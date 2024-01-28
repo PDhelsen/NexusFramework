@@ -55,7 +55,7 @@ project "NexusEngine"
 
     postbuildcommands 
     {
-        "../../Scripts/PostBuildCommands.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
+        "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
     }
 
 project "NexusEditor"
@@ -91,7 +91,7 @@ project "NexusEditor"
 
     postbuildcommands 
     {
-        "../../Scripts/PostBuildCommands.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
+        "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
     }
 
 project "NexusApp"
@@ -124,5 +124,5 @@ project "NexusApp"
 
     postbuildcommands 
     {
-        "../../Scripts/PostBuildCommands.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
+        "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
     }

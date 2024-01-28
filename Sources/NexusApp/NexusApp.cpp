@@ -15,4 +15,5 @@ namespace NexusApp
 int main()
 {
 	NexusApp::LogApp();
+	std::cin.get();
 }

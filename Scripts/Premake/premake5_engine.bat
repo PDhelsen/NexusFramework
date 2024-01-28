@@ -1,1 +1,1 @@
-premake5 vs2022 --file=premake5_engine.lua --verbose
+premake5 vs2022 --file=Premake5_Engine.lua --verbose

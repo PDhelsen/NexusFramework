@@ -15,7 +15,7 @@ del %archive%
 robocopy ../builds %install%
 robocopy ../Assets %install%/Assets /e
 robocopy ../Config %install%/Config /e
-robocopy ../Scripts %install%/Scripts /e /xf Deploy.bat PostBuildCommands.bat 
+robocopy ../Scripts %install%/Scripts /e /xf Deploy.bat PostBuildCommandsEngine.bat 
 robocopy ../Sources %install%/Sources /e /xf *.vcxproj *vcxproj.user
 
 powershell Compress-Archive %install% %archive%
