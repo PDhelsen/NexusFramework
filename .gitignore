@@ -1,0 +1,35 @@
+# Folder structure
+
+/binaries/
+/builds/
+/cook/
+/intermediates/
+/saved/
+
+# Visual Studio
+
+.vs/
+.vsconfig
+.vscode/
+*.sln
+*.vcxproj
+*.vcxproj.user
+
+# C++
+
+*.slo
+*.lo
+*.o
+*.obj
+*.gch
+*.pch
+*.so
+*.dylib
+*.dll
+*.lai
+*.la
+*.a
+*.lib
+*.exe
+*.out
+*.app
