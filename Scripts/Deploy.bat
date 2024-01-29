@@ -18,7 +18,7 @@ robocopy ../builds %install%/Libraries/NexusEngine *.lib
 robocopy ../Assets %install%/Assets /e
 robocopy ../Config %install%/Config /e
 robocopy ../Scripts %install%/Scripts /e 
-robocopy ../Sources %install%/Sources /e /xf *.vcxproj *vcxproj.user
+robocopy ../Sources %install%/Sources /e /xf *.vcxproj *.vcxproj.user *.vcxproj.filters
 
 powershell Compress-Archive %install% %archive%
 
