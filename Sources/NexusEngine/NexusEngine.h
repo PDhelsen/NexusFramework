@@ -8,5 +8,11 @@
 
 namespace NexusEngine
 {
+	NEXUS_ENGINE_API void ExecuteFromDll(const char* DllName, int Ordinal);
+
+	NEXUS_ENGINE_API void WaitForUserCloseConsole();
+
+	NEXUS_ENGINE_API void Log(const char* Message);
+
 	NEXUS_ENGINE_API void LogEngine();
 }
