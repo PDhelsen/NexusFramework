@@ -1,9 +1,9 @@
 @echo off
 
-SET folder=%1
-if [%folder%]==[] (SET /p folder="Enter project path: ")
+SET premake_file=%1
+if [%premake_file%]==[] (SET /p premake_file="Enter premake file path: ")
 
 cd Premake
-call Premake5_Project.bat %folder%/Scripts/Premake/Premake5_Project.lua
+call Premake5_Project.bat %premake_file%
 
 pause

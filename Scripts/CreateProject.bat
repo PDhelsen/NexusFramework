@@ -23,6 +23,6 @@ robocopy ../Config %destination%/%name%/Config DllExport.def
 robocopy Premake %destination%/%name%/Scripts/Premake Premake5_Project.lua
 
 @REM Create Project Solution
-call CreateProjectSolution.bat %destination%/%name%/
+call CreateProjectSolution.bat %destination%/%name%/Scripts/Premake/Premake5_Project.lua
 
 pause
