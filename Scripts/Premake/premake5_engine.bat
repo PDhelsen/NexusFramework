@@ -1,1 +1,2 @@
 premake5 vs2022 --file=Premake5_Engine.lua --verbose
+pause
