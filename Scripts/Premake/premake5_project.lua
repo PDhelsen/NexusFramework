@@ -40,13 +40,29 @@ project "NexusSandbox"
         "../../Sources/%{prj.name}/**.cpp"
     }
 
+    defines
+    {
+        "NEXUS_PROJECT_DLL_BUILD"
+    }
+
     includedirs
     {
         "../../../../Softwares/NexusEngine/Install/Sources/NexusEngine/",
         "../../../../Softwares/NexusEngine/Install/Sources/NexusEditor/"
     }
 
+    libdirs
+    {
+        "../../../../Softwares/NexusEngine/Install/Libraries/NexusEngine/"
+    }
+
+    links
+    {
+        "NexusEngine",
+        "NexusEditor"
+    }
+
     postbuildcommands 
     {
-        "../../Scripts/PostBuildCommandsProject.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
+        "../../../../Softwares/NexusEngine/Install/Scripts/PostBuildCommandsProject.bat %{cfg.buildtarget.directory} %{cfg.buildtarget.name}"
     }

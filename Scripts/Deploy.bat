@@ -14,7 +14,7 @@ del %archive%
 
 robocopy ../builds %install% *.exe *.dll
 robocopy ../Assets %install%/Assets /e
-robocopy ../builds %install%/Libraries/Engine *.lib
+robocopy ../builds %install%/Libraries/NexusEngine
 robocopy ../Config %install%/Config /e
 robocopy ../Scripts %install%/Scripts /e 
 robocopy ../Sources %install%/Sources /e /xf *.vcxproj *vcxproj.user
