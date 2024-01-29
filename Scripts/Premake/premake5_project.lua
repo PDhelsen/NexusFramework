@@ -37,7 +37,8 @@ project "NexusSandbox"
     files
     {
         "../../Sources/%{prj.name}/**.h",
-        "../../Sources/%{prj.name}/**.cpp"
+        "../../Sources/%{prj.name}/**.cpp",
+        "../../Config/DllExport.def"
     }
 
     defines
