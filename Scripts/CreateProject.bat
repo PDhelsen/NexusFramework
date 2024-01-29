@@ -6,17 +6,20 @@ SET name=%2
 if [%destination%]==[] (SET /p destination="Enter new project path: ")
 if [%name%]==[] (SET /p name="Enter new project name: ")
 
-robocopy . %destination%/%name%/Scripts /e /xf CreateProject.bat Premake5_Engine.lua Premake5_Engine.bat 
-
-cd %destination%/%name%/
-
+@REM Create Hierarchy
+pushd %destination%
+md %name%
+cd %name%
 md Assets
 md Config
 md Libraries
 md Resources
+md Scripts
 md Sources
+popd
 
-cd Scripts/Premake/
-call Premake5_Project.bat
+@REM Create Project Solution
+robocopy Premake %destination%/%name%/Scripts/Premake Premake5_Project.lua
+call CreateProjectSolution.bat %destination%/%name%/
 
 pause

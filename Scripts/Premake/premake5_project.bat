@@ -1,1 +1,1 @@
-premake5 vs2022 --file=Premake5_Project.lua --verbose
+premake5 vs2022 --file=%1 --verbose
