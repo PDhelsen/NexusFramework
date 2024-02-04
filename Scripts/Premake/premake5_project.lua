@@ -48,6 +48,7 @@ project "NexusSandbox"
 
     includedirs
     {
+        "../../Sources/%{prj.name}/",
         "../../../../Softwares/NexusEngine/Install/Sources/NexusEngine/",
         "../../../../Softwares/NexusEngine/Install/Sources/NexusEditor/"
     }

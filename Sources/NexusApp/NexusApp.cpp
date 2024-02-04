@@ -1,12 +1,15 @@
+#include "Debug/Logger.h"
+
 #include "NexusEngine.h"
 #include "NexusEditor.h"
 #include "NexusApp.h"
+
 
 namespace NexusApp
 {
 	void LogApp()
 	{
-		NexusEngine::Log("Hello World (App)");
+		NEXUS_LOG(App, Info, 0, "Hello World")
 	}
 }
 
@@ -16,6 +19,7 @@ int main()
 	NexusEditor::LogEditor();
 	NexusApp::LogApp();
 
+	// TODO: Handle Different dll name and functions
 	NexusEngine::ExecuteFromDll("NexusSandbox", 1);
 
 	NexusEngine::WaitForUserCloseConsole();

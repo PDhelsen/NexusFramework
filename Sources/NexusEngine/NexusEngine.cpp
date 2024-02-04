@@ -1,6 +1,8 @@
 #include <iostream>
 #include <windows.h>
 
+#include "Debug/Logger.h"
+
 #include "NexusEngine.h"
 
 namespace NexusEngine
@@ -12,14 +14,14 @@ namespace NexusEngine
 		auto dll = LoadLibraryA(DllName);
 		if (dll == nullptr)
 		{
-			std::cout << "Failed to load library" << std::endl;
+			NEXUS_LOG(Engine, Error, 0, "Failed to load library")
 			return;
 		}
 
 		ProjectFunction function = (ProjectFunction)GetProcAddress(dll, MAKEINTRESOURCEA(Ordinal));
 		if (function == nullptr)
 		{
-			std::cout << "Failed to load Function" << std::endl;
+			NEXUS_LOG(Engine, Error, 0, "Failed to load function")
 			FreeLibrary(dll);
 			return;
 		}
@@ -34,13 +36,8 @@ namespace NexusEngine
 		std::cin.get();
 	}
 
-	void Log(const char* Message)
-	{
-		std::cout <<  Message << std::endl;
-	}
-
 	void LogEngine()
-	{
-		Log("Hello World (Engine)");
+	{ 
+		NEXUS_LOG(Engine, Info, 0, "Hello World")
 	}
 }

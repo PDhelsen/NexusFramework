@@ -12,7 +12,5 @@ namespace NexusEngine
 
 	NEXUS_ENGINE_API void WaitForUserCloseConsole();
 
-	NEXUS_ENGINE_API void Log(const char* Message);
-
 	NEXUS_ENGINE_API void LogEngine();
 }

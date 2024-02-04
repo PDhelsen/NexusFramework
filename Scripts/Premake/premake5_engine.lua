@@ -48,6 +48,11 @@ project "NexusEngine"
         "../../Sources/%{prj.name}/**.cpp"
     }
 
+    includedirs
+    {
+        "../../Sources/%{prj.name}/"
+    }
+
     defines
     {
         "NEXUS_ENGINE_DLL_BUILD"
@@ -81,6 +86,7 @@ project "NexusEditor"
 
     includedirs
     {
+        "../../Sources/%{prj.name}/",
         "../../Sources/NexusEngine/"
     }
 
@@ -112,6 +118,7 @@ project "NexusApp"
 
     includedirs
     {
+        "../../Sources/%{prj.name}/",
         "../../Sources/NexusEngine/",
         "../../Sources/NexusEditor/"
     }

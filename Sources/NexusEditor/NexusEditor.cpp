@@ -1,10 +1,11 @@
-#include "NexusEngine.h"
+#include "Debug/Logger.h"
+
 #include "NexusEditor.h"
 
 namespace NexusEditor
 {
 	void LogEditor()
 	{
-		NexusEngine::Log("Hello World (Editor)");
+		NEXUS_LOG(Editor, Info, 0, "Hello World")
 	}
 }
