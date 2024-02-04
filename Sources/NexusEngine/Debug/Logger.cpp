@@ -7,7 +7,7 @@
 namespace NexusEngine
 {
 	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
-	static const char* SourceStrings[4] = { "Engine", "Editor", "App   ", "Project" };
+	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
 
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
@@ -26,6 +26,13 @@ namespace NexusEngine
 	{
 		Channels = std::unordered_map<int, bool>();
 		AddChannel(0, true);
+
+		HANDLE ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		DWORD ConsoleOutDefaultMode = 0;
+		GetConsoleMode(ConsoleOut, &ConsoleOutDefaultMode);
+		DWORD ConsoleOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+		DWORD ConsoleOutMode = ConsoleOutDefaultMode | ConsoleOutRequestMode;
+		SetConsoleMode(ConsoleOut, ConsoleOutMode);
 	}
 
 	Logger::~Logger()
