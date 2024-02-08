@@ -5,7 +5,7 @@
 
 #include "NexusEngine.h"
 
-namespace NexusEngine
+namespace NxEn
 {
 	typedef void(CALLBACK* ProjectFunction)();
 
@@ -36,7 +36,7 @@ namespace NexusEngine
 		std::cin.get();
 	}
 
-	void LogEngine()
+	void HelloWorld()
 	{ 
 		NEXUS_LOG(Engine, Info, 0, "Hello World")
 	}

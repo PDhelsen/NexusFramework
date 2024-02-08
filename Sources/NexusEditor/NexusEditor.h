@@ -6,7 +6,7 @@
 #define NEXUS_EDITOR_API __declspec(dllimport)
 #endif
 
-namespace NexusEditor
+namespace NxEd
 {
-	NEXUS_EDITOR_API void LogEditor();
+	NEXUS_EDITOR_API void HelloWorld();
 }

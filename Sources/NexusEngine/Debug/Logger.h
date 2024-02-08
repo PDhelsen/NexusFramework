@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include "NexusEngine.h"
 
-namespace NexusEngine
+namespace NxEn
 {
 	class Logger
 	{
@@ -61,7 +61,7 @@ namespace NexusEngine
 	};
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...) NexusEngine::Logger::GetInstance()->Log(NexusEngine::Logger::Source::Src, NexusEngine::Logger::Verbosity::Vbs, Chn, Msg, __VA_ARGS__);
+#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...) NxEn::Logger::GetInstance()->Log(NxEn::Logger::Source::Src, NxEn::Logger::Verbosity::Vbs, Chn, Msg, __VA_ARGS__);
 #elif NEXUS_DISTRIB
 #define NEXUS_LOG(Src, Vbs, Chn, Msg, ...)
 #endif

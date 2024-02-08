@@ -4,7 +4,7 @@
 
 #include "Logger.h"
 
-namespace NexusEngine
+namespace NxEn
 {
 	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
 	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };

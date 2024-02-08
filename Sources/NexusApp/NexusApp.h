@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NexusApp
+namespace NxAp
 {
-	void LogApp();
+	void HelloWorld();
 }
