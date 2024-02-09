@@ -7,6 +7,7 @@ workspace "NexusSandbox"
     platforms { "Win64" }
 
     filter "platforms:Win64"
+        defines { "NEXUS_WINDOWS" }
         architecture "x64"
         
     filter "configurations:Debug"

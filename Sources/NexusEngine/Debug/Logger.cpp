@@ -2,6 +2,7 @@
 #include <time.h>
 #include <iostream>
 
+#include "Assert.h"
 #include "Logger.h"
 
 namespace NxEn
@@ -66,14 +67,15 @@ namespace NxEn
 		PrintToOutput(MessageFormatted);
 	}
 
-	// TODO: Assert on dictionnary content manipulation
 	void Logger::AddChannel(int Channel, bool State)
 	{
+		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %d", Channel)
 		Channels.emplace(Channel, State);
 	}
 
 	void Logger::SetChannel(int Channel, bool State)
 	{
+		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
 		Channels[Channel] = State;
 	}
 
@@ -84,6 +86,7 @@ namespace NxEn
 
 	inline bool Logger::CheckChannel(int Channel) const
 	{
+		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
 		return Channels.at(Channel);
 	}
 
