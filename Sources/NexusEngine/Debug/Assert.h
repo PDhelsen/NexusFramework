@@ -16,3 +16,5 @@
 #elif NEXUS_DISTRIB
 	#define NEXUS_ASSERT(condition, Msg, ...)
 #endif
+
+#define NEXUS_ASSERT_STATIC(condition, Msg) static_assert(condition, Msg)
