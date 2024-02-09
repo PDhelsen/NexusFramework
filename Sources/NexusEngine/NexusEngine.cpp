@@ -9,7 +9,7 @@ namespace NxEn
 {
 	typedef void(CALLBACK* ProjectFunction)();
 
-	void ExecuteFromDll(const char* DllName, int Ordinal)
+	void ExecuteFromDll(const char* DllName, int8 Ordinal)
 	{
 		auto dll = LoadLibraryA(DllName);
 		if (dll == nullptr)

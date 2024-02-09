@@ -15,7 +15,7 @@ namespace NxEn
 	static const char* ColorsConsoleStrings[4] = { "\033[35m", "\033[31m", "\033[33m", "\033[32m" };
 	static const char* ColorsConsoleReset = "\033[m";
 
-	static const int MaxChars = 1024;
+	static const uint32 MaxChars = 1024;
 	static char Resolved[MaxChars];
 	static char Formatted[MaxChars];
 	static char Time[MaxChars];
@@ -25,7 +25,7 @@ namespace NxEn
 	Logger::Logger(Verbosity Verbosity)
 		: VerbosityLevel(Verbosity)
 	{
-		Channels = std::unordered_map<int, bool>();
+		Channels = std::unordered_map<uint32, bool>();
 		AddChannel(0, true);
 
 		HANDLE ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -40,7 +40,7 @@ namespace NxEn
 	{
 	}
 
-	void Logger::Log(Source Source, Verbosity Verbosity, int Channel, const char* Message, ...)
+	void Logger::Log(Source Source, Verbosity Verbosity, uint32 Channel, const char* Message, ...)
 	{
 		if (!CheckVerbosityLevel(Verbosity))
 		{
@@ -67,24 +67,24 @@ namespace NxEn
 		PrintToOutput(MessageFormatted);
 	}
 
-	void Logger::AddChannel(int Channel, bool State)
+	void Logger::AddChannel(uint32 Channel, bool State)
 	{
 		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %d", Channel)
 		Channels.emplace(Channel, State);
 	}
 
-	void Logger::SetChannel(int Channel, bool State)
+	void Logger::SetChannel(uint32 Channel, bool State)
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
 		Channels[Channel] = State;
 	}
 
-	inline bool Logger::HasChannel(int Channel) const
+	inline bool Logger::HasChannel(uint32 Channel) const
 	{
 		return Channels.find(Channel) != Channels.end();
 	}
 
-	inline bool Logger::CheckChannel(int Channel) const
+	inline bool Logger::CheckChannel(uint32 Channel) const
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
 		return Channels.at(Channel);
@@ -109,20 +109,20 @@ namespace NxEn
 	 
 	inline const char* Logger::VerbosityToString(Verbosity Verbosity) const
 	{
-		return VerbosityStrings[(int)Verbosity];
+		return VerbosityStrings[(uint32)Verbosity];
 	}
 
 	inline const char* Logger::SourceToString(Source Source) const
 	{
-		return SourceStrings[(int)Source];
+		return SourceStrings[(uint32)Source];
 	}
 
 	inline const char* Logger::ColorizeConsole(Verbosity Verbosity) const
 	{
-		return ColorsConsoleStrings[(int)Verbosity];
+		return ColorsConsoleStrings[(uint32)Verbosity];
 	}
 
-	inline const char* Logger::Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, int Channel) const
+	inline const char* Logger::Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint32 Channel) const
 	{
 		snprintf(Formatted, MaxChars, FormatString, Date, Source, Verbosity, Channel, Message);
 		return Formatted;

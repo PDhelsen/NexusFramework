@@ -1,6 +1,7 @@
 #pragma once 
 
 #include <unordered_map>
+#include "Types/Types.h"
 #include "NexusEngine.h"
 
 namespace NxEn
@@ -12,7 +13,7 @@ namespace NxEn
 		// The enum declaration and the const char array in the cpp should match.
 
 		// TODO: Change for flag instead of simple enum
-		enum class Verbosity : char
+		enum class Verbosity : int8
 		{
 			Fatal,
 			Error,
@@ -20,7 +21,7 @@ namespace NxEn
 			Info
 		};
 
-		enum class Source: char
+		enum class Source: int8
 		{
 			Engine,
 			Editor,
@@ -31,10 +32,10 @@ namespace NxEn
 		NEXUS_ENGINE_API Logger(Verbosity Verbosity);
 		NEXUS_ENGINE_API ~Logger();
 		
-		NEXUS_ENGINE_API void Log(Source Source, Verbosity Verbosity, int Channel, const char* Message, ...);
+		NEXUS_ENGINE_API void Log(Source Source, Verbosity Verbosity, uint32 Channel, const char* Message, ...);
 
-		NEXUS_ENGINE_API void AddChannel(int Channel, bool State = false);
-		NEXUS_ENGINE_API void SetChannel(int Channel, bool State);
+		NEXUS_ENGINE_API void AddChannel(uint32 Channel, bool State = false);
+		NEXUS_ENGINE_API void SetChannel(uint32 Channel, bool State);
 
 		NEXUS_ENGINE_API inline Verbosity GetVerbosity() const { return VerbosityLevel; }
 		NEXUS_ENGINE_API inline void SetVerbosity(Verbosity Verbosity) { VerbosityLevel = Verbosity; }
@@ -42,19 +43,19 @@ namespace NxEn
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
 
 	private:
-		inline bool HasChannel(int Channel) const;
-		inline bool CheckChannel(int Channel) const;
+		inline bool HasChannel(uint32 Channel) const;
+		inline bool CheckChannel(uint32 Channel) const;
 		inline bool CheckVerbosityLevel(Verbosity Verbosity) const;
 		inline const char* DateToString() const;
 		inline const char* VerbosityToString(Verbosity Verbosity) const;
 		inline const char* SourceToString(Source Source) const;
 		inline const char* ColorizeConsole(Verbosity Verbosity) const;
-		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, int Channel) const;
+		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint32 Channel) const;
 		inline void PrintToConsole(const char* Message, Verbosity Verbosity) const;
 		inline void PrintToOutput(const char* Message) const;
 
 		// TEMP: Replace int key by string once we have string
-		std::unordered_map<int, bool> Channels;
+		std::unordered_map<uint32, bool> Channels;
 		Verbosity VerbosityLevel;
 
 		static Logger* Instance;

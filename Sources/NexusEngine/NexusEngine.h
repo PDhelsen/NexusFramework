@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Types/Types.h"
+
 #if NEXUS_ENGINE_DLL_BUILD
 #define NEXUS_ENGINE_API __declspec(dllexport)
 #else
@@ -8,7 +10,7 @@
 
 namespace NxEn
 {
-	NEXUS_ENGINE_API void ExecuteFromDll(const char* DllName, int Ordinal);
+	NEXUS_ENGINE_API void ExecuteFromDll(const char* DllName, int8 Ordinal);
 
 	NEXUS_ENGINE_API void WaitForUserCloseConsole();
 
