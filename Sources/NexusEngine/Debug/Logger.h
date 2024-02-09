@@ -32,10 +32,10 @@ namespace NxEn
 		NEXUS_ENGINE_API Logger(Verbosity Verbosity);
 		NEXUS_ENGINE_API ~Logger();
 		
-		NEXUS_ENGINE_API void Log(Source Source, Verbosity Verbosity, uint32 Channel, const char* Message, ...);
+		NEXUS_ENGINE_API void Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...);
 
-		NEXUS_ENGINE_API void AddChannel(uint32 Channel, bool State = false);
-		NEXUS_ENGINE_API void SetChannel(uint32 Channel, bool State);
+		NEXUS_ENGINE_API void AddChannel(uint16 Channel, bool State = false);
+		NEXUS_ENGINE_API void SetChannel(uint16 Channel, bool State);
 
 		NEXUS_ENGINE_API inline Verbosity GetVerbosity() const { return VerbosityLevel; }
 		NEXUS_ENGINE_API inline void SetVerbosity(Verbosity Verbosity) { VerbosityLevel = Verbosity; }
@@ -43,19 +43,19 @@ namespace NxEn
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
 
 	private:
-		inline bool HasChannel(uint32 Channel) const;
-		inline bool CheckChannel(uint32 Channel) const;
+		inline bool HasChannel(uint16 Channel) const;
+		inline bool CheckChannel(uint16 Channel) const;
 		inline bool CheckVerbosityLevel(Verbosity Verbosity) const;
 		inline const char* DateToString() const;
 		inline const char* VerbosityToString(Verbosity Verbosity) const;
 		inline const char* SourceToString(Source Source) const;
 		inline const char* ColorizeConsole(Verbosity Verbosity) const;
-		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint32 Channel) const;
+		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint16 Channel) const;
 		inline void PrintToConsole(const char* Message, Verbosity Verbosity) const;
 		inline void PrintToOutput(const char* Message) const;
 
 		// TEMP: Replace int key by string once we have string
-		std::unordered_map<uint32, bool> Channels;
+		std::unordered_map<uint16, bool> Channels;
 		Verbosity VerbosityLevel;
 
 		static Logger* Instance;
