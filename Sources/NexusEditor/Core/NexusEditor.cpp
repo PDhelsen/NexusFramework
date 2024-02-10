@@ -1,4 +1,5 @@
 #include "NexusEditor.h"
+
 #include "Core/NexusBase.h"
 
 namespace NxEd
