@@ -1,7 +1,6 @@
 #include <windows.h>
-#include <time.h>
-#include <iostream>
 
+#include "External/StandarLibrary.h"
 #include "Assert.h"
 #include "Logger.h"
 
@@ -25,7 +24,7 @@ namespace NxEn
 	Logger::Logger(Verbosity Verbosity)
 		: VerbosityLevel(Verbosity)
 	{
-		Channels = std::unordered_map<uint16, bool>();
+		Channels = Dictionary<uint16, bool>();
 		AddChannel(0, true);
 
 		HANDLE ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
@@ -52,10 +51,7 @@ namespace NxEn
 			return;
 		}
 
-		va_list ArgList;
-		va_start(ArgList, Message);
-		vsnprintf(Resolved, MaxChars, Message, ArgList);
-		va_end(ArgList);
+		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
 
 		const char* DateString = DateToString();
 		const char* VerbosityString = VerbosityToString(Verbosity);

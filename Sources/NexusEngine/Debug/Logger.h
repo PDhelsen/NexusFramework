@@ -1,6 +1,5 @@
 #pragma once 
 
-#include <unordered_map>
 #include "Types/Types.h"
 #include "NexusEngine.h"
 
@@ -55,7 +54,7 @@ namespace NxEn
 		inline void PrintToOutput(const char* Message) const;
 
 		// TEMP: Replace int key by string once we have string
-		std::unordered_map<uint16, bool> Channels;
+		Dictionary<uint16, bool> Channels;
 		Verbosity VerbosityLevel;
 
 		static Logger* Instance;
