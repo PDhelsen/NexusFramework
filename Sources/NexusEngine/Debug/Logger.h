@@ -1,7 +1,8 @@
 #pragma once 
 
+#include "External/StandarLibrary.h"
 #include "Types/Types.h"
-#include "NexusEngine.h"
+#include "Core/NexusEngine.h"
 
 namespace NxEn
 {

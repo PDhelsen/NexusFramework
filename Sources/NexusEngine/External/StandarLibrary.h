@@ -1,7 +1,5 @@
 #pragma once
 
-#include <unordered_map>
-
 #include <iostream>
 
 #include <stdarg.h>
@@ -9,3 +7,8 @@
 									va_start(ArgList, Format);\
 									Function;\
 									va_end(ArgList);
+
+// TODO: Replace with custom implementation
+#include <unordered_map>
+template<typename T, typename U>
+using Dictionary = std::unordered_map<T, U>;

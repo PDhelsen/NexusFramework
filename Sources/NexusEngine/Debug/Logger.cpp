@@ -1,7 +1,6 @@
 #include <windows.h>
 
-#include "External/StandarLibrary.h"
-#include "Assert.h"
+#include "Debug/Assert.h"
 #include "Logger.h"
 
 namespace NxEn

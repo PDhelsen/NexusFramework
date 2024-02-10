@@ -1,7 +1,7 @@
 #include "Debug/Logger.h"
 
-#include "NexusEngine.h"
-#include "NexusEditor.h"
+#include "Core/NexusEngine.h"
+#include "Core/NexusEditor.h"
 
 #include "NexusApp.h"
 

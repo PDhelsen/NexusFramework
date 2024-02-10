@@ -5,6 +5,7 @@ workspace "NexusSandbox"
 
     configurations { "Debug", "Release", "Ditrib" }
     platforms { "Win64" }
+    flags { "MultiProcessorCompile" }
 
     filter "platforms:Win64"
         defines { "NEXUS_WINDOWS" }
