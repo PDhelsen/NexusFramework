@@ -1,6 +1,4 @@
-#include <windows.h>
-
-#include "Debug/Assert.h"
+#include "Core/NexusPch.h"
 #include "Logger.h"
 
 namespace NxEn

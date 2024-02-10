@@ -1,9 +1,7 @@
-#include "Debug/Logger.h"
-
-#include "Core/NexusEngine.h"
-#include "Core/NexusEditor.h"
-
 #include "NexusApp.h"
+
+#include "Core/NexusBase.h"
+#include "Core/NexusEditor.h"
 
 namespace NxAp
 {

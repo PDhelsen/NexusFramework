@@ -1,6 +1,5 @@
-#include "Debug/Logger.h"
-
 #include "NexusEditor.h"
+#include "Core/NexusBase.h"
 
 namespace NxEd
 {

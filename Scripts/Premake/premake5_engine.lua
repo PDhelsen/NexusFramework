@@ -6,7 +6,7 @@ workspace "NexusEngine"
     configurations { "Debug", "Release", "Ditrib" }
     platforms { "Win64" }
     flags { "MultiProcessorCompile" }
-    
+
     filter "platforms:Win64"
         defines { "NEXUS_WINDOWS" }
         architecture "x64"
@@ -43,6 +43,9 @@ project "NexusEngine"
 
 	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+
+    pchheader "Core/NexusPch.h"
+	pchsource "../../Sources/%{prj.name}/Core/NexusPch.cpp"
 
     files
     {

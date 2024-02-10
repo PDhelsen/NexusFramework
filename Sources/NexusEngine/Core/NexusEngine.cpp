@@ -1,8 +1,4 @@
-#include <windows.h>
-
-#include "External/StandarLibrary.h"
-#include "Debug/Logger.h"
-
+#include "Core/NexusPch.h"
 #include "NexusEngine.h"
 
 namespace NxEn

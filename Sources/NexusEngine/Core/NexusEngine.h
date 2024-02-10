@@ -1,11 +1,12 @@
 #pragma once
 
+// Move Dll and Console to Platform + Remove include
 #include "Types/Types.h"
 
 #if NEXUS_ENGINE_DLL_BUILD
-#define NEXUS_ENGINE_API __declspec(dllexport)
+	#define NEXUS_ENGINE_API __declspec(dllexport)
 #else
-#define NEXUS_ENGINE_API __declspec(dllimport)
+	#define NEXUS_ENGINE_API __declspec(dllimport)
 #endif
 
 namespace NxEn
