@@ -9,7 +9,10 @@ namespace NxEn
 	static const char* ColorsConsoleStrings[4] = { "\033[35m", "\033[31m", "\033[33m", "\033[32m" };
 	static const char* ColorsConsoleReset = "\033[m";
 
-	void PlatformWindows::WaitForUserCloseConsole() const
+	static const uint16 MaxChars = 128;
+	static char TimeBuffer[MaxChars];
+
+	void PlatformWindows::WaitForUserToCloseConsole() const
 	{
 		std::cin.get();
 	}
@@ -45,6 +48,19 @@ namespace NxEn
 		function();
 
 		FreeLibrary(dll);
+	}
+
+	// TODO: Move to Time
+	const char* PlatformWindows::GetTimestamp(const char* Format) const
+	{
+		std::time_t Time;
+		std::tm TimeInfo;
+		
+		time(&Time);
+		localtime_s(&TimeInfo, &Time);
+
+		std::strftime(TimeBuffer, MaxChars, Format, &TimeInfo);
+		return TimeBuffer;
 	}
 
 	PlatformWindows::PlatformWindows()

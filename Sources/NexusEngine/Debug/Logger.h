@@ -44,7 +44,6 @@ namespace NxEn
 		inline bool HasChannel(uint16 Channel) const;
 		inline bool CheckChannel(uint16 Channel) const;
 		inline bool CheckVerbosityLevel(Verbosity Verbosity) const;
-		inline const char* DateToString() const;
 		inline const char* VerbosityToString(Verbosity Verbosity) const;
 		inline const char* SourceToString(Source Source) const;
 		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint16 Channel) const;

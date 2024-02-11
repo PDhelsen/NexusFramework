@@ -14,10 +14,11 @@ namespace NxEn
 			Windows
 		};
 		
-		NEXUS_ENGINE_API virtual void WaitForUserCloseConsole() const {};
+		NEXUS_ENGINE_API virtual void WaitForUserToCloseConsole() const {};
 		NEXUS_ENGINE_API virtual void WriteToConsole(const char* Message, Logger::Verbosity Verbosity) const {};
 		NEXUS_ENGINE_API virtual void WriteToOutput(const char* Message, Logger::Verbosity Verbosity) const {};
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(const char* DllName, int8 Ordinal) const {};
+		NEXUS_ENGINE_API virtual const char* GetTimestamp(const char* Format) const { return nullptr; };
 
 		NEXUS_ENGINE_API inline virtual Target GetTarget() { return Target::None; }
 

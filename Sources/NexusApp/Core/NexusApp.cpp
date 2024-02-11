@@ -21,5 +21,5 @@ int main()
 
 	NxEn::Platform* Platform = NxEn::Platform::GetInstance();
 	Platform->ExecuteFromDll("NexusSandbox", 1);
-	Platform->WaitForUserCloseConsole();
+	Platform->WaitForUserToCloseConsole();
 }
