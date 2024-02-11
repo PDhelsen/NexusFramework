@@ -4,7 +4,17 @@
 // Include files that will be use in a lot of different cpp file (for header files look at NexusCore.h).
 // Also, avoid to include files that will change often
 
-#include "Core/NexusCore.h"
+// TODO: Move to Platform
+#include "External/StandardLibrary.h"
+
+#include "Types/Types.h"
+
+// TODO: Move to Platform
+#if NEXUS_WINDOWS
+#include <windows.h>
+#endif
+
+#include "Core/NexusEngine.h"
 
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"

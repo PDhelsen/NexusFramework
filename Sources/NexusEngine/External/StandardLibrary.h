@@ -8,7 +8,5 @@
 									Function;\
 									va_end(ArgList);
 
-// TODO: Replace with custom implementation
+// TEMP: Remove once we have custom dictionary
 #include <unordered_map>
-template<typename T, typename U>
-using Dictionary = std::unordered_map<T, U>;
