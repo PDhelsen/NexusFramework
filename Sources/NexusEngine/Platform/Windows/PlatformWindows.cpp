@@ -1,8 +1,6 @@
 #include "Core/NexusPch.h"
 #include "PlatformWindows.h"
 
-#include "External/StandardLibrary.h"
-
 #include <windows.h>
 
 namespace NxEn

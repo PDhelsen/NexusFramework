@@ -1,7 +1,7 @@
 #include "Core/NexusPch.h"
 #include "Platform.h"
 
-#include "Platform/PlatformWindows.h"
+#include "Platform/Windows/PlatformWindows.h"
 
 namespace NxEn
 {

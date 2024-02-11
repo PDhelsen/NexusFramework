@@ -5,7 +5,7 @@
 
 namespace NxEn
 {
-	class Platform
+		class Platform
 	{
 	public:
 		enum class Target : int8
