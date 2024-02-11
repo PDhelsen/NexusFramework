@@ -5,10 +5,13 @@
 
 namespace NxEn
 {
+	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
 	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
+	static uint8 Colors[4] = { 5, 1, 3, 2 };
 
+	// TEMP: Remove once we have string
 	static const uint16 MaxChars = 1024;
 	static char Resolved[MaxChars];
 	static char Formatted[MaxChars];
@@ -28,7 +31,7 @@ namespace NxEn
 
 	void Logger::Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...)
 	{
-		if (!CheckVerbosityLevel(Verbosity))
+		if (Verbosity > VerbosityLevel)
 		{
 			return;
 		}
@@ -40,17 +43,16 @@ namespace NxEn
 
 		Platform* Platform = Platform::GetInstance();
 
-
-		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
-
 		const char* DateString = Platform->GetTimestamp("%H:%M:%S");
-		const char* VerbosityString = VerbosityToString(Verbosity);
-		const char* SourceString = SourceToString(Source);
+		const char* VerbosityString = VerbosityStrings[(uint8)Verbosity];
+		const char* SourceString = SourceStrings[(uint8)Source];
+		uint8 Color = Colors[(uint8)Verbosity];
+		
+		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
+		snprintf(Formatted, MaxChars, FormatString, DateString, SourceString, VerbosityString, Channel, Message);
 
-		const char* MessageFormatted = Format(Resolved, DateString, SourceString, VerbosityString, Channel);
-
-		Platform->WriteToConsole(MessageFormatted, Verbosity);
-		Platform->WriteToOutput(MessageFormatted, Verbosity);
+		Platform->WriteToConsole(Formatted, Color);
+		Platform->WriteToOutput(Formatted);
 	}
 
 	void Logger::AddChannel(uint16 Channel, bool State)
@@ -65,35 +67,14 @@ namespace NxEn
 		Channels[Channel] = State;
 	}
 
-	inline bool Logger::HasChannel(uint16 Channel) const
+	bool Logger::HasChannel(uint16 Channel) const
 	{
 		return Channels.find(Channel) != Channels.end();
 	}
 
-	inline bool Logger::CheckChannel(uint16 Channel) const
+	bool Logger::CheckChannel(uint16 Channel) const
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
 		return Channels.at(Channel);
-	}
-
-	inline bool Logger::CheckVerbosityLevel(Verbosity Verbosity) const
-	{
-		return Verbosity <= VerbosityLevel;
-	}
-	 
-	inline const char* Logger::VerbosityToString(Verbosity Verbosity) const
-	{
-		return VerbosityStrings[(uint8)Verbosity];
-	}
-
-	inline const char* Logger::SourceToString(Source Source) const
-	{
-		return SourceStrings[(uint8)Source];
-	}
-
-	inline const char* Logger::Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint16 Channel) const
-	{
-		snprintf(Formatted, MaxChars, FormatString, Date, Source, Verbosity, Channel, Message);
-		return Formatted;
 	}
 }

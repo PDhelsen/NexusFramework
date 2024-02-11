@@ -6,9 +6,10 @@
 namespace NxEn
 {
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-	static const char* ColorsConsoleStrings[4] = { "\033[35m", "\033[31m", "\033[33m", "\033[32m" };
-	static const char* ColorsConsoleReset = "\033[m";
+	static const char* ConsoleColors[16] = { "\033[30m", "\033[31m", "\033[32m", "\033[33m", "\033[34m", "\033[35m", "\033[36m", "\033[37m", "\033[40m", "\033[41m", "\033[42m", "\033[43m", "\033[44m", "\033[45m", "\033[46m", "\033[47m" };
+	static const char* ConsoleFormatReset = "\033[m";
 
+	// TEMP: Remove once we have string
 	static const uint16 MaxChars = 128;
 	static char TimeBuffer[MaxChars];
 
@@ -17,17 +18,17 @@ namespace NxEn
 		std::cin.get();
 	}
 
-	void PlatformWindows::WriteToConsole(const char* Message, Logger::Verbosity Verbosity) const
+	void PlatformWindows::WriteToConsole(const char* Message, uint8 Color) const
 	{
-		std::cout << ColorsConsoleStrings[(uint8)Verbosity] << Message << ColorsConsoleReset;
+		std::cout << ConsoleColors[Color] << Message << ConsoleFormatReset;
 	}
 
-	void PlatformWindows::WriteToOutput(const char* Message, Logger::Verbosity Verbosity) const
+	void PlatformWindows::WriteToOutput(const char* Message) const
 	{
 		OutputDebugStringA(Message);
 	}
 
-	void PlatformWindows::ExecuteFromDll(const char* DllName, int8 Ordinal) const
+	void PlatformWindows::ExecuteFromDll(const char* DllName, uint8 Ordinal) const
 	{
 		auto dll = LoadLibraryA(DllName);
 		if (dll == nullptr)

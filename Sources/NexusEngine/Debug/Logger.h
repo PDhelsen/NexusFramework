@@ -4,12 +4,10 @@
 
 namespace NxEn
 {
+	// Keep the Verbosity & Source enum sync with the const char array in the cpp file
 	class Logger
 	{
 	public:
-		// The log format and the enum to strings are defined by const char* in the cpp file.
-		// The enum declaration and the const char array in the cpp should match.
-
 		// TODO: Change for flag instead of simple enum
 		enum class Verbosity : uint8
 		{
@@ -34,6 +32,8 @@ namespace NxEn
 
 		NEXUS_ENGINE_API void AddChannel(uint16 Channel, bool State = false);
 		NEXUS_ENGINE_API void SetChannel(uint16 Channel, bool State);
+		NEXUS_ENGINE_API bool HasChannel(uint16 Channel) const;
+		NEXUS_ENGINE_API bool CheckChannel(uint16 Channel) const;
 
 		NEXUS_ENGINE_API inline Verbosity GetVerbosity() const { return VerbosityLevel; }
 		NEXUS_ENGINE_API inline void SetVerbosity(Verbosity Verbosity) { VerbosityLevel = Verbosity; }
@@ -41,13 +41,6 @@ namespace NxEn
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
 
 	private:
-		inline bool HasChannel(uint16 Channel) const;
-		inline bool CheckChannel(uint16 Channel) const;
-		inline bool CheckVerbosityLevel(Verbosity Verbosity) const;
-		inline const char* VerbosityToString(Verbosity Verbosity) const;
-		inline const char* SourceToString(Source Source) const;
-		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint16 Channel) const;
-
 		// TEMP: Replace int key by string once we have string
 		Dictionary<uint16, bool> Channels;
 		Verbosity VerbosityLevel;
