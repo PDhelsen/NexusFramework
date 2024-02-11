@@ -1,15 +1,15 @@
 #include "Core/NexusPch.h"
 #include "Logger.h"
 
+#include "Platform/Platform.h"
+
 namespace NxEn
 {
 	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
 	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
 
-	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-	static const char* ColorsConsoleStrings[4] = { "\033[35m", "\033[31m", "\033[33m", "\033[32m" };
-	static const char* ColorsConsoleReset = "\033[m";
+
 
 	static const uint16 MaxChars = 1024;
 	static char Resolved[MaxChars];
@@ -23,13 +23,6 @@ namespace NxEn
 	{
 		Channels = Dictionary<uint16, bool>();
 		AddChannel(0, true);
-
-		HANDLE ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		DWORD ConsoleOutDefaultMode = 0;
-		GetConsoleMode(ConsoleOut, &ConsoleOutDefaultMode);
-		DWORD ConsoleOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-		DWORD ConsoleOutMode = ConsoleOutDefaultMode | ConsoleOutRequestMode;
-		SetConsoleMode(ConsoleOut, ConsoleOutMode);
 	}
 
 	Logger::~Logger()
@@ -56,8 +49,9 @@ namespace NxEn
 
 		const char* MessageFormatted = Format(Resolved, DateString, SourceString, VerbosityString, Channel);
 
-		PrintToConsole(MessageFormatted, Verbosity);
-		PrintToOutput(MessageFormatted);
+		Platform* Platform = Platform::GetInstance();
+		Platform->WriteToConsole(MessageFormatted, Verbosity);
+		Platform->WriteToOutput(MessageFormatted, Verbosity);
 	}
 
 	void Logger::AddChannel(uint16 Channel, bool State)
@@ -102,33 +96,17 @@ namespace NxEn
 	 
 	inline const char* Logger::VerbosityToString(Verbosity Verbosity) const
 	{
-		return VerbosityStrings[(uint16)Verbosity];
+		return VerbosityStrings[(uint8)Verbosity];
 	}
 
 	inline const char* Logger::SourceToString(Source Source) const
 	{
-		return SourceStrings[(uint16)Source];
-	}
-
-	inline const char* Logger::ColorizeConsole(Verbosity Verbosity) const
-	{
-		return ColorsConsoleStrings[(uint16)Verbosity];
+		return SourceStrings[(uint8)Source];
 	}
 
 	inline const char* Logger::Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint16 Channel) const
 	{
 		snprintf(Formatted, MaxChars, FormatString, Date, Source, Verbosity, Channel, Message);
 		return Formatted;
-	}
-
-	inline void Logger::PrintToConsole(const char* Message, Verbosity Verbosity) const
-	{
-		const char* Color = ColorizeConsole(Verbosity);
-		std::cout << Color << Message << ColorsConsoleReset;
-	}
-
-	inline void Logger::PrintToOutput(const char* Message) const
-	{
-		OutputDebugStringA(Message);
 	}
 }

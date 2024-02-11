@@ -11,7 +11,7 @@ namespace NxEn
 		// The enum declaration and the const char array in the cpp should match.
 
 		// TODO: Change for flag instead of simple enum
-		enum class Verbosity : int8
+		enum class Verbosity : uint8
 		{
 			Fatal,
 			Error,
@@ -19,7 +19,7 @@ namespace NxEn
 			Info
 		};
 
-		enum class Source: int8
+		enum class Source: uint8
 		{
 			Engine,
 			Editor,
@@ -47,10 +47,7 @@ namespace NxEn
 		inline const char* DateToString() const;
 		inline const char* VerbosityToString(Verbosity Verbosity) const;
 		inline const char* SourceToString(Source Source) const;
-		inline const char* ColorizeConsole(Verbosity Verbosity) const;
 		inline const char* Format(const char* Message, const char* Date, const char* Source, const char* Verbosity, uint16 Channel) const;
-		inline void PrintToConsole(const char* Message, Verbosity Verbosity) const;
-		inline void PrintToOutput(const char* Message) const;
 
 		// TEMP: Replace int key by string once we have string
 		Dictionary<uint16, bool> Channels;

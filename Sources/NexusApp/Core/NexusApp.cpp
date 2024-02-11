@@ -3,6 +3,8 @@
 #include "Core/NexusBase.h"
 #include "Core/NexusEditor.h"
 
+#include "Platform/Platform.h"
+
 namespace NxAp
 {
 	void HelloWorld()
@@ -17,8 +19,10 @@ int main()
 	NxEd::HelloWorld();
 	NxAp::HelloWorld();
 
-	// TODO: Handle Different dll name and functions
-	NxEn::ExecuteFromDll("NexusSandbox", 1);
+	NxEn::Platform::Target Target = NxEn::Platform::GetInstance()->GetTarget();
+	NEXUS_LOG(App, Info, 0, "Target : %s", Target == NxEn::Platform::Target::Windows ? "Windows" : "None")
 
-	NxEn::WaitForUserCloseConsole();
+	NxEn::Platform* Platform = NxEn::Platform::GetInstance();
+	Platform->ExecuteFromDll("NexusSandbox", 1);
+	Platform->WaitForUserCloseConsole();
 }
