@@ -9,7 +9,7 @@ namespace NxEn
 	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
 	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
-	static uint8 Colors[4] = { 5, 1, 3, 2 };
+	static Platform::ConsoleColor Colors[4] = { Platform::ConsoleColor::Magenta, Platform::ConsoleColor::Red, Platform::ConsoleColor::Yellow, Platform::ConsoleColor::White };
 
 	// TEMP: Remove once we have string
 	static const uint16 MaxChars = 1024;
@@ -29,7 +29,7 @@ namespace NxEn
 	{
 	}
 
-	void Logger::Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...)
+	void Logger::Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...) const
 	{
 		if (Verbosity > VerbosityLevel)
 		{
@@ -43,10 +43,10 @@ namespace NxEn
 
 		Platform* Platform = Platform::GetInstance();
 
+		Platform::ConsoleColor Color = Colors[(uint8)Verbosity];
 		const char* DateString = Platform->GetTimestamp("%H:%M:%S");
 		const char* VerbosityString = VerbosityStrings[(uint8)Verbosity];
 		const char* SourceString = SourceStrings[(uint8)Source];
-		uint8 Color = Colors[(uint8)Verbosity];
 		
 		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
 		snprintf(Formatted, MaxChars, FormatString, DateString, SourceString, VerbosityString, Channel, Message);
@@ -55,7 +55,7 @@ namespace NxEn
 		Platform->WriteToOutput(Formatted);
 	}
 
-	void Logger::AddChannel(uint16 Channel, bool State)
+	void Logger::AddChannel(uint16 Channel, bool State /*true*/)
 	{
 		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %d", Channel)
 		Channels.emplace(Channel, State);

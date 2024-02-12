@@ -13,8 +13,20 @@ namespace NxEn
 	class Platform
 	{
 	public:
+		enum class ConsoleColor : uint8
+		{
+			White,
+			Black,
+			Red,
+			Green,
+			Blue,
+			Yellow,
+			Cyan,
+			Magenta
+		};
+
 		NEXUS_ENGINE_API virtual void WaitForUserToCloseConsole() const {};
-		NEXUS_ENGINE_API virtual void WriteToConsole(const char* Message, uint8 Color) const {};
+		NEXUS_ENGINE_API virtual void WriteToConsole(const char* Message, ConsoleColor Color = ConsoleColor::White) const {};
 		NEXUS_ENGINE_API virtual void WriteToOutput(const char* Message) const {};
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(const char* DllName, uint8 Ordinal) const {};
 		NEXUS_ENGINE_API virtual const char* GetTimestamp(const char* Format) const { return nullptr; };

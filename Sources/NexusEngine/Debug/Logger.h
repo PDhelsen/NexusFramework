@@ -28,9 +28,9 @@ namespace NxEn
 		NEXUS_ENGINE_API Logger(Verbosity Verbosity);
 		NEXUS_ENGINE_API ~Logger();
 		
-		NEXUS_ENGINE_API void Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...);
+		NEXUS_ENGINE_API void Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...) const;
 
-		NEXUS_ENGINE_API void AddChannel(uint16 Channel, bool State = false);
+		NEXUS_ENGINE_API void AddChannel(uint16 Channel, bool State = true);
 		NEXUS_ENGINE_API void SetChannel(uint16 Channel, bool State);
 		NEXUS_ENGINE_API bool HasChannel(uint16 Channel) const;
 		NEXUS_ENGINE_API bool CheckChannel(uint16 Channel) const;

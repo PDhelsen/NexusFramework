@@ -6,7 +6,8 @@
 namespace NxEn
 {
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-	static const char* ConsoleColors[16] = { "\033[30m", "\033[31m", "\033[32m", "\033[33m", "\033[34m", "\033[35m", "\033[36m", "\033[37m", "\033[40m", "\033[41m", "\033[42m", "\033[43m", "\033[44m", "\033[45m", "\033[46m", "\033[47m" };
+	// Keep synced with the enum in the Platform.h
+	static const char* ConsoleColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
 	static const char* ConsoleFormatReset = "\033[m";
 
 	// TEMP: Remove once we have string
@@ -18,9 +19,9 @@ namespace NxEn
 		std::cin.get();
 	}
 
-	void PlatformWindows::WriteToConsole(const char* Message, uint8 Color) const
+	void PlatformWindows::WriteToConsole(const char* Message, ConsoleColor Color /*ConsoleColor::White*/) const
 	{
-		std::cout << ConsoleColors[Color] << Message << ConsoleFormatReset;
+		std::cout << ConsoleColors[(uint8)Color] << Message << ConsoleFormatReset;
 	}
 
 	void PlatformWindows::WriteToOutput(const char* Message) const

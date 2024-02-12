@@ -10,7 +10,7 @@ namespace NxEn
 		friend Platform;
 
 		NEXUS_ENGINE_API void WaitForUserToCloseConsole() const override;
-		NEXUS_ENGINE_API void WriteToConsole(const char* Message, uint8 Color) const override;
+		NEXUS_ENGINE_API void WriteToConsole(const char* Message, ConsoleColor Color = ConsoleColor::White) const override;
 		NEXUS_ENGINE_API void WriteToOutput(const char* Message) const override;
 		NEXUS_ENGINE_API void ExecuteFromDll(const char* DllName, uint8 Ordinal) const override;
 		NEXUS_ENGINE_API const char* GetTimestamp(const char* Format) const override;
