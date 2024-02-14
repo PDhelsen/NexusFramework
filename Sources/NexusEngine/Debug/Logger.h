@@ -13,7 +13,6 @@ namespace NxEn
 	{
 	public:
 		// TODO: Change for flag instead of simple enum
-
 		enum class Verbosity : uint8
 		{
 			Fatal,

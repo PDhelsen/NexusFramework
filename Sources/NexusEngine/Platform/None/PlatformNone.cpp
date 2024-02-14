@@ -1,0 +1,34 @@
+#include "Core/NexusPch.h"
+#include "PlatformNone.h"
+
+namespace NxEn
+{
+    void PlatformNone::WaitForUserToCloseConsole() const
+    {
+    }
+
+    void PlatformNone::WriteToConsole(const char* Message, ConsoleColor Color) const
+    {
+    }
+
+    void PlatformNone::WriteToOutput(const char* Message) const
+    {
+    }
+
+    void PlatformNone::ExecuteFromDll(const char* DllName, uint8 Ordinal) const
+    {
+    }
+
+    const char* PlatformNone::GetTimestamp(const char* Format) const
+    {
+        return nullptr;
+    }
+
+    PlatformNone::PlatformNone()
+    {
+    }
+
+    PlatformNone::~PlatformNone()
+    {
+    }
+}

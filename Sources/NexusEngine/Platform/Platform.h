@@ -29,11 +29,11 @@ namespace NxEn
 			Magenta
 		};
 
-		NEXUS_ENGINE_API virtual void WaitForUserToCloseConsole() const {};
-		NEXUS_ENGINE_API virtual void WriteToConsole(const char* Message, ConsoleColor Color = ConsoleColor::White) const {};
-		NEXUS_ENGINE_API virtual void WriteToOutput(const char* Message) const {};
-		NEXUS_ENGINE_API virtual void ExecuteFromDll(const char* DllName, uint8 Ordinal) const {};
-		NEXUS_ENGINE_API virtual const char* GetTimestamp(const char* Format) const { return nullptr; };
+		NEXUS_ENGINE_API virtual void WaitForUserToCloseConsole() const = 0;
+		NEXUS_ENGINE_API virtual void WriteToConsole(const char* Message, ConsoleColor Color = ConsoleColor::White) const = 0;
+		NEXUS_ENGINE_API virtual void WriteToOutput(const char* Message) const = 0;
+		NEXUS_ENGINE_API virtual void ExecuteFromDll(const char* DllName, uint8 Ordinal) const = 0;
+		NEXUS_ENGINE_API virtual const char* GetTimestamp(const char* Format) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

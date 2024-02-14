@@ -1,6 +1,7 @@
 #include "Core/NexusPch.h"
 #include "Platform.h"
 
+#include "Platform/None/PlatformNone.h"
 #include "Platform/Windows/PlatformWindows.h"
 
 namespace NxEn
@@ -11,8 +12,8 @@ namespace NxEn
 	{
 #if NEXUS_WINDOWS
 		return new PlatformWindows();
+#else
+		return new PlatformNone();
 #endif
-		
-		return new Platform();
 	}
 }

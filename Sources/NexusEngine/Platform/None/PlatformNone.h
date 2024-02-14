@@ -5,10 +5,9 @@
 
 namespace NxEn
 {
-	// Windows implementation of the platform API
-	// Only Windows x64 is supported
+	// Empty implementation used when no platform are defined
 
-	class PlatformWindows : public Platform
+	class PlatformNone : public Platform
 	{
 		friend Platform;
 
@@ -22,10 +21,7 @@ namespace NxEn
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 
 	protected:
-		PlatformWindows();
-		~PlatformWindows();
-
-	private:
-		void InitializeConsole();
+		PlatformNone();
+		~PlatformNone();
 	};
 }
