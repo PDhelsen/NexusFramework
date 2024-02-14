@@ -1,10 +1,10 @@
 #pragma once
 
-// This file regroup the generic header file that needs to included into others header to work properly.
+// This file regroup the generic header file that needs to included into others header to work properly (for cpp files look at NexusPch.h).
 // This mainly concern file that either define macros or generic / standard type (int, string, containers, ... )
 // Also, pay attention to avoid circular dependency. The headers included here should not include header that include this file.
 // Keep this file to a minimun !!!
 
-#include "Types/Types.h"
+#include "Types/Integer.h"
 
 #include "Core/NexusEngine.h"

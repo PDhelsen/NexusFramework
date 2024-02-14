@@ -1,9 +1,9 @@
 #pragma once
 
 // This file is the base the include for the others dll (Editor, App, Project), it should never be include into a .h/.cpp in the engine project.
-// Add default / generic include that will be use for sure.
+// Add default / generic include that will be use for sure by others project.
 
-#include "Types/Types.h"
+#include "Types/Integer.h"
 
 #include "Core/NexusEngine.h"
 

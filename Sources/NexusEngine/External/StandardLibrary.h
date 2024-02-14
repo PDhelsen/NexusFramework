@@ -1,5 +1,7 @@
 #pragma once
 
+// All the needed standard library features should be included here
+
 #include <iostream>
 #include <ctime>
 
@@ -11,3 +13,5 @@
 
 // TEMP: Remove once we have custom dictionary
 #include <unordered_map>
+template<typename T, typename U>
+using Dictionary = std::unordered_map<T, U>;

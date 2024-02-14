@@ -1,14 +1,19 @@
 #pragma once 
 
 #include "Core/NexusCore.h"
+#include "External/StandardLibrary.h"
 
 namespace NxEn
 {
+	// Logger
+	// There is globally available logger. It is also possible to create local logger.
 	// Keep the Verbosity & Source enum sync with the const char array in the cpp file
+
 	class Logger
 	{
 	public:
 		// TODO: Change for flag instead of simple enum
+
 		enum class Verbosity : uint8
 		{
 			Fatal,

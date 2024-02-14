@@ -1,6 +1,9 @@
 #pragma once
 
-struct PlaftormTypesWindows
+// Define the bytes precision of the integer types.
+// This file define the Win64 integer type
+
+struct PlatformTypeIntegerWindows
 {
 	typedef	signed char			int8;
 	typedef signed short		int16;

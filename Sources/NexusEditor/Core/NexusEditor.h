@@ -1,5 +1,7 @@
 #pragma once
 
+// Global defines, macro, function, ...
+
 #if NEXUS_EDITOR_DLL_BUILD
 	#define NEXUS_EDITOR_API __declspec(dllexport)
 #else
