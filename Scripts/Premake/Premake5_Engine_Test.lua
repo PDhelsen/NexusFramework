@@ -188,3 +188,4 @@ project "NexusTest"
     {
         "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory}"
     }
+    
