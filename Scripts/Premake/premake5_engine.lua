@@ -33,6 +33,9 @@ group ""
 group "App"
 project "NexusApp"
 group ""
+group "Test"
+project "NexusTest"
+group ""
 
 project "NexusEngine"
     location "../../Sources/%{prj.name}/"
@@ -132,6 +135,53 @@ project "NexusApp"
     {
         "NexusEngine",
         "NexusEditor"
+    }
+
+    postbuildcommands 
+    {
+        "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory}"
+    }
+
+project "NexusTest"
+    location "../../Sources/%{prj.name}/"
+    
+    kind "ConsoleApp"
+    language "C++"
+	cppdialect "C++20"
+
+	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+
+    files
+    {
+        "../../Sources/%{prj.name}/**.h",
+        "../../Sources/%{prj.name}/**.cpp",
+
+        "../../Libraries/googletest-1.14.0/**.h",
+        "../../Libraries/googletest-1.14.0/**.cc"
+    }
+
+    removefiles 
+    { 
+        "../../Libraries/googletest-1.14.0/src/gtest-all.cc" 
+    }
+
+    includedirs
+    {
+        "../../Sources/%{prj.name}/",
+        "../../Sources/NexusEngine/",
+        "../../Sources/NexusEditor/",
+        "../../Sources/NexusApp/",
+
+        "../../Libraries/googletest-1.14.0/",
+        "../../Libraries/googletest-1.14.0/include/"
+    }
+
+    links
+    {
+        "NexusEngine",
+        "NexusEditor",
+        "NexusApp"
     }
 
     postbuildcommands 

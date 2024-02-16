@@ -17,6 +17,7 @@ robocopy ../builds %install%/Libraries/NexusEngine *.lib
 
 robocopy ../Assets %install%/Assets /e
 robocopy ../Config %install%/Config /e
+robocopy ../Libraries %install%/Libraries /e
 robocopy ../Scripts %install%/Scripts /e 
 robocopy ../Sources %install%/Sources /e /xf *.vcxproj *.vcxproj.user *.vcxproj.filters
 
