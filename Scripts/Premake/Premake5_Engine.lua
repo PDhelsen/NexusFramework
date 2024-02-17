@@ -47,8 +47,8 @@ project "NexusEngine"
 	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
-    pchheader "Core/NexusPch.h"
-	pchsource "../../Sources/%{prj.name}/Core/NexusPch.cpp"
+    pchheader "Core/NexusEnginePch.h"
+	pchsource "../../Sources/%{prj.name}/Core/NexusEnginePch.cpp"
 
     files
     {

@@ -1,4 +1,4 @@
-#include <gtest/gtest.h>
+#include "Core/NexusTestPch.h"
 
 #include "Platform/Platform.h"
 

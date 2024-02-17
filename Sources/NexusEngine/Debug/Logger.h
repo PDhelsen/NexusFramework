@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "Core/NexusCore.h"
+#include "Core/NexusEngineCore.h"
 #include "External/StandardLibrary.h"
 
 namespace NxEn

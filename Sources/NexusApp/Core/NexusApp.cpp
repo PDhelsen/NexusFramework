@@ -1,6 +1,6 @@
 #include "NexusApp.h"
 
-#include "Core/NexusBase.h"
+#include "Core/NexusEngineBase.h"
 #include "Core/NexusEditor.h"
 
 #include "Platform/Platform.h"

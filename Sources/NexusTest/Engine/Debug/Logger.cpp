@@ -1,6 +1,6 @@
-#include <gtest/gtest.h>
+#include "Core/NexusTestPch.h"
 
-#include "Core/NexusBase.h"
+#include "Debug/Logger.h"
 
 namespace NxTs
 {
