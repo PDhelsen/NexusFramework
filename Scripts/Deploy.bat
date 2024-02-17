@@ -14,10 +14,10 @@ del %archive%
 
 robocopy ../builds %install% *.exe *.dll
 robocopy ../builds %install%/Libraries/NexusEngine *.lib
+robocopy ../Libraries %install%/Libraries /e *.h *.cpp *.cc *.lib *.dll
 
 robocopy ../Assets %install%/Assets /e
 robocopy ../Config %install%/Config /e
-robocopy ../Libraries %install%/Libraries /e
 robocopy ../Scripts %install%/Scripts /e 
 robocopy ../Sources %install%/Sources /e /xf *.vcxproj *.vcxproj.user *.vcxproj.filters
 

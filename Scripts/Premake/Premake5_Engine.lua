@@ -36,6 +36,9 @@ group ""
 group "Test"
 project "NexusTest"
 group ""
+group "Libraries"
+project "GoogleTest"
+group ""
 
 project "NexusEngine"
     location "../../Sources/%{prj.name}/"
@@ -152,11 +155,51 @@ project "NexusTest"
 	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
+    pchheader "Core/NexusTestPch.h"
+	pchsource "../../Sources/%{prj.name}/Core/NexusTestPch.cpp"
+
     files
     {
         "../../Sources/%{prj.name}/**.h",
         "../../Sources/%{prj.name}/**.cpp",
+    }
 
+    includedirs
+    {
+        "../../Sources/%{prj.name}/",
+        "../../Sources/NexusEngine/",
+        "../../Sources/NexusEditor/",
+        "../../Sources/NexusApp/",
+
+        "../../Libraries/googletest-1.14.0/include/"
+    }
+
+    links
+    {
+        "NexusEngine",
+        "NexusEditor",
+        "NexusApp",
+        "GoogleTest"
+    }
+
+    postbuildcommands 
+    {
+        "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory}"
+    }
+    
+
+project "GoogleTest"
+    location "../../Libraries/googletest-1.14.0/"
+    
+    kind "StaticLib"
+    language "C++"
+	cppdialect "C++20"
+
+	targetdir ("../../Libraries/googletest-1.14.0/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../Libraries/googletest-1.14.0/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+
+    files
+    {
         "../../Libraries/googletest-1.14.0/**.h",
         "../../Libraries/googletest-1.14.0/**.cc"
     }
@@ -168,24 +211,6 @@ project "NexusTest"
 
     includedirs
     {
-        "../../Sources/%{prj.name}/",
-        "../../Sources/NexusEngine/",
-        "../../Sources/NexusEditor/",
-        "../../Sources/NexusApp/",
-
         "../../Libraries/googletest-1.14.0/",
         "../../Libraries/googletest-1.14.0/include/"
     }
-
-    links
-    {
-        "NexusEngine",
-        "NexusEditor",
-        "NexusApp"
-    }
-
-    postbuildcommands 
-    {
-        "../../Scripts/PostBuildCommandsEngine.bat %{cfg.buildtarget.directory}"
-    }
-    

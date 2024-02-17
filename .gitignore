@@ -1,10 +1,10 @@
 # Folder structure
 
-/binaries/
-/builds/
-/cook/
-/intermediates/
-/saved/
+**/binaries/
+**/builds/
+**/cook/
+**/intermediates/
+**/saved/
 
 # Visual Studio
 
