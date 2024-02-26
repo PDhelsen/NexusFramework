@@ -4,6 +4,7 @@
 // Add default / generic include that will be use for sure by others project.
 
 #include "Types/Integer.h"
+#include "Types/Flags.h"
 
 #include "Core/NexusEngine.h"
 

@@ -6,5 +6,6 @@
 // Keep this file to a minimun !!!
 
 #include "Types/Integer.h"
+#include "Types/Flags.h"
 
 #include "Core/NexusEngine.h"

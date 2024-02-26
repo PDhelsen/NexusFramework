@@ -7,6 +7,7 @@
 #include "External/StandardLibrary.h"
 
 #include "Types/Integer.h"
+#include "Types/Flags.h"
 
 #include "Core/NexusEngine.h"
 

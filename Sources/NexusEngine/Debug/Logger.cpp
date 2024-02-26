@@ -16,22 +16,24 @@ namespace NxEn
 	static char Resolved[MaxChars];
 	static char Formatted[MaxChars];
 
-	Logger* Logger::Instance = new Logger(Logger::Verbosity::Info);
+	Logger* Logger::Instance = new Logger(LoggerVerbosity::Info);
 
-	Logger::Logger(Verbosity Verbosity)
-		: VerbosityLevel(Verbosity)
+	Logger::Logger(LoggerVerbosity Verbosity)
+		: VerbosityMask(0)
 	{
 		Channels = Dictionary<uint16, bool>();
+
 		AddChannel(0, true);
+		SetVerbosity(Verbosity, true, true);
 	}
 
 	Logger::~Logger()
 	{
 	}
 
-	void Logger::Log(Source Source, Verbosity Verbosity, uint16 Channel, const char* Message, ...) const
+	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, uint16 Channel, const char* Message, ...) const
 	{
-		if (Verbosity > VerbosityLevel)
+		if (!CheckVerbosity(Verbosity))
 		{
 			return;
 		}
@@ -76,5 +78,24 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
 		return Channels.at(Channel);
+	}
+
+	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
+	{
+		return CheckBit(VerbosityMask, (uint8)Verbosity);
+	}
+
+	void Logger::SetVerbosity(LoggerVerbosity Verbosity, bool State, bool All /*false*/)
+	{
+		if (!All)
+		{
+			SetBit(VerbosityMask, (uint8)Verbosity, State);
+			return;
+		}
+
+		for (int8 Offset = (uint8)Verbosity; Offset >= 0; Offset--)
+		{
+			SetBit(VerbosityMask, (uint8)Offset, State);
+		}
 	}
 }
