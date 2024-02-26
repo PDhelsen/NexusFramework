@@ -8,8 +8,11 @@
 
 #include "Types/Integer.h"
 #include "Types/Flags.h"
+#include "Types/Timestamp.h"
 
 #include "Core/NexusEngine.h"
+
+#include "Application/Time.h"
 
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"

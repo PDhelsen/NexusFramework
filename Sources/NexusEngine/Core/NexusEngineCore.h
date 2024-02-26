@@ -5,7 +5,10 @@
 // Also, pay attention to avoid circular dependency. The headers included here should not include header that include this file.
 // Keep this file to a minimun !!!
 
+#include "External/StandardLibrary.h"
+
 #include "Types/Integer.h"
 #include "Types/Flags.h"
+#include "Types/Timestamp.h"
 
 #include "Core/NexusEngine.h"

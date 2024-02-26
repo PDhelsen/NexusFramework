@@ -19,11 +19,6 @@ namespace NxEn
     {
     }
 
-    const char* PlatformNone::GetTimestamp(const char* Format) const
-    {
-        return nullptr;
-    }
-
     PlatformNone::PlatformNone()
     {
     }

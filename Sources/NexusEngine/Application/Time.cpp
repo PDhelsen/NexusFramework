@@ -1,0 +1,45 @@
+#include "Core/NexusEnginePch.h"
+#include "Time.h"
+
+namespace NxEn
+{
+	Time* Time::Instance = new Time();
+
+	uint64 Time::GetTimeSinceEpoch() const
+	{
+		std::time_t Time;
+		time(&Time);
+		return uint64(Time);
+	}
+
+	Timestamp Time::Now() const
+	{
+		std::time_t Time;
+		std::tm TimeInfo;
+
+		time(&Time);
+		localtime_s(&TimeInfo, &Time);
+
+		Timestamp Stamp = 
+		{ 
+			.Seconds = TimeInfo.tm_sec,
+			.Minutes = TimeInfo.tm_min,
+			.Hours = TimeInfo.tm_hour,
+			.Days = TimeInfo.tm_mday,
+			.Months = TimeInfo.tm_mon,
+			.Year = TimeInfo.tm_year,
+			.WeekDay = TimeInfo.tm_wday,
+			.YearDay = TimeInfo.tm_yday,
+			.IsDayTime = TimeInfo.tm_isdst,
+		};
+		return Stamp;
+	}
+
+	Time::Time()
+	{
+	}
+
+	Time::~Time()
+	{
+	}
+}

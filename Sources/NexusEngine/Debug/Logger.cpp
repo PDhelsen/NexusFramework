@@ -6,6 +6,7 @@
 namespace NxEn
 {
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
+	static const char* DateString = "%02d:%02d:%02d";
 	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
 	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
@@ -13,6 +14,7 @@ namespace NxEn
 
 	// TEMP: Remove once we have string
 	static const uint16 MaxChars = 1024;
+	static char Date[MaxChars];
 	static char Resolved[MaxChars];
 	static char Formatted[MaxChars];
 
@@ -43,16 +45,16 @@ namespace NxEn
 			return;
 		}
 
-		Platform* Platform = Platform::GetInstance();
-
+		Timestamp Stamp = Time::GetInstance()->Now();
 		Platform::ConsoleColor Color = Colors[(uint8)Verbosity];
-		const char* DateString = Platform->GetTimestamp("%H:%M:%S");
 		const char* VerbosityString = VerbosityStrings[(uint8)Verbosity];
 		const char* SourceString = SourceStrings[(uint8)Source];
 		
 		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
-		snprintf(Formatted, MaxChars, FormatString, DateString, SourceString, VerbosityString, Channel, Message);
+		snprintf(Date, MaxChars, DateString, Stamp.Hours, Stamp.Minutes, Stamp.Seconds);
+		snprintf(Formatted, MaxChars, FormatString, Date, SourceString, VerbosityString, Channel, Message);
 
+		Platform* Platform = Platform::GetInstance();
 		Platform->WriteToConsole(Formatted, Color);
 		Platform->WriteToOutput(Formatted);
 	}

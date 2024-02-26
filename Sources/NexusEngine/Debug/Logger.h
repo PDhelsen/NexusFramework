@@ -1,7 +1,6 @@
 #pragma once 
 
 #include "Core/NexusEngineCore.h"
-#include "External/StandardLibrary.h"
 
 namespace NxEn
 {
@@ -19,10 +18,10 @@ namespace NxEn
 
 	enum class LoggerSource : uint8
 	{
-		Engine,
-		Editor,
-		App,
-		Project
+		Engine	= 0,
+		Editor	= 1,
+		App		= 2,
+		Project	= 3,
 	};
 
 	class Logger
