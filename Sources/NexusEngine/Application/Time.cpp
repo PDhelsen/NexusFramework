@@ -30,7 +30,7 @@ namespace NxEn
 			.Year = TimeInfo.tm_year,
 			.WeekDay = TimeInfo.tm_wday,
 			.YearDay = TimeInfo.tm_yday,
-			.IsDayTime = TimeInfo.tm_isdst,
+			.SummerTime = TimeInfo.tm_isdst,
 		};
 		return Stamp;
 	}

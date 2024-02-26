@@ -12,5 +12,5 @@ struct Timestamp
     int32 Year;
     int32 WeekDay;
     int32 YearDay;
-    int32 IsDayTime;
+    int32 SummerTime;
 };
