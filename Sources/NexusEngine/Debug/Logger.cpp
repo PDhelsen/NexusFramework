@@ -52,7 +52,7 @@ namespace NxEn
 		
 		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
 		snprintf(Date, MaxChars, DateString, Stamp.Hours, Stamp.Minutes, Stamp.Seconds);
-		snprintf(Formatted, MaxChars, FormatString, Date, SourceString, VerbosityString, Channel, Message);
+		snprintf(Formatted, MaxChars, FormatString, Date, SourceString, VerbosityString, Channel, Resolved);
 
 		Platform* Platform = Platform::GetInstance();
 		Platform->WriteToConsole(Formatted, Color);
