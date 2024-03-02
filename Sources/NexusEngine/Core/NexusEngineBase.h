@@ -7,6 +7,8 @@
 #include "Types/Flags.h"
 #include "Types/Timestamp.h"
 
+#include "Memory/Memory.h"
+
 #include "Core/NexusEngine.h"
 
 #include "Application/Time.h"

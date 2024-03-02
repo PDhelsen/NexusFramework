@@ -35,6 +35,12 @@ namespace NxEn
 
 	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, uint16 Channel, const char* Message, ...) const
 	{
+		Platform* Platform = Platform::GetInstance();
+		if (Platform == nullptr)
+		{
+			return;
+		}
+
 		if (!CheckVerbosity(Verbosity))
 		{
 			return;
@@ -54,7 +60,6 @@ namespace NxEn
 		snprintf(Date, MaxChars, DateString, Stamp.Hours, Stamp.Minutes, Stamp.Seconds);
 		snprintf(Formatted, MaxChars, FormatString, Date, SourceString, VerbosityString, Channel, Resolved);
 
-		Platform* Platform = Platform::GetInstance();
 		Platform->WriteToConsole(Formatted, Color);
 		Platform->WriteToOutput(Formatted);
 	}
