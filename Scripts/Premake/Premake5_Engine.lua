@@ -198,6 +198,8 @@ project "GoogleTest"
 	targetdir ("../../Libraries/googletest-1.14.0/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 	objdir ("../../Libraries/googletest-1.14.0/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
+    disablewarnings { "26495", "26439" }
+
     files
     {
         "../../Libraries/googletest-1.14.0/**.h",

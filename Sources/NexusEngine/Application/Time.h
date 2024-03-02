@@ -10,7 +10,7 @@ namespace NxEn
 	class Time
 	{
 	public:
-		NEXUS_ENGINE_API uint64 GetTimeSinceEpoch() const;
+		NEXUS_ENGINE_API int64 GetTimeSinceEpoch() const;
 		NEXUS_ENGINE_API Timestamp Now() const;
 
 		NEXUS_ENGINE_API inline static Time* GetInstance() { return Instance; }

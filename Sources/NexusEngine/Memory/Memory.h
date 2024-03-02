@@ -5,6 +5,9 @@
 
 namespace NxEn
 {
+	// Memory
+	// Static class that provide global function to handle memory (malloc / free, operator, placement new)
+
 	class Memory
 	{
 	public:

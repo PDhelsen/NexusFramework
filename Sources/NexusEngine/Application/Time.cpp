@@ -5,19 +5,19 @@ namespace NxEn
 {
 	Time* Time::Instance = new Time();
 
-	uint64 Time::GetTimeSinceEpoch() const
+	int64 Time::GetTimeSinceEpoch() const
 	{
-		std::time_t Time;
+		int64 Time;
 		time(&Time);
-		return uint64(Time);
+		return Time;
 	}
 
 	Timestamp Time::Now() const
 	{
-		std::time_t Time;
+		int64 Time = GetTimeSinceEpoch();
+		
+		//TODO: Replace by custom implementation
 		std::tm TimeInfo;
-
-		time(&Time);
 		localtime_s(&TimeInfo, &Time);
 
 		Timestamp Stamp = 
