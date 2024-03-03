@@ -1,7 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "Memory.h"
 
-
 namespace NxEn
 {
 	void* Memory::Malloc(uint64 Size)
@@ -30,10 +29,10 @@ namespace NxEn
 		free(Memory);
 	}
 
-	void Memory::MemSet(void* Memory, int32 Value, uint64 Size)
+	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{
 		NEXUS_ASSERT(Memory != nullptr, "Trying to set value (%d) to null address", Value);
-		NEXUS_ASSERT(Size <= 0, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size);
 		
 		memset(Memory, Value, Size);
 	}
@@ -42,35 +41,8 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Source != nullptr, "Trying to copy memory from null address");
 		NEXUS_ASSERT(Destination != nullptr, "Trying to copy memory to null address");
-		NEXUS_ASSERT(Size <= 0, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size);
 
 		memcpy(Destination, Source, Size);
 	}
 }
-
-#pragma warning(push)
-#pragma warning(disable: 6387)
-#pragma warning(disable: 28196)
-#pragma warning(disable: 28251)
-
-void* operator new(size_t Size)
-{
-	return NxEn::Memory::Malloc(Size);
-}
-
-void* operator new[](size_t Size)
-{
-	return NxEn::Memory::Malloc(Size);
-}
-
-void operator delete(void* Memory)
-{
-	NxEn::Memory::Free(Memory);
-}
-
-void operator delete[](void* Memory)
-{
-	NxEn::Memory::Free(Memory);
-}
-
-#pragma warning(pop)

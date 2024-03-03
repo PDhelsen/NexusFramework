@@ -75,4 +75,31 @@ namespace NxTs
 		}
 		NxEn::Memory::DeallocateArray<MemoryTest>(TestArray, 10);
 	}
+
+	TEST(Memory, SetCopy)
+	{
+		uint8* Test = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
+		NxEn::Memory::MemSet(Test, 5, 10);
+		for (int32 Index = 0; Index < 10; Index++)
+		{
+			ASSERT_EQ(Test[Index], 5);
+		}
+
+		uint8* Copy = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
+		NxEn::Memory::MemCopy(Test, Copy, 10);
+		for (int32 Index = 0; Index < 10; Index++)
+		{
+			ASSERT_EQ(Copy[Index], 5);
+		}
+
+		NxEn::Memory::Free(Test);
+		NxEn::Memory::Free(Copy);
+	}
+
+	TEST(Memory, Operator)
+	{
+		MemoryTest* Test = new MemoryTest();
+		ASSERT_NE(Test, nullptr);
+		delete Test;
+	}
 }

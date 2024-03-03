@@ -11,6 +11,7 @@
 #include "Types/Timestamp.h"
 
 #include "Memory/Memory.h"
+#include "Memory/MemoryOperatorDeclaration.h"
 
 #include "Core/NexusEngine.h"
 

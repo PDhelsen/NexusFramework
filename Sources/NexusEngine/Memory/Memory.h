@@ -29,7 +29,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static void* Realloc(void* Memory, uint64 Size);
 		NEXUS_ENGINE_API static void Free(void* Memory);
 
-		NEXUS_ENGINE_API static void MemSet(void* Memory, int32 Value, uint64 Size);
+		NEXUS_ENGINE_API static void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_ENGINE_API static void MemCopy(void* Source, void* Destination, uint64 Size);
 	};
 
@@ -86,15 +86,3 @@ namespace NxEn
 		Object->~T();
 	}
 }
-
-#pragma warning(push)
-#pragma warning(disable: 6387)
-#pragma warning(disable: 28196)
-#pragma warning(disable: 28251)
-
-void* operator new (size_t Size);
-void* operator new[](size_t Size);
-void operator delete(void* Memory);
-void operator delete[](void* Memory);
-
-#pragma warning(pop)
