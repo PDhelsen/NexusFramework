@@ -10,24 +10,23 @@ namespace NxTs
 		MemoryTest()
 		{
 			Value = 120;
-		}
-
-		MemoryTest(int32 V)
-		{
-			Value = V;
+			Test = 15;
 		}
 
 		MemoryTest(const MemoryTest& Other)
 		{
 			Value = Other.Value;
+			Test = Other.Test;
 		}
 
 		~MemoryTest()
 		{
 			Value = -1;
+			Test = 0;
 		}
 
 		int32 Value;
+		int32 Test;
 	};
 
 	TEST(Memory, MallocReallocFree)
