@@ -13,8 +13,17 @@ namespace NxEn
 	public:
 		template<typename T, typename... Args>
 		static T* Allocate(Args&&... args);
+		template<typename T, typename... Args>
+		static T* AllocateArray(uint32 Count, Args&&... args);
 		template<typename T>
 		static void Deallocate(T* Object);
+		template<typename T>
+		static void DeallocateArray(T* Object, uint32 Count);
+		
+		template<typename T, typename... Args>
+		static T* Construct(void* Pointer, Args&&... args);
+		template<typename T>
+		static void Destruct(T* Object);
 
 		NEXUS_ENGINE_API static void* Malloc(uint64 Size);
 		NEXUS_ENGINE_API static void* Realloc(void* Memory, uint64 Size);
@@ -25,16 +34,54 @@ namespace NxEn
 	};
 
 	template<typename T, typename... Args>
-	inline T* Memory::Allocate(Args&&... args)
+	T* Memory::Allocate(Args&&... args)
 	{
-		void* RawPtr = Malloc(sizeof(T));
-		T* TypedPtr = new (RawPtr) T(args...);
-		NEXUS_ASSERT(TypedPtr != nullptr, "Pointer is null");
-		return TypedPtr;
+		T* Pointer = (T*)Malloc(sizeof(T));
+		return Construct<T>(Pointer, args...);
+	}
+
+	template<typename T, typename... Args>
+	T* Memory::AllocateArray(uint32 Count, Args&&... args)
+	{
+		T* Pointer = (T*)Malloc(sizeof(T) * Count);
+
+		T* Offset = Pointer;
+		for (uint32 Index = 0; Index < Count; Index++)
+		{
+			Construct<T>(Offset++, args...);
+		}
+		
+		return (T*)Pointer;
 	}
 
 	template<typename T>
-	inline void Memory::Deallocate(T* Object)
+	void Memory::Deallocate(T* Object)
+	{
+		Destruct<T>(Object);
+		Free(Object);
+	}
+
+	template<typename T>
+	void Memory::DeallocateArray(T* Object, uint32 Count)
+	{
+		for (uint32 Index = 0; Index < Count; Index++)
+		{
+			Destruct<T>(&Object[Index]);
+		}
+		Free(Object);
+	}
+
+	template<typename T, typename... Args>
+	T* Memory::Construct(void* Pointer, Args&&... args)
+	{
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
+		T* Object = new (Pointer) T(args...);
+		NEXUS_ASSERT(Object != nullptr, "Object is null");
+		return Object;
+	}
+
+	template<typename T>
+	void Memory::Destruct(T* Object)
 	{
 		Object->~T();
 	}
