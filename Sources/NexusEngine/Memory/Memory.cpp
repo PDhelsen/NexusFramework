@@ -6,17 +6,17 @@ namespace NxEn
 	void* Memory::Malloc(uint64 Size)
 	{
 		NEXUS_ASSERT(Size > 0, "Allocation Size is 0");
-		void* Ptr = malloc(Size);
-		NEXUS_ASSERT(Ptr != nullptr, "Pointer is null");
-		return Ptr;
+		void* Pointer = malloc(Size);
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		return Pointer;
 	}
 
 	void* Memory::Realloc(void* Memory, uint64 Size)
 	{
 		NEXUS_ASSERT(Size > 0, "Allocation Size is 0");
-		void* Ptr = realloc(Memory, Size);
-		NEXUS_ASSERT(Ptr != nullptr, "Pointer is null");
-		return Ptr;
+		void* Pointer = realloc(Memory, Size);
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		return Pointer;
 	}
 
 	void Memory::Free(void* Memory)
