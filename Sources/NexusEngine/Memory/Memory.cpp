@@ -29,6 +29,50 @@ namespace NxEn
 		free(Memory);
 	}
 
+	uint64 Memory::AlignAddress(uint64 Address, uint64 Alignement)
+	{
+		uint64 Mask = Alignement - 1;
+		NEXUS_ASSERT((Alignement & Mask) == 0, "Alignement should be power of 2");
+		return (Address + Mask) & ~Mask;
+	}
+
+	void* Memory::AlignPointer(void* Pointer, uint64 Alignement)
+	{
+		uint64 RawAddress = reinterpret_cast<uint64>(Pointer);
+
+		uint64 AlignedAddress = AlignAddress(RawAddress, Alignement);
+		if (RawAddress == AlignedAddress)
+		{
+			AlignedAddress += Alignement;
+		}
+
+		uint64 Shift = AlignedAddress - RawAddress;
+		NEXUS_ASSERT(Shift > 0 && Shift <= 256, "Shift is too large");
+
+		uint8* MemoryBlock = reinterpret_cast<uint8*>(AlignedAddress);
+		MemoryBlock[-1] = static_cast<uint8>(Shift & 0xFF);
+
+		return reinterpret_cast<void*>(AlignedAddress);
+	}
+
+	void* Memory::UnalignPointer(void* Pointer)
+	{
+		if (Pointer == nullptr)
+		{
+			return nullptr;
+		}
+
+		uint8* AlignedPointer = reinterpret_cast<uint8*>(Pointer);
+		
+		uint8 Shift = AlignedPointer[-1];
+		NEXUS_ASSERT(Shift > 0 && Shift <= 256, "Shift is too large");
+	
+		uint64 AlignAddress = reinterpret_cast<uint64>(Pointer);
+		uint64 RawAddress = AlignAddress - Shift;
+
+		return reinterpret_cast<void*>(RawAddress);
+	}
+
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{
 		NEXUS_ASSERT(Memory != nullptr, "Trying to set value (%d) to null address", Value);

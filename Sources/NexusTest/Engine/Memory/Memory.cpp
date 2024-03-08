@@ -102,4 +102,30 @@ namespace NxTs
 		ASSERT_NE(Test, nullptr);
 		delete Test;
 	}
+
+	TEST(Memory, Alignement)
+	{
+		const uint8 Alignement = 8;
+
+		void* Pointer = new uint64();
+
+		uint64 RawAddress = reinterpret_cast<uint64>(Pointer);
+		uint64 AlignedAddress = NxEn::Memory::AlignAddress(RawAddress, Alignement);
+		if (RawAddress == AlignedAddress)
+		{
+			AlignedAddress += Alignement;
+		}
+
+		void* AlignedPointer = NxEn::Memory::AlignPointer(Pointer, Alignement);
+		ASSERT_EQ(reinterpret_cast<uint64>(AlignedPointer), AlignedAddress);
+
+		uint8* MemoryBlock = reinterpret_cast<uint8*>(AlignedPointer);
+		uint8 Shift = MemoryBlock[-1];
+		ASSERT_EQ(Shift, Alignement);
+
+		void* UnalignedPointer = NxEn::Memory::UnalignPointer(AlignedPointer);
+		ASSERT_EQ(reinterpret_cast<uint64>(UnalignedPointer), reinterpret_cast<uint64>(Pointer));
+	
+		delete Pointer;
+	}
 }
