@@ -1,6 +1,7 @@
 #include "Core/NexusTestPch.h"
 
 #include "Memory/Memory.h"
+#include "Memory/Allocator/StackAllocator.h"
 
 namespace NxTs
 {
@@ -127,5 +128,34 @@ namespace NxTs
 		ASSERT_EQ(reinterpret_cast<uint64>(UnalignedPointer), reinterpret_cast<uint64>(Pointer));
 	
 		delete Pointer;
+	}
+
+	TEST(Memory, StackAllocator)
+	{
+		NxEn::StackAllocator* Allocator = new NxEn::StackAllocator(512);
+
+		bool* Test1 = (bool*)Allocator->Allocate(sizeof(bool), alignof(bool));
+		*Test1 = true;
+		ASSERT_EQ(Allocator->FreeAmount(), 510);
+
+		int16* Test2 = (int16*)Allocator->Allocate(sizeof(int16), alignof(int16));
+		*Test2 = 8;
+		ASSERT_EQ(Allocator->FreeAmount(), 506);
+
+		int32* Test3 = (int32*)Allocator->Allocate(sizeof(int32), alignof(int32));
+		*Test3 = 255;
+		ASSERT_EQ(Allocator->FreeAmount(), 500);
+
+		Allocator->Free(Test2);
+		ASSERT_EQ(Allocator->FreeAmount(), 510);
+
+		int64* Test4 = (int64*)Allocator->Allocate(sizeof(int64), alignof(int64));
+		*Test4 = 1024;
+		ASSERT_EQ(Allocator->FreeAmount(), 496);
+
+		Allocator->Free(Test1);
+		ASSERT_EQ(Allocator->FreeAmount(), 512);
+
+		delete Allocator;
 	}
 }

@@ -72,6 +72,13 @@ namespace NxEn
 
 		return reinterpret_cast<void*>(RawAddress);
 	}
+	
+	void* Memory::OffsetPointer(void* Pointer, uint64 Offset)
+	{
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		Address += Offset;
+		return reinterpret_cast<void*>(Address);
+	}
 
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{
