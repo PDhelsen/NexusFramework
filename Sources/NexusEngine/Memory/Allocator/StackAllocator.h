@@ -15,6 +15,9 @@ namespace NxEn
         NEXUS_ENGINE_API virtual void Free(void* Pointer);
         NEXUS_ENGINE_API virtual void Clear();
 
+        NEXUS_ENGINE_API virtual bool CanFit(uint64 Size, uint64 Alignement) const;
+        NEXUS_ENGINE_API virtual bool ValidAddress(void* Pointer) const;
+
     private:
         void UpdateAmount();
 

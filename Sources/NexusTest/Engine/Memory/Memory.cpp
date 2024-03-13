@@ -156,6 +156,20 @@ namespace NxTs
 		Allocator->Free(Test1);
 		ASSERT_EQ(Allocator->FreeAmount(), 512);
 
+		int32* Test5 = (int32*)Allocator->Allocate(sizeof(int32) * 5, alignof(int32));
+		Test5[0] = 5;
+		Test5[1] = 4;
+		Test5[2] = 3;
+		Test5[3] = 2;
+		Test5[4] = 1;
+		ASSERT_EQ(Allocator->FreeAmount(), 488);
+
+		Allocator->Free(Test5);
+		ASSERT_EQ(Allocator->FreeAmount(), 512);
+
+		ASSERT_EQ(Allocator->CanFit(256, 16), true);
+		ASSERT_EQ(Allocator->CanFit(512, 16), false);
+
 		delete Allocator;
 	}
 }
