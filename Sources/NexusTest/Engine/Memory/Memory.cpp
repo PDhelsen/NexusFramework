@@ -168,8 +168,8 @@ namespace NxTs
 		Allocator->Clear();
 		ASSERT_EQ(Allocator->FreeAmount(), 512);
 
-		ASSERT_EQ(Allocator->CanFit(256, 16), true);
-		ASSERT_EQ(Allocator->CanFit(512, 16), false);
+		ASSERT_EQ(Allocator->CanAllocate(256, 16), true);
+		ASSERT_EQ(Allocator->CanAllocate(512, 16), false);
 
 		delete Allocator;
 	}
