@@ -16,7 +16,7 @@ namespace NxEn
 	
 	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(CanFit(Size, Alignement), "Stack Allocator Overflow");
+		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Stack Allocator Overflow");
 
 		void* Pointer = Memory::AlignPointer(Marker, Alignement);
 		Marker = Memory::OffsetPointer(Pointer, Size);
@@ -45,7 +45,7 @@ namespace NxEn
 #endif
 	}
 
-	bool StackAllocator::CanFit(uint64 Size, uint64 Alignement) const
+	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 		uint64 Aligned = Memory::AlignAddress(Current, Alignement);
@@ -63,6 +63,8 @@ namespace NxEn
 
 	bool StackAllocator::ValidAddress(void* Pointer) const
 	{
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 

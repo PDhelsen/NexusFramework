@@ -15,7 +15,7 @@ namespace NxEn
         NEXUS_ENGINE_API void Free(void* Pointer);
         NEXUS_ENGINE_API void Clear();
 
-        NEXUS_ENGINE_API bool CanFit(uint64 Size, uint64 Alignement) const;
+        NEXUS_ENGINE_API bool CanAllocate(uint64 Size, uint64 Alignement) const;
         NEXUS_ENGINE_API bool ValidAddress(void* Pointer) const;
 
     private:
