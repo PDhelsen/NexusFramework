@@ -85,6 +85,6 @@ namespace NxEn
 		uint64 Start = reinterpret_cast<uint64>(GetPointer());
 		uint64 End = Start + TotalAmount();
 
-		return Address > Start && Address < End;
+		return Address >= Start && Address < End;
 	}
 }
