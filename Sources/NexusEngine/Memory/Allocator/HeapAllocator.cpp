@@ -27,20 +27,17 @@ namespace NxEn
 		uint64 NextAddress = MemoryAddress + Size;
 
 		bool AddHeapSlot = Slot->Next == nullptr;
-		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress > sizeof(HeapSlot) + NEXUS_HEAP_ALIGN);
+		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_HEAP_ALIGN);
 
 		HeapSlot* NewHeapSlot = nullptr;
 		if (AddHeapSlot || InsertHeapSlot)
 		{
 			NewHeapSlot = reinterpret_cast<HeapSlot*>(NextAddress);
-			NewHeapSlot->Previous = Slot;
 			NewHeapSlot->Next = InsertHeapSlot ? Slot->Next : nullptr;
-			NewHeapSlot->Size = Slot->Size - Size - sizeof(HeapSlot);
 			NewHeapSlot->Free = true;
 		}
 
 		Slot->Next = AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
-		Slot->Size = Size;
 		Slot->Free = false;
 
 		UpdateAmount(Size, true);
@@ -60,28 +57,18 @@ namespace NxEn
 		Address -= sizeof(HeapSlot);
 
 		HeapSlot* Slot = reinterpret_cast<HeapSlot*>(Address);
+		uint64 Size = GetHeapSlotSize(Slot);
 		Slot->Free = true;
 
-		EraseMemory(Pointer, Slot->Size);
-		UpdateAmount(Slot->Size, false);
+		EraseMemory(Pointer, Size);
+		UpdateAmount(Size, false);
 
 		if (Slot->Next != nullptr && Slot->Next->Free)
 		{
 			HeapSlot* Next = Slot->Next;
-			Slot->Size += Next->Size + sizeof(HeapSlot);
 			Slot->Next = Next->Next;
 
 			EraseMemory(Next, sizeof(HeapSlot));
-			UpdateAmount(sizeof(HeapSlot), false);
-		}
-
-		if (Slot->Previous != nullptr && Slot->Previous->Free)
-		{
-			HeapSlot* Previous = Slot->Previous;
-			Previous->Size += Slot->Size + sizeof(HeapSlot);
-			Previous->Next = Slot->Next;
-
-			EraseMemory(Slot, sizeof(HeapSlot));
 			UpdateAmount(sizeof(HeapSlot), false);
 		}
 	}
@@ -92,9 +79,7 @@ namespace NxEn
 		ResetAmount();
 
 		Root = (HeapSlot*)GetMemoryBlock();
-		Root->Previous = nullptr;
 		Root->Next = nullptr;
-		Root->Size = TotalAmount() - sizeof(HeapSlot);
 		Root->Free = true;
 
 		UpdateAmount(sizeof(HeapSlot), true);
@@ -119,17 +104,10 @@ namespace NxEn
 		return Address >= Start && Address < End;
 	}
 
-	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
-	{
-		uint64 UnalignedBytes = Size % NEXUS_HEAP_ALIGN;
-		Size += UnalignedBytes == 0 ? 0 : NEXUS_HEAP_ALIGN - UnalignedBytes;
-		return Size;
-	}
-
 	HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
 		HeapSlot* Slot = Root;
-		while (!Slot->Free || Slot->Size < Size)
+		while (!Slot->Free || GetHeapSlotSize(Slot) < Size)
 		{
 			Slot = Slot->Next;
 
@@ -140,5 +118,27 @@ namespace NxEn
 		}
 
 		return Slot;
+	}
+
+	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
+	{
+		uint64 UnalignedBytes = Size % NEXUS_HEAP_ALIGN;
+		Size += UnalignedBytes == 0 ? 0 : NEXUS_HEAP_ALIGN - UnalignedBytes;
+		return Size;
+	}
+
+	uint64 HeapAllocator::GetHeapSlotSize(HeapSlot* Slot) const
+	{
+		uint64 Size = 0;
+		if (Slot->Next != nullptr)
+		{
+			Size = reinterpret_cast<uint64>(Slot->Next) - reinterpret_cast<uint64>(Slot);
+		}
+		else
+		{
+			Size = reinterpret_cast<uint64>(GetMemoryBlock()) + TotalAmount() - reinterpret_cast<uint64>(Slot);
+		}
+
+		return Size - sizeof(HeapSlot);
 	}
 }

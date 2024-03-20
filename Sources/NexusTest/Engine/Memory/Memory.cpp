@@ -245,13 +245,13 @@ namespace NxTs
 	{
 		NxEn::HeapAllocator* Allocator = new NxEn::HeapAllocator(512);
 
-		ASSERT_EQ(Allocator->UsedAmount(), 32);
+		ASSERT_EQ(Allocator->UsedAmount(), 16);
 
 		MemoryTest* Test1 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest));
 		Test1->Value = 1;
 		Test1->Test = 0xffffffff;
 
-		ASSERT_EQ(Allocator->UsedAmount(), 80);
+		ASSERT_EQ(Allocator->UsedAmount(), 48);
 
 		MemoryTest* Test2 = (MemoryTest*)Allocator->Allocate(2 * sizeof(MemoryTest));
 		Test2[0].Value = 2;
@@ -259,43 +259,43 @@ namespace NxTs
 		Test2[1].Value = 2;
 		Test2[1].Test = 0xffffffff;
 
-		ASSERT_EQ(Allocator->UsedAmount(), 128);
+		ASSERT_EQ(Allocator->UsedAmount(), 80);
 
 		MemoryTest* Test3 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest));
 		Test3->Value = 3;
 		Test3->Test = 0xffffffff;
 
-		ASSERT_EQ(Allocator->UsedAmount(), 176);
+		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
 		Allocator->Free(Test2);
 
-		ASSERT_EQ(Allocator->UsedAmount(), 160);
+		ASSERT_EQ(Allocator->UsedAmount(), 96);
 
 		Allocator->Free(Test1);
 
-		ASSERT_EQ(Allocator->UsedAmount(), 112);
+		ASSERT_EQ(Allocator->UsedAmount(), 64);
 
 		MemoryTest* Test4 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest));
 		Test4->Value = 4;
 		Test4->Test = 0xffffffff;
 
-		ASSERT_EQ(Allocator->UsedAmount(), 128);
+		ASSERT_EQ(Allocator->UsedAmount(), 96);
 
 		MemoryTest* Test5 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest));
 		Test5->Value = 5;
 		Test5->Test = 0xffffffff;
 
-		ASSERT_EQ(Allocator->UsedAmount(), 176);
+		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
 		Allocator->Clear();
 		
-		ASSERT_EQ(Allocator->UsedAmount(), 32);
+		ASSERT_EQ(Allocator->UsedAmount(), 16);
 
 		MemoryTest* Test6 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest));
 		Test6->Value = 6;
 		Test6->Test = 0xffffffff;
 		
-		ASSERT_EQ(Allocator->UsedAmount(), 80);
+		ASSERT_EQ(Allocator->UsedAmount(), 48);
 
 		delete Allocator;
 	}

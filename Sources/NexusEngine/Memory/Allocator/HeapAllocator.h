@@ -16,9 +16,7 @@ namespace NxEn
 
     struct HeapSlot
     {
-        HeapSlot* Previous;
         HeapSlot* Next;
-        uint64 Size;
         bool Free;
     };
 
@@ -36,8 +34,9 @@ namespace NxEn
         NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const;
 
     private:
-        uint64 GetAlignedSize(uint64 Size) const;
         HeapSlot* GetHeapSlot(uint64 Size) const;
+        uint64 GetAlignedSize(uint64 Size) const;
+        uint64 GetHeapSlotSize(HeapSlot* Slot) const;
 
         HeapSlot* Root;
     };
