@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Types/Integer.h"
 #include "Allocator.h"
 
 namespace NxEn
@@ -26,11 +26,11 @@ namespace NxEn
         NEXUS_ENGINE_API HeapAllocator(uint64 Size);
         NEXUS_ENGINE_API ~HeapAllocator();
 
-        NEXUS_ENGINE_API void* Allocate(uint64 Size);
+        NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = 0) override;
         NEXUS_ENGINE_API void Free(void* Pointer);
         NEXUS_ENGINE_API void Clear();
 
-        NEXUS_ENGINE_API bool CanAllocate(uint64 Size) const;
+        NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = 0) const override;
         NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const;
 
     private:

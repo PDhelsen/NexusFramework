@@ -9,6 +9,9 @@
 
 #include "Memory/Memory.h"
 #include "Memory/MemoryOperatorDeclaration.h"
+#include "Memory/Allocator/StackAllocator.h"
+#include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Allocator/PoolAllocator.h"
 
 #include "Core/NexusEngine.h"
 

@@ -3,6 +3,48 @@
 
 namespace NxEn
 {
+	StackAllocator* Memory::Stack = new StackAllocator(NEXUS_STACK_SIZE);
+	HeapAllocator* Memory::Heap = new HeapAllocator(NEXUS_HEAP_SIZE);
+
+	Allocator* Memory::Active = NEXUS_ALLOCATOR_DEFAULT;
+
+	void* Memory::Allocate(uint64 Size, uint64 Alignement, Allocator* Allocator)
+	{
+		if (Allocator != nullptr)
+		{
+			return Allocator->Allocate(Size, Alignement);
+		}
+		else
+		{
+			return Malloc(Size);
+		}
+	}
+
+	void* Memory::Realloc(void* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator)
+	{
+		if (Allocator != nullptr)
+		{
+			Allocator->Free(Pointer);
+			return Allocator->Allocate(Size, Alignement);
+		}
+		else
+		{
+			return Realloc(Pointer, Size);
+		}
+	}
+
+	void Memory::Free(void* Pointer, Allocator* Allocator)
+	{
+		if (Allocator != nullptr)
+		{
+			Allocator->Free(Pointer);
+		}
+		else
+		{
+			Free(Pointer);
+		}
+	}
+	
 	void* Memory::Malloc(uint64 Size)
 	{
 		NEXUS_ASSERT(Size > 0, "Allocation Size is 0")

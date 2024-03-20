@@ -13,7 +13,7 @@ namespace NxEn
 	{
 	}
 	
-	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
+	void* StackAllocator::Allocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */)
 	{
 		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Stack Allocator Overflow")
 
@@ -51,7 +51,7 @@ namespace NxEn
 		Marker = GetMemoryBlock();
 	}
 
-	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	bool StackAllocator::CanAllocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */) const
 	{
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 		uint64 Aligned = Memory::AlignAddress(Current, Alignement);

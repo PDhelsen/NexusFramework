@@ -3,8 +3,6 @@
 
 namespace NxEn
 {
-#define NEXUS_HEAP_ALIGN 16
-
 	HeapAllocator::HeapAllocator(uint64 Size)
 		: Allocator(Size)
 	{
@@ -15,7 +13,7 @@ namespace NxEn
 	{
 	}
 
-	void* HeapAllocator::Allocate(uint64 Size)
+	void* HeapAllocator::Allocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */)
 	{
 		Size = GetAlignedSize(Size);
 		HeapSlot* Slot = GetHeapSlot(Size);
@@ -27,7 +25,7 @@ namespace NxEn
 		uint64 NextAddress = MemoryAddress + Size;
 
 		bool AddHeapSlot = Slot->Next == nullptr;
-		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_HEAP_ALIGN);
+		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
 
 		HeapSlot* NewHeapSlot = nullptr;
 		if (AddHeapSlot || InsertHeapSlot)
@@ -85,7 +83,7 @@ namespace NxEn
 		UpdateAmount(sizeof(HeapSlot), true);
 	}
 
-	bool HeapAllocator::CanAllocate(uint64 Size) const
+	bool HeapAllocator::CanAllocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */) const
 	{
 		Size = GetAlignedSize(Size);
 		return GetHeapSlot(Size) != nullptr;
@@ -94,7 +92,7 @@ namespace NxEn
 	bool HeapAllocator::IsValidAddress(void* Pointer) const
 	{
 		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
-		NEXUS_ASSERT(reinterpret_cast<uint64>(Pointer) % NEXUS_HEAP_ALIGN == 0, "Pointer is not aligned")
+		NEXUS_ASSERT(reinterpret_cast<uint64>(Pointer) % NEXUS_MEMORY_ALIGN == 0, "Pointer is not aligned")
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
@@ -122,8 +120,8 @@ namespace NxEn
 
 	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
 	{
-		uint64 UnalignedBytes = Size % NEXUS_HEAP_ALIGN;
-		Size += UnalignedBytes == 0 ? 0 : NEXUS_HEAP_ALIGN - UnalignedBytes;
+		uint64 UnalignedBytes = Size % NEXUS_MEMORY_ALIGN;
+		Size += UnalignedBytes == 0 ? 0 : NEXUS_MEMORY_ALIGN - UnalignedBytes;
 		return Size;
 	}
 

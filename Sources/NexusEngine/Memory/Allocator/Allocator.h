@@ -1,14 +1,30 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Types/Integer.h"
 
 namespace NxEn
 {
 	// Base class for custom allocator
 
+	class Allocator;
+
+	struct AllocatorActive
+	{
+	public:
+		NEXUS_ENGINE_API AllocatorActive(Allocator* Allocator);
+		NEXUS_ENGINE_API ~AllocatorActive();
+	};
+
 	class Allocator
 	{
 	public:
+		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size = 0, uint64 Alignement = 0) = 0;
+		NEXUS_ENGINE_API virtual void Free(void* Pointer) = 0;
+		NEXUS_ENGINE_API virtual void Clear() = 0;
+
+		NEXUS_ENGINE_API virtual bool CanAllocate(uint64 Size = 0, uint64 Alignement = 0) const = 0;
+		NEXUS_ENGINE_API virtual bool IsValidAddress(void* Pointer) const = 0;
+
 		NEXUS_ENGINE_API bool IsFull() const { return Usage() > 0.95f; };
 		NEXUS_ENGINE_API float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }
 

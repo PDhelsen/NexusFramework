@@ -3,6 +3,16 @@
 
 namespace NxEn
 {
+	AllocatorActive::AllocatorActive(Allocator* Allocator)
+	{
+		Memory::SetActiveAllocator(Allocator);
+	}
+
+	AllocatorActive::~AllocatorActive()
+	{
+		Memory::SetActiveAllocator(NEXUS_ALLOCATOR_DEFAULT);
+	}
+
 	Allocator::Allocator(uint64 Size)
 		: Capacity(Size), Amount(0)
 	{

@@ -9,12 +9,12 @@
 
 void* operator new(std::size_t Size)
 {
-	return NxEn::Memory::Malloc(Size);
+	return NxEn::Memory::Allocate(Size, NEXUS_MEMORY_ALIGN, NxEn::Memory::GetActiveAllocator());
 }
 
 void* operator new[](std::size_t Size)
 {
-	return NxEn::Memory::Malloc(Size);
+	return NxEn::Memory::Allocate(Size, NEXUS_MEMORY_ALIGN, NxEn::Memory::GetActiveAllocator());
 }
 
 void* operator new(std::size_t Size, std::align_val_t Align)
@@ -55,12 +55,12 @@ void* operator new[](std::size_t Size, std::align_val_t Alignement, const std::n
 
 void operator delete(void* Pointer)
 {
-	NxEn::Memory::Free(Pointer);
+	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
 }
 
 void operator delete[](void* Pointer)
 {
-	NxEn::Memory::Free(Pointer);
+	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
 }
 
 void operator delete(void* Pointer, std::align_val_t Align)
@@ -75,12 +75,12 @@ void operator delete[](void* Pointer, std::align_val_t Align)
 
 void operator delete(void* Pointer, std::size_t sz)
 {
-	NxEn::Memory::Free(Pointer);
+	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
 }
 
 void operator delete[](void* Pointer, std::size_t sz)
 {
-	NxEn::Memory::Free(Pointer);
+	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
 }
 
 void operator delete(void* Pointer, std::size_t sz, std::align_val_t Alignement)

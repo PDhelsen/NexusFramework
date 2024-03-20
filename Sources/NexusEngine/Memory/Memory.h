@@ -3,27 +3,33 @@
 #include "Core/NexusEngine.h"
 #include "Debug/Assert.h"
 
+#include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/StackAllocator.h"
+#include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Allocator/PoolAllocator.h"
+
 namespace NxEn
 {
 	// Memory
 	// Static class that provide global function to handle memory (malloc / free, operator, placement new)
 
+#define NEXUS_MEMORY_ALIGN 16
+
+#define NEXUS_ALLOCATOR_DEFAULT NxEn::Memory::GetHeap()
+#define NEXUS_STACK_SIZE 1024
+#define NEXUS_HEAP_SIZE 1024 * 1024
+
 	class Memory
 	{
 	public:
 		template<typename T, typename... Args>
-		static T* Allocate(Args&&... args);
-		template<typename T, typename... Args>
-		static T* AllocateArray(uint32 Count, Args&&... args);
-		template<typename T>
-		static void Deallocate(T* Object);
-		template<typename T>
-		static void DeallocateArray(T* Object, uint32 Count);
-		
-		template<typename T, typename... Args>
 		static T* Construct(void* Pointer, Args&&... args);
 		template<typename T>
 		static void Destruct(T* Object);
+
+		NEXUS_ENGINE_API static void* Allocate(uint64 Size, uint64 Alignement, Allocator* Allocator);
+		NEXUS_ENGINE_API static void* Realloc(void* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator);
+		NEXUS_ENGINE_API static void Free(void* Pointer, Allocator* Allocator);
 
 		NEXUS_ENGINE_API static void* Malloc(uint64 Size);
 		NEXUS_ENGINE_API static void* Realloc(void* Memory, uint64 Size);
@@ -36,45 +42,19 @@ namespace NxEn
 
 		NEXUS_ENGINE_API static void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_ENGINE_API static void MemCopy(void* Source, void* Destination, uint64 Size);
+
+		NEXUS_ENGINE_API static void SetActiveAllocator(Allocator* Allocator) { Active = Allocator; }
+		NEXUS_ENGINE_API static Allocator* GetActiveAllocator() { return Active; }
+
+		NEXUS_ENGINE_API static StackAllocator* GetStack() { return Stack; }
+		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return Heap; }
+
+	private:
+		static StackAllocator* Stack;
+		static HeapAllocator* Heap;
+
+		static Allocator* Active;
 	};
-
-	template<typename T, typename... Args>
-	T* Memory::Allocate(Args&&... args)
-	{
-		T* Pointer = (T*)Malloc(sizeof(T));
-		return Construct<T>(Pointer, args...);
-	}
-
-	template<typename T, typename... Args>
-	T* Memory::AllocateArray(uint32 Count, Args&&... args)
-	{
-		T* Pointer = (T*)Malloc(sizeof(T) * Count);
-
-		T* Offset = Pointer;
-		for (uint32 Index = 0; Index < Count; Index++)
-		{
-			Construct<T>(Offset++, args...);
-		}
-		
-		return (T*)Pointer;
-	}
-
-	template<typename T>
-	void Memory::Deallocate(T* Object)
-	{
-		Destruct<T>(Object);
-		Free(Object);
-	}
-
-	template<typename T>
-	void Memory::DeallocateArray(T* Object, uint32 Count)
-	{
-		for (uint32 Index = 0; Index < Count; Index++)
-		{
-			Destruct<T>(&Object[Index]);
-		}
-		Free(Object);
-	}
 
 	template<typename T, typename... Args>
 	T* Memory::Construct(void* Pointer, Args&&... args)

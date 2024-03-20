@@ -64,19 +64,11 @@ namespace NxTs
 		NxEn::Memory::Free(Test);
 	}
 
-
-	TEST(Memory, AllocateDeallocate)
+	TEST(Memory, Operator)
 	{
-		MemoryTest* Test = NxEn::Memory::Allocate<MemoryTest>();
-		ASSERT_EQ(Test->Value, 120);
-		NxEn::Memory::Deallocate<MemoryTest>(Test);
-
-		MemoryTest* TestArray = NxEn::Memory::AllocateArray<MemoryTest>(uint32(10));
-		for (int32 Index = 0; Index < 10; Index++)
-		{
-			ASSERT_EQ(TestArray[Index].Value, 120);
-		}
-		NxEn::Memory::DeallocateArray<MemoryTest>(TestArray, 10);
+		MemoryTest* Test = new MemoryTest();
+		ASSERT_NE(Test, nullptr);
+		delete Test;
 	}
 
 	TEST(Memory, SetCopy)
@@ -97,13 +89,6 @@ namespace NxTs
 
 		NxEn::Memory::Free(Test);
 		NxEn::Memory::Free(Copy);
-	}
-
-	TEST(Memory, Operator)
-	{
-		MemoryTest* Test = new MemoryTest();
-		ASSERT_NE(Test, nullptr);
-		delete Test;
 	}
 
 	TEST(Memory, Alignement)
