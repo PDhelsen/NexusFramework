@@ -6,8 +6,7 @@ namespace NxEn
 	StackAllocator::StackAllocator(uint64 Size)
 		: Allocator(Size)
 	{
-		Marker = GetPointer();
-		UpdateAmount();
+		Clear();
 	}
 
 	StackAllocator::~StackAllocator()
@@ -16,33 +15,40 @@ namespace NxEn
 	
 	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Stack Allocator Overflow");
+		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Stack Allocator Overflow")
+
+		uint64 Before = reinterpret_cast<uint64>(Marker);
 
 		void* Pointer = Memory::AlignPointer(Marker, Alignement);
 		Marker = Memory::OffsetPointer(Pointer, Size);
-		UpdateAmount();
+		
+		uint64 After = reinterpret_cast<uint64>(Marker);
+
+		UpdateAmount(After - Before, true);
 		
 		return Pointer;
 	}
 
 	void StackAllocator::Free(void* Pointer)
 	{
-		NEXUS_ASSERT(ValidAddress(Pointer), "Address is outside of the stack");
+		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside of the stack")
+
+		uint64 Before = reinterpret_cast<uint64>(Marker);
 
 		Marker = Memory::UnalignPointer(Pointer);
-		UpdateAmount();
-#if NEXUS_DEBUG
-		Memory::MemSet(Marker, 0, FreeAmount());
-#endif
+
+		uint64 After = reinterpret_cast<uint64>(Marker);
+
+		UpdateAmount(Before - After, false);
+		EraseMemory(Marker, FreeAmount());
 	}
 
 	void StackAllocator::Clear()
 	{
-		Marker = GetPointer();
-		UpdateAmount();
-#if NEXUS_DEBUG
-		Memory::MemSet(Marker, 0, FreeAmount());
-#endif
+		WipeoutMemory();
+		ResetAmount();
+
+		Marker = GetMemoryBlock();
 	}
 
 	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
@@ -55,29 +61,22 @@ namespace NxEn
 		}
 		uint64 Address = Aligned + Size;
 
-		uint64 Start = reinterpret_cast<uint64>(GetPointer());
+		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
 		uint64 End = Start + TotalAmount();
 
 		return Address < End;
 	}
 
-	bool StackAllocator::ValidAddress(void* Pointer) const
+	bool StackAllocator::IsValidAddress(void* Pointer) const
 	{
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 
-		uint64 Start = reinterpret_cast<uint64>(GetPointer());
+		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
 		uint64 End = Start + TotalAmount();
 
 		return Address < Current && Address >= Start && Address < End;
-	}
-
-	void StackAllocator::UpdateAmount()
-	{
-		uint64 Start = reinterpret_cast<uint64>(GetPointer());
-		uint64 Current = reinterpret_cast<uint64>(Marker);
-		SetAmount(Current - Start);
 	}
 }

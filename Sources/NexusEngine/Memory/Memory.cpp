@@ -5,17 +5,17 @@ namespace NxEn
 {
 	void* Memory::Malloc(uint64 Size)
 	{
-		NEXUS_ASSERT(Size > 0, "Allocation Size is 0");
+		NEXUS_ASSERT(Size > 0, "Allocation Size is 0")
 		void* Pointer = malloc(Size);
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
 		return Pointer;
 	}
 
 	void* Memory::Realloc(void* Memory, uint64 Size)
 	{
-		NEXUS_ASSERT(Size > 0, "Allocation Size is 0");
+		NEXUS_ASSERT(Size > 0, "Allocation Size is 0")
 		void* Pointer = realloc(Memory, Size);
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
 		return Pointer;
 	}
 
@@ -32,7 +32,7 @@ namespace NxEn
 	uint64 Memory::AlignAddress(uint64 Address, uint64 Alignement)
 	{
 		uint64 Mask = Alignement - 1;
-		NEXUS_ASSERT((Alignement & Mask) == 0, "Alignement should be power of 2");
+		NEXUS_ASSERT((Alignement & Mask) == 0, "Alignement should be power of 2")
 		return (Address + Mask) & ~Mask;
 	}
 
@@ -47,7 +47,7 @@ namespace NxEn
 		}
 
 		uint64 Shift = AlignedAddress - RawAddress;
-		NEXUS_ASSERT(Shift > 0 && Shift <= 256, "Shift is too large");
+		NEXUS_ASSERT(Shift > 0 && Shift <= 256, "Shift is too large")
 
 		uint8* MemoryBlock = reinterpret_cast<uint8*>(AlignedAddress);
 		MemoryBlock[-1] = static_cast<uint8>(Shift & 0xFF);
@@ -65,7 +65,7 @@ namespace NxEn
 		uint8* AlignedPointer = reinterpret_cast<uint8*>(Pointer);
 		
 		uint8 Shift = AlignedPointer[-1];
-		NEXUS_ASSERT(Shift > 0 && Shift <= 256, "Shift is too large");
+		NEXUS_ASSERT(Shift > 0 && Shift <= 256, "Shift is too large")
 	
 		uint64 AlignAddress = reinterpret_cast<uint64>(Pointer);
 		uint64 RawAddress = AlignAddress - Shift;
@@ -82,17 +82,17 @@ namespace NxEn
 
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{
-		NEXUS_ASSERT(Memory != nullptr, "Trying to set value (%d) to null address", Value);
-		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Memory != nullptr, "Trying to set value (%d) to null address", Value)
+		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size)
 		
 		memset(Memory, Value, Size);
 	}
 
 	void Memory::MemCopy(void* Source, void* Destination, uint64 Size)
 	{
-		NEXUS_ASSERT(Source != nullptr, "Trying to copy memory from null address");
-		NEXUS_ASSERT(Destination != nullptr, "Trying to copy memory to null address");
-		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Source != nullptr, "Trying to copy memory from null address")
+		NEXUS_ASSERT(Destination != nullptr, "Trying to copy memory to null address")
+		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size)
 
 		memcpy(Destination, Source, Size);
 	}

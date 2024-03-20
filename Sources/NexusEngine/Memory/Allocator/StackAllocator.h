@@ -5,6 +5,10 @@
 
 namespace NxEn
 {
+    // Stack allocator
+    // Return aligned pointer from pre-allocated memory
+    // Last object allocated need to be the first de-allocated
+
     class StackAllocator : public Allocator
     {
     public:
@@ -16,11 +20,9 @@ namespace NxEn
         NEXUS_ENGINE_API void Clear();
 
         NEXUS_ENGINE_API bool CanAllocate(uint64 Size, uint64 Alignement) const;
-        NEXUS_ENGINE_API bool ValidAddress(void* Pointer) const;
+        NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const;
 
     private:
-        void UpdateAmount();
-
         void* Marker;
     };
 }

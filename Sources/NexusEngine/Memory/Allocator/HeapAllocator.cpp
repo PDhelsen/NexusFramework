@@ -8,29 +8,23 @@ namespace NxEn
 	HeapAllocator::HeapAllocator(uint64 Size)
 		: Allocator(Size)
 	{
-		Root = (HeapSlot*)GetPointer();
-		Root->Previous = nullptr;
-		Root->Next = nullptr;
-		Root->Size = Size;
-		Root->Free = true;
-
-		SetAmount(sizeof(HeapSlot));
+		Clear();
 	}
 
 	HeapAllocator::~HeapAllocator()
 	{
 	}
-	
+
 	void* HeapAllocator::Allocate(uint64 Size)
 	{
 		uint64 UnalignedBytes = Size % NEXUS_HEAP_ALIGN;
 		Size += UnalignedBytes == 0 ? 0 : NEXUS_HEAP_ALIGN - UnalignedBytes;
-		SetAmount(UsedAmount() + Size);
+		UpdateAmount(Size, true);
 
 		Size += sizeof(HeapSlot);
 
 		HeapSlot* Slot = GetHeapSlot(Size);
-		NEXUS_ASSERT(Slot != nullptr, "Failed to find a big enough heap slot");
+		NEXUS_ASSERT(Slot != nullptr, "Failed to find a big enough heap slot")
 
 		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
 		uint64 PointerAddress = HeapSlotAddress + sizeof(HeapSlot);
@@ -48,7 +42,7 @@ namespace NxEn
 			Slot->Size = Size;
 			Slot->Free = false;
 
-			SetAmount(UsedAmount() + sizeof(HeapSlot));
+			UpdateAmount(sizeof(HeapSlot), true);
 		}
 		else
 		{
@@ -67,7 +61,7 @@ namespace NxEn
 				Slot->Size = Size;
 				Slot->Free = false;
 
-				SetAmount(UsedAmount() + sizeof(HeapSlot));
+				UpdateAmount(sizeof(HeapSlot), true);
 			}
 			else
 			{
@@ -75,16 +69,12 @@ namespace NxEn
 			}
 		}
 
-		// Since the memory pointer is aligned on 16 bytes and the HeapSlot is 32 bytes long,
-		// Any address just after the heapslot is aligned on 16 bytes (32 = 16 * 2)
-		// It should look like :
-		// Root (16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + ... 
 		return reinterpret_cast<void*>(PointerAddress);
 	}
 
 	void HeapAllocator::Free(void* Pointer)
 	{
-		NEXUS_ASSERT(ValidAddress(Pointer), "Address is outside ouf the heap");
+		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside ouf the heap")
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		Address -= sizeof(HeapSlot);
@@ -92,11 +82,8 @@ namespace NxEn
 		HeapSlot* Slot = reinterpret_cast<HeapSlot*>(Address);
 		Slot->Free = true;
 
-		SetAmount(UsedAmount() - (Slot->Size - sizeof(HeapSlot)));
-
-#if NEXUS_DEBUG
-		Memory::MemSet(Pointer, 0, Slot->Size - sizeof(HeapSlot));
-#endif
+		EraseMemory(Pointer, Slot->Size - sizeof(HeapSlot));
+		UpdateAmount((Slot->Size - sizeof(HeapSlot)), false);
 
 		if (Slot->Next != nullptr && Slot->Next->Free)
 		{
@@ -104,11 +91,8 @@ namespace NxEn
 			Slot->Size += Next->Size;
 			Slot->Next = Next->Next;
 
-			SetAmount(UsedAmount() - sizeof(HeapSlot));
-
-#if NEXUS_DEBUG
-			Memory::MemSet(Next, 0, sizeof(HeapSlot));
-#endif
+			EraseMemory(Next, sizeof(HeapSlot));
+			UpdateAmount(sizeof(HeapSlot), false);
 		}
 
 		if (Slot->Previous != nullptr && Slot->Previous->Free)
@@ -117,27 +101,23 @@ namespace NxEn
 			Previous->Size += Slot->Size;
 			Previous->Next = Slot->Next;
 
-			SetAmount(UsedAmount() - sizeof(HeapSlot));
-
-#if NEXUS_DEBUG
-			Memory::MemSet(Slot, 0, sizeof(HeapSlot));
-#endif
+			EraseMemory(Slot, sizeof(HeapSlot));
+			UpdateAmount(sizeof(HeapSlot), false);
 		}
 	}
 
 	void HeapAllocator::Clear()
 	{
-#if NEXUS_DEBUG
-		Memory::MemSet(Root, 0, TotalAmount());
-#endif
+		WipeoutMemory();
+		ResetAmount();
 
-		Root = (HeapSlot*)GetPointer();
+		Root = (HeapSlot*)GetMemoryBlock();
 		Root->Previous = nullptr;
 		Root->Next = nullptr;
 		Root->Size = TotalAmount();
 		Root->Free = true;
 
-		SetAmount(sizeof(HeapSlot));
+		UpdateAmount(sizeof(HeapSlot), true);
 	}
 
 	bool HeapAllocator::CanAllocate(uint64 Size) const
@@ -149,20 +129,20 @@ namespace NxEn
 		return GetHeapSlot(Size) != nullptr;
 	}
 	
-	bool HeapAllocator::ValidAddress(void* Pointer) const
+	bool HeapAllocator::IsValidAddress(void* Pointer) const
 	{
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
-		NEXUS_ASSERT(reinterpret_cast<uint64>(Pointer) % NEXUS_HEAP_ALIGN == 0, "Pointer is not aligned");
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
+		NEXUS_ASSERT(reinterpret_cast<uint64>(Pointer) % NEXUS_HEAP_ALIGN == 0, "Pointer is not aligned")
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		uint64 Start = reinterpret_cast<uint64>(GetPointer());
+		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
 		uint64 End = Start + TotalAmount();
 
 		return Address >= Start && Address < End;
 	}
 
-	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
+	HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
 		HeapSlot* Slot = Root;
 		while (!Slot->Free || Slot->Size < Size)
