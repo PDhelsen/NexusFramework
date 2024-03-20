@@ -9,8 +9,8 @@ namespace NxEn
     // General purpose allocator return an aligned pointer
     // The memory book keeping is handle by the HeapSlot struct stored just before the returned memory pointer
 
-    // Since the memory pointer is aligned on 16 bytes and the HeapSlot is 32 bytes long,
-    // Any address just after the heapslot is aligned on 16 bytes (32 = 16 * 2)
+    // Since the memory pointer is aligned on 16 bytes and the HeapSlot is 16 bytes long,
+    // Any address just after the heapslot is aligned on 16 bytes
     // It should look like :
     // Root (16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + ... 
 
