@@ -36,6 +36,7 @@ namespace NxEn
         NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const;
 
     private:
+        uint64 GetAlignedSize(uint64 Size) const;
         HeapSlot* GetHeapSlot(uint64 Size) const;
 
         HeapSlot* Root;
