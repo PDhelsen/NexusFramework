@@ -26,9 +26,7 @@ namespace NxEn
 
 	void Allocator::WipeoutMemory()
 	{
-#if NEXUS_DEBUG
 		Memory::MemSet(Memory, 0, Capacity);
-#endif
 	}
 
 	void Allocator::EraseMemory(void* Memory, uint64 Size)

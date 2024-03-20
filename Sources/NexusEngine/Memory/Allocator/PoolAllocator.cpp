@@ -25,7 +25,7 @@ namespace NxEn
 		void* Pointer = Head;
 		
 		Head = reinterpret_cast<uint64*>(*Head);
-		if (*Head == 0)
+		if (Head != nullptr && *Head == 0)
 		{
 			*Head = reinterpret_cast<uint64>(Head) + Stride;
 		}
