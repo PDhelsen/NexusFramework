@@ -284,4 +284,25 @@ namespace NxTs
 
 		delete Allocator;
 	}
+
+	TEST(Memory, ActiveAllocator)
+	{
+		NxEn::HeapAllocator* Allocator = new NxEn::HeapAllocator(512);
+
+		{
+			NxEn::AllocatorActive Active(Allocator);
+
+			MemoryTest* Test1 = new MemoryTest();
+			Test1->Value = 1;
+			Test1->Test = 0xffffffff;
+
+			ASSERT_EQ(Allocator->UsedAmount(), 48);
+
+			delete Test1;
+
+			ASSERT_EQ(Allocator->UsedAmount(), 16);
+		}
+
+		delete Allocator;
+	}
 }
