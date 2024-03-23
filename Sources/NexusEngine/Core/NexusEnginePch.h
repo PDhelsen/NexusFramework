@@ -15,6 +15,7 @@
 #include "Memory/Allocator/StackAllocator.h"
 #include "Memory/Allocator/HeapAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
+#include "Memory/Handle/Handle.h"
 
 #include "Core/NexusEngine.h"
 

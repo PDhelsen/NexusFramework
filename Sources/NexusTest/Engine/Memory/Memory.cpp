@@ -4,6 +4,7 @@
 #include "Memory/Allocator/StackAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 #include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Handle/HandleManager.h"
 
 namespace NxTs
 {
@@ -304,5 +305,28 @@ namespace NxTs
 		}
 
 		delete Allocator;
+	}
+
+	TEST(Memory, Handle)
+	{
+		MemoryTest* Test1 = new MemoryTest();
+		MemoryTest* Test2 = new MemoryTest();
+
+		NxEn::Handle<MemoryTest> Handle = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test1);
+		ASSERT_EQ(Handle.IsValid(), true);
+		ASSERT_EQ(&Handle->Value, &Test1->Value);
+
+		Handle->Value = 1;
+		Handle->Test = 0xffffffff;
+
+		NxEn::HandleManager::GetInstance()->UpdateHandle<MemoryTest>(Handle, Test2);
+		ASSERT_EQ(Handle.IsValid(), true);
+		ASSERT_EQ(&Handle->Value, &Test2->Value);
+
+		Handle->Value = 2;
+		Handle->Test = 0xffffffff;
+
+		NxEn::HandleManager::GetInstance()->ReleaseHandle<MemoryTest>(Handle);
+		ASSERT_EQ(Handle.IsValid(), false);
 	}
 }
