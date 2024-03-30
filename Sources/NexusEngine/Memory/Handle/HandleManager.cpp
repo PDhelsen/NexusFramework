@@ -32,7 +32,7 @@ namespace NxEn
 		Pool.Free(Handle);
 	}
 
-	// TODO: Improve algo to retreive handle
+	// TODO: Optimization - Algo - Improve to retreive handle
 	void* HandleManager::GetHandle(void* Pointer)
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);

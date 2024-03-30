@@ -12,7 +12,7 @@
 									Function;\
 									va_end(ArgList);
 
-// TEMP: Remove once we have custom dictionary
+// TEMP: Remove - Datastructure - Once we have custom dictionary
 #include <unordered_map>
 template<typename T, typename U>
 using Dictionary = std::unordered_map<T, U>;

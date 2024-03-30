@@ -12,7 +12,7 @@ namespace NxEn
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
 	static Platform::ConsoleColor Colors[4] = { Platform::ConsoleColor::Magenta, Platform::ConsoleColor::Red, Platform::ConsoleColor::Yellow, Platform::ConsoleColor::White };
 
-	// TEMP: Remove once we have string
+	// TEMP: Remove - String - Once we have string
 	static const uint16 MaxChars = 1024;
 	static char Date[MaxChars];
 	static char Resolved[MaxChars];

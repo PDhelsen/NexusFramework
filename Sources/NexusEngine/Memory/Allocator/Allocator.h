@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types/Integer.h"
+#include "Core/NexusEngineCore.h"
 
 namespace NxEn
 {
@@ -49,7 +49,7 @@ namespace NxEn
 		uint64 Capacity;
 		void* Memory;
 
-		// TEMP: Remove once HandleManager replace PoolAllocator by data structure
+		// TEMP: Remove - Datastructure - Once HandleManager replace PoolAllocator by data structure
 		friend class HandleManager;
 	};
 }

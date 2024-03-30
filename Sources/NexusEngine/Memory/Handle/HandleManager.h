@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Core/NexusEngineCore.h"
-#include "Memory/Handle/Handle.h"
 #include "Memory/Allocator/PoolAllocator.h"
 
 namespace NxEn
@@ -29,7 +28,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
-		// TEMP: Replace by a data structure
+		// TEMP: Replace - Datastructure - Custom data structure
 		PoolAllocator Pool;
 
 		static HandleManager* Instance;

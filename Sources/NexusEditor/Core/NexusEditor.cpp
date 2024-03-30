@@ -1,7 +1,7 @@
 #include "NexusEditor.h"
+#include "Memory/MemoryOperatorImplementation.h"
 
 #include "Core/NexusEngineBase.h"
-#include "Memory/MemoryOperatorImplementation.h"
 
 namespace NxEd
 {

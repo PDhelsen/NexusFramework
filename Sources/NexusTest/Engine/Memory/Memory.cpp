@@ -1,9 +1,11 @@
 #include "Core/NexusTestPch.h"
 
 #include "Memory/Memory.h"
+#include "Memory/MemoryOperatorDeclaration.h"
 #include "Memory/Allocator/StackAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 #include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Handle/Handle.h"
 #include "Memory/Handle/HandleManager.h"
 
 namespace NxTs

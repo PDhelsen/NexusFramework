@@ -1,6 +1,6 @@
 #pragma once
 
-// TODO: Enum & Flags improve macro 
+// TODO: Implementation - Enum & Flags - Improve macro 
 // Add support for count, to string
 // See if there is something else
 

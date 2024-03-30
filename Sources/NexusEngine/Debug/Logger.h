@@ -43,7 +43,7 @@ namespace NxEn
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
 
 	private:
-		// TEMP: Replace int key by string once we have string
+		// TEMP: Replace - String - Custom string
 		Dictionary<uint16, bool> Channels;
 		uint8 VerbosityMask;
 

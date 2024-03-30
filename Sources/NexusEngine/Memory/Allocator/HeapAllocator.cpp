@@ -1,5 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "HeapAllocator.h"
+
 #include "Memory/Handle/HandleManager.h"
 
 namespace NxEn
@@ -103,6 +104,7 @@ namespace NxEn
 		return Address >= Start && Address < End;
 	}
 
+	// TODO: Optimization - Algo - Improve to defragment memory
 	void HeapAllocator::Defragment()
 	{
 		NEXUS_LOG(Engine, Info, 0, "Starting defragmentation (Current amount : %d)", UsedAmount());
