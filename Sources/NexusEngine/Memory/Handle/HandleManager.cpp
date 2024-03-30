@@ -31,4 +31,22 @@ namespace NxEn
 	{
 		Pool.Free(Handle);
 	}
+
+	// TODO: Improve algo to retreive handle
+	void* HandleManager::GetHandle(void* Pointer)
+	{
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+
+		uint64* Memory = (uint64*)Pool.GetMemoryBlock();
+		for (int i = 0; i < NEXUS_HANDLE_COUNT; i++)
+		{
+			uint64 Handle = Memory[i];
+			if (Address == Handle)
+			{
+				return &Memory[i];
+			}
+		}
+
+		return nullptr;
+	}
 }

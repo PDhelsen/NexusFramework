@@ -16,7 +16,7 @@ namespace NxEn
 	{
 		int64 Time = GetTimeSinceEpoch();
 		
-		//TODO: Replace by custom implementation
+		// TODO: Replace by custom implementation
 		std::tm TimeInfo;
 		localtime_s(&TimeInfo, &Time);
 

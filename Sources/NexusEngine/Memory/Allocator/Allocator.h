@@ -48,6 +48,9 @@ namespace NxEn
 		uint64 Amount;
 		uint64 Capacity;
 		void* Memory;
+
+		// TEMP: Remove once HandleManager replace PoolAllocator by data structure
+		friend class HandleManager;
 	};
 }
 

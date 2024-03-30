@@ -328,5 +328,71 @@ namespace NxTs
 
 		NxEn::HandleManager::GetInstance()->ReleaseHandle<MemoryTest>(Handle);
 		ASSERT_EQ(Handle.IsValid(), false);
+
+		delete Test1;
+		delete Test2;
+	}
+
+	TEST(Memory, Defragmentation)
+	{
+		NxEn::HeapAllocator* Heap = new NxEn::HeapAllocator(512);
+		
+		Heap->Defragment();
+
+		MemoryTest* Test1 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test1->Value = 1;
+		Test1->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle1 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test1);
+
+		MemoryTest* Test2 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test2->Value = 2;
+		Test2->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle2 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test2);
+
+		MemoryTest* Test3 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test3->Value = 3;
+		Test3->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle3 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test3);
+
+		MemoryTest* Test4 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test4->Value = 4;
+		Test4->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle4 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test4);
+
+		MemoryTest* Test5 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test5->Value = 5;
+		Test5->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle5 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test5);
+
+		MemoryTest* Test6 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test6->Value = 6;
+		Test6->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle6 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test6);
+
+		MemoryTest* Test7 = (MemoryTest*)Heap->Allocate(sizeof(MemoryTest));
+		Test7->Value = 7;
+		Test7->Test = 0xffffffff;
+		NxEn::Handle<MemoryTest> Handle7 = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test7);
+
+		Heap->Free(NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle2));
+		Heap->Free(NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle4));
+		Heap->Free(NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle5));
+
+		uint64 StartAmount = Heap->UsedAmount();
+		Heap->Defragment();
+		Heap->Defragment();
+		uint64 EndAmount = Heap->UsedAmount();
+
+		ASSERT_EQ(Handle3->Value, 3);
+		ASSERT_EQ(Handle6->Value, 6);
+		ASSERT_EQ(Handle7->Value, 7);
+		ASSERT_EQ(StartAmount > EndAmount, true);
+
+		NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle1);
+		NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle3);
+		NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle6);
+		NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle7);
+
+		delete Heap;
 	}
 }

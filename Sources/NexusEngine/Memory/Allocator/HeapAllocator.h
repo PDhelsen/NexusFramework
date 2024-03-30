@@ -33,10 +33,13 @@ namespace NxEn
         NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = 0) const override;
         NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const;
 
+        NEXUS_ENGINE_API void Defragment();
+
     private:
         HeapSlot* GetHeapSlot(uint64 Size) const;
         uint64 GetAlignedSize(uint64 Size) const;
         uint64 GetHeapSlotSize(HeapSlot* Slot) const;
+        uint8* GetHeapSlotData(HeapSlot* Slot) const;
 
         HeapSlot* Root;
     };

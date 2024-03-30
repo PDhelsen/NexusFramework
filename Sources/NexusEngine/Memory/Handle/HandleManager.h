@@ -14,7 +14,9 @@ namespace NxEn
 		template<typename T>
 		void UpdateHandle(Handle<T>& Handle, T* Pointer);
 		template<typename T>
-		void ReleaseHandle(Handle<T>& Handle);
+		void* ReleaseHandle(Handle<T>& Handle);
+		template<typename T>
+		Handle<T> FindHandle(T* Pointer);
 
 		NEXUS_ENGINE_API static HandleManager* GetInstance() { return Instance; }
 
@@ -25,7 +27,9 @@ namespace NxEn
 		NEXUS_ENGINE_API void* AllocateHandle(void* Pointer);
 		NEXUS_ENGINE_API void ModifyHandle(void* Handle, void* Pointer);
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
+		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
+		// TEMP: Replace by a data structure
 		PoolAllocator Pool;
 
 		static HandleManager* Instance;
@@ -46,9 +50,19 @@ namespace NxEn
 	}
 
 	template<typename T>
-	inline void HandleManager::ReleaseHandle(Handle<T>& Handle)
+	inline void* HandleManager::ReleaseHandle(Handle<T>& Handle)
 	{
+		void* RawPointer = Handle.GetRedirectedPointer();
 		FreeHandle(Handle.Pointer);
 		Handle.Pointer = nullptr;
+		return RawPointer;
+	}
+
+	template<typename T>
+	inline Handle<T> HandleManager::FindHandle(T* Pointer)
+	{
+		Handle<T> Handle;
+		Handle.Pointer = GetHandle(Pointer);
+		return Handle;
 	}
 }
