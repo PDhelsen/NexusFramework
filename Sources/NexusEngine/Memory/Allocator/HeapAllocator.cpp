@@ -104,6 +104,7 @@ namespace NxEn
 		return Address >= Start && Address < End;
 	}
 
+	// TODO: Implementation - Memory Defragmentation - Defragment heap over multiple frame
 	// TODO: Optimization - Algo - Improve to defragment memory
 	void HeapAllocator::Defragment()
 	{
