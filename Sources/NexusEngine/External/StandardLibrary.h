@@ -4,7 +4,6 @@
 
 #include <iostream>
 #include <ctime>
-#include <memory>
 
 #include <stdarg.h>
 #define NEXUS_VA(Format, Function)	va_list ArgList;\
