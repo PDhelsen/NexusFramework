@@ -7,9 +7,9 @@ namespace NxEn
 {
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	static const char* DateString = "%02d:%02d:%02d";
-	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
-	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
+	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
+	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
 	static Platform::ConsoleColor Colors[4] = { Platform::ConsoleColor::Magenta, Platform::ConsoleColor::Red, Platform::ConsoleColor::Yellow, Platform::ConsoleColor::White };
 
 	// TEMP: Remove - String - Once we have string
@@ -18,15 +18,14 @@ namespace NxEn
 	static char Resolved[MaxChars];
 	static char Formatted[MaxChars];
 
-	Logger* Logger::Instance = new Logger(LoggerVerbosity::Info);
+	Logger* Logger::Instance = new Logger(LoggerVerbosity::All);
 
 	Logger::Logger(LoggerVerbosity Verbosity)
-		: VerbosityMask(0)
+		: VerbosityMask(Verbosity)
 	{
 		Channels = Dictionary<uint16, bool>();
 
 		AddChannel(0, true);
-		SetVerbosity(Verbosity, true, true);
 	}
 
 	Logger::~Logger()
@@ -51,9 +50,11 @@ namespace NxEn
 			return;
 		}
 
+		uint8 VerbosityIndex = LogTwoPowerOfTwo((uint8)Verbosity);
+
 		Timestamp Stamp = Time::GetInstance()->Now();
-		Platform::ConsoleColor Color = Colors[(uint8)Verbosity];
-		const char* VerbosityString = VerbosityStrings[(uint8)Verbosity];
+		Platform::ConsoleColor Color = Colors[VerbosityIndex];
+		const char* VerbosityString = VerbosityStrings[VerbosityIndex];
 		const char* SourceString = SourceStrings[(uint8)Source];
 		
 		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
@@ -89,20 +90,11 @@ namespace NxEn
 
 	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
 	{
-		return CheckBit(VerbosityMask, (uint8)Verbosity);
+		return CheckFlag(VerbosityMask, Verbosity);
 	}
 
-	void Logger::SetVerbosity(LoggerVerbosity Verbosity, bool State, bool All /*false*/)
+	void Logger::SetVerbosity(LoggerVerbosity Verbosity, bool State)
 	{
-		if (!All)
-		{
-			SetBit(VerbosityMask, (uint8)Verbosity, State);
-			return;
-		}
-
-		for (int8 Offset = (uint8)Verbosity; Offset >= 0; Offset--)
-		{
-			SetBit(VerbosityMask, (uint8)Offset, State);
-		}
+		VerbosityMask = SetFlag(VerbosityMask, Verbosity, State);
 	}
 }

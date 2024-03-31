@@ -31,40 +31,53 @@ namespace NxTs
 
 	TEST(Flags, Or)
 	{
-		TestFlag TestOne = TestFlag::First | TestFlag::Fourth;
-		ASSERT_EQ((uint8)TestOne, 0b1001);
+		TestFlag Test1 = TestFlag::First | TestFlag::Fourth;
+		ASSERT_EQ((uint8)Test1, 0b1001);
 
-		TestFlag TestTwo = TestFlag::First | TestFlag::Fourth;
-		TestTwo |= TestFlag::Third;
-		ASSERT_EQ((uint8)TestTwo, 0b1101);
+		TestFlag Test2 = TestFlag::First | TestFlag::Fourth;
+		Test2 |= TestFlag::Third;
+		ASSERT_EQ((uint8)Test2, 0b1101);
 	}
 
 	TEST(Flags, Xor)
 	{
-		TestFlag MaskOne = TestFlag::First | TestFlag::Fourth;
-		TestFlag MaskTwo = TestFlag::First | TestFlag::Third;
-		TestFlag TestOne = MaskOne ^ MaskTwo;
-		ASSERT_EQ((uint8)TestOne, 0b1100);
+		TestFlag Mask1 = TestFlag::First | TestFlag::Fourth;
+		TestFlag Mask2 = TestFlag::First | TestFlag::Third;
+		TestFlag Test1 = Mask1 ^ Mask2;
+		ASSERT_EQ((uint8)Test1, 0b1100);
 
-		TestFlag TestTwo = TestFlag::First | TestFlag::Fourth;
-		TestFlag MaskFour = TestFlag::First | TestFlag::Third;
-		TestTwo ^= MaskFour;
-		ASSERT_EQ((uint8)TestTwo, 0b1100);
+		TestFlag Test2 = TestFlag::First | TestFlag::Fourth;
+		TestFlag Mask4 = TestFlag::First | TestFlag::Third;
+		Test2 ^= Mask4;
+		ASSERT_EQ((uint8)Test2, 0b1100);
 	}
 
 	TEST(Flags, And)
 	{
-		TestFlag TestOne = TestFlag::First & TestFlag::Second;
-		ASSERT_EQ((uint8)TestOne, 0);
+		TestFlag Test1 = TestFlag::First & TestFlag::Second;
+		ASSERT_EQ((uint8)Test1, 0);
 
-		TestFlag MaskOne = TestFlag::First | TestFlag::Second;
-		TestFlag MaskTwo = TestFlag::Fourth | TestFlag::Second;
-		TestFlag TestTwo = MaskOne & MaskTwo;
-		ASSERT_EQ((uint8)TestTwo, 0b10);
+		TestFlag Mask1 = TestFlag::First | TestFlag::Second;
+		TestFlag Mask2 = TestFlag::Fourth | TestFlag::Second;
+		TestFlag Test2 = Mask1 & Mask2;
+		ASSERT_EQ((uint8)Test2, 0b10);
 
-		TestFlag MaskThree = TestFlag::First | TestFlag::Third;
-		TestFlag TestThree = ~TestFlag::Null;
-		TestThree &= MaskThree;
-		ASSERT_EQ((uint8)TestThree, 0b101);
+		TestFlag Mask3 = TestFlag::First | TestFlag::Third;
+		TestFlag Test3 = ~TestFlag::Null;
+		Test3 &= Mask3;
+		ASSERT_EQ((uint8)Test3, 0b101);
+	}
+
+	TEST(Flags, CheckSet)
+	{
+		TestFlag Test1 = TestFlag::First | TestFlag::Third;
+		ASSERT_EQ(CheckFlag(Test1, TestFlag::Third), true);
+		ASSERT_EQ(CheckFlag(Test1, TestFlag::Fourth), false);
+
+		TestFlag Test2 = TestFlag::First;
+		Test2 = SetFlag(Test2, TestFlag::Third, true);
+		ASSERT_EQ((uint8)Test2, 0b101);
+		Test2 = SetFlag(Test2, TestFlag::First, false);
+		ASSERT_EQ((uint8)Test2, 0b100);
 	}
 }

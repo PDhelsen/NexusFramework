@@ -17,6 +17,9 @@
 
 #include "Core/NexusEngine.h"
 
+
+#include "Misc/Misc.h"
+
 #include "Application/Time.h"
 
 #include "Debug/Logger.h"

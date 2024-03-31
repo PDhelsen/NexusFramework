@@ -20,23 +20,23 @@ namespace NxTs
 	{
 		NxEn::Logger* Logger = NxEn::Logger::GetInstance();
 
-		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Info), true);
-		Logger->SetVerbosity(NxEn::LoggerVerbosity::Info, false, true);
+		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::All), true);
+		Logger->SetVerbosity(NxEn::LoggerVerbosity::All, false);
 
-		Logger->SetVerbosity(NxEn::LoggerVerbosity::Warning, true, false);
+		Logger->SetVerbosity(NxEn::LoggerVerbosity::Warning, true);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Info), false);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Warning), true);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Error), false);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Fatal), false);
-		Logger->SetVerbosity(NxEn::LoggerVerbosity::Info, false, true);
+		Logger->SetVerbosity(NxEn::LoggerVerbosity::All, false);
 
-		Logger->SetVerbosity(NxEn::LoggerVerbosity::Warning, true, true);
+		Logger->SetVerbosity(NxEn::LoggerVerbosity::Warning | NxEn::LoggerVerbosity::Fatal, true);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Info), false);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Warning), true);
-		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Error), true);
+		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Error), false);
 		ASSERT_EQ(Logger->CheckVerbosity(NxEn::LoggerVerbosity::Fatal), true);
-		Logger->SetVerbosity(NxEn::LoggerVerbosity::Info, false, true);
+		Logger->SetVerbosity(NxEn::LoggerVerbosity::All, false);
 
-		Logger->SetVerbosity(NxEn::LoggerVerbosity::Info, true, true);
+		Logger->SetVerbosity(NxEn::LoggerVerbosity::All, true);
 	}
 }

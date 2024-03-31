@@ -15,26 +15,17 @@ typedef PlaftormTypeInteger::uint16		uint16;
 typedef PlaftormTypeInteger::uint32		uint32;
 typedef PlaftormTypeInteger::uint64		uint64;
 
-#define BIT_CHECK_SET(Type)\
+#define NEXUS_BIT_CHECK_SET(Type)\
 inline bool CheckBit(Type Value, Type Offset) { return Value & (Type(1) << Offset); }\
-inline void SetBit(Type& Value, Type Offset, bool State) \
-{\
-	Type Mask = Type(1) << Offset;\
-	if (State)\
-	{\
-		Value |= Mask;\
-	}\
-	else\
-	{\
-		Value &= ~(Mask);\
-	}\
-}\
+inline Type SetBit1(Type Value, Type Offset) { return Value |= Type(1) << Offset; }\
+inline Type SetBit0(Type Value, Type Offset) { return Value &= ~(Type(1) << Offset); }\
+inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1(Value, Offset) : SetBit0(Value, Offset); }\
 
-BIT_CHECK_SET(int8);
-BIT_CHECK_SET(int16);
-BIT_CHECK_SET(int32);
-BIT_CHECK_SET(int64);
-BIT_CHECK_SET(uint8);
-BIT_CHECK_SET(uint16);
-BIT_CHECK_SET(uint32);
-BIT_CHECK_SET(uint64);
+NEXUS_BIT_CHECK_SET(int8);
+NEXUS_BIT_CHECK_SET(int16);
+NEXUS_BIT_CHECK_SET(int32);
+NEXUS_BIT_CHECK_SET(int64);
+NEXUS_BIT_CHECK_SET(uint8);
+NEXUS_BIT_CHECK_SET(uint16);
+NEXUS_BIT_CHECK_SET(uint32);
+NEXUS_BIT_CHECK_SET(uint64);

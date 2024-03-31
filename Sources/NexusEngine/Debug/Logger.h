@@ -10,11 +10,18 @@ namespace NxEn
 
 	enum class LoggerVerbosity : uint8
 	{
-		Fatal	= 0,
-		Error	= 1,
-		Warning = 2,
-		Info	= 3,
+		None	= 0,
+
+		Fatal	= 1 << 0,
+		Error	= 1 << 1,
+		Warning = 1 << 2,
+		Info	= 1 << 3,
+
+		All = Fatal | Error | Warning | Info,
+
+		COUNT
 	};
+	NEXUS_FLAG(LoggerVerbosity, uint8)
 
 	enum class LoggerSource : uint8
 	{
@@ -22,6 +29,7 @@ namespace NxEn
 		Editor	= 1,
 		App		= 2,
 		Project	= 3,
+		COUNT
 	};
 
 	class Logger
@@ -38,14 +46,14 @@ namespace NxEn
 		NEXUS_ENGINE_API bool CheckChannel(uint16 Channel) const;
 
 		NEXUS_ENGINE_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
-		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State, bool All = false);
+		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
 
 	private:
 		// TEMP: Replace - String - Custom string
 		Dictionary<uint16, bool> Channels;
-		uint8 VerbosityMask;
+		LoggerVerbosity VerbosityMask;
 
 		static Logger* Instance;
 	};

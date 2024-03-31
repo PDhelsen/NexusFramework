@@ -5,10 +5,14 @@
 // See if there is something else
 
 #define NEXUS_FLAG(EnumType, IntegerType)\
-constexpr EnumType operator ~ (EnumType A) {  return (EnumType)(~(IntegerType)A); } \
-constexpr EnumType operator | (EnumType A, EnumType B) {  return (EnumType)((IntegerType)A | (IntegerType)B); } \
-constexpr EnumType operator & (EnumType A, EnumType B) {  return (EnumType)((IntegerType)A & (IntegerType)B); } \
-constexpr EnumType operator ^ (EnumType A, EnumType B) {  return (EnumType)((IntegerType)A ^ (IntegerType)B); } \
-EnumType& operator |= (EnumType& A, EnumType B) {  return (EnumType&)((IntegerType&)A |= (IntegerType)B); } \
-EnumType& operator &= (EnumType& A, EnumType B) {  return (EnumType&)((IntegerType&)A &= (IntegerType)B); } \
-EnumType& operator ^= (EnumType& A, EnumType B) {  return (EnumType&)((IntegerType&)A ^= (IntegerType)B); } \
+inline constexpr EnumType operator ~ (EnumType A) {  return (EnumType)(~(IntegerType)A); } \
+inline constexpr EnumType operator | (EnumType A, EnumType B) {  return (EnumType)((IntegerType)A | (IntegerType)B); } \
+inline constexpr EnumType operator & (EnumType A, EnumType B) {  return (EnumType)((IntegerType)A & (IntegerType)B); } \
+inline constexpr EnumType operator ^ (EnumType A, EnumType B) {  return (EnumType)((IntegerType)A ^ (IntegerType)B); } \
+inline EnumType& operator |= (EnumType& A, EnumType B) {  return (EnumType&)((IntegerType&)A |= (IntegerType)B); } \
+inline EnumType& operator &= (EnumType& A, EnumType B) {  return (EnumType&)((IntegerType&)A &= (IntegerType)B); } \
+inline EnumType& operator ^= (EnumType& A, EnumType B) {  return (EnumType&)((IntegerType&)A ^= (IntegerType)B); } \
+inline bool CheckFlag(EnumType A, EnumType F) { return (IntegerType)(A & F) != 0; }\
+inline EnumType SetFlagTrue(EnumType A, EnumType F) { return A |= F; }\
+inline EnumType SetFlagFalse(EnumType A, EnumType F) { return A &= ~F; }\
+inline EnumType SetFlag(EnumType A, EnumType F, bool State) { return State ? SetFlagTrue(A, F) : SetFlagFalse(A, F); }

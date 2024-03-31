@@ -16,3 +16,4 @@
 #include "Memory/Handle/Handle.h"
 
 #include "Core/NexusEngine.h"
+#include "Core/Intrinsics.h"
