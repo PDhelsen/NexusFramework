@@ -1,6 +1,6 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Flags.h"
+#include "Types/Enum.h"
 
 namespace NxTs
 {
@@ -14,7 +14,7 @@ namespace NxTs
 	};
 	NEXUS_FLAG(TestFlag, uint8)
 
-	TEST(Flags, Invert)
+	TEST(Enum, Invert)
 	{
 		TestFlag None = TestFlag::Null;
 		TestFlag All = ~TestFlag::Null;
@@ -29,7 +29,7 @@ namespace NxTs
 		ASSERT_EQ((uint8)NotFirst, 254);
 	}
 
-	TEST(Flags, Or)
+	TEST(Enum, Or)
 	{
 		TestFlag Test1 = TestFlag::First | TestFlag::Fourth;
 		ASSERT_EQ((uint8)Test1, 0b1001);
@@ -39,7 +39,7 @@ namespace NxTs
 		ASSERT_EQ((uint8)Test2, 0b1101);
 	}
 
-	TEST(Flags, Xor)
+	TEST(Enum, Xor)
 	{
 		TestFlag Mask1 = TestFlag::First | TestFlag::Fourth;
 		TestFlag Mask2 = TestFlag::First | TestFlag::Third;
@@ -52,7 +52,7 @@ namespace NxTs
 		ASSERT_EQ((uint8)Test2, 0b1100);
 	}
 
-	TEST(Flags, And)
+	TEST(Enum, And)
 	{
 		TestFlag Test1 = TestFlag::First & TestFlag::Second;
 		ASSERT_EQ((uint8)Test1, 0);
@@ -68,7 +68,7 @@ namespace NxTs
 		ASSERT_EQ((uint8)Test3, 0b101);
 	}
 
-	TEST(Flags, CheckSet)
+	TEST(Enum, CheckSet)
 	{
 		TestFlag Test1 = TestFlag::First | TestFlag::Third;
 		ASSERT_EQ(CheckFlag(Test1, TestFlag::Third), true);

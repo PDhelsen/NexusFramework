@@ -1,8 +1,13 @@
 #pragma once
 
-// TODO: Implementation - Enum & Flags - Improve macro 
-// Add support for count, to string
-// See if there is something else
+#define NEXUS_ENUM_TO_STRING_DEFINITION(EnumType)\
+const char* EnumType##ToString(EnumType Value) const;\
+const char* EnumType##ToString(uint64 Value) const;
+#define NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(EnumType, Class, Count, ...)\
+static const char* EnumType##Strings[Count] = { __VA_ARGS__ };\
+const char* Class##EnumType##ToString(EnumType Value) const { return EnumType##Strings[(uint64)Value]; }\
+const char* Class##EnumType##ToString(uint64 Value) const { return EnumType##Strings[Value]; }
+#define NEXUS_ENUM_TO_STRING_IMPLEMENTATION(EnumType, Class, ...) NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(EnumType, Class, (uint64)EnumType::COUNT, __VA_ARGS__)
 
 #define NEXUS_FLAG(EnumType, IntegerType)\
 inline constexpr EnumType operator ~ (EnumType A) {  return (EnumType)(~(IntegerType)A); } \

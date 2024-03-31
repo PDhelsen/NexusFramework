@@ -50,6 +50,9 @@ namespace NxEn
 
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
 
+		NEXUS_ENGINE_API NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
+		NEXUS_ENGINE_API NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
+
 	private:
 		// TEMP: Replace - String - Custom string
 		Dictionary<uint16, bool> Channels;

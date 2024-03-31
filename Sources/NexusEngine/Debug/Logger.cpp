@@ -8,8 +8,8 @@ namespace NxEn
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	static const char* DateString = "%02d:%02d:%02d";
 	static const char* FormatString = "[%s][%s][%s][%i] %s\n";
-	static const char* SourceStrings[4] = { "Engine ", "Editor ", "App    ", "Project" };
-	static const char* VerbosityStrings[4] = { "Fatal  ", "Error  ", "Warning", "Info   " };
+	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, Logger::, "Engine ", "Editor ", "App    ", "Project");
+	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, Logger::, 4, "Fatal  ", "Error  ", "Warning", "Info   ");
 	static Platform::ConsoleColor Colors[4] = { Platform::ConsoleColor::Magenta, Platform::ConsoleColor::Red, Platform::ConsoleColor::Yellow, Platform::ConsoleColor::White };
 
 	// TEMP: Remove - String - Once we have string
@@ -54,8 +54,8 @@ namespace NxEn
 
 		Timestamp Stamp = Time::GetInstance()->Now();
 		Platform::ConsoleColor Color = Colors[VerbosityIndex];
-		const char* VerbosityString = VerbosityStrings[VerbosityIndex];
-		const char* SourceString = SourceStrings[(uint8)Source];
+		const char* VerbosityString = LoggerVerbosityToString(VerbosityIndex);
+		const char* SourceString = LoggerSourceToString(Source);
 		
 		NEXUS_VA(Message, vsnprintf(Resolved, MaxChars, Message, ArgList))
 		snprintf(Date, MaxChars, DateString, Stamp.Hours, Stamp.Minutes, Stamp.Seconds);

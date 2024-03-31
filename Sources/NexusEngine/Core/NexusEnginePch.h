@@ -8,7 +8,7 @@
 #include "External/StandardLibrary.h"
 
 #include "Types/Integer.h"
-#include "Types/Flags.h"
+#include "Types/Enum.h"
 #include "Types/Timestamp.h"
 
 #include "Memory/Memory.h"
