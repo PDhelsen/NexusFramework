@@ -51,7 +51,7 @@ project "NexusSandbox"
 
     defines
     {
-        "NEXUS_PROJECT_DLL_BUILD"
+        "NEXUS_SANDBOX_DLL_BUILD"
     }
 
     includedirs
