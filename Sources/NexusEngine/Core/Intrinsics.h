@@ -1,6 +1,6 @@
 #pragma once
 
-#if _MSC_VER && !__INTEL_COMPILER
+#if NEXUS_MSVC
 	#define NEXUS_BITSCANFORWARD(Mask, Index, Result)	unsigned long Index;\
 														uint64 Result = _BitScanForward(&Index, (unsigned long)Mask);
 	#define NEXUS_BITSCANBACKWARD(Mask, Index, Result)	unsigned long Index;\

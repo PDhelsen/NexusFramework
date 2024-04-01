@@ -7,6 +7,9 @@ workspace "NexusEngine"
     platforms { "Win64" }
     flags { "MultiProcessorCompile" }
 
+    filter "action:vs*"
+        toolset "msc"
+
     filter "platforms:Win64"
         defines { "NEXUS_WINDOWS" }
         architecture "x64"
@@ -25,6 +28,9 @@ workspace "NexusEngine"
         defines { "NEXUS_DISTRIB" }
         symbols "Off"
         optimize "On"
+        
+    filter "toolset:msc"
+        defines { "NEXUS_MSVC" }
 
 group "Engine"
 project "NexusEngine"
