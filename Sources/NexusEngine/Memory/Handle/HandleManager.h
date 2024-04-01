@@ -30,7 +30,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
-		// TEMP: Replace - Datastructure - Custom data structure
+		// TEMP: Replace - Container - Custom container
 		PoolAllocator Pool;
 
 		static HandleManager* Instance;

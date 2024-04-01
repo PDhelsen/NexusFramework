@@ -16,7 +16,7 @@ namespace NxEn
 	{
 		int64 Time = GetTimeSinceEpoch();
 		
-		// TODO: Implementation - Time - Custom implementation
+		// TODO: Implementation - Time - Convert time since epoch to Timestamp
 		std::tm TimeInfo;
 		localtime_s(&TimeInfo, &Time);
 

@@ -106,7 +106,7 @@ namespace NxEn
 	}
 
 	// TODO: Implementation - Memory Defragmentation - Defragment heap over multiple frame
-	// TODO: Optimization - Algo - Improve to defragment memory
+	// TODO: Optimization - Algo - Defragment memory
 	void HeapAllocator::Defragment()
 	{
 		NEXUS_LOG(Engine, Info, 0, "Starting defragmentation (Current amount : %d)", UsedAmount());
