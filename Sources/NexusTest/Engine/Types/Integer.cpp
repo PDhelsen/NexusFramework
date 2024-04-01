@@ -4,7 +4,7 @@
 
 namespace NxTs
 {
-	TEST(Integer, BitCheckSet)
+	TEST(Type_Integer, BitCheckSet)
 	{
 		uint8 Test = 0b10101010;
 		ASSERT_EQ(CheckBit(Test, uint8(1)), true);
