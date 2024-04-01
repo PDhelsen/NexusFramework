@@ -37,7 +37,7 @@ namespace NxEn
 	};
 	
 	template<typename T>
-	inline Handle<T> HandleManager::AcquireHandle(T* Pointer)
+	Handle<T> HandleManager::AcquireHandle(T* Pointer)
 	{
 		Handle<T> Handle;
 		Handle.Pointer = AllocateHandle(Pointer);
@@ -45,13 +45,13 @@ namespace NxEn
 	}
 
 	template<typename T>
-	inline void HandleManager::UpdateHandle(Handle<T>& Handle, T* Pointer)
+	void HandleManager::UpdateHandle(Handle<T>& Handle, T* Pointer)
 	{
 		ModifyHandle(Handle.Pointer, Pointer);
 	}
 
 	template<typename T>
-	inline void* HandleManager::ReleaseHandle(Handle<T>& Handle)
+	void* HandleManager::ReleaseHandle(Handle<T>& Handle)
 	{
 		void* RawPointer = Handle.GetRedirectedPointer();
 		FreeHandle(Handle.Pointer);
@@ -60,7 +60,7 @@ namespace NxEn
 	}
 
 	template<typename T>
-	inline Handle<T> HandleManager::FindHandle(T* Pointer)
+	Handle<T> HandleManager::FindHandle(T* Pointer)
 	{
 		Handle<T> Handle;
 		Handle.Pointer = GetHandle(Pointer);
