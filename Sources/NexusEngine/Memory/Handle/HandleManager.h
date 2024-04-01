@@ -5,6 +5,8 @@
 
 namespace NxEn
 {
+	// Manage the global array of data pointer referenced by the Handle
+
 	class HandleManager
 	{
 	public:

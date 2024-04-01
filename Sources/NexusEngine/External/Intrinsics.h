@@ -1,5 +1,7 @@
 #pragma once
 
+// All the compiler intrinsics functions
+
 #if NEXUS_MSVC
 	#define NEXUS_BITSCANFORWARD(Mask, Index, Result)	unsigned long Index;\
 														uint64 Result = _BitScanForward(&Index, (unsigned long)Mask);

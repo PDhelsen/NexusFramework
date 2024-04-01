@@ -3,7 +3,7 @@
 // Define the bytes precision of the integer types.
 // This file define the integer type used when no platform are defined
 
-struct PlatformTypeIntegerNone
+struct PlatformNoneInteger
 {
 	typedef	signed char			int8;
 	typedef signed short		int16;

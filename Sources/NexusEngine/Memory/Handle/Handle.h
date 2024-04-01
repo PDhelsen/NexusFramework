@@ -2,6 +2,10 @@
 
 namespace NxEn
 {
+	// Struct that store a pointer to global array of data pointer and forward a the data pointer
+	// Allow to move data in memory without losing reference to it.
+	// Needed for heap defragmentation
+
 	template<typename T>
 	struct Handle
 	{

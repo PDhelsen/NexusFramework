@@ -6,6 +6,7 @@
 // Keep this file to a minimun !!!
 
 #include "External/StandardLibrary.h"
+#include "External/Intrinsics.h"
 
 #include "Types/Integer.h"
 #include "Types/Enum.h"
@@ -16,4 +17,3 @@
 #include "Memory/Handle/Handle.h"
 
 #include "Core/NexusEngine.h"
-#include "Core/Intrinsics.h"

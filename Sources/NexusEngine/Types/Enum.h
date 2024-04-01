@@ -1,5 +1,8 @@
 #pragma once
 
+// Macro to define common function related to enum
+// The Enum to String macro needs to be used in .h & .cpp. The .h macro needs to be used inside a class
+
 #define NEXUS_ENUM_TO_STRING_DEFINITION(EnumType)\
 const char* EnumType##ToString(EnumType Value) const;\
 const char* EnumType##ToString(uint64 Value) const;

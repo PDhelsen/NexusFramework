@@ -4,7 +4,7 @@
 #include "Debug/Logger.h"
 
 // Assert Macro (compile time and runtime)
-// They are strip in Distrib builds
+// They are stripped in Distrib builds
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
 	#if NEXUS_WINDOWS

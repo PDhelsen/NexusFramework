@@ -6,6 +6,7 @@
 
 
 #include "External/StandardLibrary.h"
+#include "External/Intrinsics.h"
 
 #include "Types/Integer.h"
 #include "Types/Enum.h"
@@ -16,7 +17,6 @@
 #include "Memory/Handle/Handle.h"
 
 #include "Core/NexusEngine.h"
-#include "Core/Intrinsics.h"
 
 #include "Misc/Misc.h"
 

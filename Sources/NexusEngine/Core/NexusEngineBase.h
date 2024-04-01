@@ -7,6 +7,7 @@
 
 
 
+
 #include "Types/Integer.h"
 #include "Types/Enum.h"
 #include "Types/Timestamp.h"
@@ -16,7 +17,6 @@
 #include "Memory/Handle/Handle.h"
 
 #include "Core/NexusEngine.h"
-
 
 #include "Misc/Misc.h"
 
