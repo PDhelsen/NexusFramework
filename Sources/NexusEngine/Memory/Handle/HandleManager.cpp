@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "HandleManager.h"
 
+#include "Memory/Memory.h"
+
 namespace NxEn
 {
 	HandleManager* HandleManager::Instance = new HandleManager();

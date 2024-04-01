@@ -8,12 +8,11 @@
 #include "External/StandardLibrary.h"
 #include "External/Intrinsics.h"
 
+#include "Core/NexusEngine.h"
+
 #include "Types/Integer.h"
 #include "Types/Enum.h"
 #include "Types/Timestamp.h"
 
-#include "Memory/Memory.h"
 #include "Memory/MemoryOperatorDeclaration.h"
 #include "Memory/Handle/Handle.h"
-
-#include "Core/NexusEngine.h"

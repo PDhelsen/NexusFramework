@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Memory/Memory.h"
 
 #pragma warning(push)
 #pragma warning(disable: 6387)

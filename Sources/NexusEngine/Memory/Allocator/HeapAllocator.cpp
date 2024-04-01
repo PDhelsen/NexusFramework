@@ -1,6 +1,7 @@
 #include "Core/NexusEnginePch.h"
 #include "HeapAllocator.h"
 
+#include "Memory/Memory.h"
 #include "Memory/Handle/HandleManager.h"
 
 namespace NxEn

@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Allocator.h"
 
+#include "Memory/Memory.h"
+
 namespace NxEn
 {
 	AllocatorActive::AllocatorActive(Allocator* Allocator)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
+#include "Core/NexusEngineCore.h"
 #include "Debug/Assert.h"
 
 #include "Memory/Allocator/StackAllocator.h"

@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Logger.h"
 
+#include "Application/Time.h"
+#include "Misc/Misc.h"
 #include "Platform/Platform.h"
 
 namespace NxEn
