@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Misc.h"
 
+#include "External/Intrinsics.h"
+
 namespace NxEn
 {
 	bool IsPowerOfTwo(uint64 Number)

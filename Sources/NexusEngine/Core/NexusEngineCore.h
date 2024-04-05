@@ -5,9 +5,6 @@
 // Also, pay attention to avoid circular dependency. The headers included here should not include header that include this file.
 // Keep this file to a minimun !!!
 
-#include "External/StandardLibrary.h"
-#include "External/Intrinsics.h"
-
 #include "Core/NexusEngine.h"
 
 #include "Types/Integer.h"

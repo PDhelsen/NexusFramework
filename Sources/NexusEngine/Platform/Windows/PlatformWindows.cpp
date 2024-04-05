@@ -3,6 +3,8 @@
 
 #include <windows.h>
 
+#include "External/StandardLibrary.h"
+
 namespace NxEn
 {
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences

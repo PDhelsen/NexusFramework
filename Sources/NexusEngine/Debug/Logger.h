@@ -4,6 +4,8 @@
 #include "Types/Integer.h"
 #include "Types/Enum.h"
 
+#include "External/StandardLibrary.h"
+
 namespace NxEn
 {
 	// Logger
