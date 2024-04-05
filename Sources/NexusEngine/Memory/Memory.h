@@ -1,10 +1,13 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Core/NexusEngine.h"
+#include "Types/Integer.h"
 #include "Debug/Assert.h"
 
+#include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/StackAllocator.h"
 #include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Allocator/PoolAllocator.h"
 
 namespace NxEn
 {

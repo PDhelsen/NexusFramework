@@ -4,6 +4,8 @@
 // Each dll should include in one cpp file the MemoryOperatorImplementation 
 // because the new / delete operator cannot be dynamicly link, so the implementation have to present in each dll
 
+#include "External/StandardLibrary.h"
+
 #pragma warning(push)
 #pragma warning(disable: 6387)
 #pragma warning(disable: 28196)

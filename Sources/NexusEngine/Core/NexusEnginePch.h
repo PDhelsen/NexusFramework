@@ -14,8 +14,12 @@
 #include "Types/Enum.h"
 #include "Types/Timestamp.h"
 
+#include "Memory/Memory.h"
 #include "Memory/MemoryOperatorDeclaration.h"
 #include "Memory/Handle/Handle.h"
+#include "Memory/Handle/HandleManager.h"
 
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"
+
+#include "Misc/Misc.h"

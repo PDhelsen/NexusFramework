@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "StackAllocator.h"
 
-#include "Memory/Memory.h"
-
 namespace NxEn
 {
 	StackAllocator::StackAllocator(uint64 Size)

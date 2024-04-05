@@ -1,6 +1,7 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Core/NexusEngine.h"
+#include "Memory/Handle/Handle.h"
 #include "Memory/Allocator/PoolAllocator.h"
 
 namespace NxEn

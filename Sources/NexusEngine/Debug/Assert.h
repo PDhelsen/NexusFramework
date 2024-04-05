@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
 #include "Debug/Logger.h"
 
 // Assert Macro (compile time and runtime)

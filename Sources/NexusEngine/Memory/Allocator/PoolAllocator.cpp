@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "PoolAllocator.h"
 
-#include "Memory/Memory.h"
-
 namespace NxEn
 {
 	PoolAllocator::PoolAllocator(uint64 Count, uint64 Stride)

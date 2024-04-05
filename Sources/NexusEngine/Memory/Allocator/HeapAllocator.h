@@ -1,6 +1,5 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
 #include "Allocator.h"
 
 namespace NxEn
