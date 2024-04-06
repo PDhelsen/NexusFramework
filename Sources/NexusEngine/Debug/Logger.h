@@ -4,6 +4,7 @@
 #include "Types/Integer.h"
 #include "Types/Enum.h"
 
+// TEMP: Remove - Container - Once we have custom dictionary
 #include "External/StandardLibrary.h"
 
 namespace NxEn
@@ -58,8 +59,8 @@ namespace NxEn
 		NEXUS_ENGINE_API NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
 	private:
-		// TEMP: Replace - String - Custom string
-		Dictionary<uint16, bool> Channels;
+		// TEMP: Replace - String - Once we have custom string
+		std::unordered_map<uint16, bool>* Channels;
 		LoggerVerbosity VerbosityMask;
 
 		static Logger* Instance;

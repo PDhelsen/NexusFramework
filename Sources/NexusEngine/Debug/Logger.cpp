@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Logger.h"
 
+#include "External/StandardLibrary.h"
+
 #include "Application/Time.h"
 #include "Misc/Misc.h"
 #include "Platform/Platform.h"
@@ -25,13 +27,13 @@ namespace NxEn
 	Logger::Logger(LoggerVerbosity Verbosity)
 		: VerbosityMask(Verbosity)
 	{
-		Channels = Dictionary<uint16, bool>();
-
+		Channels = new std::unordered_map<uint16, bool>();
 		AddChannel(0, true);
 	}
 
 	Logger::~Logger()
 	{
+		delete Channels;
 	}
 
 	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, uint16 Channel, const char* Message, ...) const
@@ -70,24 +72,24 @@ namespace NxEn
 	void Logger::AddChannel(uint16 Channel, bool State /*true*/)
 	{
 		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %d", Channel)
-		Channels.emplace(Channel, State);
+		Channels->emplace(Channel, State);
 	}
 
 	void Logger::SetChannel(uint16 Channel, bool State)
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
-		Channels[Channel] = State;
+		Channels->at(Channel) = State;
 	}
 
 	bool Logger::HasChannel(uint16 Channel) const
 	{
-		return Channels.find(Channel) != Channels.end();
+		return Channels->find(Channel) != Channels->end();
 	}
 
 	bool Logger::CheckChannel(uint16 Channel) const
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
-		return Channels.at(Channel);
+		return Channels->at(Channel);
 	}
 
 	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const

@@ -1,6 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "NexusEngine.h"
-#include "Memory/MemoryOperatorImplementation.h"
+#include "Memory/MemoryOperator.h"
 
 namespace NxEn
 {

@@ -1,5 +1,5 @@
 #include "NexusEditor.h"
-#include "Memory/MemoryOperatorImplementation.h"
+#include "Memory/MemoryOperator.h"
 
 #include "Core/NexusEngineBase.h"
 

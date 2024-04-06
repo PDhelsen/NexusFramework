@@ -31,7 +31,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
-		// TEMP: Replace - Container - Custom container
+		// TEMP: Replace - Container - Once we have custom pool
 		PoolAllocator Pool;
 
 		static HandleManager* Instance;

@@ -2,6 +2,7 @@
 
 #include "External/StandardLibrary.h"
 #include "Memory/Memory.h"
+#include "Debug/Assert.h"
 
 #pragma warning(push)
 #pragma warning(disable: 6387)
@@ -74,22 +75,22 @@ void operator delete[](void* Pointer, std::align_val_t Align)
 	NEXUS_ASSERT(false, "Not supported delete operator");
 }
 
-void operator delete(void* Pointer, std::size_t sz)
+void operator delete(void* Pointer, std::size_t Size)
 {
 	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
 }
 
-void operator delete[](void* Pointer, std::size_t sz)
+void operator delete[](void* Pointer, std::size_t Size)
 {
 	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
 }
 
-void operator delete(void* Pointer, std::size_t sz, std::align_val_t Alignement)
+void operator delete(void* Pointer, std::size_t Size, std::align_val_t Alignement)
 {
 	NEXUS_ASSERT(false, "Not supported delete operator");
 }
 
-void operator delete[](void* Pointer, std::size_t sz, std::align_val_t Alignement)
+void operator delete[](void* Pointer, std::size_t Size, std::align_val_t Alignement)
 {
 	NEXUS_ASSERT(false, "Not supported delete operator");
 }

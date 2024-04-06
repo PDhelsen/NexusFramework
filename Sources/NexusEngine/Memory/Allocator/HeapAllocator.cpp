@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "HeapAllocator.h"
 
-#include "Memory/Handle/HandleManager.h"
-
 namespace NxEn
 {
 	HeapAllocator::HeapAllocator(uint64 Size)
