@@ -46,7 +46,9 @@ project "NexusSandbox"
     {
         "../../Sources/%{prj.name}/**.h",
         "../../Sources/%{prj.name}/**.cpp",
-        "../../Config/DllExport.def"
+        "../../Config/DllExport.def",
+
+        "../../../../Softwares/NexusEngine/Install/Config/NexusEngine.natvis"
     }
 
     defines
