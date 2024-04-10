@@ -98,8 +98,8 @@ namespace NxTs
 		ASSERT_EQ(Test[3].Interger, 3);
 
 		ContainerTest Test2 = ContainerTest(2);
-		bool Contains = Test.Contains(Test2);
-		uint64 Found = Test.Find(Test2);
+		uint64 Found;
+		bool Contains = Test.Find(Test2, Found);
 		ASSERT_EQ(Contains, true);
 		ASSERT_EQ(Found, 2);
 	}

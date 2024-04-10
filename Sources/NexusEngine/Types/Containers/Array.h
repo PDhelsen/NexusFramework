@@ -181,20 +181,22 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != -1;
+			uint64 Index;
+			return Find(Other, Index);
 		}
 
-		int64 Find(const T& Other) const
+		bool Find(const T& Other, uint64& Found) const
 		{
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
 				if (Data[Index] == Other)
 				{
-					return Index;
+					Found = Index;
+					return true;
 				}
 			}
 
-			return -1;
+			return false;
 		}
 
 		uint64 GetCount() { return Count; }
