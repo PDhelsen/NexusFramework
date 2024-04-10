@@ -2,6 +2,7 @@
 
 #include "Types/Integer.h"
 #include "Debug/Assert.h"
+#include "Misc/Sort.h"
 
 namespace NxEn
 {
@@ -73,26 +74,27 @@ namespace NxEn
 			T* Pointer;
 		};
 
-		Array(uint64 Count)
+		Array(uint64 Count, Allocator* Alloc = nullptr)
 			: Count(Count)
 		{
-			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, NxEn::Memory::GetActiveAllocator());
+			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
 		Array(const Array<T>& Other)
-			: Count(Other.Count), Data(Other.Data)
+			: Data(Other.Data), Count(Other.Count), Allocator(Other.Allocator)
 		{
 		}
 
 		Array(Array<T>&& Other) noexcept
-			: Count(Other.Count), Data(Other.Data)
+			: Data(Other.Data), Count(Other.Count), Allocator(Other.Allocator)
 		{
 			Other.Data = nullptr;
 		}
 
 		~Array()
 		{
-			delete[] Data;
+			Memory::Free(Data, Allocator);
 		}
 
 		template<typename... Args>
@@ -112,7 +114,7 @@ namespace NxEn
 
 		Array<T> CopyDeep()
 		{
-			Array<T> New = Array(Count);
+			Array<T> New = Array(Count, Allocator);
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
 				New.Data[Index] = Data[Index];
@@ -199,9 +201,15 @@ namespace NxEn
 			return false;
 		}
 
+		void Sort()
+		{
+			SortMerge::Sort(Data, Count);
+		}
+
 		uint64 GetCount() { return Count; }
 
 	private:
+		Allocator* Allocator;
 		uint64 Count;
 		T* Data;
 	};
