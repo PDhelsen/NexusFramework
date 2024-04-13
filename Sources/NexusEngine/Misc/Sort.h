@@ -14,7 +14,7 @@ namespace NxEn
 		template<typename T>
 		static void MergeSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
 		{
-			MergeSortSort(Data, Count, Compare);
+			Sort::MergeSortSort(Data, Count, Compare);
 		}
 
 	private:
@@ -24,7 +24,7 @@ namespace NxEn
 			T* Copy = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Memory::GetActiveAllocator());
 			Memory::MemCopy(Data, Copy, sizeof(T) * Count);
 
-			MergeSortSplit(Data, Copy, 0, Count, Compare);
+			Sort::MergeSortSplit(Data, Copy, 0, Count, Compare);
 
 			Memory::Free(Copy, Memory::GetActiveAllocator());
 		}
@@ -39,10 +39,10 @@ namespace NxEn
 
 			uint64 Middle = (Start + End) / 2;
 
-			MergeSortSplit(Data, Copy, Start, Middle, Compare);
-			MergeSortSplit(Data, Copy, Middle, End, Compare);
+			Sort::MergeSortSplit(Data, Copy, Start, Middle, Compare);
+			Sort::MergeSortSplit(Data, Copy, Middle, End, Compare);
 
-			MergeSortMerge(Copy, Data, Start, End, Middle, Compare);
+			Sort::MergeSortMerge(Copy, Data, Start, End, Middle, Compare);
 		}
 
 		template<typename T>

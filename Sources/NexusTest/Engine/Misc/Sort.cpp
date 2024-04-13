@@ -24,13 +24,13 @@ namespace NxTs
 		Data[8] = 5;
 		Data[9] = 3;
 
-		NxEn::Sort::MergeSort<uint64>(Data, 10);
+		NxEn::Sort::MergeSort(Data, 10);
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sort::MergeSort<uint64>(Data, 10, &CompareFunction);
+		NxEn::Sort::MergeSort(Data, 10, &CompareFunction);
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
