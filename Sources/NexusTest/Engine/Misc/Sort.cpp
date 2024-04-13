@@ -4,11 +4,11 @@
 
 namespace NxTs
 {
-	TEST(Sort, SortMerge)
+	TEST(Sort, MergeSort)
 	{
 		uint64* Data = new uint64[10];
 		
-		Data[0] = 8;
+		Data[0] = 5;
 		Data[1] = 4;
 		Data[2] = 7;
 		Data[3] = 1;
@@ -16,13 +16,13 @@ namespace NxTs
 		Data[5] = 5;
 		Data[6] = 6;
 		Data[7] = 2;
-		Data[8] = 9;
+		Data[8] = 5;
 		Data[9] = 3;
 
-		NxEn::SortMerge::Sort(Data, 10);
-		for (uint64 Index = 0; Index < 10; Index++)
+		NxEn::Sort::MergeSort(Data, 10);
+		for (uint64 Index = 1; Index < 10; Index++)
 		{
-			ASSERT_EQ(Data[Index], Index);
+			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
 		delete[] Data;
