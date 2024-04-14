@@ -203,7 +203,7 @@ namespace NxEn
 
 		void Sort()
 		{
-			Sort::MergeSort(Data, Count);
+			Sort::QuickSort(Data, Count);
 		}
 
 		uint64 GetCount() { return Count; }

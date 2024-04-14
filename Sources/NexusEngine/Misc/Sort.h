@@ -17,6 +17,12 @@ namespace NxEn
 			Sort::MergeSortSort(Data, Count, Compare);
 		}
 
+		template<typename T>
+		static void QuickSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		{
+			Sort::QuickSortSort(Data, Count, Compare);
+		}
+
 	private:
 		template<typename T>
 		static void MergeSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
@@ -62,6 +68,73 @@ namespace NxEn
 					Copy[K] = Data[J];
 					J++;
 				}
+			}
+		}
+	
+		template<typename T>
+		static void QuickSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		{
+			Sort::QuickSortSplit(Data, 0, Count - 1, Compare);
+		}
+
+		template<typename T>
+		static void QuickSortSplit(T* Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
+		{
+			if (Start >= End || End - Start < 1)
+			{
+				return;
+			}
+
+			uint64 Pivot = Sort::QuickSortPivot(Data, Start, End, Compare);
+
+			if (Pivot > 0)
+			{
+				Sort::QuickSortSplit(Data, Start, Pivot - 1, Compare);
+			}
+			if (Pivot < End)
+			{
+				Sort::QuickSortSplit(Data, Pivot + 1, End, Compare);
+			}
+		}
+
+		template<typename T>
+		static uint64 QuickSortPivot(T* Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
+		{
+			uint64 Current = Start;
+			uint64 Pivot = End;
+
+			while (Current < Pivot)
+			{
+				bool LessThan = Compare != nullptr ? Compare(Data[Current], Data[Pivot]) : Data[Current] <= Data[Pivot];
+				if (LessThan)
+				{
+					Current++;
+				}
+				else
+				{
+					Sort::QuickSortSwap(Data, Current, Pivot);
+					Pivot--;
+				}
+			}
+
+			return Pivot;
+		}
+
+		template<typename T>
+		static void QuickSortSwap(T* Data, uint64 Current, uint64 Pivot)
+		{
+			T Temp = Data[Current];
+
+			if (Pivot - Current > 1)
+			{
+				Data[Current] = Data[Pivot - 1];
+				Data[Pivot - 1] = Data[Pivot];
+				Data[Pivot] = Temp;
+			}
+			else
+			{
+				Data[Current] = Data[Pivot];
+				Data[Pivot] = Temp;
 			}
 		}
 	};
