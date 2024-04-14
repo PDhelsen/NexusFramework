@@ -23,6 +23,18 @@ namespace NxEn
 			Sort::QuickSortSort(Data, Count, Compare);
 		}
 
+		template<typename T>
+		static void HeapSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		{
+			Sort::HeapSortSort(Data, Count, Compare);
+		}
+
+		template<typename T>
+		static void Heapify(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		{
+			Sort::HeapifySort(Data, Count, Compare);
+		}
+
 	private:
 		template<typename T>
 		static void MergeSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
@@ -135,6 +147,84 @@ namespace NxEn
 			{
 				Data[Current] = Data[Pivot];
 				Data[Pivot] = Temp;
+			}
+		}
+
+		template<typename T>
+		static void HeapSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		{
+			Sort::HeapifySort(Data, Count, Compare);
+
+			uint64 Index = Count - 1;
+			while (true)
+			{
+				HeapSortSwap(Data, Index);
+				HeapifySwap(Data, Index, 0, Compare);
+
+				if (Index > 0)
+				{
+					Index--;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+		template<typename T>
+		static void HeapSortSwap(T* Data, uint64 Index)
+		{
+			T Temp = Data[0];
+			Data[0] = Data[Index];
+			Data[Index] = Temp;
+		}
+
+		template<typename T>
+		static void HeapifySort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		{
+			uint64 Root = Count / 2 - 1;
+			while(true)
+			{
+				Sort::HeapifySwap(Data, Count, Root, Compare);
+			
+				if (Root > 0)
+				{
+					Root--;
+				}
+				else
+				{
+					break;
+				}
+			}
+		}
+
+		template<typename T>
+		static void HeapifySwap(T* Data, uint64 Count, uint64 Root, CompareFunction<T> Compare = nullptr)
+		{
+			uint64 Largest = Root;
+			uint64 Left = 2 * Root + 1;
+			uint64 Right = 2 * Root + 2;
+
+			bool LeftGreater = Compare != nullptr ? !Compare(Data[Left], Data[Largest]) : Data[Left] > Data[Largest];
+			if (Left < Count && LeftGreater)
+			{
+				Largest = Left;
+			}
+
+			bool RightGreater = Compare != nullptr ? !Compare(Data[Right], Data[Largest]) : Data[Right] > Data[Largest];
+			if (Right < Count && RightGreater)
+			{
+				Largest = Right;
+			}
+
+			if (Largest != Root)
+			{
+				T Temp = Data[Root];
+				Data[Root] = Data[Largest];
+				Data[Largest] = Temp;
+			
+				Sort::HeapifySwap(Data, Count, Largest, Compare);
 			}
 		}
 	};

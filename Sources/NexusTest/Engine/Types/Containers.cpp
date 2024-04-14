@@ -38,6 +38,11 @@ namespace NxTs
 		{
 			return Integer <= Other.Integer;
 		}
+
+		bool operator>(const ContainerTest& Other)
+		{
+			return Integer > Other.Integer;
+		}
 	};
 
 	TEST(Type_Containers, Array)
