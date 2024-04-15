@@ -47,8 +47,8 @@ namespace NxTs
 
 	TEST(Type_Containers, Array)
 	{
-		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(10);
-		ASSERT_EQ(Test.GetCount(), 10);
+		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(9);
+		ASSERT_EQ(Test.GetCount(), 9);
 	
 		Test.Initialize(5);
 		ASSERT_EQ(Test[1].Integer, 5);
@@ -86,7 +86,7 @@ namespace NxTs
 		}
 		ASSERT_EQ(Test[3].Integer, 3);
 
-		Index = 9;
+		Index = 8;
 		for (NxEn::Array<ContainerTest>::Iterator Iterator = Test.BeginReverse(); Iterator != Test.EndReverse(); --Iterator)
 		{
 			ContainerTest& Container = *Iterator;
@@ -122,13 +122,18 @@ namespace NxTs
 		Test[5].Integer = 5;
 		Test[6].Integer = 6;
 		Test[7].Integer = 2;
-		Test[8].Integer = 9;
-		Test[9].Integer = 3;
+		Test[8].Integer = 3;
 
 		Test.Sort();
 		for (Index = 0; Index < Test.GetCount(); Index++)
 		{
 			ASSERT_EQ(Test[Index].Integer, Index);
+		}
+
+		Test.Reverse();
+		for (Index = 0; Index < Test.GetCount(); Index++)
+		{
+			ASSERT_EQ(Test[Index].Integer, Test.GetCount() - 1 - Index);
 		}
 	}
 }

@@ -107,12 +107,12 @@ namespace NxEn
 			}
 		}
 
-		Array<T> CopyShallow()
+		Array<T> CopyShallow() const
 		{
 			return Array(*this);
 		}
 
-		Array<T> CopyDeep()
+		Array<T> CopyDeep() const
 		{
 			Array<T> New = Array(Count, Allocator);
 			for (uint64 Index = 0; Index < Count; Index++)
@@ -176,7 +176,7 @@ namespace NxEn
 			return --Begin();
 		}
 
-		bool IsValidIndex(uint64 Index)
+		bool IsValidIndex(uint64 Index) const
 		{
 			return Index >= 0 && Index < Count;
 		}
@@ -206,7 +206,16 @@ namespace NxEn
 			Sort::HeapSort(Data, Count);
 		}
 
-		uint64 GetCount() { return Count; }
+		void Reverse()
+		{
+			uint64 Half = Count / 2;
+			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
+			{
+				Swap(Front, Back);
+			}
+		}
+
+		uint64 GetCount() const { return Count; }
 
 	private:
 		Allocator* Allocator;
