@@ -205,7 +205,7 @@ namespace NxEn
 
 		void Sort()
 		{
-			Sort::HeapSort(Data, Count);
+			Sort::QuickSort(Data, Count);
 		}
 
 		void Reverse()
