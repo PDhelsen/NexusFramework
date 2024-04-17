@@ -152,8 +152,8 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
 			
 			T Temp = Data[IndexB];
-			Data[IndexB] = Data[IndexA];
-			Data[IndexA] = Temp;
+			Data[IndexB] = (T&&)Data[IndexA];
+			Data[IndexA] = (T&&)Temp;
 		}
 
 		Iterator begin() const { return Begin(); }
@@ -205,7 +205,7 @@ namespace NxEn
 
 		void Sort()
 		{
-			Sort::QuickSort(Data, Count);
+			Sort::HeapSort(Data, Count);
 		}
 
 		void Reverse()
