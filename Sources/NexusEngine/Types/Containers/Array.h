@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
 #include "Misc/Sort.h"
