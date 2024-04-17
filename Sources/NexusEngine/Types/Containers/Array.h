@@ -77,19 +77,19 @@ namespace NxEn
 		};
 
 		Array(uint64 Count, Allocator* Alloc = nullptr)
-			: Count(Count)
+			: Allocator(nullptr), Count(Count), Data(nullptr)
 		{
 			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
 			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
 		Array(const Array<T>& Other)
-			: Data(Other.Data), Count(Other.Count), Allocator(Other.Allocator)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
 		}
 
 		Array(Array<T>&& Other) noexcept
-			: Data(Other.Data), Count(Other.Count), Allocator(Other.Allocator)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
