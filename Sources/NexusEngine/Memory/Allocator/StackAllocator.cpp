@@ -29,8 +29,19 @@ namespace NxEn
 		return Pointer;
 	}
 
+	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	{
+		NEXUS_ASSERT(false, "Reallocate from Stack Allocator is not supported")
+		return nullptr;
+	}
+
 	void StackAllocator::Free(void* Pointer)
 	{
+		if (!Pointer)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside of the stack")
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);

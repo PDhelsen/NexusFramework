@@ -35,8 +35,19 @@ namespace NxEn
 		return Pointer;
 	}
 
+	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	{
+		NEXUS_ASSERT(false, "Reallocate from Pool Allocator is not supported")
+		return nullptr;
+	}
+
 	void PoolAllocator::Free(void* Pointer)
 	{
+		if (!Pointer)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(Head != nullptr, "Head is null")
 		NEXUS_ASSERT(*Head != 0, "Next head is null")
 		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside of the pool")

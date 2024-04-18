@@ -20,6 +20,7 @@ namespace NxEn
 	{
 	public:
 		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size = 0, uint64 Alignement = 0) = 0;
+		NEXUS_ENGINE_API virtual void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) = 0;
 		NEXUS_ENGINE_API virtual void Free(void* Pointer) = 0;
 		NEXUS_ENGINE_API virtual void Clear() = 0;
 

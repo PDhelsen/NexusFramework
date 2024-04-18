@@ -26,15 +26,17 @@ namespace NxEn
         NEXUS_ENGINE_API ~HeapAllocator();
 
         NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = 0) override;
-        NEXUS_ENGINE_API void Free(void* Pointer);
-        NEXUS_ENGINE_API void Clear();
+        NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) override;
+        NEXUS_ENGINE_API void Free(void* Pointer) override;
+        NEXUS_ENGINE_API void Clear() override;
 
         NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = 0) const override;
-        NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const;
+        NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const override;
 
         NEXUS_ENGINE_API void Defragment();
 
     private:
+        bool UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
         HeapSlot* GetHeapSlot(uint64 Size) const;
         uint64 GetAlignedSize(uint64 Size) const;
         uint64 GetHeapSlotSize(HeapSlot* Slot) const;

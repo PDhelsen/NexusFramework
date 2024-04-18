@@ -26,8 +26,7 @@ namespace NxEn
 	{
 		if (Allocator != nullptr)
 		{
-			Allocator->Free(Pointer);
-			return Allocator->Allocate(Size, Alignement);
+			return Allocator->Reallocate(Pointer, Size, Alignement);
 		}
 		else
 		{

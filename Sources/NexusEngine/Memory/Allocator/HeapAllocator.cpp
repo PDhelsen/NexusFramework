@@ -20,35 +20,65 @@ namespace NxEn
 
 		NEXUS_ASSERT(Slot != nullptr, "Failed to find a big enough heap slot")
 
-		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
-		uint64 MemoryAddress = HeapSlotAddress + sizeof(HeapSlot);
-		uint64 NextAddress = MemoryAddress + Size;
-
-		bool AddHeapSlot = Slot->Next == nullptr;
-		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
-
-		HeapSlot* NewHeapSlot = nullptr;
-		if (AddHeapSlot || InsertHeapSlot)
-		{
-			NewHeapSlot = reinterpret_cast<HeapSlot*>(NextAddress);
-			NewHeapSlot->Next = InsertHeapSlot ? Slot->Next : nullptr;
-			NewHeapSlot->Free = true;
-		}
-
-		Slot->Next = AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
-		Slot->Free = false;
+		bool NewHeapSlot = UpdateHeapSlot(Slot, Size);
 
 		UpdateAmount(Size, true);
-		if (AddHeapSlot || InsertHeapSlot)
+		if (NewHeapSlot)
 		{
 			UpdateAmount(sizeof(HeapSlot), true);
 		}
 
-		return reinterpret_cast<void*>(MemoryAddress);
+		uint8* Data = GetHeapSlotData(Slot);
+		return reinterpret_cast<void*>(Data);
+	}
+
+	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size /* 0 */, uint64 Alignement /* 0 */)
+	{
+		if (!Pointer)
+		{
+			return nullptr;
+		}
+
+		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside ouf the heap")
+
+		void* NewPointer = nullptr;
+
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		Address -= sizeof(HeapSlot);
+
+		HeapSlot* Slot = reinterpret_cast<HeapSlot*>(Address);
+		uint64 CurrentSize = GetHeapSlotSize(Slot);
+
+		if (Slot->Next->Free && CurrentSize + GetHeapSlotSize(Slot->Next) >= Size)
+		{
+			bool NewHeapSlot = UpdateHeapSlot(Slot, Size);
+
+			UpdateAmount(Size - CurrentSize, true);
+			if (NewHeapSlot)
+			{
+				UpdateAmount(sizeof(HeapSlot), true);
+			}
+
+			uint8* Data = GetHeapSlotData(Slot);
+			NewPointer = reinterpret_cast<void*>(Data);
+		}
+		else
+		{
+			NewPointer = Allocate(Size, Alignement);
+			Memory::MemCopy(Pointer, NewPointer, Size);
+			Free(Pointer);
+		}
+
+		return NewPointer;
 	}
 
 	void HeapAllocator::Free(void* Pointer)
 	{
+		if (!Pointer)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside ouf the heap")
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
@@ -169,6 +199,29 @@ namespace NxEn
 		}
 
 		NEXUS_LOG(Engine, Info, 0, "End defragmentation (Current amount : %d)", UsedAmount());
+	}
+
+	bool HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
+	{
+		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
+		uint64 MemoryAddress = HeapSlotAddress + sizeof(HeapSlot);
+		uint64 NextAddress = MemoryAddress + Size;
+
+		bool AddHeapSlot = Slot->Next == nullptr;
+		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
+
+		HeapSlot* NewHeapSlot = nullptr;
+		if (AddHeapSlot || InsertHeapSlot)
+		{
+			NewHeapSlot = reinterpret_cast<HeapSlot*>(NextAddress);
+			NewHeapSlot->Next = InsertHeapSlot ? Slot->Next : nullptr;
+			NewHeapSlot->Free = true;
+		}
+
+		Slot->Next = AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
+		Slot->Free = false;
+
+		return AddHeapSlot || InsertHeapSlot;
 	}
 
 	HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
