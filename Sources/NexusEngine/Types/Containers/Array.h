@@ -5,6 +5,7 @@
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
 #include "Misc/Sort.h"
+#include "Misc/References.h"
 
 namespace NxEn
 {
@@ -152,8 +153,8 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
 			
 			T Temp = Data[IndexB];
-			Data[IndexB] = (T&&)Data[IndexA];
-			Data[IndexA] = (T&&)Temp;
+			Data[IndexB] = Move(Data[IndexA]);
+			Data[IndexA] = Move(Temp);
 		}
 
 		Iterator begin() const { return Begin(); }

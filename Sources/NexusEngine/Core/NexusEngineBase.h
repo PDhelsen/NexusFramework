@@ -10,6 +10,7 @@
 #include "Types/Integer.h"
 #include "Types/Enum.h"
 #include "Types/Timestamp.h"
+#include "Types/Containers/Array.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
@@ -22,4 +23,4 @@
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"
 
-#include "Misc/Misc.h"
+#include "Misc/References.h"

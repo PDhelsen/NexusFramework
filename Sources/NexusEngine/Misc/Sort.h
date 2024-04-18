@@ -2,6 +2,7 @@
 
 #include "Types/Integer.h"
 #include "Memory/Memory.h"
+#include "Misc/References.h"
 
 namespace NxEn
 {
@@ -139,14 +140,14 @@ namespace NxEn
 
 			if (Pivot - Current > 1)
 			{
-				Data[Current] = Data[Pivot - 1];
-				Data[Pivot - 1] = Data[Pivot];
-				Data[Pivot] = Temp;
+				Data[Current] = Move(Data[Pivot - 1]);
+				Data[Pivot - 1] = Move(Data[Pivot]);
+				Data[Pivot] = Move(Temp);
 			}
 			else
 			{
-				Data[Current] = Data[Pivot];
-				Data[Pivot] = Temp;
+				Data[Current] = Move(Data[Pivot]);
+				Data[Pivot] = Move(Temp);
 			}
 		}
 
@@ -176,8 +177,8 @@ namespace NxEn
 		static void HeapSortSwap(T* Data, uint64 Index)
 		{
 			T Temp = Data[0];
-			Data[0] = Data[Index];
-			Data[Index] = Temp;
+			Data[0] = Move(Data[Index]);
+			Data[Index] = Move(Temp);
 		}
 
 		template<typename T>
@@ -221,8 +222,8 @@ namespace NxEn
 			if (Largest != Root)
 			{
 				T Temp = Data[Root];
-				Data[Root] = Data[Largest];
-				Data[Largest] = Temp;
+				Data[Root] = Move(Data[Largest]);
+				Data[Largest] = Move(Temp);
 			
 				Sort::HeapifySwap(Data, Count, Largest, Compare);
 			}
