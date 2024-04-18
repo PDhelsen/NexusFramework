@@ -21,11 +21,14 @@ inline Type SetBit1(Type Value, Type Offset) { return Value |= Type(1) << Offset
 inline Type SetBit0(Type Value, Type Offset) { return Value &= ~(Type(1) << Offset); }\
 inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1(Value, Offset) : SetBit0(Value, Offset); }\
 
-NEXUS_BIT_CHECK_SET(int8);
-NEXUS_BIT_CHECK_SET(int16);
-NEXUS_BIT_CHECK_SET(int32);
-NEXUS_BIT_CHECK_SET(int64);
-NEXUS_BIT_CHECK_SET(uint8);
-NEXUS_BIT_CHECK_SET(uint16);
-NEXUS_BIT_CHECK_SET(uint32);
-NEXUS_BIT_CHECK_SET(uint64);
+namespace NxEn
+{
+	NEXUS_BIT_CHECK_SET(int8);
+	NEXUS_BIT_CHECK_SET(int16);
+	NEXUS_BIT_CHECK_SET(int32);
+	NEXUS_BIT_CHECK_SET(int64);
+	NEXUS_BIT_CHECK_SET(uint8);
+	NEXUS_BIT_CHECK_SET(uint16);
+	NEXUS_BIT_CHECK_SET(uint32);
+	NEXUS_BIT_CHECK_SET(uint64);
+}
