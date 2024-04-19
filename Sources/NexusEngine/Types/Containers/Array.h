@@ -77,8 +77,8 @@ namespace NxEn
 			T* Pointer;
 		};
 
-		Array(uint64 Count, Allocator* Alloc = nullptr)
-			: Allocator(nullptr), Count(Count), Data(nullptr)
+		Array(uint64 Cnt, Allocator* Alloc = nullptr)
+			: Allocator(nullptr), Count(Cnt), Data(nullptr)
 		{
 			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
 			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
@@ -112,17 +112,17 @@ namespace NxEn
 
 		Array<T> CopyShallow() const
 		{
-			return Array(*this);
+			return Array<T>(*this);
 		}
 
 		Array<T> CopyDeep() const
 		{
-			Array<T> New = Array(Count, Allocator);
+			Array<T> Copy = Array<T>(Count, Allocator);
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				New.Data[Index] = Data[Index];
+				Copy.Data[Index] = Data[Index];
 			}
-			return New;
+			return Copy;
 		}
 
 		T& operator[](uint64 Index)
