@@ -157,7 +157,7 @@ namespace NxEn
 
 			for (uint64 Offset = 0; Offset < Values.GetCount(); Offset++)
 			{
-				Data[Index + Offset] = Values[Index];
+				Data[Index + Offset] = Values[Offset];
 			}
 		}
 
