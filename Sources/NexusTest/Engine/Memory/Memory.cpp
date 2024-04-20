@@ -292,13 +292,13 @@ namespace NxTs
 
 		ASSERT_EQ(Test6, Test7);
 		ASSERT_EQ(Test7[0].Value, 6);
-		ASSERT_EQ(Allocator->UsedAmount(), 72);
+		ASSERT_EQ(Allocator->UsedAmount(), 64);
 
 		MemoryTest* Test8 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest));
 		Test8->Value = 9;
 		Test8->Test = 0xffffffff;
 
-		ASSERT_EQ(Allocator->UsedAmount(), 104);
+		ASSERT_EQ(Allocator->UsedAmount(), 96);
 
 		MemoryTest* Test9 = (MemoryTest*)Allocator->Reallocate(Test7, sizeof(MemoryTest) * 5);
 		Test9[3].Value = 10;
@@ -309,7 +309,12 @@ namespace NxTs
 		ASSERT_NE(Test7, Test9);
 		ASSERT_EQ(Test9[0].Value, 6);
 		ASSERT_EQ(Test9[2].Value, 8);
-		ASSERT_EQ(Allocator->UsedAmount(), 144);
+		ASSERT_EQ(Allocator->UsedAmount(), 128);
+
+		MemoryTest* Test10 = (MemoryTest*)Allocator->Reallocate(Test9, sizeof(MemoryTest) * 2);
+		ASSERT_EQ(Test10, Test9);
+		ASSERT_EQ(Test10[0].Value, 6);
+		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
 		delete Allocator;
 	}

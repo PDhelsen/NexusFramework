@@ -20,13 +20,8 @@ namespace NxEn
 
 		NEXUS_ASSERT(Slot != nullptr, "Failed to find a big enough heap slot")
 
-		bool NewHeapSlot = UpdateHeapSlot(Slot, Size);
-
+		UpdateHeapSlot(Slot, Size);
 		UpdateAmount(Size, true);
-		if (NewHeapSlot)
-		{
-			UpdateAmount(sizeof(HeapSlot), true);
-		}
 
 		uint8* Data = GetHeapSlotData(Slot);
 		return reinterpret_cast<void*>(Data);
@@ -42,21 +37,31 @@ namespace NxEn
 		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside ouf the heap")
 
 		void* NewPointer = nullptr;
+		Size = GetAlignedSize(Size);
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		Address -= sizeof(HeapSlot);
 
 		HeapSlot* Slot = reinterpret_cast<HeapSlot*>(Address);
 		uint64 CurrentSize = GetHeapSlotSize(Slot);
+		bool Shrink = CurrentSize >= Size;
 
-		if (Slot->Next->Free && CurrentSize + GetHeapSlotSize(Slot->Next) >= Size)
+		if ((CurrentSize + GetHeapSlotSize(Slot->Next) >= Size && Slot->Next->Free) || Shrink)
 		{
-			bool NewHeapSlot = UpdateHeapSlot(Slot, Size);
-
-			UpdateAmount(Size - CurrentSize, true);
-			if (NewHeapSlot)
+			if (!Shrink)
 			{
-				UpdateAmount(sizeof(HeapSlot), true);
+				RemoveNextHeapSlot(Slot);
+			}
+
+			UpdateHeapSlot(Slot, Size);
+
+			if (!Shrink)
+			{
+				UpdateAmount(Size - CurrentSize, true);
+			}
+			else
+			{
+				UpdateAmount(CurrentSize - Size, false);
 			}
 
 			uint8* Data = GetHeapSlotData(Slot);
@@ -93,11 +98,7 @@ namespace NxEn
 
 		if (Slot->Next != nullptr && Slot->Next->Free)
 		{
-			HeapSlot* Next = Slot->Next;
-			Slot->Next = Next->Next;
-
-			EraseMemory(Next, sizeof(HeapSlot));
-			UpdateAmount(sizeof(HeapSlot), false);
+			RemoveNextHeapSlot(Slot);
 		}
 	}
 
@@ -201,27 +202,11 @@ namespace NxEn
 		NEXUS_LOG(Engine, Info, 0, "End defragmentation (Current amount : %d)", UsedAmount());
 	}
 
-	bool HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
+	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
 	{
-		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
-		uint64 MemoryAddress = HeapSlotAddress + sizeof(HeapSlot);
-		uint64 NextAddress = MemoryAddress + Size;
-
-		bool AddHeapSlot = Slot->Next == nullptr;
-		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
-
-		HeapSlot* NewHeapSlot = nullptr;
-		if (AddHeapSlot || InsertHeapSlot)
-		{
-			NewHeapSlot = reinterpret_cast<HeapSlot*>(NextAddress);
-			NewHeapSlot->Next = InsertHeapSlot ? Slot->Next : nullptr;
-			NewHeapSlot->Free = true;
-		}
-
-		Slot->Next = AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
-		Slot->Free = false;
-
-		return AddHeapSlot || InsertHeapSlot;
+		uint64 UnalignedBytes = Size % NEXUS_MEMORY_ALIGN;
+		Size += UnalignedBytes == 0 ? 0 : NEXUS_MEMORY_ALIGN - UnalignedBytes;
+		return Size;
 	}
 
 	HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
@@ -240,11 +225,41 @@ namespace NxEn
 		return Slot;
 	}
 
-	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
+	void HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
 	{
-		uint64 UnalignedBytes = Size % NEXUS_MEMORY_ALIGN;
-		Size += UnalignedBytes == 0 ? 0 : NEXUS_MEMORY_ALIGN - UnalignedBytes;
-		return Size;
+		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
+		uint64 MemoryAddress = HeapSlotAddress + sizeof(HeapSlot);
+		uint64 NextAddress = MemoryAddress + Size;
+
+		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, "Overflow");
+
+		bool AddHeapSlot = Slot->Next == nullptr;
+		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
+
+		HeapSlot* NewHeapSlot = nullptr;
+		if (AddHeapSlot || InsertHeapSlot)
+		{
+			NewHeapSlot = reinterpret_cast<HeapSlot*>(NextAddress);
+			NewHeapSlot->Next = InsertHeapSlot ? Slot->Next : nullptr;
+			NewHeapSlot->Free = true;
+		}
+
+		Slot->Next = AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
+		Slot->Free = false;
+
+		if (AddHeapSlot || InsertHeapSlot)
+		{
+			UpdateAmount(sizeof(HeapSlot), true);
+		}
+	}
+
+	void HeapAllocator::RemoveNextHeapSlot(HeapSlot* Slot)
+	{
+		HeapSlot* Next = Slot->Next;
+		Slot->Next = Next->Next;
+
+		EraseMemory(Next, sizeof(HeapSlot));
+		UpdateAmount(sizeof(HeapSlot), false);
 	}
 
 	uint64 HeapAllocator::GetHeapSlotSize(HeapSlot* Slot) const

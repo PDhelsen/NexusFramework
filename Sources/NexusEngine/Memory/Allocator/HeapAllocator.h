@@ -36,9 +36,10 @@ namespace NxEn
         NEXUS_ENGINE_API void Defragment();
 
     private:
-        bool UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
-        HeapSlot* GetHeapSlot(uint64 Size) const;
         uint64 GetAlignedSize(uint64 Size) const;
+        HeapSlot* GetHeapSlot(uint64 Size) const;
+        void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
+        void RemoveNextHeapSlot(HeapSlot* Slot);
         uint64 GetHeapSlotSize(HeapSlot* Slot) const;
         uint8* GetHeapSlotData(HeapSlot* Slot) const;
 
