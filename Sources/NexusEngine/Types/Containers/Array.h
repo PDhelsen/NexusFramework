@@ -48,11 +48,6 @@ namespace NxEn
 				return Copy;
 			}
 
-			T& operator[](uint64 Index)
-			{
-				return *(Pointer + Index);
-			}
-
 			T* operator->()
 			{
 				return Pointer;
@@ -100,22 +95,7 @@ namespace NxEn
 			Memory::Free(Data, Allocator);
 		}
 
-		template<typename... Args>
-		void Initialize(Args&&... args)
-		{
-			for (uint64 Index = 0; Index < Count; Index++)
-			{
-				T& Instance = Data[Index];
-				Memory::Construct<T>(&Instance, args...);
-			}
-		}
-
-		Array<T> CopyShallow() const
-		{
-			return Array<T>(*this);
-		}
-
-		Array<T> CopyDeep() const
+		Array<T> Copy() const
 		{
 			Array<T> Copy = Array<T>(Count, Allocator);
 			for (uint64 Index = 0; Index < Count; Index++)
@@ -141,10 +121,60 @@ namespace NxEn
 			return Count != Other.Count || Data != Other.Data;
 		}
 
+		template<typename... Args>
+		void Initialize(Args&&... args)
+		{
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				T& Instance = Data[Index];
+				Memory::Construct<T>(&Instance, args...);
+			}
+		}
+
+		void Assign(uint64 Index, const T& Value)
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			Data[Index] = Value;
+		}
+
+		void Assign(uint64 Index, T&& Value)
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			Data[Index] = Move(Value);
+		}
+
+		template<typename... Args>
+		void AssignConstruct(uint64 Index, Args&&... args)
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			Data[Index] = T(args...);
+		}
+
+		void AssignRange(uint64 Index, Array<T>& Values)
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Values.GetCount()  - 1), "Invalid Index");
+
+			for (uint64 Offset = 0; Offset < Values.GetCount(); Offset++)
+			{
+				Data[Index + Offset] = Values[Index];
+			}
+		}
+
 		T& Get(uint64 Index)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Data[Index];
+		}
+
+		T& First()
+		{
+			return Data[0];
+		}
+
+		T& Last()
+		{
+			return Data[Count - 1];
 		}
 
 		void Swap(uint64 IndexA, uint64 IndexB)
@@ -186,22 +216,20 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			uint64 Index;
-			return Find(Other, Index);
+			return Find(Other) < Count;
 		}
 
-		bool Find(const T& Other, uint64& Found) const
+		uint64 Find(const T& Other) const
 		{
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
 				if (Data[Index] == Other)
 				{
-					Found = Index;
-					return true;
+					return Index;
 				}
 			}
 
-			return false;
+			return Count;
 		}
 
 		void Sort()
@@ -219,6 +247,7 @@ namespace NxEn
 		}
 
 		uint64 GetCount() const { return Count; }
+		T* GetRaw() { return Data; }
 
 	private:
 		Allocator* Allocator;

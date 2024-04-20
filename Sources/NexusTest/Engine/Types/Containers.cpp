@@ -24,6 +24,44 @@ namespace NxTs
 			Boolean = true;
 		}
 
+		ContainerTest(const ContainerTest& Other)
+		{
+			Integer = Other.Integer;
+			Float = Other.Float;
+			Boolean = Other.Boolean;
+
+			NEXUS_LOG(App, Info, 0, "Copy");
+		}
+
+		ContainerTest(ContainerTest&& Other) noexcept
+		{
+			Integer = Other.Integer;
+			Float = Other.Float;
+			Boolean = Other.Boolean;
+
+			NEXUS_LOG(App, Info, 0, "Move");
+		}
+
+		ContainerTest& operator=(const ContainerTest& Other)
+		{
+			Integer = Other.Integer;
+			Float = Other.Float;
+			Boolean = Other.Boolean;
+
+			NEXUS_LOG(App, Info, 0, "Copy");
+			return *this;
+		}
+
+		ContainerTest& operator=(ContainerTest&& Other) noexcept
+		{
+			Integer = Other.Integer;
+			Float = Other.Float;
+			Boolean = Other.Boolean;
+
+			NEXUS_LOG(App, Info, 0, "Move");
+			return *this;
+		}
+
 		bool operator==(const ContainerTest& Other)
 		{
 			return Integer == Other.Integer;
@@ -53,27 +91,38 @@ namespace NxTs
 		Test.Initialize(5);
 		ASSERT_EQ(Test[1].Integer, 5);
 
+		NxEn::Array<ContainerTest> CopyDeep = Test.Copy();
+		ASSERT_NE(&Test[5], &CopyDeep[5]);
+		ASSERT_EQ(Test[5].Integer, CopyDeep[5].Integer);
+		ASSERT_EQ(Test == CopyDeep, false);
+
 		ContainerTest Copy = Test[5];
 		Copy.Integer = 10;
 		ASSERT_NE(Test[5].Integer, 10);
 
-		NxEn::Array<ContainerTest> CopyShallow = Test.CopyShallow();
-		ASSERT_EQ(&Test[5], &CopyShallow[5]);
-
-		NxEn::Array<ContainerTest> CopyDeep = Test.CopyDeep();
-		ASSERT_NE(&Test[5], &CopyDeep[5]);
-		ASSERT_EQ(Test[5].Integer, CopyDeep[5].Integer);
-
-		ASSERT_EQ(Test == CopyShallow, true);
-		ASSERT_EQ(Test == CopyDeep, false);
+		ContainerTest& Reference = Test[0];
+		Reference.Integer = 10;
+		ASSERT_EQ(Test[0].Integer, 10);
 
 		Test[3] = ContainerTest(3);
 		Test[6] = ContainerTest(6);
 		ASSERT_EQ(Test[3].Integer, 3);
 		ASSERT_EQ(Test[6].Integer, 6);
 
+		Test.Assign(5, ContainerTest(7));
+		Test.Assign(7, 8);
+		ASSERT_EQ(Test[5].Integer, 7);
+		ASSERT_EQ(Test[7].Integer, 8);
+
+		Test.AssignRange(0, CopyDeep);
+		ASSERT_EQ(Test[0].Integer, 5);
+		ASSERT_EQ(Test[8].Integer, 5);
+
+		Test[3].Integer = 3;
+		Test[6].Integer = 6;
 		Test.Swap(3, 6);
 		ASSERT_EQ(Test[3].Integer, 6);
+		ASSERT_EQ(Test[6].Integer, 3);
 
 		uint64 Index = 0;
 		for (NxEn::Array<ContainerTest>::Iterator Iterator = Test.Begin(); Iterator != Test.End(); ++Iterator)
@@ -108,11 +157,8 @@ namespace NxTs
 		ASSERT_EQ(Test[3].Integer, 3);
 
 		ContainerTest Test2 = ContainerTest(2);
-		uint64 Found;
-		bool Contains = Test.Find(Test2, Found);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found, 2);
-
+		ASSERT_EQ(Test.Contains(Test2), true);
+		ASSERT_EQ(Test.Find(Test2), 2);
 
 		Test[0].Integer = 8;
 		Test[1].Integer = 4;
