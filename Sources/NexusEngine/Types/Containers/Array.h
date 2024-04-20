@@ -111,6 +111,12 @@ namespace NxEn
 			return Data[Index];
 		}
 
+		const T& operator[](uint64 Index) const
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			return Data[Index];
+		}
+
 		bool operator==(const Array<T>& Other)
 		{
 			return Count == Other.Count && Data == Other.Data;
@@ -150,7 +156,7 @@ namespace NxEn
 			Data[Index] = T(args...);
 		}
 
-		void AssignRange(uint64 Index, Array<T>& Values)
+		void AssignRange(uint64 Index, const Array<T>& Values)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Values.GetCount()  - 1), "Invalid Index");
@@ -162,6 +168,12 @@ namespace NxEn
 		}
 
 		T& Get(uint64 Index)
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			return Data[Index];
+		}
+
+		const T& Get(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Data[Index];
