@@ -2,6 +2,7 @@
 
 #include "Types/Containers/Array.h"
 #include "Types/Containers/List.h"
+#include "Types/Containers/Pool.h"
 
 namespace NxTs
 {
@@ -342,5 +343,93 @@ namespace NxTs
 		{
 			ASSERT_EQ(Test[Index].Integer, Test.GetCount() - 1 - Index);
 		}
+	}
+
+	TEST(Type_Containers, Pool)
+	{
+		NxEn::Pool<ContainerTest> Test = NxEn::Pool<ContainerTest>();
+		ASSERT_EQ(Test.GetCapacity(), 2);
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		ContainerTest* Test1 = Test.Acquire();
+		ASSERT_NE(Test1, nullptr);
+		ASSERT_EQ(Test1->Integer, 1);
+		ASSERT_EQ(Test.GetCount(), 0);
+
+		ContainerTest* Test2 = Test.Acquire();
+		ASSERT_NE(Test2, nullptr);
+		ASSERT_EQ(Test2->Integer, 1);
+		ASSERT_EQ(Test.GetCount(), 0);
+
+		ContainerTest* Test3 = Test.Acquire();
+		ASSERT_NE(Test3, nullptr);
+		ASSERT_EQ(Test3->Integer, 1);
+		ASSERT_EQ(Test.GetCount(), 0);
+
+		Test.Recycle(Test1);
+		ASSERT_EQ(Test.GetCount(), 1);
+		Test.Recycle(Test2);
+		ASSERT_EQ(Test.GetCount(), 2);
+		Test.Recycle(Test3);
+		ASSERT_EQ(Test.GetCount(), 3);
+
+		ContainerTest* Test4 = Test.Acquire();
+		ASSERT_EQ(Test4, Test3);
+		ASSERT_EQ(Test.GetCount(), 2);
+
+		ContainerTest* Test5 = Test.Acquire();
+		ASSERT_EQ(Test5, Test2);
+		ASSERT_EQ(Test.GetCount(), 1);
+
+		Test.Shrink();
+		ASSERT_EQ(Test.GetCapacity(), 2);
+
+		Test.Reserve(5);
+		ASSERT_EQ(Test.GetCapacity(), 5);
+
+		Test.Recycle(Test4);
+		Test.Recycle(Test5);
+		Test.Clear();
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.GetCapacity(), 5);
+
+		NxEn::Pool<ContainerTest> TestAllocator = NxEn::Pool<ContainerTest>(10, nullptr, true);
+
+		ContainerTest* Test6 = TestAllocator.Acquire();
+		ASSERT_NE(Test6, nullptr);
+		ASSERT_EQ(Test6->Integer, 1);
+		ASSERT_EQ(TestAllocator.GetCount(), 0);
+
+		ContainerTest* Test7 = TestAllocator.Acquire();
+		ASSERT_NE(Test7, nullptr);
+		ASSERT_EQ(Test7->Integer, 1);
+		ASSERT_EQ(TestAllocator.GetCount(), 0);
+
+		ContainerTest* Test8 = TestAllocator.Acquire();
+		ASSERT_NE(Test8, nullptr);
+		ASSERT_EQ(Test8->Integer, 1);
+		ASSERT_EQ(TestAllocator.GetCount(), 0);
+
+		TestAllocator.Recycle(Test6);
+		ASSERT_EQ(TestAllocator.GetCount(), 1);
+		TestAllocator.Recycle(Test7);
+		ASSERT_EQ(TestAllocator.GetCount(), 2);
+		TestAllocator.Recycle(Test8);
+		ASSERT_EQ(TestAllocator.GetCount(), 3);
+
+		ContainerTest* Test9 = TestAllocator.Acquire();
+		ASSERT_EQ(Test9, Test8);
+		ASSERT_EQ(TestAllocator.GetCount(), 2);
+
+		ContainerTest* Test10 = TestAllocator.Acquire();
+		ASSERT_EQ(Test10, Test7);
+		ASSERT_EQ(TestAllocator.GetCount(), 1);
+
+		TestAllocator.Recycle(Test9);
+		TestAllocator.Recycle(Test10);
+		TestAllocator.Clear();
+		ASSERT_EQ(TestAllocator.GetCount(), 0);
+		ASSERT_EQ(TestAllocator.GetCapacity(), 10);
 	}
 }

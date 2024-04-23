@@ -12,6 +12,7 @@
 #include "Types/Timestamp.h"
 #include "Types/Containers/Array.h"
 #include "Types/Containers/List.h"
+#include "Types/Containers/Pool.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
