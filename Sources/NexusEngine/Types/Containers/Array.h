@@ -259,7 +259,6 @@ namespace NxEn
 		}
 
 		uint64 GetCount() const { return Count; }
-		T* GetRaw() { return Data; }
 
 	private:
 		Allocator* Allocator;

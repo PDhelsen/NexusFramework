@@ -386,7 +386,6 @@ namespace NxEn
 		uint64 GetCount() const { return Count; }
 		uint64 GetCapacity() const { return Capacity; }
 		bool IsEmpty() const { return Count == 0; }
-		T* GetRaw() { return Data; }
 
 	private:
 		uint64 GetValidCapacity(uint64 Size) { return Size > 2 ? Size : 2; }
