@@ -12,146 +12,118 @@ namespace NxEn
 	template<typename T>
 	class Pool
 	{
-	public:
-		Pool(uint64 Cpct = 2, Allocator* AllocStructure = nullptr, Allocator* AllocData = nullptr)
-			: AllocatorStructure(nullptr), AllocatorData(nullptr), Capacity(0), Count(0), OwnAllocator(false), Data(nullptr)
+		struct Node
 		{
-			AllocatorStructure = AllocStructure != nullptr ? AllocStructure : Memory::GetActiveAllocator();
-			AllocatorData = AllocData != nullptr ? AllocData : Memory::GetActiveAllocator();
-			Capacity = GetValidCapacity(Cpct);
-			Data = (T**)Memory::Allocate(sizeof(T*) * Capacity, NEXUS_MEMORY_ALIGN, AllocatorStructure);
+			T Data;
+			Node* Next;
+		};
+
+	public:
+		Pool(Allocator* Alloc = nullptr)
+			: Allocator(nullptr), Count(0), Head(nullptr), Own(false)
+		{
+			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
 		}
 
-		Pool(uint64 Cpct, Allocator* AllocStructure = nullptr, bool AllocData = false)
-			: AllocatorStructure(nullptr), AllocatorData(nullptr), Capacity(0), Count(0), OwnAllocator(AllocData), Data(nullptr)
+		Pool(uint64 Capacity)
+			: Allocator(nullptr), Count(0), Head(nullptr), Own(true)
 		{
-			AllocatorStructure = AllocStructure != nullptr ? AllocStructure : Memory::GetActiveAllocator();
-			AllocatorData = AllocData ? new PoolAllocator(Cpct, sizeof(T)) : Memory::GetActiveAllocator();
-			Capacity = GetValidCapacity(Cpct);
-			Data = (T**)Memory::Allocate(sizeof(T*) * Capacity, NEXUS_MEMORY_ALIGN, AllocatorStructure);
+			AllocatorActive RawAllocator(nullptr);
+			Allocator = new PoolAllocator(Capacity, sizeof(Node));
 		}
 
 		Pool(const Pool<T>& Other)
-			: AllocatorStructure(Other.AllocStructure), AllocatorData(Other.AllocatorData), Capacity(Other.Capacity), Count(Other.Count), OwnAllocator(Other.OwnAllocator), Data(Other.Data)
+			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Own(Other.Own)
 		{
 		}
 
 		Pool(Pool<T>&& Other) noexcept
-			: AllocatorStructure(Other.AllocStructure), AllocatorData(Other.AllocatorData), Capacity(Other.Capacity), Count(Other.Count), OwnAllocator(Other.OwnAllocator), Data(Other.Data)
+			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Own(Other.Own)
 		{
-			Other.Data = nullptr;
+			Other.Head = nullptr;
+
+			if (Other.Own)
+			{
+				Other.Allocator = nullptr;
+			}
 		}
 
 		~Pool()
 		{
 			Clear();
-			if (OwnAllocator)
+
+			if (Own)
 			{
-				delete (PoolAllocator*)AllocatorData;
+				AllocatorActive RawAllocator(nullptr);
+				delete (PoolAllocator*)Allocator;
 			}
-
-			Memory::Free(Data, AllocatorStructure);
 		}
 
-		bool operator==(const Pool<T> Other)
+		bool operator==(const Pool<T>& Other)
 		{
-			return Count == Other.Count && OwnAllocator == Other.OwnAllocator && Data == Other.Data;
+			return Count == Other.Count && Head == Other.Head && Own == Other.Own;
 		}
 
-		bool operator!=(const Pool<T> Other)
+		bool operator!=(const Pool<T>& Other)
 		{
-			return Count != Other.Count || OwnAllocator != Other.OwnAllocator || Data != Other.Data;
+			return Count != Other.Count || Head != Other.Head || Own != Other.Own;
 		}
 
-		T* Acquire()
+		T& Acquire()
 		{
 			T* Instance = nullptr;
 
 			if (IsEmpty())
 			{
-				Instance = (T*)Memory::Allocate(sizeof(T), NEXUS_MEMORY_ALIGN, AllocatorData);
-				Memory::Construct<T>(Instance);
+				Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+				Memory::Construct<T>(&New->Data);
+				Instance = &New->Data;
 			}
 			else
 			{
-				Instance = Data[Count - 1];
-				Resize(--Count);
+				Node* Old = Head;
+				Head = Head->Next;
+				Instance = &Old->Data;
+
+				Count--;
 			}
 
-			return Instance;
+			return *Instance;
 		}
 
-		void Recycle(T* Instance)
+		void Recycle(T& Instance)
 		{
-			Resize(++Count);
-			Data[Count - 1] = Instance;
-		}
-
-		void Clear(bool ShrinkToZero = false)
-		{
-			for (uint64 Index = 0; Index < Count; Index++)
-			{
-				Memory::Destruct(Data[Index]);
-				Memory::Free(Data[Index], AllocatorData);
-			}
-
-			Resize(0);
-			if (ShrinkToZero)
-			{
-				Shrink();
-			}
-		}
-
-		void Reserve(uint64 Size)
-		{
-			NEXUS_ASSERT(!OwnAllocator, "Cannot modify capacity if using own allactor");
-
-			if (Size <= Capacity)
-			{
-				return;
-			}
-
-			Capacity = GetValidCapacity(Size);
-			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Capacity, NEXUS_MEMORY_ALIGN, AllocatorStructure);
-		}
-
-		void Shrink()
-		{
-			NEXUS_ASSERT(!OwnAllocator, "Cannot modify capacity if using own allactor");
+			Node* N = reinterpret_cast<Node*>(&Instance);
 			
-			Capacity = GetValidCapacity(Count);
-			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Capacity, NEXUS_MEMORY_ALIGN, AllocatorStructure);
+			N->Next = Head;
+			Head = N;
+
+			Count++;
+		}
+
+		void Clear()
+		{
+			while (Head)
+			{
+				Node* Next = Head->Next;
+
+				Memory::Destruct<T>(&Head->Data);
+				Memory::Free(Head, Allocator);
+				
+				Head = Next;
+			}
+
+			Count = 0;
 		}
 
 		uint64 GetCount() const { return Count; }
-		uint64 GetCapacity() const { return Capacity; }
 		bool IsEmpty() const { return Count == 0; }
+		bool OwnAllocator() const { return Own; }
 
 	private:
-		void Resize(uint64 Size)
-		{
-			Count = Size;
-
-			if (Count > Capacity)
-			{
-				NEXUS_ASSERT(!OwnAllocator, "Cannot modify capacity if using own allactor");
-
-				uint64 NewCapacity = Capacity + Capacity / 2;
-				Capacity = GetValidCapacity(NewCapacity > Count ? NewCapacity : Count);
-
-				Data = (T**)Memory::Realloc(Data, sizeof(T*) * Capacity, NEXUS_MEMORY_ALIGN, AllocatorStructure);
-			}
-
-			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
-		}
-
-		uint64 GetValidCapacity(uint64 Size) { return Size > 2 ? Size : 2; }
-
-		Allocator* AllocatorStructure;
-		Allocator* AllocatorData;
-		uint64 Capacity;
+		Allocator* Allocator;
 		uint64 Count;
-		bool OwnAllocator;
-		T** Data;
+		Node* Head;
+		bool Own;
 	};
 }
