@@ -15,6 +15,7 @@ namespace NxEn
 	{
 	}
 
+	//TODO: Implementation - PoolAllocator - Check behaviour when allocating last element
 	void* PoolAllocator::Allocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */)
 	{
 		NEXUS_ASSERT(Stride == Size || Size == 0, "Requested size is different from pool stride (it may be because the request is an array but it is not supported).")
