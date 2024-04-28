@@ -22,12 +22,16 @@ namespace NxEn
 		Pool(Allocator* Alloc = nullptr)
 			: Allocator(nullptr), Count(0), Head(nullptr), Own(false)
 		{
+			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
+
 			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
 		}
 
 		Pool(uint64 Capacity)
 			: Allocator(nullptr), Count(0), Head(nullptr), Own(true)
 		{
+			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
+
 			AllocatorActive RawAllocator(nullptr);
 			Allocator = new PoolAllocator(Capacity, sizeof(Node));
 		}

@@ -26,4 +26,22 @@ namespace NxEn
 		typedef typename RemoveReference<T>::Type RawType;
 		return (RawType&&)Obj;
 	}
+
+	template<typename T>
+	struct IsPointer
+	{ 
+		static bool Check() 
+		{
+			return false;
+		}
+	};
+
+	template<typename T>
+	struct IsPointer<T*> 
+	{ 
+		static bool Check()
+		{
+			return true;
+		}
+	};
 }
