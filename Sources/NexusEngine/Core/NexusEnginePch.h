@@ -13,6 +13,7 @@
 #include "Types/Containers/Array.h"
 #include "Types/Containers/List.h"
 #include "Types/Containers/Pool.h"
+#include "Types/Containers/LinkedList.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"

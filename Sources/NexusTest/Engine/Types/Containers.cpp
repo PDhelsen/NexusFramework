@@ -3,6 +3,7 @@
 #include "Types/Containers/Array.h"
 #include "Types/Containers/List.h"
 #include "Types/Containers/Pool.h"
+#include "Types/Containers/LinkedList.h"
 
 namespace NxTs
 {
@@ -74,14 +75,24 @@ namespace NxTs
 			return Integer != Other.Integer;
 		}
 
-		bool operator<=(const ContainerTest& Other)
-		{
-			return Integer <= Other.Integer;
-		}
-
 		bool operator>(const ContainerTest& Other)
 		{
 			return Integer > Other.Integer;
+		}
+
+		bool operator<(const ContainerTest& Other)
+		{
+			return Integer < Other.Integer;
+		}
+		
+		bool operator>=(const ContainerTest& Other)
+		{
+			return Integer >= Other.Integer;
+		}
+		
+		bool operator<=(const ContainerTest& Other)
+		{
+			return Integer <= Other.Integer;
 		}
 	};
 
@@ -416,5 +427,92 @@ namespace NxTs
 		TestAllocator.Recycle(Test10);
 		TestAllocator.Clear();
 		ASSERT_EQ(TestAllocator.GetCount(), 0);
+	}
+
+	TEST(Type_Containers, LinkedList)
+	{
+		NxEn::LinkedList<ContainerTest> Test = NxEn::LinkedList<ContainerTest>();
+		ASSERT_EQ(Test.GetCount(), 0);
+
+		Test.AppendBack(ContainerTest(5));
+		ASSERT_EQ(Test.Last().Integer, 5);
+		Test.AppendBack(8);
+		ASSERT_EQ(Test.Last().Integer, 8);
+		Test.AppendFront(10);
+		ASSERT_EQ(Test.First().Integer, 10);
+		Test.AppendFront(ContainerTest(3));
+		ASSERT_EQ(Test.First().Integer, 3);
+		ASSERT_EQ(Test.GetCount(), 4);
+
+		ContainerTest& First = Test.First();
+		First.Integer = 62;
+		ASSERT_EQ(Test.First().Integer, 62);
+		ContainerTest& Next = Test.GetNext(&First);
+		Next.Integer = 46;
+		ASSERT_EQ(Test.GetNext(&Test.First()).Integer, 46);
+		ContainerTest& Last = Test.Last();
+		Last.Integer = 24;
+		ASSERT_EQ(Test.Last().Integer, 24);
+		ContainerTest& Prev = Test.GetPrev(&Last);
+		Prev.Integer = 72;
+		ASSERT_EQ(Test.GetPrev(&Test.Last()).Integer, 72);
+
+		Test.Assign(&First, ContainerTest(6));
+		ASSERT_EQ(Test.First().Integer, 6);
+		Test.Assign(&Last, 8);
+		ASSERT_EQ(Test.Last().Integer, 8);
+
+		Test.InsertAfter(&Next, ContainerTest(56));
+		Test.InsertAfter(&Prev, 23);
+		Test.InsertBefore(&Prev, ContainerTest(32));
+		Test.InsertBefore(&Next, 2);
+		ASSERT_EQ(Test.GetCount(), 8);
+
+		Test.Swap(&Test.First(), &Test.Last());
+		Test.Swap(&Test.First(), &Test.Last());
+		Test.Swap(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
+		Test.Swap(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
+		Test.Swap(&Test.GetNext(&Test.GetNext(&Test.GetNext(&Test.First()))), &Test.GetPrev(&Test.GetPrev(&Test.GetPrev(&Test.Last()))));
+		Test.Swap(&Test.GetNext(&Test.GetNext(&Test.GetNext(&Test.First()))), &Test.GetPrev(&Test.GetPrev(&Test.GetPrev(&Test.Last()))));
+
+		Test.AppendFront(2);
+
+		bool Contains = Test.Contains(ContainerTest(23));
+		ASSERT_EQ(Contains, true);
+		Test.Sort();
+		for (ContainerTest& It : Test)
+		{
+			ContainerTest* Next = Test.TryGetNext(&It);
+			if (Next != nullptr)
+			{
+				ASSERT_EQ(It <= *Next, true);
+			}
+		}
+		Test.Reverse();
+		for (ContainerTest& It : Test)
+		{
+			ContainerTest* Next = Test.TryGetNext(&It);
+			if (Next != nullptr)
+			{
+				ASSERT_EQ(It >= *Next, true);
+			}
+		}
+
+		NxEn::LinkedList<ContainerTest> Copy = Test.Copy();
+		uint64 Index = 0;
+		for (NxEn::LinkedList<ContainerTest>::Iterator It = Copy.begin(); It != Copy.End(); It++, Index++)
+		{
+			It->Integer = Index;
+		}
+
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		Test.RemoveBack();
+		Test.RemoveFront();
+		ASSERT_EQ(Test.GetCount(), 7);
+
+		Test.Remove(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
+		ASSERT_EQ(Test.GetCount(), 2);
 	}
 }
