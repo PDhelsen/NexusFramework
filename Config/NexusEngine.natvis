@@ -45,4 +45,16 @@
     </Expand>
   </Type>
 
+  <Type Name="NxEn::Stack&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <LinkedListItems>
+        <Size>Count</Size>
+        <HeadPointer>Top</HeadPointer>
+        <NextPointer>Next</NextPointer>
+        <ValueNode>Data</ValueNode>
+      </LinkedListItems>
+    </Expand>
+  </Type>
+
 </AutoVisualizer>

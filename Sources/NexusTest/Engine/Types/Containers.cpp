@@ -4,6 +4,7 @@
 #include "Types/Containers/List.h"
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/LinkedList.h"
+#include "Types/Containers/Stack.h"
 
 namespace NxTs
 {
@@ -514,5 +515,49 @@ namespace NxTs
 
 		Test.Remove(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
 		ASSERT_EQ(Test.GetCount(), 2);
+	}
+
+	TEST(Type_Containers, Stack)
+	{
+		NxEn::Stack<ContainerTest> Test = NxEn::Stack<ContainerTest>();
+		ASSERT_EQ(Test.GetCount(), 0);
+
+		Test.Append(ContainerTest(5));
+		ASSERT_EQ(Test.Get().Integer, 5);
+		Test.Append(8);
+		ASSERT_EQ(Test.Get().Integer, 8);
+
+		ContainerTest& Test1 = Test.Get();
+		Test1.Integer = 15;
+		ASSERT_EQ(Test.Get().Integer, 15);
+
+		Test.Append(10);
+		ASSERT_EQ(Test.Get().Integer, 10);
+		Test.Append(ContainerTest(3));
+		ASSERT_EQ(Test.Get().Integer, 3);
+		Test.Append(ContainerTest(19));
+		ASSERT_EQ(Test.Get().Integer, 19);
+		Test.Append(ContainerTest(8));
+		ASSERT_EQ(Test.Get().Integer, 8);
+		ASSERT_EQ(Test.GetCount(), 6);
+
+		NxEn::Stack<ContainerTest> Copy = Test.Copy();
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		Test.Remove();
+		ASSERT_EQ(Test.GetCount(), 5);
+		Test.Remove(&Test1);
+		ASSERT_EQ(Test.GetCount(), 1);
+
+		Test.Append(10);
+		Test.Append(17);
+		Test.Append(25);
+
+		bool Contains = Test.Contains(25);
+		ASSERT_EQ(Contains, true);
+
+		Test.Reverse();
+		ASSERT_EQ(Test.Get().Integer, 5);
 	}
 }

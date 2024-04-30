@@ -14,6 +14,7 @@
 #include "Types/Containers/List.h"
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/LinkedList.h"
+#include "Types/Containers/Stack.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
