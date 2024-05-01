@@ -547,8 +547,8 @@ namespace NxTs
 
 		Test.Remove();
 		ASSERT_EQ(Test.GetCount(), 5);
-		Test.Remove(&Test1);
-		ASSERT_EQ(Test.GetCount(), 1);
+		Test.Remove();
+		ASSERT_EQ(Test.GetCount(), 4);
 
 		Test.Append(10);
 		Test.Append(17);
@@ -559,5 +559,47 @@ namespace NxTs
 
 		Test.Reverse();
 		ASSERT_EQ(Test.Get().Integer, 5);
+	}
+
+	TEST(Type_Containers, Queue)
+	{
+		NxEn::Queue<ContainerTest> Test = NxEn::Queue<ContainerTest>();
+		ASSERT_EQ(Test.GetCount(), 0);
+
+		Test.Append(ContainerTest(5));
+		ASSERT_EQ(Test.Get().Integer, 5);
+		Test.Append(8);
+		ASSERT_EQ(Test.Get().Integer, 5);
+
+		ContainerTest& Test1 = Test.Get();
+		Test1.Integer = 15;
+		ASSERT_EQ(Test.Get().Integer, 15);
+
+		Test.Append(10);
+		ASSERT_EQ(Test.Get().Integer, 15);
+		Test.Append(ContainerTest(3));
+		Test.Append(ContainerTest(19));
+		Test.Append(ContainerTest(8));
+		ASSERT_EQ(Test.GetCount(), 6);
+
+		NxEn::Queue<ContainerTest> Copy = Test.Copy();
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		Test.Remove();
+		ASSERT_EQ(Test.GetCount(), 5);
+		Test.Remove();
+		ASSERT_EQ(Test.GetCount(), 4);
+		ASSERT_EQ(Test.Get().Integer, 10);
+
+		Test.Append(10);
+		Test.Append(17);
+		Test.Append(25);
+
+		bool Contains = Test.Contains(25);
+		ASSERT_EQ(Contains, true);
+
+		Test.Reverse();
+		ASSERT_EQ(Test.Get().Integer, 25);
 	}
 }

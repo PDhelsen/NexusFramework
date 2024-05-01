@@ -57,4 +57,16 @@
     </Expand>
   </Type>
 
+  <Type Name="NxEn::Queue&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <LinkedListItems>
+        <Size>Count</Size>
+        <HeadPointer>Head</HeadPointer>
+        <NextPointer>Next</NextPointer>
+        <ValueNode>Data</ValueNode>
+      </LinkedListItems>
+    </Expand>
+  </Type>
+
 </AutoVisualizer>
