@@ -29,7 +29,7 @@ namespace NxEn
 		{
 		}
 
-		Stack(Stack<T>&& Other)
+		Stack(Stack<T>&& Other) noexcept
 			: Allocator(Other.Allocator), Count(Other.Count), Top(Other.Top)
 		{
 			Other.Top = nullptr;

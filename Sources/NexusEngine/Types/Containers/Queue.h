@@ -28,7 +28,7 @@ namespace NxEn
 		{
 		}
 
-		Queue(Queue<T>&& Other)
+		Queue(Queue<T>&& Other) noexcept
 			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Tail(Other.Tail)
 		{
 			Other.Head = nullptr;
