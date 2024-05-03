@@ -69,4 +69,14 @@
     </Expand>
   </Type>
 
+  <Type Name="NxEn::Dequeue&lt;*&gt;">
+    <DisplayString>{{ size={Count} }}</DisplayString>
+    <Expand>
+      <IndexListItems>
+        <Size>Count</Size>
+        <ValueNode>Data[($i + Front) / ChunkSize][($i + Front) % ChunkSize]</ValueNode>
+      </IndexListItems>
+    </Expand>
+  </Type>
+
 </AutoVisualizer>

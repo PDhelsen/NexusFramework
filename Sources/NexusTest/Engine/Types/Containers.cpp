@@ -5,6 +5,8 @@
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/LinkedList.h"
 #include "Types/Containers/Stack.h"
+#include "Types/Containers/Queue.h"
+#include "Types/Containers/Dequeue.h"
 
 namespace NxTs
 {
@@ -601,5 +603,97 @@ namespace NxTs
 
 		Test.Reverse();
 		ASSERT_EQ(Test.Get().Integer, 25);
+	}
+
+	TEST(Type_Containers, Dequeue)
+	{
+		NxEn::Dequeue<ContainerTest> Test = NxEn::Dequeue<ContainerTest>();
+		ASSERT_EQ(Test.GetChunks(), 1);
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		Test.AppendBack(ContainerTest(93));
+		Test.AppendBack(ContainerTest(16));
+		Test.AppendBack(ContainerTest(73));
+		Test.AppendBack(21);
+		Test.AppendBack(64);
+		Test.AppendBack(24);
+		Test.AppendFront(ContainerTest(86));
+		Test.AppendFront(ContainerTest(82));
+		Test.AppendFront(ContainerTest(60));
+		Test.AppendFront(26);
+		Test.AppendFront(59);
+		Test.AppendFront(34);
+		ASSERT_EQ(Test.GetChunks(), 3);
+		ASSERT_EQ(Test.GetCount(), 12);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		ASSERT_EQ(Test[3].Integer, 60);
+		ASSERT_EQ(Test[9].Integer, 21);
+
+		NxEn::Dequeue<ContainerTest> CopyDeep = Test.Copy();
+		ASSERT_NE(&Test[0], &CopyDeep[0]);
+		ASSERT_EQ(Test[0].Integer, CopyDeep[0].Integer);
+		ASSERT_EQ(Test == CopyDeep, false);
+
+		CopyDeep.Clear();
+		ASSERT_EQ(CopyDeep.GetCount(), 0);
+		ASSERT_EQ(CopyDeep.IsEmpty(), true);
+
+		Test.Assign(4, 48);
+		ASSERT_EQ(Test[4].Integer, 48);
+
+		Test.RemoveBack();
+		Test.RemoveBack();
+		Test.RemoveFront();
+		Test.RemoveFront();
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.GetChunks(), 1);
+
+		ASSERT_EQ(Test.First().Integer, 26);
+		ASSERT_EQ(Test.Last().Integer, 21);
+
+		bool Contains = Test.Contains(ContainerTest(86));
+		uint64 Found = Test.Find(ContainerTest(73));
+		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found, 6);
+
+		Test.AppendBack(21);
+		Test.AppendBack(64);
+		Test.AppendBack(24);
+		Test.AppendFront(26);
+		Test.AppendFront(59);
+		Test.AppendFront(34);
+
+		uint64 Index = 0;
+		for (NxEn::Dequeue<ContainerTest>::Iterator Iterator = Test.Begin(); Iterator != Test.End(); ++Iterator)
+		{
+			ContainerTest& Container = *Iterator;
+			Container.Integer = Index;
+			Container.Float = (float)Index;
+			Container.Boolean = Index % 2 == 1;
+			Index++;
+		}
+		ASSERT_EQ(Test[3].Integer, 3);
+
+		Index = Test.GetCount() - 1;
+		for (NxEn::Dequeue<ContainerTest>::Iterator Iterator = Test.BeginReverse(); Iterator != Test.EndReverse(); --Iterator)
+		{
+			Iterator->Integer = Index;
+			Iterator->Float = (float)Index;
+			Iterator->Boolean = Index % 2 == 1;
+			Index--;
+		}
+		ASSERT_EQ(Test[3].Integer, 3);
+
+		Index = 0;
+		for (ContainerTest& Container : Test)
+		{
+			Container.Integer = Index;
+			Container.Float = (float)Index;
+			Container.Boolean = Index % 2 == 1;
+			Index++;
+		}
+		ASSERT_EQ(Test[3].Integer, 3);
 	}
 }

@@ -16,6 +16,7 @@
 #include "Types/Containers/LinkedList.h"
 #include "Types/Containers/Stack.h"
 #include "Types/Containers/Queue.h"
+#include "Types/Containers/Dequeue.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
