@@ -44,4 +44,9 @@ namespace NxEn
 			return true;
 		}
 	};
+
+	template <class, class>
+	constexpr bool IsSameType = false;
+	template <class T>
+	constexpr bool IsSameType<T, T> = true;
 }

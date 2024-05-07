@@ -17,6 +17,7 @@
 #include "Types/Containers/Stack.h"
 #include "Types/Containers/Queue.h"
 #include "Types/Containers/Dequeue.h"
+#include "Types/Containers/Tuple.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"

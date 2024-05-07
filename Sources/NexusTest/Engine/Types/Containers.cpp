@@ -7,6 +7,7 @@
 #include "Types/Containers/Stack.h"
 #include "Types/Containers/Queue.h"
 #include "Types/Containers/Dequeue.h"
+#include "Types/Containers/Tuple.h"
 
 namespace NxTs
 {
@@ -695,5 +696,25 @@ namespace NxTs
 			Index++;
 		}
 		ASSERT_EQ(Test[3].Integer, 3);
+	}
+
+	TEST(Type_Containers, Tuple)
+	{
+		NxEn::Tuple<ContainerTest, ContainerTest> Test = NxEn::Tuple(ContainerTest(5), ContainerTest(10));
+
+		ContainerTest& Test1 = Test.GetFirst();
+		ContainerTest& Test2 = Test.GetSecond();
+		ASSERT_EQ(Test1.Integer, 5);
+		ASSERT_EQ(Test2.Integer, 10);
+
+		Test.SetFirst(ContainerTest(20));
+		Test.SetSecond(ContainerTest(25));
+
+		ASSERT_EQ(Test1.Integer, 20);
+		ASSERT_EQ(Test2.Integer, 25);
+
+		Test.Swap();
+		ASSERT_EQ(Test.GetFirst().Integer, 25);
+		ASSERT_EQ(Test.GetSecond().Integer, 20);
 	}
 }
