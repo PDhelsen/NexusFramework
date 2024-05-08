@@ -58,6 +58,7 @@ namespace NxEn
 		static StackAllocator* Stack;
 		static HeapAllocator* Heap;
 
+		// TODO: Implementation - Allocators - Store in stack
 		static Allocator* Active;
 	};
 
