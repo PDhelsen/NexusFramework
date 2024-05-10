@@ -98,7 +98,7 @@ namespace NxEn
 		{
 		}
 
-		Tree(Tree<T>&& Other)
+		Tree(Tree<T>&& Other) noexcept
 			: Allocator(Other.Allocator), Count(Other.Count), Root(Other.Root)
 		{
 			Root = nullptr;
@@ -106,6 +106,7 @@ namespace NxEn
 
 		~Tree()
 		{
+			Clear();
 		}
 
 		Tree<T> Copy() const
