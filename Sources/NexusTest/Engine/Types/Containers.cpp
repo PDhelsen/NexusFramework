@@ -8,6 +8,7 @@
 #include "Types/Containers/Queue.h"
 #include "Types/Containers/Dequeue.h"
 #include "Types/Containers/Tuple.h"
+#include "Types/Containers/Tree.h"
 
 namespace NxTs
 {
@@ -696,6 +697,69 @@ namespace NxTs
 			Index++;
 		}
 		ASSERT_EQ(Test[3].Integer, 3);
+	}
+
+	TEST(Type_Containers, Tree)
+	{
+		NxEn::Tree<ContainerTest> Test = NxEn::Tree<ContainerTest>();
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		Test.Initialize(ContainerTest(10));
+		ASSERT_EQ(Test.GetCount(), 1);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test.GetRoot().Integer, 10);
+
+		Test.Append(&Test.GetRoot(), ContainerTest(1));
+		Test.Append(&Test.GetRoot(), ContainerTest(2));
+		Test.Append(&Test.GetRoot(), ContainerTest(3));
+		ASSERT_EQ(Test.GetCount(), 4);
+
+		ContainerTest& Test1Ref = Test.GetChild(&Test.GetRoot());
+		ASSERT_EQ(Test1Ref.Integer, 1);
+		ContainerTest& Test2Ref = Test.GetSibling(&Test1Ref);
+		ASSERT_EQ(Test2Ref.Integer, 2);
+		ContainerTest& Test3Ref = Test.GetSibling(&Test2Ref);
+		ASSERT_EQ(Test3Ref.Integer, 3);
+		ContainerTest& Test0Ref = Test.GetParent(&Test2Ref);
+		ASSERT_EQ(Test0Ref.Integer, 10);
+
+		Test.Append(&Test1Ref, ContainerTest(4));
+		Test.Append(&Test2Ref, ContainerTest(5));
+		ASSERT_EQ(Test.GetCount(), 6);
+
+		Test.InsertSibling(&Test2Ref, ContainerTest(6));
+		Test.InsertSibling(&Test3Ref, ContainerTest(7));
+		ASSERT_EQ(Test.GetCount(), 8);
+
+		Test.InsertChild(&Test.GetRoot(), ContainerTest(100));
+		ASSERT_EQ(Test.GetCount(), 9);
+
+		NxEn::Tree<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Test == Copy, false);
+		Test.AppendRange(&Test1Ref, Copy);
+		ASSERT_EQ(Test.GetCount(), 18);
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		uint64 Index = 0;
+		for (NxEn::Tree<ContainerTest>::Iterator It = Test.Begin(); It != Test.End(); It++)
+		{
+			(*It).Integer = Index++;
+		}
+
+		Index = 0;
+		for (auto It : Test)
+		{
+			ASSERT_EQ(It.Integer, Index++);
+		}
+
+		ASSERT_EQ(Test.Contains(ContainerTest(5)), true);
+		ASSERT_EQ(Test.Contains(ContainerTest(20)), false);
+
+		Test.Remove(&Test2Ref);
+		Test.Remove(&Test1Ref);
+		ASSERT_EQ(Test.GetCount(), 5);
 	}
 
 	TEST(Type_Containers, Tuple)

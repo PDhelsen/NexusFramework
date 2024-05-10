@@ -18,6 +18,7 @@
 #include "Types/Containers/Queue.h"
 #include "Types/Containers/Dequeue.h"
 #include "Types/Containers/Tuple.h"
+#include "Types/Containers/Tree.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
