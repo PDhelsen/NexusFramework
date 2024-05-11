@@ -79,4 +79,16 @@
     </Expand>
   </Type>
 
+  <Type Name="NxEn::Graph&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <LinkedListItems>
+        <Size>Count</Size>
+        <HeadPointer>Root</HeadPointer>
+        <NextPointer>Next</NextPointer>
+        <ValueNode>Data</ValueNode>
+      </LinkedListItems>
+    </Expand>
+  </Type>
+
 </AutoVisualizer>
