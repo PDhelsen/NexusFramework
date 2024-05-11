@@ -19,6 +19,7 @@
 #include "Types/Containers/Dequeue.h"
 #include "Types/Containers/Tuple.h"
 #include "Types/Containers/Tree.h"
+#include "Types/Containers/Graph.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"

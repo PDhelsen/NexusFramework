@@ -9,6 +9,7 @@
 #include "Types/Containers/Dequeue.h"
 #include "Types/Containers/Tuple.h"
 #include "Types/Containers/Tree.h"
+#include "Types/Containers/Graph.h"
 
 namespace NxTs
 {
@@ -761,6 +762,56 @@ namespace NxTs
 		Test.Remove(&Test1Ref);
 		ASSERT_EQ(Test.GetCount(), 5);
 	}
+
+	//TEST(Type_Containers, Graph)
+	//{
+	//	NxEn::Graph<ContainerTest> Test = NxEn::Graph<ContainerTest>();
+	//	ASSERT_EQ(Test.GetCount(), 0);
+
+	//	Test.Append(ContainerTest(5));
+	//	ASSERT_EQ(Test.GetRoot().Integer, 5);
+	//	Test.Append(8);
+	//	ASSERT_EQ(Test.GetRoot().Integer, 8);
+	//	Test.Append(10);
+	//	ASSERT_EQ(Test.GetRoot().Integer, 10);
+	//	Test.Append(ContainerTest(3));
+	//	ASSERT_EQ(Test.GetRoot().Integer, 3);
+	//	ASSERT_EQ(Test.GetCount(), 4);
+
+	//	Test.Assign(&Test.GetRoot(), ContainerTest(6));
+	//	ASSERT_EQ(Test.GetRoot().Integer, 6);
+
+	//	bool Contains = Test.Contains(ContainerTest(10));
+	//	ASSERT_EQ(Contains, true);
+	//	Test.Append(8);
+	//	ContainerTest* TestA = Test.TryGetRoot();
+	//	Test.Append(4);
+	//	ContainerTest* TestB = Test.TryGetRoot();
+	//	Test.Swap(TestA, TestB);
+	//	ASSERT_EQ(Test.GetRoot().Integer, 8);
+
+	//	Test.Remove(Test.TryGetRoot());
+	//	ASSERT_EQ(Test.GetRoot().Integer, 4);
+	//	Test.Remove(Test.TryGetRoot());
+	//	ASSERT_EQ(Test.GetRoot().Integer, 3);
+	//	ASSERT_EQ(Test.GetCount(), 4);
+
+	//	uint64 Index = 0;
+	//	for (ContainerTest& It : Test)
+	//	{
+	//		It.Integer = Index++;
+	//	}
+
+	//	Index = 0;
+	//	for (NxEn::Graph<ContainerTest>::Iterator It = Test.Begin(); It != Test.End(); It++)
+	//	{
+	//		ASSERT_EQ(It->Integer, Index++);
+	//	}
+
+	//	//NxEn::Graph<ContainerTest> Copy = Test.Copy();
+	//	Test.Clear();
+	//	ASSERT_EQ(Test.GetCount(), 0);
+	//}
 
 	TEST(Type_Containers, Tuple)
 	{

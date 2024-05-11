@@ -486,6 +486,11 @@ namespace NxEn
 
 		void RemoveNode(Node* Instance)
 		{
+			if (!Instance)
+			{
+				return;
+			}
+
 			Node* Child = Instance->Child;
 			while (Child)
 			{
