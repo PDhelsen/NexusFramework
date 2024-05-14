@@ -332,7 +332,7 @@ namespace NxEn
 				Current = Current->Next;
 			}
 
-			if (Instance == Root)
+			if (Instance && Instance == Root)
 			{
 				Root = Instance->Next;
 			}

@@ -750,7 +750,7 @@ namespace NxTs
 		}
 
 		Index = 0;
-		for (auto It : Test)
+		for (auto& It : Test)
 		{
 			ASSERT_EQ(It.Integer, Index++);
 		}
