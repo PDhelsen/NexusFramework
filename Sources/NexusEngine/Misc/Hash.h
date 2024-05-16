@@ -11,9 +11,9 @@ namespace NxEn
 	public:
 		NEXUS_ENGINE_API Hash32(uint32 Seed = 0);
 
-		NEXUS_ENGINE_API static uint32 Hash(const void* Input, uint64 Length, uint32 Seed = 0);
+		NEXUS_ENGINE_API static uint32 Hash(const void* Data, uint64 Length, uint32 Seed = 0);
 
-		NEXUS_ENGINE_API Hash32& Accumulate(const void* Input, uint64 Length);
+		NEXUS_ENGINE_API Hash32& Accumulate(const void* Data, uint64 Length);
 		NEXUS_ENGINE_API uint32 Hash() const;
 
 		NEXUS_ENGINE_API uint64 GetSize() const { return Size; }
@@ -48,9 +48,9 @@ namespace NxEn
 	public:
 		NEXUS_ENGINE_API Hash64(uint64 Seed = 0);
 
-		NEXUS_ENGINE_API static uint64 Hash(const void* Input, uint64 Length, uint64 Seed = 0);
+		NEXUS_ENGINE_API static uint64 Hash(const void* Data, uint64 Length, uint64 Seed = 0);
 
-		NEXUS_ENGINE_API Hash64& Accumulate(const void* Input, uint64 Length);
+		NEXUS_ENGINE_API Hash64& Accumulate(const void* Data, uint64 Length);
 		NEXUS_ENGINE_API uint64 Hash() const;
 
 		NEXUS_ENGINE_API uint64 GetSize() const { return Size; }
