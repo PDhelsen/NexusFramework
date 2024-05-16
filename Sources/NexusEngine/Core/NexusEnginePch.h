@@ -33,5 +33,6 @@
 #include "Debug/Assert.h"
 
 #include "Misc/References.h"
+#include "Misc/Hash.h"
 #include "Misc/Misc.h"
 #include "Misc/Sort.h"
