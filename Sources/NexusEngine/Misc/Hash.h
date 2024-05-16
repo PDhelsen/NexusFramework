@@ -16,8 +16,8 @@ namespace NxEn
 		NEXUS_ENGINE_API Hash32& Accumulate(const void* Input, uint64 Length);
 		NEXUS_ENGINE_API uint32 Hash() const;
 
-		NEXUS_ENGINE_API uint64 GetSize() { return Size; }
-		NEXUS_ENGINE_API uint32 GetSeed() { return Seed; }
+		NEXUS_ENGINE_API uint64 GetSize() const { return Size; }
+		NEXUS_ENGINE_API uint32 GetSeed() const { return Seed; }
 
 	private:
 		static inline const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
@@ -53,8 +53,8 @@ namespace NxEn
 		NEXUS_ENGINE_API Hash64& Accumulate(const void* Input, uint64 Length);
 		NEXUS_ENGINE_API uint64 Hash() const;
 
-		NEXUS_ENGINE_API uint64 GetSize() { return Size; }
-		NEXUS_ENGINE_API uint64 GetSeed() { return Seed; }
+		NEXUS_ENGINE_API uint64 GetSize() const { return Size; }
+		NEXUS_ENGINE_API uint64 GetSeed() const { return Seed; }
 
 	private:
 		static inline const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);

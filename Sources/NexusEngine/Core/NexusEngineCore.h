@@ -31,5 +31,3 @@
 
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"
-
-#include "Misc/References.h"
