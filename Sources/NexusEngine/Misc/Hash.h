@@ -6,17 +6,17 @@
 
 namespace NxEn
 {
-	class Hash64;
+	class XxHash64;
 
-	template<typename T = void*, class H = Hash64>
-	struct Hasher
+	template<typename T = const void*, class H = XxHash64>
+	struct Hash
 	{
-		static H::HashLength Hash(const T& Data, H::HashLength Seed = 0)
+		static H::HashLength HashObject(const T& Data, H::HashLength Seed = 0)
 		{
 			return H::Hash(&Data, sizeof(T), Seed);
 		}
 
-		static H::HashLength Hash(const void* Data, uint64 Length, H::HashLength Seed = 0)
+		static H::HashLength HashData(const void* Data, uint64 Length, H::HashLength Seed = 0)
 		{
 			return H::Hash(Data, Length, Seed);
 		}
@@ -31,16 +31,16 @@ namespace NxEn
 		}
 	};
 
-	class Hash32
+	class XxHash32
 	{
 	public:
 		using HashLength = uint32;
 
-		NEXUS_ENGINE_API Hash32(uint32 Seed = 0);
+		NEXUS_ENGINE_API XxHash32(uint32 Seed = 0);
 
 		NEXUS_ENGINE_API static uint32 Hash(const void* Data, uint64 Length, uint32 Seed = 0);
 
-		NEXUS_ENGINE_API Hash32& Accumulate(const void* Data, uint64 Length);
+		NEXUS_ENGINE_API XxHash32& Accumulate(const void* Data, uint64 Length);
 		NEXUS_ENGINE_API uint32 Hash() const;
 
 		NEXUS_ENGINE_API uint64 GetSize() const { return Size; }
@@ -70,16 +70,16 @@ namespace NxEn
 		uint8 BufferSize;
 	};
 
-	class Hash64
+	class XxHash64
 	{
 	public:
 		using HashLength = uint64;
 		
-		NEXUS_ENGINE_API Hash64(uint64 Seed = 0);
+		NEXUS_ENGINE_API XxHash64(uint64 Seed = 0);
 
 		NEXUS_ENGINE_API static uint64 Hash(const void* Data, uint64 Length, uint64 Seed = 0);
 
-		NEXUS_ENGINE_API Hash64& Accumulate(const void* Data, uint64 Length);
+		NEXUS_ENGINE_API XxHash64& Accumulate(const void* Data, uint64 Length);
 		NEXUS_ENGINE_API uint64 Hash() const;
 
 		NEXUS_ENGINE_API uint64 GetSize() const { return Size; }
