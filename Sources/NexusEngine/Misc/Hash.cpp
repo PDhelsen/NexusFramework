@@ -3,8 +3,8 @@
 
 namespace NxEn
 {
-	XxHash32::XxHash32(uint32 Seed)
-		: Seed(Seed), Size(0), BufferSize(0)
+	XxHash32::XxHash32(HashLength Seed)
+		: HashFunction<HashLength>(Seed), Seed(Seed), Size(0), BufferSize(0)
 	{
 		State[0] = Seed + PrimeA + PrimeB;
 		State[1] = Seed + PrimeB;
@@ -13,11 +13,18 @@ namespace NxEn
 		Buffer[0] = 0;
 	}
 
-	uint32 XxHash32::Hash(const void* Data, uint64 Length, uint32 Seed)
+	XxHash32::HashLength XxHash32::Hash(const void* Data, uint64 Length, HashLength Seed)
 	{
 		XxHash32 Hash = XxHash32(Seed);
 		Hash.Accumulate(Data, Length);
 		return Hash.Hash();
+	}
+
+	XxHash32::HashLength XxHash32::Combine(HashLength HashA, HashLength HashB)
+	{
+		HashLength HashCombined = HashA;
+		HashCombined ^= HashB + 0x9e3779b9 + (HashCombined << 6) + (HashCombined >> 2);
+		return HashCombined;
 	}
 
 	XxHash32& XxHash32::Accumulate(const void* Data, uint64 Length)
@@ -46,7 +53,7 @@ namespace NxEn
 		}
 
 		// Process the data by 16 bytes block
-		uint32 S0 = State[0], S1 = State[1], S2 = State[2], S3 = State[3];
+		HashLength S0 = State[0], S1 = State[1], S2 = State[2], S3 = State[3];
 		while (Pointer < StopBlock)
 		{
 			Process(Pointer, S0, S1, S2, S3);
@@ -60,12 +67,12 @@ namespace NxEn
 		return *this;
 	}
 
-	uint32 XxHash32::Hash() const
+	XxHash32::HashLength XxHash32::Hash() const
 	{
 		const uint8* Pointer = Buffer;
 		const uint8* Stop = Pointer + BufferSize;
 
-		uint32 Result = Converge(Seed, (uint32)Size, State);
+		HashLength Result = Converge(Seed, (HashLength)Size, State);
 		Result = Remains(Result, Pointer, Stop);
 		Result = Avalanche(Result);
 
@@ -82,20 +89,20 @@ namespace NxEn
 		return Pointer;
 	}
 
-	inline void XxHash32::Process(const void* Pointer, uint32& State0, uint32& State1, uint32& State2, uint32& State3)
+	inline void XxHash32::Process(const void* Pointer, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3)
 	{
-		const uint32* Block = (const uint32*)Pointer;
+		const HashLength* Block = (const HashLength*)Pointer;
 		State0 = Process(State0, Block[0]);
 		State1 = Process(State1, Block[1]);
 		State2 = Process(State2, Block[2]);
 		State3 = Process(State3, Block[3]);
 	}
 
-	inline uint32 XxHash32::Remains(uint32 Result, const uint8* Pointer, const uint8* Stop)
+	inline XxHash32::HashLength XxHash32::Remains(HashLength Result, const uint8* Pointer, const uint8* Stop)
 	{
 		for (; Pointer + 4 <= Stop; Pointer += 4)
 		{
-			Result = RotateLeft(Result + (*(uint32*)Pointer) * PrimeC, 17) * PrimeD;
+			Result = RotateLeft(Result + (*(HashLength*)Pointer) * PrimeC, 17) * PrimeD;
 		}
 
 		while (Pointer != Stop)
@@ -106,12 +113,12 @@ namespace NxEn
 		return Result;
 	}
 
-	inline uint32 XxHash32::RotateLeft(uint32 Value, uint8 Bits)
+	inline XxHash32::HashLength XxHash32::RotateLeft(HashLength Value, uint8 Bits)
 	{
 		return (Value << Bits) | (Value >> (32 - Bits));
 	}
 
-	inline uint32 XxHash32::Process(uint32 Value, uint32 Pointer)
+	inline XxHash32::HashLength XxHash32::Process(HashLength Value, HashLength Pointer)
 	{
 		Value += Pointer * PrimeB;
 		Value = RotateLeft(Value, 13);
@@ -119,9 +126,9 @@ namespace NxEn
 		return Value;
 	}
 
-	inline uint32 XxHash32::Converge(uint32 Seed, uint32 Size, const uint32* State)
+	inline XxHash32::HashLength XxHash32::Converge(HashLength Seed, HashLength Size, const HashLength* State)
 	{
-		uint32 Result = 0;
+		HashLength Result = 0;
 		if (Size >= MaxBufferSize)
 		{
 			Result += RotateLeft(State[0], 1) + RotateLeft(State[1], 7) + RotateLeft(State[2], 12) + RotateLeft(State[3], 18);
@@ -134,7 +141,7 @@ namespace NxEn
 		return Result;
 	}
 
-	inline uint32 XxHash32::Avalanche(uint32 Accumulator)
+	inline XxHash32::HashLength XxHash32::Avalanche(HashLength Accumulator)
 	{
 		Accumulator ^= Accumulator >> 15;
 		Accumulator *= PrimeB;
@@ -144,8 +151,8 @@ namespace NxEn
 		return Accumulator;
 	}
 
-	XxHash64::XxHash64(uint64 Seed)
-		: Seed(Seed), Size(0), BufferSize(0)
+	XxHash64::XxHash64(HashLength Seed)
+		: HashFunction<HashLength>(Seed), Seed(Seed), Size(0), BufferSize(0)
 	{
 		State[0] = Seed + PrimeA + PrimeB;
 		State[1] = Seed + PrimeB;
@@ -154,11 +161,18 @@ namespace NxEn
 		Buffer[0] = 0;
 	}
 
-	uint64 XxHash64::Hash(const void* Data, uint64 Length, uint64 Seed)
+	XxHash64::HashLength XxHash64::Hash(const void* Data, uint64 Length, HashLength Seed)
 	{
 		XxHash64 Hash = XxHash64(Seed);
 		Hash.Accumulate(Data, Length);
 		return Hash.Hash();
+	}
+
+	XxHash64::HashLength XxHash64::Combine(HashLength HashA, HashLength HashB)
+	{
+		HashLength HashCombined = HashA;
+		HashCombined ^= HashB + 0x9e3779b97f4a7c15 + (HashCombined << 6) + (HashCombined >> 2);
+		return HashCombined;
 	}
 	
 	XxHash64& XxHash64::Accumulate(const void* Data, uint64 Length)
@@ -187,7 +201,7 @@ namespace NxEn
 		}
 
 		// Process the data by 32 bytes block
-		uint64 S0 = State[0], S1 = State[1], S2 = State[2], S3 = State[3];
+		HashLength S0 = State[0], S1 = State[1], S2 = State[2], S3 = State[3];
 		while (Pointer < StopBlock)
 		{
 			Process(Pointer, S0, S1, S2, S3);
@@ -201,13 +215,13 @@ namespace NxEn
 		return *this;
 	}
 	
-	uint64 XxHash64::Hash() const
+	XxHash64::HashLength XxHash64::Hash() const
 	{
 		// Process remaining data
 		const uint8* Pointer = Buffer;
 		const uint8* Stop = Pointer + BufferSize;
 
-		uint64 Result = Converge(Seed, Size, State);
+		HashLength Result = Converge(Seed, Size, State);
 		Result = Remains(Result, Pointer, Stop);
 		Result = Avalanche(Result);
 
@@ -224,20 +238,20 @@ namespace NxEn
 		return Pointer;
 	}
 	
-	inline void XxHash64::Process(const void* Pointer, uint64& State0, uint64& State1, uint64& State2, uint64& State3)
+	inline void XxHash64::Process(const void* Pointer, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3)
 	{
-		const uint64* Block = (const uint64*)Pointer;
+		const HashLength* Block = (const HashLength*)Pointer;
 		State0 = Process(State0, Block[0]);
 		State1 = Process(State1, Block[1]);
 		State2 = Process(State2, Block[2]);
 		State3 = Process(State3, Block[3]);
 	}
 
-	inline uint64 XxHash64::Remains(uint64 Result, const uint8* Pointer, const uint8* Stop)
+	inline XxHash64::HashLength XxHash64::Remains(HashLength Result, const uint8* Pointer, const uint8* Stop)
 	{
 		for (; Pointer + 8 <= Stop; Pointer += 8)
 		{
-			Result = RotateLeft(Result ^ Process(0, *(uint64*)Pointer), 27) * PrimeA + PrimeD;
+			Result = RotateLeft(Result ^ Process(0, *(HashLength*)Pointer), 27) * PrimeA + PrimeD;
 		}
 
 		if (Pointer + 4 <= Stop)
@@ -254,12 +268,12 @@ namespace NxEn
 		return Result;
 	}
 
-	inline uint64 XxHash64::RotateLeft(uint64 Value, uint8 Bits)
+	inline XxHash64::HashLength XxHash64::RotateLeft(HashLength Value, uint8 Bits)
 	{
 		return (Value << Bits) | (Value >> (64 - Bits));
 	}
 	
-	inline uint64 XxHash64::Process(uint64 Value, uint64 Pointer)
+	inline XxHash64::HashLength XxHash64::Process(HashLength Value, HashLength Pointer)
 	{
 		Value += Pointer * PrimeB;
 		Value = RotateLeft(Value, 31);
@@ -267,9 +281,9 @@ namespace NxEn
 		return Value;
 	}
 
-	inline uint64 XxHash64::Converge(uint64 Seed, uint64 Size, const uint64* State)
+	inline XxHash64::HashLength XxHash64::Converge(HashLength Seed, HashLength Size, const HashLength* State)
 	{
-		uint64 Result = 0;
+		HashLength Result = 0;
 		if (Size >= MaxBufferSize)
 		{
 			Result = RotateLeft(State[0], 1) + RotateLeft(State[1], 7) + RotateLeft(State[2], 12) + RotateLeft(State[3], 18);
@@ -286,12 +300,12 @@ namespace NxEn
 		return Result;
 	}
 
-	inline uint64 XxHash64::Merge(uint64 Value, uint64 Accumulator)
+	inline XxHash64::HashLength XxHash64::Merge(HashLength Value, HashLength Accumulator)
 	{
 		return (Value ^ Process(0, Accumulator)) * PrimeA + PrimeD;
 	}
 	
-	inline uint64 XxHash64::Avalanche(uint64 Accumulator)
+	inline XxHash64::HashLength XxHash64::Avalanche(HashLength Accumulator)
 	{
 		Accumulator ^= Accumulator >> 33;
 		Accumulator *= PrimeB;
