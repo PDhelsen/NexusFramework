@@ -6,9 +6,36 @@
 
 namespace NxEn
 {
+	class Hash64;
+
+	template<typename T = void*, class H = Hash64>
+	struct Hasher
+	{
+		static H::HashLength Hash(const T& Data, H::HashLength Seed = 0)
+		{
+			return H::Hash(&Data, sizeof(T), Seed);
+		}
+
+		static H::HashLength Hash(const void* Data, uint64 Length, H::HashLength Seed = 0)
+		{
+			return H::Hash(Data, Length, Seed);
+		}
+
+		static H::HashLength Combine(H::HashLength HashA, H::HashLength HashB)
+		{
+			constexpr H::HashLength Magic = sizeof(H::HashLength) > 4 ? 0x9e3779b97f4a7c15 : 0x9e3779b9;
+
+			typename H::HashLength HashCombined = HashA;
+			HashCombined ^= HashB + Magic + (HashCombined << 6) + (HashCombined >> 2);
+			return HashCombined;
+		}
+	};
+
 	class Hash32
 	{
 	public:
+		using HashLength = uint32;
+
 		NEXUS_ENGINE_API Hash32(uint32 Seed = 0);
 
 		NEXUS_ENGINE_API static uint32 Hash(const void* Data, uint64 Length, uint32 Seed = 0);
@@ -46,6 +73,8 @@ namespace NxEn
 	class Hash64
 	{
 	public:
+		using HashLength = uint64;
+		
 		NEXUS_ENGINE_API Hash64(uint64 Seed = 0);
 
 		NEXUS_ENGINE_API static uint64 Hash(const void* Data, uint64 Length, uint64 Seed = 0);
