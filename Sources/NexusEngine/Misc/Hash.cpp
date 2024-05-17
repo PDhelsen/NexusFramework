@@ -79,7 +79,7 @@ namespace NxEn
 		return Result;
 	}
 
-	inline const uint8* XxHash32::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
+	const uint8* XxHash32::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
 	{
 		while (Length-- > 0)
 		{
@@ -89,7 +89,7 @@ namespace NxEn
 		return Pointer;
 	}
 
-	inline void XxHash32::Process(const void* Pointer, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3)
+	void XxHash32::Process(const void* Pointer, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3)
 	{
 		const HashLength* Block = (const HashLength*)Pointer;
 		State0 = Process(State0, Block[0]);
@@ -98,7 +98,7 @@ namespace NxEn
 		State3 = Process(State3, Block[3]);
 	}
 
-	inline XxHash32::HashLength XxHash32::Remains(HashLength Result, const uint8* Pointer, const uint8* Stop)
+	XxHash32::HashLength XxHash32::Remains(HashLength Result, const uint8* Pointer, const uint8* Stop)
 	{
 		for (; Pointer + 4 <= Stop; Pointer += 4)
 		{
@@ -113,12 +113,12 @@ namespace NxEn
 		return Result;
 	}
 
-	inline XxHash32::HashLength XxHash32::RotateLeft(HashLength Value, uint8 Bits)
+	XxHash32::HashLength XxHash32::RotateLeft(HashLength Value, uint8 Bits)
 	{
 		return (Value << Bits) | (Value >> (32 - Bits));
 	}
 
-	inline XxHash32::HashLength XxHash32::Process(HashLength Value, HashLength Pointer)
+	XxHash32::HashLength XxHash32::Process(HashLength Value, HashLength Pointer)
 	{
 		Value += Pointer * PrimeB;
 		Value = RotateLeft(Value, 13);
@@ -126,7 +126,7 @@ namespace NxEn
 		return Value;
 	}
 
-	inline XxHash32::HashLength XxHash32::Converge(HashLength Seed, HashLength Size, const HashLength* State)
+	XxHash32::HashLength XxHash32::Converge(HashLength Seed, HashLength Size, const HashLength* State)
 	{
 		HashLength Result = 0;
 		if (Size >= MaxBufferSize)
@@ -141,7 +141,7 @@ namespace NxEn
 		return Result;
 	}
 
-	inline XxHash32::HashLength XxHash32::Avalanche(HashLength Accumulator)
+	XxHash32::HashLength XxHash32::Avalanche(HashLength Accumulator)
 	{
 		Accumulator ^= Accumulator >> 15;
 		Accumulator *= PrimeB;
@@ -228,7 +228,7 @@ namespace NxEn
 		return Result;
 	}
 	
-	inline const uint8* XxHash64::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
+	const uint8* XxHash64::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
 	{
 		while (Length-- > 0)
 		{
@@ -238,7 +238,7 @@ namespace NxEn
 		return Pointer;
 	}
 	
-	inline void XxHash64::Process(const void* Pointer, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3)
+	void XxHash64::Process(const void* Pointer, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3)
 	{
 		const HashLength* Block = (const HashLength*)Pointer;
 		State0 = Process(State0, Block[0]);
@@ -247,7 +247,7 @@ namespace NxEn
 		State3 = Process(State3, Block[3]);
 	}
 
-	inline XxHash64::HashLength XxHash64::Remains(HashLength Result, const uint8* Pointer, const uint8* Stop)
+	XxHash64::HashLength XxHash64::Remains(HashLength Result, const uint8* Pointer, const uint8* Stop)
 	{
 		for (; Pointer + 8 <= Stop; Pointer += 8)
 		{
@@ -268,12 +268,12 @@ namespace NxEn
 		return Result;
 	}
 
-	inline XxHash64::HashLength XxHash64::RotateLeft(HashLength Value, uint8 Bits)
+	XxHash64::HashLength XxHash64::RotateLeft(HashLength Value, uint8 Bits)
 	{
 		return (Value << Bits) | (Value >> (64 - Bits));
 	}
 	
-	inline XxHash64::HashLength XxHash64::Process(HashLength Value, HashLength Pointer)
+	XxHash64::HashLength XxHash64::Process(HashLength Value, HashLength Pointer)
 	{
 		Value += Pointer * PrimeB;
 		Value = RotateLeft(Value, 31);
@@ -281,7 +281,7 @@ namespace NxEn
 		return Value;
 	}
 
-	inline XxHash64::HashLength XxHash64::Converge(HashLength Seed, HashLength Size, const HashLength* State)
+	XxHash64::HashLength XxHash64::Converge(HashLength Seed, HashLength Size, const HashLength* State)
 	{
 		HashLength Result = 0;
 		if (Size >= MaxBufferSize)
@@ -300,12 +300,12 @@ namespace NxEn
 		return Result;
 	}
 
-	inline XxHash64::HashLength XxHash64::Merge(HashLength Value, HashLength Accumulator)
+	XxHash64::HashLength XxHash64::Merge(HashLength Value, HashLength Accumulator)
 	{
 		return (Value ^ Process(0, Accumulator)) * PrimeA + PrimeD;
 	}
 	
-	inline XxHash64::HashLength XxHash64::Avalanche(HashLength Accumulator)
+	XxHash64::HashLength XxHash64::Avalanche(HashLength Accumulator)
 	{
 		Accumulator ^= Accumulator >> 33;
 		Accumulator *= PrimeB;

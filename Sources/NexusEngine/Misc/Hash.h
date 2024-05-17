@@ -1,5 +1,6 @@
 #pragma once
 
+#include "External/Intrinsics.h"
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 #include "Debug/Assert.h"
@@ -60,14 +61,14 @@ namespace NxEn
 		NEXUS_ENGINE_API HashLength GetSeed() const override { return Seed; }
 
 	private:
-		static inline const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
-		static inline void Process(const void* Data, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3);
-		static inline HashLength Remains(HashLength Result, const uint8* Data, const uint8* Stop);
+		NEXUS_FORCE_INLINE static const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
+		NEXUS_FORCE_INLINE static void Process(const void* Data, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3);
+		NEXUS_FORCE_INLINE static HashLength Remains(HashLength Result, const uint8* Data, const uint8* Stop);
 
-		static inline HashLength RotateLeft(HashLength Value, uint8 Bits);
-		static inline HashLength Process(HashLength Value, HashLength Data);
-		static inline HashLength Converge(HashLength Seed, HashLength Size, const HashLength* State);
-		static inline HashLength Avalanche(HashLength Accumulator);
+		NEXUS_FORCE_INLINE static HashLength RotateLeft(HashLength Value, uint8 Bits);
+		NEXUS_FORCE_INLINE static HashLength Process(HashLength Value, HashLength Data);
+		NEXUS_FORCE_INLINE static HashLength Converge(HashLength Seed, HashLength Size, const HashLength* State);
+		NEXUS_FORCE_INLINE static HashLength Avalanche(HashLength Accumulator);
 
 		static const HashLength PrimeA = 0x9E3779B1U;  // 0b10011110001101110111100110110001
 		static const HashLength PrimeB = 0x85EBCA77U;  // 0b10000101111010111100101001110111
@@ -98,15 +99,15 @@ namespace NxEn
 		NEXUS_ENGINE_API HashLength GetSeed() const { return Seed; }
 
 	private:
-		static inline const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
-		static inline void Process(const void* Data, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3);
-		static inline HashLength Remains(HashLength Result, const uint8* Data, const uint8* Stop);
+		NEXUS_FORCE_INLINE static const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
+		NEXUS_FORCE_INLINE static void Process(const void* Data, HashLength& State0, HashLength& State1, HashLength& State2, HashLength& State3);
+		NEXUS_FORCE_INLINE static HashLength Remains(HashLength Result, const uint8* Data, const uint8* Stop);
 
-		static inline HashLength RotateLeft(HashLength Value, uint8 Bits);
-		static inline HashLength Process(HashLength Value, HashLength Data);
-		static inline HashLength Converge(HashLength Seed, HashLength Size, const HashLength* State);
-		static inline HashLength Merge(HashLength Value, HashLength Accumulator);
-		static inline HashLength Avalanche(HashLength Accumulator);
+		NEXUS_FORCE_INLINE static HashLength RotateLeft(HashLength Value, uint8 Bits);
+		NEXUS_FORCE_INLINE static HashLength Process(HashLength Value, HashLength Data);
+		NEXUS_FORCE_INLINE static HashLength Converge(HashLength Seed, HashLength Size, const HashLength* State);
+		NEXUS_FORCE_INLINE static HashLength Merge(HashLength Value, HashLength Accumulator);
+		NEXUS_FORCE_INLINE static HashLength Avalanche(HashLength Accumulator);
 
 		static const HashLength PrimeA = 0x9E3779B185EBCA87ULL;  // 0b1001111000110111011110011011000110000101111010111100101010000111
 		static const HashLength PrimeB = 0xC2B2AE3D27D4EB4FULL;  // 0b1100001010110010101011100011110100100111110101001110101101001111
