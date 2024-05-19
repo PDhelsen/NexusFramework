@@ -314,4 +314,179 @@ namespace NxEn
 		Accumulator ^= Accumulator >> 32;
 		return Accumulator;
 	}
+
+	Murmur32::Murmur32(HashLength Seed)
+		: HashFunction<HashLength>(Seed), Seed(Seed), Size(0), Accumulator(0)
+	{
+		Accumulator = Seed;
+	}
+	
+	Murmur32::HashLength Murmur32::Hash(const void* Data, uint64 Length, HashLength Seed)
+	{
+		Murmur32 Hash = Murmur32(Seed);
+		Hash.Accumulate(Data, Length);
+		return Hash.Hash();
+	}
+	
+	Murmur32::HashLength Murmur32::Combine(HashLength HashA, HashLength HashB)
+	{
+		HashLength HashCombined = HashA;
+		HashCombined ^= HashB + 0x9e3779b9 + (HashCombined << 6) + (HashCombined >> 2);
+		return HashCombined;
+	}
+	
+	Murmur32& Murmur32::Accumulate(const void* Data, uint64 Length)
+	{
+		Size += Length;
+
+		const uint64 NbBlocks = Length / 4;
+		const uint8* Pointer = reinterpret_cast<const uint8*>(Data);
+
+		HashLength K = 0;
+		const HashLength* Blocks = reinterpret_cast<const HashLength*>(Pointer);
+		for (uint64 Index = 0; Index < NbBlocks; Index++)
+		{
+			K = Blocks[Index];
+
+			K *= PrimeA;
+			K = RotateLeft(K, 15);
+			K *= PrimeB;
+
+			Accumulator ^= K;
+			Accumulator = RotateLeft(Accumulator, 13);
+			Accumulator = Accumulator * 5 + PrimeC;
+		}
+
+		K = 0;
+		const uint8_t* Tail = reinterpret_cast<const uint8*>(Pointer + NbBlocks * 4);
+		switch (Length & 3)
+		{
+#pragma warning(push)
+#pragma warning(disable: 26819)
+		case 3: K ^= Tail[2] << 16;
+		case 2: K ^= Tail[1] << 8;
+		case 1: K ^= Tail[0];
+#pragma warning(pop)
+
+			K *= PrimeA;
+			K = RotateLeft(K, 15);
+			K *= PrimeB;
+			Accumulator ^= K;
+		};
+
+		return *this;
+	}
+	
+	Murmur32::HashLength Murmur32::Hash() const
+	{
+		HashLength Result = Accumulator;
+		Result ^= Size;
+		Result = Avalanche(Result);
+		return Result;
+	}
+
+	Murmur32::HashLength Murmur32::RotateLeft(HashLength Value, uint8 Bits)
+	{
+		return (Value << Bits) | (Value >> (32 - Bits));
+	}
+
+	Murmur32::HashLength Murmur32::Avalanche(HashLength Accumulator)
+	{
+		Accumulator ^= Accumulator >> 16;
+		Accumulator *= PrimeD;
+		Accumulator ^= Accumulator >> 13;
+		Accumulator *= PrimeE;
+		Accumulator ^= Accumulator >> 16;
+		return Accumulator;
+	}
+	
+	Fnv164::Fnv164(HashLength Seed)
+		: HashFunction<HashLength>(Seed), Seed(Seed), Size(0), Accumulator(0)
+	{
+		Accumulator = Basis + Seed;
+	}
+
+	Fnv164::HashLength Fnv164::Hash(const void* Data, uint64 Length, HashLength Seed)
+	{
+		Fnv164 Hash = Fnv164(Seed);
+		Hash.Accumulate(Data, Length);
+		return Hash.Hash();
+	}
+	
+	Fnv164::HashLength Fnv164::Combine(HashLength HashA, HashLength HashB)
+	{
+		HashLength CombinedHash = Basis;
+
+		CombinedHash *= Prime;
+		CombinedHash ^= HashA;
+
+		CombinedHash *= Prime;
+		CombinedHash ^= HashB;
+
+		return CombinedHash;
+	}
+	
+	Fnv164& Fnv164::Accumulate(const void* Data, uint64 Length)
+	{
+		Size += Length;
+
+		const uint8* Pointer = reinterpret_cast<const uint8*>(Data);
+		for (uint64 Index = 0; Index < Length; ++Index)
+		{
+			Accumulator *= Prime;
+			Accumulator ^= static_cast<HashLength>(Pointer[Index]);
+		}
+
+		return *this;
+	}
+	
+	Fnv164::HashLength Fnv164::Hash() const
+	{
+		return Accumulator;
+	}
+
+	Fnv1a64::Fnv1a64(HashLength Seed)
+		: HashFunction<HashLength>(Seed), Seed(Seed), Size(0), Accumulator(0)
+	{
+		Accumulator = Basis + Seed;
+	}
+	
+	Fnv1a64::HashLength Fnv1a64::Hash(const void* Data, uint64 Length, HashLength Seed)
+	{
+		Fnv1a64 Hash = Fnv1a64(Seed);
+		Hash.Accumulate(Data, Length);
+		return Hash.Hash();
+	}
+	
+	Fnv1a64::HashLength Fnv1a64::Combine(HashLength HashA, HashLength HashB)
+	{
+		HashLength CombinedHash = Basis;
+
+		CombinedHash ^= HashA;
+		CombinedHash *= Prime;
+
+		CombinedHash ^= HashB;
+		CombinedHash *= Prime;
+
+		return CombinedHash;
+	}
+	
+	Fnv1a64& Fnv1a64::Accumulate(const void* Data, uint64 Length)
+	{
+		Size += Length;
+
+		const uint8* Pointer = reinterpret_cast<const uint8*>(Data);
+		for (uint64 Index = 0; Index < Length; ++Index)
+		{
+			Accumulator ^= static_cast<HashLength>(Pointer[Index]);
+			Accumulator *= Prime;
+		}
+
+		return *this;
+	}
+	
+	Fnv1a64::HashLength Fnv1a64::Hash() const
+	{
+		return Accumulator;
+	}
 }
