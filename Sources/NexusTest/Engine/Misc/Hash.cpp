@@ -19,11 +19,11 @@ namespace NxEn
 	{
 		static H::HashLength HashObject(const NxTs::HashTest& Data, H::HashLength Seed = 0)
 		{
-			H Algo = H(Seed);
-			Algo.Accumulate(&Data.A, sizeof(uint64))
+			H Hashing = H(Seed);
+			Hashing.Accumulate(&Data.A, sizeof(uint64))
 				.Accumulate(&Data.B, sizeof(uint64))
 				.Accumulate(&Data.C, sizeof(uint64));
-			return Algo.Hash();
+			return Hashing.Hash();
 		}
 	};
 }

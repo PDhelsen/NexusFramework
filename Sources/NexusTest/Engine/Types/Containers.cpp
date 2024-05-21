@@ -111,11 +111,11 @@ namespace NxEn
 	{
 		static H::HashLength HashObject(const NxTs::ContainerTest& Data, H::HashLength Seed = 0)
 		{
-			H Algo = H(Seed);
-			Algo.Accumulate(&Data.Integer, sizeof(uint64))
+			H Hashing = H(Seed);
+			Hashing.Accumulate(&Data.Integer, sizeof(uint64))
 				.Accumulate(&Data.Float, sizeof(float))
 				.Accumulate(&Data.Boolean, sizeof(bool));
-			return Algo.Hash();
+			return Hashing.Hash();
 		}
 	};
 }
