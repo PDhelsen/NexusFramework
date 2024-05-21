@@ -10,6 +10,7 @@
 #include "Types/Containers/Tuple.h"
 #include "Types/Containers/Tree.h"
 #include "Types/Containers/Graph.h"
+#include "Types/Containers/Set.h"
 
 namespace NxTs
 {
@@ -90,18 +91,37 @@ namespace NxTs
 		{
 			return Integer < Other.Integer;
 		}
-		
+
 		bool operator>=(const ContainerTest& Other)
 		{
 			return Integer >= Other.Integer;
 		}
-		
+
 		bool operator<=(const ContainerTest& Other)
 		{
 			return Integer <= Other.Integer;
 		}
 	};
+}
 
+namespace NxEn
+{
+	template<class H>
+	struct Hash<NxTs::ContainerTest, H>
+	{
+		static H::HashLength HashObject(const NxTs::ContainerTest& Data, H::HashLength Seed = 0)
+		{
+			H Algo = H(Seed);
+			Algo.Accumulate(&Data.Integer, sizeof(uint64))
+				.Accumulate(&Data.Float, sizeof(float))
+				.Accumulate(&Data.Boolean, sizeof(bool));
+			return Algo.Hash();
+		}
+	};
+}
+
+namespace NxTs
+{
 	TEST(Type_Containers, Array)
 	{
 		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(9);
@@ -831,6 +851,49 @@ namespace NxTs
 
 		Test.Clear();
 		ASSERT_EQ(Test.GetCount(), 0);
+	}
+
+	TEST(Type_Containers, Set)
+	{
+		NxEn::Set<ContainerTest, NxEn::XxHash64> Test = NxEn::Set<ContainerTest, NxEn::XxHash64>();
+		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		ContainerTest Test1 = ContainerTest(5);
+		ContainerTest Test2 = ContainerTest(6);
+		ContainerTest Test3 = ContainerTest(7);
+
+		Test.Append(Test1);
+		Test.Append(Test1);
+		Test.Append(Test2);
+		Test.Append(Test2);
+		Test.Append(Test3);
+		Test.Append(Test3);
+		Test.Append(ContainerTest(27));
+		Test.Append(ContainerTest(8));
+		Test.Append(ContainerTest(58));
+		Test.Append(ContainerTest(9));
+		Test.Append(ContainerTest(43));
+		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		Test.Remove(Test2);
+		Test.Remove(Test3);
+
+		NxEn::Set<ContainerTest, NxEn::XxHash64> CopyDeep = Test.Copy();
+		ASSERT_EQ(Test == CopyDeep, false);
+		ASSERT_EQ(Test.GetCount(), CopyDeep.GetCount());
+
+		CopyDeep.Clear();
+		ASSERT_EQ(CopyDeep.GetCount(), 0);
+		ASSERT_EQ(CopyDeep.IsEmpty(), true);
+
+		for (NxEn::Set<ContainerTest, NxEn::XxHash64>::Iterator It = Test.Begin(); It != Test.End(); It++)
+		{
+			NEXUS_LOG(App, Info, 0, "Set value : %d", It->Integer);
+		}
 	}
 
 	TEST(Type_Containers, Tuple)

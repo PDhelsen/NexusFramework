@@ -91,4 +91,27 @@
     </Expand>
   </Type>
 
+  <Type Name="NxEn::Set&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <CustomListItems>
+        <Variable Name="Index" InitialValue="0" />
+        <Variable Name="Pointer" InitialValue="Data[0]" />
+        
+        <Size>Count</Size>
+        <Loop>
+          <If Condition="Pointer == nullptr">
+            <Exec>Index++</Exec>
+            <Break Condition="Index == Capacity" />
+            <Exec>Pointer = Data[Index]</Exec>
+          </If>
+          <Else>
+            <Item>Pointer->Value</Item>
+            <Exec>Pointer = Pointer->Next</Exec>
+          </Else>
+        </Loop>
+      </CustomListItems>
+    </Expand>
+  </Type>
+
 </AutoVisualizer>
