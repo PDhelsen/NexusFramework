@@ -9,7 +9,7 @@
 
 namespace NxEn
 {
-	template<typename T, class H = Fnv1a64, float LF = 0.75f>
+	template<typename T, class H = Fnv1a64, float LF = 1.0f>
 	class Set
 	{
 		struct Node
