@@ -11,6 +11,7 @@
 #include "Types/Containers/Tree.h"
 #include "Types/Containers/Graph.h"
 #include "Types/Containers/Set.h"
+#include "Types/Containers/Dictionary.h"
 
 namespace NxTs
 {
@@ -894,6 +895,90 @@ namespace NxTs
 		{
 			NEXUS_LOG(App, Info, 0, "Set value : %d", It->Integer);
 		}
+	}
+
+	TEST(Type_Containers, Dictionary)
+	{
+		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>();
+		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		ContainerTest Test1 = ContainerTest(1);
+		ContainerTest Test2 = ContainerTest(2);
+		ContainerTest Test3 = ContainerTest(3);
+
+		Test.Append(Test1, ContainerTest(10));
+		Test.Append(Test1, ContainerTest(20));
+		Test.Append(Test2, ContainerTest(11));
+		Test.Append(Test2, ContainerTest(21));
+		Test.Append(Test3, ContainerTest(12));
+		Test.Append(Test3, ContainerTest(22));
+
+		Test.Assign(Test1, ContainerTest(30));
+		Test.Assign(Test2, ContainerTest(31));
+		Test.Assign(Test3, ContainerTest(32));
+
+		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetCount(), 3);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		Test.Remove(Test2);
+		ASSERT_EQ(Test.GetCount(), 2);
+
+		NxEn::Dictionary<ContainerTest, ContainerTest> CopyDeep = Test.Copy();
+		ASSERT_EQ(CopyDeep == Test, false);
+		ASSERT_EQ(CopyDeep.GetCount(), 2);
+
+		CopyDeep.Clear();
+		ASSERT_EQ(CopyDeep.GetCount(), 0);
+
+		ContainerTest Copy = Test[Test1];
+		Copy.Integer = 40;
+		ASSERT_EQ(Test[Test1].Integer, 30);
+
+		ContainerTest& Ref = Test[Test1];
+		Ref.Integer = 40;
+		ASSERT_EQ(Test[Test1].Integer, 40);
+
+		ContainerTest* None = Test.TryGet(ContainerTest(4));
+		ASSERT_EQ(None, nullptr);
+
+		Test.Swap(Test1, Test3);
+		ASSERT_EQ(Test[Test1].Integer, 32);
+		ASSERT_EQ(Test[Test3].Integer, 40);
+
+		bool ContainsKey = Test.ContainsKey(Test1);
+		bool ContainsValue = Test.ContainsValue(ContainerTest(40));
+		const ContainerTest* FoundKey = Test.Find(ContainerTest(40));
+		ASSERT_EQ(ContainsKey, true);
+		ASSERT_EQ(ContainsValue, true);
+		ASSERT_EQ(FoundKey->Integer, 3);
+
+		Test.Append(ContainerTest(4), ContainerTest(40));
+		Test.Append(ContainerTest(5), ContainerTest(50));
+		Test.Append(ContainerTest(6), ContainerTest(60));
+		Test.Append(ContainerTest(7), ContainerTest(70));
+		Test.Append(ContainerTest(8), ContainerTest(80));
+		Test.Append(ContainerTest(9), ContainerTest(90));
+		Test.Append(ContainerTest(10), ContainerTest(100));
+		Test.Append(ContainerTest(11), ContainerTest(110));
+		Test.Append(ContainerTest(12), ContainerTest(120));
+
+		uint64 Index = 0;
+		for (NxEn::Dictionary<ContainerTest, ContainerTest>::Iterator It = Test.Begin(); It != Test.End(); It++)
+		{
+			NxEn::Dictionary<ContainerTest, ContainerTest>::KeyValuePair& Kv = *It;
+			Kv.GetValue().Integer = Index++;
+		}
+
+		Index = 0;
+		for (auto& Kv : Test)
+		{
+			ASSERT_EQ(Kv.GetValue().Integer, Index++);
+		}
+
+		Test.ReHash(21);
 	}
 
 	TEST(Type_Containers, Tuple)

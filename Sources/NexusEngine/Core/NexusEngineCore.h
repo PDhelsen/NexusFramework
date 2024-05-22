@@ -21,6 +21,7 @@
 #include "Types/Containers/Tree.h"
 #include "Types/Containers/Graph.h"
 #include "Types/Containers/Set.h"
+#include "Types/Containers/Dictionary.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
