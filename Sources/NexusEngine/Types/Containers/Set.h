@@ -101,12 +101,12 @@ namespace NxEn
 			Data = (Node**)Memory::Allocate(sizeof(Node*) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		Set(const Set<T>& Other)
+		Set(const Set<T, H, LF>& Other)
 			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 		{
 		}
 
-		Set(Set<T>&& Other) noexcept
+		Set(Set<T, H, LF>&& Other) noexcept
 			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
