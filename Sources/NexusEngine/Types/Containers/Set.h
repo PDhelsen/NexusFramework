@@ -233,11 +233,6 @@ namespace NxEn
 			return Iterator(Data, Capacity, nullptr, Capacity);
 		}
 
-		bool IsValidIndex(uint64 Index) const
-		{
-			return Index >= 0 && Index < Capacity;
-		}
-
 		void ReHash(uint64 Size)
 		{
 			Node** TempArray = Data;
@@ -345,6 +340,11 @@ namespace NxEn
 		{
 			uint64 Index = GetIndex(Value);
 			return GetNode(Index, Value);
+		}
+
+		bool IsValidIndex(uint64 Index) const
+		{
+			return Index >= 0 && Index < Capacity;
 		}
 
 		uint64 Grow()
