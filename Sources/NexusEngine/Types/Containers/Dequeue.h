@@ -37,9 +37,9 @@ namespace NxEn
 
 			Iterator operator++(int32)
 			{
-				Iterator Copy = *this;
+				Iterator Temp = *this;
 				++(*this);
-				return Copy;
+				return Temp;
 			}
 
 			Iterator& operator--()
@@ -58,9 +58,9 @@ namespace NxEn
 
 			Iterator operator--(int32)
 			{
-				Iterator Copy = *this;
+				Iterator Temp = *this;
 				--(*this);
-				return Copy;
+				return Temp;
 			}
 
 			T* operator->()
@@ -373,6 +373,28 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
+		void CreateChunk(uint64 Index)
+		{
+			Data[Index] = (T*)Memory::Allocate(sizeof(T) * ChunkSize, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void DestroyChunk(uint64 Index)
+		{
+			Memory::Free(Data[Index], Allocator);
+		}
+
+		void ResizeChunks()
+		{
+			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Chunks, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void MoveChunks(bool Forward)
+		{
+			T** Start = Forward ? &Data[0] : &Data[1];
+			T** End = Forward ? &Data[1] : &Data[0];
+			Memory::MemCopy(Start, End, sizeof(T*) * (Chunks - 1));
+		}
+
 		void ConvertIndex(uint64 Index, uint64& ChunkIndex, uint64& DataIndex) const
 		{
 			Index += Front;
@@ -450,28 +472,6 @@ namespace NxEn
 					Front++;
 				}
 			}
-		}
-
-		void ResizeChunks()
-		{
-			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Chunks, NEXUS_MEMORY_ALIGN, Allocator);
-		}
-
-		void MoveChunks(bool Forward)
-		{
-			T** Start = Forward ? &Data[0] : &Data[1];
-			T** End = Forward ? &Data[1] : &Data[0];
-			Memory::MemCopy(Start, End, sizeof(T*) * (Chunks - 1));
-		}
-
-		void CreateChunk(uint64 Index)
-		{
-			Data[Index] = (T*)Memory::Allocate(sizeof(T) * ChunkSize, NEXUS_MEMORY_ALIGN, Allocator);
-		}
-
-		void DestroyChunk(uint64 Index)
-		{
-			Memory::Free(Data[Index], Allocator);
 		}
 
 		static const uint64 ChunkSize = 10;

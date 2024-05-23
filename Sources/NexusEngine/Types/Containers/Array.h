@@ -30,9 +30,9 @@ namespace NxEn
 
 			Iterator operator++(int32)
 			{
-				Iterator Copy = *this;
+				Iterator Temp = *this;
 				++(*this);
-				return Copy;
+				return Temp;
 			}
 
 			Iterator& operator--()
@@ -43,9 +43,9 @@ namespace NxEn
 
 			Iterator operator--(int32)
 			{
-				Iterator Copy = *this;
+				Iterator Temp = *this;
 				--(*this);
-				return Copy;
+				return Temp;
 			}
 
 			T* operator->()
@@ -189,16 +189,6 @@ namespace NxEn
 			return Data[Count - 1];
 		}
 
-		void Swap(uint64 IndexA, uint64 IndexB)
-		{
-			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
-			
-			T Temp = Data[IndexB];
-			Data[IndexB] = Move(Data[IndexA]);
-			Data[IndexA] = Move(Temp);
-		}
-
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
@@ -224,6 +214,16 @@ namespace NxEn
 		bool IsValidIndex(uint64 Index) const
 		{
 			return Index >= 0 && Index < Count;
+		}
+
+		void Swap(uint64 IndexA, uint64 IndexB)
+		{
+			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
+
+			T Temp = Data[IndexB];
+			Data[IndexB] = Move(Data[IndexA]);
+			Data[IndexA] = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const

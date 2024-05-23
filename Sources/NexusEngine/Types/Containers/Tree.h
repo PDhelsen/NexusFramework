@@ -58,9 +58,9 @@ namespace NxEn
 
 			Iterator operator++(int32)
 			{
-				Iterator Copy = *this;
+				Iterator Temp = *this;
 				++(*this);
-				return Copy;
+				return Temp;
 			}
 
 			T* operator->()

@@ -102,7 +102,8 @@ namespace NxEn
 
 		void Swap()
 		{
-			NEXUS_ASSERT_STATIC(IsSameType<T1, T2>, "Cannot swap if First and Second are not of the same type");
+			constexpr bool SameType = IsSameType<T1, T2>;
+			NEXUS_ASSERT_STATIC(SameType, "Cannot swap if First and Second are not of the same type");
 
 			T1 Temp = Second;
 			Second = First;
