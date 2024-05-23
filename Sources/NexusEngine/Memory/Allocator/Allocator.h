@@ -8,6 +8,7 @@ namespace NxEn
 	// Base class for custom allocator
 
 	class Allocator;
+	class HandleManager;
 
 	struct AllocatorActive
 	{
@@ -18,6 +19,9 @@ namespace NxEn
 
 	class Allocator
 	{
+		// TEMP: Remove - Container - Once HandleManager replace PoolAllocator by pool container
+		friend HandleManager;
+
 	public:
 		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size = 0, uint64 Alignement = 0) = 0;
 		NEXUS_ENGINE_API virtual void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) = 0;
@@ -50,9 +54,6 @@ namespace NxEn
 		uint64 Amount;
 		uint64 Capacity;
 		void* Memory;
-
-		// TEMP: Remove - Container - Once HandleManager replace PoolAllocator by pool container
-		friend class HandleManager;
 	};
 }
 

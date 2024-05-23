@@ -6,9 +6,13 @@ namespace NxEn
 	// Allow to move data in memory without losing reference to it.
 	// Needed for heap defragmentation
 
+	class HandleManager;
+
 	template<typename T>
 	struct Handle
 	{
+		friend HandleManager;
+
 		inline bool IsValid() { return Pointer != nullptr; }
 		inline T* GetRedirectedPointer()
 		{
@@ -24,7 +28,5 @@ namespace NxEn
 		Handle() = default;
 
 		void* Pointer = nullptr;
-	
-		friend class HandleManager;
 	};
 }
