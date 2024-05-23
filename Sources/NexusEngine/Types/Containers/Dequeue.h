@@ -15,17 +15,17 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(T** Ptr, uint64 ChunkIdx, uint64 DataIdx)
-				: Pointer(Ptr), ChunkIndex(ChunkIdx), DataIndex(DataIdx)
+			Iterator(T** Ptr, uint64 BucketIdx, uint64 DataIdx)
+				: Pointer(Ptr), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
 
 			}
 
 			Iterator& operator++()
 			{
-				if (DataIndex == ChunkSize - 1)
+				if (DataIndex == BucketSize - 1)
 				{
-					ChunkIndex++;
+					BucketIndex++;
 					DataIndex = 0;
 				}
 				else
@@ -46,8 +46,8 @@ namespace NxEn
 			{
 				if (DataIndex == 0)
 				{
-					ChunkIndex--;
-					DataIndex = ChunkSize - 1;
+					BucketIndex--;
+					DataIndex = BucketSize - 1;
 				}
 				else
 				{
@@ -65,52 +65,53 @@ namespace NxEn
 
 			T* operator->()
 			{
-				return &Pointer[ChunkIndex][DataIndex];
+				return &Pointer[BucketIndex][DataIndex];
 			}
 
 			T& operator*()
 			{
-				return Pointer[ChunkIndex][DataIndex];
+				return Pointer[BucketIndex][DataIndex];
 			}
 
 			bool operator==(const Iterator& Other) const
 			{
-				return Pointer == Other.Pointer && ChunkIndex == Other.ChunkIndex && DataIndex == Other.DataIndex;
+				return Pointer == Other.Pointer && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
 
 			bool operator!=(const Iterator& Other) const
 			{
-				return Pointer != Other.Pointer || ChunkIndex != Other.ChunkIndex || DataIndex != Other.DataIndex;
+				return Pointer != Other.Pointer || BucketIndex != Other.BucketIndex || DataIndex != Other.DataIndex;
 			}
 
 		private:
 			T** Pointer;
-			uint64 ChunkIndex;
+			uint64 BucketIndex;
 			uint64 DataIndex;
 		};
 
-		Dequeue(Allocator* Alloc = nullptr)
-			: Allocator(nullptr), Chunks(1), Count(0), Front(5), Back(4), Data(nullptr)
+		Dequeue(Allocator* Allctr = nullptr)
+			: Allocator(nullptr), Buckets(0), Count(0), Front(0), Back(0), Data(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
-			Data = (T**)Memory::Allocate(sizeof(T*) * Chunks, NEXUS_MEMORY_ALIGN, Allocator);
-			Data[0] = (T*)Memory::Allocate(sizeof(T) * ChunkSize, NEXUS_MEMORY_ALIGN, Allocator);
+			Reset();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
+			Data[0] = (T*)Memory::Allocate(sizeof(T) * BucketSize, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
 		Dequeue(const Dequeue<T>& Other)
-			: Allocator(Other.Allocator), Chunks(Other.Chunks), Count(Other.Count), Front(Other.Front), Back(Other.Back), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Front(Other.Front), Back(Other.Back), Data(Other.Data)
 		{
 		}
 
 		Dequeue(Dequeue<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Chunks(Other.Chunks), Count(Other.Count), Front(Other.Front), Back(Other.Back), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Front(Other.Front), Back(Other.Back), Data(Other.Data)
 		{
 			Data = nullptr;
 		}
 
 		~Dequeue()
 		{
-			for (uint64 Index = 0; Index < Chunks; Index++)
+			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Memory::Free(Data[Index], Allocator);
 			}
@@ -122,22 +123,22 @@ namespace NxEn
 		{
 			Dequeue<T> Copy = Dequeue(Allocator);
 			
-			Copy.Chunks = Chunks;
+			Copy.Buckets = Buckets;
 			Copy.Count = Count;
 			Copy.Front = Front;
 			Copy.Back = Back;
 
-			Copy.ResizeChunks();
-			for (uint64 C = 1; C < Chunks; C++)
+			Copy.ResizeBuckets();
+			for (uint64 Bucket = 1; Bucket < Buckets; Bucket++)
 			{
-				Copy.CreateChunk(C);
+				Copy.CreateBucket(Bucket);
 			}
 
-			for (uint64 C = 0; C < Chunks; C++)
+			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
 			{
-				for (uint64 I = 0; I < ChunkSize; I++)
+				for (uint64 Index = 0; Index < BucketSize; Index++)
 				{
-					Copy.Data[C][I] = Data[C][I];
+					Copy.Data[Bucket][Index] = Data[Bucket][Index];
 				}
 			}
 
@@ -148,82 +149,82 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			return Data[ChunkIndex][DataIndex];
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		const T& operator[](uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			return Data[ChunkIndex][DataIndex];
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		bool operator==(const Dequeue<T>& Other)
 		{
-			return Chunks == Other.Chunks && Count == Other.Count && Data == Other.Data;
+			return Buckets == Other.Buckets && Count == Other.Count && Data == Other.Data;
 		}
 
 		bool operator!=(const Dequeue<T>& Other)
 		{
-			return Chunks != Other.Chunks || Count != Other.Count || Data != Other.Data;
+			return Buckets != Other.Buckets || Count != Other.Count || Data != Other.Data;
 		}
 
 		void Assign(uint64 Index, const T& Value)
 		{
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			Data[ChunkIndex][DataIndex] = Value;
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			Data[BucketIndex][DataIndex] = Value;
 		}
 
 		void Assign(uint64 Index, T&& Value)
 		{
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			Data[ChunkIndex][DataIndex] = Move(Value);
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			Data[BucketIndex][DataIndex] = Move(Value);
 		}
 
 		template<typename... Args>
-		void Assign(uint64 Index, Args&&... args)
+		void AssignConstruct(uint64 Index, Args&&... args)
 		{
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			Data[ChunkIndex][DataIndex] = T(args...);
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			Data[BucketIndex][DataIndex] = T(args...);
 		}
 
-		void Assign(uint64 Index, const Dequeue<T>& Value)
+		void AssignRange(uint64 Index, const Dequeue<T>& Values)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index + Value.Count), "Overflow");
+			NEXUS_ASSERT(IsValidIndex(Index + Values.Count), "Overflow");
 
-			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
+			for (uint64 Offset = 0; Offset < Values.Count; Offset++)
 			{
-				Assign(Index + Offset, Value[Offset]);
+				Assign(Index + Offset, Values[Offset]);
 			}
 		}
 
 		void AppendBack(const T& Value)
 		{
 			Grow(true);
-			Data[Chunks - 1][Back] = Value;
+			Data[Buckets - 1][Back] = Value;
 		}
 
 		void AppendBack(T&& Value)
 		{
 			Grow(true);
-			Data[Chunks - 1][Back] = Move(Value);
+			Data[Buckets - 1][Back] = Move(Value);
 		}
 
 		template<typename... Args>
-		void AppendBack(Args&&... args)
+		void AppendBackConstruct(Args&&... args)
 		{
 			Grow(true);
-			Data[Chunks - 1][Back] = T(args...);
+			Data[Buckets - 1][Back] = T(args...);
 		}
 
-		void AppendBack(const Dequeue<T>& Value)
+		void AppendBackRange(const Dequeue<T>& Value)
 		{
 			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
 			{
@@ -244,13 +245,13 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void AppendFront(Args&&... args)
+		void AppendFrontConstruct(Args&&... args)
 		{
 			Grow(false);
 			Data[0][Front] = T(args...);
 		}
 
-		void AppendFront(const Dequeue<T>& Value)
+		void AppendFrontRange(const Dequeue<T>& Value)
 		{
 			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
 			{
@@ -274,36 +275,32 @@ namespace NxEn
 
 		void Clear()
 		{
-			for (uint64 Index = 0; Index < Chunks; Index++)
+			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Memory::Free(Data[Index], Allocator);
 			}
-
-			Chunks = 1;
-			Count = 0;
-			Front = 5;
-			Back = 4;
-
-			ResizeChunks();
-			CreateChunk(0);
+			
+			Reset();
+			ResizeBuckets();
+			CreateBucket(0);
 		}
 
 		T& Get(uint64 Index)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			return Data[ChunkIndex][DataIndex];
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		const T& Get(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			uint64 ChunkIndex, DataIndex;
-			ConvertIndex(Index, ChunkIndex, DataIndex);
-			return Data[ChunkIndex][DataIndex];
+			uint64 BucketIndex, DataIndex;
+			ConvertIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		T& First()
@@ -317,7 +314,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 			
-			return Data[Chunks - 1][Back];
+			return Data[Buckets - 1][Back];
 		}
 
 		Iterator begin() const { return Begin(); }
@@ -334,7 +331,7 @@ namespace NxEn
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			Iterator It = Iterator(Data, Chunks - 1, Back);
+			Iterator It = Iterator(Data, Buckets - 1, Back);
 			return ++It;
 		}
 
@@ -357,9 +354,9 @@ namespace NxEn
 		{
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				uint64 ChunkIndex, DataIndex;
-				ConvertIndex(Index, ChunkIndex, DataIndex);
-				if (Data[ChunkIndex][DataIndex] == Other)
+				uint64 BucketIndex, DataIndex;
+				ConvertIndex(Index, BucketIndex, DataIndex);
+				if (Data[BucketIndex][DataIndex] == Other)
 				{
 					return Index;
 				}
@@ -369,52 +366,52 @@ namespace NxEn
 		}
 
 		uint64 GetCount() const { return Count; }
-		uint64 GetChunks() const { return Chunks; }
+		uint64 GetBuckets() const { return Buckets; }
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		void CreateChunk(uint64 Index)
+		void CreateBucket(uint64 Index)
 		{
-			Data[Index] = (T*)Memory::Allocate(sizeof(T) * ChunkSize, NEXUS_MEMORY_ALIGN, Allocator);
+			Data[Index] = (T*)Memory::Allocate(sizeof(T) * BucketSize, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		void DestroyChunk(uint64 Index)
+		void DestroyBucket(uint64 Index)
 		{
 			Memory::Free(Data[Index], Allocator);
 		}
 
-		void ResizeChunks()
+		void ResizeBuckets()
 		{
-			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Chunks, NEXUS_MEMORY_ALIGN, Allocator);
+			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		void MoveChunks(bool Forward)
+		void MoveBuckets(bool Forward)
 		{
 			T** Start = Forward ? &Data[0] : &Data[1];
 			T** End = Forward ? &Data[1] : &Data[0];
-			Memory::MemCopy(Start, End, sizeof(T*) * (Chunks - 1));
+			Memory::MemCopy(Start, End, sizeof(T*) * (Buckets - 1));
 		}
 
-		void ConvertIndex(uint64 Index, uint64& ChunkIndex, uint64& DataIndex) const
+		void ConvertIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
 		{
 			Index += Front;
-			ChunkIndex = Index / ChunkSize;
-			DataIndex = Index % ChunkSize;
+			BucketIndex = Index / BucketSize;
+			DataIndex = Index % BucketSize;
 		}
 
 		void Grow(bool AppendBack)
 		{
 			Count++;
 
-			if ((AppendBack && Back == ChunkSize - 1) || (!AppendBack && Front == 0))
+			if ((AppendBack && Back == BucketSize - 1) || (!AppendBack && Front == 0))
 			{
-				Chunks++;
-				ResizeChunks();
+				Buckets++;
+				ResizeBuckets();
 				if (!AppendBack)
 				{
-					MoveChunks(true);
+					MoveBuckets(true);
 				}
-				CreateChunk(AppendBack ? Chunks - 1 : 0);
+				CreateBucket(AppendBack ? Buckets - 1 : 0);
 
 				if (AppendBack)
 				{
@@ -422,7 +419,7 @@ namespace NxEn
 				}
 				else
 				{
-					Front = ChunkSize - 1;
+					Front = BucketSize - 1;
 				}
 			}
 			else
@@ -442,19 +439,19 @@ namespace NxEn
 		{
 			Count--;
 
-			if ((RemoveBack && Back == 0) || (!RemoveBack && Front == ChunkSize - 1))
+			if ((RemoveBack && Back == 0) || (!RemoveBack && Front == BucketSize - 1))
 			{
-				DestroyChunk(RemoveBack ? Chunks - 1 : 0);
+				DestroyBucket(RemoveBack ? Buckets - 1 : 0);
 				if (!RemoveBack)
 				{
-					MoveChunks(false);
+					MoveBuckets(false);
 				}
-				Chunks--;
-				ResizeChunks();
+				Buckets--;
+				ResizeBuckets();
 
 				if (RemoveBack)
 				{
-					Back = ChunkSize - 1;
+					Back = BucketSize - 1;
 				}
 				else
 				{
@@ -474,10 +471,18 @@ namespace NxEn
 			}
 		}
 
-		static const uint64 ChunkSize = 10;
+		void Reset()
+		{
+			Buckets = 1;
+			Count = 0;
+			Front = 5;
+			Back = 4;
+		}
+
+		static const uint64 BucketSize = 10;
 
 		Allocator* Allocator;
-		uint64 Chunks;
+		uint64 Buckets;
 		uint64 Count;
 		uint64 Front;
 		uint64 Back;

@@ -72,11 +72,11 @@ namespace NxEn
 			T* Pointer;
 		};
 
-		List(uint64 Cpct = 2, Allocator* Alloc = nullptr)
+		List(uint64 Size = 2, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
-			Capacity = GetValidCapacity(Cpct);
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Capacity = GetValidCapacity(Size);
 			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
@@ -148,14 +148,14 @@ namespace NxEn
 			Data[Index] = T(args...);
 		}
 
-		void AssignRange(uint64 Index, List<T>& Values)
+		void AssignRange(uint64 Index, List<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Values.GetCount() - 1), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Invalid Index");
 
-			for (uint64 Offset = 0; Offset < Values.GetCount(); Offset++)
+			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
 			{
-				Data[Index + Offset] = Values[Offset];
+				Data[Index + Offset] = Value[Offset];
 			}
 		}
 
@@ -178,13 +178,13 @@ namespace NxEn
 			Data[Count - 1] = T(args...);
 		}
 
-		void AppendRange(const List<T>& Values)
+		void AppendRange(const List<T>& Value)
 		{
 			uint64 Index = GetCount();
-			Resize(GetCount() + Values.GetCount());
-			for (uint64 Offset = 0; Offset < Values.GetCount(); Offset++)
+			Resize(GetCount() + Value.GetCount());
+			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
 			{
-				Data[Index + Offset] = Values[Offset];
+				Data[Index + Offset] = Value[Offset];
 			}
 		}
 
@@ -216,15 +216,15 @@ namespace NxEn
 			Data[Index] = T(args...);
 		}
 
-		void InsertRange(uint64 Index, const List<T>& Values)
+		void InsertRange(uint64 Index, const List<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Resize(GetCount() + Values.GetCount());
-			Memory::MemCopy(&Data[Index], &Data[Index + Values.GetCount()], sizeof(T) * (Count - Index - Values.GetCount()));
-			for (uint64 Offset = 0; Offset < Values.GetCount(); Offset++)
+			Resize(GetCount() + Value.GetCount());
+			Memory::MemCopy(&Data[Index], &Data[Index + Value.GetCount()], sizeof(T) * (Count - Index - Value.GetCount()));
+			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
 			{
-				Data[Index + Offset] = Values[Offset];
+				Data[Index + Offset] = Value[Offset];
 			}
 		}
 

@@ -87,10 +87,10 @@ namespace NxEn
 			Node* Current;
 		};
 
-		Tree(Allocator* Alloc = nullptr)
+		Tree(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Root(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Tree(const Tree<T>& Other)
@@ -146,34 +146,34 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void Initialize(Args&&... args)
+		void InitializeConstruct(Args&&... args)
 		{
 			Root = CreateNode();
 			Memory::Construct<T>(&Root->Data, args...);
 		}
 
-		void Assign(T* Index, const T& Value)
+		void Assign(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Instance->Data = Value;
 		}
 
-		void Assign(T* Index, T&& Value)
+		void Assign(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Instance->Data = Move(Value);
 		}
 
 		template<typename... Args>
-		void Assign(T* Index, Args&&... args)
+		void AssignConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
 		}
 
@@ -181,111 +181,111 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 
-			Node* Instance = NodeFromData(Parent);
-			AddChild(Instance, New);
+			Node* Anchor = NodeFromData(Parent);
+			AddChild(Anchor, Instance);
 		}
 
 		void Append(T* Parent, T&& Value)
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			Node* Instance = NodeFromData(Parent);
-			AddChild(Instance, New);
+			Node* Anchor = NodeFromData(Parent);
+			AddChild(Anchor, Instance);
 		}
 
 		template<typename... Args>
-		void Append(T* Parent, Args&&... args)
+		void AppendConstruct(T* Parent, Args&&... args)
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Instance = NodeFromData(Parent);
-			AddChild(Instance, New);
+			Node* Anchor = NodeFromData(Parent);
+			AddChild(Anchor, Instance);
 		}
 
 		void AppendRange(T* Parent, const Tree<T>& Value)
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 
-			Node* Instance = NodeFromData(Parent);
+			Node* Anchor = NodeFromData(Parent);
 			Node* Copy = NodeFromData(&Value.GetRoot());
-			CopyNode(Instance, Copy);
+			CopyNode(Anchor, Copy);
 		}
 
 		void InsertSibling(T* Sibling, const T& Value)
 		{
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 		
-			Node* Instance = NodeFromData(Sibling);
-			InsertSibling(Instance, New);
+			Node* Anchor = NodeFromData(Sibling);
+			InsertSibling(Anchor, Instance);
 		}
 
 		void InsertSibling(T* Sibling, T&& Value)
 		{
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			Node* Instance = NodeFromData(Sibling);
-			InsertSibling(Instance, New);
+			Node* Anchor = NodeFromData(Sibling);
+			InsertSibling(Anchor, Instance);
 		}
 
 		template<typename... Args>
-		void InsertSibling(T* Sibling, Args&&... args)
+		void InsertSiblingConstruct(T* Sibling, Args&&... args)
 		{
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Instance = NodeFromData(Sibling);
-			InsertSibling(Instance, New);
+			Node* Anchor = NodeFromData(Sibling);
+			InsertSibling(Anchor, Instance);
 		}
 
 		void InsertChild(T* Parent, const T& Value)
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 
-			Node* Instance = NodeFromData(Parent);
-			InsertChild(Instance, New);
+			Node* Anchor = NodeFromData(Parent);
+			InsertChild(Anchor, Instance);
 		}
 
 		void InsertChild(T* Parent, T&& Value)
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			Node* Instance = NodeFromData(Parent);
-			InsertChild(Instance, New);
+			Node* Anchor = NodeFromData(Parent);
+			InsertChild(Anchor, Instance);
 		}
 
 		template<typename... Args>
-		void InsertChild(T* Parent, Args&&... args)
+		void InsertChildConstruct(T* Parent, Args&&... args)
 		{
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Instance = NodeFromData(Parent);
-			InsertChild(Instance, New);
+			Node* Anchor = NodeFromData(Parent);
+			InsertChild(Anchor, Instance);
 		}
 
 		void Remove(T* Root)
@@ -425,12 +425,12 @@ namespace NxEn
 		{
 			Count++;
 
-			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
-			New->ChildCount = 0;
-			New->Parent = nullptr;
-			New->Sibling = nullptr;
-			New->Child = nullptr;
-			return New;
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Instance->ChildCount = 0;
+			Instance->Parent = nullptr;
+			Instance->Sibling = nullptr;
+			Instance->Child = nullptr;
+			return Instance;
 		}
 
 		void DestroyNode(Node* Instance)
@@ -460,27 +460,27 @@ namespace NxEn
 			Parent->ChildCount++;
 		}
 
-		void InsertSibling(Node* Sibling, Node* New)
+		void InsertSibling(Node* Sibling, Node* Instance)
 		{
-			New->Parent = Sibling->Parent;
-			New->Sibling = Sibling->Sibling;
-			Sibling->Sibling = New;
+			Instance->Parent = Sibling->Parent;
+			Instance->Sibling = Sibling->Sibling;
+			Sibling->Sibling = Instance;
 			Sibling->Parent->ChildCount++;
 		}
 
-		void InsertChild(Node* Parent, Node* New)
+		void InsertChild(Node* Parent, Node* Instance)
 		{
 			Node* Child = Parent->Child;
 			while (Child)
 			{
-				Child->Parent = New;
+				Child->Parent = Instance;
 				Child = Child->Sibling;
 			}
 
-			New->Parent = Parent;
-			New->Child = Parent->Child;
-			New->ChildCount = Parent->ChildCount;
-			Parent->Child = New;
+			Instance->Parent = Parent;
+			Instance->Child = Parent->Child;
+			Instance->ChildCount = Parent->ChildCount;
+			Parent->Child = Instance;
 			Parent->ChildCount = 1;
 		}
 

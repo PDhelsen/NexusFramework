@@ -19,21 +19,21 @@ namespace NxEn
 		};
 
 	public:
-		Pool(Allocator* Alloc = nullptr)
+		Pool(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Head(nullptr), Own(false)
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
-		Pool(uint64 Capacity)
+		Pool(uint64 Size)
 			: Allocator(nullptr), Count(0), Head(nullptr), Own(true)
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
 			AllocatorActive RawAllocator(nullptr);
-			Allocator = new PoolAllocator(Capacity, sizeof(Node));
+			Allocator = new PoolAllocator(Size, sizeof(Node));
 		}
 
 		Pool(const Pool<T>& Other)

@@ -17,10 +17,10 @@ namespace NxEn
 			Node* Next;
 		};
 	public:
-		Queue(Allocator* Alloc = nullptr)
+		Queue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Head(nullptr), Tail(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Queue(const Queue<T>& Other)
@@ -64,27 +64,27 @@ namespace NxEn
 
 		void Append(const T& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Value;
-			AppendNode(New);
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
+			AppendNode(Instance);
 		}
 
 		void Append(T&& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Move(Value);
-			AppendNode(New);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
+			AppendNode(Instance);
 		}
 
 		template<typename... Args>
-		void Append(Args&&... args)
+		void AppendConstruct(Args&&... args)
 		{
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
-			AppendNode(New);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
+			AppendNode(Instance);
 		}
 
-		void Append(const Queue<T>& Value)
+		void AppendRange(const Queue<T>& Value)
 		{
 			Node* Current = Value.Head;
 			while (Current)
@@ -96,8 +96,8 @@ namespace NxEn
 
 		void Remove()
 		{
-			Node* Removed = RemoveNode();
-			DestroyNode(Removed);
+			Node* Instance = RemoveNode();
+			DestroyNode(Instance);
 		}
 
 		void Clear()
@@ -161,9 +161,9 @@ namespace NxEn
 		Node* CreateNode()
 		{
 			Count++;
-			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
-			New->Next = nullptr;
-			return New;
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Instance->Next = nullptr;
+			return Instance;
 		}
 
 		void DestroyNode(Node* Instance)
@@ -172,23 +172,23 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AppendNode(Node* New)
+		void AppendNode(Node* Instance)
 		{
 			if (Head == nullptr || Tail == nullptr)
 			{
-				Head = Tail = New;
+				Head = Tail = Instance;
 				return;
 			}
 
-			Tail->Next = New;
-			Tail = New;
+			Tail->Next = Instance;
+			Tail = Instance;
 		}
 
 		Node* RemoveNode()
 		{
-			Node* Removed = Head;
+			Node* Instance = Head;
 			Head = Head->Next;
-			return Removed;
+			return Instance;
 		}
 
 		Allocator* Allocator;

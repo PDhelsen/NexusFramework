@@ -481,10 +481,10 @@ namespace NxTs
 		Test.Assign(&Last, 8);
 		ASSERT_EQ(Test.Last().Integer, 8);
 
-		Test.InsertAfter(&Next, ContainerTest(56));
-		Test.InsertAfter(&Prev, 23);
-		Test.InsertBefore(&Prev, ContainerTest(32));
-		Test.InsertBefore(&Next, 2);
+		Test.InsertBack(&Next, ContainerTest(56));
+		Test.InsertBackConstruct(&Prev, 23);
+		Test.InsertFront(&Prev, ContainerTest(32));
+		Test.InsertFrontConstruct(&Next, 2);
 		ASSERT_EQ(Test.GetCount(), 8);
 
 		Test.Swap(&Test.First(), &Test.Last());
@@ -624,7 +624,7 @@ namespace NxTs
 	TEST(Type_Containers, Dequeue)
 	{
 		NxEn::Dequeue<ContainerTest> Test = NxEn::Dequeue<ContainerTest>();
-		ASSERT_EQ(Test.GetChunks(), 1);
+		ASSERT_EQ(Test.GetBuckets(), 1);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
@@ -640,7 +640,7 @@ namespace NxTs
 		Test.AppendFront(26);
 		Test.AppendFront(59);
 		Test.AppendFront(34);
-		ASSERT_EQ(Test.GetChunks(), 3);
+		ASSERT_EQ(Test.GetBuckets(), 3);
 		ASSERT_EQ(Test.GetCount(), 12);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
@@ -664,7 +664,7 @@ namespace NxTs
 		Test.RemoveFront();
 		Test.RemoveFront();
 		ASSERT_EQ(Test.GetCount(), 8);
-		ASSERT_EQ(Test.GetChunks(), 1);
+		ASSERT_EQ(Test.GetBuckets(), 1);
 
 		ASSERT_EQ(Test.First().Integer, 26);
 		ASSERT_EQ(Test.Last().Integer, 21);
@@ -849,7 +849,7 @@ namespace NxTs
 	TEST(Type_Containers, Set)
 	{
 		NxEn::Set<ContainerTest, NxEn::XxHash64> Test = NxEn::Set<ContainerTest, NxEn::XxHash64>();
-		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetBuckets(), 16);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
@@ -868,7 +868,7 @@ namespace NxTs
 		Test.Append(ContainerTest(58));
 		Test.Append(ContainerTest(9));
 		Test.Append(ContainerTest(43));
-		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetBuckets(), 16);
 		ASSERT_EQ(Test.GetCount(), 8);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
@@ -894,7 +894,7 @@ namespace NxTs
 	TEST(Type_Containers, Dictionary)
 	{
 		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>();
-		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetBuckets(), 16);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
@@ -913,7 +913,7 @@ namespace NxTs
 		Test.Assign(Test2, ContainerTest(31));
 		Test.Assign(Test3, ContainerTest(32));
 
-		ASSERT_EQ(Test.GetCapacity(), 16);
+		ASSERT_EQ(Test.GetBuckets(), 16);
 		ASSERT_EQ(Test.GetCount(), 3);
 		ASSERT_EQ(Test.IsEmpty(), false);
 

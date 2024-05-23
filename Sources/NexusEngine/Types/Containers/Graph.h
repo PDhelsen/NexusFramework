@@ -83,10 +83,10 @@ namespace NxEn
 			T* Pointer;
 		};
 
-		Graph(Allocator* Alloc = nullptr)
+		Graph(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Root(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Graph(const Graph<T>& Other)
@@ -115,63 +115,63 @@ namespace NxEn
 			return Count != Other.Count || Root != Other.Root;
 		}
 
-		void Assign(T* Index, const T& Value)
+		void Assign(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Instance->Data = Value;
 		}
 
-		void Assign(T* Index, T&& Value)
+		void Assign(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Instance->Data = Move(Value);
 		}
 
 		template<typename... Args>
-		void Assign(T* Index, Args&&... args)
+		void AssignConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
 		}
 
 		void Append(const T& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 
-			AddNode(New);
+			AddNode(Instance);
 		}
 
 		void Append(T&& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			AddNode(New);
+			AddNode(Instance);
 		}
 
 		template<typename... Args>
-		void Append(Args&&... args)
+		void AppendConstruct(Args&&... args)
 		{
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			AddNode(New);
+			AddNode(Instance);
 		}
 
-		void Append(const Graph<T>& Value)
+		void AppendRange(const Graph<T>& Value)
 		{
-			Node* Copy = Value.Root;
-			while (Copy)
+			Node* Current = Value.Root;
+			while (Current)
 			{
-				Append(&Copy->Data);
-				Copy = Copy->Next;
+				Append(&Current->Data);
+				Current = Current->Next;
 			}
 		}
 
@@ -223,9 +223,9 @@ namespace NxEn
 			return &Root->Data;
 		}
 
-		T* TryGetConnection(T* Instance, ConnectionType Type, uint64 Index = 0)
+		T* TryGetConnection(T* Instance, ConnectionType Type, uint64 Position = 0)
 		{
-			uint64 I = 0;
+			uint64 Idx = 0;
 			Node* Start = NodeFromData(Instance);
 			
 			Connection* Connect = Start->Connection;
@@ -233,12 +233,12 @@ namespace NxEn
 			{
 				if (Connect->Type == Type)
 				{
-					if (I == Index)
+					if (Idx == Position)
 					{
 						return &Connect->Target->Data;
 					}
 					
-					I++;
+					Idx++;
 				}
 
 				Connect = Connect->Next;
@@ -271,15 +271,15 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			Node* Node = Root;
-			while (Node)
+			Node* Current = Root;
+			while (Current)
 			{
-				if (Node->Data == Other)
+				if (Current->Data == Other)
 				{
 					return true;
 				}
 
-				Node = Node->Next;
+				Current = Current->Next;
 			}
 
 			return false;
@@ -299,11 +299,11 @@ namespace NxEn
 		{
 			Count++;
 
-			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
-			New->Count = 0;
-			New->Next = nullptr;
-			New->Connection = nullptr;
-			return New;
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Instance->Count = 0;
+			Instance->Next = nullptr;
+			Instance->Connection = nullptr;
+			return Instance;
 		}
 
 		void DestroyNode(Node* Instance)

@@ -72,10 +72,10 @@ namespace NxEn
 			T* Pointer;
 		};
 
-		Array(uint64 Cnt, Allocator* Alloc = nullptr)
-			: Allocator(nullptr), Count(Cnt), Data(nullptr)
+		Array(uint64 Size, Allocator* Allctr = nullptr)
+			: Allocator(nullptr), Count(Size), Data(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
@@ -156,14 +156,14 @@ namespace NxEn
 			Data[Index] = T(args...);
 		}
 
-		void AssignRange(uint64 Index, const Array<T>& Values)
+		void AssignRange(uint64 Index, const Array<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Values.GetCount()  - 1), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount()  - 1), "Invalid Index");
 
-			for (uint64 Offset = 0; Offset < Values.GetCount(); Offset++)
+			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
 			{
-				Data[Index + Offset] = Values[Offset];
+				Data[Index + Offset] = Value[Offset];
 			}
 		}
 

@@ -18,10 +18,10 @@ namespace NxEn
 		};
 
 	public:
-		Stack(Allocator* Alloc = nullptr)
+		Stack(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Top(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Stack(const Stack<T>& Other)
@@ -64,27 +64,27 @@ namespace NxEn
 
 		void Append(const T& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Value;
-			AppendNode(New);
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
+			AppendNode(Instance);
 		}
 
 		void Append(T&& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Move(Value);
-			AppendNode(New);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
+			AppendNode(Instance);
 		}
 
 		template<typename... Args>
-		void Append(Args&&... args)
+		void AppendConstruct(Args&&... args)
 		{
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
-			AppendNode(New);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
+			AppendNode(Instance);
 		}
 
-		void Append(const Stack<T>& Value)
+		void AppendRange(const Stack<T>& Value)
 		{
 			Node* Current = Value.Top;
 			while (Current)
@@ -96,8 +96,8 @@ namespace NxEn
 
 		void Remove()
 		{
-			Node* Removed = RemoveNode();
-			DestroyNode(Removed);
+			Node* Instance = RemoveNode();
+			DestroyNode(Instance);
 		}
 
 		void Clear()
@@ -168,20 +168,20 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AppendNode(Node* New)
+		void AppendNode(Node* Instance)
 		{
-			New->Next = Top;
-			Top = New;
+			Instance->Next = Top;
+			Top = Instance;
 		}
 
 		Node* RemoveNode()
 		{
-			Node* Removed = Top;
+			Node* Instance = Top;
 			if (Top)
 			{
 				Top = Top->Next;
 			}
-			return Removed;
+			return Instance;
 		}
 
 		Allocator* Allocator;

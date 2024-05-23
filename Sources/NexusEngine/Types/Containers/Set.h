@@ -22,10 +22,10 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(Node** Data, uint64 Capacity, Node* Current, uint64 Index)
-				: Data(Data), Capacity(Capacity), Current(Current), Index(Index)
+			Iterator(Node** Data, uint64 Buckets, Node* Current, uint64 Index)
+				: Data(Data), Buckets(Buckets), Current(Current), Index(Index)
 			{
-				if (Current == nullptr && Index != Capacity)
+				if (Current == nullptr && Index != Buckets)
 				{
 					MoveToNext();
 				}
@@ -76,7 +76,7 @@ namespace NxEn
 					do
 					{
 						Index++;
-						if (Index >= Capacity)
+						if (Index >= Buckets)
 						{
 							Current = nullptr;
 							break;
@@ -88,30 +88,30 @@ namespace NxEn
 			}
 			
 			Node** Data;
-			uint64 Capacity;
+			uint64 Buckets;
 			Node* Current;
 			uint64 Index;
 		};
 
-		Set(uint64 Cpct = DefaultCapacity, Allocator* Alloc = nullptr)
-			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)
+		Set(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
+			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
-			Capacity = GetValidCapacity(Cpct);
-			Data = (Node**)Memory::Allocate(sizeof(Node*) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
-			for (uint64 Index = 0; Index <= Capacity; Index++)
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Buckets = GetValidCapacity(Size);
+			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
+			for (uint64 Index = 0; Index <= Buckets; Index++)
 			{
 				Data[Index] = nullptr;
 			}
 		}
 
 		Set(const Set<T, H, LF>& Other)
-			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Data(Other.Data)
 		{
 		}
 
 		Set(Set<T, H, LF>&& Other) noexcept
-			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -124,9 +124,9 @@ namespace NxEn
 
 		Set<T, H, LF> Copy() const
 		{
-			Set<T, H, LF> Copy = Set<T, H, LF>(Capacity, Allocator);
+			Set<T, H, LF> Copy = Set<T, H, LF>(Buckets, Allocator);
 			
-			for (uint64 Index = 0; Index < Capacity; Index++)
+			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Node* Current = Data[Index];
 				while (Current)
@@ -165,10 +165,10 @@ namespace NxEn
 				ReHash(Grow());
 			}
 			
-			Node* New = CreateNode();
-			New->Value = Value;
+			Node* Instance = CreateNode();
+			Instance->Value = Value;
 
-			AddNode(Index, New);
+			AddNode(Index, Instance);
 		}
 
 		void Append(T&& Value)
@@ -184,17 +184,17 @@ namespace NxEn
 				ReHash(Grow());
 			}
 
-			Node* New = CreateNode();
-			New->Value = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Value = Move(Value);
 
-			AddNode(Index, New);
+			AddNode(Index, Instance);
 		}
 
-		void Append(const Set<T>& Other)
+		void AppendRange(const Set<T>& Value)
 		{
-			for (auto& Value : Other)
+			for (auto& It : Value)
 			{
-				Append(Value);
+				Append(It);
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace NxEn
 
 		void Clear()
 		{
-			for (uint64 Index = 0; Index < Capacity; Index++)
+			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Node* Current = Data[Index];
 				while (Current)
@@ -228,23 +228,23 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(Data, Capacity, Data[0], 0);
+			return Iterator(Data, Buckets, Data[0], 0);
 		}
 
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			return Iterator(Data, Capacity, nullptr, Capacity);
+			return Iterator(Data, Buckets, nullptr, Buckets);
 		}
 
 		void ReHash(uint64 Size)
 		{
 			Node** TempArray = Data;
-			uint64 TempCapacity = Capacity;
+			uint64 TempCapacity = Buckets;
 
-			Capacity = Size;
-			Data = (Node**)Memory::Allocate(sizeof(Node*) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
-			for (uint64 Index = 0; Index <= Capacity; Index++)
+			Buckets = Size;
+			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
+			for (uint64 Index = 0; Index <= Buckets; Index++)
 			{
 				Data[Index] = nullptr;
 			}
@@ -272,19 +272,19 @@ namespace NxEn
 			return GetNode(Other) != nullptr;
 		}
 
-		float GetLoadFactor() const { return (float)(Count + 1) / (float)(Capacity); }
+		float GetLoadFactor() const { return (float)(Count + 1) / (float)(Buckets); }
 		float GetLoadFactorThrehsold() const { return LoadFactorThreshold; }
 		uint64 GetCount() const { return Count; }
-		uint64 GetCapacity() const { return Capacity; }
+		uint64 GetBuckets() const { return Buckets; }
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
 		Node* CreateNode()
 		{
 			Count++;
-			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
-			New->Next = nullptr;
-			return New;
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Instance->Next = nullptr;
+			return Instance;
 		}
 
 		void DestroyNode(Node* Instance)
@@ -305,16 +305,16 @@ namespace NxEn
 
 		void RemoveNode(uint64 Index, Node* Instance)
 		{
-			Node* Node = Data[Index];
-			while (Node->Next)
+			Node* Current = Data[Index];
+			while (Current->Next)
 			{
-				if (Node->Next == Instance)
+				if (Current->Next == Instance)
 				{
-					Node->Next = Instance->Next;
+					Current->Next = Instance->Next;
 					break;
 				}
 
-				Node = Node->Next;
+				Current = Current->Next;
 			}
 
 			if (Instance == Data[Index])
@@ -325,25 +325,25 @@ namespace NxEn
 
 		uint64 GetIndex(const T& Value) const
 		{
-			uint64 Index = Hash<T, H>::HashObject(Value) % Capacity;
+			uint64 Index = Hash<T, H>::HashObject(Value) % Buckets;
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Index;
 		}
 
 		Node* GetNode(uint64 Index, const T& Value) const
 		{
-			Node* Node = Data[Index];
-			while (Node)
+			Node* Current = Data[Index];
+			while (Current)
 			{
-				if (Node->Value == Value)
+				if (Current->Value == Value)
 				{
 					break;
 				}
 
-				Node = Node->Next;
+				Current = Current->Next;
 			}
 
-			return Node;
+			return Current;
 		}
 
 		Node* GetNode(const T& Value)
@@ -354,21 +354,21 @@ namespace NxEn
 
 		bool IsValidIndex(uint64 Index) const
 		{
-			return Index >= 0 && Index < Capacity;
+			return Index >= 0 && Index < Buckets;
 		}
 
 		uint64 Grow()
 		{
-			return GetValidCapacity(Capacity + Capacity / 2);
+			return GetValidCapacity(Buckets + Buckets / 2);
 		}
 
 		uint64 GetValidCapacity(uint64 Size) const { return Size > 3 ? Size : 3; }
 
-		inline static const uint64 DefaultCapacity = 16;
+		inline static const uint64 DefaultSize = 16;
 		inline static const float LoadFactorThreshold = LF;
 
 		Allocator* Allocator;
-		uint64 Capacity;
+		uint64 Buckets;
 		uint64 Count;
 		Node** Data;
 	};

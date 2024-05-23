@@ -78,10 +78,10 @@ namespace NxEn
 			T* Pointer;
 		};
 
-		LinkedList(Allocator* Alloc = nullptr)
-			: Allocator(Alloc), Count(0), Head(nullptr), Tail(nullptr)
+		LinkedList(Allocator* Allctr = nullptr)
+			: Allocator(Allctr), Count(0), Head(nullptr), Tail(nullptr)
 		{
-			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		LinkedList(const LinkedList<T>& Other)
@@ -125,211 +125,211 @@ namespace NxEn
 			return Count != Other.Count || Head != Other.Head || Tail != Other.Tail;
 		}
 
-		void Assign(T* Index, const T& Value)
+		void Assign(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Instance->Data = Value;
 		}
 
-		void Assign(T* Index, T&& Value)
+		void Assign(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Instance->Data = Move(Value);
 		}
 
 		template<typename... Args>
-		void Assign(T* Index, Args&&... args)
+		void AssignConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
 		}
 
 		void AppendBack(const T& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 
-			AddToTail(New);
+			AddToTail(Instance);
 		}
 
 		void AppendBack(T&& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			AddToTail(New);
+			AddToTail(Instance);
 		}
 
 		template<typename... Args>
-		void AppendBack(Args&&... args)
+		void AppendBackConstruct(Args&&... args)
 		{
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			AddToTail(New);
+			AddToTail(Instance);
 		}
 
-		void AppendBack(const LinkedList<T>& Other)
+		void AppendBackRange(const LinkedList<T>& Other)
 		{
-			Node* New = Other.Head;
-			while (New != nullptr)
+			Node* Instance = Other.Head;
+			while (Instance != nullptr)
 			{
-				AppendBack(New->Data);
-				New = New->Next;
+				AppendBack(Instance->Data);
+				Instance = Instance->Next;
 			}
 		}
 
 		void AppendFront(const T& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 
-			AddToHead(New);
+			AddToHead(Instance);
 		}
 
 		void AppendFront(T&& Value)
 		{
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			AddToHead(New);
+			AddToHead(Instance);
 		}
 
 		template<typename... Args>
-		void AppendFront(Args&&... args)
+		void AppendFrontConstruct(Args&&... args)
 		{
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			AddToHead(New);
+			AddToHead(Instance);
 		}
 
-		void AppendFront(const LinkedList<T>& Other)
+		void AppendFrontRange(const LinkedList<T>& Other)
 		{
-			Node* New = Other.Head;
-			while (New != nullptr)
+			Node* Instance = Other.Head;
+			while (Instance != nullptr)
 			{
-				AppendFront(New->Data);
-				New = New->Next;
-			}
-		}
-
-		void InsertAfter(T* Index, const T& Value)
-		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
-			
-			Node* New = CreateNode();
-			New->Data = Value;
-
-			Node* Instance = NodeFromData(Index);
-			InsertAfter(Instance, New);
-		}
-
-		void InsertAfter(T* Index, T&& Value)
-		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
-			
-			Node* New = CreateNode();
-			New->Data = Move(Value);
-
-			Node* Instance = NodeFromData(Index);
-			InsertAfter(Instance, New);
-		}
-
-		template<typename... Args>
-		void InsertAfter(T* Index, Args&&... args)
-		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
-			
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
-
-			Node* Instance = NodeFromData(Index);
-			InsertAfter(Instance, New);
-		}
-
-		void InsertAfter(T* Index, const LinkedList<T>& Other)
-		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
-			
-			Node* New = Other.Head;
-			Node* Instance = NodeFromData(Index);
-
-			while (New != nullptr)
-			{
-				InsertAfter(Instance, New->Data);
-				New = New->Next;
+				AppendFront(Instance->Data);
 				Instance = Instance->Next;
 			}
 		}
 
-		void InsertBefore(T* Index, const T& Value)
+		void InsertBack(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* New = CreateNode();
-			New->Data = Value;
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
 
-			Node* Instance = NodeFromData(Index);
-			InsertBefore(Instance, New);
+			Node* Anchor = NodeFromData(Position);
+			InsertBack(Anchor, Instance);
 		}
 
-		void InsertBefore(T* Index, T&& Value)
+		void InsertBack(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* New = CreateNode();
-			New->Data = Move(Value);
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
 
-			Node* Instance = NodeFromData(Index);
-			InsertBefore(Instance, New);
+			Node* Anchor = NodeFromData(Position);
+			InsertBack(Anchor, Instance);
 		}
 
 		template<typename... Args>
-		void InsertBefore(T* Index, Args&&... args)
+		void InsertBackConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* New = CreateNode();
-			Memory::Construct<T>(&New->Data, args...);
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Instance = NodeFromData(Index);
-			InsertBefore(Instance, New);
+			Node* Anchor = NodeFromData(Position);
+			InsertBack(Anchor, Instance);
 		}
 
-		void InsertBefore(T* Index, const LinkedList<T>& Other)
+		void InsertBackRange(T* Position, const LinkedList<T>& Other)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* New = Other.Head;
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = Other.Head;
+			Node* Anchor = NodeFromData(Position);
 
-			while (New != nullptr)
+			while (Instance != nullptr)
 			{
-				InsertBefore(Instance, New->Data);
-				New = New->Next;
+				InsertBack(Anchor, Instance->Data);
 				Instance = Instance->Next;
+				Anchor = Anchor->Next;
+			}
+		}
+
+		void InsertFront(T* Position, const T& Value)
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			
+			Node* Instance = CreateNode();
+			Instance->Data = Value;
+
+			Node* Anchor = NodeFromData(Position);
+			InsertFront(Anchor, Instance);
+		}
+
+		void InsertFront(T* Position, T&& Value)
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			
+			Node* Instance = CreateNode();
+			Instance->Data = Move(Value);
+
+			Node* Anchor = NodeFromData(Position);
+			InsertFront(Anchor, Instance);
+		}
+
+		template<typename... Args>
+		void InsertFrontConstruct(T* Position, Args&&... args)
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			
+			Node* Instance = CreateNode();
+			Memory::Construct<T>(&Instance->Data, args...);
+
+			Node* Anchor = NodeFromData(Position);
+			InsertFront(Anchor, Instance);
+		}
+
+		void InsertFrontRange(T* Position, const LinkedList<T>& Other)
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			
+			Node* Instance = Other.Head;
+			Node* Anchor = NodeFromData(Position);
+
+			while (Instance != nullptr)
+			{
+				InsertFront(Anchor, Instance->Data);
+				Instance = Instance->Next;
+				Anchor = Anchor->Next;
 			}
 		}
 
 		void RemoveBack()
 		{
-			Node* Removed = RemoveFromTail();
-			DestroyNode(Removed);
+			Node* Instance = RemoveFromTail();
+			DestroyNode(Instance);
 		}
 
-		void RemoveBack(T* Index)
+		void RemoveBack(T* Position)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* Target = NodeFromData(Index);
-			while (Tail != Target)
+			Node* Instance = NodeFromData(Position);
+			while (Tail != Instance)
 			{
 				RemoveBack();
 			}
@@ -338,16 +338,16 @@ namespace NxEn
 
 		void RemoveFront()
 		{
-			Node* Removed = RemoveFromHead();
-			DestroyNode(Removed);
+			Node* Instance = RemoveFromHead();
+			DestroyNode(Instance);
 		}
 
-		void RemoveFront(T* Index)
+		void RemoveFront(T* Position)
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			
-			Node* Target = NodeFromData(Index);
-			while (Head != Target)
+			Node* Instance = NodeFromData(Position);
+			while (Head != Instance)
 			{
 				RemoveFront();
 			}
@@ -362,34 +362,34 @@ namespace NxEn
 			Node* Start = NodeFromData(From);
 			Node* End = NodeFromData(To);
 		
-			Node* Before = Start->Prev;
-			Node* After = End->Next;
+			Node* Prev = Start->Prev;
+			Node* Next = End->Next;
 
 			while (Start != End)
 			{
-				Node* Removed = Start;
+				Node* Instance = Start;
 				Start = Start->Next;
-				DestroyNode(Removed);
+				DestroyNode(Instance);
 			}
 
 			DestroyNode(End);
 
-			if (Before)
+			if (Prev)
 			{
-				Before->Next = After;
+				Prev->Next = Next;
 			}
 			else
 			{
-				Head = After;
+				Head = Next;
 			}
 
-			if (After)
+			if (Next)
 			{
-				After->Prev = Before;
+				Next->Prev = Prev;
 			}
 			else
 			{
-				Tail = Before;
+				Tail = Prev;
 			}
 		}
 
@@ -401,21 +401,21 @@ namespace NxEn
 			}
 		}
 
-		T& GetNext(T* Index) const
+		T& GetNext(T* Position) const
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			NEXUS_ASSERT(Instance != Tail, "Cannot get next on Tail");
 
 			return Instance->Next->Data;
 		}
 
-		T* TryGetNext(T* Index) const
+		T* TryGetNext(T* Position) const
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			if (Instance == Tail)
 			{
 				return nullptr;
@@ -424,21 +424,21 @@ namespace NxEn
 			return &Instance->Next->Data;
 		}
 
-		T& GetPrev(T* Index) const
+		T& GetPrev(T* Position) const
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			NEXUS_ASSERT(Instance != Head, "Cannot get prev on Head");
 
 			return Instance->Prev->Data;
 		}
 
-		T* TryGetPrev(T* Index) const
+		T* TryGetPrev(T* Position) const
 		{
-			NEXUS_ASSERT(Index != nullptr, "Index is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 
-			Node* Instance = NodeFromData(Index);
+			Node* Instance = NodeFromData(Position);
 			if (Instance == Head)
 			{
 				return nullptr;
@@ -553,15 +553,15 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			Node* Node = Head;
-			while (Node != nullptr)
+			Node* Current = Head;
+			while (Current != nullptr)
 			{
-				if (Node->Data == Other)
+				if (Current->Data == Other)
 				{
 					return true;
 				}
 
-				Node = Node->Next;
+				Current = Current->Next;
 			}
 
 			return false;
@@ -576,17 +576,17 @@ namespace NxEn
 		void Reverse()
 		{
 			uint64 Half = Count / 2;
-			Node* A = Head;
-			Node* B = Tail;
+			Node* H = Head;
+			Node* T = Tail;
 			for (uint64 It = 0; It < Half; It++)
 			{
-				Node* Next = A->Next;
-				Node* Prev = B->Prev;
+				Node* Next = H->Next;
+				Node* Prev = T->Prev;
 				
-				Swap(&A->Data, &B->Data);
+				Swap(&H->Data, &T->Data);
 
-				A = Next;
-				B = Prev;
+				H = Next;
+				T = Prev;
 			}
 		}
 
@@ -611,61 +611,61 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AddToTail(Node* New)
+		void AddToTail(Node* Instance)
 		{
-			New->Next = nullptr;
-			New->Prev = Tail;
+			Instance->Next = nullptr;
+			Instance->Prev = Tail;
 
 			if (!Head)
 			{
-				Head = New;
+				Head = Instance;
 			}
 
 			if (Tail)
 			{
-				Tail->Next = New;
+				Tail->Next = Instance;
 			}
 
-			Tail = New;
+			Tail = Instance;
 		}
 
-		void AddToHead(Node* New)
+		void AddToHead(Node* Instance)
 		{
-			New->Next = Head;
-			New->Prev = nullptr;
+			Instance->Next = Head;
+			Instance->Prev = nullptr;
 
 			if (!Tail)
 			{
-				Tail = New;
+				Tail = Instance;
 			}
 
 			if (Head)
 			{
-				Head->Prev = New;
+				Head->Prev = Instance;
 			}
 
-			Head = New;
+			Head = Instance;
 		}
 
-		void InsertAfter(Node* Instance, Node* New)
+		void InsertBack(Node* Anchor, Node* Instance)
 		{
-			New->Next = Instance->Next;
-			New->Prev = Instance;
-			Instance->Next->Prev = New;
-			Instance->Next = New;
+			Instance->Next = Anchor->Next;
+			Instance->Prev = Anchor;
+			Anchor->Next->Prev = Instance;
+			Anchor->Next = Instance;
 		}
 
-		void InsertBefore(Node* Instance, Node* New)
+		void InsertFront(Node* Anchor, Node* Instance)
 		{
-			New->Prev = Instance->Prev;
-			New->Next = Instance;
-			Instance->Prev->Next= New;
-			Instance->Prev = New;
+			Instance->Prev = Anchor->Prev;
+			Instance->Next = Anchor;
+			Anchor->Prev->Next= Instance;
+			Anchor->Prev = Instance;
 		}
 
 		Node* RemoveFromTail()
 		{
-			Node* Removed = Tail;
+			Node* Instance = Tail;
 			Tail = Tail->Prev;
 
 			if (Tail)
@@ -673,17 +673,17 @@ namespace NxEn
 				Tail->Next = nullptr;
 			}
 			
-			if (Head == Removed)
+			if (Head == Instance)
 			{
 				Head = nullptr;
 			}
 
-			return Removed;
+			return Instance;
 		}
 
 		Node* RemoveFromHead()
 		{
-			Node* Removed = Head;
+			Node* Instance = Head;
 			Head = Head->Next;
 
 			if (Head)
@@ -691,12 +691,12 @@ namespace NxEn
 				Head->Prev = nullptr;
 			}
 
-			if (Tail == Removed)
+			if (Tail == Instance)
 			{
 				Tail = nullptr;
 			}
 
-			return Removed;
+			return Instance;
 		}
 
 		static void SortSort(Node** HeadRef)
