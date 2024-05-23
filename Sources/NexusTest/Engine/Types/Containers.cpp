@@ -40,8 +40,6 @@ namespace NxTs
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
-
-			NEXUS_LOG(App, Info, 0, "Copy");
 		}
 
 		ContainerTest(ContainerTest&& Other) noexcept
@@ -49,8 +47,6 @@ namespace NxTs
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
-
-			NEXUS_LOG(App, Info, 0, "Move");
 		}
 
 		ContainerTest& operator=(const ContainerTest& Other)
@@ -58,8 +54,6 @@ namespace NxTs
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
-
-			NEXUS_LOG(App, Info, 0, "Copy");
 			return *this;
 		}
 
@@ -68,8 +62,6 @@ namespace NxTs
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
-
-			NEXUS_LOG(App, Info, 0, "Move");
 			return *this;
 		}
 
@@ -895,6 +887,8 @@ namespace NxTs
 		{
 			NEXUS_LOG(App, Info, 0, "Set value : %d", It->Integer);
 		}
+
+		Test.ReHash(21);
 	}
 
 	TEST(Type_Containers, Dictionary)

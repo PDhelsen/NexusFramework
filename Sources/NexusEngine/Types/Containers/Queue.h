@@ -161,7 +161,9 @@ namespace NxEn
 		Node* CreateNode()
 		{
 			Count++;
-			return (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			New->Next = nullptr;
+			return New;
 		}
 
 		void DestroyNode(Node* Instance)

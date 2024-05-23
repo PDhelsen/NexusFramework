@@ -114,6 +114,10 @@ namespace NxEn
 			Allocator = Alloc != nullptr ? Alloc : Memory::GetActiveAllocator();
 			Capacity = GetValidCapacity(Cpct);
 			Data = (Node**)Memory::Allocate(sizeof(Node*) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+			for (uint64 Index = 0; Index <= Capacity; Index++)
+			{
+				Data[Index] = nullptr;
+			}
 		}
 
 		Dictionary(const Dictionary<K, T, H, LF>& Other)
@@ -328,6 +332,10 @@ namespace NxEn
 
 			Capacity = Size;
 			Data = (Node**)Memory::Allocate(sizeof(Node*) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+			for (uint64 Index = 0; Index <= Capacity; Index++)
+			{
+				Data[Index] = nullptr;
+			}
 
 			for (uint64 TempIndex = 0; TempIndex < TempCapacity; TempIndex++)
 			{
@@ -398,7 +406,9 @@ namespace NxEn
 		Node* CreateNode()
 		{
 			Count++;
-			return (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			New->Next = nullptr;
+			return New;
 		}
 
 		void DestroyNode(Node* Instance)
