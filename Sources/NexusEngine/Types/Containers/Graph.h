@@ -118,6 +118,7 @@ namespace NxEn
 		void Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = NodeFromData(Position);
 			Instance->Data = Value;
@@ -126,6 +127,7 @@ namespace NxEn
 		void Assign(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = NodeFromData(Position);
 			Instance->Data = Move(Value);
@@ -135,6 +137,7 @@ namespace NxEn
 		void AssignConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = NodeFromData(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
@@ -177,6 +180,9 @@ namespace NxEn
 
 		void Remove(T* Value)
 		{
+			NEXUS_ASSERT(Value != nullptr, "Value is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
 			Node* Instance = NodeFromData(Value);
 			RemoveNode(Instance);
 			DestroyNode(Instance);
@@ -197,6 +203,10 @@ namespace NxEn
 
 		void Connect(T* From, T* To)
 		{
+			NEXUS_ASSERT(From != nullptr, "From is null");
+			NEXUS_ASSERT(To != nullptr, "To is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
 			Node* Start = NodeFromData(From);
 			Node* Target = NodeFromData(To);
 			
@@ -206,6 +216,10 @@ namespace NxEn
 
 		void Disconnect(T* From, T* To)
 		{
+			NEXUS_ASSERT(From != nullptr, "From is null");
+			NEXUS_ASSERT(To != nullptr, "To is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+
 			Node* Start = NodeFromData(From);
 			Node* Target = NodeFromData(To);
 
@@ -215,16 +229,26 @@ namespace NxEn
 
 		T& GetRoot() const
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
 			return Root->Data;
 		}
 
 		T* TryGetRoot() const
 		{
+			if (!Root)
+			{
+				return nullptr;
+			}
+
 			return &Root->Data;
 		}
 
 		T& GetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
 		{
+			NEXUS_ASSERT(Instance != nullptr, "Instance is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
 			uint64 Idx = 0;
 			Node* Start = NodeFromData(Instance);
 
@@ -249,6 +273,9 @@ namespace NxEn
 
 		T* TryGetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
 		{
+			NEXUS_ASSERT(Instance != nullptr, "Instance is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
 			uint64 Idx = 0;
 			Node* Start = NodeFromData(Instance);
 			
@@ -285,6 +312,10 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
+			NEXUS_ASSERT(A != nullptr, "A is null");
+			NEXUS_ASSERT(B != nullptr, "B is null"); 
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
 			Node* NodeA = NodeFromData(A);
 			Node* NodeB = NodeFromData(B);
 

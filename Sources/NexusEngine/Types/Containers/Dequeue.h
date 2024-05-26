@@ -166,6 +166,8 @@ namespace NxEn
 
 		void Assign(uint64 Index, const T& Value)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = Value;
@@ -173,6 +175,8 @@ namespace NxEn
 
 		void Assign(uint64 Index, T&& Value)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = Move(Value);
@@ -181,6 +185,8 @@ namespace NxEn
 		template<typename... Args>
 		void AssignConstruct(uint64 Index, Args&&... args)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = T(args...);
@@ -188,6 +194,7 @@ namespace NxEn
 
 		void AssignRange(uint64 Index, const Dequeue<T>& Values)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Values.Count), "Overflow");
 
 			for (uint64 Offset = 0; Offset < Values.Count; Offset++)
@@ -287,16 +294,20 @@ namespace NxEn
 
 		T& First() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
+			NEXUS_ASSERT(IsValidIndex(0), "Invalid Index");
 			
-			return Data[0][Front];
+			uint64 BucketIndex, DataIndex;
+			GetIndex(0, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		T& Last() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
-			
-			return Data[Buckets - 1][Back];
+			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
+
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Count - 1, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		Iterator begin() const { return Begin(); }

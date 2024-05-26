@@ -200,6 +200,8 @@ namespace NxEn
 
 		void Remove(const T& Value)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Set is empty");
+
 			uint64 Index = GetIndex(Value);
 			Node* Instance = GetNode(Index, Value);
 
@@ -326,7 +328,6 @@ namespace NxEn
 		uint64 GetIndex(const T& Value) const
 		{
 			uint64 Index = Hash<T, H>::HashObject(Value) % Buckets;
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Index;
 		}
 

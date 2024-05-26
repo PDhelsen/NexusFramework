@@ -128,6 +128,7 @@ namespace NxEn
 		void Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = NodeFromData(Position);
 			Instance->Data = Value;
@@ -136,7 +137,8 @@ namespace NxEn
 		void Assign(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = NodeFromData(Position);
 			Instance->Data = Move(Value);
 		}
@@ -145,7 +147,8 @@ namespace NxEn
 		void AssignConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = NodeFromData(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
 		}
@@ -223,7 +226,8 @@ namespace NxEn
 		void InsertBack(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = CreateNode();
 			Instance->Data = Value;
 
@@ -234,7 +238,8 @@ namespace NxEn
 		void InsertBack(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = CreateNode();
 			Instance->Data = Move(Value);
 
@@ -246,7 +251,8 @@ namespace NxEn
 		void InsertBackConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = CreateNode();
 			Memory::Construct<T>(&Instance->Data, args...);
 
@@ -257,7 +263,8 @@ namespace NxEn
 		void InsertBackRange(T* Position, const LinkedList<T>& Other)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = Other.Head;
 			Node* Anchor = NodeFromData(Position);
 
@@ -272,7 +279,8 @@ namespace NxEn
 		void InsertFront(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = CreateNode();
 			Instance->Data = Value;
 
@@ -283,7 +291,8 @@ namespace NxEn
 		void InsertFront(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = CreateNode();
 			Instance->Data = Move(Value);
 
@@ -295,7 +304,8 @@ namespace NxEn
 		void InsertFrontConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = CreateNode();
 			Memory::Construct<T>(&Instance->Data, args...);
 
@@ -306,7 +316,8 @@ namespace NxEn
 		void InsertFrontRange(T* Position, const LinkedList<T>& Other)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = Other.Head;
 			Node* Anchor = NodeFromData(Position);
 
@@ -320,6 +331,8 @@ namespace NxEn
 
 		void RemoveBack()
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			
 			Node* Instance = RemoveNodeTail();
 			DestroyNode(Instance);
 		}
@@ -327,7 +340,8 @@ namespace NxEn
 		void RemoveBack(T* Position)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = NodeFromData(Position);
 			while (Tail != Instance)
 			{
@@ -338,6 +352,8 @@ namespace NxEn
 
 		void RemoveFront()
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			
 			Node* Instance = RemoveNodeHead();
 			DestroyNode(Instance);
 		}
@@ -345,7 +361,8 @@ namespace NxEn
 		void RemoveFront(T* Position)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Instance = NodeFromData(Position);
 			while (Head != Instance)
 			{
@@ -358,7 +375,8 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(From != nullptr, "From is null");
 			NEXUS_ASSERT(To != nullptr, "To is null");
-			
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			Node* Start = NodeFromData(From);
 			Node* End = NodeFromData(To);
 		
@@ -404,6 +422,7 @@ namespace NxEn
 		T& GetNext(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = NodeFromData(Position);
 			NEXUS_ASSERT(Instance != Tail, "Cannot get next on Tail");
@@ -414,6 +433,7 @@ namespace NxEn
 		T* TryGetNext(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = NodeFromData(Position);
 			if (Instance == Tail)
@@ -427,6 +447,7 @@ namespace NxEn
 		T& GetPrev(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = NodeFromData(Position);
 			NEXUS_ASSERT(Instance != Head, "Cannot get prev on Head");
@@ -437,6 +458,7 @@ namespace NxEn
 		T* TryGetPrev(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = NodeFromData(Position);
 			if (Instance == Head)
@@ -449,11 +471,15 @@ namespace NxEn
 
 		T& First() const
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			return Head->Data;
 		}
 
 		T& Last() const
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
 			return Tail->Data;
 		}
 
@@ -481,6 +507,7 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 

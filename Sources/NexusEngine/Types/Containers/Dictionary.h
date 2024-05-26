@@ -160,6 +160,8 @@ namespace NxEn
 
 		T& operator[](const K& Key) const
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			return Get(Key);
 		}
 
@@ -175,6 +177,8 @@ namespace NxEn
 
 		void Assign(const K& Key, const T& Value)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			Instance->KeyValue.Value = Value;
@@ -182,6 +186,8 @@ namespace NxEn
 
 		void Assign(const K& Key, T&& Value)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			Instance->KeyValue.Value = Move(Value);
@@ -190,6 +196,8 @@ namespace NxEn
 		template<typename... Args>
 		void AssignConstruct(const K& Key, Args&&... args)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			Memory::Construct<T>(&Instance->KeyValue.Value, args...);
@@ -266,6 +274,8 @@ namespace NxEn
 
 		void Remove(const T& Key)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			uint64 Index = GetIndex(Key);
 			Node* Instance = GetNode(Index, Key);
 
@@ -293,6 +303,8 @@ namespace NxEn
 
 		T& Get(const K& Key) const
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			return Instance->KeyValue.Value;
@@ -352,6 +364,8 @@ namespace NxEn
 
 		void Swap(const K& A, const K& B)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			
 			Node* NodeA = GetNode(A);
 			Node* NodeB = GetNode(B);
 
@@ -445,7 +459,6 @@ namespace NxEn
 		uint64 GetIndex(const K& Key) const
 		{
 			uint64 Index = Hash<K, H>::HashObject(Key) % Buckets;
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Index;
 		}
 

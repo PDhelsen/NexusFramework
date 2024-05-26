@@ -108,6 +108,7 @@ namespace NxEn
 		T& operator[](uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			return Data[Index];
 		}
 
@@ -134,12 +135,14 @@ namespace NxEn
 		void Assign(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Data[Index] = Value;
 		}
 
 		void Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Data[Index] = Move(Value);
 		}
 
@@ -147,6 +150,7 @@ namespace NxEn
 		void AssignConstruct(uint64 Index, Args&&... args)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Data[Index] = T(args...);
 		}
 
@@ -164,16 +168,21 @@ namespace NxEn
 		T& Get(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			return Data[Index];
 		}
 
 		T& First() const
 		{
+			NEXUS_ASSERT(IsValidIndex(0), "Invalid Index");
+
 			return Data[0];
 		}
 
 		T& Last() const
 		{
+			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
+
 			return Data[Count - 1];
 		}
 

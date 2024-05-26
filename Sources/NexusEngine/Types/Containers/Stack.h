@@ -96,6 +96,8 @@ namespace NxEn
 
 		void Remove()
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
+			
 			Node* Instance = RemoveNode();
 			DestroyNode(Instance);
 		}
@@ -110,6 +112,8 @@ namespace NxEn
 
 		T& Get() const
 		{
+			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
+			
 			return Top->Data;
 		}
 

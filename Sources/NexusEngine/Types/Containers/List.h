@@ -110,6 +110,7 @@ namespace NxEn
 		T& operator[](uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			return Data[Index];
 		}
 
@@ -126,12 +127,14 @@ namespace NxEn
 		void Assign(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Data[Index] = Value;
 		}
 
 		void Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Data[Index] = Move(Value);
 		}
 
@@ -139,6 +142,7 @@ namespace NxEn
 		void AssignConstruct(uint64 Index, Args&&... args)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Data[Index] = T(args...);
 		}
 
@@ -224,23 +228,32 @@ namespace NxEn
 
 		void Remove(uint64 Index)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Memory::MemCopy(&Data[Index + 1], &Data[Index], sizeof(T) * (Count - Index - 1));
 			Resize(--Count);
 		}
 
 		void RemoveRange(uint64 Index, uint64 Size)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), "Invalid Index");
+
 			Memory::MemCopy(&Data[Index + Size], &Data[Index], sizeof(T) * (Count - Index - Size));
 			Resize(Count - Size);
 		}
 
 		void RemoveLast()
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			
 			Resize(--Count);
 		}
 
 		void RemoveSwap(uint64 Index)
 		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			Swap(Index, Count - 1);
 			RemoveLast();
 		}
@@ -257,16 +270,21 @@ namespace NxEn
 		T& Get(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
 			return Data[Index];
 		}
 
 		T& First() const
 		{
+			NEXUS_ASSERT(IsValidIndex(0), "Invalid Index");
+
 			return Data[0];
 		}
 
 		T& Last() const
 		{
+			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
+
 			return Data[Count - 1];
 		}
 
@@ -321,12 +339,16 @@ namespace NxEn
 
 			Capacity = GetValidCapacity(Size);
 			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+		
+			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
 		}
 
 		void Shrink()
 		{
 			Capacity = GetValidCapacity(Count);
 			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+		
+			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
 		}
 
 		void Swap(uint64 IndexA, uint64 IndexB)
