@@ -150,7 +150,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
+			GetIndex(Index, BucketIndex, DataIndex);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -167,14 +167,14 @@ namespace NxEn
 		void Assign(uint64 Index, const T& Value)
 		{
 			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
+			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = Value;
 		}
 
 		void Assign(uint64 Index, T&& Value)
 		{
 			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
+			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = Move(Value);
 		}
 
@@ -182,7 +182,7 @@ namespace NxEn
 		void AssignConstruct(uint64 Index, Args&&... args)
 		{
 			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
+			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = T(args...);
 		}
 
@@ -281,7 +281,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
+			GetIndex(Index, BucketIndex, DataIndex);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -337,7 +337,7 @@ namespace NxEn
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
 				uint64 BucketIndex, DataIndex;
-				ConvertIndex(Index, BucketIndex, DataIndex);
+				GetIndex(Index, BucketIndex, DataIndex);
 				if (Data[BucketIndex][DataIndex] == Other)
 				{
 					return Index;
@@ -374,7 +374,7 @@ namespace NxEn
 			Memory::MemCopy(Start, End, sizeof(T*) * (Buckets - 1));
 		}
 
-		void ConvertIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
+		void GetIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
 		{
 			Index += Front;
 			BucketIndex = Index / BucketSize;

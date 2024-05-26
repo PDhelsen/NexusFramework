@@ -145,7 +145,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Instance->Data = Value;
 
-			AddNode(Instance);
+			AppendNode(Instance);
 		}
 
 		void Append(T&& Value)
@@ -153,7 +153,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Instance->Data = Move(Value);
 
-			AddNode(Instance);
+			AppendNode(Instance);
 		}
 
 		template<typename... Args>
@@ -162,7 +162,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Memory::Construct<T>(&Instance->Data, args...);
 
-			AddNode(Instance);
+			AppendNode(Instance);
 		}
 
 		void AppendRange(const Graph<T>& Value)
@@ -200,8 +200,8 @@ namespace NxEn
 			Node* Start = NodeFromData(From);
 			Node* Target = NodeFromData(To);
 			
-			AddConnection(Start, Target, ConnectionType::To);
-			AddConnection(Target, Start, ConnectionType::From);
+			AppendConnection(Start, Target, ConnectionType::To);
+			AppendConnection(Target, Start, ConnectionType::From);
 		}
 
 		void Disconnect(T* From, T* To)
@@ -336,7 +336,7 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AddNode(Node* Instance)
+		void AppendNode(Node* Instance)
 		{
 			Instance->Next = Root;
 			Root = Instance;
@@ -362,7 +362,7 @@ namespace NxEn
 			}
 		}
 
-		void AddConnection(Node* A, Node* B, ConnectionType Type)
+		void AppendConnection(Node* A, Node* B, ConnectionType Type)
 		{
 			Connection* Prev = nullptr;
 			Connection* Current = A->Connection;

@@ -149,7 +149,7 @@ namespace NxEn
 					Node* NodeCopy = Copy.CreateNode();
 					NodeCopy->KeyValue.Key = Current->KeyValue.Key;
 					NodeCopy->KeyValue.Value = Current->KeyValue.Value;
-					Copy.AddNode(Index, NodeCopy);
+					Copy.AppendNode(Index, NodeCopy);
 
 					Current = Current->Next;
 				}
@@ -205,14 +205,14 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(Grow());
+				ReHash(GetValidCapacity(Buckets + Buckets / 2));
 			}
 
 			Node* New = CreateNode();
 			New->KeyValue.Key = Key;
 			New->KeyValue.Value = Value;
 
-			AddNode(Index, New);
+			AppendNode(Index, New);
 		}
 
 		void Append(const K& Key, T&& Value)
@@ -225,14 +225,14 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(Grow());
+				ReHash(GetValidCapacity(Buckets + Buckets / 2));
 			}
 
 			Node* New = CreateNode();
 			New->KeyValue.Key = Move(Key);
 			New->KeyValue.Value = Move(Value);
 
-			AddNode(Index, New);
+			AppendNode(Index, New);
 		}
 
 		template<typename... Args>
@@ -246,14 +246,14 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(Grow());
+				ReHash(GetValidCapacity(Buckets + Buckets / 2));
 			}
 
 			Node* New = CreateNode();
 			New->KeyValue.Key = Key;
 			Memory::Construct<T>(&New->KeyValue.Value, args...);
 
-			AddNode(Index, New);
+			AppendNode(Index, New);
 		}
 
 		void Append(const Dictionary<K, T>& Other)
@@ -341,7 +341,7 @@ namespace NxEn
 
 					Current->Next = nullptr;
 					uint64 Index = GetIndex(Current->KeyValue.Key);
-					AddNode(Index, Current);
+					AppendNode(Index, Current);
 
 					Current = Next;
 				}
@@ -412,7 +412,7 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AddNode(uint64 Index, Node* Instance)
+		void AppendNode(uint64 Index, Node* Instance)
 		{
 			if (Data[Index] != nullptr)
 			{
@@ -474,11 +474,6 @@ namespace NxEn
 		bool IsValidIndex(uint64 Index) const
 		{
 			return Index >= 0 && Index < Buckets;
-		}
-
-		uint64 Grow() const
-		{
-			return GetValidCapacity(Buckets + Buckets / 2);
 		}
 
 		uint64 GetValidCapacity(uint64 Size) const { return Size > 3 ? Size : 3; }

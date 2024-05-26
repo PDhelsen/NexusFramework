@@ -155,7 +155,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Instance->Data = Value;
 
-			AddToTail(Instance);
+			AppendNodeTail(Instance);
 		}
 
 		void AppendBack(T&& Value)
@@ -163,7 +163,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Instance->Data = Move(Value);
 
-			AddToTail(Instance);
+			AppendNodeTail(Instance);
 		}
 
 		template<typename... Args>
@@ -172,7 +172,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Memory::Construct<T>(&Instance->Data, args...);
 
-			AddToTail(Instance);
+			AppendNodeTail(Instance);
 		}
 
 		void AppendBackRange(const LinkedList<T>& Other)
@@ -190,7 +190,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Instance->Data = Value;
 
-			AddToHead(Instance);
+			AppendNodeHead(Instance);
 		}
 
 		void AppendFront(T&& Value)
@@ -198,7 +198,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Instance->Data = Move(Value);
 
-			AddToHead(Instance);
+			AppendNodeHead(Instance);
 		}
 
 		template<typename... Args>
@@ -207,7 +207,7 @@ namespace NxEn
 			Node* Instance = CreateNode();
 			Memory::Construct<T>(&Instance->Data, args...);
 
-			AddToHead(Instance);
+			AppendNodeHead(Instance);
 		}
 
 		void AppendFrontRange(const LinkedList<T>& Other)
@@ -228,7 +228,7 @@ namespace NxEn
 			Instance->Data = Value;
 
 			Node* Anchor = NodeFromData(Position);
-			InsertBack(Anchor, Instance);
+			InsertNodeBack(Anchor, Instance);
 		}
 
 		void InsertBack(T* Position, T&& Value)
@@ -239,7 +239,7 @@ namespace NxEn
 			Instance->Data = Move(Value);
 
 			Node* Anchor = NodeFromData(Position);
-			InsertBack(Anchor, Instance);
+			InsertNodeBack(Anchor, Instance);
 		}
 
 		template<typename... Args>
@@ -251,7 +251,7 @@ namespace NxEn
 			Memory::Construct<T>(&Instance->Data, args...);
 
 			Node* Anchor = NodeFromData(Position);
-			InsertBack(Anchor, Instance);
+			InsertNodeBack(Anchor, Instance);
 		}
 
 		void InsertBackRange(T* Position, const LinkedList<T>& Other)
@@ -263,7 +263,7 @@ namespace NxEn
 
 			while (Instance != nullptr)
 			{
-				InsertBack(Anchor, Instance->Data);
+				InsertNodeBack(Anchor, Instance->Data);
 				Instance = Instance->Next;
 				Anchor = Anchor->Next;
 			}
@@ -277,7 +277,7 @@ namespace NxEn
 			Instance->Data = Value;
 
 			Node* Anchor = NodeFromData(Position);
-			InsertFront(Anchor, Instance);
+			InsertNodeFront(Anchor, Instance);
 		}
 
 		void InsertFront(T* Position, T&& Value)
@@ -288,7 +288,7 @@ namespace NxEn
 			Instance->Data = Move(Value);
 
 			Node* Anchor = NodeFromData(Position);
-			InsertFront(Anchor, Instance);
+			InsertNodeFront(Anchor, Instance);
 		}
 
 		template<typename... Args>
@@ -300,7 +300,7 @@ namespace NxEn
 			Memory::Construct<T>(&Instance->Data, args...);
 
 			Node* Anchor = NodeFromData(Position);
-			InsertFront(Anchor, Instance);
+			InsertNodeFront(Anchor, Instance);
 		}
 
 		void InsertFrontRange(T* Position, const LinkedList<T>& Other)
@@ -312,7 +312,7 @@ namespace NxEn
 
 			while (Instance != nullptr)
 			{
-				InsertFront(Anchor, Instance->Data);
+				InsertNodeFront(Anchor, Instance->Data);
 				Instance = Instance->Next;
 				Anchor = Anchor->Next;
 			}
@@ -320,7 +320,7 @@ namespace NxEn
 
 		void RemoveBack()
 		{
-			Node* Instance = RemoveFromTail();
+			Node* Instance = RemoveNodeTail();
 			DestroyNode(Instance);
 		}
 
@@ -338,7 +338,7 @@ namespace NxEn
 
 		void RemoveFront()
 		{
-			Node* Instance = RemoveFromHead();
+			Node* Instance = RemoveNodeHead();
 			DestroyNode(Instance);
 		}
 
@@ -611,7 +611,7 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AddToTail(Node* Instance)
+		void AppendNodeTail(Node* Instance)
 		{
 			Instance->Next = nullptr;
 			Instance->Prev = Tail;
@@ -629,7 +629,7 @@ namespace NxEn
 			Tail = Instance;
 		}
 
-		void AddToHead(Node* Instance)
+		void AppendNodeHead(Node* Instance)
 		{
 			Instance->Next = Head;
 			Instance->Prev = nullptr;
@@ -647,7 +647,7 @@ namespace NxEn
 			Head = Instance;
 		}
 
-		void InsertBack(Node* Anchor, Node* Instance)
+		void InsertNodeBack(Node* Anchor, Node* Instance)
 		{
 			Instance->Next = Anchor->Next;
 			Instance->Prev = Anchor;
@@ -655,7 +655,7 @@ namespace NxEn
 			Anchor->Next = Instance;
 		}
 
-		void InsertFront(Node* Anchor, Node* Instance)
+		void InsertNodeFront(Node* Anchor, Node* Instance)
 		{
 			Instance->Prev = Anchor->Prev;
 			Instance->Next = Anchor;
@@ -663,7 +663,7 @@ namespace NxEn
 			Anchor->Prev = Instance;
 		}
 
-		Node* RemoveFromTail()
+		Node* RemoveNodeTail()
 		{
 			Node* Instance = Tail;
 			Tail = Tail->Prev;
@@ -681,7 +681,7 @@ namespace NxEn
 			return Instance;
 		}
 
-		Node* RemoveFromHead()
+		Node* RemoveNodeHead()
 		{
 			Node* Instance = Head;
 			Head = Head->Next;

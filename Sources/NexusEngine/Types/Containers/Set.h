@@ -133,7 +133,7 @@ namespace NxEn
 				{
 					Node* NodeCopy = Copy.CreateNode();
 					NodeCopy->Value = Current->Value;
-					Copy.AddNode(Index, NodeCopy);
+					Copy.AppendNode(Index, NodeCopy);
 
 					Current = Current->Next;
 				}
@@ -162,13 +162,13 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(Grow());
+				ReHash(GetValidCapacity(Buckets + Buckets / 2));
 			}
 			
 			Node* Instance = CreateNode();
 			Instance->Value = Value;
 
-			AddNode(Index, Instance);
+			AppendNode(Index, Instance);
 		}
 
 		void Append(T&& Value)
@@ -181,13 +181,13 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(Grow());
+				ReHash(GetValidCapacity(Buckets + Buckets / 2));
 			}
 
 			Node* Instance = CreateNode();
 			Instance->Value = Move(Value);
 
-			AddNode(Index, Instance);
+			AppendNode(Index, Instance);
 		}
 
 		void AppendRange(const Set<T>& Value)
@@ -258,7 +258,7 @@ namespace NxEn
 
 					Current->Next = nullptr;
 					uint64 Index = GetIndex(Current->Value);
-					AddNode(Index, Current);
+					AppendNode(Index, Current);
 
 					Current = Next;
 				}
@@ -293,7 +293,7 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AddNode(uint64 Index, Node* Instance)
+		void AppendNode(uint64 Index, Node* Instance)
 		{
 			if (Data[Index] != nullptr)
 			{
@@ -355,11 +355,6 @@ namespace NxEn
 		bool IsValidIndex(uint64 Index) const
 		{
 			return Index >= 0 && Index < Buckets;
-		}
-
-		uint64 Grow() const
-		{
-			return GetValidCapacity(Buckets + Buckets / 2);
 		}
 
 		uint64 GetValidCapacity(uint64 Size) const { return Size > 3 ? Size : 3; }

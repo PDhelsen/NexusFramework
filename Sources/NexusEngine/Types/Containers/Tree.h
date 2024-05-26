@@ -185,7 +185,7 @@ namespace NxEn
 			Instance->Data = Value;
 
 			Node* Anchor = NodeFromData(Parent);
-			AddChild(Anchor, Instance);
+			AppendNode(Anchor, Instance);
 		}
 
 		void Append(T* Parent, T&& Value)
@@ -196,7 +196,7 @@ namespace NxEn
 			Instance->Data = Move(Value);
 
 			Node* Anchor = NodeFromData(Parent);
-			AddChild(Anchor, Instance);
+			AppendNode(Anchor, Instance);
 		}
 
 		template<typename... Args>
@@ -208,7 +208,7 @@ namespace NxEn
 			Memory::Construct<T>(&Instance->Data, args...);
 
 			Node* Anchor = NodeFromData(Parent);
-			AddChild(Anchor, Instance);
+			AppendNode(Anchor, Instance);
 		}
 
 		void AppendRange(T* Parent, const Tree<T>& Value)
@@ -228,7 +228,7 @@ namespace NxEn
 			Instance->Data = Value;
 		
 			Node* Anchor = NodeFromData(Sibling);
-			InsertSibling(Anchor, Instance);
+			InsertNodeSibling(Anchor, Instance);
 		}
 
 		void InsertSibling(T* Sibling, T&& Value)
@@ -239,7 +239,7 @@ namespace NxEn
 			Instance->Data = Move(Value);
 
 			Node* Anchor = NodeFromData(Sibling);
-			InsertSibling(Anchor, Instance);
+			InsertNodeSibling(Anchor, Instance);
 		}
 
 		template<typename... Args>
@@ -251,7 +251,7 @@ namespace NxEn
 			Memory::Construct<T>(&Instance->Data, args...);
 
 			Node* Anchor = NodeFromData(Sibling);
-			InsertSibling(Anchor, Instance);
+			InsertNodeSibling(Anchor, Instance);
 		}
 
 		void InsertChild(T* Parent, const T& Value)
@@ -262,7 +262,7 @@ namespace NxEn
 			Instance->Data = Value;
 
 			Node* Anchor = NodeFromData(Parent);
-			InsertChild(Anchor, Instance);
+			InsertNodeChild(Anchor, Instance);
 		}
 
 		void InsertChild(T* Parent, T&& Value)
@@ -273,7 +273,7 @@ namespace NxEn
 			Instance->Data = Move(Value);
 
 			Node* Anchor = NodeFromData(Parent);
-			InsertChild(Anchor, Instance);
+			InsertNodeChild(Anchor, Instance);
 		}
 
 		template<typename... Args>
@@ -285,7 +285,7 @@ namespace NxEn
 			Memory::Construct<T>(&Instance->Data, args...);
 
 			Node* Anchor = NodeFromData(Parent);
-			InsertChild(Anchor, Instance);
+			InsertNodeChild(Anchor, Instance);
 		}
 
 		void Remove(T* Root)
@@ -439,7 +439,7 @@ namespace NxEn
 			Memory::Free(Instance, Allocator);
 		}
 
-		void AddChild(Node* Parent, Node* Child)
+		void AppendNode(Node* Parent, Node* Child)
 		{
 			Child->Parent = Parent;
 
@@ -460,7 +460,7 @@ namespace NxEn
 			Parent->ChildCount++;
 		}
 
-		void InsertSibling(Node* Sibling, Node* Instance)
+		void InsertNodeSibling(Node* Sibling, Node* Instance)
 		{
 			Instance->Parent = Sibling->Parent;
 			Instance->Sibling = Sibling->Sibling;
@@ -468,7 +468,7 @@ namespace NxEn
 			Sibling->Parent->ChildCount++;
 		}
 
-		void InsertChild(Node* Parent, Node* Instance)
+		void InsertNodeChild(Node* Parent, Node* Instance)
 		{
 			Node* Child = Parent->Child;
 			while (Child)
