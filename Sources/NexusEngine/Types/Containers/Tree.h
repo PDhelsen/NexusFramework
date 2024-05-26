@@ -63,12 +63,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->()
+			T* operator->() const
 			{
 				return *(Current->Data);
 			}
 
-			T& operator*()
+			T& operator*() const
 			{
 				return Current->Data;
 			}
@@ -123,12 +123,12 @@ namespace NxEn
 			return Copy;
 		}
 
-		bool operator==(const Tree<T>& Other)
+		bool operator==(const Tree<T>& Other) const
 		{
 			return Count == Other.Count && Root == Other.Root;
 		}
 
-		bool operator!=(const Tree<T>& Other)
+		bool operator!=(const Tree<T>& Other) const
 		{
 			return Count != Other.Count || Root != Other.Root;
 		}
@@ -412,8 +412,8 @@ namespace NxEn
 			return false;
 		}
 
-		uint64 GetCount() { return Count; }
-		bool IsEmpty() { return Count == 0; }
+		uint64 GetCount() const { return Count; }
+		bool IsEmpty() const { return Count == 0; }
 
 	private:
 		static Node* NodeFromData(T* Data)

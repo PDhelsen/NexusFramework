@@ -54,12 +54,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->()
+			T* operator->() const
 			{
 				return Pointer;
 			}
 
-			T& operator*()
+			T& operator*() const
 			{
 				return *Pointer;
 			}
@@ -115,12 +115,12 @@ namespace NxEn
 			return Copy;
 		}
 
-		bool operator==(const LinkedList<T>& Other)
+		bool operator==(const LinkedList<T>& Other) const
 		{
 			return Count == Other.Count && Head == Other.Head && Tail == Other.Tail;
 		}
 
-		bool operator!=(const LinkedList<T>& Other)
+		bool operator!=(const LinkedList<T>& Other) const
 		{
 			return Count != Other.Count || Head != Other.Head || Tail != Other.Tail;
 		}

@@ -63,12 +63,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->()
+			T* operator->() const
 			{
 				return &Pointer[BucketIndex][DataIndex];
 			}
 
-			T& operator*()
+			T& operator*() const
 			{
 				return Pointer[BucketIndex][DataIndex];
 			}
@@ -145,7 +145,7 @@ namespace NxEn
 			return Copy;
 		}
 
-		T& operator[](uint64 Index)
+		T& operator[](uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
@@ -154,21 +154,12 @@ namespace NxEn
 			return Data[BucketIndex][DataIndex];
 		}
 
-		const T& operator[](uint64 Index) const
-		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-
-			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
-		}
-
-		bool operator==(const Dequeue<T>& Other)
+		bool operator==(const Dequeue<T>& Other) const
 		{
 			return Buckets == Other.Buckets && Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const Dequeue<T>& Other)
+		bool operator!=(const Dequeue<T>& Other) const
 		{
 			return Buckets != Other.Buckets || Count != Other.Count || Data != Other.Data;
 		}
@@ -285,7 +276,7 @@ namespace NxEn
 			CreateBucket(0);
 		}
 
-		T& Get(uint64 Index)
+		T& Get(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
@@ -294,23 +285,14 @@ namespace NxEn
 			return Data[BucketIndex][DataIndex];
 		}
 
-		const T& Get(uint64 Index) const
-		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-
-			uint64 BucketIndex, DataIndex;
-			ConvertIndex(Index, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
-		}
-
-		T& First()
+		T& First() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 			
 			return Data[0][Front];
 		}
 
-		T& Last()
+		T& Last() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 			
@@ -340,7 +322,7 @@ namespace NxEn
 			return --Begin();
 		}
 
-		bool IsValidIndex(uint64 Index)
+		bool IsValidIndex(uint64 Index) const
 		{
 			return Index >= 0 && Index < Count;
 		}

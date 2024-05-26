@@ -63,12 +63,12 @@ namespace NxEn
 			}
 		}
 
-		bool operator==(const Pool<T>& Other)
+		bool operator==(const Pool<T>& Other) const
 		{
 			return Count == Other.Count && Head == Other.Head && Own == Other.Own;
 		}
 
-		bool operator!=(const Pool<T>& Other)
+		bool operator!=(const Pool<T>& Other) const
 		{
 			return Count != Other.Count || Head != Other.Head || Own != Other.Own;
 		}

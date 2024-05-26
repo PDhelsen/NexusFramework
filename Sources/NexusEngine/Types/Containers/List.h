@@ -48,12 +48,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->()
+			T* operator->() const
 			{
 				return Pointer;
 			}
 
-			T& operator*()
+			T& operator*() const
 			{
 				return *Pointer;
 			}
@@ -107,24 +107,18 @@ namespace NxEn
 			return Copy;
 		}
 
-		T& operator[](uint64 Index)
+		T& operator[](uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Data[Index];
 		}
 
-		const T& operator[](uint64 Index) const
-		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			return Data[Index];
-		}
-
-		bool operator==(const List<T>& Other)
+		bool operator==(const List<T>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const List<T>& Other)
+		bool operator!=(const List<T>& Other) const
 		{
 			return Count != Other.Count || Data != Other.Data;
 		}
@@ -260,24 +254,18 @@ namespace NxEn
 			}
 		}
 
-		T& Get(uint64 Index)
+		T& Get(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			return Data[Index];
 		}
 
-		const T& Get(uint64 Index) const
-		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			return Data[Index];
-		}
-
-		T& First()
+		T& First() const
 		{
 			return Data[0];
 		}
 
-		T& Last()
+		T& Last() const
 		{
 			return Data[Count - 1];
 		}
@@ -388,7 +376,7 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		uint64 GetValidCapacity(uint64 Size) { return Size > 2 ? Size : 2; }
+		uint64 GetValidCapacity(uint64 Size) const { return Size > 2 ? Size : 2; }
 
 		Allocator* Allocator;
 		uint64 Capacity;

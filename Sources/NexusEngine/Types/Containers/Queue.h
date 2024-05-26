@@ -40,7 +40,7 @@ namespace NxEn
 			Clear();
 		}
 
-		Queue<T> Copy()
+		Queue<T> Copy() const
 		{
 			Queue<T> Copy = Queue<T>(Allocator);
 			Node* Current = Head;
@@ -52,12 +52,12 @@ namespace NxEn
 			return Copy;
 		}
 
-		bool operator==(const Queue<T>& Other)
+		bool operator==(const Queue<T>& Other) const
 		{
 			return Count == Other.Count && Head == Other.Head && Tail == Other.Tail;
 		}
 
-		bool operator!=(const Queue<T>& Other)
+		bool operator!=(const Queue<T>& Other) const
 		{
 			return Count != Other.Count || Head != Other.Head || Tail != Other.Tail;
 		}

@@ -150,8 +150,8 @@ namespace NxTs
 		ASSERT_EQ(Test[0].Integer, 5);
 		ASSERT_EQ(Test[8].Integer, 5);
 
-		Test[3].Integer = 3;
-		Test[6].Integer = 6;
+		Test.Get(3).Integer = 3;
+		Test.Get(6).Integer = 6;
 		Test.Swap(3, 6);
 		ASSERT_EQ(Test[3].Integer, 6);
 		ASSERT_EQ(Test[6].Integer, 3);

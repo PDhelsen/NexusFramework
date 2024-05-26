@@ -23,7 +23,7 @@ namespace NxEn
 		{
 		}
 
-		Tuple(Tuple<T1, T2>&& Other)
+		Tuple(Tuple<T1, T2>&& Other) noexcept
 			: First(Other.F), Second(Other.S)
 		{
 		}
@@ -33,17 +33,17 @@ namespace NxEn
 			
 		}
 
-		Tuple<T1, T2> Copy()
+		Tuple<T1, T2> Copy() const
 		{
 			return Tuple<T1, T2>(First, Second);
 		}
 
-		bool operator==(const Tuple<T1, T2>& Other)
+		bool operator==(const Tuple<T1, T2>& Other) const
 		{
 			return First == Other.First && Second == Other.Second;
 		}
 
-		bool operator!=(const Tuple<T1, T2>& Other)
+		bool operator!=(const Tuple<T1, T2>& Other) const
 		{
 			return First != Other.First || Second != Other.Second;
 		}

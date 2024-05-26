@@ -59,12 +59,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->()
+			T* operator->() const
 			{
 				return Pointer;
 			}
 
-			T& operator*()
+			T& operator*() const
 			{
 				return *Pointer;
 			}
@@ -94,7 +94,7 @@ namespace NxEn
 		{
 		}
 
-		Graph(Graph<T>&& Other)
+		Graph(Graph<T>&& Other) noexcept
 			: Allocator(Other.Allocator), Count(Other.Count), Root(Other.Root)
 		{
 			Other.Root = nullptr;
@@ -105,12 +105,12 @@ namespace NxEn
 			Clear();
 		}
 
-		bool operator==(const Graph<T>& Other)
+		bool operator==(const Graph<T>& Other) const
 		{
 			return Count == Other.Count && Root == Other.Root;
 		}
 
-		bool operator!=(const Graph<T>& Other)
+		bool operator!=(const Graph<T>& Other) const
 		{
 			return Count != Other.Count || Root != Other.Root;
 		}
@@ -213,17 +213,41 @@ namespace NxEn
 			RemoveConnection(Target, Start, ConnectionType::From);
 		}
 
-		T& GetRoot()
+		T& GetRoot() const
 		{
 			return Root->Data;
 		}
 
-		T* TryGetRoot()
+		T* TryGetRoot() const
 		{
 			return &Root->Data;
 		}
 
-		T* TryGetConnection(T* Instance, ConnectionType Type, uint64 Position = 0)
+		T& GetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
+		{
+			uint64 Idx = 0;
+			Node* Start = NodeFromData(Instance);
+
+			Connection* Connect = Start->Connection;
+			while (Connect)
+			{
+				if (Connect->Type == Type)
+				{
+					if (Idx == Position)
+					{
+						break;
+					}
+
+					Idx++;
+				}
+
+				Connect = Connect->Next;
+			}
+
+			return Connect->Target->Data;
+		}
+
+		T* TryGetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
 		{
 			uint64 Idx = 0;
 			Node* Start = NodeFromData(Instance);
@@ -285,9 +309,9 @@ namespace NxEn
 			return false;
 		}
 
-		uint64 GetConnectionCount(T* Instance) { return NodeFromData(Instance)->Count; }
-		uint64 GetCount() { return Count; }
-		bool IsEmpty() { return Count == 0; }
+		uint64 GetConnectionCount(T* Instance) const { return NodeFromData(Instance)->Count; }
+		uint64 GetCount() const { return Count; }
+		bool IsEmpty() const { return Count == 0; }
 
 	private:
 		static Node* NodeFromData(T* Data)

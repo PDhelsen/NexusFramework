@@ -59,12 +59,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			KeyValuePair* operator->()
+			KeyValuePair* operator->() const
 			{
 				return &Current->KeyValue;
 			}
 
-			KeyValuePair& operator*()
+			KeyValuePair& operator*() const
 			{
 				return Current->KeyValue;
 			}
@@ -158,22 +158,17 @@ namespace NxEn
 			return Copy;
 		}
 
-		T& operator[](const K& Key)
+		T& operator[](const K& Key) const
 		{
 			return Get(Key);
 		}
 
-		const T& operator[](const K& Key) const
-		{
-			return Get(Key);
-		}
-
-		bool operator==(const Dictionary<K, T, H, LF>& Other)
+		bool operator==(const Dictionary<K, T, H, LF>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const Dictionary<K, T, H, LF>& Other)
+		bool operator!=(const Dictionary<K, T, H, LF>& Other) const
 		{
 			return Count != Other.Count || Data != Other.Data;
 		}
@@ -296,14 +291,14 @@ namespace NxEn
 			}
 		}
 
-		T& Get(const K& Key)
+		T& Get(const K& Key) const
 		{
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			return Instance->KeyValue.Value;
 		}
 
-		T* TryGet(const K& Key)
+		T* TryGet(const K& Key) const
 		{
 			Node* Instance = GetNode(Key);
 			if (!Instance)
@@ -481,7 +476,7 @@ namespace NxEn
 			return Index >= 0 && Index < Buckets;
 		}
 
-		uint64 Grow()
+		uint64 Grow() const
 		{
 			return GetValidCapacity(Buckets + Buckets / 2);
 		}

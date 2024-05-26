@@ -40,7 +40,7 @@ namespace NxEn
 			Clear();
 		}
 
-		Stack<T> Copy()
+		Stack<T> Copy() const
 		{
 			Stack<T> Copy = Stack<T>(Allocator);
 			Node* Current = Top;
@@ -52,12 +52,12 @@ namespace NxEn
 			return Copy;
 		}
 
-		bool operator==(const Stack<T>& Other)
+		bool operator==(const Stack<T>& Other) const
 		{
 			return Count == Other.Count && Top == Other.Top;
 		}
 
-		bool operator!=(const Stack<T>& Other)
+		bool operator!=(const Stack<T>& Other) const
 		{
 			return Count != Other.Count || Top != Other.Top;
 		}

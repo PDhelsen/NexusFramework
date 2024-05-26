@@ -44,12 +44,12 @@ namespace NxEn
 				return Temp;
 			}
 
-			const T* operator->()
+			const T* operator->() const
 			{
 				return &Current->Value;
 			}
 
-			const T& operator*()
+			const T& operator*() const
 			{
 				return Current->Value;
 			}
@@ -142,12 +142,12 @@ namespace NxEn
 			return Copy;
 		}
 
-		bool operator==(const Set<T, H, LF>& Other)
+		bool operator==(const Set<T, H, LF>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const Set<T, H, LF>& Other)
+		bool operator!=(const Set<T, H, LF>& Other) const
 		{
 			return Count != Other.Count || Data != Other.Data;
 		}
@@ -346,7 +346,7 @@ namespace NxEn
 			return Current;
 		}
 
-		Node* GetNode(const T& Value)
+		Node* GetNode(const T& Value) const
 		{
 			uint64 Index = GetIndex(Value);
 			return GetNode(Index, Value);
@@ -357,7 +357,7 @@ namespace NxEn
 			return Index >= 0 && Index < Buckets;
 		}
 
-		uint64 Grow()
+		uint64 Grow() const
 		{
 			return GetValidCapacity(Buckets + Buckets / 2);
 		}
