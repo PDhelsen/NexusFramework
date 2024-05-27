@@ -191,7 +191,14 @@ namespace NxEn
 		Node* RemoveNode()
 		{
 			Node* Instance = Head;
-			Head = Head->Next;
+			if (Head)
+			{
+				Head = Head->Next;
+			}
+			if (Head == nullptr)
+			{
+				Tail = nullptr;
+			}
 			return Instance;
 		}
 
