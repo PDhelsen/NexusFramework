@@ -245,7 +245,7 @@ namespace NxEn
 
 		void RemoveLast()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
 			
 			Resize(--Count);
 		}
@@ -323,7 +323,6 @@ namespace NxEn
 			{
 				uint64 NewCapacity = Capacity + Capacity / 2;
 				Capacity = GetValidCapacity(NewCapacity > Count ? NewCapacity : Count);
-
 				Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 			}
 

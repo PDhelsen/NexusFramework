@@ -97,8 +97,6 @@ namespace NxEn
 
 		void Recycle(T& Instance)
 		{
-			NEXUS_ASSERT(Allocator->IsValidAddress(&Instance), "Object was not allocated from the pool");
-
 			Node* N = reinterpret_cast<Node*>(&Instance);
 			
 			N->Next = Head;

@@ -114,7 +114,7 @@ namespace NxEn
 			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 			Buckets = GetValidCapacity(Size);
 			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
-			for (uint64 Index = 0; Index <= Buckets; Index++)
+			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Data[Index] = nullptr;
 			}
@@ -339,7 +339,7 @@ namespace NxEn
 
 			Buckets = Size;
 			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
-			for (uint64 Index = 0; Index <= Buckets; Index++)
+			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Data[Index] = nullptr;
 			}
