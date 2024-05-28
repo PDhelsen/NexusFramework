@@ -26,7 +26,7 @@ namespace NxEn
 		public:
 			Iterator(T* Ptr)
 			{
-				Current = NodeFromData(Ptr);
+				Current = GetNode(Ptr);
 			}
 
 			Iterator& operator++()
@@ -135,20 +135,20 @@ namespace NxEn
 
 		void Initialize(const T& Value)
 		{
-			Root = CreateNode();
+			Root = Allocate();
 			Root->Data = Value;
 		}
 
 		void Initialize(T&& Value)
 		{
-			Root = CreateNode();
+			Root = Allocate();
 			Root->Data = Move(Value);
 		}
 
 		template<typename... Args>
 		void InitializeConstruct(Args&&... args)
 		{
-			Root = CreateNode();
+			Root = Allocate();
 			Memory::Construct<T>(&Root->Data, args...);
 		}
 
@@ -157,7 +157,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = NodeFromData(Position);
+			Node* Instance = GetNode(Position);
 			Instance->Data = Value;
 		}
 
@@ -166,7 +166,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = NodeFromData(Position);
+			Node* Instance = GetNode(Position);
 			Instance->Data = Move(Value);
 		}
 
@@ -176,7 +176,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = NodeFromData(Position);
+			Node* Instance = GetNode(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
 		}
 
@@ -185,10 +185,10 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Value;
 
-			Node* Anchor = NodeFromData(Parent);
+			Node* Anchor = GetNode(Parent);
 			AppendNode(Anchor, Instance);
 		}
 
@@ -197,10 +197,10 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Move(Value);
 
-			Node* Anchor = NodeFromData(Parent);
+			Node* Anchor = GetNode(Parent);
 			AppendNode(Anchor, Instance);
 		}
 
@@ -210,10 +210,10 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Anchor = NodeFromData(Parent);
+			Node* Anchor = GetNode(Parent);
 			AppendNode(Anchor, Instance);
 		}
 
@@ -222,8 +222,8 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Anchor = NodeFromData(Parent);
-			Node* Copy = NodeFromData(&Value.GetRoot());
+			Node* Anchor = GetNode(Parent);
+			Node* Copy = GetNode(&Value.GetRoot());
 			CopyNode(Anchor, Copy);
 		}
 
@@ -232,10 +232,10 @@ namespace NxEn
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Value;
 		
-			Node* Anchor = NodeFromData(Sibling);
+			Node* Anchor = GetNode(Sibling);
 			InsertNodeSibling(Anchor, Instance);
 		}
 
@@ -244,10 +244,10 @@ namespace NxEn
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Move(Value);
 
-			Node* Anchor = NodeFromData(Sibling);
+			Node* Anchor = GetNode(Sibling);
 			InsertNodeSibling(Anchor, Instance);
 		}
 
@@ -257,10 +257,10 @@ namespace NxEn
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Anchor = NodeFromData(Sibling);
+			Node* Anchor = GetNode(Sibling);
 			InsertNodeSibling(Anchor, Instance);
 		}
 
@@ -269,10 +269,10 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Value;
 
-			Node* Anchor = NodeFromData(Parent);
+			Node* Anchor = GetNode(Parent);
 			InsertNodeChild(Anchor, Instance);
 		}
 
@@ -281,10 +281,10 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Move(Value);
 
-			Node* Anchor = NodeFromData(Parent);
+			Node* Anchor = GetNode(Parent);
 			InsertNodeChild(Anchor, Instance);
 		}
 
@@ -294,10 +294,10 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Data, args...);
 
-			Node* Anchor = NodeFromData(Parent);
+			Node* Anchor = GetNode(Parent);
 			InsertNodeChild(Anchor, Instance);
 		}
 
@@ -305,7 +305,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			Node* Instance = NodeFromData(Root);
+			Node* Instance = GetNode(Root);
 			RemoveNode(Instance);
 		}
 
@@ -313,7 +313,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			Node* Instance = NodeFromData(Root);
+			Node* Instance = GetNode(Root);
 			Node* Child = Instance->Child;
 			while (Child)
 			{
@@ -355,7 +355,7 @@ namespace NxEn
 			NEXUS_ASSERT(Child != nullptr, "Child is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			return NodeFromData(Child)->Parent->Data;
+			return GetNode(Child)->Parent->Data;
 		}
 
 		T* TryGetParent(T* Child) const
@@ -363,7 +363,7 @@ namespace NxEn
 			NEXUS_ASSERT(Child != nullptr, "Child is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = NodeFromData(Child);
+			Node* Instance = GetNode(Child);
 			if (!Instance->Parent)
 			{
 				return nullptr;
@@ -376,7 +376,7 @@ namespace NxEn
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			return NodeFromData(Sibling)->Sibling->Data;
+			return GetNode(Sibling)->Sibling->Data;
 		}
 
 		T* TryGetSibling(T* Sibling) const
@@ -384,7 +384,7 @@ namespace NxEn
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = NodeFromData(Sibling);
+			Node* Instance = GetNode(Sibling);
 			if (!Instance->Sibling)
 			{
 				return nullptr;
@@ -397,7 +397,7 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			return NodeFromData(Parent)->Child->Data;
+			return GetNode(Parent)->Child->Data;
 		}
 
 		T* TryGetChild(T* Parent) const
@@ -405,7 +405,7 @@ namespace NxEn
 			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
-			Node* Instance = NodeFromData(Parent);
+			Node* Instance = GetNode(Parent);
 			if (!Instance->Child)
 			{
 				return nullptr;
@@ -431,8 +431,8 @@ namespace NxEn
 			NEXUS_ASSERT(B != nullptr, "B is null");
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			Node* NodeA = NodeFromData(A);
-			Node* NodeB = NodeFromData(B);
+			Node* NodeA = GetNode(A);
+			Node* NodeB = GetNode(B);
 
 			T Temp = NodeA->Data;
 			NodeA->Data = Move(NodeB->Data);
@@ -457,12 +457,7 @@ namespace NxEn
 		bool IsInitialized() const { Root != nullptr; }
 
 	private:
-		static Node* NodeFromData(T* Data)
-		{
-			return reinterpret_cast<Node*>(Data);
-		}
-		
-		Node* CreateNode()
+		Node* Allocate()
 		{
 			Count++;
 
@@ -474,7 +469,7 @@ namespace NxEn
 			return Instance;
 		}
 
-		void DestroyNode(Node* Instance)
+		void Free(Node* Instance)
 		{
 			Count--;
 			Memory::Free(Instance, Allocator);
@@ -560,7 +555,7 @@ namespace NxEn
 				Parent->ChildCount--;
 			}
 
-			DestroyNode(Instance);
+			Free(Instance);
 		}
 
 		void CopyNode(Node* Parent, Node* Instance)
@@ -579,6 +574,11 @@ namespace NxEn
 				CopyNode(Copy, Child);
 				Child = Child->Sibling;
 			}
+		}
+
+		static Node* GetNode(T* Data)
+		{
+			return reinterpret_cast<Node*>(Data);
 		}
 
 		Allocator* Allocator;

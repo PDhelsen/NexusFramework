@@ -112,7 +112,7 @@ namespace NxEn
 			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)
 		{
 			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			Buckets = GetValidCapacity(Size);
+			Buckets = ValidateCapacity(Size);
 			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
 			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
@@ -146,7 +146,7 @@ namespace NxEn
 				Node* Current = Data[Index];
 				while (Current)
 				{
-					Node* NodeCopy = Copy.CreateNode();
+					Node* NodeCopy = Copy.Allocate();
 					NodeCopy->KeyValue.Key = Current->KeyValue.Key;
 					NodeCopy->KeyValue.Value = Current->KeyValue.Value;
 					Copy.AppendNode(Index, NodeCopy);
@@ -213,10 +213,10 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(GetValidCapacity(Buckets + Buckets / 2));
+				Resize(ValidateCapacity(Buckets + Buckets / 2));
 			}
 
-			Node* New = CreateNode();
+			Node* New = Allocate();
 			New->KeyValue.Key = Key;
 			New->KeyValue.Value = Value;
 
@@ -233,10 +233,10 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(GetValidCapacity(Buckets + Buckets / 2));
+				Resize(ValidateCapacity(Buckets + Buckets / 2));
 			}
 
-			Node* New = CreateNode();
+			Node* New = Allocate();
 			New->KeyValue.Key = Move(Key);
 			New->KeyValue.Value = Move(Value);
 
@@ -254,10 +254,10 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				ReHash(GetValidCapacity(Buckets + Buckets / 2));
+				Resize(ValidateCapacity(Buckets + Buckets / 2));
 			}
 
-			Node* New = CreateNode();
+			Node* New = Allocate();
 			New->KeyValue.Key = Key;
 			Memory::Construct<T>(&New->KeyValue.Value, args...);
 
@@ -282,7 +282,7 @@ namespace NxEn
 			NEXUS_ASSERT(Instance, "Key not in Dictionary");
 
 			RemoveNode(Index, Instance);
-			DestroyNode(Instance);
+			Free(Instance);
 		}
 
 		void Clear()
@@ -294,7 +294,7 @@ namespace NxEn
 				{
 					Node* ToRemove = Current;
 					Current = Current->Next;
-					DestroyNode(ToRemove);
+					Free(ToRemove);
 				}
 
 				Data[Index] = nullptr;
@@ -332,7 +332,7 @@ namespace NxEn
 			return Iterator(Data, Buckets, nullptr, Buckets);
 		}
 
-		void ReHash(uint64 Size)
+		void Resize(uint64 Size)
 		{
 			Node** TempArray = Data;
 			uint64 TempCapacity = Buckets;
@@ -412,7 +412,7 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		Node* CreateNode()
+		Node* Allocate()
 		{
 			Count++;
 			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
@@ -420,7 +420,7 @@ namespace NxEn
 			return New;
 		}
 
-		void DestroyNode(Node* Instance)
+		void Free(Node* Instance)
 		{
 			Count--;
 			Memory::Free(Instance, Allocator);
@@ -484,12 +484,10 @@ namespace NxEn
 			return GetNode(Index, Key);
 		}
 
-		bool IsValidIndex(uint64 Index) const
+		uint64 ValidateCapacity(uint64 Size) const
 		{
-			return Index >= 0 && Index < Buckets;
+			return Size > 3 ? Size : 3;
 		}
-
-		uint64 GetValidCapacity(uint64 Size) const { return Size > 3 ? Size : 3; }
 
 		inline static const uint64 DefaultSize = 16;
 		inline static const float LoadFactorThreshold = LF;

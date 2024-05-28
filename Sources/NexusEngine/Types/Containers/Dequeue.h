@@ -128,10 +128,10 @@ namespace NxEn
 			Copy.Front = Front;
 			Copy.Back = Back;
 
-			Copy.ResizeBuckets();
+			Copy.Reallocate();
 			for (uint64 Bucket = 1; Bucket < Buckets; Bucket++)
 			{
-				Copy.CreateBucket(Bucket);
+				Copy.Allocate(Bucket);
 			}
 
 			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
@@ -205,20 +205,20 @@ namespace NxEn
 
 		void AppendBack(const T& Value)
 		{
-			Grow(true);
+			AppendBucket(true);
 			Data[Buckets - 1][Back] = Value;
 		}
 
 		void AppendBack(T&& Value)
 		{
-			Grow(true);
+			AppendBucket(true);
 			Data[Buckets - 1][Back] = Move(Value);
 		}
 
 		template<typename... Args>
 		void AppendBackConstruct(Args&&... args)
 		{
-			Grow(true);
+			AppendBucket(true);
 			Data[Buckets - 1][Back] = T(args...);
 		}
 
@@ -232,20 +232,20 @@ namespace NxEn
 
 		void AppendFront(const T& Value)
 		{
-			Grow(false);
+			AppendBucket(false);
 			Data[0][Front] = Value;
 		}
 
 		void AppendFront(T&& Value)
 		{
-			Grow(false);
+			AppendBucket(false);
 			Data[0][Front] = Move(Value);
 		}
 
 		template<typename... Args>
 		void AppendFrontConstruct(Args&&... args)
 		{
-			Grow(false);
+			AppendBucket(false);
 			Data[0][Front] = T(args...);
 		}
 
@@ -261,14 +261,14 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 
-			Shrink(true);
+			RemoveBucket(true);
 		}
 
 		void RemoveFront()
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 			
-			Shrink(false);
+			RemoveBucket(false);
 		}
 
 		void Clear()
@@ -279,8 +279,8 @@ namespace NxEn
 			}
 			
 			Reset();
-			ResizeBuckets();
-			CreateBucket(0);
+			Reallocate();
+			Allocate(0);
 		}
 
 		T& Get(uint64 Index) const
@@ -363,48 +363,41 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		void CreateBucket(uint64 Index)
+		void Allocate(uint64 Index)
 		{
 			Data[Index] = (T*)Memory::Allocate(sizeof(T) * BucketSize, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		void DestroyBucket(uint64 Index)
-		{
-			Memory::Free(Data[Index], Allocator);
-		}
-
-		void ResizeBuckets()
+		void Reallocate()
 		{
 			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		void MoveBuckets(bool Forward)
+		void Free(uint64 Index)
+		{
+			Memory::Free(Data[Index], Allocator);
+		}
+
+		void Shift(bool Forward)
 		{
 			T** Start = Forward ? &Data[0] : &Data[1];
 			T** End = Forward ? &Data[1] : &Data[0];
 			Memory::MemCopy(Start, End, sizeof(T*) * (Buckets - 1));
 		}
 
-		void GetIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
-		{
-			Index += Front;
-			BucketIndex = Index / BucketSize;
-			DataIndex = Index % BucketSize;
-		}
-
-		void Grow(bool AppendBack)
+		void AppendBucket(bool AppendBack)
 		{
 			Count++;
 
 			if ((AppendBack && Back == BucketSize - 1) || (!AppendBack && Front == 0))
 			{
 				Buckets++;
-				ResizeBuckets();
+				Reallocate();
 				if (!AppendBack)
 				{
-					MoveBuckets(true);
+					Shift(true);
 				}
-				CreateBucket(AppendBack ? Buckets - 1 : 0);
+				Allocate(AppendBack ? Buckets - 1 : 0);
 
 				if (AppendBack)
 				{
@@ -428,19 +421,19 @@ namespace NxEn
 			}
 		}
 
-		void Shrink(bool RemoveBack)
+		void RemoveBucket(bool RemoveBack)
 		{
 			Count--;
 
 			if ((RemoveBack && Back == 0) || (!RemoveBack && Front == BucketSize - 1))
 			{
-				DestroyBucket(RemoveBack ? Buckets - 1 : 0);
+				Free(RemoveBack ? Buckets - 1 : 0);
 				if (!RemoveBack)
 				{
-					MoveBuckets(false);
+					Shift(false);
 				}
 				Buckets--;
-				ResizeBuckets();
+				Reallocate();
 
 				if (RemoveBack)
 				{
@@ -462,6 +455,13 @@ namespace NxEn
 					Front++;
 				}
 			}
+		}
+
+		void GetIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
+		{
+			Index += Front;
+			BucketIndex = Index / BucketSize;
+			DataIndex = Index % BucketSize;
 		}
 
 		void Reset()

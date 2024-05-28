@@ -64,14 +64,14 @@ namespace NxEn
 
 		void Append(const T& Value)
 		{
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Value;
 			AppendNode(Instance);
 		}
 
 		void Append(T&& Value)
 		{
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Move(Value);
 			AppendNode(Instance);
 		}
@@ -79,7 +79,7 @@ namespace NxEn
 		template<typename... Args>
 		void AppendConstruct(Args&&... args)
 		{
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Data, args...);
 			AppendNode(Instance);
 		}
@@ -99,7 +99,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
 			
 			Node* Instance = RemoveNode();
-			DestroyNode(Instance);
+			Free(Instance);
 		}
 
 		void Clear()
@@ -155,18 +155,13 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		static Node* NodeFromData(T* Data)
-		{
-			return reinterpret_cast<Node*>(Data);
-		}
-
-		Node* CreateNode()
+		Node* Allocate()
 		{
 			Count++;
 			return (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		void DestroyNode(Node* Instance)
+		void Free(Node* Instance)
 		{
 			Count--;
 			Memory::Free(Instance, Allocator);
@@ -186,6 +181,11 @@ namespace NxEn
 				Top = Top->Next;
 			}
 			return Instance;
+		}
+
+		static Node* GetNode(T* Data)
+		{
+			return reinterpret_cast<Node*>(Data);
 		}
 
 		Allocator* Allocator;

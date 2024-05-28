@@ -340,7 +340,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 9);
 		ASSERT_EQ(Test.GetCapacity(), 9);
 
-		Test.Reserve(18);
+		Test.Grow(18);
 		ASSERT_EQ(Test.GetCount(), 9);
 		ASSERT_EQ(Test.GetCapacity(), 18);
 
@@ -700,7 +700,7 @@ namespace NxTs
 			NEXUS_LOG(App, Info, 0, "Set value : %d", It->Integer);
 		}
 
-		Test.ReHash(21);
+		Test.Resize(21);
 	}
 
 	TEST(Type_Containers, Dictionary)
@@ -787,7 +787,7 @@ namespace NxTs
 			ASSERT_EQ(Kv.GetValue().Integer, Index++);
 		}
 
-		Test.ReHash(21);
+		Test.Resize(21);
 	}
 
 	TEST(Type_Containers, Tree)

@@ -76,7 +76,7 @@ namespace NxEn
 			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			Capacity = GetValidCapacity(Size);
+			Capacity = ValidateCapacity(Size);
 			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
@@ -322,21 +322,21 @@ namespace NxEn
 			if (Count > Capacity)
 			{
 				uint64 NewCapacity = Capacity + Capacity / 2;
-				Capacity = GetValidCapacity(NewCapacity > Count ? NewCapacity : Count);
+				Capacity = ValidateCapacity(NewCapacity > Count ? NewCapacity : Count);
 				Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 			}
 
 			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
 		}
 
-		void Reserve(uint64 Size)
+		void Grow(uint64 Size)
 		{
 			if (Size <= Capacity)
 			{
 				return;
 			}
 
-			Capacity = GetValidCapacity(Size);
+			Capacity = ValidateCapacity(Size);
 			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 		
 			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
@@ -344,7 +344,7 @@ namespace NxEn
 
 		void Shrink()
 		{
-			Capacity = GetValidCapacity(Count);
+			Capacity = ValidateCapacity(Count);
 			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
 		
 			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
@@ -397,7 +397,10 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		uint64 GetValidCapacity(uint64 Size) const { return Size > 2 ? Size : 2; }
+		uint64 ValidateCapacity(uint64 Size) const 
+		{ 
+			return Size > 2 ? Size : 2; 
+		}
 
 		Allocator* Allocator;
 		uint64 Capacity;

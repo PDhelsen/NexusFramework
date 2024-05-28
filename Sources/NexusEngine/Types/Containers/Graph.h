@@ -48,7 +48,7 @@ namespace NxEn
 
 			Iterator& operator++()
 			{
-				Pointer = &(NodeFromData(Pointer)->Next->Data);
+				Pointer = &(GetNode(Pointer)->Next->Data);
 				return *this;
 			}
 
@@ -120,7 +120,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			Node* Instance = NodeFromData(Position);
+			Node* Instance = GetNode(Position);
 			Instance->Data = Value;
 		}
 
@@ -129,7 +129,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			Node* Instance = NodeFromData(Position);
+			Node* Instance = GetNode(Position);
 			Instance->Data = Move(Value);
 		}
 
@@ -139,13 +139,13 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			Node* Instance = NodeFromData(Position);
+			Node* Instance = GetNode(Position);
 			Memory::Construct<T>(&Instance->Data, args...);
 		}
 
 		void Append(const T& Value)
 		{
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Value;
 
 			AppendNode(Instance);
@@ -153,7 +153,7 @@ namespace NxEn
 
 		void Append(T&& Value)
 		{
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Instance->Data = Move(Value);
 
 			AppendNode(Instance);
@@ -162,7 +162,7 @@ namespace NxEn
 		template<typename... Args>
 		void AppendConstruct(Args&&... args)
 		{
-			Node* Instance = CreateNode();
+			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Data, args...);
 
 			AppendNode(Instance);
@@ -183,9 +183,9 @@ namespace NxEn
 			NEXUS_ASSERT(Value != nullptr, "Value is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			Node* Instance = NodeFromData(Value);
+			Node* Instance = GetNode(Value);
 			RemoveNode(Instance);
-			DestroyNode(Instance);
+			Free(Instance);
 		}
 
 		void Clear()
@@ -194,7 +194,7 @@ namespace NxEn
 			while (Current)
 			{
 				Node* Next = Current->Next;
-				DestroyNode(Current);
+				Free(Current);
 				Current = Next;
 			}
 
@@ -207,8 +207,8 @@ namespace NxEn
 			NEXUS_ASSERT(To != nullptr, "To is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			Node* Start = NodeFromData(From);
-			Node* Target = NodeFromData(To);
+			Node* Start = GetNode(From);
+			Node* Target = GetNode(To);
 			
 			AppendConnection(Start, Target, ConnectionType::To);
 			AppendConnection(Target, Start, ConnectionType::From);
@@ -220,8 +220,8 @@ namespace NxEn
 			NEXUS_ASSERT(To != nullptr, "To is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			Node* Start = NodeFromData(From);
-			Node* Target = NodeFromData(To);
+			Node* Start = GetNode(From);
+			Node* Target = GetNode(To);
 
 			RemoveConnection(Start, Target, ConnectionType::To);
 			RemoveConnection(Target, Start, ConnectionType::From);
@@ -250,7 +250,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			uint64 Idx = 0;
-			Node* Start = NodeFromData(Instance);
+			Node* Start = GetNode(Instance);
 
 			Connection* Connect = Start->Connection;
 			while (Connect)
@@ -277,7 +277,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			uint64 Idx = 0;
-			Node* Start = NodeFromData(Instance);
+			Node* Start = GetNode(Instance);
 			
 			Connection* Connect = Start->Connection;
 			while (Connect)
@@ -316,8 +316,8 @@ namespace NxEn
 			NEXUS_ASSERT(B != nullptr, "B is null"); 
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			Node* NodeA = NodeFromData(A);
-			Node* NodeB = NodeFromData(B);
+			Node* NodeA = GetNode(A);
+			Node* NodeB = GetNode(B);
 
 			T Temp = NodeA->Data;
 			NodeA->Data = Move(NodeB->Data);
@@ -340,17 +340,12 @@ namespace NxEn
 			return false;
 		}
 
-		uint64 GetConnectionCount(T* Instance) const { return NodeFromData(Instance)->Count; }
+		uint64 GetConnectionCount(T* Instance) const { return GetNode(Instance)->Count; }
 		uint64 GetCount() const { return Count; }
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		static Node* NodeFromData(T* Data)
-		{
-			return reinterpret_cast<Node*>(Data);
-		}
-
-		Node* CreateNode()
+		Node* Allocate()
 		{
 			Count++;
 
@@ -361,7 +356,7 @@ namespace NxEn
 			return Instance;
 		}
 
-		void DestroyNode(Node* Instance)
+		void Free(Node* Instance)
 		{
 			Count--;
 			Memory::Free(Instance, Allocator);
@@ -457,6 +452,11 @@ namespace NxEn
 
 			Memory::Free(Current, Allocator);
 			A->Count--;
+		}
+
+		static Node* GetNode(T* Data)
+		{
+			return reinterpret_cast<Node*>(Data);
 		}
 
 		Allocator* Allocator;
