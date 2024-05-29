@@ -155,8 +155,6 @@ namespace NxEn
 
 		T& operator[](const K& Key) const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
-			
 			return Get(Key);
 		}
 

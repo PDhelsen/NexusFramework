@@ -142,11 +142,7 @@ namespace NxEn
 
 		T& operator[](uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
+			return Get(Index);
 		}
 
 		bool operator==(const Dequeue<T>& Other) const
@@ -289,20 +285,12 @@ namespace NxEn
 
 		T& First() const
 		{
-			NEXUS_ASSERT(IsValidIndex(0), "Invalid Index");
-			
-			uint64 BucketIndex, DataIndex;
-			GetIndex(0, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
+			return Get(0);
 		}
 
 		T& Last() const
 		{
-			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
-
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Count - 1, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
+			return Get(Count - 1);
 		}
 
 		Iterator begin() const { return Begin(); }

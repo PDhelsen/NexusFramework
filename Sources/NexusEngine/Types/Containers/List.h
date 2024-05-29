@@ -110,9 +110,7 @@ namespace NxEn
 
 		T& operator[](uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-
-			return Data[Index];
+			return Get(Index);
 		}
 
 		bool operator==(const List<T>& Other) const
@@ -277,16 +275,12 @@ namespace NxEn
 
 		T& First() const
 		{
-			NEXUS_ASSERT(IsValidIndex(0), "Invalid Index");
-
-			return Data[0];
+			return Get(0);
 		}
 
 		T& Last() const
 		{
-			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
-
-			return Data[Count - 1];
+			return Get(Count - 1);
 		}
 
 		Iterator begin() const { return Begin(); }
