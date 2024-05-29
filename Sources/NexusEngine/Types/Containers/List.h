@@ -122,7 +122,7 @@ namespace NxEn
 
 		bool operator!=(const List<T>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		void Assign(uint64 Index, const T& Value)

@@ -112,7 +112,7 @@ namespace NxEn
 
 		bool operator!=(const Graph<T>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		void Assign(T* Position, const T& Value)

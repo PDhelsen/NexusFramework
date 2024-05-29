@@ -121,7 +121,7 @@ namespace NxEn
 
 		bool operator!=(const Array<T>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		template<typename... Args>

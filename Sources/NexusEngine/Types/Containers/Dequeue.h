@@ -151,12 +151,12 @@ namespace NxEn
 
 		bool operator==(const Dequeue<T>& Other) const
 		{
-			return Buckets == Other.Buckets && Count == Other.Count && Data == Other.Data;
+			return Count == Other.Count && Data == Other.Data;
 		}
 
 		bool operator!=(const Dequeue<T>& Other) const
 		{
-			return Buckets != Other.Buckets || Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		void Assign(uint64 Index, const T& Value)

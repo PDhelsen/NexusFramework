@@ -45,7 +45,7 @@ namespace NxEn
 
 		bool operator!=(const Tuple<T1, T2>& Other) const
 		{
-			return First != Other.First || Second != Other.Second;
+			return !(*this == Other);
 		}
 
 		void Assign(const T1& F, const T2& S)

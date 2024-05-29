@@ -144,7 +144,7 @@ namespace NxEn
 
 		bool operator!=(const Set<T, H, LF>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		void Append(const T& Value)

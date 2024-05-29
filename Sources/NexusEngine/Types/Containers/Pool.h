@@ -59,12 +59,12 @@ namespace NxEn
 
 		bool operator==(const Pool<T>& Other) const
 		{
-			return Count == Other.Count && Data == Other.Data && Own == Other.Own;
+			return Count == Other.Count && Data == Other.Data;
 		}
 
 		bool operator!=(const Pool<T>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data || Own != Other.Own;
+			return !(*this == Other);
 		}
 
 		T& Acquire()

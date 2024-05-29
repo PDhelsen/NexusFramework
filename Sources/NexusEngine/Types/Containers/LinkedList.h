@@ -122,7 +122,7 @@ namespace NxEn
 
 		bool operator!=(const LinkedList<T>& Other) const
 		{
-			return Count != Other.Count || DataHead != Other.DataHead || DataTail != Other.DataTail;
+			return !(*this == Other);
 		}
 
 		void Assign(T* Position, const T& Value)

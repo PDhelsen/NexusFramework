@@ -108,7 +108,7 @@ namespace NxEn
 
 		bool operator!=(const Queue<T>& Other) const
 		{
-			return Count != Other.Count || DataHead != Other.DataHead || DataTail != Other.DataTail;
+			return !(*this == Other);
 		}
 
 		void Append(const T& Value)

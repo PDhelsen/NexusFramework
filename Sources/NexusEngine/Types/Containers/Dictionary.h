@@ -167,7 +167,7 @@ namespace NxEn
 
 		bool operator!=(const Dictionary<K, T, H, LF>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		void Assign(const K& Key, const T& Value)

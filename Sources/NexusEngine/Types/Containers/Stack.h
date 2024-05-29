@@ -107,7 +107,7 @@ namespace NxEn
 
 		bool operator!=(const Stack<T>& Other) const
 		{
-			return Count != Other.Count || Data != Other.Data;
+			return !(*this == Other);
 		}
 
 		void Append(const T& Value)
