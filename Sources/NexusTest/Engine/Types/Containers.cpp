@@ -702,6 +702,7 @@ namespace NxTs
 		ASSERT_EQ(Test == CopyDeep, false);
 		ASSERT_EQ(Test.GetCount(), CopyDeep.GetCount());
 
+		CopyDeep.AppendRange(Test);
 		CopyDeep.Clear();
 		ASSERT_EQ(CopyDeep.GetCount(), 0);
 		ASSERT_EQ(CopyDeep.IsEmpty(), true);
@@ -750,6 +751,7 @@ namespace NxTs
 		ASSERT_EQ(CopyDeep == Test, false);
 		ASSERT_EQ(CopyDeep.GetCount(), 2);
 
+		CopyDeep.AppendRange(Test);
 		CopyDeep.Clear();
 		ASSERT_EQ(CopyDeep.GetCount(), 0);
 

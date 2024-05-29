@@ -257,11 +257,11 @@ namespace NxEn
 			AppendNode(Index, New);
 		}
 
-		void Append(const Dictionary<K, T>& Other)
+		void AppendRange(const Dictionary<K, T, H, LF>& Other)
 		{
-			for (auto& Value : Other)
+			for (auto& Kv : Other)
 			{
-				Append(Value);
+				Append(Kv.GetKey(), Kv.GetValue());
 			}
 		}
 

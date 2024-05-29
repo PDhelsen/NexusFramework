@@ -114,6 +114,7 @@ namespace NxEn
 		{
 			Node* Instance = Allocate();
 			Instance->Data = Value;
+
 			AppendNode(Instance);
 		}
 
@@ -121,6 +122,7 @@ namespace NxEn
 		{
 			Node* Instance = Allocate();
 			Instance->Data = Move(Value);
+
 			AppendNode(Instance);
 		}
 
@@ -129,6 +131,7 @@ namespace NxEn
 		{
 			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Data, args...);
+
 			AppendNode(Instance);
 		}
 

@@ -127,8 +127,7 @@ namespace NxEn
 		{
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				T& Instance = Data[Index];
-				Memory::Construct<T>(&Instance, args...);
+				Memory::Construct<T>(&Data[Index], args...);
 			}
 		}
 

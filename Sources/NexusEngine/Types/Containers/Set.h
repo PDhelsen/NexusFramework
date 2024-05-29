@@ -185,7 +185,7 @@ namespace NxEn
 			AppendNode(Index, Instance);
 		}
 
-		void AppendRange(const Set<T>& Value)
+		void AppendRange(const Set<T, H, LF>& Value)
 		{
 			for (auto& It : Value)
 			{
