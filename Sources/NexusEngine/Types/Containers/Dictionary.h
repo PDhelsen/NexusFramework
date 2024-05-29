@@ -414,6 +414,7 @@ namespace NxEn
 		Node* Allocate()
 		{
 			Count++;
+
 			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
 			New->Next = nullptr;
 			return New;

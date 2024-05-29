@@ -21,15 +21,13 @@
     </Expand>
   </Type>
 
-  <Type Name="NxEn::Pool&lt;*&gt;">
-    <DisplayString>{{ Count={Count} }}</DisplayString>
+  <Type Name="NxEn::Dequeue&lt;*&gt;">
+    <DisplayString>{{ size={Count} }}</DisplayString>
     <Expand>
-      <LinkedListItems>
+      <IndexListItems>
         <Size>Count</Size>
-        <HeadPointer>Head</HeadPointer>
-        <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
-      </LinkedListItems>
+        <ValueNode>Data[($i + IndexFront) / BucketSize][($i + IndexFront) % BucketSize]</ValueNode>
+      </IndexListItems>
     </Expand>
   </Type>
 
@@ -38,7 +36,7 @@
     <Expand>
       <LinkedListItems>
         <Size>Count</Size>
-        <HeadPointer>Head</HeadPointer>
+        <HeadPointer>DataHead</HeadPointer>
         <NextPointer>Next</NextPointer>
         <ValueNode>Data</ValueNode>
       </LinkedListItems>
@@ -50,7 +48,7 @@
     <Expand>
       <LinkedListItems>
         <Size>Count</Size>
-        <HeadPointer>Top</HeadPointer>
+        <HeadPointer>Data</HeadPointer>
         <NextPointer>Next</NextPointer>
         <ValueNode>Data</ValueNode>
       </LinkedListItems>
@@ -62,29 +60,7 @@
     <Expand>
       <LinkedListItems>
         <Size>Count</Size>
-        <HeadPointer>Head</HeadPointer>
-        <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
-      </LinkedListItems>
-    </Expand>
-  </Type>
-
-  <Type Name="NxEn::Dequeue&lt;*&gt;">
-    <DisplayString>{{ size={Count} }}</DisplayString>
-    <Expand>
-      <IndexListItems>
-        <Size>Count</Size>
-        <ValueNode>Data[($i + Front) / ChunkSize][($i + Front) % ChunkSize]</ValueNode>
-      </IndexListItems>
-    </Expand>
-  </Type>
-
-  <Type Name="NxEn::Graph&lt;*&gt;">
-    <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <LinkedListItems>
-        <Size>Count</Size>
-        <HeadPointer>Root</HeadPointer>
+        <HeadPointer>DataHead</HeadPointer>
         <NextPointer>Next</NextPointer>
         <ValueNode>Data</ValueNode>
       </LinkedListItems>
@@ -97,7 +73,7 @@
       <CustomListItems>
         <Variable Name="Index" InitialValue="0" />
         <Variable Name="Pointer" InitialValue="Data[0]" />
-        
+
         <Size>Count</Size>
         <Loop>
           <If Condition="Pointer == nullptr">
@@ -134,6 +110,30 @@
           </Else>
         </Loop>
       </CustomListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="NxEn::Graph&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <LinkedListItems>
+        <Size>Count</Size>
+        <HeadPointer>Data</HeadPointer>
+        <NextPointer>Next</NextPointer>
+        <ValueNode>Data</ValueNode>
+      </LinkedListItems>
+    </Expand>
+  </Type>
+
+  <Type Name="NxEn::Pool&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <LinkedListItems>
+        <Size>Count</Size>
+        <HeadPointer>Data</HeadPointer>
+        <NextPointer>Next</NextPointer>
+        <ValueNode>Data</ValueNode>
+      </LinkedListItems>
     </Expand>
   </Type>
 

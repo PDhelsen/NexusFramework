@@ -224,6 +224,7 @@ namespace NxEn
 		Node* Allocate()
 		{
 			Count++;
+
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
 			Instance->Next = nullptr;
 			return Instance;

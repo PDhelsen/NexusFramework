@@ -221,7 +221,10 @@ namespace NxEn
 		Node* Allocate()
 		{
 			Count++;
-			return (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Instance->Next = nullptr;
+			return Instance;
 		}
 
 		void Free(Node* Instance)
