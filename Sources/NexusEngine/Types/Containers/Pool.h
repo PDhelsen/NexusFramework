@@ -24,7 +24,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			ValidateAllocator(Allctr);
 		}
 
 		Pool(uint64 Size)
@@ -32,8 +32,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
-			AllocatorActive RawAllocator(nullptr);
-			Allocator = new PoolAllocator(Size, sizeof(Node));
+			Allocate(Size);
 		}
 
 		Pool(const Pool<T>& Other)
@@ -55,12 +54,7 @@ namespace NxEn
 		~Pool()
 		{
 			Clear();
-
-			if (Own)
-			{
-				AllocatorActive RawAllocator(nullptr);
-				delete (PoolAllocator*)Allocator;
-			}
+			Free();
 		}
 
 		bool operator==(const Pool<T>& Other) const
@@ -75,32 +69,31 @@ namespace NxEn
 
 		T& Acquire()
 		{
-			T* Instance = nullptr;
+			T* Value = nullptr;
 
 			if (IsEmpty())
 			{
-				Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
-				Memory::Construct<T>(&New->Data);
-				Instance = &New->Data;
+				Node* Instance = Allocate();
+				Value = &Instance->Data;
 			}
 			else
 			{
-				Node* Old = Head;
+				Node* Instance = Head;
 				Head = Head->Next;
-				Instance = &Old->Data;
+				Value = &Instance->Data;
 
 				Count--;
 			}
 
-			return *Instance;
+			return *Value;
 		}
 
-		void Recycle(T& Instance)
+		void Recycle(T& Value)
 		{
-			Node* N = reinterpret_cast<Node*>(&Instance);
+			Node* Instance = reinterpret_cast<Node*>(&Value);
 			
-			N->Next = Head;
-			Head = N;
+			Instance->Next = Head;
+			Head = Instance;
 
 			Count++;
 		}
@@ -110,10 +103,7 @@ namespace NxEn
 			while (Head)
 			{
 				Node* Next = Head->Next;
-
-				Memory::Destruct<T>(&Head->Data);
-				Memory::Free(Head, Allocator);
-				
+				Free(Head);
 				Head = Next;
 			}
 
@@ -125,6 +115,39 @@ namespace NxEn
 		bool OwnAllocator() const { return Own; }
 
 	private:
+		void Allocate(uint64 Size)
+		{
+			AllocatorActive RawAllocator(nullptr);
+			Allocator = new PoolAllocator(Size, sizeof(Node));
+		}
+
+		Node* Allocate()
+		{
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Memory::Construct<T>(&Instance->Data);
+			return Instance;
+		}
+
+		void Free()
+		{
+			if (Own)
+			{
+				AllocatorActive RawAllocator(nullptr);
+				delete (PoolAllocator*)Allocator;
+			}
+		}
+
+		void Free(Node* Instance)
+		{
+			Memory::Destruct<T>(&Instance->Data);
+			Memory::Free(Instance, Allocator);
+		}
+
+		void ValidateAllocator(Allocator* Allctr)
+		{
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+		}
+
 		Allocator* Allocator;
 		uint64 Count;
 		Node* Head;

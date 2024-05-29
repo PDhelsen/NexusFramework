@@ -96,13 +96,8 @@ namespace NxEn
 		Set(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			Buckets = ValidateCapacity(Size);
-			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
-			for (uint64 Index = 0; Index < Buckets; Index++)
-			{
-				Data[Index] = nullptr;
-			}
+			ValidateAllocator(Allctr);
+			Allocate(Size);
 		}
 
 		Set(const Set<T, H, LF>& Other)
@@ -119,7 +114,7 @@ namespace NxEn
 		~Set()
 		{
 			Clear();
-			Memory::Free(Data, Allocator);
+			Free(Data);
 		}
 
 		Set<T, H, LF> Copy() const
@@ -162,7 +157,7 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				Resize(ValidateCapacity(Buckets + Buckets / 2));
+				Resize(Buckets + Buckets / 2);
 			}
 			
 			Node* Instance = Allocate();
@@ -181,7 +176,7 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				Resize(ValidateCapacity(Buckets + Buckets / 2));
+				Resize(Buckets + Buckets / 2);
 			}
 
 			Node* Instance = Allocate();
@@ -244,12 +239,7 @@ namespace NxEn
 			Node** TempArray = Data;
 			uint64 TempCapacity = Buckets;
 
-			Buckets = Size;
-			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
-			for (uint64 Index = 0; Index < Buckets; Index++)
-			{
-				Data[Index] = nullptr;
-			}
+			Allocate(Size);
 
 			for (uint64 TempIndex = 0; TempIndex < TempCapacity; TempIndex++)
 			{
@@ -266,7 +256,7 @@ namespace NxEn
 				}
 			}
 
-			Memory::Free(TempArray, Allocator);
+			Free(TempArray);
 		}
 
 		bool Contains(const T& Other) const
@@ -281,12 +271,28 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
+		void Allocate(uint64 Size)
+		{
+			ValidateBucket(Size);
+
+			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
+			for (uint64 Index = 0; Index < Buckets; Index++)
+			{
+				Data[Index] = nullptr;
+			}
+		}
+
 		Node* Allocate()
 		{
 			Count++;
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
 			Instance->Next = nullptr;
 			return Instance;
+		}
+
+		void Free(Node** Pointer)
+		{
+			Memory::Free(Pointer, Allocator);
 		}
 
 		void Free(Node* Instance)
@@ -353,9 +359,14 @@ namespace NxEn
 			return GetNode(Index, Value);
 		}
 
-		uint64 ValidateCapacity(uint64 Size) const
+		void ValidateAllocator(Allocator* Allctr)
 		{
-			return Size > 3 ? Size : 3;
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+		}
+
+		void ValidateBucket(uint64 Size)
+		{
+			Buckets = Size > 3 ? Size : 3;
 		}
 
 		inline static const uint64 DefaultSize = 16;

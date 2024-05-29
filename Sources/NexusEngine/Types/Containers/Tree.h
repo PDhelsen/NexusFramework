@@ -90,7 +90,7 @@ namespace NxEn
 		Tree(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Root(nullptr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			ValidateAllocator(Allctr);
 		}
 
 		Tree(const Tree<T>& Other)
@@ -579,6 +579,11 @@ namespace NxEn
 		static Node* GetNode(T* Data)
 		{
 			return reinterpret_cast<Node*>(Data);
+		}
+
+		void ValidateAllocator(Allocator* Allctr)
+		{
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Allocator* Allocator;

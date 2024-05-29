@@ -81,7 +81,7 @@ namespace NxEn
 		LinkedList(Allocator* Allctr = nullptr)
 			: Allocator(Allctr), Count(0), Head(nullptr), Tail(nullptr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			ValidateAllocator(Allctr);
 		}
 
 		LinkedList(const LinkedList<T>& Other)
@@ -724,6 +724,11 @@ namespace NxEn
 		static Node* GetNode(T* Data)
 		{
 			return reinterpret_cast<Node*>(Data);
+		}
+
+		void ValidateAllocator(Allocator* Allctr)
+		{
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		static void SortSort(Node** HeadRef)

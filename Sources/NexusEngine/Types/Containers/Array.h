@@ -73,10 +73,10 @@ namespace NxEn
 		};
 
 		Array(uint64 Size, Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(Size), Data(nullptr)
+			: Allocator(nullptr), Count(0), Data(nullptr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
+			ValidateAllocator(Allctr);
+			Allocate(Size);
 		}
 
 		Array(const Array<T>& Other)
@@ -92,7 +92,7 @@ namespace NxEn
 
 		~Array()
 		{
-			Memory::Free(Data, Allocator);
+			Free();
 		}
 
 		Array<T> Copy() const
@@ -258,6 +258,27 @@ namespace NxEn
 		uint64 GetCount() const { return Count; }
 
 	private:
+		void Allocate(uint64 Size)
+		{
+			ValidateCapacity(Size);
+			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void Free()
+		{
+			Memory::Free(Data, Allocator);
+		}
+
+		void ValidateAllocator(Allocator* Allctr)
+		{
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+		}
+
+		void ValidateCapacity(uint64 Size)
+		{
+			Count = Size > 1 ? Size : 1;
+		}
+
 		Allocator* Allocator;
 		uint64 Count;
 		T* Data;

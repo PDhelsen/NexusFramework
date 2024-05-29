@@ -92,10 +92,10 @@ namespace NxEn
 		Dequeue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), Front(0), Back(0), Data(nullptr)
 		{
-			Reset();
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
-			Data[0] = (T*)Memory::Allocate(sizeof(T) * BucketSize, NEXUS_MEMORY_ALIGN, Allocator);
+			ValidateAllocator(Allctr);
+			ValidateDefaultState();
+			Allocate(1);
+			Allocate(0, BucketSize);
 		}
 
 		Dequeue(const Dequeue<T>& Other)
@@ -111,12 +111,7 @@ namespace NxEn
 
 		~Dequeue()
 		{
-			for (uint64 Index = 0; Index < Buckets; Index++)
-			{
-				Memory::Free(Data[Index], Allocator);
-			}
-
-			Memory::Free(Data, Allocator);
+			Free();
 		}
 
 		Dequeue<T> Copy() const
@@ -128,10 +123,10 @@ namespace NxEn
 			Copy.Front = Front;
 			Copy.Back = Back;
 
-			Copy.Reallocate();
+			Copy.Reallocate(Buckets);
 			for (uint64 Bucket = 1; Bucket < Buckets; Bucket++)
 			{
-				Copy.Allocate(Bucket);
+				Copy.Allocate(Bucket, BucketSize);
 			}
 
 			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
@@ -275,12 +270,12 @@ namespace NxEn
 		{
 			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
-				Memory::Free(Data[Index], Allocator);
+				Free(Index);
 			}
 			
-			Reset();
-			Reallocate();
-			Allocate(0);
+			ValidateDefaultState();
+			Reallocate(1);
+			Allocate(0, BucketSize);
 		}
 
 		T& Get(uint64 Index) const
@@ -363,14 +358,31 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		void Allocate(uint64 Index)
+		void Allocate(uint64 Size)
 		{
-			Data[Index] = (T*)Memory::Allocate(sizeof(T) * BucketSize, NEXUS_MEMORY_ALIGN, Allocator);
+			ValidateBucket(Size);
+			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
 		}
 
-		void Reallocate()
+		void Allocate(uint64 Index, uint64 Size)
 		{
+			Data[Index] = (T*)Memory::Allocate(sizeof(T) * Size, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void Reallocate(uint64 Size)
+		{
+			ValidateBucket(Size);
 			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void Free()
+		{
+			for (uint64 Index = 0; Index < Buckets; Index++)
+			{
+				Free(Index);
+			}
+
+			Memory::Free(Data, Allocator);
 		}
 
 		void Free(uint64 Index)
@@ -391,13 +403,12 @@ namespace NxEn
 
 			if ((AppendBack && Back == BucketSize - 1) || (!AppendBack && Front == 0))
 			{
-				Buckets++;
-				Reallocate();
+				Reallocate(++Buckets);
 				if (!AppendBack)
 				{
 					Shift(true);
 				}
-				Allocate(AppendBack ? Buckets - 1 : 0);
+				Allocate(AppendBack ? Buckets - 1 : 0, BucketSize);
 
 				if (AppendBack)
 				{
@@ -432,8 +443,8 @@ namespace NxEn
 				{
 					Shift(false);
 				}
-				Buckets--;
-				Reallocate();
+				;
+				Reallocate(--Buckets);
 
 				if (RemoveBack)
 				{
@@ -464,9 +475,18 @@ namespace NxEn
 			DataIndex = Index % BucketSize;
 		}
 
-		void Reset()
+		void ValidateAllocator(Allocator* Allctr)
 		{
-			Buckets = 1;
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+		}
+
+		void ValidateBucket(uint64 Size)
+		{
+			Buckets = Size > 1 ? Size : 1;
+		}
+
+		void ValidateDefaultState()
+		{
 			Count = 0;
 			Front = 5;
 			Back = 4;

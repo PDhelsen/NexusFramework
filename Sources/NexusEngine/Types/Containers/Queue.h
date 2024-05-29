@@ -67,7 +67,7 @@ namespace NxEn
 		Queue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Head(nullptr), Tail(nullptr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			ValidateAllocator(Allctr);
 		}
 
 		Queue(const Queue<T>& Other)
@@ -259,6 +259,11 @@ namespace NxEn
 		static Node* GetNode(T* Data)
 		{
 			return reinterpret_cast<Node*>(Data);
+		}
+
+		void ValidateAllocator(Allocator* Allctr)
+		{
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Allocator* Allocator;

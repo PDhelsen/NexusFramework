@@ -75,9 +75,8 @@ namespace NxEn
 		List(uint64 Size = 2, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			Capacity = ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+			ValidateAllocator(Allctr);
+			Allocate(Size);
 		}
 
 		List(const List<T>& Other)
@@ -93,7 +92,7 @@ namespace NxEn
 
 		~List()
 		{
-			Memory::Free(Data, Allocator);
+			Free();
 		}
 
 		List<T> Copy() const
@@ -321,12 +320,8 @@ namespace NxEn
 
 			if (Count > Capacity)
 			{
-				uint64 NewCapacity = Capacity + Capacity / 2;
-				Capacity = ValidateCapacity(NewCapacity > Count ? NewCapacity : Count);
-				Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+				Reallocate(Capacity + Capacity / 2);
 			}
-
-			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
 		}
 
 		void Grow(uint64 Size)
@@ -336,18 +331,12 @@ namespace NxEn
 				return;
 			}
 
-			Capacity = ValidateCapacity(Size);
-			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
-		
-			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
+			Reallocate(Size);
 		}
 
-		void Shrink()
+		void Shrink(uint64 Size = 0)
 		{
-			Capacity = ValidateCapacity(Count);
-			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
-		
-			NEXUS_ASSERT(Count <= Capacity, "Overflowing list");
+			Reallocate(Size);
 		}
 
 		void Swap(uint64 IndexA, uint64 IndexB)
@@ -397,9 +386,32 @@ namespace NxEn
 		bool IsEmpty() const { return Count == 0; }
 
 	private:
-		uint64 ValidateCapacity(uint64 Size) const 
+		void Allocate(uint64 Size)
+		{
+			ValidateCapacity(Size);
+			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void Reallocate(uint64 Size)
+		{
+			ValidateCapacity(Size);
+			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+		}
+
+		void Free()
+		{
+			Memory::Free(Data, Allocator);
+		}
+
+		void ValidateAllocator(Allocator* Allctr)
+		{
+			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+		}
+
+		void ValidateCapacity(uint64 Size)
 		{ 
-			return Size > 2 ? Size : 2; 
+			uint64 Lowest = Count > 2 ? Count : 2;
+			Capacity = Size > Lowest ? Size : Lowest;
 		}
 
 		Allocator* Allocator;
