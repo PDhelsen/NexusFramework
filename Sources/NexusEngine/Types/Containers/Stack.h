@@ -18,6 +18,52 @@ namespace NxEn
 		};
 
 	public:
+		class Iterator
+		{
+		public:
+			Iterator(T* Ptr)
+				: Pointer(Ptr)
+			{
+
+			}
+
+			Iterator& operator++()
+			{
+				Pointer = &(GetNode(Pointer)->Next->Data);
+				return *this;
+			}
+
+			Iterator operator++(int32)
+			{
+				Iterator Temp = *this;
+				++(*this);
+				return Temp;
+			}
+
+			T* operator->() const
+			{
+				return Pointer;
+			}
+
+			T& operator*() const
+			{
+				return *Pointer;
+			}
+
+			bool operator==(const Iterator& Other) const
+			{
+				return Pointer == Other.Pointer;
+			}
+
+			bool operator!=(const Iterator& Other) const
+			{
+				return Pointer != Other.Pointer;
+			}
+
+		private:
+			T* Pointer;
+		};
+
 		Stack(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Top(nullptr)
 		{
@@ -115,6 +161,18 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
 			
 			return Top->Data;
+		}
+
+		Iterator begin() const { return Begin(); }
+		Iterator Begin() const
+		{
+			return Iterator(&Top->Data);
+		}
+
+		Iterator end() const { return End(); }
+		Iterator End() const
+		{
+			return Iterator(nullptr);
 		}
 
 		bool Contains(const T& Other) const

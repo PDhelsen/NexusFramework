@@ -16,7 +16,54 @@ namespace NxEn
 			T Data;
 			Node* Next;
 		};
+
 	public:
+		class Iterator
+		{
+		public:
+			Iterator(T* Ptr)
+				: Pointer(Ptr)
+			{
+
+			}
+
+			Iterator& operator++()
+			{
+				Pointer = &(GetNode(Pointer)->Next->Data);
+				return *this;
+			}
+
+			Iterator operator++(int32)
+			{
+				Iterator Temp = *this;
+				++(*this);
+				return Temp;
+			}
+
+			T* operator->() const
+			{
+				return Pointer;
+			}
+
+			T& operator*() const
+			{
+				return *Pointer;
+			}
+
+			bool operator==(const Iterator& Other) const
+			{
+				return Pointer == Other.Pointer;
+			}
+
+			bool operator!=(const Iterator& Other) const
+			{
+				return Pointer != Other.Pointer;
+			}
+
+		private:
+			T* Pointer;
+		};
+
 		Queue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Head(nullptr), Tail(nullptr)
 		{
@@ -115,6 +162,18 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Queue is empty");
 			
 			return Head->Data;
+		}
+
+		Iterator begin() const { return Begin(); }
+		Iterator Begin() const
+		{
+			return Iterator(&Head->Data);
+		}
+
+		Iterator end() const { return End(); }
+		Iterator End() const
+		{
+			return Iterator(nullptr);
 		}
 
 		bool Contains(const T& Other) const

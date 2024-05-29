@@ -606,6 +606,12 @@ namespace NxTs
 
 		Test.Reverse();
 		ASSERT_EQ(Test.Get().Integer, 5);
+
+		uint64 Index = 0;
+		for (auto& It : Test)
+		{
+			It.Integer = Index++;
+		}
 	}
 
 	TEST(Type_Containers, Queue)
@@ -653,6 +659,14 @@ namespace NxTs
 
 		Test.Reverse();
 		ASSERT_EQ(Test.Get().Integer, 25);
+
+		uint64 Index = 0;
+		for (auto& It : Test)
+		{
+			It.Integer = Index++;
+		}
+
+		Test.Append(8);
 	}
 
 	TEST(Type_Containers, Set)
