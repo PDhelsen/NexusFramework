@@ -244,20 +244,20 @@ namespace NxEn
 			return &Data->Data;
 		}
 
-		T& GetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
+		T& GetConnection(T* Position, ConnectionType Type, uint64 Index = 0) const
 		{
-			NEXUS_ASSERT(Instance != nullptr, "Instance is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			uint64 Idx = 0;
-			Node* Start = GetNode(Instance);
+			Node* Instance = GetNode(Position);
 
-			Connection* Connect = Start->Connection;
+			Connection* Connect = Instance->Connection;
 			while (Connect)
 			{
 				if (Connect->Type == Type)
 				{
-					if (Idx == Position)
+					if (Idx == Index)
 					{
 						break;
 					}
@@ -271,20 +271,20 @@ namespace NxEn
 			return Connect->Target->Data;
 		}
 
-		T* TryGetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
+		T* TryGetConnection(T* Position, ConnectionType Type, uint64 Index = 0) const
 		{
-			NEXUS_ASSERT(Instance != nullptr, "Instance is null");
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			uint64 Idx = 0;
-			Node* Start = GetNode(Instance);
+			Node* Instance = GetNode(Position);
 			
-			Connection* Connect = Start->Connection;
+			Connection* Connect = Instance->Connection;
 			while (Connect)
 			{
 				if (Connect->Type == Type)
 				{
-					if (Idx == Position)
+					if (Idx == Index)
 					{
 						return &Connect->Target->Data;
 					}
