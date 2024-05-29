@@ -98,10 +98,12 @@ namespace NxEn
 		Array<T> Copy() const
 		{
 			Array<T> Copy = Array<T>(Count, Allocator);
+
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
 				Copy.Data[Index] = Data[Index];
 			}
+
 			return Copy;
 		}
 

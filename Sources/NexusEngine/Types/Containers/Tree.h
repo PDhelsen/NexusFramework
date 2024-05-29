@@ -88,20 +88,20 @@ namespace NxEn
 		};
 
 		Tree(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Root(nullptr)
+			: Allocator(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Tree(const Tree<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Root(Other.Root)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
 		}
 
 		Tree(Tree<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Root(Other.Root)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
-			Root = nullptr;
+			Data = nullptr;
 		}
 
 		~Tree()
@@ -112,12 +112,12 @@ namespace NxEn
 		Tree<T> Copy() const
 		{
 			Tree<T> Copy = Tree<T>(Allocator);
-			Copy.Initialize(Root->Data);
+			Copy.Initialize(Data->Data);
 			
-			Node* RootChild = Root->Child;
+			Node* RootChild = Data->Child;
 			while (RootChild)
 			{
-				Copy.CopyNode(Copy.Root, RootChild);
+				Copy.CopyNode(Copy.Data, RootChild);
 				RootChild = RootChild->Sibling;
 			}
 			return Copy;
@@ -125,31 +125,31 @@ namespace NxEn
 
 		bool operator==(const Tree<T>& Other) const
 		{
-			return Count == Other.Count && Root == Other.Root;
+			return Count == Other.Count && Data == Other.Data;
 		}
 
 		bool operator!=(const Tree<T>& Other) const
 		{
-			return Count != Other.Count || Root != Other.Root;
+			return Count != Other.Count || Data != Other.Data;
 		}
 
 		void Initialize(const T& Value)
 		{
-			Root = Allocate();
-			Root->Data = Value;
+			Data = Allocate();
+			Data->Data = Value;
 		}
 
 		void Initialize(T&& Value)
 		{
-			Root = Allocate();
-			Root->Data = Move(Value);
+			Data = Allocate();
+			Data->Data = Move(Value);
 		}
 
 		template<typename... Args>
 		void InitializeConstruct(Args&&... args)
 		{
-			Root = Allocate();
-			Memory::Construct<T>(&Root->Data, args...);
+			Data = Allocate();
+			Memory::Construct<T>(&Data->Data, args...);
 		}
 
 		void Assign(T* Position, const T& Value)
@@ -329,25 +329,25 @@ namespace NxEn
 				return;
 			}
 
-			Remove(&Root->Data);
-			Root = nullptr;
+			Remove(&Data->Data);
+			Data = nullptr;
 		}
 
 		T& GetRoot() const 
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
-			return Root->Data;
+			return Data->Data;
 		}
 
 		T* TryGetRoot() const
 		{
-			if (!Root)
+			if (!Data)
 			{
 				return nullptr;
 			}
 
-			return &Root->Data;
+			return &Data->Data;
 		}
 
 		T& GetParent(T* Child) const
@@ -416,7 +416,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Root->Data);
+			return Iterator(&Data->Data);
 		}
 
 		Iterator end() const { return End(); }
@@ -454,7 +454,7 @@ namespace NxEn
 
 		uint64 GetCount() const { return Count; }
 		bool IsEmpty() const { return Count == 0; }
-		bool IsInitialized() const { Root != nullptr; }
+		bool IsInitialized() const { Data != nullptr; }
 
 	private:
 		Node* Allocate()
@@ -588,6 +588,6 @@ namespace NxEn
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Root;
+		Node* Data;
 	};
 }

@@ -90,7 +90,7 @@ namespace NxEn
 		};
 
 		Dequeue(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Buckets(0), Count(0), Front(0), Back(0), Data(nullptr)
+			: Allocator(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 			ValidateDefaultState();
@@ -99,12 +99,12 @@ namespace NxEn
 		}
 
 		Dequeue(const Dequeue<T>& Other)
-			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Front(Other.Front), Back(Other.Back), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(Other.Data)
 		{
 		}
 
 		Dequeue(Dequeue<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Front(Other.Front), Back(Other.Back), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(Other.Data)
 		{
 			Data = nullptr;
 		}
@@ -120,8 +120,8 @@ namespace NxEn
 			
 			Copy.Buckets = Buckets;
 			Copy.Count = Count;
-			Copy.Front = Front;
-			Copy.Back = Back;
+			Copy.IndexFront = IndexFront;
+			Copy.IndexBack = IndexBack;
 
 			Copy.Reallocate(Buckets);
 			for (uint64 Bucket = 1; Bucket < Buckets; Bucket++)
@@ -201,20 +201,20 @@ namespace NxEn
 		void AppendBack(const T& Value)
 		{
 			AppendBucket(true);
-			Data[Buckets - 1][Back] = Value;
+			Data[Buckets - 1][IndexBack] = Value;
 		}
 
 		void AppendBack(T&& Value)
 		{
 			AppendBucket(true);
-			Data[Buckets - 1][Back] = Move(Value);
+			Data[Buckets - 1][IndexBack] = Move(Value);
 		}
 
 		template<typename... Args>
 		void AppendBackConstruct(Args&&... args)
 		{
 			AppendBucket(true);
-			Data[Buckets - 1][Back] = T(args...);
+			Data[Buckets - 1][IndexBack] = T(args...);
 		}
 
 		void AppendBackRange(const Dequeue<T>& Value)
@@ -228,20 +228,20 @@ namespace NxEn
 		void AppendFront(const T& Value)
 		{
 			AppendBucket(false);
-			Data[0][Front] = Value;
+			Data[0][IndexFront] = Value;
 		}
 
 		void AppendFront(T&& Value)
 		{
 			AppendBucket(false);
-			Data[0][Front] = Move(Value);
+			Data[0][IndexFront] = Move(Value);
 		}
 
 		template<typename... Args>
 		void AppendFrontConstruct(Args&&... args)
 		{
 			AppendBucket(false);
-			Data[0][Front] = T(args...);
+			Data[0][IndexFront] = T(args...);
 		}
 
 		void AppendFrontRange(const Dequeue<T>& Value)
@@ -308,7 +308,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(Data, 0, Front);
+			return Iterator(Data, 0, IndexFront);
 		}
 
 		Iterator BeginReverse() const
@@ -319,7 +319,7 @@ namespace NxEn
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			Iterator It = Iterator(Data, Buckets - 1, Back);
+			Iterator It = Iterator(Data, Buckets - 1, IndexBack);
 			return ++It;
 		}
 
@@ -401,7 +401,7 @@ namespace NxEn
 		{
 			Count++;
 
-			if ((AppendBack && Back == BucketSize - 1) || (!AppendBack && Front == 0))
+			if ((AppendBack && IndexBack == BucketSize - 1) || (!AppendBack && IndexFront == 0))
 			{
 				Reallocate(++Buckets);
 				if (!AppendBack)
@@ -412,22 +412,22 @@ namespace NxEn
 
 				if (AppendBack)
 				{
-					Back = 0;
+					IndexBack = 0;
 				}
 				else
 				{
-					Front = BucketSize - 1;
+					IndexFront = BucketSize - 1;
 				}
 			}
 			else
 			{
 				if (AppendBack)
 				{
-					Back++;
+					IndexBack++;
 				}
 				else
 				{
-					Front--;
+					IndexFront--;
 				}
 			}
 		}
@@ -436,7 +436,7 @@ namespace NxEn
 		{
 			Count--;
 
-			if ((RemoveBack && Back == 0) || (!RemoveBack && Front == BucketSize - 1))
+			if ((RemoveBack && IndexBack == 0) || (!RemoveBack && IndexFront == BucketSize - 1))
 			{
 				Free(RemoveBack ? Buckets - 1 : 0);
 				if (!RemoveBack)
@@ -448,29 +448,29 @@ namespace NxEn
 
 				if (RemoveBack)
 				{
-					Back = BucketSize - 1;
+					IndexBack = BucketSize - 1;
 				}
 				else
 				{
-					Front = 0;
+					IndexFront = 0;
 				}
 			}
 			else
 			{
 				if (RemoveBack)
 				{
-					Back--;
+					IndexBack--;
 				}
 				else
 				{
-					Front++;
+					IndexFront++;
 				}
 			}
 		}
 
 		void GetIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
 		{
-			Index += Front;
+			Index += IndexFront;
 			BucketIndex = Index / BucketSize;
 			DataIndex = Index % BucketSize;
 		}
@@ -488,8 +488,8 @@ namespace NxEn
 		void ValidateDefaultState()
 		{
 			Count = 0;
-			Front = 5;
-			Back = 4;
+			IndexFront = 5;
+			IndexBack = 4;
 		}
 
 		static const uint64 BucketSize = 10;
@@ -497,8 +497,8 @@ namespace NxEn
 		Allocator* Allocator;
 		uint64 Buckets;
 		uint64 Count;
-		uint64 Front;
-		uint64 Back;
+		uint64 IndexFront;
+		uint64 IndexBack;
 		T** Data;
 	};
 }

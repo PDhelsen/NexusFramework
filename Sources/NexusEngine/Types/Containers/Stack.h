@@ -65,20 +65,20 @@ namespace NxEn
 		};
 
 		Stack(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Top(nullptr)
+			: Allocator(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Stack(const Stack<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Top(Other.Top)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
 		}
 
 		Stack(Stack<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Top(Other.Top)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
-			Other.Top = nullptr;
+			Other.Data = nullptr;
 		}
 
 		~Stack()
@@ -89,23 +89,25 @@ namespace NxEn
 		Stack<T> Copy() const
 		{
 			Stack<T> Copy = Stack<T>(Allocator);
-			Node* Current = Top;
+			
+			Node* Current = Data;
 			while (Current)
 			{
 				Copy.Append(Current->Data);
 				Current = Current->Next;
 			}
+
 			return Copy;
 		}
 
 		bool operator==(const Stack<T>& Other) const
 		{
-			return Count == Other.Count && Top == Other.Top;
+			return Count == Other.Count && Data == Other.Data;
 		}
 
 		bool operator!=(const Stack<T>& Other) const
 		{
-			return Count != Other.Count || Top != Other.Top;
+			return Count != Other.Count || Data != Other.Data;
 		}
 
 		void Append(const T& Value)
@@ -132,7 +134,7 @@ namespace NxEn
 
 		void AppendRange(const Stack<T>& Value)
 		{
-			Node* Current = Value.Top;
+			Node* Current = Value.Data;
 			while (Current)
 			{
 				Append(Current->Data);
@@ -150,7 +152,7 @@ namespace NxEn
 
 		void Clear()
 		{
-			while (Top)
+			while (Data)
 			{
 				Remove();
 			}
@@ -160,13 +162,13 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
 			
-			return Top->Data;
+			return Data->Data;
 		}
 
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Top->Data);
+			return Iterator(&Data->Data);
 		}
 
 		Iterator end() const { return End(); }
@@ -177,7 +179,7 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			Node* Current = Top;
+			Node* Current = Data;
 			while (Current)
 			{
 				if (Current->Data == Other)
@@ -193,7 +195,7 @@ namespace NxEn
 
 		void Reverse()
 		{
-			Node* Current = Top;
+			Node* Current = Data;
 			Node* Next = Current->Next;
 			Current->Next = nullptr;
 
@@ -206,7 +208,7 @@ namespace NxEn
 				Next = SecondNext;
 			}
 
-			Top = Current;
+			Data = Current;
 		}
 
 		uint64 GetCount() const { return Count; }
@@ -227,16 +229,16 @@ namespace NxEn
 
 		void AppendNode(Node* Instance)
 		{
-			Instance->Next = Top;
-			Top = Instance;
+			Instance->Next = Data;
+			Data = Instance;
 		}
 
 		Node* RemoveNode()
 		{
-			Node* Instance = Top;
-			if (Top)
+			Node* Instance = Data;
+			if (Data)
 			{
-				Top = Top->Next;
+				Data = Data->Next;
 			}
 			return Instance;
 		}
@@ -253,6 +255,6 @@ namespace NxEn
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Top;
+		Node* Data;
 	};
 }

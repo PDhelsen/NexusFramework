@@ -65,21 +65,21 @@ namespace NxEn
 		};
 
 		Queue(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Head(nullptr), Tail(nullptr)
+			: Allocator(nullptr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Queue(const Queue<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Tail(Other.Tail)
+			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
 		}
 
 		Queue(Queue<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Tail(Other.Tail)
+			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
-			Other.Head = nullptr;
-			Other.Tail = nullptr;
+			Other.DataHead = nullptr;
+			Other.DataTail = nullptr;
 		}
 
 		~Queue()
@@ -90,23 +90,25 @@ namespace NxEn
 		Queue<T> Copy() const
 		{
 			Queue<T> Copy = Queue<T>(Allocator);
-			Node* Current = Head;
+
+			Node* Current = DataHead;
 			while (Current)
 			{
 				Copy.Append(Current->Data);
 				Current = Current->Next;
 			}
+
 			return Copy;
 		}
 
 		bool operator==(const Queue<T>& Other) const
 		{
-			return Count == Other.Count && Head == Other.Head && Tail == Other.Tail;
+			return Count == Other.Count && DataHead == Other.DataHead && DataTail == Other.DataTail;
 		}
 
 		bool operator!=(const Queue<T>& Other) const
 		{
-			return Count != Other.Count || Head != Other.Head || Tail != Other.Tail;
+			return Count != Other.Count || DataHead != Other.DataHead || DataTail != Other.DataTail;
 		}
 
 		void Append(const T& Value)
@@ -133,7 +135,7 @@ namespace NxEn
 
 		void AppendRange(const Queue<T>& Value)
 		{
-			Node* Current = Value.Head;
+			Node* Current = Value.DataHead;
 			while (Current)
 			{
 				Append(Current->Data);
@@ -151,7 +153,7 @@ namespace NxEn
 
 		void Clear()
 		{
-			while (Head)
+			while (DataHead)
 			{
 				Remove();
 			}
@@ -161,13 +163,13 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Queue is empty");
 			
-			return Head->Data;
+			return DataHead->Data;
 		}
 
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Head->Data);
+			return Iterator(&DataHead->Data);
 		}
 
 		Iterator end() const { return End(); }
@@ -178,7 +180,7 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			Node* Current = Head;
+			Node* Current = DataHead;
 			while (Current)
 			{
 				if (Current->Data == Other)
@@ -194,9 +196,9 @@ namespace NxEn
 
 		void Reverse()
 		{
-			Tail = Head;
+			DataTail = DataHead;
 
-			Node* Current = Head;
+			Node* Current = DataHead;
 			Node* Next = Current->Next;
 			Current->Next = nullptr;
 
@@ -209,7 +211,7 @@ namespace NxEn
 				Next = SecondNext;
 			}
 
-			Head = Current;
+			DataHead = Current;
 		}
 
 		uint64 GetCount() const { return Count; }
@@ -232,26 +234,26 @@ namespace NxEn
 
 		void AppendNode(Node* Instance)
 		{
-			if (Head == nullptr || Tail == nullptr)
+			if (DataHead == nullptr || DataTail == nullptr)
 			{
-				Head = Tail = Instance;
+				DataHead = DataTail = Instance;
 				return;
 			}
 
-			Tail->Next = Instance;
-			Tail = Instance;
+			DataTail->Next = Instance;
+			DataTail = Instance;
 		}
 
 		Node* RemoveNode()
 		{
-			Node* Instance = Head;
-			if (Head)
+			Node* Instance = DataHead;
+			if (DataHead)
 			{
-				Head = Head->Next;
+				DataHead = DataHead->Next;
 			}
-			if (Head == nullptr)
+			if (DataHead == nullptr)
 			{
-				Tail = nullptr;
+				DataTail = nullptr;
 			}
 			return Instance;
 		}
@@ -268,7 +270,7 @@ namespace NxEn
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Head;
-		Node* Tail;
+		Node* DataHead;
+		Node* DataTail;
 	};
 }

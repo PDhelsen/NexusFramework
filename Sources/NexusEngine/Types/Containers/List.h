@@ -99,10 +99,12 @@ namespace NxEn
 		{
 			List<T> Copy = List<T>(Capacity, Allocator);
 			Copy.Count = Count;
+
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
 				Copy.Data[Index] = Data[Index];
 			}
+
 			return Copy;
 		}
 

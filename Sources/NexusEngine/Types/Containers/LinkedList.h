@@ -79,21 +79,21 @@ namespace NxEn
 		};
 
 		LinkedList(Allocator* Allctr = nullptr)
-			: Allocator(Allctr), Count(0), Head(nullptr), Tail(nullptr)
+			: Allocator(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		LinkedList(const LinkedList<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Tail(Other.Tail)
+			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
 		}
 
 		LinkedList(LinkedList<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Tail(Other.Tail)
+			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
-			Other.Head = nullptr;
-			Other.Tail = nullptr;
+			Other.DataHead = nullptr;
+			Other.DataTail = nullptr;
 		}
 
 		~LinkedList()
@@ -105,7 +105,7 @@ namespace NxEn
 		{
 			LinkedList Copy = LinkedList(Allocator);
 
-			Node* Current = Head;
+			Node* Current = DataHead;
 			while (Current != nullptr)
 			{
 				Copy.AppendBack(Current->Data);
@@ -117,12 +117,12 @@ namespace NxEn
 
 		bool operator==(const LinkedList<T>& Other) const
 		{
-			return Count == Other.Count && Head == Other.Head && Tail == Other.Tail;
+			return Count == Other.Count && DataHead == Other.DataHead && DataTail == Other.DataTail;
 		}
 
 		bool operator!=(const LinkedList<T>& Other) const
 		{
-			return Count != Other.Count || Head != Other.Head || Tail != Other.Tail;
+			return Count != Other.Count || DataHead != Other.DataHead || DataTail != Other.DataTail;
 		}
 
 		void Assign(T* Position, const T& Value)
@@ -180,7 +180,7 @@ namespace NxEn
 
 		void AppendBackRange(const LinkedList<T>& Other)
 		{
-			Node* Instance = Other.Head;
+			Node* Instance = Other.DataHead;
 			while (Instance != nullptr)
 			{
 				AppendBack(Instance->Data);
@@ -215,7 +215,7 @@ namespace NxEn
 
 		void AppendFrontRange(const LinkedList<T>& Other)
 		{
-			Node* Instance = Other.Head;
+			Node* Instance = Other.DataHead;
 			while (Instance != nullptr)
 			{
 				AppendFront(Instance->Data);
@@ -265,7 +265,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			Node* Instance = Other.Head;
+			Node* Instance = Other.DataHead;
 			Node* Anchor = GetNode(Position);
 
 			while (Instance != nullptr)
@@ -318,7 +318,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			Node* Instance = Other.Head;
+			Node* Instance = Other.DataHead;
 			Node* Anchor = GetNode(Position);
 
 			while (Instance != nullptr)
@@ -343,7 +343,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			while (Tail != Instance)
+			while (DataTail != Instance)
 			{
 				RemoveBack();
 			}
@@ -364,7 +364,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			while (Head != Instance)
+			while (DataHead != Instance)
 			{
 				RemoveFront();
 			}
@@ -398,7 +398,7 @@ namespace NxEn
 			}
 			else
 			{
-				Head = Next;
+				DataHead = Next;
 			}
 
 			if (Next)
@@ -407,13 +407,13 @@ namespace NxEn
 			}
 			else
 			{
-				Tail = Prev;
+				DataTail = Prev;
 			}
 		}
 
 		void Clear()
 		{
-			while(Tail)
+			while(DataTail)
 			{
 				RemoveBack();
 			}
@@ -425,7 +425,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			NEXUS_ASSERT(Instance != Tail, "Cannot get next on Tail");
+			NEXUS_ASSERT(Instance != DataTail, "Cannot get next on Tail");
 
 			return Instance->Next->Data;
 		}
@@ -436,7 +436,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			if (Instance == Tail)
+			if (Instance == DataTail)
 			{
 				return nullptr;
 			}
@@ -450,7 +450,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			NEXUS_ASSERT(Instance != Head, "Cannot get prev on Head");
+			NEXUS_ASSERT(Instance != DataHead, "Cannot get prev on Head");
 
 			return Instance->Prev->Data;
 		}
@@ -461,7 +461,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			if (Instance == Head)
+			if (Instance == DataHead)
 			{
 				return nullptr;
 			}
@@ -473,25 +473,25 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			return Head->Data;
+			return DataHead->Data;
 		}
 
 		T& Last() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			return Tail->Data;
+			return DataTail->Data;
 		}
 
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Head->Data);
+			return Iterator(&DataHead->Data);
 		}
 
 		Iterator BeginReverse() const
 		{
-			return Iterator(&Tail->Data);
+			return Iterator(&DataTail->Data);
 		}
 
 		Iterator end() const { return End(); }
@@ -560,27 +560,27 @@ namespace NxEn
 				}
 			}
 
-			if (NodeA == Head)
+			if (NodeA == DataHead)
 			{
-				Head = NodeB;
+				DataHead = NodeB;
 			}
-			else if (NodeB == Head)
+			else if (NodeB == DataHead)
 			{
-				Head = NodeA;
+				DataHead = NodeA;
 			}
-			if (NodeA == Tail)
+			if (NodeA == DataTail)
 			{
-				Tail = NodeB;
+				DataTail = NodeB;
 			}
-			else if (NodeB == Tail)
+			else if (NodeB == DataTail)
 			{
-				Tail = NodeA;
+				DataTail = NodeA;
 			}
 		}
 
 		bool Contains(const T& Other) const
 		{
-			Node* Current = Head;
+			Node* Current = DataHead;
 			while (Current != nullptr)
 			{
 				if (Current->Data == Other)
@@ -596,15 +596,15 @@ namespace NxEn
 
 		void Sort()
 		{
-			SortSort(&Head);
+			SortSort(&DataHead);
 			FixLinks();
 		}
 
 		void Reverse()
 		{
 			uint64 Half = Count / 2;
-			Node* H = Head;
-			Node* T = Tail;
+			Node* H = DataHead;
+			Node* T = DataTail;
 			for (uint64 It = 0; It < Half; It++)
 			{
 				Node* Next = H->Next;
@@ -636,37 +636,37 @@ namespace NxEn
 		void AppendNodeTail(Node* Instance)
 		{
 			Instance->Next = nullptr;
-			Instance->Prev = Tail;
+			Instance->Prev = DataTail;
 
-			if (!Head)
+			if (!DataHead)
 			{
-				Head = Instance;
+				DataHead = Instance;
 			}
 
-			if (Tail)
+			if (DataTail)
 			{
-				Tail->Next = Instance;
+				DataTail->Next = Instance;
 			}
 
-			Tail = Instance;
+			DataTail = Instance;
 		}
 
 		void AppendNodeHead(Node* Instance)
 		{
-			Instance->Next = Head;
+			Instance->Next = DataHead;
 			Instance->Prev = nullptr;
 
-			if (!Tail)
+			if (!DataTail)
 			{
-				Tail = Instance;
+				DataTail = Instance;
 			}
 
-			if (Head)
+			if (DataHead)
 			{
-				Head->Prev = Instance;
+				DataHead->Prev = Instance;
 			}
 
-			Head = Instance;
+			DataHead = Instance;
 		}
 
 		void InsertNodeBack(Node* Anchor, Node* Instance)
@@ -687,17 +687,17 @@ namespace NxEn
 
 		Node* RemoveNodeTail()
 		{
-			Node* Instance = Tail;
-			Tail = Tail->Prev;
+			Node* Instance = DataTail;
+			DataTail = DataTail->Prev;
 
-			if (Tail)
+			if (DataTail)
 			{
-				Tail->Next = nullptr;
+				DataTail->Next = nullptr;
 			}
 			
-			if (Head == Instance)
+			if (DataHead == Instance)
 			{
-				Head = nullptr;
+				DataHead = nullptr;
 			}
 
 			return Instance;
@@ -705,17 +705,17 @@ namespace NxEn
 
 		Node* RemoveNodeHead()
 		{
-			Node* Instance = Head;
-			Head = Head->Next;
+			Node* Instance = DataHead;
+			DataHead = DataHead->Next;
 
-			if (Head)
+			if (DataHead)
 			{
-				Head->Prev = nullptr;
+				DataHead->Prev = nullptr;
 			}
 
-			if (Tail == Instance)
+			if (DataTail == Instance)
 			{
-				Tail = nullptr;
+				DataTail = nullptr;
 			}
 
 			return Instance;
@@ -802,7 +802,7 @@ namespace NxEn
 
 		void FixLinks()
 		{
-			Node* Current = Head;
+			Node* Current = DataHead;
 			Current->Prev = nullptr;
 
 			while (Current != nullptr)
@@ -817,14 +817,14 @@ namespace NxEn
 				else
 				{
 					Prev->Next = nullptr;
-					Tail = Prev;
+					DataTail = Prev;
 				}
 			}
 		}
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Head;
-		Node* Tail;
+		Node* DataHead;
+		Node* DataTail;
 	};
 }

@@ -84,20 +84,20 @@ namespace NxEn
 		};
 
 		Graph(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Root(nullptr)
+			: Allocator(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Graph(const Graph<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Root(Other.Root)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
 		}
 
 		Graph(Graph<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Root(Other.Root)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
 		{
-			Other.Root = nullptr;
+			Other.Data = nullptr;
 		}
 
 		~Graph()
@@ -107,12 +107,12 @@ namespace NxEn
 
 		bool operator==(const Graph<T>& Other) const
 		{
-			return Count == Other.Count && Root == Other.Root;
+			return Count == Other.Count && Data == Other.Data;
 		}
 
 		bool operator!=(const Graph<T>& Other) const
 		{
-			return Count != Other.Count || Root != Other.Root;
+			return Count != Other.Count || Data != Other.Data;
 		}
 
 		void Assign(T* Position, const T& Value)
@@ -170,7 +170,7 @@ namespace NxEn
 
 		void AppendRange(const Graph<T>& Value)
 		{
-			Node* Current = Value.Root;
+			Node* Current = Value.Data;
 			while (Current)
 			{
 				Append(&Current->Data);
@@ -190,7 +190,7 @@ namespace NxEn
 
 		void Clear()
 		{
-			Node* Current = Root;
+			Node* Current = Data;
 			while (Current)
 			{
 				Node* Next = Current->Next;
@@ -198,7 +198,7 @@ namespace NxEn
 				Current = Next;
 			}
 
-			Root = nullptr;
+			Data = nullptr;
 		}
 
 		void Connect(T* From, T* To)
@@ -231,17 +231,17 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			return Root->Data;
+			return Data->Data;
 		}
 
 		T* TryGetRoot() const
 		{
-			if (!Root)
+			if (!Data)
 			{
 				return nullptr;
 			}
 
-			return &Root->Data;
+			return &Data->Data;
 		}
 
 		T& GetConnection(T* Instance, ConnectionType Type, uint64 Position = 0) const
@@ -301,7 +301,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Root->Data);
+			return Iterator(&Data->Data);
 		}
 
 		Iterator end() const { return End(); }
@@ -326,7 +326,7 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			Node* Current = Root;
+			Node* Current = Data;
 			while (Current)
 			{
 				if (Current->Data == Other)
@@ -364,13 +364,13 @@ namespace NxEn
 
 		void AppendNode(Node* Instance)
 		{
-			Instance->Next = Root;
-			Root = Instance;
+			Instance->Next = Data;
+			Data = Instance;
 		}
 
 		void RemoveNode(Node* Instance)
 		{
-			Node* Current = Root;
+			Node* Current = Data;
 			while (Current) 
 			{
 				if (Current->Next == Instance)
@@ -382,9 +382,9 @@ namespace NxEn
 				Current = Current->Next;
 			}
 
-			if (Instance && Instance == Root)
+			if (Instance && Instance == Data)
 			{
-				Root = Instance->Next;
+				Data = Instance->Next;
 			}
 		}
 
@@ -466,6 +466,6 @@ namespace NxEn
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Root;
+		Node* Data;
 	};
 }

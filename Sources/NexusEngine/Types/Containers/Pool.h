@@ -20,7 +20,7 @@ namespace NxEn
 
 	public:
 		Pool(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Head(nullptr), Own(false)
+			: Allocator(nullptr), Count(0), Data(nullptr), Own(false)
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
@@ -28,7 +28,7 @@ namespace NxEn
 		}
 
 		Pool(uint64 Size)
-			: Allocator(nullptr), Count(0), Head(nullptr), Own(true)
+			: Allocator(nullptr), Count(0), Data(nullptr), Own(true)
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
@@ -36,14 +36,14 @@ namespace NxEn
 		}
 
 		Pool(const Pool<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Own(Other.Own)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data), Own(Other.Own)
 		{
 		}
 
 		Pool(Pool<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Head(Other.Head), Own(Other.Own)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data), Own(Other.Own)
 		{
-			Other.Head = nullptr;
+			Other.Data = nullptr;
 
 			if (Other.Own)
 			{
@@ -59,12 +59,12 @@ namespace NxEn
 
 		bool operator==(const Pool<T>& Other) const
 		{
-			return Count == Other.Count && Head == Other.Head && Own == Other.Own;
+			return Count == Other.Count && Data == Other.Data && Own == Other.Own;
 		}
 
 		bool operator!=(const Pool<T>& Other) const
 		{
-			return Count != Other.Count || Head != Other.Head || Own != Other.Own;
+			return Count != Other.Count || Data != Other.Data || Own != Other.Own;
 		}
 
 		T& Acquire()
@@ -78,8 +78,8 @@ namespace NxEn
 			}
 			else
 			{
-				Node* Instance = Head;
-				Head = Head->Next;
+				Node* Instance = Data;
+				Data = Data->Next;
 				Value = &Instance->Data;
 
 				Count--;
@@ -92,19 +92,19 @@ namespace NxEn
 		{
 			Node* Instance = reinterpret_cast<Node*>(&Value);
 			
-			Instance->Next = Head;
-			Head = Instance;
+			Instance->Next = Data;
+			Data = Instance;
 
 			Count++;
 		}
 
 		void Clear()
 		{
-			while (Head)
+			while (Data)
 			{
-				Node* Next = Head->Next;
-				Free(Head);
-				Head = Next;
+				Node* Next = Data->Next;
+				Free(Data);
+				Data = Next;
 			}
 
 			Count = 0;
@@ -150,7 +150,7 @@ namespace NxEn
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Head;
+		Node* Data;
 		bool Own;
 	};
 }
