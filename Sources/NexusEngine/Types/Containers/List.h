@@ -144,7 +144,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Data[Index] = T(args...);
+			Memory::Construct<T>(&Data[Index], args...);
 			return Data[Index];
 		}
 
@@ -179,7 +179,7 @@ namespace NxEn
 		T& AppendConstruct(Args&&... args)
 		{
 			Resize(++Count);
-			Data[Count - 1] = T(args...);
+			Memory::Construct<T>(&Data[Count - 1], args...);
 			return Data[Count - 1];
 		}
 
@@ -222,7 +222,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Data[Index] = T(args...);
+			Memory::Construct<T>(&Data[Index], args...);
 			return Data[Index];
 		}
 

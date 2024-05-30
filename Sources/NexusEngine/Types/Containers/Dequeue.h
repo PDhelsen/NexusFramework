@@ -182,7 +182,7 @@ namespace NxEn
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
-			Data[BucketIndex][DataIndex] = T(args...);
+			Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -219,7 +219,7 @@ namespace NxEn
 		T& AppendBackConstruct(Args&&... args)
 		{
 			AppendBucket(true);
-			Data[Buckets - 1][IndexBack] = T(args...);
+			Memory::Construct<T>(&Data[Buckets - 1][IndexBack], args...);
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -254,7 +254,7 @@ namespace NxEn
 		T& AppendFrontConstruct(Args&&... args)
 		{
 			AppendBucket(false);
-			Data[0][IndexFront] = T(args...);
+			Memory::Construct<T>(&Data[0][IndexFront], args...);
 			return Data[0][IndexFront];
 		}
 

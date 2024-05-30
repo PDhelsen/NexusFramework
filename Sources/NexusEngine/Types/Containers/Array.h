@@ -152,7 +152,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Data[Index] = T(args...);
+			Memory::Construct<T>(&Data[Index], args...);
 			return Data[Index];
 		}
 
