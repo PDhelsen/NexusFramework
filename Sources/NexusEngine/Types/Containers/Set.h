@@ -147,12 +147,13 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Append(const T& Value)
+		const T& Append(const T& Value)
 		{
 			uint64 Index = GetIndex(Value);
-			if (GetNode(Index, Value) != nullptr)
+			Node* Instance = GetNode(Index, Value);
+			if (Instance != nullptr)
 			{
-				return;
+				return Instance->Value;
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -160,18 +161,20 @@ namespace NxEn
 				Resize(Buckets + Buckets / 2);
 			}
 			
-			Node* Instance = Allocate();
+			Instance = Allocate();
 			Instance->Value = Value;
 
 			AppendNode(Index, Instance);
+			return Instance->Value;
 		}
 
-		void Append(T&& Value)
+		const T& Append(T&& Value)
 		{
 			uint64 Index = GetIndex(Value);
-			if (GetNode(Index, Value) != nullptr)
+			Node* Instance = GetNode(Index, Value);
+			if (Instance != nullptr)
 			{
-				return;
+				return Instance->Value;
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -179,18 +182,21 @@ namespace NxEn
 				Resize(Buckets + Buckets / 2);
 			}
 
-			Node* Instance = Allocate();
+			Instance = Allocate();
 			Instance->Value = Move(Value);
 
 			AppendNode(Index, Instance);
+			return Instance->Value;
 		}
 
-		void AppendRange(const Set<T, H, LF>& Value)
+		const T& AppendRange(const Set<T, H, LF>& Value)
 		{
 			for (auto& It : Value)
 			{
 				Append(It);
 			}
+			
+			return GetNode(*(Value.Begin()))->Value;
 		}
 
 		void Remove(const T& Value)

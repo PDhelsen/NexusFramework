@@ -123,29 +123,32 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Assign(uint64 Index, const T& Value)
+		T& Assign(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Data[Index] = Value;
+			return Data[Index];
 		}
 
-		void Assign(uint64 Index, T&& Value)
+		T& Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Data[Index] = Move(Value);
+			return Data[Index];
 		}
 
 		template<typename... Args>
-		void AssignConstruct(uint64 Index, Args&&... args)
+		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Data[Index] = T(args...);
+			return Data[Index];
 		}
 
-		void AssignRange(uint64 Index, List<T>& Value)
+		T& AssignRange(uint64 Index, List<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Invalid Index");
@@ -154,28 +157,33 @@ namespace NxEn
 			{
 				Data[Index + Offset] = Value[Offset];
 			}
+		
+			return Data[Index];
 		}
 
-		void Append(const T& Value)
+		T& Append(const T& Value)
 		{
 			Resize(++Count);
 			Data[Count - 1] = Value;
+			return Data[Count - 1];
 		}
 
-		void Append(T&& Value)
+		T& Append(T&& Value)
 		{
 			Resize(++Count);
 			Data[Count - 1] = Move(Value);
+			return Data[Count - 1];
 		}
 
 		template<typename... Args>
-		void AppendConstruct(Args&&... args)
+		T& AppendConstruct(Args&&... args)
 		{
 			Resize(++Count);
 			Data[Count - 1] = T(args...);
+			return Data[Count - 1];
 		}
 
-		void AppendRange(const List<T>& Value)
+		T& AppendRange(const List<T>& Value)
 		{
 			uint64 Index = GetCount();
 			Resize(GetCount() + Value.GetCount());
@@ -183,37 +191,42 @@ namespace NxEn
 			{
 				Data[Index + Offset] = Value[Offset];
 			}
+	
+			return Data[Index];
 		}
 
-		void Insert(uint64 Index, const T& Value)
+		T& Insert(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
 			Data[Index] = Value;
+			return Data[Index];
 		}
 
-		void Insert(uint64 Index, T&& Value)
+		T& Insert(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
 			Data[Index] = Move(Value);
+			return Data[Index];
 		}
 
 		template<typename... Args>
-		void InsertConstruct(uint64 Index, Args&&... args)
+		T& InsertConstruct(uint64 Index, Args&&... args)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
 			Data[Index] = T(args...);
+			return Data[Index];
 		}
 
-		void InsertRange(uint64 Index, const List<T>& Value)
+		T& InsertRange(uint64 Index, const List<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
@@ -223,6 +236,8 @@ namespace NxEn
 			{
 				Data[Index + Offset] = Value[Offset];
 			}
+		
+			return Data[Index];
 		}
 
 		void Remove(uint64 Index)

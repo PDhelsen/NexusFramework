@@ -155,35 +155,38 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Assign(uint64 Index, const T& Value)
+		T& Assign(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = Value;
+			return Data[BucketIndex][DataIndex];
 		}
 
-		void Assign(uint64 Index, T&& Value)
+		T& Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = Move(Value);
+			return Data[BucketIndex][DataIndex];
 		}
 
 		template<typename... Args>
-		void AssignConstruct(uint64 Index, Args&&... args)
+		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Data[BucketIndex][DataIndex] = T(args...);
+			return Data[BucketIndex][DataIndex];
 		}
 
-		void AssignRange(uint64 Index, const Dequeue<T>& Values)
+		T& AssignRange(uint64 Index, const Dequeue<T>& Values)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Values.Count), "Overflow");
@@ -192,60 +195,77 @@ namespace NxEn
 			{
 				Assign(Index + Offset, Values[Offset]);
 			}
+		
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
-		void AppendBack(const T& Value)
+		T& AppendBack(const T& Value)
 		{
 			AppendBucket(true);
 			Data[Buckets - 1][IndexBack] = Value;
+			return Data[Buckets - 1][IndexBack];
 		}
 
-		void AppendBack(T&& Value)
+		T& AppendBack(T&& Value)
 		{
 			AppendBucket(true);
 			Data[Buckets - 1][IndexBack] = Move(Value);
+			return Data[Buckets - 1][IndexBack];
 		}
 
 		template<typename... Args>
-		void AppendBackConstruct(Args&&... args)
+		T& AppendBackConstruct(Args&&... args)
 		{
 			AppendBucket(true);
 			Data[Buckets - 1][IndexBack] = T(args...);
+			return Data[Buckets - 1][IndexBack];
 		}
 
-		void AppendBackRange(const Dequeue<T>& Value)
+		T& AppendBackRange(const Dequeue<T>& Value)
 		{
+			uint64 Index = Count - 1;
 			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
 			{
 				AppendBack(Value[Offset]);
 			}
+
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
 		}
 
-		void AppendFront(const T& Value)
+		T& AppendFront(const T& Value)
 		{
 			AppendBucket(false);
 			Data[0][IndexFront] = Value;
+			return Data[0][IndexFront];
 		}
 
-		void AppendFront(T&& Value)
+		T& AppendFront(T&& Value)
 		{
 			AppendBucket(false);
 			Data[0][IndexFront] = Move(Value);
+			return Data[0][IndexFront];
 		}
 
 		template<typename... Args>
-		void AppendFrontConstruct(Args&&... args)
+		T& AppendFrontConstruct(Args&&... args)
 		{
 			AppendBucket(false);
 			Data[0][IndexFront] = T(args...);
+			return Data[0][IndexFront];
 		}
 
-		void AppendFrontRange(const Dequeue<T>& Value)
+		T& AppendFrontRange(const Dequeue<T>& Value)
 		{
 			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
 			{
 				AppendFront(Value[Value.Count - 1 - Offset]);
 			}
+
+			return Data[0][IndexFront];
 		}
 
 		void RemoveBack()

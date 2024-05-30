@@ -141,9 +141,9 @@ namespace NxTs
 		ASSERT_EQ(Test[3].Integer, 3);
 		ASSERT_EQ(Test[6].Integer, 6);
 
-		Test.Assign(5, ContainerTest(7));
+		ContainerTest& Index5 = Test.Assign(5, ContainerTest(7));
 		Test.AssignConstruct(7, 8);
-		ASSERT_EQ(Test[5].Integer, 7);
+		ASSERT_EQ(Index5.Integer, 7);
 		ASSERT_EQ(Test[7].Integer, 8);
 
 		Test.AssignRange(0, CopyDeep);
@@ -222,7 +222,9 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
-		Test.Append(ContainerTest(5));
+		ContainerTest& Index0 = Test.Append(ContainerTest(5));
+		ASSERT_EQ(Index0.Integer, 5);
+		
 		Test.Append(ContainerTest(6));
 		Test.Append(ContainerTest(7));
 		Test.Append(ContainerTest(8));
@@ -382,7 +384,9 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
-		Test.AppendBack(ContainerTest(93));
+		ContainerTest& Index0 = Test.AppendBack(ContainerTest(93));
+		ASSERT_EQ(Index0.Integer, 93);
+
 		Test.AppendBack(ContainerTest(16));
 		Test.AppendBack(ContainerTest(73));
 		Test.AppendBack(21);
@@ -396,7 +400,6 @@ namespace NxTs
 		Test.AppendFront(34);
 		ASSERT_EQ(Test.GetBuckets(), 3);
 		ASSERT_EQ(Test.GetCount(), 12);
-		ASSERT_EQ(Test.IsEmpty(), false);
 
 		ASSERT_EQ(Test[3].Integer, 60);
 		ASSERT_EQ(Test[9].Integer, 21);
@@ -478,8 +481,8 @@ namespace NxTs
 		NxEn::LinkedList<ContainerTest> Test = NxEn::LinkedList<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 
-		Test.AppendBack(ContainerTest(5));
-		ASSERT_EQ(Test.Last().Integer, 5);
+		ContainerTest& Index0 = Test.AppendBack(ContainerTest(5));
+		ASSERT_EQ(Index0.Integer, 5);
 		Test.AppendBack(8);
 		ASSERT_EQ(Test.Last().Integer, 8);
 		Test.AppendFront(10);
@@ -570,8 +573,8 @@ namespace NxTs
 		NxEn::Stack<ContainerTest> Test = NxEn::Stack<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 
-		Test.Append(ContainerTest(5));
-		ASSERT_EQ(Test.Get().Integer, 5);
+		ContainerTest& Index0 = Test.Append(ContainerTest(5));
+		ASSERT_EQ(Index0.Integer, 5);
 		Test.Append(8);
 		ASSERT_EQ(Test.Get().Integer, 8);
 
@@ -627,7 +630,8 @@ namespace NxTs
 
 		Test.Append(ContainerTest(5));
 		ASSERT_EQ(Test.Get().Integer, 5);
-		Test.Append(8);
+		ContainerTest& Index1 = Test.Append(8);
+		ASSERT_EQ(Index1.Integer, 8);
 		ASSERT_EQ(Test.Get().Integer, 5);
 
 		ContainerTest& Test1 = Test.Get();
@@ -686,7 +690,9 @@ namespace NxTs
 		ContainerTest Test2 = ContainerTest(6);
 		ContainerTest Test3 = ContainerTest(7);
 
-		Test.Append(Test1);
+		const ContainerTest& Index0 = Test.Append(Test1);
+		ASSERT_EQ(Index0.Integer, 5);
+
 		Test.Append(Test1);
 		Test.Append(Test2);
 		Test.Append(Test2);
@@ -735,7 +741,9 @@ namespace NxTs
 		ContainerTest Test2 = ContainerTest(2);
 		ContainerTest Test3 = ContainerTest(3);
 
-		Test.Append(Test1, ContainerTest(10));
+		ContainerTest& Index0 = Test.Append(Test1, ContainerTest(10));
+		ASSERT_EQ(Index0.Integer, 10);
+
 		Test.Append(Test1, ContainerTest(20));
 		Test.Append(Test2, ContainerTest(11));
 		Test.Append(Test2, ContainerTest(21));
@@ -825,7 +833,9 @@ namespace NxTs
 		ASSERT_EQ(Test.IsEmpty(), false);
 		ASSERT_EQ(Test.GetRoot().Integer, 10);
 
-		Test.Append(&Test.GetRoot(), ContainerTest(1));
+		ContainerTest& Index0 = Test.Append(&Test.GetRoot(), ContainerTest(1));
+		ASSERT_EQ(Index0.Integer, 1);
+
 		Test.Append(&Test.GetRoot(), ContainerTest(2));
 		Test.Append(&Test.GetRoot(), ContainerTest(3));
 		ASSERT_EQ(Test.GetCount(), 4);
@@ -882,53 +892,55 @@ namespace NxTs
 		NxEn::Graph<ContainerTest> Test = NxEn::Graph<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 
-		Test.Append(ContainerTest(5));
-		ContainerTest* Test1 = Test.TryGetRoot();
-		ASSERT_EQ(Test.GetRoot().Integer, 5);
+		ContainerTest& Index0 = Test.Append(ContainerTest(5));
+		ASSERT_EQ(Index0.Integer, 5);
+
+		ContainerTest& Test1 = Test.Get();
+		ASSERT_EQ(Test.Get().Integer, 5);
 		Test.Append(8);
-		ContainerTest* Test2 = Test.TryGetRoot();
-		ASSERT_EQ(Test.GetRoot().Integer, 8);
+		ContainerTest& Test2 = Test.Get();
+		ASSERT_EQ(Test.Get().Integer, 8);
 		Test.Append(10);
-		ContainerTest* Test3 = Test.TryGetRoot();
-		ASSERT_EQ(Test.GetRoot().Integer, 10);
+		ContainerTest& Test3 = Test.Get();
+		ASSERT_EQ(Test.Get().Integer, 10);
 		Test.Append(ContainerTest(3));
-		ContainerTest* Test4 = Test.TryGetRoot();
-		ASSERT_EQ(Test.GetRoot().Integer, 3);
+		ContainerTest& Test4 = Test.Get();
+		ASSERT_EQ(Test.Get().Integer, 3);
 		ASSERT_EQ(Test.GetCount(), 4);
 
-		Test.Assign(&Test.GetRoot(), ContainerTest(6));
-		ASSERT_EQ(Test.GetRoot().Integer, 6);
+		Test.Assign(&Test.Get(), ContainerTest(6));
+		ASSERT_EQ(Test.Get().Integer, 6);
 
 		bool Contains = Test.Contains(ContainerTest(10));
 		ASSERT_EQ(Contains, true);
 		Test.Append(8);
-		ContainerTest* TestA = Test.TryGetRoot();
+		ContainerTest& TestA = Test.Get();
 		Test.Append(4);
-		ContainerTest* TestB = Test.TryGetRoot();
-		Test.Swap(TestA, TestB);
-		ASSERT_EQ(Test.GetRoot().Integer, 8);
+		ContainerTest& TestB = Test.Get();
+		Test.Swap(&TestA, &TestB);
+		ASSERT_EQ(Test.Get().Integer, 8);
 
-		Test.Connect(TestA, TestB);
-		Test.Connect(TestA, Test1);
-		Test.Connect(TestA, Test4);
-		ASSERT_EQ(Test.GetConnectionCount(TestA), 3);
+		Test.Connect(&TestA, &TestB);
+		Test.Connect(&TestA, &Test1);
+		Test.Connect(&TestA, &Test4);
+		ASSERT_EQ(Test.GetConnectionCount(&TestA), 3);
 
-		ContainerTest* TestConnection1 = Test.TryGetConnection(TestA, NxEn::Graph<ContainerTest>::ConnectionType::To);
-		ContainerTest* TestConnection2 = Test.TryGetConnection(TestA, NxEn::Graph<ContainerTest>::ConnectionType::To, 2);
-		ContainerTest* TestConnection3 = Test.TryGetConnection(Test1, NxEn::Graph<ContainerTest>::ConnectionType::From);
+		ContainerTest* TestConnection1 = Test.TryGetConnection(&TestA, NxEn::Graph<ContainerTest>::ConnectionType::To);
+		ContainerTest* TestConnection2 = Test.TryGetConnection(&TestA, NxEn::Graph<ContainerTest>::ConnectionType::To, 2);
+		ContainerTest* TestConnection3 = Test.TryGetConnection(&Test1, NxEn::Graph<ContainerTest>::ConnectionType::From);
 		ASSERT_EQ(TestConnection1->Integer, 8);
 		ASSERT_EQ(TestConnection2->Integer, 6);
 		ASSERT_EQ(TestConnection3->Integer, 4);
 
-		Test.Disconnect(TestA, Test1);
-		Test.Disconnect(TestA, TestB);
-		Test.Disconnect(TestA, Test4);
-		ASSERT_EQ(Test.GetConnectionCount(TestA), 0);
+		Test.Disconnect(&TestA, &Test1);
+		Test.Disconnect(&TestA, &TestB);
+		Test.Disconnect(&TestA, &Test4);
+		ASSERT_EQ(Test.GetConnectionCount(&TestA), 0);
 
-		Test.Remove(Test.TryGetRoot());
-		ASSERT_EQ(Test.GetRoot().Integer, 4);
-		Test.Remove(Test.TryGetRoot());
-		ASSERT_EQ(Test.GetRoot().Integer, 6);
+		Test.Remove(&Test.Get());
+		ASSERT_EQ(Test.Get().Integer, 4);
+		Test.Remove(&Test.Get());
+		ASSERT_EQ(Test.Get().Integer, 6);
 		ASSERT_EQ(Test.GetCount(), 4);
 
 		uint64 Index = 0;

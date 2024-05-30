@@ -131,29 +131,32 @@ namespace NxEn
 			}
 		}
 
-		void Assign(uint64 Index, const T& Value)
+		T& Assign(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Data[Index] = Value;
+			return Data[Index];
 		}
 
-		void Assign(uint64 Index, T&& Value)
+		T& Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Data[Index] = Move(Value);
+			return Data[Index];
 		}
 
 		template<typename... Args>
-		void AssignConstruct(uint64 Index, Args&&... args)
+		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Data[Index] = T(args...);
+			return Data[Index];
 		}
 
-		void AssignRange(uint64 Index, const Array<T>& Value)
+		T& AssignRange(uint64 Index, const Array<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount()  - 1), "Invalid Index");
@@ -162,6 +165,8 @@ namespace NxEn
 			{
 				Data[Index + Offset] = Value[Offset];
 			}
+
+			return Data[Index];
 		}
 
 		T& Get(uint64 Index) const

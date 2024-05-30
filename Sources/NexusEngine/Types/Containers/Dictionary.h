@@ -168,40 +168,47 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Assign(const K& Key, const T& Value)
+		T& Assign(const K& Key, const T& Value)
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			Instance->KeyValue.Value = Value;
+
+			return Instance->KeyValue.Value;
 		}
 
-		void Assign(const K& Key, T&& Value)
+		T& Assign(const K& Key, T&& Value)
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			Instance->KeyValue.Value = Move(Value);
+			
+			return Instance->KeyValue.Value;
 		}
 
 		template<typename... Args>
-		void AssignConstruct(const K& Key, Args&&... args)
+		T& AssignConstruct(const K& Key, Args&&... args)
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
 			Memory::Construct<T>(&Instance->KeyValue.Value, args...);
+		
+			return Instance->KeyValue.Value;
 		}
 
-		void Append(const K& Key, const T& Value)
+		T& Append(const K& Key, const T& Value)
 		{
 			uint64 Index = GetIndex(Key);
-			if (GetNode(Index, Key) != nullptr)
+			Node* Instance = GetNode(Index, Key);
+			if (Instance != nullptr)
 			{
-				return;
+				return Instance->KeyValue.Value;
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -209,19 +216,21 @@ namespace NxEn
 				Resize(Buckets + Buckets / 2);
 			}
 
-			Node* New = Allocate();
-			New->KeyValue.Key = Key;
-			New->KeyValue.Value = Value;
+			Instance = Allocate();
+			Instance->KeyValue.Key = Key;
+			Instance->KeyValue.Value = Value;
 
-			AppendNode(Index, New);
+			AppendNode(Index, Instance);
+			return Instance->KeyValue.Value;
 		}
 
-		void Append(const K& Key, T&& Value)
+		T& Append(const K& Key, T&& Value)
 		{
 			uint64 Index = GetIndex(Key);
-			if (GetNode(Index, Key) != nullptr)
+			Node* Instance = GetNode(Index, Key);
+			if (Instance != nullptr)
 			{
-				return;
+				return Instance->KeyValue.Value;
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -229,20 +238,22 @@ namespace NxEn
 				Resize(Buckets + Buckets / 2);
 			}
 
-			Node* New = Allocate();
-			New->KeyValue.Key = Move(Key);
-			New->KeyValue.Value = Move(Value);
+			Instance = Allocate();
+			Instance->KeyValue.Key = Move(Key);
+			Instance->KeyValue.Value = Move(Value);
 
-			AppendNode(Index, New);
+			AppendNode(Index, Instance);
+			return Instance->KeyValue.Value;
 		}
 
 		template<typename... Args>
-		void AppendConstruct(const K& Key, Args&&... args)
+		T& AppendConstruct(const K& Key, Args&&... args)
 		{
 			uint64 Index = GetIndex(Key);
-			if (GetNode(Index, Key) != nullptr)
+			Node* Instance = GetNode(Index, Key);
+			if (Instance != nullptr)
 			{
-				return;
+				return Instance->KeyValue.Value;
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -250,19 +261,22 @@ namespace NxEn
 				Resize(Buckets + Buckets / 2);
 			}
 
-			Node* New = Allocate();
-			New->KeyValue.Key = Key;
-			Memory::Construct<T>(&New->KeyValue.Value, args...);
+			Instance = Allocate();
+			Instance->KeyValue.Key = Key;
+			Memory::Construct<T>(&Instance->KeyValue.Value, args...);
 
-			AppendNode(Index, New);
+			AppendNode(Index, Instance);
+			return Instance->KeyValue.Value;
 		}
 
-		void AppendRange(const Dictionary<K, T, H, LF>& Other)
+		T& AppendRange(const Dictionary<K, T, H, LF>& Value)
 		{
-			for (auto& Kv : Other)
+			for (auto& Kv : Value)
 			{
 				Append(Kv.GetKey(), Kv.GetValue());
 			}
+
+			return GetNode(Value.Begin()->GetKey())->KeyValue.Value;
 		}
 
 		void Remove(const T& Key)

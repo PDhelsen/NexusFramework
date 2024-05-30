@@ -110,39 +110,46 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Append(const T& Value)
+		T& Append(const T& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Value;
 
 			AppendNode(Instance);
+			return Instance->Value;
 		}
 
-		void Append(T&& Value)
+		T& Append(T&& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Move(Value);
 
 			AppendNode(Instance);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void AppendConstruct(Args&&... args)
+		T& AppendConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNode(Instance);
+			return Instance->Value;
 		}
 
-		void AppendRange(const Stack<T>& Value)
+		T& AppendRange(const Stack<T>& Value)
 		{
+			Node* Return = Data;
+
 			Node* Current = Value.Data;
 			while (Current)
 			{
 				Append(Current->Value);
 				Current = Current->Next;
 			}
+
+			return Return->Next->Value;
 		}
 
 		void Remove()

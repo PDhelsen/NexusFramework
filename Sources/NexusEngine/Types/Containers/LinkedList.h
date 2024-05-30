@@ -125,95 +125,107 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Assign(T* Position, const T& Value)
+		T& Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
 			Instance->Value = Value;
+			return Instance->Value;
 		}
 
-		void Assign(T* Position, T&& Value)
+		T& Assign(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
 			Instance->Value = Move(Value);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void AssignConstruct(T* Position, Args&&... args)
+		T& AssignConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
 			Memory::Construct<T>(&Instance->Value, args...);
+			return Instance->Value;
 		}
 
-		void AppendBack(const T& Value)
+		T& AppendBack(const T& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Value;
 
 			AppendNodeTail(Instance);
+			return Instance->Value;
 		}
 
-		void AppendBack(T&& Value)
+		T& AppendBack(T&& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Move(Value);
 
 			AppendNodeTail(Instance);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void AppendBackConstruct(Args&&... args)
+		T& AppendBackConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNodeTail(Instance);
+			return Instance->Value;
 		}
 
-		void AppendBackRange(const LinkedList<T>& Other)
+		T& AppendBackRange(const LinkedList<T>& Other)
 		{
+			Node Return = DataTail;
+
 			Node* Instance = Other.DataHead;
 			while (Instance != nullptr)
 			{
 				AppendBack(Instance->Value);
 				Instance = Instance->Next;
 			}
+			return Return->Next->Value;
 		}
 
-		void AppendFront(const T& Value)
+		T& AppendFront(const T& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Value;
 
 			AppendNodeHead(Instance);
+			return Instance->Value;
 		}
 
-		void AppendFront(T&& Value)
+		T& AppendFront(T&& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Move(Value);
 
 			AppendNodeHead(Instance);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void AppendFrontConstruct(Args&&... args)
+		T& AppendFrontConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNodeHead(Instance);
+			return Instance->Value;
 		}
 
-		void AppendFrontRange(const LinkedList<T>& Other)
+		T& AppendFrontRange(const LinkedList<T>& Other)
 		{
 			Node* Instance = Other.DataHead;
 			while (Instance != nullptr)
@@ -221,9 +233,11 @@ namespace NxEn
 				AppendFront(Instance->Value);
 				Instance = Instance->Next;
 			}
+
+			return DataHead->Value;
 		}
 
-		void InsertBack(T* Position, const T& Value)
+		T& InsertBack(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -233,9 +247,10 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
+			return Instance->Value;
 		}
 
-		void InsertBack(T* Position, T&& Value)
+		T& InsertBack(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -245,10 +260,11 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void InsertBackConstruct(T* Position, Args&&... args)
+		T& InsertBackConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -258,12 +274,15 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
+			return Instance->Value;
 		}
 
-		void InsertBackRange(T* Position, const LinkedList<T>& Other)
+		T& InsertBackRange(T* Position, const LinkedList<T>& Other)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
+			Node* Return = DataTail;
 
 			Node* Instance = Other.DataHead;
 			Node* Anchor = GetNode(Position);
@@ -274,9 +293,11 @@ namespace NxEn
 				Instance = Instance->Next;
 				Anchor = Anchor->Next;
 			}
+
+			return Return->Next->Value;
 		}
 
-		void InsertFront(T* Position, const T& Value)
+		T& InsertFront(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -286,9 +307,10 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
+			return Instance->Value;
 		}
 
-		void InsertFront(T* Position, T&& Value)
+		T& InsertFront(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -298,10 +320,11 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void InsertFrontConstruct(T* Position, Args&&... args)
+		T& InsertFrontConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -311,9 +334,10 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
+			return Instance->Value;
 		}
 
-		void InsertFrontRange(T* Position, const LinkedList<T>& Other)
+		T& InsertFrontRange(T* Position, const LinkedList<T>& Other)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -327,6 +351,8 @@ namespace NxEn
 				Instance = Instance->Next;
 				Anchor = Anchor->Next;
 			}
+
+			return DataHead->Value;
 		}
 
 		void RemoveBack()

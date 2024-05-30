@@ -115,67 +115,77 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void Assign(T* Position, const T& Value)
+		T& Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
 			Instance->Value = Value;
+			return Instance->Value;
 		}
 
-		void Assign(T* Position, T&& Value)
+		T& Assign(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
 			Instance->Value = Move(Value);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void AssignConstruct(T* Position, Args&&... args)
+		T& AssignConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
 			Memory::Construct<T>(&Instance->Value, args...);
+			return Instance->Value;
 		}
 
-		void Append(const T& Value)
+		T& Append(const T& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Value;
 
 			AppendNode(Instance);
+			return Instance->Value;
 		}
 
-		void Append(T&& Value)
+		T& Append(T&& Value)
 		{
 			Node* Instance = Allocate();
 			Instance->Value = Move(Value);
 
 			AppendNode(Instance);
+			return Instance->Value;
 		}
 
 		template<typename... Args>
-		void AppendConstruct(Args&&... args)
+		T& AppendConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
 			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNode(Instance);
+			return Instance->Value;
 		}
 
-		void AppendRange(const Graph<T>& Value)
+		T& AppendRange(const Graph<T>& Value)
 		{
+			T* Return = nullptr;
+
 			Node* Current = Value.Data;
 			while (Current)
 			{
-				Append(&Current->Value);
+				Return = &Append(&Current->Value);
 				Current = Current->Next;
 			}
+
+			return *Return;
 		}
 
 		void Remove(T* Value)
@@ -227,21 +237,11 @@ namespace NxEn
 			RemoveConnection(Target, Start, ConnectionType::From);
 		}
 
-		T& GetRoot() const
+		T& Get() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			return Data->Value;
-		}
-
-		T* TryGetRoot() const
-		{
-			if (!Data)
-			{
-				return nullptr;
-			}
-
-			return &Data->Value;
 		}
 
 		T& GetConnection(T* Position, ConnectionType Type, uint64 Index = 0) const
