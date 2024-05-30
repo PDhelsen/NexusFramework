@@ -170,10 +170,9 @@ namespace NxTs
 		Index = Test.GetCount() - 1;
 		for (NxEn::Array<ContainerTest>::Iterator Iterator = Test.BeginReverse(); Iterator != Test.EndReverse(); --Iterator)
 		{
-			ContainerTest& Container = *Iterator;
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
+			Iterator->Integer = Index;
+			Iterator->Float = (float)Index;
+			Iterator->Boolean = Index % 2 == 1;
 			Index--;
 		}
 		ASSERT_EQ(Test[3].Integer, 3);
