@@ -30,7 +30,7 @@ namespace NxEn
 		
 		struct Node
 		{
-			T Data;
+			T Value;
 			uint64 Count;
 			Node* Next;
 			Connection* Connection;
@@ -48,7 +48,7 @@ namespace NxEn
 
 			Iterator& operator++()
 			{
-				Pointer = &(GetNode(Pointer)->Next->Data);
+				Pointer = &(GetNode(Pointer)->Next->Value);
 				return *this;
 			}
 
@@ -121,7 +121,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
-			Instance->Data = Value;
+			Instance->Value = Value;
 		}
 
 		void Assign(T* Position, T&& Value)
@@ -130,7 +130,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 		}
 
 		template<typename... Args>
@@ -140,13 +140,13 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 		}
 
 		void Append(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Value;
+			Instance->Value = Value;
 
 			AppendNode(Instance);
 		}
@@ -154,7 +154,7 @@ namespace NxEn
 		void Append(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 
 			AppendNode(Instance);
 		}
@@ -163,7 +163,7 @@ namespace NxEn
 		void AppendConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNode(Instance);
 		}
@@ -173,7 +173,7 @@ namespace NxEn
 			Node* Current = Value.Data;
 			while (Current)
 			{
-				Append(&Current->Data);
+				Append(&Current->Value);
 				Current = Current->Next;
 			}
 		}
@@ -231,7 +231,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			return Data->Data;
+			return Data->Value;
 		}
 
 		T* TryGetRoot() const
@@ -241,7 +241,7 @@ namespace NxEn
 				return nullptr;
 			}
 
-			return &Data->Data;
+			return &Data->Value;
 		}
 
 		T& GetConnection(T* Position, ConnectionType Type, uint64 Index = 0) const
@@ -268,7 +268,7 @@ namespace NxEn
 				Connect = Connect->Next;
 			}
 
-			return Connect->Target->Data;
+			return Connect->Target->Value;
 		}
 
 		T* TryGetConnection(T* Position, ConnectionType Type, uint64 Index = 0) const
@@ -286,7 +286,7 @@ namespace NxEn
 				{
 					if (Idx == Index)
 					{
-						return &Connect->Target->Data;
+						return &Connect->Target->Value;
 					}
 					
 					Idx++;
@@ -301,7 +301,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Data->Data);
+			return Iterator(&Data->Value);
 		}
 
 		Iterator end() const { return End(); }
@@ -316,9 +316,9 @@ namespace NxEn
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			T Temp = GetNode(A)->Data;
-			GetNode(A)->Data = Move(GetNode(B)->Data);
-			GetNode(B)->Data = Move(Temp);
+			T Temp = GetNode(A)->Value;
+			GetNode(A)->Value = Move(GetNode(B)->Value);
+			GetNode(B)->Value = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const
@@ -331,9 +331,9 @@ namespace NxEn
 			Node* Current = Data;
 			while (Current)
 			{
-				if (Current->Data == Other)
+				if (Current->Value == Other)
 				{
-					return &Current->Data;
+					return &Current->Value;
 				}
 
 				Current = Current->Next;
@@ -456,9 +456,9 @@ namespace NxEn
 			A->Count--;
 		}
 
-		static Node* GetNode(T* Data)
+		static Node* GetNode(T* Value)
 		{
-			return reinterpret_cast<Node*>(Data);
+			return reinterpret_cast<Node*>(Value);
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

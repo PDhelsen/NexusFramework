@@ -13,7 +13,7 @@ namespace NxEn
 	{
 		struct Node
 		{
-			T Data;
+			T Value;
 			Node* Next;
 			Node* Prev;
 		};
@@ -30,7 +30,7 @@ namespace NxEn
 
 			Iterator& operator++()
 			{
-				Pointer = &(GetNode(Pointer)->Next->Data);
+				Pointer = &(GetNode(Pointer)->Next->Value);
 				return *this;
 			}
 
@@ -43,7 +43,7 @@ namespace NxEn
 
 			Iterator& operator--()
 			{
-				Pointer = &(GetNode(Pointer)->Prev->Data);
+				Pointer = &(GetNode(Pointer)->Prev->Value);
 				return *this;
 			}
 
@@ -108,7 +108,7 @@ namespace NxEn
 			Node* Current = DataHead;
 			while (Current != nullptr)
 			{
-				Copy.AppendBack(Current->Data);
+				Copy.AppendBack(Current->Value);
 				Current = Current->Next;
 			}
 
@@ -131,7 +131,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			Instance->Data = Value;
+			Instance->Value = Value;
 		}
 
 		void Assign(T* Position, T&& Value)
@@ -140,7 +140,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 		}
 
 		template<typename... Args>
@@ -150,13 +150,13 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 		}
 
 		void AppendBack(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Value;
+			Instance->Value = Value;
 
 			AppendNodeTail(Instance);
 		}
@@ -164,7 +164,7 @@ namespace NxEn
 		void AppendBack(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 
 			AppendNodeTail(Instance);
 		}
@@ -173,7 +173,7 @@ namespace NxEn
 		void AppendBackConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNodeTail(Instance);
 		}
@@ -183,7 +183,7 @@ namespace NxEn
 			Node* Instance = Other.DataHead;
 			while (Instance != nullptr)
 			{
-				AppendBack(Instance->Data);
+				AppendBack(Instance->Value);
 				Instance = Instance->Next;
 			}
 		}
@@ -191,7 +191,7 @@ namespace NxEn
 		void AppendFront(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Value;
+			Instance->Value = Value;
 
 			AppendNodeHead(Instance);
 		}
@@ -199,7 +199,7 @@ namespace NxEn
 		void AppendFront(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 
 			AppendNodeHead(Instance);
 		}
@@ -208,7 +208,7 @@ namespace NxEn
 		void AppendFrontConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNodeHead(Instance);
 		}
@@ -218,7 +218,7 @@ namespace NxEn
 			Node* Instance = Other.DataHead;
 			while (Instance != nullptr)
 			{
-				AppendFront(Instance->Data);
+				AppendFront(Instance->Value);
 				Instance = Instance->Next;
 			}
 		}
@@ -229,7 +229,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Data = Value;
+			Instance->Value = Value;
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
@@ -241,7 +241,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
@@ -254,7 +254,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
@@ -270,7 +270,7 @@ namespace NxEn
 
 			while (Instance != nullptr)
 			{
-				InsertNodeBack(Anchor, Instance->Data);
+				InsertNodeBack(Anchor, Instance->Value);
 				Instance = Instance->Next;
 				Anchor = Anchor->Next;
 			}
@@ -282,7 +282,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Data = Value;
+			Instance->Value = Value;
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
@@ -294,7 +294,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
@@ -307,7 +307,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
@@ -323,7 +323,7 @@ namespace NxEn
 
 			while (Instance != nullptr)
 			{
-				InsertNodeFront(Anchor, Instance->Data);
+				InsertNodeFront(Anchor, Instance->Value);
 				Instance = Instance->Next;
 				Anchor = Anchor->Next;
 			}
@@ -427,7 +427,7 @@ namespace NxEn
 			Node* Instance = GetNode(Position);
 			NEXUS_ASSERT(Instance != DataTail, "Cannot get next on Tail");
 
-			return Instance->Next->Data;
+			return Instance->Next->Value;
 		}
 
 		T* TryGetNext(T* Position) const
@@ -441,7 +441,7 @@ namespace NxEn
 				return nullptr;
 			}
 
-			return &Instance->Next->Data;
+			return &Instance->Next->Value;
 		}
 
 		T& GetPrev(T* Position) const
@@ -452,7 +452,7 @@ namespace NxEn
 			Node* Instance = GetNode(Position);
 			NEXUS_ASSERT(Instance != DataHead, "Cannot get prev on Head");
 
-			return Instance->Prev->Data;
+			return Instance->Prev->Value;
 		}
 
 		T* TryGetPrev(T* Position) const
@@ -466,32 +466,32 @@ namespace NxEn
 				return nullptr;
 			}
 
-			return &Instance->Prev->Data;
+			return &Instance->Prev->Value;
 		}
 
 		T& First() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			return DataHead->Data;
+			return DataHead->Value;
 		}
 
 		T& Last() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			return DataTail->Data;
+			return DataTail->Value;
 		}
 
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&DataHead->Data);
+			return Iterator(&DataHead->Value);
 		}
 
 		Iterator BeginReverse() const
 		{
-			return Iterator(&DataTail->Data);
+			return Iterator(&DataTail->Value);
 		}
 
 		Iterator end() const { return End(); }
@@ -511,9 +511,9 @@ namespace NxEn
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			T Temp = GetNode(A)->Data;
-			GetNode(A)->Data = Move(GetNode(B)->Data);
-			GetNode(B)->Data = Move(Temp);
+			T Temp = GetNode(A)->Value;
+			GetNode(A)->Value = Move(GetNode(B)->Value);
+			GetNode(B)->Value = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const
@@ -526,9 +526,9 @@ namespace NxEn
 			Node* Current = DataHead;
 			while (Current != nullptr)
 			{
-				if (Current->Data == Other)
+				if (Current->Value == Other)
 				{
-					return &Current->Data;
+					return &Current->Value;
 				}
 
 				Current = Current->Next;
@@ -673,9 +673,9 @@ namespace NxEn
 			return Instance;
 		}
 
-		static Node* GetNode(T* Data)
+		static Node* GetNode(T* Value)
 		{
-			return reinterpret_cast<Node*>(Data);
+			return reinterpret_cast<Node*>(Value);
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
@@ -714,7 +714,7 @@ namespace NxEn
 				return A;
 			}
 
-			if (A->Data <= B->Data)
+			if (A->Value <= B->Value)
 			{
 				Result = A;
 				Result->Next = SortMerge(A->Next, B);

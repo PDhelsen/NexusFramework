@@ -13,7 +13,7 @@ namespace NxEn
 	{
 		struct Node
 		{
-			T Data;
+			T Value;
 			Node* Next;
 		};
 
@@ -29,7 +29,7 @@ namespace NxEn
 
 			Iterator& operator++()
 			{
-				Pointer = &(GetNode(Pointer)->Next->Data);
+				Pointer = &(GetNode(Pointer)->Next->Value);
 				return *this;
 			}
 
@@ -94,7 +94,7 @@ namespace NxEn
 			Node* Current = DataHead;
 			while (Current)
 			{
-				Copy.Append(Current->Data);
+				Copy.Append(Current->Value);
 				Current = Current->Next;
 			}
 
@@ -114,7 +114,7 @@ namespace NxEn
 		void Append(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Value;
+			Instance->Value = Value;
 
 			AppendNode(Instance);
 		}
@@ -122,7 +122,7 @@ namespace NxEn
 		void Append(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Data = Move(Value);
+			Instance->Value = Move(Value);
 
 			AppendNode(Instance);
 		}
@@ -131,7 +131,7 @@ namespace NxEn
 		void AppendConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Data, args...);
+			Memory::Construct<T>(&Instance->Value, args...);
 
 			AppendNode(Instance);
 		}
@@ -141,7 +141,7 @@ namespace NxEn
 			Node* Current = Value.DataHead;
 			while (Current)
 			{
-				Append(Current->Data);
+				Append(Current->Value);
 				Current = Current->Next;
 			}
 		}
@@ -166,13 +166,13 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Queue is empty");
 			
-			return DataHead->Data;
+			return DataHead->Value;
 		}
 
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&DataHead->Data);
+			return Iterator(&DataHead->Value);
 		}
 
 		Iterator end() const { return End(); }
@@ -187,9 +187,9 @@ namespace NxEn
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			T Temp = GetNode(A)->Data;
-			GetNode(A)->Data = Move(GetNode(B)->Data);
-			GetNode(B)->Data = Move(Temp);
+			T Temp = GetNode(A)->Value;
+			GetNode(A)->Value = Move(GetNode(B)->Value);
+			GetNode(B)->Value = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const
@@ -202,9 +202,9 @@ namespace NxEn
 			Node* Current = DataHead;
 			while (Current != nullptr)
 			{
-				if (Current->Data == Other)
+				if (Current->Value == Other)
 				{
-					return &Current->Data;
+					return &Current->Value;
 				}
 
 				Current = Current->Next;
@@ -278,9 +278,9 @@ namespace NxEn
 			return Instance;
 		}
 
-		static Node* GetNode(T* Data)
+		static Node* GetNode(T* Value)
 		{
-			return reinterpret_cast<Node*>(Data);
+			return reinterpret_cast<Node*>(Value);
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
