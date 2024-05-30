@@ -518,18 +518,23 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
+			return Find(Other) != nullptr;
+		}
+
+		T* Find(const T& Other) const
+		{
 			Node* Current = DataHead;
 			while (Current != nullptr)
 			{
 				if (Current->Data == Other)
 				{
-					return true;
+					return &Current->Data;
 				}
 
 				Current = Current->Next;
 			}
 
-			return false;
+			return nullptr;
 		}
 
 		void Sort()
@@ -540,19 +545,24 @@ namespace NxEn
 
 		void Reverse()
 		{
-			uint64 Half = Count / 2;
-			Node* H = DataHead;
-			Node* T = DataTail;
-			for (uint64 It = 0; It < Half; It++)
-			{
-				Node* Next = H->Next;
-				Node* Prev = T->Prev;
-				
-				Swap(&H->Data, &T->Data);
+			DataTail = DataHead;
 
-				H = Next;
-				T = Prev;
+			Node* Current = DataHead;
+			Node* Next = Current->Next;
+			Current->Next = nullptr;
+			Current->Prev = Next;
+
+			while (Next)
+			{
+				Node* SecondNext = Next->Next;
+				Next->Next = Current;
+				Next->Prev = SecondNext;
+
+				Current = Next;
+				Next = SecondNext;
 			}
+
+			DataHead = Current;
 		}
 
 		uint64 GetCount() const { return Count; }

@@ -194,18 +194,23 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
+			return Find(Other) != nullptr;
+		}
+
+		T* Find(const T& Other) const
+		{
 			Node* Current = DataHead;
-			while (Current)
+			while (Current != nullptr)
 			{
 				if (Current->Data == Other)
 				{
-					return true;
+					return &Current->Data;
 				}
 
 				Current = Current->Next;
 			}
 
-			return false;
+			return nullptr;
 		}
 
 		void Reverse()

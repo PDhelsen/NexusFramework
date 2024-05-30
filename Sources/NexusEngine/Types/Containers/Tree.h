@@ -438,15 +438,20 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
+			return Find(Other) != nullptr;
+		}
+
+		T* Find(const T& Other) const
+		{
 			for (Iterator It = Begin(); It != End(); It++)
 			{
 				if (*It == Other)
 				{
-					return true;
+					return &(*It);
 				}
 			}
 
-			return false;
+			return nullptr;
 		}
 
 		uint64 GetCount() const { return Count; }

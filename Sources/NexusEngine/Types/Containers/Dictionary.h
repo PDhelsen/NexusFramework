@@ -367,15 +367,26 @@ namespace NxEn
 
 		bool ContainsKey(const K& Key) const
 		{
-			return GetNode(Key) != nullptr;
+			return FindKey(Key) != nullptr;
 		}
 
 		bool ContainsValue(const T& Other) const
 		{
-			return Find(Other) != nullptr;
+			return FindValue(Other) != nullptr;
 		}
 
-		const K* Find(const T& Other) const
+		const K* FindKey(const K& Key) const
+		{
+			Node* Instance = GetNode(Key);
+			if (!Instance)
+			{
+				return nullptr;
+			}
+
+			return &Instance->KeyValue.Key;
+		}
+
+		const K* FindValue(const T& Other) const
 		{
 			for (uint64 Index = 0; Index < Buckets; Index++)
 			{

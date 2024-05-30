@@ -781,10 +781,12 @@ namespace NxTs
 
 		bool ContainsKey = Test.ContainsKey(Test1);
 		bool ContainsValue = Test.ContainsValue(ContainerTest(40));
-		const ContainerTest* FoundKey = Test.Find(ContainerTest(40));
+		const ContainerTest* FoundKey = Test.FindKey(ContainerTest(3));
+		const ContainerTest* FoundValue = Test.FindValue(ContainerTest(40));
 		ASSERT_EQ(ContainsKey, true);
 		ASSERT_EQ(ContainsValue, true);
 		ASSERT_EQ(FoundKey->Integer, 3);
+		ASSERT_EQ(FoundValue->Integer, 3);
 
 		Test.Append(ContainerTest(4), ContainerTest(40));
 		Test.Append(ContainerTest(5), ContainerTest(50));

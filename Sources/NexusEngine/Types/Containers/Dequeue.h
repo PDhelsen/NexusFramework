@@ -351,6 +351,15 @@ namespace NxEn
 			return Count;
 		}
 
+		void Reverse()
+		{
+			uint64 Half = Count / 2;
+			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
+			{
+				Swap(Front, Back);
+			}
+		}
+
 		uint64 GetCount() const { return Count; }
 		uint64 GetBuckets() const { return Buckets; }
 		bool IsEmpty() const { return Count == 0; }

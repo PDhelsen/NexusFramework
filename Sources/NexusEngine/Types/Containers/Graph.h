@@ -323,18 +323,23 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
+			return Find(Other) != nullptr;
+		}
+
+		T* Find(const T& Other) const
+		{
 			Node* Current = Data;
 			while (Current)
 			{
 				if (Current->Data == Other)
 				{
-					return true;
+					return &Current->Data;
 				}
 
 				Current = Current->Next;
 			}
 
-			return false;
+			return nullptr;
 		}
 
 		uint64 GetConnectionCount(T* Instance) const { return GetNode(Instance)->Count; }

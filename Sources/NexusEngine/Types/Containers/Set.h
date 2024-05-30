@@ -261,7 +261,18 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return GetNode(Other) != nullptr;
+			return Find(Other) != nullptr;
+		}
+
+		T* Find(const T& Other) const
+		{
+			Node* Instance = GetNode(Other);
+			if (!Instance)
+			{
+				return nullptr;
+			}
+
+			return &Instance->Value;
 		}
 
 		float GetLoadFactor() const { return (float)(Count + 1) / (float)(Buckets); }
