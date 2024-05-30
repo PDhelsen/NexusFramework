@@ -190,7 +190,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(++Count);
-			Memory::MemCopy(&Data[Index], &Data[Index + 1], sizeof(T) * (Count - Index - 1));
+			Shift(Index, 1, true);
 			Data[Index] = Value;
 		}
 
@@ -199,7 +199,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(++Count);
-			Memory::MemCopy(&Data[Index], &Data[Index + 1], sizeof(T) * (Count - Index - 1));
+			Shift(Index, 1, true);
 			Data[Index] = Move(Value);
 		}
 
@@ -209,7 +209,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(++Count);
-			Memory::MemCopy(&Data[Index], &Data[Index + 1], sizeof(T) * (Count - Index - 1));
+			Shift(Index, 1, true);
 			Data[Index] = T(args...);
 		}
 
@@ -218,7 +218,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Resize(GetCount() + Value.GetCount());
-			Memory::MemCopy(&Data[Index], &Data[Index + Value.GetCount()], sizeof(T) * (Count - Index - Value.GetCount()));
+			Shift(Index, Value.GetCount(), true);
 			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
 			{
 				Data[Index + Offset] = Value[Offset];
@@ -229,7 +229,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Memory::MemCopy(&Data[Index + 1], &Data[Index], sizeof(T) * (Count - Index - 1));
+			Shift(Index, 1, false);
 			Resize(--Count);
 		}
 
@@ -238,7 +238,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), "Invalid Index");
 
-			Memory::MemCopy(&Data[Index + Size], &Data[Index], sizeof(T) * (Count - Index - Size));
+			Shift(Index, Size, false);
 			Resize(Count - Size);
 		}
 
@@ -397,6 +397,13 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Allocator);
+		}
+
+		void Shift(uint64 Index, uint64 Size, bool Forward)
+		{
+			T* Start = Forward ? &Data[Index] : &Data[Index + Size];
+			T* End = Forward ? &Data[Index + Size] : &Data[Index];
+			Memory::MemCopy(Start, End, sizeof(T) * (Count - Index - Size));
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
