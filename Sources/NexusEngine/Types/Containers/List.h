@@ -339,10 +339,10 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
-
-			T Temp = Data[IndexB];
-			Data[IndexB] = Move(Data[IndexA]);
-			Data[IndexA] = Move(Temp);
+			
+			T Temp = Get(IndexA);
+			Get(IndexA) = Move(Get(IndexB));
+			Get(IndexB) = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const

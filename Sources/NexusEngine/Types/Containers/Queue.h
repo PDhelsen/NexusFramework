@@ -181,6 +181,17 @@ namespace NxEn
 			return Iterator(nullptr);
 		}
 
+		void Swap(T* A, T* B)
+		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(A != nullptr, "A is null");
+			NEXUS_ASSERT(B != nullptr, "B is null");
+
+			T Temp = GetNode(A)->Data;
+			GetNode(A)->Data = Move(GetNode(B)->Data);
+			GetNode(B)->Data = Move(Temp);
+		}
+
 		bool Contains(const T& Other) const
 		{
 			Node* Current = DataHead;

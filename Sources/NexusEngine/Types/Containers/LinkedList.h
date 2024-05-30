@@ -511,71 +511,9 @@ namespace NxEn
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			Node* NodeA = GetNode(A);
-			Node* NodeB = GetNode(B);
-
-			Node* NextA = NodeA->Next;
-			Node* PrevA = NodeA->Prev;
-			Node* NextB = NodeB->Next;
-			Node* PrevB = NodeB->Prev;
-
-			if (NextA == NodeB || PrevA == NodeB || NextB == NodeA || PrevB == NodeA)
-			{
-				NodeA->Next = NextB;
-				NodeB->Prev = PrevA;
-				NodeB->Next = NodeA;
-				NodeA->Prev = NodeB;
-
-				if (PrevA)
-				{
-					PrevA->Next = NodeB;
-				}
-				if (NextB)
-				{
-					NextB->Prev = NodeA;
-				}
-			}
-			else
-			{
-				NodeA->Next = NextB;
-				NodeA->Prev = PrevB;
-				NodeB->Next = NextA;
-				NodeB->Prev = PrevA;
-
-				if (NextA)
-				{
-					NextA->Prev = NodeB;
-				}
-				if (PrevA)
-				{
-					PrevA->Next = NodeB;
-				}
-				if (NextB)
-				{
-					NextB->Prev = NodeA;
-				}
-				if (PrevB)
-				{
-					PrevB->Next = NodeA;
-				}
-			}
-
-			if (NodeA == DataHead)
-			{
-				DataHead = NodeB;
-			}
-			else if (NodeB == DataHead)
-			{
-				DataHead = NodeA;
-			}
-			if (NodeA == DataTail)
-			{
-				DataTail = NodeB;
-			}
-			else if (NodeB == DataTail)
-			{
-				DataTail = NodeA;
-			}
+			T Temp = GetNode(A)->Data;
+			GetNode(A)->Data = Move(GetNode(B)->Data);
+			GetNode(B)->Data = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const

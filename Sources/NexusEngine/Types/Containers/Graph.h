@@ -312,16 +312,13 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 			NEXUS_ASSERT(A != nullptr, "A is null");
-			NEXUS_ASSERT(B != nullptr, "B is null"); 
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
-			
-			Node* NodeA = GetNode(A);
-			Node* NodeB = GetNode(B);
+			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			T Temp = NodeA->Data;
-			NodeA->Data = Move(NodeB->Data);
-			NodeB->Data = Move(Temp);
+			T Temp = GetNode(A)->Data;
+			GetNode(A)->Data = Move(GetNode(B)->Data);
+			GetNode(B)->Data = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const

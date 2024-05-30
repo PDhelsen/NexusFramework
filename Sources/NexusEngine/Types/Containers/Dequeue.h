@@ -321,6 +321,16 @@ namespace NxEn
 			return Index >= 0 && Index < Count;
 		}
 
+		void Swap(uint64 IndexA, uint64 IndexB)
+		{
+			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
+			
+			T Temp = Get(IndexA);
+			Get(IndexA) = Move(Get(IndexB));
+			Get(IndexB) = Move(Temp);
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) < Count;
