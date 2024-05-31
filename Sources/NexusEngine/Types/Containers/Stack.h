@@ -156,7 +156,8 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
 			
-			Node* Instance = RemoveNode();
+			Node* Instance = Data;
+			RemoveNode();
 			Free(Instance);
 		}
 
@@ -262,14 +263,12 @@ namespace NxEn
 			Data = Instance;
 		}
 
-		Node* RemoveNode()
+		void RemoveNode()
 		{
-			Node* Instance = Data;
 			if (Data)
 			{
 				Data = Data->Next;
 			}
-			return Instance;
 		}
 
 		static Node* GetNode(T* Value)

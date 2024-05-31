@@ -332,8 +332,9 @@ namespace NxEn
 			Node* Child = Instance->Child;
 			while (Child)
 			{
+				Node* Sibling = Child->Sibling;
 				RemoveNode(Child);
-				Child = Child->Sibling;
+				Child = Sibling;
 			}
 		}
 
@@ -426,6 +427,42 @@ namespace NxEn
 				return nullptr;
 			}
 			return &Instance->Child->Value;
+		}
+
+		bool IsParent(T* Position, T* Parent) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			
+			return GetNode(Position)->Parent == GetNode(Parent);
+		}
+
+		bool IsSibling(T* Position, T* Sibling) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), "Tree is empty"); 
+			
+			return GetNode(Position)->Parent == GetNode(Sibling)->Parent;
+		}
+
+		bool IsChild(T* Position, T* Child) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(Child != nullptr, "Child is null");
+			NEXUS_ASSERT(!IsEmpty(), "Tree is empty"); 
+			
+			return GetNode(Position) == GetNode(Child)->Parent;
+		}
+
+		bool IsConnected(T* A, T* B) const
+		{
+			NEXUS_ASSERT(A != nullptr, "A is null");
+			NEXUS_ASSERT(B != nullptr, "B is null");
+			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+
+			return IsParent(A, B) || IsSibling(A, B) || IsChild(A, B);
 		}
 
 		Iterator begin() const { return Begin(); }

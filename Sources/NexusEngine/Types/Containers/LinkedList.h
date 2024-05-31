@@ -359,7 +359,8 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 			
-			Node* Instance = RemoveNodeTail();
+			Node* Instance = DataTail;
+			RemoveNode(Instance);
 			Free(Instance);
 		}
 
@@ -368,19 +369,19 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			Node* Instance = GetNode(Position);
+			Node* Instance = GetNode(Position)->Prev;
 			while (DataTail != Instance)
 			{
 				RemoveBack();
 			}
-			RemoveBack();
 		}
 
 		void RemoveFront()
 		{
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 			
-			Node* Instance = RemoveNodeHead();
+			Node* Instance = DataHead;
+			RemoveNode(Instance);
 			Free(Instance);
 		}
 
@@ -389,12 +390,21 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			Node* Instance = GetNode(Position);
+			Node* Instance = GetNode(Position)->Next;
 			while (DataHead != Instance)
 			{
 				RemoveFront();
 			}
-			RemoveFront();
+		}
+
+		void Remove(T* Position)
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
+			Node* Instance = GetNode(Position);
+			RemoveNode(Instance);
+			Free(Instance);
 		}
 
 		void Remove(T* From, T* To)
@@ -404,36 +414,14 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Start = GetNode(From);
-			Node* End = GetNode(To);
+			Node* End = GetNode(To)->Next;
 		
-			Node* Prev = Start->Prev;
-			Node* Next = End->Next;
-
 			while (Start != End)
 			{
 				Node* Instance = Start;
 				Start = Start->Next;
+				RemoveNode(Instance);
 				Free(Instance);
-			}
-
-			Free(End);
-
-			if (Prev)
-			{
-				Prev->Next = Next;
-			}
-			else
-			{
-				DataHead = Next;
-			}
-
-			if (Next)
-			{
-				Next->Prev = Prev;
-			}
-			else
-			{
-				DataTail = Prev;
 			}
 		}
 
@@ -507,6 +495,31 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			return DataTail->Value;
+		}
+
+		bool IsNext(T* Position, T* Next) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			
+			return GetNode(Position)->Next == GetNode(Next);
+		}
+
+		bool IsPrevious(T* Position, T* Prev) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			
+			return GetNode(Position)->Prev == GetNode(Prev);
+		}
+
+		bool IsConnected(T* A, T* B) const
+		{
+			NEXUS_ASSERT(A != nullptr, "A is null");
+			NEXUS_ASSERT(B != nullptr, "B is null");
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			
+			return IsNext(A, B) || IsPrev(A, B);
 		}
 
 		Iterator begin() const { return Begin(); }
@@ -663,40 +676,44 @@ namespace NxEn
 			Anchor->Prev = Instance;
 		}
 
-		Node* RemoveNodeTail()
+		void RemoveNode(Node* Instance)
 		{
-			Node* Instance = DataTail;
-			DataTail = DataTail->Prev;
-
-			if (DataTail)
+			if (Instance == DataHead)
 			{
-				DataTail->Next = nullptr;
+				DataHead = DataHead->Next;
+
+				if (DataHead)
+				{
+					DataHead->Prev = nullptr;
+				}
+
+				if (DataTail == Instance)
+				{
+					DataTail = nullptr;
+				}
 			}
-			
-			if (DataHead == Instance)
+			else if (Instance == DataTail)
 			{
-				DataHead = nullptr;
+				DataTail = DataTail->Prev;
+
+				if (DataTail)
+				{
+					DataTail->Next = nullptr;
+				}
+
+				if (DataHead == Instance)
+				{
+					DataHead = nullptr;
+				}
 			}
-
-			return Instance;
-		}
-
-		Node* RemoveNodeHead()
-		{
-			Node* Instance = DataHead;
-			DataHead = DataHead->Next;
-
-			if (DataHead)
+			else
 			{
-				DataHead->Prev = nullptr;
-			}
+				Node* Next = Instance->Next;
+				Node* Prev = Instance->Prev;
 
-			if (DataTail == Instance)
-			{
-				DataTail = nullptr;
+				Next->Prev = Prev;
+				Prev->Next = Next;
 			}
-
-			return Instance;
 		}
 
 		static Node* GetNode(T* Value)

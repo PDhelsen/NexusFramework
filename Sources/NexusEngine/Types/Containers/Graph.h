@@ -298,6 +298,37 @@ namespace NxEn
 			return nullptr;
 		}
 
+		bool IsConnected(T* Position, T* To, ConnectionType Type) const
+		{
+			uint64 Index = 0;
+			return IsConnected(Position, To, Type, Index);
+		}
+		
+		bool IsConnected(T* Position, T* To, ConnectionType Type, uint64& Index) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(To != nullptr, "To is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			
+			Index = 0;
+			Node* Instance = GetNode(Position);
+			Node* Target = GetNode(To);
+
+			Connection* Connect = Instance->Connection;
+			while (Connect)
+			{
+				if (Connect->Target == Target && Connect->Type == Type)
+				{
+					return true;
+				}
+
+				Connect = Connect->Next;
+				Index++;
+			}
+
+			return false;
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{

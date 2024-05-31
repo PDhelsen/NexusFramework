@@ -565,6 +565,9 @@ namespace NxTs
 
 		Test.Remove(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
 		ASSERT_EQ(Test.GetCount(), 2);
+
+		bool Connected = Test.IsNext(&Test.First(), &Test.Last());
+		ASSERT_EQ(Connected, true);
 	}
 
 	TEST(Type_Containers, Stack)
@@ -848,6 +851,11 @@ namespace NxTs
 		ContainerTest& Test0Ref = Test.GetParent(&Test2Ref);
 		ASSERT_EQ(Test0Ref.Integer, 10);
 
+		bool IsChild = Test.IsParent(&Test1Ref, &Test0Ref);
+		bool IsSibling = Test.IsSibling(&Test1Ref, &Test2Ref);
+		ASSERT_EQ(IsChild, true);
+		ASSERT_EQ(IsSibling, true);
+
 		Test.Append(&Test1Ref, ContainerTest(4));
 		Test.Append(&Test2Ref, ContainerTest(5));
 		ASSERT_EQ(Test.GetCount(), 6);
@@ -930,6 +938,9 @@ namespace NxTs
 		ASSERT_EQ(TestConnection1->Integer, 8);
 		ASSERT_EQ(TestConnection2->Integer, 6);
 		ASSERT_EQ(TestConnection3->Integer, 4);
+
+		bool IsConnected = Test.IsConnected(&TestA, &TestB, NxEn::Graph<ContainerTest>::ConnectionType::To);
+		ASSERT_EQ(IsConnected, true);
 
 		Test.Disconnect(&TestA, &Test1);
 		Test.Disconnect(&TestA, &TestB);

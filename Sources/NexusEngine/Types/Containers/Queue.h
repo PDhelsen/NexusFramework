@@ -157,7 +157,8 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Queue is empty");
 			
-			Node* Instance = RemoveNode();
+			Node* Instance = DataHead;
+			RemoveNode();
 			Free(Instance);
 		}
 
@@ -271,9 +272,8 @@ namespace NxEn
 			DataTail = Instance;
 		}
 
-		Node* RemoveNode()
+		void RemoveNode()
 		{
-			Node* Instance = DataHead;
 			if (DataHead)
 			{
 				DataHead = DataHead->Next;
@@ -282,7 +282,6 @@ namespace NxEn
 			{
 				DataTail = nullptr;
 			}
-			return Instance;
 		}
 
 		static Node* GetNode(T* Value)
