@@ -38,7 +38,7 @@
         <Size>Count</Size>
         <HeadPointer>DataHead</HeadPointer>
         <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
+        <ValueNode>Value</ValueNode>
       </LinkedListItems>
     </Expand>
   </Type>
@@ -50,7 +50,7 @@
         <Size>Count</Size>
         <HeadPointer>Data</HeadPointer>
         <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
+        <ValueNode>Value</ValueNode>
       </LinkedListItems>
     </Expand>
   </Type>
@@ -62,7 +62,7 @@
         <Size>Count</Size>
         <HeadPointer>DataHead</HeadPointer>
         <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
+        <ValueNode>Value</ValueNode>
       </LinkedListItems>
     </Expand>
   </Type>
@@ -78,7 +78,7 @@
         <Loop>
           <If Condition="Pointer == nullptr">
             <Exec>Index++</Exec>
-            <Break Condition="Index == Capacity" />
+            <Break Condition="Index == Buckets" />
             <Exec>Pointer = Data[Index]</Exec>
           </If>
           <Else>
@@ -101,7 +101,7 @@
         <Loop>
           <If Condition="Pointer == nullptr">
             <Exec>Index++</Exec>
-            <Break Condition="Index == Capacity" />
+            <Break Condition="Index == Buckets" />
             <Exec>Pointer = Data[Index]</Exec>
           </If>
           <Else>
@@ -113,6 +113,19 @@
     </Expand>
   </Type>
 
+  <Type Name="NxEn::Tree&lt;*&gt;">
+    <DisplayString>{{ Count={Count} }}</DisplayString>
+    <Expand>
+      <TreeItems>
+        <Size>Count</Size>
+        <HeadPointer>Data</HeadPointer>
+        <LeftPointer>Sibling</LeftPointer>
+        <RightPointer>Child</RightPointer>
+        <ValueNode>Value</ValueNode>
+      </TreeItems>
+    </Expand>
+  </Type>
+
   <Type Name="NxEn::Graph&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
@@ -120,7 +133,7 @@
         <Size>Count</Size>
         <HeadPointer>Data</HeadPointer>
         <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
+        <ValueNode>Value</ValueNode>
       </LinkedListItems>
     </Expand>
   </Type>
@@ -132,7 +145,7 @@
         <Size>Count</Size>
         <HeadPointer>Data</HeadPointer>
         <NextPointer>Next</NextPointer>
-        <ValueNode>Data</ValueNode>
+        <ValueNode>Value</ValueNode>
       </LinkedListItems>
     </Expand>
   </Type>

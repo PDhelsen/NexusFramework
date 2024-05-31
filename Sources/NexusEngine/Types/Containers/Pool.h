@@ -14,7 +14,7 @@ namespace NxEn
 	{
 		struct Node
 		{
-			T Data;
+			T Value;
 			Node* Next;
 		};
 
@@ -74,13 +74,13 @@ namespace NxEn
 			if (IsEmpty())
 			{
 				Node* Instance = Allocate();
-				Value = &Instance->Data;
+				Value = &Instance->Value;
 			}
 			else
 			{
 				Node* Instance = Data;
 				Data = Data->Next;
-				Value = &Instance->Data;
+				Value = &Instance->Value;
 
 				Count--;
 			}
@@ -125,7 +125,7 @@ namespace NxEn
 		{
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
 			Instance->Next = nullptr;
-			Memory::Construct<T>(&Instance->Data);
+			Memory::Construct<T>(&Instance->Value);
 			return Instance;
 		}
 
@@ -140,7 +140,7 @@ namespace NxEn
 
 		void Free(Node* Instance)
 		{
-			Memory::Destruct<T>(&Instance->Data);
+			Memory::Destruct<T>(&Instance->Value);
 			Memory::Free(Instance, Allocator);
 		}
 
