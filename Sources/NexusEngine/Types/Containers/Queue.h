@@ -241,8 +241,8 @@ namespace NxEn
 			DataHead = Current;
 		}
 
-		uint64 GetCount() const { return Count; }
 		bool IsEmpty() const { return Count == 0; }
+		uint64 GetCount() const { return Count; }
 
 	private:
 		Node* Allocate()

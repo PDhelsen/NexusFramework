@@ -392,9 +392,9 @@ namespace NxEn
 			}
 		}
 
+		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		uint64 GetCapacity() const { return Capacity; }
-		bool IsEmpty() const { return Count == 0; }
 
 	private:
 		void Allocate(uint64 Size)

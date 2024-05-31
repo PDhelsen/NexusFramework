@@ -110,8 +110,8 @@ namespace NxEn
 			Count = 0;
 		}
 
-		uint64 GetCount() const { return Count; }
 		bool IsEmpty() const { return Count == 0; }
+		uint64 GetCount() const { return Count; }
 		bool OwnAllocator() const { return Own; }
 
 	private:

@@ -380,9 +380,9 @@ namespace NxEn
 			}
 		}
 
+		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		uint64 GetBuckets() const { return Buckets; }
-		bool IsEmpty() const { return Count == 0; }
 
 	private:
 		void Allocate(uint64 Size)

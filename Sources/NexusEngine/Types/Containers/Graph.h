@@ -105,6 +105,40 @@ namespace NxEn
 			Clear();
 		}
 
+		Graph<T> Copy() const
+		{
+			Graph<T> Copy = Graph<T>(Allocator);
+			
+			Node* Current = Data;
+			while (Current)
+			{
+				Copy.Append(Current->Value);
+				Current = Current->Next;
+			}
+
+			Current = Data;
+			while (Current)
+			{
+				T* Data = Copy.Find(Current->Value);
+
+				Connection* Connect = Current->Connection;
+				while (Connect)
+				{
+					if (Connect->Type == ConnectionType::To)
+					{
+						T* Target = Copy.Find(Connect->Target->Value);
+						Copy.Connect(Data, Target);
+					}
+
+					Connect = Connect->Next;
+				}
+				
+				Current = Current->Next;
+			}
+
+			return Copy;
+		}
+
 		bool operator==(const Graph<T>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
@@ -373,9 +407,9 @@ namespace NxEn
 			return nullptr;
 		}
 
-		uint64 GetConnectionCount(T* Instance) const { return GetNode(Instance)->Count; }
-		uint64 GetCount() const { return Count; }
 		bool IsEmpty() const { return Count == 0; }
+		uint64 GetCount() const { return Count; }
+		uint64 GetConnectionCount(T* Instance) const { return GetNode(Instance)->Count; }
 
 	private:
 		Node* Allocate()

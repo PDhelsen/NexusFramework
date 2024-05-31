@@ -281,11 +281,11 @@ namespace NxEn
 			return &Instance->Value;
 		}
 
-		float GetLoadFactor() const { return (float)(Count + 1) / (float)(Buckets); }
-		float GetLoadFactorThrehsold() const { return LoadFactorThreshold; }
+		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		uint64 GetBuckets() const { return Buckets; }
-		bool IsEmpty() const { return Count == 0; }
+		float GetLoadFactor() const { return (float)(Count + 1) / (float)(Buckets); }
+		float GetLoadFactorThrehsold() const { return LoadFactorThreshold; }
 
 	private:
 		void Allocate(uint64 Size)

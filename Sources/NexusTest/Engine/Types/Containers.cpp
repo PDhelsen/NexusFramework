@@ -942,6 +942,9 @@ namespace NxTs
 		bool IsConnected = Test.IsConnected(&TestA, &TestB, NxEn::Graph<ContainerTest>::ConnectionType::To);
 		ASSERT_EQ(IsConnected, true);
 
+		NxEn::Graph<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Test == Copy, false);
+
 		Test.Disconnect(&TestA, &Test1);
 		Test.Disconnect(&TestA, &TestB);
 		Test.Disconnect(&TestA, &Test4);

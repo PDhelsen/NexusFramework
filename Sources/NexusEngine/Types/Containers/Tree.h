@@ -14,7 +14,7 @@ namespace NxEn
 		struct Node
 		{
 			T Value;
-			uint64 ChildCount;
+			uint64 Count;
 			Node* Parent;
 			Node* Sibling;
 			Node* Child;
@@ -506,9 +506,11 @@ namespace NxEn
 			return nullptr;
 		}
 
-		uint64 GetCount() const { return Count; }
 		bool IsEmpty() const { return Count == 0; }
+		uint64 GetCount() const { return Count; }
 		bool IsInitialized() const { Data != nullptr; }
+		uint64 GetChildCount(T* Instance) const { return GetNode(Instance)->Count; }
+		uint64 GetSiblingCount(T* Instance) const { return GetNode(Instance)->Parent->Count - 1; }
 
 	private:
 		Node* Allocate()
@@ -516,7 +518,7 @@ namespace NxEn
 			Count++;
 
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
-			Instance->ChildCount = 0;
+			Instance->Count = 0;
 			Instance->Parent = nullptr;
 			Instance->Sibling = nullptr;
 			Instance->Child = nullptr;
@@ -547,7 +549,7 @@ namespace NxEn
 				Parent->Child = Child;
 			}
 
-			Parent->ChildCount++;
+			Parent->Count++;
 		}
 
 		void InsertNodeSibling(Node* Sibling, Node* Instance)
@@ -555,7 +557,7 @@ namespace NxEn
 			Instance->Parent = Sibling->Parent;
 			Instance->Sibling = Sibling->Sibling;
 			Sibling->Sibling = Instance;
-			Sibling->Parent->ChildCount++;
+			Sibling->Parent->Count++;
 		}
 
 		void InsertNodeChild(Node* Parent, Node* Instance)
@@ -569,9 +571,9 @@ namespace NxEn
 
 			Instance->Parent = Parent;
 			Instance->Child = Parent->Child;
-			Instance->ChildCount = Parent->ChildCount;
+			Instance->Count = Parent->Count;
 			Parent->Child = Instance;
-			Parent->ChildCount = 1;
+			Parent->Count = 1;
 		}
 
 		void RemoveNode(Node* Instance)
@@ -606,7 +608,7 @@ namespace NxEn
 
 					Sibling->Sibling = Instance->Sibling;
 				}
-				Parent->ChildCount--;
+				Parent->Count--;
 			}
 
 			Free(Instance);
