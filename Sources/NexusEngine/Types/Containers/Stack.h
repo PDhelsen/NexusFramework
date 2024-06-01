@@ -199,6 +199,24 @@ namespace NxEn
 			GetNode(B)->Value = Move(Temp);
 		}
 
+		void Reverse()
+		{
+			Node* Current = Data;
+			Node* Next = Current->Next;
+			Current->Next = nullptr;
+
+			while (Next)
+			{
+				Node* SecondNext = Next->Next;
+				Next->Next = Current;
+
+				Current = Next;
+				Next = SecondNext;
+			}
+
+			Data = Current;
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) != nullptr;
@@ -218,24 +236,6 @@ namespace NxEn
 			}
 
 			return nullptr;
-		}
-
-		void Reverse()
-		{
-			Node* Current = Data;
-			Node* Next = Current->Next;
-			Current->Next = nullptr;
-
-			while (Next)
-			{
-				Node* SecondNext = Next->Next;
-				Next->Next = Current;
-
-				Current = Next;
-				Next = SecondNext;
-			}
-
-			Data = Current;
 		}
 
 		bool IsEmpty() const { return Count == 0; }

@@ -555,33 +555,6 @@ namespace NxEn
 			GetNode(B)->Value = Move(Temp);
 		}
 
-		bool Contains(const T& Other) const
-		{
-			return Find(Other) != nullptr;
-		}
-
-		T* Find(const T& Other) const
-		{
-			Node* Current = DataHead;
-			while (Current != nullptr)
-			{
-				if (Current->Value == Other)
-				{
-					return &Current->Value;
-				}
-
-				Current = Current->Next;
-			}
-
-			return nullptr;
-		}
-
-		void Sort()
-		{
-			SortSort(&DataHead);
-			FixLinks();
-		}
-
 		void Reverse()
 		{
 			DataTail = DataHead;
@@ -602,6 +575,33 @@ namespace NxEn
 			}
 
 			DataHead = Current;
+		}
+
+		void Sort()
+		{
+			SortSort(&DataHead);
+			FixLinks();
+		}
+
+		bool Contains(const T& Other) const
+		{
+			return Find(Other) != nullptr;
+		}
+
+		T* Find(const T& Other) const
+		{
+			Node* Current = DataHead;
+			while (Current != nullptr)
+			{
+				if (Current->Value == Other)
+				{
+					return &Current->Value;
+				}
+
+				Current = Current->Next;
+			}
+
+			return nullptr;
 		}
 
 		bool IsEmpty() const { return Count == 0; }

@@ -229,6 +229,20 @@ namespace NxEn
 			Get(IndexB) = Move(Temp);
 		}
 
+		void Reverse()
+		{
+			uint64 Half = Count / 2;
+			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
+			{
+				Swap(Front, Back);
+			}
+		}
+
+		void Sort()
+		{
+			Sort::HeapSort(Data, Count);
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) < Count;
@@ -245,20 +259,6 @@ namespace NxEn
 			}
 
 			return Count;
-		}
-
-		void Sort()
-		{
-			Sort::HeapSort(Data, Count);
-		}
-
-		void Reverse()
-		{
-			uint64 Half = Count / 2;
-			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
-			{
-				Swap(Front, Back);
-			}
 		}
 
 		uint64 GetCount() const { return Count; }
