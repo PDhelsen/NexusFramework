@@ -1090,4 +1090,24 @@ namespace NxTs
 		ASSERT_EQ(Test.GetFirst().Integer, 25);
 		ASSERT_EQ(Test.GetSecond().Integer, 20);
 	}
+
+	TEST(Type_Containers, NativeType)
+	{
+		NxEn::List<uint64> TestUint;
+		TestUint.Append(18);
+		TestUint.Append(24);
+		TestUint.Append(36);
+		TestUint.Append(45);
+		TestUint.Append(58);
+		TestUint.Append(64);
+		TestUint.Append(72);
+
+		ContainerTest Container;
+		NxEn::List<ContainerTest*> TestPointer;
+		TestPointer.Append(&Container);
+		TestPointer.Append(&Container);
+		TestPointer.Append(&Container);
+		TestPointer.Append(&Container);
+		TestPointer.Append(&Container);
+	}
 }
