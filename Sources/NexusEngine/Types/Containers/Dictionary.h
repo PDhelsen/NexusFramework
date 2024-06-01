@@ -361,41 +361,37 @@ namespace NxEn
 
 		bool ContainsKey(const K& Key) const
 		{
-			return FindKey(Key) != nullptr;
+			return FindKey(Key) != End();
 		}
 
 		bool ContainsValue(const T& Other) const
 		{
-			return FindValue(Other) != nullptr;
+			return FindValue(Other) != End();
 		}
 
-		const K* FindKey(const K& Key) const
+		Iterator FindKey(const K& Key) const
 		{
-			Node* Instance = GetNode(Key);
-			if (!Instance)
+			uint64 Index = GetIndex(Key);
+			Node* Instance = GetNode(Index, Key);
+			if (Instance)
 			{
-				return nullptr;
+				return Iterator(Data, Buckets, Instance, Index);
 			}
 
-			return &Instance->KeyValue.Key;
+			return End();
 		}
 
-		const K* FindValue(const T& Other) const
+		Iterator FindValue(const T& Other) const
 		{
-			for (uint64 Index = 0; Index < Buckets; Index++)
+			for (Iterator It = Begin(); It != End(); It++)
 			{
-				Node* Current = Data[Index];
-				while (Current)
+				if (It->GetValue() == Other)
 				{
-					if (Current->KeyValue.Value == Other)
-					{
-						return &Current->KeyValue.Key;
-					}
-					Current = Current->Next;
+					return It;
 				}
 			}
 
-			return nullptr;
+			return End();
 		}
 
 		bool IsEmpty() const { return Count == 0; }

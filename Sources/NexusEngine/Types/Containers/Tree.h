@@ -65,7 +65,7 @@ namespace NxEn
 
 			T* operator->() const
 			{
-				return *(Current->Value);
+				return &Current->Value;
 			}
 
 			T& operator*() const
@@ -490,20 +490,20 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != nullptr;
+			return Find(Other) != End();
 		}
 
-		T* Find(const T& Other) const
+		Iterator Find(const T& Other) const
 		{
 			for (Iterator It = Begin(); It != End(); It++)
 			{
 				if (*It == Other)
 				{
-					return &(*It);
+					return It;
 				}
 			}
 
-			return nullptr;
+			return End();
 		}
 
 		bool IsEmpty() const { return Count == 0; }

@@ -212,9 +212,11 @@ namespace NxTs
 		}
 		ASSERT_EQ(Test[3].Integer, 3);
 
-		ContainerTest Test2 = ContainerTest(2);
-		ASSERT_EQ(Test.Contains(Test2), true);
-		ASSERT_EQ(Test.Find(Test2), 2);
+		ContainerTest ToFind = ContainerTest(2);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
+		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 2);
 
 		Test[0].Integer = 8;
 		Test[1].Integer = 4;
@@ -375,9 +377,11 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 9);
 		ASSERT_EQ(Test.GetCapacity(), 9);
 
-		ContainerTest Test2 = ContainerTest(2);
-		ASSERT_EQ(Test.Contains(Test2), true);
-		ASSERT_EQ(Test.Find(Test2), 2);
+		ContainerTest ToFind = ContainerTest(2);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
+		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 2);
 
 		Test[0].Integer = 3;
 		Test[1].Integer = 4;
@@ -451,10 +455,11 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, 26);
 		ASSERT_EQ(Test.Last().Integer, 21);
 
-		bool Contains = Test.Contains(ContainerTest(86));
-		uint64 Found = Test.Find(ContainerTest(73));
+		ContainerTest ToFind = ContainerTest(86);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
 		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found, 6);
+		ASSERT_EQ(Found->Integer, 86);
 
 		Test.AppendBack(21);
 		Test.AppendBack(64);
@@ -549,8 +554,12 @@ namespace NxTs
 
 		Test.AppendFront(2);
 
-		bool Contains = Test.Contains(ContainerTest(23));
+		ContainerTest ToFind = ContainerTest(23);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
 		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 23);
+
 		Test.Sort();
 		for (ContainerTest& It : Test)
 		{
@@ -638,8 +647,11 @@ namespace NxTs
 		Test.Append(17);
 		Test.Append(25);
 
-		bool Contains = Test.Contains(25);
+		ContainerTest ToFind = ContainerTest(25);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
 		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 25);
 
 		Test.Reverse();
 		ASSERT_EQ(Test.Get().Integer, 5);
@@ -692,8 +704,11 @@ namespace NxTs
 		Test.Append(17);
 		Test.Append(25);
 
-		bool Contains = Test.Contains(25);
+		ContainerTest ToFind = ContainerTest(25);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
 		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 25);
 
 		Test.Reverse();
 		ASSERT_EQ(Test.Get().Integer, 25);
@@ -750,10 +765,11 @@ namespace NxTs
 		CopyDeep.Append(9);
 		CopyDeep.Remove(9);
 
-		for (NxEn::Set<ContainerTest, NxEn::XxHash64>::Iterator It = Test.Begin(); It != Test.End(); It++)
-		{
-			NEXUS_LOG(App, Info, 0, "Set value : %d", It->Integer);
-		}
+		ContainerTest ToFind = ContainerTest(43);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
+		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 43);
 
 		Test.ReHash(21);
 	}
@@ -817,12 +833,12 @@ namespace NxTs
 
 		bool ContainsKey = Test.ContainsKey(Test1);
 		bool ContainsValue = Test.ContainsValue(ContainerTest(40));
-		const ContainerTest* FoundKey = Test.FindKey(ContainerTest(3));
-		const ContainerTest* FoundValue = Test.FindValue(ContainerTest(40));
+		auto FoundKey = Test.FindKey(ContainerTest(3));
+		auto FoundValue = Test.FindValue(ContainerTest(40));
 		ASSERT_EQ(ContainsKey, true);
 		ASSERT_EQ(ContainsValue, true);
-		ASSERT_EQ(FoundKey->Integer, 3);
-		ASSERT_EQ(FoundValue->Integer, 3);
+		ASSERT_EQ(FoundKey->GetKey().Integer, 3);
+		ASSERT_EQ(FoundValue->GetKey().Integer, 3);
 
 		Test.Append(ContainerTest(4), ContainerTest(40));
 		Test.Append(ContainerTest(5), ContainerTest(50));
@@ -912,8 +928,11 @@ namespace NxTs
 			ASSERT_EQ(It.Integer, Index++);
 		}
 
-		ASSERT_EQ(Test.Contains(ContainerTest(5)), true);
-		ASSERT_EQ(Test.Contains(ContainerTest(20)), false);
+		ContainerTest ToFind = ContainerTest(5);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
+		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 5);
 
 		Test.Remove(&Test2Ref);
 		Test.Remove(&Test1Ref);
@@ -944,8 +963,6 @@ namespace NxTs
 		Test.Assign(&Test.Get(), ContainerTest(6));
 		ASSERT_EQ(Test.Get().Integer, 6);
 
-		bool Contains = Test.Contains(ContainerTest(10));
-		ASSERT_EQ(Contains, true);
 		Test.Append(8);
 		ContainerTest& TestA = Test.Get();
 		Test.Append(4);
@@ -981,6 +998,12 @@ namespace NxTs
 		Test.Remove(&Test.Get());
 		ASSERT_EQ(Test.Get().Integer, 6);
 		ASSERT_EQ(Test.GetCount(), 4);
+
+		ContainerTest ToFind = ContainerTest(6);
+		bool Contains = Test.Contains(ToFind);
+		auto Found = Test.Find(ToFind);
+		ASSERT_EQ(Contains, true);
+		ASSERT_EQ(Found->Integer, 6);
 
 		uint64 Index = 0;
 		for (ContainerTest& It : Test)

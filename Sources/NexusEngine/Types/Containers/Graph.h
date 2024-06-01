@@ -119,15 +119,15 @@ namespace NxEn
 			Current = Data;
 			while (Current)
 			{
-				T* Data = Copy.Find(Current->Value);
+				Iterator Data = Copy.Find(Current->Value);
 
 				Connection* Connect = Current->Connection;
 				while (Connect)
 				{
 					if (Connect->Type == ConnectionType::To)
 					{
-						T* Target = Copy.Find(Connect->Target->Value);
-						Copy.Connect(Data, Target);
+						Iterator Target = Copy.Find(Connect->Target->Value);
+						Copy.Connect(&(*Data), &(*Target));
 					}
 
 					Connect = Connect->Next;
@@ -388,23 +388,20 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != nullptr;
+			return Find(Other) != End();
 		}
 
-		T* Find(const T& Other) const
+		Iterator Find(const T& Other) const
 		{
-			Node* Current = Data;
-			while (Current)
+			for (Iterator It = Begin(); It != End(); It++)
 			{
-				if (Current->Value == Other)
+				if (*It == Other)
 				{
-					return &Current->Value;
+					return It;
 				}
-
-				Current = Current->Next;
 			}
 
-			return nullptr;
+			return End();
 		}
 
 		bool IsEmpty() const { return Count == 0; }

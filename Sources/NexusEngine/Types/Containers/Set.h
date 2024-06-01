@@ -247,18 +247,19 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != nullptr;
+			return Find(Other) != End();
 		}
 
-		T* Find(const T& Other) const
+		Iterator Find(const T& Other) const
 		{
-			Node* Instance = GetNode(Other);
-			if (!Instance)
+			uint64 Index = GetIndex(Other);
+			Node* Instance = GetNode(Index, Other);
+			if (Instance)
 			{
-				return nullptr;
+				return Iterator(Data, Buckets, Instance, Index);
 			}
 
-			return &Instance->Value;
+			return End();
 		}
 
 		bool IsEmpty() const { return Count == 0; }

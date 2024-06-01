@@ -376,20 +376,20 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) < Count;
+			return Find(Other) != End();
 		}
 
-		uint64 Find(const T& Other) const
+		Iterator Find(const T& Other) const
 		{
-			for (uint64 Index = 0; Index < Count; Index++)
+			for (Iterator It = Begin(); It != End(); It++)
 			{
-				if (Data[Index] == Other)
+				if (*It == Other)
 				{
-					return Index;
+					return It;
 				}
 			}
 
-			return Count;
+			return End();
 		}
 
 		bool IsEmpty() const { return Count == 0; }
