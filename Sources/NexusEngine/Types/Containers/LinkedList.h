@@ -621,6 +621,8 @@ namespace NxEn
 		void Free(Node* Instance)
 		{
 			Count--;
+
+			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
 		}
 

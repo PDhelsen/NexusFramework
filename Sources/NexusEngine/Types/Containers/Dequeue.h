@@ -111,6 +111,7 @@ namespace NxEn
 
 		~Dequeue()
 		{
+			Clear();
 			Free();
 		}
 
@@ -284,10 +285,8 @@ namespace NxEn
 
 		void Clear()
 		{
-			for (uint64 Index = 0; Index < Buckets; Index++)
-			{
-				Free(Index);
-			}
+			Destruct(0, Count);
+			Free(0, Buckets);
 			
 			ValidateDefaultState();
 			Reallocate(1);
@@ -404,17 +403,25 @@ namespace NxEn
 
 		void Free()
 		{
-			for (uint64 Index = 0; Index < Buckets; Index++)
-			{
-				Free(Index);
-			}
-
 			Memory::Free(Data, Allocator);
 		}
 
-		void Free(uint64 Index)
+		void Free(uint64 Index, uint64 Size)
 		{
-			Memory::Free(Data[Index], Allocator);
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				Memory::Free(Data[Index + Offset], Allocator);
+			}
+		}
+
+		void Destruct(uint64 Index, uint64 Size)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index + Offset, BucketIndex, DataIndex);
+				Memory::Destruct(&Data[BucketIndex][DataIndex]);
+			}
 		}
 
 		void Shift(bool Forward)
@@ -461,11 +468,13 @@ namespace NxEn
 
 		void RemoveBucket(bool RemoveBack)
 		{
+			Destruct(RemoveBack ? Count - 1 : 0, 1);
+			
 			Count--;
 
 			if ((RemoveBack && IndexBack == 0) || (!RemoveBack && IndexFront == BucketSize - 1))
 			{
-				Free(RemoveBack ? Buckets - 1 : 0);
+				Free(RemoveBack ? Buckets - 1 : 0, 1);
 				if (!RemoveBack)
 				{
 					Shift(false);

@@ -240,29 +240,9 @@ namespace NxEn
 			return Iterator(Data, Buckets, nullptr, Buckets);
 		}
 
-		void Resize(uint64 Size)
+		void ReHash(uint64 Size)
 		{
-			Node** TempArray = Data;
-			uint64 TempCapacity = Buckets;
-
-			Allocate(Size);
-
-			for (uint64 TempIndex = 0; TempIndex < TempCapacity; TempIndex++)
-			{
-				Node* Current = TempArray[TempIndex];
-				while (Current)
-				{
-					Node* Next = Current->Next;
-
-					Current->Next = nullptr;
-					uint64 Index = GetIndex(Current->Value);
-					AppendNode(Index, Current);
-
-					Current = Next;
-				}
-			}
-
-			Free(TempArray);
+			Resize(Size);
 		}
 
 		bool Contains(const T& Other) const
@@ -316,6 +296,8 @@ namespace NxEn
 		void Free(Node* Instance)
 		{
 			Count--;
+
+			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
 		}
 
@@ -375,6 +357,31 @@ namespace NxEn
 		{
 			uint64 Index = GetIndex(Value);
 			return GetNode(Index, Value);
+		}
+
+		void Resize(uint64 Size)
+		{
+			Node** TempArray = Data;
+			uint64 TempCapacity = Buckets;
+
+			Allocate(Size);
+
+			for (uint64 TempIndex = 0; TempIndex < TempCapacity; TempIndex++)
+			{
+				Node* Current = TempArray[TempIndex];
+				while (Current)
+				{
+					Node* Next = Current->Next;
+
+					Current->Next = nullptr;
+					uint64 Index = GetIndex(Current->Value);
+					AppendNode(Index, Current);
+
+					Current = Next;
+				}
+			}
+
+			Free(TempArray);
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

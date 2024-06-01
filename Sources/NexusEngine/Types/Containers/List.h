@@ -92,6 +92,7 @@ namespace NxEn
 
 		~List()
 		{
+			Clear();
 			Free();
 		}
 
@@ -244,6 +245,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
+			Destruct(Index, 1);
 			Shift(Index, 1, false);
 			Resize(--Count);
 		}
@@ -253,6 +255,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), "Invalid Index");
 
+			Destruct(Index, Size);
 			Shift(Index, Size, false);
 			Resize(Count - Size);
 		}
@@ -261,6 +264,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
 			
+			Destruct(Count - 1, 1);
 			Resize(--Count);
 		}
 
@@ -274,6 +278,7 @@ namespace NxEn
 
 		void Clear(bool ShrinkToZero = false)
 		{
+			Destruct(0, Count);
 			Resize(0);
 			if (ShrinkToZero)
 			{
@@ -325,16 +330,6 @@ namespace NxEn
 			return Index >= 0 && Index < Count;
 		}
 
-		void Resize(uint64 Size)
-		{
-			Count = Size;
-
-			if (Count > Capacity)
-			{
-				Reallocate(Capacity + Capacity / 2);
-			}
-		}
-
 		void Grow(uint64 Size)
 		{
 			if (Size <= Capacity)
@@ -347,6 +342,11 @@ namespace NxEn
 
 		void Shrink(uint64 Size = 0)
 		{
+			if (Size > Capacity)
+			{
+				return;
+			}
+
 			Reallocate(Size);
 		}
 
@@ -414,11 +414,29 @@ namespace NxEn
 			Memory::Free(Data, Allocator);
 		}
 
+		void Destruct(uint64 Index, uint64 Size)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				Memory::Destruct(&Data[Index + Offset]);
+			}
+		}
+
 		void Shift(uint64 Index, uint64 Size, bool Forward)
 		{
 			T* Start = Forward ? &Data[Index] : &Data[Index + Size];
 			T* End = Forward ? &Data[Index + Size] : &Data[Index];
 			Memory::MemCopy(Start, End, sizeof(T) * (Count - Index - Size));
+		}
+
+		void Resize(uint64 Size)
+		{
+			Count = Size;
+
+			if (Count > Capacity)
+			{
+				Reallocate(Capacity + Capacity / 2);
+			}
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

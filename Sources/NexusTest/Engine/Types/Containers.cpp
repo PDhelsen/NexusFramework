@@ -21,32 +21,55 @@ namespace NxTs
 		float Float;
 		bool Boolean;
 
+		bool Destroyed;
+
 		ContainerTest()
 		{
+			NEXUS_LOG(App, Info, 0, "Container Constructor");
+
 			Integer = 1;
 			Float = 1.0f;
 			Boolean = true;
+			Destroyed = false;
 		}
 
 		ContainerTest(uint64 Initialization)
 		{
+			NEXUS_LOG(App, Info, 0, "Container Constructor Value");
+			
 			Integer = Initialization;
 			Float = 1.0f;
 			Boolean = true;
+			Destroyed = false;
 		}
 
 		ContainerTest(const ContainerTest& Other)
 		{
+			NEXUS_LOG(App, Info, 0, "Container Copy");
+			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
+			Destroyed = Other.Destroyed;
 		}
 
 		ContainerTest(ContainerTest&& Other) noexcept
 		{
+			NEXUS_LOG(App, Info, 0, "Container Move");
+		
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
+			Destroyed = Other.Destroyed;
+		}
+
+		~ContainerTest()
+		{
+			NEXUS_LOG(App, Info, 0, "Container Destructor");
+			NEXUS_ASSERT(!Destroyed, "Already Destroyed");
+
+			Destroyed = true;
+
 		}
 
 		ContainerTest& operator=(const ContainerTest& Other)
@@ -54,6 +77,7 @@ namespace NxTs
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
+			Destroyed = Other.Destroyed;
 			return *this;
 		}
 
@@ -62,6 +86,7 @@ namespace NxTs
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
+			Destroyed = Other.Destroyed;
 			return *this;
 		}
 
@@ -337,9 +362,10 @@ namespace NxTs
 		}
 		ASSERT_EQ(Test[3].Integer, 3);
 
-		Test.Resize(9);
-		ASSERT_EQ(Test.GetCount(), 9);
-		ASSERT_EQ(Test.GetCapacity(), 9);
+		Test.AppendConstruct(9);
+		Test.AppendConstruct(9);
+		Test.AppendConstruct(9);
+		Test.AppendConstruct(9);
 
 		Test.Grow(18);
 		ASSERT_EQ(Test.GetCount(), 9);
@@ -729,7 +755,7 @@ namespace NxTs
 			NEXUS_LOG(App, Info, 0, "Set value : %d", It->Integer);
 		}
 
-		Test.Resize(21);
+		Test.ReHash(21);
 	}
 
 	TEST(Type_Containers, Dictionary)
@@ -821,7 +847,7 @@ namespace NxTs
 			ASSERT_EQ(Kv.GetValue().Integer, Index++);
 		}
 
-		Test.Resize(21);
+		Test.ReHash(21);
 	}
 
 	TEST(Type_Containers, Tree)

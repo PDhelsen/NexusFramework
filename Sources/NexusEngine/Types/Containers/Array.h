@@ -92,6 +92,7 @@ namespace NxEn
 
 		~Array()
 		{
+			Clear();
 			Free();
 		}
 
@@ -167,6 +168,11 @@ namespace NxEn
 			}
 
 			return Data[Index];
+		}
+
+		void Clear()
+		{
+			Destruct(0, Count);
 		}
 
 		T& Get(uint64 Index) const
@@ -267,6 +273,14 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Allocator);
+		}
+
+		void Destruct(uint64 Index, uint64 Size)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				Memory::Destruct(&Data[Index + Offset]);
+			}
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
