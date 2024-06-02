@@ -56,7 +56,7 @@ namespace NxEn
 
 			bool operator==(const Iterator& Other) const
 			{
-				return Current == Other.Current;
+				return Current == Other.Current && Index == Other.Index;
 			}
 
 			bool operator!=(const Iterator& Other) const
