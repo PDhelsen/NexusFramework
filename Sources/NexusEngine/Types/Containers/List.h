@@ -152,7 +152,7 @@ namespace NxEn
 			return Data[Index];
 		}
 
-		T& AssignRange(uint64 Index, List<T>& Value)
+		T& AssignRange(uint64 Index, const List<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Invalid Index");
