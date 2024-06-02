@@ -200,16 +200,15 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& AppendBackRange(const LinkedList<T>& Other)
+		T& AppendBackRange(const LinkedList<T>& Value)
 		{
 			Node Return = DataTail;
 
-			Node* Instance = Other.DataHead;
-			while (Instance != nullptr)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				AppendBack(Instance->Value);
-				Instance = Instance->Next;
+				AppendBack(*It);
 			}
+
 			return Return->Next->Value;
 		}
 
@@ -241,13 +240,11 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& AppendFrontRange(const LinkedList<T>& Other)
+		T& AppendFrontRange(const LinkedList<T>& Value)
 		{
-			Node* Instance = Other.DataHead;
-			while (Instance != nullptr)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				AppendFront(Instance->Value);
-				Instance = Instance->Next;
+				AppendFront(*It);
 			}
 
 			return DataHead->Value;
@@ -293,20 +290,17 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& InsertBackRange(T* Position, const LinkedList<T>& Other)
+		T& InsertBackRange(T* Position, const LinkedList<T>& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			Node* Return = DataTail;
-
-			Node* Instance = Other.DataHead;
 			Node* Anchor = GetNode(Position);
+			Node* Return = Anchor;
 
-			while (Instance != nullptr)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				InsertNodeBack(Anchor, Instance->Value);
-				Instance = Instance->Next;
+				InsertBack(&Anchor->Value, *It);
 				Anchor = Anchor->Next;
 			}
 
@@ -353,22 +347,20 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& InsertFrontRange(T* Position, const LinkedList<T>& Other)
+		T& InsertFrontRange(T* Position, const LinkedList<T>& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
-			Node* Instance = Other.DataHead;
 			Node* Anchor = GetNode(Position);
 
-			while (Instance != nullptr)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				InsertNodeFront(Anchor, Instance->Value);
-				Instance = Instance->Next;
-				Anchor = Anchor->Next;
+				InsertFront(&Anchor->Value, *It);
+				Anchor = Anchor->Prev;
 			}
 
-			return DataHead->Value;
+			return Anchor->Value;
 		}
 
 		void RemoveBack()

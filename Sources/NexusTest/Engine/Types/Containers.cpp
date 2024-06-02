@@ -444,6 +444,7 @@ namespace NxTs
 		ASSERT_EQ(Test[0].Integer, CopyDeep[0].Integer);
 		ASSERT_EQ(Test == CopyDeep, false);
 
+		CopyDeep.AppendBackRange(Test);
 		CopyDeep.Clear();
 		ASSERT_EQ(CopyDeep.GetCount(), 0);
 		ASSERT_EQ(CopyDeep.IsEmpty(), true);
@@ -595,6 +596,8 @@ namespace NxTs
 			It->Integer = Index;
 		}
 
+		Copy.InsertBackRange(&Copy.First(), Test);
+
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
@@ -643,6 +646,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 6);
 
 		NxEn::Stack<ContainerTest> Copy = Test.Copy();
+		Copy.AppendRange(Test);
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
@@ -702,6 +706,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 6);
 
 		NxEn::Queue<ContainerTest> Copy = Test.Copy();
+		Copy.AppendRange(Test);
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
@@ -776,6 +781,7 @@ namespace NxTs
 		ASSERT_EQ(Test == CopyDeep, false);
 		ASSERT_EQ(Test.GetCount(), CopyDeep.GetCount());
 
+		CopyDeep.Clear();
 		CopyDeep.AppendRange(Test);
 		CopyDeep.Clear();
 		ASSERT_EQ(CopyDeep.GetCount(), 0);
@@ -831,6 +837,7 @@ namespace NxTs
 		ASSERT_EQ(CopyDeep == Test, false);
 		ASSERT_EQ(CopyDeep.GetCount(), 2);
 
+		CopyDeep.Clear();
 		CopyDeep.AppendRange(Test);
 		CopyDeep.Clear();
 		ASSERT_EQ(CopyDeep.GetCount(), 0);
@@ -1016,6 +1023,8 @@ namespace NxTs
 
 		NxEn::Graph<ContainerTest> Copy = Test.Copy();
 		ASSERT_EQ(Test == Copy, false);
+		Copy.Clear();
+		Copy.AppendRange(Test);
 
 		auto It = Test.GetIterator(&TestA);
 		ASSERT_EQ(It->Integer, TestA.Integer);

@@ -145,11 +145,9 @@ namespace NxEn
 		{
 			Node* Return = Data;
 
-			Node* Current = Value.Data;
-			while (Current)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				Append(Current->Value);
-				Current = Current->Next;
+				Append(*It);
 			}
 
 			return Return->Next->Value;

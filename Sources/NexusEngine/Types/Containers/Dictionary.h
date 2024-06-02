@@ -271,9 +271,9 @@ namespace NxEn
 
 		T& AppendRange(const Dictionary<K, T, H, LF>& Value)
 		{
-			for (auto& Kv : Value)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				Append(Kv.GetKey(), Kv.GetValue());
+				Append(It->GetKey(), It->GetValue());
 			}
 
 			return GetNode(Value.Begin()->GetKey())->KeyValue.Value;

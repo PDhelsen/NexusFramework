@@ -157,11 +157,12 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Invalid Index");
 
-			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
+			uint64 Offset = 0;
+			for (Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Data[Index + Offset] = Value[Offset];
+				Data[Index + Offset] = *It;
 			}
-		
+
 			return Data[Index];
 		}
 
@@ -191,9 +192,11 @@ namespace NxEn
 		{
 			uint64 Index = GetCount();
 			Resize(GetCount() + Value.GetCount());
-			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
+
+			uint64 Offset = 0;
+			for (Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Data[Index + Offset] = Value[Offset];
+				Data[Index + Offset] = *It;
 			}
 	
 			return Data[Index];
@@ -236,9 +239,11 @@ namespace NxEn
 
 			Resize(GetCount() + Value.GetCount());
 			Shift(Index, Value.GetCount(), true);
-			for (uint64 Offset = 0; Offset < Value.GetCount(); Offset++)
+
+			uint64 Offset = 0;
+			for (Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Data[Index + Offset] = Value[Offset];
+				Data[Index + Offset] = *It;
 			}
 		
 			return Data[Index];

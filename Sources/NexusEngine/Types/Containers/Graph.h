@@ -244,16 +244,12 @@ namespace NxEn
 
 		T& AppendRange(const Graph<T>& Value)
 		{
-			T* Return = nullptr;
-
-			Node* Current = Value.Data;
-			while (Current)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				Return = &Append(&Current->Value);
-				Current = Current->Next;
+				Append(*It);
 			}
 
-			return *Return;
+			return Data->Value;
 		}
 
 		void Remove(T* Value)

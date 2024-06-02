@@ -191,9 +191,9 @@ namespace NxEn
 
 		const T& AppendRange(const Set<T, H, LF>& Value)
 		{
-			for (auto& It : Value)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				Append(It);
+				Append(*It);
 			}
 			
 			return GetNode(*(Value.Begin()))->Value;

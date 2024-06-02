@@ -202,14 +202,17 @@ namespace NxEn
 			return Data[BucketIndex][DataIndex];
 		}
 
-		T& AssignRange(uint64 Index, const Dequeue<T>& Values)
+		T& AssignRange(uint64 Index, const Dequeue<T>& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Values.Count), "Overflow");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.Count), "Overflow");
 
-			for (uint64 Offset = 0; Offset < Values.Count; Offset++)
+			uint64 Offset = 0;
+			for (Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Assign(Index + Offset, Values[Offset]);
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index + Offset, BucketIndex, DataIndex);
+				Data[BucketIndex][DataIndex] = *It;
 			}
 		
 			uint64 BucketIndex, DataIndex;
@@ -241,14 +244,14 @@ namespace NxEn
 
 		T& AppendBackRange(const Dequeue<T>& Value)
 		{
-			uint64 Index = Count - 1;
-			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
+			uint64 BucketIndex = Buckets - 1;
+			uint64 DataIndex = IndexBack;
+
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				AppendBack(Value[Offset]);
+				AppendBack(*It);
 			}
 
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -276,9 +279,9 @@ namespace NxEn
 
 		T& AppendFrontRange(const Dequeue<T>& Value)
 		{
-			for (uint64 Offset = 0; Offset < Value.Count; Offset++)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				AppendFront(Value[Value.Count - 1 - Offset]);
+				AppendFront(*It);
 			}
 
 			return Data[0][IndexFront];

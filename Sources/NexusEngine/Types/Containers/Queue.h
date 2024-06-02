@@ -146,11 +146,9 @@ namespace NxEn
 		{
 			Node* Return = DataTail;
 
-			Node* Current = Value.DataHead;
-			while (Current)
+			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				Append(Current->Value);
-				Current = Current->Next;
+				Append(*It);
 			}
 
 			return Return->Next->Value;
