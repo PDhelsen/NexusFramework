@@ -68,6 +68,8 @@ namespace NxEn
 				return !(*this == Other);
 			}
 
+			uint64 GetIndex() const { return Index; }
+
 		private:
 			T* Data;
 			uint64 Index;
@@ -191,6 +193,11 @@ namespace NxEn
 		T& Last() const
 		{
 			return Get(Count - 1);
+		}
+
+		Iterator GetIterator(uint64 Index) const
+		{
+			return Iterator(Data, Index);
 		}
 
 		Iterator begin() const { return Begin(); }

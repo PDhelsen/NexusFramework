@@ -327,6 +327,13 @@ namespace NxEn
 			return &Instance->KeyValue.Value;
 		}
 
+		Iterator GetIterator(const K& Key)
+		{
+			uint64 Index = GetIndex(Key);
+			Node* Instance = GetNode(Index, Key);
+			return Iterator(Data, Instance, Buckets, Index);
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{

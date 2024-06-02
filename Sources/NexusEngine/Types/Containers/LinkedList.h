@@ -528,6 +528,11 @@ namespace NxEn
 			return IsNext(A, B) || IsPrev(A, B);
 		}
 
+		Iterator GetIterator(T* Position)
+		{
+			return Iterator(GetNode(Position));
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{

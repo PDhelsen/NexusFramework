@@ -239,6 +239,9 @@ namespace NxTs
 		{
 			ASSERT_EQ(Test[Index].Integer, Test.GetCount() - 1 - Index);
 		}
+
+		auto It = Test.GetIterator(5);
+		ASSERT_EQ(It.GetIndex(), 5);
 	}
 
 	TEST(Type_Containers, List)
@@ -404,6 +407,9 @@ namespace NxTs
 		{
 			ASSERT_EQ(Test[Index].Integer, Test.GetCount() - 1 - Index);
 		}
+
+		auto It = Test.GetIterator(5);
+		ASSERT_EQ(It.GetIndex(), 5);
 	}
 
 	TEST(Type_Containers, Dequeue)
@@ -504,6 +510,9 @@ namespace NxTs
 		Test.Swap(3, 6);
 		ASSERT_EQ(Test[3].Integer, 6);
 		ASSERT_EQ(Test[6].Integer, 3);
+
+		auto It = Test.GetIterator(5);
+		ASSERT_EQ(It.GetIndex(), 5);
 	}
 
 	TEST(Type_Containers, LinkedList)
@@ -603,6 +612,9 @@ namespace NxTs
 
 		bool Connected = Test.IsNext(&Test.First(), &Test.Last());
 		ASSERT_EQ(Connected, true);
+
+		auto It = Test.GetIterator(&Test.First());
+		ASSERT_EQ(It->Integer, Test.First().Integer);
 	}
 
 	TEST(Type_Containers, Stack)
@@ -661,6 +673,9 @@ namespace NxTs
 		{
 			It.Integer = Index++;
 		}
+
+		auto It = Test.GetIterator(&Test.Get());
+		ASSERT_EQ(It->Integer, Test.Get().Integer);
 	}
 
 	TEST(Type_Containers, Queue)
@@ -720,6 +735,9 @@ namespace NxTs
 		}
 
 		Test.Append(8);
+
+		auto It = Test.GetIterator(&Test.Get());
+		ASSERT_EQ(It->Integer, Test.Get().Integer);
 	}
 
 	TEST(Type_Containers, Set)
@@ -772,6 +790,9 @@ namespace NxTs
 		ASSERT_EQ(Found->Integer, 43);
 
 		Test.ReHash(21);
+
+		auto It = Test.GetIterator(Test1);
+		ASSERT_EQ(It->Integer, Test1.Integer);
 	}
 
 	TEST(Type_Containers, Dictionary)
@@ -864,6 +885,9 @@ namespace NxTs
 		}
 
 		Test.ReHash(21);
+
+		auto It = Test.GetIterator(Test1);
+		ASSERT_EQ(It->GetKey().Integer, Test1.Integer);
 	}
 
 	TEST(Type_Containers, Tree)
@@ -933,6 +957,9 @@ namespace NxTs
 		auto Found = Test.Find(ToFind);
 		ASSERT_EQ(Contains, true);
 		ASSERT_EQ(Found->Integer, 5);
+
+		auto It = Test.GetIterator(&Test1Ref);
+		ASSERT_EQ(It->Integer, Test1Ref.Integer);
 
 		Test.Remove(&Test2Ref);
 		Test.Remove(&Test1Ref);
@@ -1016,6 +1043,9 @@ namespace NxTs
 		{
 			ASSERT_EQ(It->Integer, Index++);
 		}
+
+		auto It = Test.GetIterator(&TestA);
+		ASSERT_EQ(It->Integer, TestA.Integer);
 
 		Test.Clear();
 		ASSERT_EQ(Test.GetCount(), 0);

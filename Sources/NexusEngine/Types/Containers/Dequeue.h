@@ -15,8 +15,8 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(T** Pointer, uint64 BucketIdx, uint64 DataIdx)
-				: Data(Pointer), BucketIndex(BucketIdx), DataIndex(DataIdx)
+			Iterator(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
+				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
 
 			}
@@ -67,6 +67,8 @@ namespace NxEn
 				return !(*this == Other);
 			}
 
+			uint64 GetIndex() const { return BucketIndex * BucketSize + DataIndex - Offset; }
+
 		private:
 			void MoveToNext(bool Forward)
 			{
@@ -97,6 +99,7 @@ namespace NxEn
 			}
 
 			T** Data;
+			uint64 Offset;
 			uint64 BucketIndex;
 			uint64 DataIndex;
 		};
@@ -324,10 +327,17 @@ namespace NxEn
 			return Get(Count - 1);
 		}
 
+		Iterator GetIterator(uint64 Index) const
+		{
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			return Iterator(Data, IndexFront, BucketIndex, DataIndex);
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(Data, 0, IndexFront);
+			return Iterator(Data, IndexFront, 0, IndexFront);
 		}
 
 		Iterator BeginReverse() const
@@ -338,7 +348,7 @@ namespace NxEn
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			Iterator It = Iterator(Data, Buckets - 1, IndexBack);
+			Iterator It = Iterator(Data, IndexFront, Buckets - 1, IndexBack);
 			return ++It;
 		}
 

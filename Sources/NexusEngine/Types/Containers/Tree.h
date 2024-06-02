@@ -469,6 +469,11 @@ namespace NxEn
 			return IsParent(A, B) || IsSibling(A, B) || IsChild(A, B);
 		}
 
+		Iterator GetIterator(T* Position)
+		{
+			return Iterator(GetNode(Position));
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{

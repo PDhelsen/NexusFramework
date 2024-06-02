@@ -228,6 +228,13 @@ namespace NxEn
 			}
 		}
 
+		Iterator GetIterator(const T& Value)
+		{
+			uint64 Index = GetIndex(Value);
+			Node* Instance = GetNode(Index, Value);
+			return Iterator(Data, Instance, Buckets, Index);
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{

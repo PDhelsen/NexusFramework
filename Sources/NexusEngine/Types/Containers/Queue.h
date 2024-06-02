@@ -180,6 +180,11 @@ namespace NxEn
 			return DataHead->Value;
 		}
 
+		Iterator GetIterator(T* Position)
+		{
+			return Iterator(GetNode(Position));
+		}
+
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
