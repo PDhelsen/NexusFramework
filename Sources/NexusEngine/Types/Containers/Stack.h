@@ -99,6 +99,7 @@ namespace NxEn
 				Copy.Append(Current->Value);
 				Current = Current->Next;
 			}
+			Copy.Reverse();
 
 			return Copy;
 		}
@@ -143,14 +144,18 @@ namespace NxEn
 
 		T& AppendRange(const Stack<T>& Value)
 		{
-			Node* Return = Data;
+			T* Return = nullptr;
 
 			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				Append(*It);
+				T& Instance = Append(*It);
+				if (!Return)
+				{
+					Return = &Instance;
+				}
 			}
 
-			return Return->Next->Value;
+			return *Return;
 		}
 
 		void Remove()

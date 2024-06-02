@@ -202,7 +202,7 @@ namespace NxEn
 
 		T& AppendBackRange(const LinkedList<T>& Value)
 		{
-			Node Return = DataTail;
+			Node* Return = DataTail;
 
 			for (Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
@@ -676,7 +676,10 @@ namespace NxEn
 		{
 			Instance->Next = Anchor->Next;
 			Instance->Prev = Anchor;
-			Anchor->Next->Prev = Instance;
+			if (Anchor->Next)
+			{
+				Anchor->Next->Prev = Instance;
+			}
 			Anchor->Next = Instance;
 		}
 
@@ -684,7 +687,10 @@ namespace NxEn
 		{
 			Instance->Prev = Anchor->Prev;
 			Instance->Next = Anchor;
-			Anchor->Prev->Next= Instance;
+			if (Anchor->Prev)
+			{
+				Anchor->Prev->Next= Instance;
+			}
 			Anchor->Prev = Instance;
 		}
 

@@ -95,7 +95,7 @@ namespace NxEn
 
 		~Array()
 		{
-			Clear();
+			Destruct(0, Count);
 			Free();
 		}
 
@@ -172,11 +172,6 @@ namespace NxEn
 			}
 
 			return Data[Index];
-		}
-
-		void Clear()
-		{
-			Destruct(0, Count);
 		}
 
 		T& Get(uint64 Index) const

@@ -331,6 +331,10 @@ namespace NxEn
 		{
 			uint64 Index = GetIndex(Key);
 			Node* Instance = GetNode(Index, Key);
+			if (!Instance)
+			{
+				return End();
+			}
 			return Iterator(Data, Instance, Buckets, Index);
 		}
 

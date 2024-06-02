@@ -25,8 +25,6 @@ namespace NxTs
 
 		ContainerTest()
 		{
-			NEXUS_LOG(App, Info, 0, "Container Constructor");
-
 			Integer = 1;
 			Float = 1.0f;
 			Boolean = true;
@@ -35,8 +33,6 @@ namespace NxTs
 
 		ContainerTest(uint64 Initialization)
 		{
-			NEXUS_LOG(App, Info, 0, "Container Constructor Value");
-			
 			Integer = Initialization;
 			Float = 1.0f;
 			Boolean = true;
@@ -45,8 +41,6 @@ namespace NxTs
 
 		ContainerTest(const ContainerTest& Other)
 		{
-			NEXUS_LOG(App, Info, 0, "Container Copy");
-			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -55,8 +49,6 @@ namespace NxTs
 
 		ContainerTest(ContainerTest&& Other) noexcept
 		{
-			NEXUS_LOG(App, Info, 0, "Container Move");
-		
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -65,11 +57,12 @@ namespace NxTs
 
 		~ContainerTest()
 		{
-			NEXUS_LOG(App, Info, 0, "Container Destructor");
 			NEXUS_ASSERT(!Destroyed, "Already Destroyed");
 
+			Integer = 0;
+			Float = 0.0f;
+			Boolean = false;
 			Destroyed = true;
-
 		}
 
 		ContainerTest& operator=(const ContainerTest& Other)
@@ -142,597 +135,776 @@ namespace NxTs
 {
 	TEST(Type_Containers, Array)
 	{
-		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(9);
-		ASSERT_EQ(Test.GetCount(), 9);
-	
+		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(10);
 		Test.Initialize(5);
-		ASSERT_EQ(Test[1].Integer, 5);
+		ASSERT_EQ(Test.GetCount(), 10);
+		ASSERT_EQ(Test[0].Integer, 5);
+	
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5);
+		Range.Initialize(4);
 
-		NxEn::Array<ContainerTest> CopyDeep = Test.Copy();
-		ASSERT_NE(&Test[5], &CopyDeep[5]);
-		ASSERT_EQ(Test[5].Integer, CopyDeep[5].Integer);
-		ASSERT_EQ(Test == CopyDeep, false);
+		Test.Assign(0, Container1);
+		Test.Assign(1, ContainerTest(2));
+		Test.AssignConstruct(2, 3);
+		Test.AssignRange(3, Range);
+		ASSERT_EQ(Test[0].Integer, 1);
+		ASSERT_EQ(Test[1].Integer, 2);
+		ASSERT_EQ(Test[2].Integer, 3);
+		ASSERT_EQ(Test[3].Integer, 4);
+		ASSERT_EQ(Test[7].Integer, 4);
 
-		ContainerTest Copy = Test[5];
-		Copy.Integer = 10;
+		ContainerTest AccesCopy = Test[5];
+		AccesCopy.Integer = 10;
 		ASSERT_NE(Test[5].Integer, 10);
 
-		ContainerTest& Reference = Test[0];
-		Reference.Integer = 10;
-		ASSERT_EQ(Test[0].Integer, 10);
+		ContainerTest& AccesRef= Test[5];
+		AccesRef.Integer = 10;
+		ASSERT_EQ(Test[5].Integer, 10);
 
-		Test[3] = ContainerTest(3);
-		Test[6] = ContainerTest(6);
-		ASSERT_EQ(Test[3].Integer, 3);
-		ASSERT_EQ(Test[6].Integer, 6);
+		NxEn::Array<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
 
-		ContainerTest& Index5 = Test.Assign(5, ContainerTest(7));
-		Test.AssignConstruct(7, 8);
-		ASSERT_EQ(Index5.Integer, 7);
-		ASSERT_EQ(Test[7].Integer, 8);
+		ASSERT_EQ(Test.Get(0).Integer, Test[0].Integer);
+		ASSERT_EQ(Test.First().Integer, Test[0].Integer);
+		ASSERT_EQ(Test.Last().Integer, Test[Test.GetCount() - 1].Integer);
 
-		Test.AssignRange(0, CopyDeep);
-		ASSERT_EQ(Test[0].Integer, 5);
-		ASSERT_EQ(Test[8].Integer, 5);
+		ASSERT_EQ(Test.GetIterator(5)->Integer, Test[5].Integer);
+		ASSERT_EQ(Test.GetIterator(5).GetIndex(), 5);
+		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
+		ASSERT_NE(Test.End()->Integer, Test.Last().Integer);
+		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
+		ASSERT_NE(Test.EndReverse()->Integer, Test.First().Integer);
 
-		Test.Get(3).Integer = 3;
-		Test.Get(6).Integer = 6;
+		uint64 Index = 0;
+		for (auto& It : Test)
+		{
+			It.Integer = Index++;
+		}
+		ASSERT_EQ(Test.First().Integer, 0);
+		ASSERT_EQ(Test.Last().Integer, Test.GetCount() - 1);
+
+		ASSERT_EQ(Test.IsValidIndex(5), true);
+		ASSERT_EQ(Test.IsValidIndex(Test.GetCount()), false);
+
+		Test[3].Integer = 3;
+		Test[6].Integer = 6;
 		Test.Swap(3, 6);
 		ASSERT_EQ(Test[3].Integer, 6);
 		ASSERT_EQ(Test[6].Integer, 3);
 
-		uint64 Index = 0;
-		for (NxEn::Array<ContainerTest>::Iterator Iterator = Test.Begin(); Iterator != Test.End(); ++Iterator)
-		{
-			ContainerTest& Container = *Iterator;
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index++;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
-
-		Index = Test.GetCount() - 1;
-		for (NxEn::Array<ContainerTest>::Iterator Iterator = Test.BeginReverse(); Iterator != Test.EndReverse(); --Iterator)
-		{
-			Iterator->Integer = Index;
-			Iterator->Float = (float)Index;
-			Iterator->Boolean = Index % 2 == 1;
-			Index--;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
-
-		Index = 0;
-		for (ContainerTest& Container : Test)
-		{
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index++;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
-
-		ContainerTest ToFind = ContainerTest(2);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 2);
-
-		Test[0].Integer = 8;
-		Test[1].Integer = 4;
-		Test[2].Integer = 7;
-		Test[3].Integer = 1;
-		Test[4].Integer = 0;
-		Test[5].Integer = 5;
-		Test[6].Integer = 6;
-		Test[7].Integer = 2;
-		Test[8].Integer = 3;
+		ContainerTest First = Test.First();
+		ContainerTest Last = Test.Last();
+		Test.Reverse();
+		ASSERT_EQ(Test.First().Integer, Last.Integer);
+		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
 		Test.Sort();
-		for (Index = 0; Index < Test.GetCount(); Index++)
+		auto ItFirst = Test.Begin();
+		auto ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
 		{
-			ASSERT_EQ(Test[Index].Integer, Index);
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
 		}
 
-		Test.Reverse();
-		for (Index = 0; Index < Test.GetCount(); Index++)
-		{
-			ASSERT_EQ(Test[Index].Integer, Test.GetCount() - 1 - Index);
-		}
-
-		auto It = Test.GetIterator(5);
-		ASSERT_EQ(It.GetIndex(), 5);
+		ContainerTest ToFind1 = ContainerTest(5);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, List)
 	{
-		NxEn::List<ContainerTest> Test = NxEn::List<ContainerTest>(3);
-		ASSERT_EQ(Test.GetCapacity(), 3);
+		NxEn::List<ContainerTest> Test = NxEn::List<ContainerTest>(10);
+		ASSERT_EQ(Test.GetCapacity(), 10);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
-		ContainerTest& Index0 = Test.Append(ContainerTest(5));
-		ASSERT_EQ(Index0.Integer, 5);
-		
-		Test.Append(ContainerTest(6));
-		Test.Append(ContainerTest(7));
-		Test.Append(ContainerTest(8));
-		Test.Append(ContainerTest(9));
-		ASSERT_EQ(Test.GetCapacity(), 6);
-		ASSERT_EQ(Test.GetCount(), 5);
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::List<ContainerTest> Range = NxEn::List<ContainerTest>();
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+
+		Test.Append(Container1);
+		Test.Append(ContainerTest(2));
+		Test.AppendConstruct(3);
+		Test.AppendRange(Range);
+		ASSERT_EQ(Test.GetCapacity(), 10);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test[0].Integer, 1);
+		ASSERT_EQ(Test[1].Integer, 2);
+		ASSERT_EQ(Test[2].Integer, 3);
+		ASSERT_EQ(Test[3].Integer, 4);
+		ASSERT_EQ(Test[7].Integer, 4);
+
+		Test.Assign(7, Container1);
+		Test.Assign(6, ContainerTest(2));
+		Test.AssignConstruct(5, 3);
+		Test.AssignRange(0, Range);
+		ASSERT_EQ(Test.GetCapacity(), 10);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false); 
+		ASSERT_EQ(Test[7].Integer, 1);
+		ASSERT_EQ(Test[6].Integer, 2);
+		ASSERT_EQ(Test[5].Integer, 3);
+		ASSERT_EQ(Test[4].Integer, 4);
+		ASSERT_EQ(Test[0].Integer, 4);
+
+		Test.Insert(3, Container1);
+		Test.Insert(4, ContainerTest(2));
+		Test.InsertConstruct(5, 3);
+		Test.InsertRange(6, Range);
+		ASSERT_EQ(Test.GetCapacity() > 10, true);
+		ASSERT_EQ(Test.GetCount(), 16);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test[3].Integer, 1);
+		ASSERT_EQ(Test[4].Integer, 2);
+		ASSERT_EQ(Test[5].Integer, 3);
+		ASSERT_EQ(Test[6].Integer, 4);
+		ASSERT_EQ(Test[11].Integer, 4);
+
+		Test.Remove(3);
+		Test.RemoveLast();
+		Test.RemoveSwap(3);
+		Test.RemoveRange(3, 3);
+		ASSERT_EQ(Test.GetCapacity() > 10, true);
+		ASSERT_EQ(Test.GetCount(), 10);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::List<ContainerTest> CopyDeep = Test.Copy();
-		ASSERT_NE(&Test[0], &CopyDeep[0]);
-		ASSERT_EQ(Test[0].Integer, CopyDeep[0].Integer);
-		ASSERT_EQ(Test == CopyDeep, false);
+		ContainerTest AccesCopy = Test[5];
+		AccesCopy.Integer = 10;
+		ASSERT_NE(Test[5].Integer, 10);
 
-		ContainerTest Copy = Test[0];
-		Copy.Integer = 10;
-		ASSERT_NE(Test[0].Integer, 10);
-
-		ContainerTest& Reference = Test[0];
-		Reference.Integer = 10;
-		ASSERT_EQ(Test[0].Integer, 10);
-
-		Test[0] = ContainerTest(3);
-		Test[1] = ContainerTest(6);
-		ASSERT_EQ(Test[0].Integer, 3);
-		ASSERT_EQ(Test[1].Integer, 6);
-
-		Test.Assign(0, ContainerTest(7));
-		Test.AssignConstruct(1, 8);
-		ASSERT_EQ(Test[0].Integer, 7);
-		ASSERT_EQ(Test[1].Integer, 8);
-
-		Test.AssignRange(0, CopyDeep);
-		ASSERT_EQ(Test[0].Integer, 5);
-		ASSERT_EQ(Test[4].Integer, 9);
-
-		Test.Append(ContainerTest(12));
-		Test.AppendConstruct(11);
-		ASSERT_EQ(Test[5].Integer, 12);
-		ASSERT_EQ(Test[6].Integer, 11);
-
-		Test.AppendRange(CopyDeep);
-		ASSERT_EQ(Test[0].Integer, 5);
-		ASSERT_EQ(Test[11].Integer, 9);
-
-		Test.Insert(5, Copy);
+		ContainerTest& AccesRef = Test[5];
+		AccesRef.Integer = 10;
 		ASSERT_EQ(Test[5].Integer, 10);
-		ASSERT_EQ(Test[6].Integer, 12);
 
-		Test.InsertConstruct(5, 13);
-		ASSERT_EQ(Test[5].Integer, 13);
-		ASSERT_EQ(Test[6].Integer, 10);
+		NxEn::List<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
 
-		Test.InsertRange(5, CopyDeep);
-		ASSERT_EQ(Test[5].Integer, 5);
-		ASSERT_EQ(Test[9].Integer, 9);
-		ASSERT_EQ(Test[10].Integer, 13);
+		ASSERT_EQ(Test.Get(0).Integer, Test[0].Integer);
+		ASSERT_EQ(Test.First().Integer, Test[0].Integer);
+		ASSERT_EQ(Test.Last().Integer, Test[Test.GetCount() - 1].Integer);
 
-		Test.Remove(5);
-		ASSERT_EQ(Test[5].Integer, 6);
-
-		Test.RemoveRange(5, 4);
-		ASSERT_EQ(Test[5].Integer, 13);
-
-		Test.RemoveLast();
-		ASSERT_EQ(Test[12].Integer, 8);
-
-		Test.RemoveSwap(5);
-		ASSERT_EQ(Test[5].Integer, 8);
-
-		Test.Clear(true);
-		ASSERT_EQ(Test.GetCount(), 0);
-		ASSERT_EQ(Test.GetCapacity(), 2);
-
-		Test.AppendRange(CopyDeep);
-
-		Test[0].Integer = 3;
-		Test[1].Integer = 6;
-		Test.Swap(0, 1);
-		ASSERT_EQ(Test[0].Integer, 6);
-		ASSERT_EQ(Test[1].Integer, 3);
+		ASSERT_EQ(Test.GetIterator(5)->Integer, Test[5].Integer);
+		ASSERT_EQ(Test.GetIterator(5).GetIndex(), 5);
+		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
+		ASSERT_NE(Test.End()->Integer, Test.Last().Integer);
+		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
+		ASSERT_NE(Test.EndReverse()->Integer, Test.First().Integer);
 
 		uint64 Index = 0;
-		for (NxEn::List<ContainerTest>::Iterator Iterator = Test.Begin(); Iterator != Test.End(); ++Iterator)
+		for (auto& It : Test)
 		{
-			ContainerTest& Container = *Iterator;
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index++;
+			It.Integer = Index++;
 		}
-		ASSERT_EQ(Test[3].Integer, 3);
+		ASSERT_EQ(Test.First().Integer, 0);
+		ASSERT_EQ(Test.Last().Integer, Test.GetCount() - 1);
 
-		Index = Test.GetCount() - 1;
-		for (NxEn::List<ContainerTest>::Iterator Iterator = Test.BeginReverse(); Iterator != Test.EndReverse(); --Iterator)
-		{
-			ContainerTest& Container = *Iterator;
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index--;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
-
-		Index = 0;
-		for (ContainerTest& Container : Test)
-		{
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index++;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
-
-		Test.AppendConstruct(9);
-		Test.AppendConstruct(9);
-		Test.AppendConstruct(9);
-		Test.AppendConstruct(9);
-
-		Test.Grow(18);
-		ASSERT_EQ(Test.GetCount(), 9);
-		ASSERT_EQ(Test.GetCapacity(), 18);
-
+		ASSERT_EQ(Test.IsValidIndex(5), true);
+		ASSERT_EQ(Test.IsValidIndex(Test.GetCount()), false);
+		Test.Grow(30);
+		ASSERT_EQ(Test.GetCapacity(), 30);
 		Test.Shrink();
-		ASSERT_EQ(Test.GetCount(), 9);
-		ASSERT_EQ(Test.GetCapacity(), 9);
+		ASSERT_EQ(Test.GetCapacity(), 10);
 
-		ContainerTest ToFind = ContainerTest(2);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 2);
+		Test[3].Integer = 3;
+		Test[6].Integer = 6;
+		Test.Swap(3, 6);
+		ASSERT_EQ(Test[3].Integer, 6);
+		ASSERT_EQ(Test[6].Integer, 3);
 
-		Test[0].Integer = 3;
-		Test[1].Integer = 4;
-		Test[2].Integer = 2;
-		Test[3].Integer = 1;
-		Test[4].Integer = 6;
-		Test[5].Integer = 8;
-		Test[6].Integer = 5;
-		Test[7].Integer = 7;
-		Test[8].Integer = 0;
+		ContainerTest First = Test.First();
+		ContainerTest Last = Test.Last();
+		Test.Reverse();
+		ASSERT_EQ(Test.First().Integer, Last.Integer);
+		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
 		Test.Sort();
-		for (Index = 0; Index < Test.GetCount(); Index++)
+		auto ItFirst = Test.Begin();
+		auto ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
 		{
-			ASSERT_EQ(Test[Index].Integer, Index);
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
 		}
 
-		Test.Reverse();
-		for (Index = 0; Index < Test.GetCount(); Index++)
-		{
-			ASSERT_EQ(Test[Index].Integer, Test.GetCount() - 1 - Index);
-		}
-
-		auto It = Test.GetIterator(5);
-		ASSERT_EQ(It.GetIndex(), 5);
+		ContainerTest ToFind1 = ContainerTest(5);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, Dequeue)
 	{
 		NxEn::Dequeue<ContainerTest> Test = NxEn::Dequeue<ContainerTest>();
-		ASSERT_EQ(Test.GetBuckets(), 1);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
-		ContainerTest& Index0 = Test.AppendBack(ContainerTest(93));
-		ASSERT_EQ(Index0.Integer, 93);
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Dequeue<ContainerTest> Range = NxEn::Dequeue<ContainerTest>();
+		Range.AppendBack(4);
+		Range.AppendBack(4);
+		Range.AppendBack(4);
+		Range.AppendBack(4);
+		Range.AppendBack(4);
 
-		Test.AppendBack(ContainerTest(16));
-		Test.AppendBack(ContainerTest(73));
-		Test.AppendBack(21);
-		Test.AppendBack(64);
-		Test.AppendBack(24);
-		Test.AppendFront(ContainerTest(86));
-		Test.AppendFront(ContainerTest(82));
-		Test.AppendFront(ContainerTest(60));
-		Test.AppendFront(26);
-		Test.AppendFront(59);
-		Test.AppendFront(34);
-		ASSERT_EQ(Test.GetBuckets(), 3);
-		ASSERT_EQ(Test.GetCount(), 12);
-
-		ASSERT_EQ(Test[3].Integer, 60);
-		ASSERT_EQ(Test[9].Integer, 21);
-
-		NxEn::Dequeue<ContainerTest> CopyDeep = Test.Copy();
-		ASSERT_NE(&Test[0], &CopyDeep[0]);
-		ASSERT_EQ(Test[0].Integer, CopyDeep[0].Integer);
-		ASSERT_EQ(Test == CopyDeep, false);
-
-		CopyDeep.AppendBackRange(Test);
-		CopyDeep.Clear();
-		ASSERT_EQ(CopyDeep.GetCount(), 0);
-		ASSERT_EQ(CopyDeep.IsEmpty(), true);
-
-		Test.Assign(4, 48);
-		ASSERT_EQ(Test[4].Integer, 48);
-
-		Test.RemoveBack();
-		Test.RemoveBack();
-		Test.RemoveFront();
-		Test.RemoveFront();
+		Test.AppendBack(Container1);
+		Test.AppendBack(ContainerTest(2));
+		Test.AppendBackConstruct(3);
+		Test.AppendBackRange(Range);
 		ASSERT_EQ(Test.GetCount(), 8);
-		ASSERT_EQ(Test.GetBuckets(), 1);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test[0].Integer, 1);
+		ASSERT_EQ(Test[1].Integer, 2);
+		ASSERT_EQ(Test[2].Integer, 3);
+		ASSERT_EQ(Test[3].Integer, 4);
+		ASSERT_EQ(Test[7].Integer, 4);
 
-		ASSERT_EQ(Test.First().Integer, 26);
-		ASSERT_EQ(Test.Last().Integer, 21);
+		Test.AppendFront(Container1);
+		Test.AppendFront(ContainerTest(2));
+		Test.AppendFrontConstruct(3);
+		Test.AppendFrontRange(Range);
+		ASSERT_EQ(Test.GetCount(), 16);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test[7].Integer, 1);
+		ASSERT_EQ(Test[6].Integer, 2);
+		ASSERT_EQ(Test[5].Integer, 3);
+		ASSERT_EQ(Test[4].Integer, 4);
+		ASSERT_EQ(Test[0].Integer, 4);
 
-		ContainerTest ToFind = ContainerTest(86);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 86);
+		Test.Assign(3, Container1);
+		Test.Assign(4, ContainerTest(2));
+		Test.AssignConstruct(5, 3);
+		Test.AssignRange(6, Range);
+		ASSERT_EQ(Test.GetCount(), 16);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test[3].Integer, 1);
+		ASSERT_EQ(Test[4].Integer, 2);
+		ASSERT_EQ(Test[5].Integer, 3);
+		ASSERT_EQ(Test[6].Integer, 4);
+		ASSERT_EQ(Test[11].Integer, 4);
 
-		Test.AppendBack(21);
-		Test.AppendBack(64);
-		Test.AppendBack(24);
-		Test.AppendFront(26);
-		Test.AppendFront(59);
-		Test.AppendFront(34);
+		Test.RemoveBack();
+		Test.RemoveFront();
+		ASSERT_EQ(Test.GetCount(), 14);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		ContainerTest AccesCopy = Test[5];
+		AccesCopy.Integer = 10;
+		ASSERT_NE(Test[5].Integer, 10);
+
+		ContainerTest& AccesRef = Test[5];
+		AccesRef.Integer = 10;
+		ASSERT_EQ(Test[5].Integer, 10);
+
+		NxEn::Dequeue<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		ASSERT_EQ(Test.Get(0).Integer, Test[0].Integer);
+		ASSERT_EQ(Test.First().Integer, Test[0].Integer);
+		ASSERT_EQ(Test.Last().Integer, Test[Test.GetCount() - 1].Integer);
+
+		ASSERT_EQ(Test.GetIterator(5)->Integer, Test[5].Integer);
+		ASSERT_EQ(Test.GetIterator(5).GetIndex(), 5);
+		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
+		ASSERT_NE(Test.End()->Integer, Test.Last().Integer);
+		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
+		ASSERT_NE(Test.EndReverse()->Integer, Test.First().Integer);
 
 		uint64 Index = 0;
-		for (NxEn::Dequeue<ContainerTest>::Iterator Iterator = Test.Begin(); Iterator != Test.End(); ++Iterator)
+		for (auto& It : Test)
 		{
-			ContainerTest& Container = *Iterator;
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index++;
+			It.Integer = Index++;
 		}
-		ASSERT_EQ(Test[3].Integer, 3);
+		ASSERT_EQ(Test.First().Integer, 0);
+		ASSERT_EQ(Test.Last().Integer, Test.GetCount() - 1);
 
-		Index = Test.GetCount() - 1;
-		for (NxEn::Dequeue<ContainerTest>::Iterator Iterator = Test.BeginReverse(); Iterator != Test.EndReverse(); --Iterator)
-		{
-			Iterator->Integer = Index;
-			Iterator->Float = (float)Index;
-			Iterator->Boolean = Index % 2 == 1;
-			Index--;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
+		ASSERT_EQ(Test.IsValidIndex(5), true);
+		ASSERT_EQ(Test.IsValidIndex(Test.GetCount()), false);
 
-		Index = 0;
-		for (ContainerTest& Container : Test)
-		{
-			Container.Integer = Index;
-			Container.Float = (float)Index;
-			Container.Boolean = Index % 2 == 1;
-			Index++;
-		}
-		ASSERT_EQ(Test[3].Integer, 3);
-
-		Test.Get(3).Integer = 3;
-		Test.Get(6).Integer = 6;
+		Test[3].Integer = 3;
+		Test[6].Integer = 6;
 		Test.Swap(3, 6);
 		ASSERT_EQ(Test[3].Integer, 6);
 		ASSERT_EQ(Test[6].Integer, 3);
 
-		auto It = Test.GetIterator(5);
-		ASSERT_EQ(It.GetIndex(), 5);
+		ContainerTest First = Test.First();
+		ContainerTest Last = Test.Last();
+		Test.Reverse();
+		ASSERT_EQ(Test.First().Integer, Last.Integer);
+		ASSERT_EQ(Test.Last().Integer, First.Integer);
+
+		ContainerTest ToFind1 = ContainerTest(5);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, LinkedList)
 	{
 		NxEn::LinkedList<ContainerTest> Test = NxEn::LinkedList<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
 
-		ContainerTest& Index0 = Test.AppendBack(ContainerTest(5));
-		ASSERT_EQ(Index0.Integer, 5);
-		Test.AppendBack(8);
-		ASSERT_EQ(Test.Last().Integer, 8);
-		Test.AppendFront(10);
-		ASSERT_EQ(Test.First().Integer, 10);
-		Test.AppendFront(ContainerTest(3));
-		ASSERT_EQ(Test.First().Integer, 3);
-		ASSERT_EQ(Test.GetCount(), 4);
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::LinkedList<ContainerTest> Range = NxEn::LinkedList<ContainerTest>();
+		Range.AppendBack(4);
+		Range.AppendBack(4);
+		Range.AppendBack(4);
+		Range.AppendBack(4);
+		Range.AppendBack(4);
 
-		ContainerTest& First = Test.First();
-		First.Integer = 62;
-		ASSERT_EQ(Test.First().Integer, 62);
-		ContainerTest& Next = Test.GetNext(&First);
-		Next.Integer = 46;
-		ASSERT_EQ(Test.GetNext(&Test.First()).Integer, 46);
-		ContainerTest& Last = Test.Last();
-		Last.Integer = 24;
-		ASSERT_EQ(Test.Last().Integer, 24);
-		ContainerTest& Prev = Test.GetPrev(&Last);
-		Prev.Integer = 72;
-		ASSERT_EQ(Test.GetPrev(&Test.Last()).Integer, 72);
-
-		Test.Assign(&First, ContainerTest(6));
-		ASSERT_EQ(Test.First().Integer, 6);
-		Test.Assign(&Last, 8);
-		ASSERT_EQ(Test.Last().Integer, 8);
-
-		Test.InsertBack(&Next, ContainerTest(56));
-		Test.InsertBackConstruct(&Prev, 23);
-		Test.InsertFront(&Prev, ContainerTest(32));
-		Test.InsertFrontConstruct(&Next, 2);
+		ContainerTest& Index1 = Test.AppendBack(Container1);
+		ContainerTest& Index2 = Test.AppendBack(ContainerTest(2));
+		ContainerTest& Index3 = Test.AppendBackConstruct(3);
+		ContainerTest& Index4 = Test.AppendBackRange(Range);
 		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 1);
+		ASSERT_EQ(Index2.Integer, 2);
+		ASSERT_EQ(Index3.Integer, 3);
+		ASSERT_EQ(Index4.Integer, 4);
 
-		Test.Swap(&Test.First(), &Test.Last());
-		Test.Swap(&Test.First(), &Test.Last());
-		Test.Swap(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
-		Test.Swap(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
-		Test.Swap(&Test.GetNext(&Test.GetNext(&Test.GetNext(&Test.First()))), &Test.GetPrev(&Test.GetPrev(&Test.GetPrev(&Test.Last()))));
-		Test.Swap(&Test.GetNext(&Test.GetNext(&Test.GetNext(&Test.First()))), &Test.GetPrev(&Test.GetPrev(&Test.GetPrev(&Test.Last()))));
+		ContainerTest& Index5 = Test.AppendFront(Container1);
+		ContainerTest& Index6 = Test.AppendFront(ContainerTest(2));
+		ContainerTest& Index7 = Test.AppendFrontConstruct(3);
+		ContainerTest& Index8 = Test.AppendFrontRange(Range);
+		ASSERT_EQ(Test.GetCount(), 16);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index5.Integer, 1);
+		ASSERT_EQ(Index6.Integer, 2);
+		ASSERT_EQ(Index7.Integer, 3);
+		ASSERT_EQ(Index8.Integer, 4);
 
-		Test.AppendFront(2);
+		Index5 = Test.Assign(&Index5, Container1);
+		Index6 = Test.Assign(&Index6, ContainerTest(2));
+		Index7 = Test.AssignConstruct(&Index7, 3);
+		ASSERT_EQ(Test.GetCount(), 16);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index5.Integer, 1);
+		ASSERT_EQ(Index6.Integer, 2);
+		ASSERT_EQ(Index7.Integer, 3);
 
-		ContainerTest ToFind = ContainerTest(23);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 23);
+		ContainerTest& Index9 = Test.InsertFront(&Index1, Container1);
+		ContainerTest& Index10 = Test.InsertFront(&Index2, ContainerTest(2));
+		ContainerTest& Index11 = Test.InsertFrontConstruct(&Index3, 3);
+		ContainerTest& Index12 = Test.InsertFrontRange(&Index4, Range);
+		ASSERT_EQ(Test.GetCount(), 24);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index9.Integer, 1);
+		ASSERT_EQ(Index10.Integer, 2);
+		ASSERT_EQ(Index11.Integer, 3);
+		ASSERT_EQ(Index12.Integer, 4);
 
-		Test.Sort();
-		for (ContainerTest& It : Test)
-		{
-			ContainerTest* Next = Test.TryGetNext(&It);
-			if (Next != nullptr)
-			{
-				ASSERT_EQ(It <= *Next, true);
-			}
-		}
-		Test.Reverse();
-		for (ContainerTest& It : Test)
-		{
-			ContainerTest* Next = Test.TryGetNext(&It);
-			if (Next != nullptr)
-			{
-				ASSERT_EQ(It >= *Next, true);
-			}
-		}
+		ContainerTest& Index13 = Test.InsertBack(&Index1, Container1);
+		ContainerTest& Index14 = Test.InsertBack(&Index2, ContainerTest(2));
+		ContainerTest& Index15 = Test.InsertBackConstruct(&Index3, 3);
+		ContainerTest& Index16 = Test.InsertBackRange(&Index4, Range);
+		ASSERT_EQ(Test.GetCount(), 32);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index13.Integer, 1);
+		ASSERT_EQ(Index14.Integer, 2);
+		ASSERT_EQ(Index15.Integer, 3);
+		ASSERT_EQ(Index16.Integer, 4);
+
+		Test.Remove(&Index1, &Index3);
+		Test.Remove(&Index4);
+		Test.RemoveBack();
+		Test.RemoveFront();
+		ASSERT_EQ(Test.GetCount(), 22);
+		ASSERT_EQ(Test.IsEmpty(), false);
 
 		NxEn::LinkedList<ContainerTest> Copy = Test.Copy();
-		uint64 Index = 0;
-		for (NxEn::LinkedList<ContainerTest>::Iterator It = Copy.begin(); It != Copy.End(); It++, Index++)
-		{
-			It->Integer = Index;
-		}
-
-		Copy.InsertBackRange(&Copy.First(), Test);
-
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy.First().Integer, Test.First().Integer);
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
-		Copy.AppendBack(9);
-		Copy.AppendFront(8);
-		Copy.RemoveBack();
-		Copy.RemoveFront();
+		ASSERT_EQ(Test.TryGetPrev(&Test.First()), nullptr);
+		ASSERT_EQ(Test.TryGetNext(&Test.Last()), nullptr);
 
-		Test.RemoveBack();
-		Test.RemoveFront();
-		ASSERT_EQ(Test.GetCount(), 7);
+		ContainerTest& Next = Test.GetNext(&Index5);
+		ContainerTest& Prev = Test.GetPrev(&Index5);
+		ASSERT_EQ(Test.IsNext(&Index5, &Next), true);
+		ASSERT_EQ(Test.IsPrevious(&Index5, &Prev), true);
 
-		Test.Remove(&Test.GetNext(&Test.First()), &Test.GetPrev(&Test.Last()));
-		ASSERT_EQ(Test.GetCount(), 2);
+		ASSERT_EQ(Test.GetIterator(&Index5)->Integer, Index5.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index5).Next()->Integer, Test.GetNext(&Index5).Integer);
+		ASSERT_EQ(Test.GetIterator(&Index5).Previous()->Integer, Test.GetPrev(&Index5).Integer);
+		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
+		ASSERT_EQ(Test.End(), nullptr);
+		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
+		ASSERT_EQ(Test.EndReverse(), nullptr);
 
-		bool Connected = Test.IsNext(&Test.First(), &Test.Last());
-		ASSERT_EQ(Connected, true);
+		uint64 Index = 0;
+		for (auto& It : Test)
+		{
+			It.Integer = Index++;
+		}
+		ASSERT_EQ(Test.First().Integer, 0);
+		ASSERT_EQ(Test.Last().Integer, Test.GetCount() - 1);
 
-		auto It = Test.GetIterator(&Test.First());
-		ASSERT_EQ(It->Integer, Test.First().Integer);
-		ASSERT_EQ(It.Next()->Integer, Test.GetNext(&Test.First()).Integer);
+		ContainerTest A = Test.First();
+		ContainerTest B = Test.Last();
+		Test.Swap(&Test.First(), &Test.Last());
+		ASSERT_EQ(Test.First().Integer, B.Integer);
+		ASSERT_EQ(Test.Last().Integer, A.Integer);
+
+		ContainerTest First = Test.First();
+		ContainerTest Last = Test.Last();
+		Test.Reverse();
+		ASSERT_EQ(Test.First().Integer, Last.Integer);
+		ASSERT_EQ(Test.Last().Integer, First.Integer);
+
+		ContainerTest ToFind1 = ContainerTest(5);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, Stack)
 	{
 		NxEn::Stack<ContainerTest> Test = NxEn::Stack<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
 
-		ContainerTest& Index0 = Test.Append(ContainerTest(5));
-		ASSERT_EQ(Index0.Integer, 5);
-		Test.Append(8);
-		ASSERT_EQ(Test.Get().Integer, 8);
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Stack<ContainerTest> Range = NxEn::Stack<ContainerTest>();
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
 
-		ContainerTest& Test1 = Test.Get();
-		Test1.Integer = 15;
-		ASSERT_EQ(Test.Get().Integer, 15);
+		ContainerTest& Index1 = Test.Append(Container1);
+		ContainerTest& Index2 = Test.Append(ContainerTest(2));
+		ContainerTest& Index3 = Test.AppendConstruct(3);
+		ContainerTest& Index4 = Test.AppendRange(Range);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 1);
+		ASSERT_EQ(Index2.Integer, 2);
+		ASSERT_EQ(Index3.Integer, 3);
+		ASSERT_EQ(Index4.Integer, 4);
 
-		Test.Append(10);
-		ASSERT_EQ(Test.Get().Integer, 10);
-		Test.Append(ContainerTest(3));
-		ASSERT_EQ(Test.Get().Integer, 3);
-		Test.Append(ContainerTest(19));
-		ASSERT_EQ(Test.Get().Integer, 19);
-		Test.Append(ContainerTest(8));
-		ASSERT_EQ(Test.Get().Integer, 8);
-		ASSERT_EQ(Test.GetCount(), 6);
+		Test.Remove();
+		Test.Remove();
+		Test.Remove();
+		Test.Remove();
+		ASSERT_EQ(Test.GetCount(), 4);
+		ASSERT_EQ(Test.IsEmpty(), false);
 
 		NxEn::Stack<ContainerTest> Copy = Test.Copy();
-		Copy.AppendRange(Test);
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy.Get().Integer, Test.Get().Integer);
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
-		Copy.Append(9);
-		Copy.Append(8);
-		Copy.Remove();
-		Copy.Remove();
+		ASSERT_EQ(Test.Get().Integer, 4);
 
-		Test.Remove();
-		ASSERT_EQ(Test.GetCount(), 5);
-		Test.Remove();
-		ASSERT_EQ(Test.GetCount(), 4);
-
-		Test.Append(10);
-		Test.Append(17);
-		Test.Append(25);
-
-		ContainerTest ToFind = ContainerTest(25);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 25);
-
-		Test.Reverse();
-		ASSERT_EQ(Test.Get().Integer, 5);
+		ASSERT_EQ(Test.GetIterator(&Index3)->Integer, Index3.Integer);
+		ASSERT_EQ(Test.Begin()->Integer, Index4.Integer);
+		ASSERT_EQ(Test.End(), nullptr);
 
 		uint64 Index = 0;
 		for (auto& It : Test)
 		{
 			It.Integer = Index++;
 		}
+		ASSERT_EQ(Test.Begin()->Integer, 0);
 
-		auto It = Test.GetIterator(&Test.Get());
-		ASSERT_EQ(It->Integer, Test.Get().Integer);
+		ContainerTest ToFind1 = ContainerTest(2);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, Queue)
 	{
 		NxEn::Queue<ContainerTest> Test = NxEn::Queue<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
 
-		Test.Append(ContainerTest(5));
-		ASSERT_EQ(Test.Get().Integer, 5);
-		ContainerTest& Index1 = Test.Append(8);
-		ASSERT_EQ(Index1.Integer, 8);
-		ASSERT_EQ(Test.Get().Integer, 5);
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Queue<ContainerTest> Range = NxEn::Queue<ContainerTest>();
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
 
-		ContainerTest& Test1 = Test.Get();
-		Test1.Integer = 15;
-		ASSERT_EQ(Test.Get().Integer, 15);
+		ContainerTest& Index1 = Test.Append(Container1);
+		ContainerTest& Index2 = Test.Append(ContainerTest(2));
+		ContainerTest& Index3 = Test.AppendConstruct(3);
+		ContainerTest& Index4 = Test.AppendRange(Range);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 1);
+		ASSERT_EQ(Index2.Integer, 2);
+		ASSERT_EQ(Index3.Integer, 3);
+		ASSERT_EQ(Index4.Integer, 4);
 
-		Test.Append(10);
-		ASSERT_EQ(Test.Get().Integer, 15);
-		Test.Append(ContainerTest(3));
-		Test.Append(ContainerTest(19));
-		Test.Append(ContainerTest(8));
+		Test.Remove();
+		Test.Remove();
 		ASSERT_EQ(Test.GetCount(), 6);
+		ASSERT_EQ(Test.IsEmpty(), false);
 
 		NxEn::Queue<ContainerTest> Copy = Test.Copy();
-		Copy.AppendRange(Test);
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy.Get().Integer, Test.Get().Integer);
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
-		Copy.Append(9);
-		Copy.Append(8);
-		Copy.Remove();
-		Copy.Remove();
+		ASSERT_EQ(Test.Get().Integer, 3);
 
-		Test.Remove();
-		ASSERT_EQ(Test.GetCount(), 5);
-		Test.Remove();
-		ASSERT_EQ(Test.GetCount(), 4);
-		ASSERT_EQ(Test.Get().Integer, 10);
+		ASSERT_EQ(Test.GetIterator(&Index4)->Integer, Index4.Integer);
+		ASSERT_EQ(Test.Begin()->Integer, Index3.Integer);
+		ASSERT_EQ(Test.End(), nullptr);
 
-		Test.Append(10);
-		Test.Append(17);
-		Test.Append(25);
+		uint64 Index = 0;
+		for (auto& It : Test)
+		{
+			It.Integer = Index++;
+		}
+		ASSERT_EQ(Test.Begin()->Integer, 0);
 
-		ContainerTest ToFind = ContainerTest(25);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 25);
+		ContainerTest ToFind1 = ContainerTest(4);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
+	}
 
-		Test.Reverse();
-		ASSERT_EQ(Test.Get().Integer, 25);
+	TEST(Type_Containers, Set)
+	{
+		NxEn::Set<ContainerTest> Test = NxEn::Set<ContainerTest>(10);
+		ASSERT_EQ(Test.GetBuckets(), 10);
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Set<ContainerTest> Range = NxEn::Set<ContainerTest>();
+		Range.Append(6);
+		Range.Append(7);
+		Range.Append(8);
+		Range.Append(9);
+		Range.Append(10);
+
+		const ContainerTest& Index1 = Test.Append(Container1);
+		const ContainerTest& Index2 = Test.Append(ContainerTest(2));
+		const ContainerTest& Index3 = Test.AppendRange(Range);
+		ASSERT_EQ(Test.GetCount(), 7);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 1);
+		ASSERT_EQ(Index2.Integer, 2);
+
+		Test.Remove(8);
+		ASSERT_EQ(Test.GetCount(), 6);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		NxEn::Set<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		ASSERT_EQ(Test.GetIterator(6)->Integer, 6);
+
+		Test.ReHash(21);
+		ASSERT_EQ(Test.GetBuckets(), 21);
+
+		ContainerTest ToFind1 = ContainerTest(6);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
+	}
+
+	TEST(Type_Containers, Dictionary)
+	{
+		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>(10);
+		ASSERT_EQ(Test.GetBuckets(), 10);
+		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
+
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Dictionary<ContainerTest, ContainerTest> Range = NxEn::Dictionary<ContainerTest, ContainerTest>();
+		Range.Append(6, 60);
+		Range.Append(7, 70);
+		Range.Append(8, 80);
+		Range.Append(9, 90);
+		Range.Append(10, 100);
+
+		const ContainerTest& Index1 = Test.Append(Container1, 10);
+		const ContainerTest& Index2 = Test.Append(ContainerTest(2), 20);
+		const ContainerTest& Index3 = Test.AppendConstruct(ContainerTest(3), 30);
+		const ContainerTest& Index4 = Test.AppendRange(Range);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 10);
+		ASSERT_EQ(Index2.Integer, 20);
+		ASSERT_EQ(Index3.Integer, 30);
+
+		const ContainerTest& Index5 = Test.Assign(Container1, 100);
+		const ContainerTest& Index6 = Test.Assign(ContainerTest(2), 200);
+		const ContainerTest& Index7 = Test.AssignConstruct(ContainerTest(3), 300);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index5.Integer, 100);
+		ASSERT_EQ(Index6.Integer, 200);
+		ASSERT_EQ(Index7.Integer, 300);
+
+		Test.Remove(8);
+		ASSERT_EQ(Test.GetCount(), 7);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		ContainerTest AccesCopy = Test[2];
+		AccesCopy.Integer = 2000;
+		ASSERT_NE(Test[2].Integer, 2000);
+
+		ContainerTest& AccesRef = Test[2];
+		AccesCopy.Integer = 2000;
+		ASSERT_NE(Test[2].Integer, 2000);
+
+		NxEn::Dictionary<ContainerTest, ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		ASSERT_EQ(Test.Get(9).Integer, 90);
+		ASSERT_EQ(Test.GetIterator(6)->GetKey().Integer, 6);
+
+		for (auto& Kv : Test)
+		{
+			Kv.GetValue().Integer = Kv.GetKey().Integer * 10;
+		}
+
+		Test.ReHash(21);
+		ASSERT_EQ(Test.GetBuckets(), 21);
+
+		Test.Swap(6, 7);
+		ASSERT_EQ(Test[6].Integer, 70);
+		ASSERT_EQ(Test[7].Integer, 60);
+
+		ContainerTest ToFind1 = ContainerTest(3);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.ContainsKey(ToFind1), true);
+		ASSERT_EQ(Test.ContainsValue(ToFind2), true);
+		ASSERT_EQ(Test.FindKey(ToFind1)->GetKey().Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.FindValue(ToFind2)->GetValue().Integer, ToFind2.Integer);
+	}
+
+	TEST(Type_Containers, Tree)
+	{
+		NxEn::Tree<ContainerTest> Test = NxEn::Tree<ContainerTest>();
+		ContainerTest& Root = Test.Initialize(0);
+		ASSERT_EQ(Test.GetCount(), 1);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Tree<ContainerTest> Range = NxEn::Tree<ContainerTest>();
+		ContainerTest& RangeRoot = Range.Initialize(0);
+		Range.Append(&RangeRoot, 4);
+		Range.Append(&RangeRoot, 4);
+		Range.Append(&RangeRoot, 4);
+		Range.Append(&RangeRoot, 4);
+		Range.Append(&RangeRoot, 4);
+
+		ContainerTest& Index1 = Test.Append(&Root, Container1);
+		ContainerTest& Index2 = Test.Append(&Root, ContainerTest(2));
+		ContainerTest& Index3 = Test.AppendConstruct(&Root, 3);
+		ContainerTest& Index4 = Test.AppendRange(&Root, Range);
+		ASSERT_EQ(Test.GetCount(), 10);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 1);
+		ASSERT_EQ(Index2.Integer, 2);
+		ASSERT_EQ(Index3.Integer, 3);
+		ASSERT_EQ(Index4.Integer, 0);
+
+		Index1 = Test.Assign(&Index1, Container1);
+		Index2 = Test.Assign(&Index2, ContainerTest(2));
+		Index3 = Test.AssignConstruct(&Index3, 3);
+		ASSERT_EQ(Test.GetCount(), 10);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		ContainerTest& Index5 = Test.InsertSibling(&Index1, Container1);
+		ContainerTest& Index6 = Test.InsertSibling(&Index2, ContainerTest(5));
+		ContainerTest& Index7 = Test.InsertSibling(&Index3, 6);
+		ASSERT_EQ(Test.GetCount(), 13);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index5.Integer, 1);
+		ASSERT_EQ(Index6.Integer, 5);
+		ASSERT_EQ(Index7.Integer, 6);
+
+		ContainerTest& Index8 = Test.InsertChild(&Index1, Container1);
+		ContainerTest& Index9 = Test.InsertChild(&Index2, ContainerTest(7));
+		ContainerTest& Index10 = Test.InsertChild(&Index3, 8);
+		ASSERT_EQ(Test.GetCount(), 16);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index8.Integer, 1);
+		ASSERT_EQ(Index9.Integer, 7);
+		ASSERT_EQ(Index10.Integer, 8);
+
+		Test.Remove(&Index2);
+		Test.RemoveChildren(&Index3);
+		ASSERT_EQ(Test.GetCount(), 13);
+		ASSERT_EQ(Test.IsEmpty(), false);
+
+		NxEn::Tree<ContainerTest> Copy = Test.Copy();
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
+		ASSERT_EQ(Copy.Begin()->Integer, Test.Begin()->Integer);
+		Copy.Clear();
+		ASSERT_EQ(Copy.GetCount(), 0);
+
+		ASSERT_EQ(Test.GetRoot().Integer, 0);
+		ASSERT_EQ(Test.GetParent(&Index1).Integer, Root.Integer);
+		ASSERT_EQ(Test.GetSibling(&Index1).Integer, 1);
+		ASSERT_EQ(Test.GetChild(&Index1).Integer, 1);
+		ASSERT_EQ(Test.IsParent(&Index1, &Root), true);
+		ASSERT_EQ(Test.IsSibling(&Index1, &Index5), true);
+		ASSERT_EQ(Test.IsChild(&Index1, &Index8), true);
+
+		ASSERT_EQ(Test.GetIterator(&Index5)->Integer, Index5.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index8).Parent()->Integer, Index1.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index1).Sibling()->Integer, Index5.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index1).Child()->Integer, Index8.Integer);
+		ASSERT_EQ(Test.Begin()->Integer, Root.Integer);
+		ASSERT_EQ(Test.End(), nullptr);
 
 		uint64 Index = 0;
 		for (auto& It : Test)
@@ -740,327 +912,96 @@ namespace NxTs
 			It.Integer = Index++;
 		}
 
-		Test.Append(8);
+		ContainerTest A = Index8;
+		ContainerTest B = Index9;
+		Test.Swap(&A, &B);
+		ASSERT_EQ(Index8.Integer, B.Integer);
+		ASSERT_EQ(Index9.Integer, A.Integer);
 
-		auto It = Test.GetIterator(&Test.Get());
-		ASSERT_EQ(It->Integer, Test.Get().Integer);
-	}
-
-	TEST(Type_Containers, Set)
-	{
-		NxEn::Set<ContainerTest, NxEn::XxHash64> Test = NxEn::Set<ContainerTest, NxEn::XxHash64>();
-		ASSERT_EQ(Test.GetBuckets(), 16);
-		ASSERT_EQ(Test.GetCount(), 0);
-		ASSERT_EQ(Test.IsEmpty(), true);
-
-		ContainerTest Test1 = ContainerTest(5);
-		ContainerTest Test2 = ContainerTest(6);
-		ContainerTest Test3 = ContainerTest(7);
-
-		const ContainerTest& Index0 = Test.Append(Test1);
-		ASSERT_EQ(Index0.Integer, 5);
-
-		Test.Append(Test1);
-		Test.Append(Test2);
-		Test.Append(Test2);
-		Test.Append(Test3);
-		Test.Append(Test3);
-		Test.Append(ContainerTest(27));
-		Test.Append(ContainerTest(8));
-		Test.Append(ContainerTest(58));
-		Test.Append(ContainerTest(9));
-		Test.Append(ContainerTest(43));
-		ASSERT_EQ(Test.GetBuckets(), 16);
-		ASSERT_EQ(Test.GetCount(), 8);
-		ASSERT_EQ(Test.IsEmpty(), false);
-
-		Test.Remove(Test2);
-		Test.Remove(Test3);
-
-		NxEn::Set<ContainerTest, NxEn::XxHash64> CopyDeep = Test.Copy();
-		ASSERT_EQ(Test == CopyDeep, false);
-		ASSERT_EQ(Test.GetCount(), CopyDeep.GetCount());
-
-		CopyDeep.Clear();
-		CopyDeep.AppendRange(Test);
-		CopyDeep.Clear();
-		ASSERT_EQ(CopyDeep.GetCount(), 0);
-		ASSERT_EQ(CopyDeep.IsEmpty(), true);
-
-		CopyDeep.Append(9);
-		CopyDeep.Remove(9);
-
-		ContainerTest ToFind = ContainerTest(43);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 43);
-
-		Test.ReHash(21);
-
-		auto It = Test.GetIterator(Test1);
-		ASSERT_EQ(It->Integer, Test1.Integer);
-	}
-
-	TEST(Type_Containers, Dictionary)
-	{
-		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>();
-		ASSERT_EQ(Test.GetBuckets(), 16);
-		ASSERT_EQ(Test.GetCount(), 0);
-		ASSERT_EQ(Test.IsEmpty(), true);
-
-		ContainerTest Test1 = ContainerTest(1);
-		ContainerTest Test2 = ContainerTest(2);
-		ContainerTest Test3 = ContainerTest(3);
-
-		ContainerTest& Index0 = Test.Append(Test1, ContainerTest(10));
-		ASSERT_EQ(Index0.Integer, 10);
-
-		Test.Append(Test1, ContainerTest(20));
-		Test.Append(Test2, ContainerTest(11));
-		Test.Append(Test2, ContainerTest(21));
-		Test.Append(Test3, ContainerTest(12));
-		Test.Append(Test3, ContainerTest(22));
-
-		Test.Assign(Test1, ContainerTest(30));
-		Test.Assign(Test2, ContainerTest(31));
-		Test.Assign(Test3, ContainerTest(32));
-
-		ASSERT_EQ(Test.GetBuckets(), 16);
-		ASSERT_EQ(Test.GetCount(), 3);
-		ASSERT_EQ(Test.IsEmpty(), false);
-
-		Test.Remove(Test2);
-		ASSERT_EQ(Test.GetCount(), 2);
-
-		NxEn::Dictionary<ContainerTest, ContainerTest> CopyDeep = Test.Copy();
-		ASSERT_EQ(CopyDeep == Test, false);
-		ASSERT_EQ(CopyDeep.GetCount(), 2);
-
-		CopyDeep.Clear();
-		CopyDeep.AppendRange(Test);
-		CopyDeep.Clear();
-		ASSERT_EQ(CopyDeep.GetCount(), 0);
-
-		CopyDeep.Append(Test1, ContainerTest(10));
-		CopyDeep.Remove(Test1);
-
-		ContainerTest Copy = Test[Test1];
-		Copy.Integer = 40;
-		ASSERT_EQ(Test[Test1].Integer, 30);
-
-		ContainerTest& Ref = Test[Test1];
-		Ref.Integer = 40;
-		ASSERT_EQ(Test[Test1].Integer, 40);
-
-		ContainerTest* None = Test.TryGet(ContainerTest(4));
-		ASSERT_EQ(None, nullptr);
-
-		Test.Swap(Test1, Test3);
-		ASSERT_EQ(Test[Test1].Integer, 32);
-		ASSERT_EQ(Test[Test3].Integer, 40);
-
-		bool ContainsKey = Test.ContainsKey(Test1);
-		bool ContainsValue = Test.ContainsValue(ContainerTest(40));
-		auto FoundKey = Test.FindKey(ContainerTest(3));
-		auto FoundValue = Test.FindValue(ContainerTest(40));
-		ASSERT_EQ(ContainsKey, true);
-		ASSERT_EQ(ContainsValue, true);
-		ASSERT_EQ(FoundKey->GetKey().Integer, 3);
-		ASSERT_EQ(FoundValue->GetKey().Integer, 3);
-
-		Test.Append(ContainerTest(4), ContainerTest(40));
-		Test.Append(ContainerTest(5), ContainerTest(50));
-		Test.Append(ContainerTest(6), ContainerTest(60));
-		Test.Append(ContainerTest(7), ContainerTest(70));
-		Test.Append(ContainerTest(8), ContainerTest(80));
-		Test.Append(ContainerTest(9), ContainerTest(90));
-		Test.Append(ContainerTest(10), ContainerTest(100));
-		Test.Append(ContainerTest(11), ContainerTest(110));
-		Test.Append(ContainerTest(12), ContainerTest(120));
-
-		uint64 Index = 0;
-		for (NxEn::Dictionary<ContainerTest, ContainerTest>::Iterator It = Test.Begin(); It != Test.End(); It++)
-		{
-			NxEn::Dictionary<ContainerTest, ContainerTest>::KeyValuePair& Kv = *It;
-			Kv.GetValue().Integer = Index++;
-		}
-
-		Index = 0;
-		for (auto& Kv : Test)
-		{
-			ASSERT_EQ(Kv.GetValue().Integer, Index++);
-		}
-
-		Test.ReHash(21);
-
-		auto It = Test.GetIterator(Test1);
-		ASSERT_EQ(It->GetKey().Integer, Test1.Integer);
-	}
-
-	TEST(Type_Containers, Tree)
-	{
-		NxEn::Tree<ContainerTest> Test = NxEn::Tree<ContainerTest>();
-		ASSERT_EQ(Test.GetCount(), 0);
-		ASSERT_EQ(Test.IsEmpty(), true);
-
-		Test.Initialize(ContainerTest(10));
-		ASSERT_EQ(Test.GetCount(), 1);
-		ASSERT_EQ(Test.IsEmpty(), false);
-		ASSERT_EQ(Test.GetRoot().Integer, 10);
-
-		ContainerTest& Index0 = Test.Append(&Test.GetRoot(), ContainerTest(1));
-		ASSERT_EQ(Index0.Integer, 1);
-
-		Test.Append(&Test.GetRoot(), ContainerTest(2));
-		Test.Append(&Test.GetRoot(), ContainerTest(3));
-		ASSERT_EQ(Test.GetCount(), 4);
-
-		ContainerTest& Test1Ref = Test.GetChild(&Test.GetRoot());
-		ASSERT_EQ(Test1Ref.Integer, 1);
-		ContainerTest& Test2Ref = Test.GetSibling(&Test1Ref);
-		ASSERT_EQ(Test2Ref.Integer, 2);
-		ContainerTest& Test3Ref = Test.GetSibling(&Test2Ref);
-		ASSERT_EQ(Test3Ref.Integer, 3);
-		ContainerTest& Test0Ref = Test.GetParent(&Test2Ref);
-		ASSERT_EQ(Test0Ref.Integer, 10);
-
-		bool IsChild = Test.IsParent(&Test1Ref, &Test0Ref);
-		bool IsSibling = Test.IsSibling(&Test1Ref, &Test2Ref);
-		ASSERT_EQ(IsChild, true);
-		ASSERT_EQ(IsSibling, true);
-
-		Test.Append(&Test1Ref, ContainerTest(4));
-		Test.Append(&Test2Ref, ContainerTest(5));
-		ASSERT_EQ(Test.GetCount(), 6);
-
-		Test.InsertSibling(&Test2Ref, ContainerTest(6));
-		Test.InsertSibling(&Test3Ref, ContainerTest(7));
-		ASSERT_EQ(Test.GetCount(), 8);
-
-		Test.InsertChild(&Test.GetRoot(), ContainerTest(100));
-		ASSERT_EQ(Test.GetCount(), 9);
-
-		NxEn::Tree<ContainerTest> Copy = Test.Copy();
-		ASSERT_EQ(Test == Copy, false);
-		Test.AppendRange(&Test1Ref, Copy);
-		ASSERT_EQ(Test.GetCount(), 18);
-		Copy.Clear();
-		ASSERT_EQ(Copy.GetCount(), 0);
-
-		uint64 Index = 0;
-		for (NxEn::Tree<ContainerTest>::Iterator It = Test.Begin(); It != Test.End(); It++)
-		{
-			(*It).Integer = Index++;
-		}
-
-		Index = 0;
-		for (auto& It : Test)
-		{
-			ASSERT_EQ(It.Integer, Index++);
-		}
-
-		ContainerTest ToFind = ContainerTest(5);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 5);
-
-		auto It = Test.GetIterator(&Test1Ref);
-		ASSERT_EQ(It->Integer, Test1Ref.Integer);
-		ASSERT_EQ(It.Child()->Integer, Test.GetChild(&Test1Ref).Integer);
-
-		Test.Remove(&Test2Ref);
-		Test.Remove(&Test1Ref);
-		ASSERT_EQ(Test.GetCount(), 5);
+		ContainerTest ToFind1 = ContainerTest(5);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, Graph)
 	{
 		NxEn::Graph<ContainerTest> Test = NxEn::Graph<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
+		ASSERT_EQ(Test.IsEmpty(), true);
 
-		ContainerTest& Index0 = Test.Append(ContainerTest(5));
-		ASSERT_EQ(Index0.Integer, 5);
+		ContainerTest Container1 = ContainerTest(1);
+		NxEn::Graph<ContainerTest> Range = NxEn::Graph<ContainerTest>();
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
+		Range.Append(4);
 
-		ContainerTest& Test1 = Test.Get();
-		ASSERT_EQ(Test.Get().Integer, 5);
-		Test.Append(8);
-		ContainerTest& Test2 = Test.Get();
-		ASSERT_EQ(Test.Get().Integer, 8);
-		Test.Append(10);
-		ContainerTest& Test3 = Test.Get();
-		ASSERT_EQ(Test.Get().Integer, 10);
-		Test.Append(ContainerTest(3));
-		ContainerTest& Test4 = Test.Get();
-		ASSERT_EQ(Test.Get().Integer, 3);
-		ASSERT_EQ(Test.GetCount(), 4);
+		ContainerTest& Index1 = Test.Append(Container1);
+		ContainerTest& Index2 = Test.Append(ContainerTest(2));
+		ContainerTest& Index3 = Test.AppendConstruct(3);
+		ContainerTest& Index4 = Test.AppendRange(Range);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Index1.Integer, 1);
+		ASSERT_EQ(Index2.Integer, 2);
+		ASSERT_EQ(Index3.Integer, 3);
+		ASSERT_EQ(Index4.Integer, 4);
 
-		Test.Assign(&Test.Get(), ContainerTest(6));
-		ASSERT_EQ(Test.Get().Integer, 6);
+		Index1 = Test.Assign(&Index1, Container1);
+		Index2 = Test.Assign(&Index2, ContainerTest(2));
+		Index3 = Test.AssignConstruct(&Index3, 3);
+		ASSERT_EQ(Test.GetCount(), 8);
+		ASSERT_EQ(Test.IsEmpty(), false);
 
-		Test.Append(8);
-		ContainerTest& TestA = Test.Get();
-		Test.Append(4);
-		ContainerTest& TestB = Test.Get();
-		Test.Swap(&TestA, &TestB);
-		ASSERT_EQ(Test.Get().Integer, 8);
-
-		Test.Connect(&TestA, &TestB);
-		Test.Connect(&TestA, &Test1);
-		Test.Connect(&TestA, &Test4);
-		ASSERT_EQ(Test.GetConnectionCount(&TestA), 3);
-
-		ContainerTest* TestConnection1 = Test.TryGetConnection(&TestA, NxEn::Graph<ContainerTest>::ConnectionType::To);
-		ContainerTest* TestConnection2 = Test.TryGetConnection(&TestA, NxEn::Graph<ContainerTest>::ConnectionType::To, 2);
-		ContainerTest* TestConnection3 = Test.TryGetConnection(&Test1, NxEn::Graph<ContainerTest>::ConnectionType::From);
-		ASSERT_EQ(TestConnection1->Integer, 8);
-		ASSERT_EQ(TestConnection2->Integer, 6);
-		ASSERT_EQ(TestConnection3->Integer, 4);
-
-		bool IsConnected = Test.IsConnected(&TestA, &TestB, NxEn::Graph<ContainerTest>::ConnectionType::To);
-		ASSERT_EQ(IsConnected, true);
+		Test.Remove(&Index4);
+		ASSERT_EQ(Test.GetCount(), 7);
+		ASSERT_EQ(Test.IsEmpty(), false);
 
 		NxEn::Graph<ContainerTest> Copy = Test.Copy();
-		ASSERT_EQ(Test == Copy, false);
+		ASSERT_EQ(Copy == Test, false);
+		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		Copy.Clear();
-		Copy.AppendRange(Test);
+		ASSERT_EQ(Copy.GetCount(), 0);
 
-		auto It = Test.GetIterator(&TestA);
-		ASSERT_EQ(It->Integer, TestA.Integer);
-		ASSERT_EQ(It.Connections(NxEn::Graph<ContainerTest>::ConnectionType::To, 0)->Integer, TestB.Integer);
+		Test.Connect(&Index1, &Index2);
+		Test.Connect(&Index1, &Index3);
+		Test.Connect(&Index2, &Index3);
+		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::ConnectionType::To, 0).Integer, 2);
+		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::ConnectionType::To, 1).Integer, 3);
+		ASSERT_EQ(Test.GetConnection(&Index2, NxEn::Graph<ContainerTest>::ConnectionType::To, 0).Integer, 3);
+		ASSERT_EQ(Test.IsConnected(&Index1, &Index2, NxEn::Graph<ContainerTest>::ConnectionType::To), true);
+		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::ConnectionType::From), true);
 
-		Test.Disconnect(&TestA, &Test1);
-		Test.Disconnect(&TestA, &TestB);
-		Test.Disconnect(&TestA, &Test4);
-		ASSERT_EQ(Test.GetConnectionCount(&TestA), 0);
+		Test.Disconnect(&Index1, &Index3);
+		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::ConnectionType::From), false);
 
-		Test.Remove(&Test.Get());
-		ASSERT_EQ(Test.Get().Integer, 4);
-		Test.Remove(&Test.Get());
-		ASSERT_EQ(Test.Get().Integer, 6);
-		ASSERT_EQ(Test.GetCount(), 4);
-
-		ContainerTest ToFind = ContainerTest(6);
-		bool Contains = Test.Contains(ToFind);
-		auto Found = Test.Find(ToFind);
-		ASSERT_EQ(Contains, true);
-		ASSERT_EQ(Found->Integer, 6);
+		ASSERT_EQ(Test.GetIterator(&Index1)->Integer, Index1.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index1).Connections(NxEn::Graph<ContainerTest>::ConnectionType::To, 0)->Integer, Index2.Integer);
+		ASSERT_EQ(Test.Begin()->Integer, Test.Get().Integer);
+		ASSERT_EQ(Test.End(), nullptr);
 
 		uint64 Index = 0;
-		for (ContainerTest& It : Test)
+		for (auto& It : Test)
 		{
 			It.Integer = Index++;
 		}
 
-		Index = 0;
-		for (NxEn::Graph<ContainerTest>::Iterator It = Test.Begin(); It != Test.End(); It++)
-		{
-			ASSERT_EQ(It->Integer, Index++);
-		}
+		ContainerTest A = Index1;
+		ContainerTest B = Index2;
+		Test.Swap(&A, &B);
+		ASSERT_EQ(Index1.Integer, B.Integer);
+		ASSERT_EQ(Index2.Integer, A.Integer);
 
-		Test.Clear();
-		ASSERT_EQ(Test.GetCount(), 0);
+		ContainerTest ToFind1 = ContainerTest(5);
+		ContainerTest ToFind2 = ContainerTest(100);
+		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains(ToFind2), false);
+		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
 	TEST(Type_Containers, Pool)
