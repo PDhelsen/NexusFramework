@@ -62,6 +62,33 @@ namespace NxEn
 				return !(*this == Other);
 			}
 
+			Iterator& Parent()
+			{
+				if (Current)
+				{
+					Current = Current->Parent;
+				}
+				return *this;
+			}
+
+			Iterator& Sibling()
+			{
+				if (Current)
+				{
+					Current = Current->Sibling;
+				}
+				return *this;
+			}
+
+			Iterator& Child()
+			{
+				if (Current)
+				{
+					Current = Current->Child;
+				}
+				return *this;
+			}
+
 		private:
 			void MoveToNext()
 			{

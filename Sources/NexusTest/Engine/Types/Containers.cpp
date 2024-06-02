@@ -615,6 +615,7 @@ namespace NxTs
 
 		auto It = Test.GetIterator(&Test.First());
 		ASSERT_EQ(It->Integer, Test.First().Integer);
+		ASSERT_EQ(It.Next()->Integer, Test.GetNext(&Test.First()).Integer);
 	}
 
 	TEST(Type_Containers, Stack)
@@ -960,6 +961,7 @@ namespace NxTs
 
 		auto It = Test.GetIterator(&Test1Ref);
 		ASSERT_EQ(It->Integer, Test1Ref.Integer);
+		ASSERT_EQ(It.Child()->Integer, Test.GetChild(&Test1Ref).Integer);
 
 		Test.Remove(&Test2Ref);
 		Test.Remove(&Test1Ref);
@@ -1015,6 +1017,10 @@ namespace NxTs
 		NxEn::Graph<ContainerTest> Copy = Test.Copy();
 		ASSERT_EQ(Test == Copy, false);
 
+		auto It = Test.GetIterator(&TestA);
+		ASSERT_EQ(It->Integer, TestA.Integer);
+		ASSERT_EQ(It.Move(NxEn::Graph<ContainerTest>::ConnectionType::To, 0)->Integer, TestB.Integer);
+
 		Test.Disconnect(&TestA, &Test1);
 		Test.Disconnect(&TestA, &TestB);
 		Test.Disconnect(&TestA, &Test4);
@@ -1043,9 +1049,6 @@ namespace NxTs
 		{
 			ASSERT_EQ(It->Integer, Index++);
 		}
-
-		auto It = Test.GetIterator(&TestA);
-		ASSERT_EQ(It->Integer, TestA.Integer);
 
 		Test.Clear();
 		ASSERT_EQ(Test.GetCount(), 0);

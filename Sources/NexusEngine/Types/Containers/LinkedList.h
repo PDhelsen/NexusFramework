@@ -30,11 +30,7 @@ namespace NxEn
 
 			Iterator& operator++()
 			{
-				if (Current)
-				{
-					Current = Current->Next;
-				}
-				return *this;
+				return Next();
 			}
 
 			Iterator operator++(int32)
@@ -46,11 +42,7 @@ namespace NxEn
 
 			Iterator& operator--()
 			{
-				if (Current)
-				{
-					Current = Current->Prev;
-				}
-				return *this;
+				return Previous();
 			}
 
 			Iterator operator--(int32)
@@ -78,6 +70,24 @@ namespace NxEn
 			bool operator!=(const Iterator& Other) const
 			{
 				return !(*this == Other);
+			}
+
+			Iterator& Next()
+			{
+				if (Current)
+				{
+					Current = Current->Next;
+				}
+				return *this;
+			}
+
+			Iterator& Previous()
+			{
+				if (Current)
+				{
+					Current = Current->Prev;
+				}
+				return *this;
 			}
 
 		private:

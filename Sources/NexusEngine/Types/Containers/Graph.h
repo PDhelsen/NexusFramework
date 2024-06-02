@@ -82,6 +82,37 @@ namespace NxEn
 				return !(*this == Other);
 			}
 
+			Iterator& Move(ConnectionType Type, uint64 Index)
+			{
+				uint64 Idx = 0;
+				Connection* Connect = Current->Connection;
+				while (Connect)
+				{
+					if (Connect->Type == Type)
+					{
+						if (Idx == Index)
+						{
+							break;
+						}
+
+						Idx++;
+					}
+
+					Connect = Connect->Next;
+				}
+
+				if (Connect)
+				{
+					Current = Connect->Target;
+				}
+				else
+				{
+					Current = nullptr;
+				}
+
+				return *this;
+			}
+
 		private:
 			Node* Current;
 		};
