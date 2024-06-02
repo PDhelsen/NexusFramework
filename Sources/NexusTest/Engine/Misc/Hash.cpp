@@ -46,29 +46,6 @@ namespace NxTs
 	uint64 Fnv1a64Small = 0x2474E7FB1AEC9F05;
 	uint64 Fnv1a64Long = 0x77F122B9F752AACB;
 
-	TEST(Hash, Hash)
-	{
-		uint64 Hash1 = NxEn::Hash<>::HashData(TestSmall, 4);
-		uint64 Hash2 = NxEn::Hash<>::HashData(TestLong, 49);
-
-		ASSERT_EQ(Hash1, Fnv1a64Small);
-		ASSERT_EQ(Hash2, Fnv1a64Long);
-
-		uint64 Test3 = 123456789;
-		uint64 Hash3 = NxEn::Hash<uint64>::HashObject(123456789);
-
-		HashTest Test4 = { .A = 10, .B = 15, .C = 20 };
-		uint64 Hash4 = NxEn::Hash<HashTest>::HashObject(Test4);
-
-		uint64 Hash5 = NxEn::Hash<>::Combine(Hash1, Hash2);
-
-		uint32 Hash6 = NxEn::Hash<const void*, NxEn::XxHash32>::HashData(TestSmall, 4);
-		uint32 Hash7 = NxEn::Hash<const void*, NxEn::XxHash32>::HashData(TestLong, 49);
-
-		ASSERT_EQ(Hash6, XxHash32Small);
-		ASSERT_EQ(Hash7, XxHash32Long);
-	}
-
 	TEST(Hash, XxHash32)
 	{
 		uint32 Hash1 = NxEn::XxHash32::Hash(TestSmall, 4);
@@ -167,5 +144,48 @@ namespace NxTs
 		uint64 HashChain = Test.Hash();
 
 		ASSERT_EQ(Hash, HashChain);
+	}
+
+	TEST(Hash, Hash)
+	{
+		uint64 Hash1 = NxEn::Hash<>::HashData(TestSmall, 4);
+		uint64 Hash2 = NxEn::Hash<>::HashData(TestLong, 49);
+
+		ASSERT_EQ(Hash1, Fnv1a64Small);
+		ASSERT_EQ(Hash2, Fnv1a64Long);
+
+		uint64 Test3 = 123456789;
+		uint64 Hash3 = NxEn::Hash<uint64>::HashObject(123456789);
+
+		HashTest Test4 = { .A = 10, .B = 15, .C = 20 };
+		uint64 Hash4 = NxEn::Hash<HashTest>::HashObject(Test4);
+
+		uint64 Hash5 = NxEn::Hash<>::Combine(Hash1, Hash2);
+
+		uint32 Hash6 = NxEn::Hash<const void*, NxEn::XxHash32>::HashData(TestSmall, 4);
+		uint32 Hash7 = NxEn::Hash<const void*, NxEn::XxHash32>::HashData(TestLong, 49);
+
+		ASSERT_EQ(Hash6, XxHash32Small);
+		ASSERT_EQ(Hash7, XxHash32Long);
+	}
+
+	TEST(Hash, NativeType)
+	{
+		ASSERT_NE(NxEn::Hash<int8>::HashObject(int8(8)), 0);
+		ASSERT_NE(NxEn::Hash<int16>::HashObject(int16(16)), 0);
+		ASSERT_NE(NxEn::Hash<int32>::HashObject(int32(32)), 0);
+		ASSERT_NE(NxEn::Hash<int64>::HashObject(int64(64)), 0);
+		ASSERT_NE(NxEn::Hash<uint8>::HashObject(uint8(8)), 0);
+		ASSERT_NE(NxEn::Hash<uint16>::HashObject(uint16(16)), 0);
+		ASSERT_NE(NxEn::Hash<uint32>::HashObject(uint32(32)), 0);
+		ASSERT_NE(NxEn::Hash<uint64>::HashObject(uint64(64)), 0);
+
+		ASSERT_NE(NxEn::Hash<float>::HashObject(float(1.0f)), 0);
+		ASSERT_NE(NxEn::Hash<double>::HashObject(double(2.0f)), 0);
+
+		ASSERT_NE(NxEn::Hash<bool>::HashObject(bool(1)), 0);
+
+		HashTest Data = { .A = 10, .B = 15, .C = 20 };
+		ASSERT_NE(NxEn::Hash<void*>::HashObject(&Data), 0);
 	}
 }
