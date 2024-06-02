@@ -82,7 +82,7 @@ namespace NxEn
 				return !(*this == Other);
 			}
 
-			Iterator& Move(ConnectionType Type, uint64 Index)
+			Iterator& Connections(ConnectionType Type, uint64 Index)
 			{
 				uint64 Idx = 0;
 				Connection* Connect = Current->Connection;

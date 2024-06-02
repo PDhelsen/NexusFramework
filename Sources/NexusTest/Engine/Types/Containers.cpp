@@ -1019,7 +1019,7 @@ namespace NxTs
 
 		auto It = Test.GetIterator(&TestA);
 		ASSERT_EQ(It->Integer, TestA.Integer);
-		ASSERT_EQ(It.Move(NxEn::Graph<ContainerTest>::ConnectionType::To, 0)->Integer, TestB.Integer);
+		ASSERT_EQ(It.Connections(NxEn::Graph<ContainerTest>::ConnectionType::To, 0)->Integer, TestB.Integer);
 
 		Test.Disconnect(&TestA, &Test1);
 		Test.Disconnect(&TestA, &TestB);
@@ -1165,5 +1165,16 @@ namespace NxTs
 		TestPointer.Append(&Container);
 		TestPointer.Append(&Container);
 		TestPointer.Append(&Container);
+
+		ContainerTest Test1(1);
+		ContainerTest Test2(2);
+		ContainerTest Test3(3);
+		ContainerTest Test4(4);
+
+		NxEn::Dictionary<ContainerTest*, ContainerTest> TestPointer2;
+		TestPointer2.Append(&Test1, Test1);
+		TestPointer2.Append(&Test2, Test2);
+		TestPointer2.Append(&Test3, Test3);
+		TestPointer2.Append(&Test4, Test4);
 	}
 }
