@@ -21,15 +21,18 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(T* Ptr)
-				: Pointer(Ptr)
+			Iterator(Node* Pointer)
+				: Current(Pointer)
 			{
 
 			}
 
 			Iterator& operator++()
 			{
-				Pointer = &(GetNode(Pointer)->Next->Value);
+				if (Current)
+				{
+					Current = Current->Next;
+				}
 				return *this;
 			}
 
@@ -42,26 +45,26 @@ namespace NxEn
 
 			T* operator->() const
 			{
-				return Pointer;
+				return &Current->Value;
 			}
 
 			T& operator*() const
 			{
-				return *Pointer;
+				return Current->Value;
 			}
 
 			bool operator==(const Iterator& Other) const
 			{
-				return Pointer == Other.Pointer;
+				return Current == Other.Current;
 			}
 
 			bool operator!=(const Iterator& Other) const
 			{
-				return Pointer != Other.Pointer;
+				return !(*this == Other);
 			}
 
 		private:
-			T* Pointer;
+			Node* Current;
 		};
 
 		Stack(Allocator* Allctr = nullptr)
@@ -179,7 +182,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Data->Value);
+			return Iterator(Data);
 		}
 
 		Iterator end() const { return End(); }

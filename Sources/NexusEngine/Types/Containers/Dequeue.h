@@ -15,23 +15,15 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(T** Ptr, uint64 BucketIdx, uint64 DataIdx)
-				: Pointer(Ptr), BucketIndex(BucketIdx), DataIndex(DataIdx)
+			Iterator(T** Pointer, uint64 BucketIdx, uint64 DataIdx)
+				: Data(Pointer), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
 
 			}
 
 			Iterator& operator++()
 			{
-				if (DataIndex == BucketSize - 1)
-				{
-					BucketIndex++;
-					DataIndex = 0;
-				}
-				else
-				{
-					DataIndex++;
-				}
+				MoveToNext(true);
 				return *this;
 			}
 
@@ -44,15 +36,7 @@ namespace NxEn
 
 			Iterator& operator--()
 			{
-				if (DataIndex == 0)
-				{
-					BucketIndex--;
-					DataIndex = BucketSize - 1;
-				}
-				else
-				{
-					DataIndex--;
-				}
+				MoveToNext(false);
 				return *this;
 			}
 
@@ -65,26 +49,54 @@ namespace NxEn
 
 			T* operator->() const
 			{
-				return &Pointer[BucketIndex][DataIndex];
+				return &Data[BucketIndex][DataIndex];
 			}
 
 			T& operator*() const
 			{
-				return Pointer[BucketIndex][DataIndex];
+				return Data[BucketIndex][DataIndex];
 			}
 
 			bool operator==(const Iterator& Other) const
 			{
-				return Pointer == Other.Pointer && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
+				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
 
 			bool operator!=(const Iterator& Other) const
 			{
-				return Pointer != Other.Pointer || BucketIndex != Other.BucketIndex || DataIndex != Other.DataIndex;
+				return !(*this == Other);
 			}
 
 		private:
-			T** Pointer;
+			void MoveToNext(bool Forward)
+			{
+				if (Forward)
+				{
+					if (DataIndex == BucketSize - 1)
+					{
+						BucketIndex++;
+						DataIndex = 0;
+					}
+					else
+					{
+						DataIndex++;
+					}
+				}
+				else
+				{
+					if (DataIndex == 0)
+					{
+						BucketIndex--;
+						DataIndex = BucketSize - 1;
+					}
+					else
+					{
+						DataIndex--;
+					}
+				}
+			}
+
+			T** Data;
 			uint64 BucketIndex;
 			uint64 DataIndex;
 		};

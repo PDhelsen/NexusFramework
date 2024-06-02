@@ -24,35 +24,14 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(T* Ptr)
+			Iterator(Node* Pointer)
+				: Current(Pointer)
 			{
-				Current = GetNode(Ptr);
 			}
 
 			Iterator& operator++()
 			{
-				if (Current->Child)
-				{
-					Current = Current->Child;
-				}
-				else if (Current->Sibling)
-				{
-					Current = Current->Sibling;
-				}
-				else
-				{
-					while (Current)
-					{
-						if (Current->Parent && Current->Parent->Sibling)
-						{
-							Current = Current->Parent->Sibling;
-							break;
-						}
-
-						Current = Current->Parent;
-					}
-				}
-
+				MoveToNext();
 				return *this;
 			}
 
@@ -80,10 +59,35 @@ namespace NxEn
 
 			bool operator!=(const Iterator& Other) const
 			{
-				return Current != Other.Current;
+				return !(*this == Other);
 			}
 
 		private:
+			void MoveToNext()
+			{
+				if (Current && Current->Child)
+				{
+					Current = Current->Child;
+				}
+				else if (Current && Current->Sibling)
+				{
+					Current = Current->Sibling;
+				}
+				else
+				{
+					while (Current)
+					{
+						if (Current->Parent && Current->Parent->Sibling)
+						{
+							Current = Current->Parent->Sibling;
+							break;
+						}
+
+						Current = Current->Parent;
+					}
+				}
+			}
+
 			Node* Current;
 		};
 
@@ -468,7 +472,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(&Data->Value);
+			return Iterator(Data);
 		}
 
 		Iterator end() const { return End(); }

@@ -37,8 +37,8 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(Node** Data, uint64 Buckets, Node* Current, uint64 Index)
-				: Data(Data), Buckets(Buckets), Current(Current), Index(Index)
+			Iterator(Node** Data, Node* Current, uint64 Buckets, uint64 Index)
+				: Data(Data), Current(Current), Buckets(Buckets), Index(Index)
 			{
 				if (Current == nullptr && Index < Buckets)
 				{
@@ -71,12 +71,12 @@ namespace NxEn
 
 			bool operator==(const Iterator& Other) const
 			{
-				return Current == Other.Current && Index == Other.Index;
+				return Current == Other.Current;
 			}
 
 			bool operator!=(const Iterator& Other) const
 			{
-				return Current != Other.Current || Index != Other.Index;
+				return !(*this == Other);
 			}
 
 		private:
@@ -103,8 +103,8 @@ namespace NxEn
 			}
 
 			Node** Data;
-			uint64 Buckets;
 			Node* Current;
+			uint64 Buckets;
 			uint64 Index;
 		};
 
@@ -330,13 +330,13 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(Data, Buckets, Data[0], 0);
+			return Iterator(Data, Data[0], Buckets, 0);
 		}
 
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			return Iterator(Data, Buckets, nullptr, Buckets);
+			return Iterator(Data, nullptr, Buckets, Buckets);
 		}
 
 		void ReHash(uint64 Size)
@@ -375,7 +375,7 @@ namespace NxEn
 			Node* Instance = GetNode(Index, Key);
 			if (Instance)
 			{
-				return Iterator(Data, Buckets, Instance, Index);
+				return Iterator(Data, Instance, Buckets, Index);
 			}
 
 			return End();

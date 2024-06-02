@@ -16,15 +16,15 @@ namespace NxEn
 		class Iterator
 		{
 		public:
-			Iterator(T* Ptr)
-				: Pointer(Ptr)
+			Iterator(T* Pointer, uint64 Idx)
+				: Data(Pointer), Index(Idx)
 			{
 
 			}
 
 			Iterator& operator++()
 			{
-				Pointer++;
+				Index++;
 				return *this;
 			}
 
@@ -37,7 +37,7 @@ namespace NxEn
 
 			Iterator& operator--()
 			{
-				Pointer--;
+				Index--;
 				return *this;
 			}
 
@@ -50,26 +50,27 @@ namespace NxEn
 
 			T* operator->() const
 			{
-				return Pointer;
+				return &Data[Index];
 			}
 
 			T& operator*() const
 			{
-				return *Pointer;
+				return Data[Index];
 			}
 
 			bool operator==(const Iterator& Other) const
 			{
-				return Pointer == Other.Pointer;
+				return Data == Other.Data && Index == Other.Index;
 			}
 
 			bool operator!=(const Iterator& Other) const
 			{
-				return Pointer != Other.Pointer;
+				return !(*this == Other);
 			}
 
 		private:
-			T* Pointer;
+			T* Data;
+			uint64 Index;
 		};
 
 		List(uint64 Size = 2, Allocator* Allctr = nullptr)
@@ -306,7 +307,7 @@ namespace NxEn
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(Data);
+			return Iterator(Data, 0);
 		}
 
 		Iterator BeginReverse() const
@@ -317,7 +318,7 @@ namespace NxEn
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			return Iterator(Data + Count);
+			return Iterator(Data, Count);
 		}
 
 		Iterator EndReverse() const
