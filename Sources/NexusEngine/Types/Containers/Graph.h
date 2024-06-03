@@ -323,7 +323,7 @@ namespace NxEn
 				{
 					if (Idx == Index)
 					{
-						break;
+						return Connect->Target->Value;
 					}
 
 					Idx++;
@@ -332,7 +332,8 @@ namespace NxEn
 				Connect = Connect->Next;
 			}
 
-			return Connect->Target->Value;
+			NEXUS_ASSERT(Connect, "Failed to find connection")
+			return *Position;
 		}
 
 		T* TryGetConnection(T* Position, ConnectionType Type, uint64 Index = 0) const

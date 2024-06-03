@@ -203,7 +203,7 @@ namespace NxTs
 
 		Test.Sort();
 		auto ItFirst = Test.Begin();
-		auto ItSecond = ++Test.Begin();
+		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
 		{
 			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
@@ -336,7 +336,7 @@ namespace NxTs
 
 		Test.Sort();
 		auto ItFirst = Test.Begin();
-		auto ItSecond = ++Test.Begin();
+		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
 		{
 			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
@@ -913,10 +913,10 @@ namespace NxTs
 		}
 
 		ContainerTest A = Index8;
-		ContainerTest B = Index9;
+		ContainerTest B = Index5;
 		Test.Swap(&A, &B);
 		ASSERT_EQ(Index8.Integer, B.Integer);
-		ASSERT_EQ(Index9.Integer, A.Integer);
+		ASSERT_EQ(Index5.Integer, A.Integer);
 
 		ContainerTest ToFind1 = ContainerTest(5);
 		ContainerTest ToFind2 = ContainerTest(100);
