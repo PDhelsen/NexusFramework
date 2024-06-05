@@ -92,11 +92,12 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& AppendRange(const Queue<T>& Value)
+		template<typename C>
+		T& AppendRange(const C& Value)
 		{
 			Node* Return = DataTail;
 
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				Append(*It);
 			}

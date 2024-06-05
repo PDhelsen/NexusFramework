@@ -113,13 +113,14 @@ namespace NxEn
 			return Data[BucketIndex][DataIndex];
 		}
 
-		T& AssignRange(uint64 Index, const Dequeue<T>& Value)
+		template<typename C>
+		T& AssignRange(uint64 Index, const C& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Value.Count), "Overflow");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Overflow");
 
 			uint64 Offset = 0;
-			for (Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index + Offset, BucketIndex, DataIndex);
@@ -153,12 +154,13 @@ namespace NxEn
 			return Data[Buckets - 1][IndexBack];
 		}
 
-		T& AppendBackRange(const Dequeue<T>& Value)
+		template<typename C>
+		T& AppendBackRange(const C& Value)
 		{
 			uint64 BucketIndex = Buckets - 1;
 			uint64 DataIndex = IndexBack;
 
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				AppendBack(*It);
 			}
@@ -188,9 +190,10 @@ namespace NxEn
 			return Data[0][IndexFront];
 		}
 
-		T& AppendFrontRange(const Dequeue<T>& Value)
+		template<typename C>
+		T& AppendFrontRange(const C& Value)
 		{
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				AppendFront(*It);
 			}

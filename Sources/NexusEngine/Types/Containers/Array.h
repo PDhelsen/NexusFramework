@@ -101,13 +101,14 @@ namespace NxEn
 			return Data[Index];
 		}
 
-		T& AssignRange(uint64 Index, const Array<T>& Value)
+		template<typename C>
+		T& AssignRange(uint64 Index, const C& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount()  - 1), "Invalid Index");
 
 			uint64 Offset = 0;
-			for (Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
 				Data[Index + Offset] = *It;
 			}

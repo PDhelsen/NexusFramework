@@ -25,8 +25,6 @@ namespace NxTs
 
 		ContainerTest()
 		{
-			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Default");
-
 			Integer = 1;
 			Float = 1.0f;
 			Boolean = true;
@@ -35,8 +33,6 @@ namespace NxTs
 
 		ContainerTest(uint64 Initialization)
 		{
-			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Init");
-
 			Integer = Initialization;
 			Float = 1.0f;
 			Boolean = true;
@@ -45,8 +41,6 @@ namespace NxTs
 
 		ContainerTest(const ContainerTest& Other)
 		{
-			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Copy");
-			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -55,8 +49,6 @@ namespace NxTs
 
 		ContainerTest(ContainerTest&& Other) noexcept
 		{
-			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Move");
-			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -66,7 +58,6 @@ namespace NxTs
 		~ContainerTest()
 		{
 			NEXUS_ASSERT(!Destroyed, "Already Destroyed");
-			NEXUS_LOG(App, Info, 0, "Container Test Destructor");
 
 			Integer = 0;
 			Float = 0.0f;
@@ -76,8 +67,6 @@ namespace NxTs
 
 		ContainerTest& operator=(const ContainerTest& Other)
 		{
-			NEXUS_LOG(App, Info, 0, "Container Test Operator - Copy");
-			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -87,8 +76,6 @@ namespace NxTs
 
 		ContainerTest& operator=(ContainerTest&& Other) noexcept
 		{
-			NEXUS_LOG(App, Info, 0, "Container Test Operator - Move");
-
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -1139,5 +1126,89 @@ namespace NxTs
 		TestPointer2.Append(&Test2, Test2);
 		TestPointer2.Append(&Test3, Test3);
 		TestPointer2.Append(&Test4, Test4);
+	}
+
+	TEST(Type_Containers, Range)
+	{
+		NxEn::Array<ContainerTest> Container1(10);
+		Container1.Initialize(0);
+		Container1.Assign(0, 18);
+		Container1.Assign(1, 24);
+		Container1.Assign(2, 36);
+		Container1.Assign(3, 45);
+		Container1.Assign(4, 58);
+
+		NxEn::List<ContainerTest> Container2;
+		Container2.Append(36);
+		Container2.Append(58);
+		Container2.Append(45);
+		Container2.Append(24);
+		Container2.Append(18);
+
+		NxEn::Dequeue<ContainerTest> Container3;
+		Container3.AppendBack(36);
+		Container3.AppendBack(24);
+		Container3.AppendBack(18);
+		Container3.AppendBack(58);
+		Container3.AppendBack(45);
+
+		NxEn::LinkedList<ContainerTest> Container4;
+		ContainerTest& Ref4 = Container4.AppendBack(36);
+		Container4.AppendBack(24);
+		Container4.AppendBack(18);
+		Container4.AppendBack(58);
+		Container4.AppendBack(45);
+
+		NxEn::Stack<ContainerTest> Container5;
+		Container5.Append(36);
+		Container5.Append(24);
+		Container5.Append(18);
+		Container5.Append(58);
+		Container5.Append(45);
+
+		NxEn::Queue<ContainerTest> Container6;
+		Container6.Append(36);
+		Container6.Append(24);
+		Container6.Append(18);
+		Container6.Append(58);
+		Container6.Append(45);
+
+		NxEn::Tree<ContainerTest> Container7;
+		ContainerTest& Root = Container7.Initialize(36);
+		Container7.Append(&Root, 24);
+		Container7.Append(&Root, 18);
+		Container7.Append(&Root, 58);
+		Container7.Append(&Root, 45);
+
+		NxEn::Graph<ContainerTest> Container8;
+		Container8.Append(36);
+		Container8.Append(24);
+		Container8.Append(18);
+		Container8.Append(58);
+		Container8.Append(45);
+
+		Container1.AssignRange(0, Container8);
+		Container2.AssignRange(0, Container6);
+		Container3.AssignRange(0, Container4);
+		Container4.InsertBackRange(&Ref4, Container3);
+		Container5.AppendRange(Container1);
+		Container6.AppendRange(Container5);
+		Container7.AppendRange(&Root, Container2);
+		Container8.AppendRange(Container6);
+
+		NxEn::Set<ContainerTest> Container9;
+		Container9.AppendRange(Container2);
+		Container2.AppendRange(Container9);
+
+		NxEn::List<NxEn::KeyValuePair<ContainerTest, ContainerTest>> Pair;
+		Pair.Append({0, 18});
+		Pair.Append({1, 24});
+		Pair.Append({2, 36});
+		Pair.Append({3, 45});
+		Pair.Append({4, 58});
+
+		NxEn::Dictionary<ContainerTest, ContainerTest> Container10;
+		Container10.AppendRange(Pair);
+		Pair.AppendRange(Container10);
 	}
 }

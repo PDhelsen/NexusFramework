@@ -123,11 +123,12 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& AppendBackRange(const LinkedList<T>& Value)
+		template<typename C>
+		T& AppendBackRange(const C& Value)
 		{
 			Node* Return = DataTail;
 
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				AppendBack(*It);
 			}
@@ -163,9 +164,10 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& AppendFrontRange(const LinkedList<T>& Value)
+		template<typename C>
+		T& AppendFrontRange(const C& Value)
 		{
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				AppendFront(*It);
 			}
@@ -213,7 +215,8 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& InsertBackRange(T* Position, const LinkedList<T>& Value)
+		template<typename C>
+		T& InsertBackRange(T* Position, const C& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
@@ -221,7 +224,7 @@ namespace NxEn
 			Node* Anchor = GetNode(Position);
 			Node* Return = Anchor;
 
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				InsertBack(&Anchor->Value, *It);
 				Anchor = Anchor->Next;
@@ -270,14 +273,15 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& InsertFrontRange(T* Position, const LinkedList<T>& Value)
+		template<typename C>
+		T& InsertFrontRange(T* Position, const C& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Anchor = GetNode(Position);
 
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				InsertFront(&Anchor->Value, *It);
 				Anchor = Anchor->Prev;

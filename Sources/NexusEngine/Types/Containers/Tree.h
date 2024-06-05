@@ -166,6 +166,23 @@ namespace NxEn
 			return CopyNode(Anchor, Copy);
 		}
 
+		template<typename C>
+		T& AppendRange(T* Parent, const C& Value)
+		{
+			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+
+			typename C::Iterator It = Value.Begin();
+			T& Return = Append(Parent, *It);
+
+			for (++It; It != Value.End(); It++)
+			{
+				Append(Parent, *It);
+			}
+
+			return Return;
+		}
+
 		T& InsertSibling(T* Sibling, const T& Value)
 		{
 			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");

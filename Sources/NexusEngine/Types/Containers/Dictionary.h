@@ -111,6 +111,17 @@ namespace NxEn
 			return Instance->Value.GetValue();
 		}
 
+		template<typename C>
+		T& AssignRange(const C& Value)
+		{
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			{
+				Assign(It->GetKey(), It->GetValue());
+			}
+
+			return GetNode(Value.Begin()->GetKey())->Value.GetValue();
+		}
+
 		T& Append(const K& Key, const T& Value)
 		{
 			uint64 Index = GetIndex(Key);
@@ -175,9 +186,10 @@ namespace NxEn
 			return Instance->Value.GetValue();
 		}
 
-		T& AppendRange(const Dictionary<K, T, H, LF>& Value)
+		template<typename C>
+		T& AppendRange(const C& Value)
 		{
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				Append(It->GetKey(), It->GetValue());
 			}

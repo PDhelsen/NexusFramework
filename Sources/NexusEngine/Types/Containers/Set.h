@@ -114,9 +114,10 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		const T& AppendRange(const Set<T, H, LF>& Value)
+		template<typename C>
+		const T& AppendRange(const C& Value)
 		{
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				Append(*It);
 			}

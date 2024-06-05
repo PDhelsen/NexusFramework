@@ -92,20 +92,18 @@ namespace NxEn
 			return Instance->Value;
 		}
 
-		T& AppendRange(const Stack<T>& Value)
+		template<typename C>
+		T& AppendRange(const C& Value)
 		{
-			T* Return = nullptr;
+			typename C::Iterator It = Value.Begin();
+			T& Return = Append(*It);
 
-			for (Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (++It; It != Value.End(); It++)
 			{
-				T& Instance = Append(*It);
-				if (!Return)
-				{
-					Return = &Instance;
-				}
+				Append(*It);
 			}
 
-			return *Return;
+			return Return;
 		}
 
 		void Remove()
