@@ -66,7 +66,7 @@ namespace NxEn
 			uint64 I = Start, J = Middle;
 			for (uint64 K = Start; K < End; K++)
 			{
-				if (I < Middle && (J >= End || DoCompare(Data, I, J, Compare)))
+				if (I < Middle && (J >= End || DoCompare(Data[I], Data[J], Compare)))
 				{
 					Copy[K] = Data[I];
 					I++;
@@ -113,7 +113,7 @@ namespace NxEn
 
 			while (Current < Pivot)
 			{
-				if (DoCompare(Data, Current, Pivot, Compare))
+				if (DoCompare(Data[Current], Data[Pivot], Compare))
 				{
 					Current++;
 				}
@@ -201,12 +201,12 @@ namespace NxEn
 			uint64 Left = 2 * Root + 1;
 			uint64 Right = 2 * Root + 2;
 
-			if (Left < Count && !DoCompare(Data, Left, Largest, Compare))
+			if (Left < Count && !DoCompare(Data[Left], Data[Largest], Compare))
 			{
 				Largest = Left;
 			}
 
-			if (Right < Count && !DoCompare(Data, Right, Largest, Compare))
+			if (Right < Count && !DoCompare(Data[Right], Data[Largest], Compare))
 			{
 				Largest = Right;
 			}
@@ -221,10 +221,10 @@ namespace NxEn
 			}
 		}
 
-		template<typename T, typename C>
-		static bool DoCompare(C& Data, uint64 IndexA, uint64 IndexB, CompareFunction<T> Compare = nullptr)
+		template<typename T>
+		static bool DoCompare(const T& A, const T& B, CompareFunction<T> Compare = nullptr)
 		{
-			return Compare != nullptr ? Compare(Data[IndexA], Data[IndexB]) : Data[IndexA] <= Data[IndexB];
+			return Compare != nullptr ? Compare(A, B) : A <= B;
 		}
 	};
 }
