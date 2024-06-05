@@ -26,7 +26,7 @@
     <Expand>
       <IndexListItems>
         <Size>Count</Size>
-        <ValueNode>Data[($i + IndexFront) / BucketSize][($i + IndexFront) % BucketSize]</ValueNode>
+        <ValueNode>Data[($i + IndexFront) / $T2][($i + IndexFront) % $T2]</ValueNode>
       </IndexListItems>
     </Expand>
   </Type>
