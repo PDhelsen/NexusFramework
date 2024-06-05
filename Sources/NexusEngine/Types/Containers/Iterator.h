@@ -6,37 +6,37 @@
 namespace NxEn
 {
 	template<typename T>
-	class LinearIterator
+	class BlockIterator
 	{
 	public:
-		LinearIterator(T* Pointer, uint64 Idx)
+		BlockIterator(T* Pointer, uint64 Idx)
 			: Data(Pointer), Index(Idx)
 		{
 
 		}
 
-		LinearIterator& operator++()
+		BlockIterator& operator++()
 		{
 			Index++;
 			return *this;
 		}
 
-		LinearIterator operator++(int32)
+		BlockIterator operator++(int32)
 		{
-			LinearIterator Temp = *this;
+			BlockIterator Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		LinearIterator& operator--()
+		BlockIterator& operator--()
 		{
 			Index--;
 			return *this;
 		}
 
-		LinearIterator operator--(int32)
+		BlockIterator operator--(int32)
 		{
-			LinearIterator Temp = *this;
+			BlockIterator Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -51,12 +51,12 @@ namespace NxEn
 			return Data[Index];
 		}
 
-		bool operator==(const LinearIterator& Other) const
+		bool operator==(const BlockIterator& Other) const
 		{
 			return Data == Other.Data && Index == Other.Index;
 		}
 
-		bool operator!=(const LinearIterator& Other) const
+		bool operator!=(const BlockIterator& Other) const
 		{
 			return !(*this == Other);
 		}

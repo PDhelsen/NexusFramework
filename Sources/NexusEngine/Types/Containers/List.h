@@ -14,7 +14,7 @@ namespace NxEn
 	class List
 	{
 	public:
-		using Iterator = LinearIterator<T>;
+		using Iterator = BlockIterator<T>;
 
 		List(uint64 Size = 2, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)

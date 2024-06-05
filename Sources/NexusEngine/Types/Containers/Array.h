@@ -14,7 +14,7 @@ namespace NxEn
 	class Array
 	{
 	public:
-		using Iterator = LinearIterator<T>;
+		using Iterator = BlockIterator<T>;
 
 		Array(uint64 Size, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)
