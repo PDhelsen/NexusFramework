@@ -298,6 +298,11 @@ namespace NxEn
 			}
 		}
 
+		void Sort()
+		{
+			Sort::HeapSort<T>(*this);
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) != End();

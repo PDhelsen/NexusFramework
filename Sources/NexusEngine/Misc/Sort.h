@@ -12,44 +12,40 @@ namespace NxEn
 		template<typename T>
 		using CompareFunction = bool(*)(const T&, const T&);
 
-		template<typename T>
-		static void MergeSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void MergeSort(C& Data, CompareFunction<T> Compare = nullptr)
 		{
-			Sort::MergeSortSort(Data, Count, Compare);
+			Sort::MergeSortSort(Data, Data.GetCount(), Compare);
 		}
 
-		template<typename T>
-		static void QuickSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void QuickSort(C& Data, CompareFunction<T> Compare = nullptr)
 		{
-			Sort::QuickSortSort(Data, Count, Compare);
+			Sort::QuickSortSort(Data, Data.GetCount(), Compare);
 		}
 
-		template<typename T>
-		static void HeapSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void HeapSort(C& Data, CompareFunction<T> Compare = nullptr)
 		{
-			Sort::HeapSortSort(Data, Count, Compare);
+			Sort::HeapSortSort(Data, Data.GetCount(), Compare);
 		}
 
-		template<typename T>
-		static void Heapify(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void Heapify(C& Data, CompareFunction<T> Compare = nullptr)
 		{
-			Sort::HeapifySort(Data, Count, Compare);
+			Sort::HeapifySort(Data, Data.GetCount(), Compare);
 		}
 
 	private:
-		template<typename T>
-		static void MergeSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void MergeSortSort(C& Data, uint64 Count, CompareFunction<T> Compare = nullptr)
 		{
-			T* Copy = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Memory::GetActiveAllocator());
-			Memory::MemCopy(Data, Copy, sizeof(T) * Count);
-
+			C Copy = Data.Copy();
 			Sort::MergeSortSplit(Data, Copy, 0, Count, Compare);
-
-			Memory::Free(Copy, Memory::GetActiveAllocator());
 		}
 
-		template<typename T>
-		static void MergeSortSplit(T* Copy, T* Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void MergeSortSplit(C& Copy, C& Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
 		{
 			if (End - Start <= 1)
 			{
@@ -64,14 +60,13 @@ namespace NxEn
 			Sort::MergeSortMerge(Copy, Data, Start, End, Middle, Compare);
 		}
 
-		template<typename T>
-		static void MergeSortMerge(T* Copy, T* Data, uint64 Start, uint64 End, uint64 Middle, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void MergeSortMerge(C& Copy, C& Data, uint64 Start, uint64 End, uint64 Middle, CompareFunction<T> Compare = nullptr)
 		{
 			uint64 I = Start, J = Middle;
 			for (uint64 K = Start; K < End; K++)
 			{
-				bool LessThan = Compare != nullptr ? Compare(Data[I], Data[J]) : Data[I] <= Data[J];
-				if (I < Middle && (J >= End || LessThan))
+				if (I < Middle && (J >= End || DoCompare(Data, I, J, Compare)))
 				{
 					Copy[K] = Data[I];
 					I++;
@@ -84,14 +79,14 @@ namespace NxEn
 			}
 		}
 	
-		template<typename T>
-		static void QuickSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void QuickSortSort(C& Data, uint64 Count, CompareFunction<T> Compare = nullptr)
 		{
 			Sort::QuickSortSplit(Data, 0, Count - 1, Compare);
 		}
 
-		template<typename T>
-		static void QuickSortSplit(T* Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void QuickSortSplit(C& Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
 		{
 			if (Start >= End || End - Start < 1)
 			{
@@ -110,22 +105,21 @@ namespace NxEn
 			}
 		}
 
-		template<typename T>
-		static uint64 QuickSortPivot(T* Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static uint64 QuickSortPivot(C& Data, uint64 Start, uint64 End, CompareFunction<T> Compare = nullptr)
 		{
 			uint64 Current = Start;
 			uint64 Pivot = End;
 
 			while (Current < Pivot)
 			{
-				bool LessThan = Compare != nullptr ? Compare(Data[Current], Data[Pivot]) : Data[Current] <= Data[Pivot];
-				if (LessThan)
+				if (DoCompare(Data, Current, Pivot, Compare))
 				{
 					Current++;
 				}
 				else
 				{
-					Sort::QuickSortSwap(Data, Current, Pivot);
+					Sort::QuickSortSwap<T>(Data, Current, Pivot);
 					Pivot--;
 				}
 			}
@@ -133,8 +127,8 @@ namespace NxEn
 			return Pivot;
 		}
 
-		template<typename T>
-		static void QuickSortSwap(T* Data, uint64 Current, uint64 Pivot)
+		template<typename T, typename C>
+		static void QuickSortSwap(C& Data, uint64 Current, uint64 Pivot)
 		{
 			T Temp = Data[Current];
 
@@ -151,15 +145,15 @@ namespace NxEn
 			}
 		}
 
-		template<typename T>
-		static void HeapSortSort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void HeapSortSort(C& Data, uint64 Count, CompareFunction<T> Compare = nullptr)
 		{
 			Sort::HeapifySort(Data, Count, Compare);
 
 			uint64 Index = Count - 1;
 			while (true)
 			{
-				HeapSortSwap(Data, Index);
+				HeapSortSwap<T>(Data, Index);
 				HeapifySwap(Data, Index, 0, Compare);
 
 				if (Index > 0)
@@ -173,16 +167,16 @@ namespace NxEn
 			}
 		}
 
-		template<typename T>
-		static void HeapSortSwap(T* Data, uint64 Index)
+		template<typename T, typename C>
+		static void HeapSortSwap(C& Data, uint64 Index)
 		{
 			T Temp = Data[0];
 			Data[0] = Move(Data[Index]);
 			Data[Index] = Move(Temp);
 		}
 
-		template<typename T>
-		static void HeapifySort(T* Data, uint64 Count, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void HeapifySort(C& Data, uint64 Count, CompareFunction<T> Compare = nullptr)
 		{
 			uint64 Root = Count / 2 - 1;
 			while(true)
@@ -200,21 +194,19 @@ namespace NxEn
 			}
 		}
 
-		template<typename T>
-		static void HeapifySwap(T* Data, uint64 Count, uint64 Root, CompareFunction<T> Compare = nullptr)
+		template<typename T, typename C>
+		static void HeapifySwap(C& Data, uint64 Count, uint64 Root, CompareFunction<T> Compare = nullptr)
 		{
 			uint64 Largest = Root;
 			uint64 Left = 2 * Root + 1;
 			uint64 Right = 2 * Root + 2;
 
-			bool LeftGreater = Compare != nullptr ? !Compare(Data[Left], Data[Largest]) : Data[Left] > Data[Largest];
-			if (Left < Count && LeftGreater)
+			if (Left < Count && !DoCompare(Data, Left, Largest, Compare))
 			{
 				Largest = Left;
 			}
 
-			bool RightGreater = Compare != nullptr ? !Compare(Data[Right], Data[Largest]) : Data[Right] > Data[Largest];
-			if (Right < Count && RightGreater)
+			if (Right < Count && !DoCompare(Data, Right, Largest, Compare))
 			{
 				Largest = Right;
 			}
@@ -227,6 +219,12 @@ namespace NxEn
 			
 				Sort::HeapifySwap(Data, Count, Largest, Compare);
 			}
+		}
+
+		template<typename T, typename C>
+		static bool DoCompare(C& Data, uint64 IndexA, uint64 IndexB, CompareFunction<T> Compare = nullptr)
+		{
+			return Compare != nullptr ? Compare(Data[IndexA], Data[IndexB]) : Data[IndexA] <= Data[IndexB];
 		}
 	};
 }

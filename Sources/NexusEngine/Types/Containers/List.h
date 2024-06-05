@@ -328,7 +328,7 @@ namespace NxEn
 
 		void Sort()
 		{
-			Sort::HeapSort(Data, Count);
+			Sort::HeapSort<T>(*this);
 		}
 
 		bool Contains(const T& Other) const
