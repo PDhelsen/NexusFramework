@@ -173,7 +173,7 @@ namespace NxTs
 			{
 				ASSERT_EQ(Data[Index] >= Data[Left], true);
 			}
-			
+
 			uint64 Right = 2 * Index + 2;
 			if (Right < 10)
 			{
@@ -211,6 +211,32 @@ namespace NxTs
 			{
 				ASSERT_EQ(Data3[Index] >= Data3[Right], true);
 			}
+		}
+	} 
+	TEST(Sort, Container)
+	{
+		NxEn::Array<uint64> Data = NxEn::Array<uint64>(10);
+		Data[0] = 5;
+		Data[1] = 4;
+		Data[2] = 7;
+		Data[3] = 1;
+		Data[4] = 0;
+		Data[5] = 5;
+		Data[6] = 6;
+		Data[7] = 2;
+		Data[8] = 5;
+		Data[9] = 3;
+
+		Data.Sort();
+		for (uint64 Index = 1; Index < 10; Index++)
+		{
+			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
+		}
+
+		Data.Sort(&CompareFunction);
+		for (uint64 Index = 1; Index < 10; Index++)
+		{
+			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 	}
 }

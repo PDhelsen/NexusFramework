@@ -326,9 +326,9 @@ namespace NxEn
 			}
 		}
 
-		void Sort()
+		void Sort(Sort::CompareFunction<T> Function = nullptr)
 		{
-			Sort::HeapSort<T>(*this);
+			Sort::HeapSort<T>(*this, Function);
 		}
 
 		bool Contains(const T& Other) const
