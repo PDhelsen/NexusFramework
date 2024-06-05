@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
@@ -12,11 +13,7 @@ namespace NxEn
 	template<typename T>
 	class Pool
 	{
-		struct Node
-		{
-			T Value;
-			Node* Next;
-		};
+		using Node = LinkedNodeSimple<T>;
 
 	public:
 		Pool(Allocator* Allctr = nullptr)

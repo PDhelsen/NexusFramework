@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -12,86 +14,9 @@ namespace NxEn
 	template<typename T, class H = Fnv1a64, float LF = 1.0f>
 	class Set
 	{
-		struct Node
-		{
-			T Value;
-			Node* Next;
-		};
-
 	public:
-		class Iterator
-		{
-		public:
-			Iterator(Node** Data, Node* Current, uint64 Buckets, uint64 Index)
-				: Data(Data), Current(Current), Buckets(Buckets), Index(Index)
-			{
-				if (Current == nullptr && Index != Buckets)
-				{
-					MoveToNext();
-				}
-			}
-
-			Iterator& operator++()
-			{
-				MoveToNext();
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			const T* operator->() const
-			{
-				return &Current->Value;
-			}
-
-			const T& operator*() const
-			{
-				return Current->Value;
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Current == Other.Current && Index == Other.Index;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-		private:
-			void MoveToNext()
-			{
-				if (Current && Current->Next != nullptr)
-				{
-					Current = Current->Next;
-				}
-				else
-				{
-					do
-					{
-						Index++;
-						if (Index >= Buckets)
-						{
-							Current = nullptr;
-							break;
-						}
-
-						Current = Data[Index];
-					} while (Current == nullptr);
-				}
-			}
-			
-			Node** Data;
-			Node* Current;
-			uint64 Buckets;
-			uint64 Index;
-		};
+		using Node = LinkedNodeSimple<T>;
+		using Iterator = HashmapIterator<const T, Node>;
 
 		Set(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)

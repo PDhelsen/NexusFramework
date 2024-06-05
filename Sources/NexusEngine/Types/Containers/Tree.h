@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -11,112 +13,9 @@ namespace NxEn
 	template<typename T>
 	class Tree
 	{
-		struct Node
-		{
-			T Value;
-			uint64 Count;
-			Node* Parent;
-			Node* Sibling;
-			Node* Child;
-		};
-
 	public:
-		class Iterator
-		{
-		public:
-			Iterator(Node* Pointer)
-				: Current(Pointer)
-			{
-			}
-
-			Iterator& operator++()
-			{
-				MoveToNext();
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->() const
-			{
-				return &Current->Value;
-			}
-
-			T& operator*() const
-			{
-				return Current->Value;
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Current == Other.Current;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-			Iterator& Parent()
-			{
-				if (Current)
-				{
-					Current = Current->Parent;
-				}
-				return *this;
-			}
-
-			Iterator& Sibling()
-			{
-				if (Current)
-				{
-					Current = Current->Sibling;
-				}
-				return *this;
-			}
-
-			Iterator& Child()
-			{
-				if (Current)
-				{
-					Current = Current->Child;
-				}
-				return *this;
-			}
-
-		private:
-			void MoveToNext()
-			{
-				if (Current && Current->Child)
-				{
-					Current = Current->Child;
-				}
-				else if (Current && Current->Sibling)
-				{
-					Current = Current->Sibling;
-				}
-				else
-				{
-					while (Current)
-					{
-						if (Current->Parent && Current->Parent->Sibling)
-						{
-							Current = Current->Parent->Sibling;
-							break;
-						}
-
-						Current = Current->Parent;
-					}
-				}
-			}
-
-			Node* Current;
-		};
+		using Node = LinkedNodeTree<T>;
+		using Iterator = LinkedIteratorTree<T, Node>;
 
 		Tree(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)

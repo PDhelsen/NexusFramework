@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -13,67 +14,7 @@ namespace NxEn
 	class List
 	{
 	public:
-		class Iterator
-		{
-		public:
-			Iterator(T* Pointer, uint64 Idx)
-				: Data(Pointer), Index(Idx)
-			{
-
-			}
-
-			Iterator& operator++()
-			{
-				Index++;
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			Iterator& operator--()
-			{
-				Index--;
-				return *this;
-			}
-
-			Iterator operator--(int32)
-			{
-				Iterator Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			T* operator->() const
-			{
-				return &Data[Index];
-			}
-
-			T& operator*() const
-			{
-				return Data[Index];
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-			uint64 GetIndex() const { return Index; }
-
-		private:
-			T* Data;
-			uint64 Index;
-		};
+		using Iterator = LinearIterator<T>;
 
 		List(uint64 Size = 2, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)

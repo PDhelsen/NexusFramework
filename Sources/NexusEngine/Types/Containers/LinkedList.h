@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -11,88 +13,9 @@ namespace NxEn
 	template<typename T>
 	class LinkedList
 	{
-		struct Node
-		{
-			T Value;
-			Node* Next;
-			Node* Prev;
-		};
-
 	public:
-		class Iterator
-		{
-		public:
-			Iterator(Node* Pointer)
-				: Current(Pointer)
-			{
-
-			}
-
-			Iterator& operator++()
-			{
-				return Next();
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			Iterator& operator--()
-			{
-				return Previous();
-			}
-
-			Iterator operator--(int32)
-			{
-				Iterator Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			T* operator->() const
-			{
-				return &Current->Value;
-			}
-
-			T& operator*() const
-			{
-				return Current->Value;
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Current == Other.Current;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-			Iterator& Next()
-			{
-				if (Current)
-				{
-					Current = Current->Next;
-				}
-				return *this;
-			}
-
-			Iterator& Previous()
-			{
-				if (Current)
-				{
-					Current = Current->Prev;
-				}
-				return *this;
-			}
-
-		private:
-			Node* Current;
-		};
+		using Node = LinkedNodeDouble<T>;
+		using Iterator = LinkedIteratorDouble<T, Node>;
 
 		LinkedList(Allocator* Allctr = nullptr)
 			: Allocator(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)

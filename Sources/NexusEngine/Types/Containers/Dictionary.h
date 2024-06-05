@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -13,100 +15,8 @@ namespace NxEn
 	class Dictionary
 	{
 	public:
-		class KeyValuePair
-		{
-			friend Dictionary;
-
-		public:
-			const K& GetKey() const { return Key; }
-			T& GetValue() { return Value; }
-
-		private:
-			K Key;
-			T Value;
-		};
-
-	private:
-		struct Node
-		{
-			KeyValuePair KeyValue;
-			Node* Next;
-		};
-
-	public:
-		class Iterator
-		{
-		public:
-			Iterator(Node** Data, Node* Current, uint64 Buckets, uint64 Index)
-				: Data(Data), Current(Current), Buckets(Buckets), Index(Index)
-			{
-				if (Current == nullptr && Index < Buckets)
-				{
-					MoveToNext();
-				}
-			}
-
-			Iterator& operator++()
-			{
-				MoveToNext();
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			KeyValuePair* operator->() const
-			{
-				return &Current->KeyValue;
-			}
-
-			KeyValuePair& operator*() const
-			{
-				return Current->KeyValue;
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Current == Other.Current && Index == Other.Index;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-		private:
-			void MoveToNext()
-			{
-				if (Current && Current->Next != nullptr)
-				{
-					Current = Current->Next;
-				}
-				else
-				{
-					do
-					{
-						Index++;
-						if (Index >= Buckets)
-						{
-							Current = nullptr;
-							break;
-						}
-
-						Current = Data[Index];
-					} while (Current == nullptr);
-				}
-			}
-
-			Node** Data;
-			Node* Current;
-			uint64 Buckets;
-			uint64 Index;
-		};
+		using Node = LinkedNodeSimple<KeyValuePair<K, T>>;
+		using Iterator = HashmapIterator<KeyValuePair<K, T>, Node>;
 
 		Dictionary(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)
@@ -142,8 +52,7 @@ namespace NxEn
 				while (Current)
 				{
 					Node* NodeCopy = Copy.Allocate();
-					NodeCopy->KeyValue.Key = Current->KeyValue.Key;
-					NodeCopy->KeyValue.Value = Current->KeyValue.Value;
+					NodeCopy->Value.Initialize(Current->Value.GetKey(), Current->Value.GetValue());
 					Copy.AppendNode(Index, NodeCopy);
 
 					Current = Current->Next;
@@ -174,9 +83,9 @@ namespace NxEn
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
-			Instance->KeyValue.Value = Value;
+			Instance->Value.SetValue(Value);
 
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		T& Assign(const K& Key, T&& Value)
@@ -185,9 +94,9 @@ namespace NxEn
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
-			Instance->KeyValue.Value = Move(Value);
+			Instance->Value.SetValue(Move(Value));
 			
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		template<typename... Args>
@@ -197,9 +106,9 @@ namespace NxEn
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
-			Memory::Construct<T>(&Instance->KeyValue.Value, args...);
+			Instance->Value.SetValue(args...);
 		
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		T& Append(const K& Key, const T& Value)
@@ -208,7 +117,7 @@ namespace NxEn
 			Node* Instance = GetNode(Index, Key);
 			if (Instance != nullptr)
 			{
-				return Instance->KeyValue.Value;
+				return Instance->Value.GetValue();
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -217,11 +126,10 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->KeyValue.Key = Key;
-			Instance->KeyValue.Value = Value;
+			Instance->Value.Initialize(Key, Value);
 
 			AppendNode(Index, Instance);
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		T& Append(const K& Key, T&& Value)
@@ -230,7 +138,7 @@ namespace NxEn
 			Node* Instance = GetNode(Index, Key);
 			if (Instance != nullptr)
 			{
-				return Instance->KeyValue.Value;
+				return Instance->Value.GetValue();
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -239,11 +147,10 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->KeyValue.Key = Move(Key);
-			Instance->KeyValue.Value = Move(Value);
+			Instance->Value.Initialize(Key, Move(Value));
 
 			AppendNode(Index, Instance);
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		template<typename... Args>
@@ -253,7 +160,7 @@ namespace NxEn
 			Node* Instance = GetNode(Index, Key);
 			if (Instance != nullptr)
 			{
-				return Instance->KeyValue.Value;
+				return Instance->Value.GetValue();
 			}
 
 			if (GetLoadFactor() > LoadFactorThreshold)
@@ -262,11 +169,10 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->KeyValue.Key = Key;
-			Memory::Construct<T>(&Instance->KeyValue.Value, args...);
+			Instance->Value.Initialize(Key, args...);
 
 			AppendNode(Index, Instance);
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		T& AppendRange(const Dictionary<K, T, H, LF>& Value)
@@ -276,7 +182,7 @@ namespace NxEn
 				Append(It->GetKey(), It->GetValue());
 			}
 
-			return GetNode(Value.Begin()->GetKey())->KeyValue.Value;
+			return GetNode(Value.Begin()->GetKey())->Value.GetValue();
 		}
 
 		void Remove(const T& Key)
@@ -314,7 +220,7 @@ namespace NxEn
 			
 			Node* Instance = GetNode(Key);
 			NEXUS_ASSERT(Instance, "Key not in the Dictionary");
-			return Instance->KeyValue.Value;
+			return Instance->Value.GetValue();
 		}
 
 		T* TryGet(const K& Key) const
@@ -324,7 +230,7 @@ namespace NxEn
 			{
 				return nullptr;
 			}
-			return &Instance->KeyValue.Value;
+			return &Instance->Value.GetValue();
 		}
 
 		Iterator GetIterator(const K& Key)
@@ -365,9 +271,9 @@ namespace NxEn
 			NEXUS_ASSERT(NodeA, "Key A not in the Dictionary");
 			NEXUS_ASSERT(NodeB, "Key B not in the Dictionary");
 
-			T Temp = NodeA->KeyValue.Value;
-			NodeA->KeyValue.Value = Move(NodeB->KeyValue.Value);
-			NodeB->KeyValue.Value = Move(Temp);
+			T Temp = NodeA->Value.GetValue();
+			NodeA->Value.GetValue() = Move(NodeB->Value.GetValue());
+			NodeB->Value.GetValue() = Move(Temp);
 		}
 
 		bool ContainsKey(const K& Key) const
@@ -441,8 +347,7 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->KeyValue.Key);
-			Memory::Destruct(&Instance->KeyValue.Value);
+			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
 		}
 
@@ -487,7 +392,7 @@ namespace NxEn
 			Node* Current = Data[Index];
 			while (Current)
 			{
-				if (Current->KeyValue.Key == Key)
+				if (Current->Value.GetKey() == Key)
 				{
 					break;
 				}
@@ -519,7 +424,7 @@ namespace NxEn
 					Node* Next = Current->Next;
 
 					Current->Next = nullptr;
-					uint64 Index = GetIndex(Current->KeyValue.Key);
+					uint64 Index = GetIndex(Current->Value.GetKey());
 					AppendNode(Index, Current);
 
 					Current = Next;

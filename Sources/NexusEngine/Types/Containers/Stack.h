@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -11,61 +13,9 @@ namespace NxEn
 	template<typename T>
 	class Stack
 	{
-		struct Node
-		{
-			T Value;
-			Node* Next;
-		};
-
 	public:
-		class Iterator
-		{
-		public:
-			Iterator(Node* Pointer)
-				: Current(Pointer)
-			{
-
-			}
-
-			Iterator& operator++()
-			{
-				if (Current)
-				{
-					Current = Current->Next;
-				}
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->() const
-			{
-				return &Current->Value;
-			}
-
-			T& operator*() const
-			{
-				return Current->Value;
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Current == Other.Current;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-		private:
-			Node* Current;
-		};
+		using Node = LinkedNodeSimple<T>;
+		using Iterator = LinkedIteratorSimple<T, Node>;
 
 		Stack(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)

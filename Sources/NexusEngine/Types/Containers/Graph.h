@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -11,111 +13,11 @@ namespace NxEn
 	template<typename T>
 	class Graph
 	{
-		struct Connection;
-		struct Node;
-
 	public:
-		enum class ConnectionType : uint8
-		{
-			From, To
-		};
-
-	private:
-		struct Connection
-		{
-			ConnectionType Type;
-			Node* Target;
-			Connection* Next;
-		};
-		
-		struct Node
-		{
-			T Value;
-			uint64 Count;
-			Node* Next;
-			Connection* Connection;
-		};
-
-	public:
-		class Iterator
-		{
-		public:
-			Iterator(Node* Pointer)
-				: Current(Pointer)
-			{
-
-			}
-
-			Iterator& operator++()
-			{
-				if (Current)
-				{
-					Current = Current->Next;
-				}
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->() const
-			{
-				return &Current->Value;
-			}
-
-			T& operator*() const
-			{
-				return Current->Value;
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Current == Other.Current;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-			Iterator& Connections(ConnectionType Type, uint64 Index)
-			{
-				uint64 Idx = 0;
-				Connection* Connect = Current->Connection;
-				while (Connect)
-				{
-					if (Connect->Type == Type)
-					{
-						if (Idx == Index)
-						{
-							break;
-						}
-
-						Idx++;
-					}
-
-					Connect = Connect->Next;
-				}
-
-				if (Connect)
-				{
-					Current = Connect->Target;
-				}
-				else
-				{
-					Current = nullptr;
-				}
-
-				return *this;
-			}
-
-		private:
-			Node* Current;
-		};
+		using Node = LinkedNodeGraph<T>;
+		using Connection = LinkedConnectionGraph<T>;
+		using ConnectionType = LinkedConnectionType;
+		using Iterator = LinkedIteratorGraph<T, Node>;
 
 		Graph(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)

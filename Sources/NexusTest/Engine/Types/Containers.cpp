@@ -25,6 +25,8 @@ namespace NxTs
 
 		ContainerTest()
 		{
+			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Default");
+
 			Integer = 1;
 			Float = 1.0f;
 			Boolean = true;
@@ -33,6 +35,8 @@ namespace NxTs
 
 		ContainerTest(uint64 Initialization)
 		{
+			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Init");
+
 			Integer = Initialization;
 			Float = 1.0f;
 			Boolean = true;
@@ -41,6 +45,8 @@ namespace NxTs
 
 		ContainerTest(const ContainerTest& Other)
 		{
+			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Copy");
+			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -49,6 +55,8 @@ namespace NxTs
 
 		ContainerTest(ContainerTest&& Other) noexcept
 		{
+			NEXUS_LOG(App, Info, 0, "Container Test Constructor - Move");
+			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -58,6 +66,7 @@ namespace NxTs
 		~ContainerTest()
 		{
 			NEXUS_ASSERT(!Destroyed, "Already Destroyed");
+			NEXUS_LOG(App, Info, 0, "Container Test Destructor");
 
 			Integer = 0;
 			Float = 0.0f;
@@ -67,6 +76,8 @@ namespace NxTs
 
 		ContainerTest& operator=(const ContainerTest& Other)
 		{
+			NEXUS_LOG(App, Info, 0, "Container Test Operator - Copy");
+			
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -76,6 +87,8 @@ namespace NxTs
 
 		ContainerTest& operator=(ContainerTest&& Other) noexcept
 		{
+			NEXUS_LOG(App, Info, 0, "Container Test Operator - Move");
+
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -83,32 +96,32 @@ namespace NxTs
 			return *this;
 		}
 
-		bool operator==(const ContainerTest& Other)
+		bool operator==(const ContainerTest& Other) const
 		{
 			return Integer == Other.Integer;
 		}
 
-		bool operator!=(const ContainerTest& Other)
+		bool operator!=(const ContainerTest& Other) const
 		{
 			return Integer != Other.Integer;
 		}
 
-		bool operator>(const ContainerTest& Other)
+		bool operator>(const ContainerTest& Other) const
 		{
 			return Integer > Other.Integer;
 		}
 
-		bool operator<(const ContainerTest& Other)
+		bool operator<(const ContainerTest& Other) const
 		{
 			return Integer < Other.Integer;
 		}
 
-		bool operator>=(const ContainerTest& Other)
+		bool operator>=(const ContainerTest& Other) const
 		{
 			return Integer >= Other.Integer;
 		}
 
-		bool operator<=(const ContainerTest& Other)
+		bool operator<=(const ContainerTest& Other) const
 		{
 			return Integer <= Other.Integer;
 		}

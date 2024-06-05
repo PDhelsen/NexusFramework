@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
@@ -8,101 +9,11 @@
 
 namespace NxEn
 {
-	template<typename T>
+	template<typename T, uint64 BucketSize = 10>
 	class Dequeue
 	{
 	public:
-		class Iterator
-		{
-		public:
-			Iterator(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
-				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
-			{
-
-			}
-
-			Iterator& operator++()
-			{
-				MoveToNext(true);
-				return *this;
-			}
-
-			Iterator operator++(int32)
-			{
-				Iterator Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			Iterator& operator--()
-			{
-				MoveToNext(false);
-				return *this;
-			}
-
-			Iterator operator--(int32)
-			{
-				Iterator Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			T* operator->() const
-			{
-				return &Data[BucketIndex][DataIndex];
-			}
-
-			T& operator*() const
-			{
-				return Data[BucketIndex][DataIndex];
-			}
-
-			bool operator==(const Iterator& Other) const
-			{
-				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
-			}
-
-			bool operator!=(const Iterator& Other) const
-			{
-				return !(*this == Other);
-			}
-
-			uint64 GetIndex() const { return BucketIndex * BucketSize + DataIndex - Offset; }
-
-		private:
-			void MoveToNext(bool Forward)
-			{
-				if (Forward)
-				{
-					if (DataIndex == BucketSize - 1)
-					{
-						BucketIndex++;
-						DataIndex = 0;
-					}
-					else
-					{
-						DataIndex++;
-					}
-				}
-				else
-				{
-					if (DataIndex == 0)
-					{
-						BucketIndex--;
-						DataIndex = BucketSize - 1;
-					}
-					else
-					{
-						DataIndex--;
-					}
-				}
-			}
-
-			T** Data;
-			uint64 Offset;
-			uint64 BucketIndex;
-			uint64 DataIndex;
-		};
+		using Iterator = BucketIterator<T, BucketSize>;
 
 		Dequeue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
@@ -550,8 +461,6 @@ namespace NxEn
 			IndexFront = 5;
 			IndexBack = 4;
 		}
-
-		static const uint64 BucketSize = 10;
 
 		Allocator* Allocator;
 		uint64 Buckets;
