@@ -177,6 +177,18 @@ namespace NxEn
 			DataHead = Current;
 		}
 
+		void Sort(Sort::CompareFunction<T> Function = nullptr)
+		{
+			DataHead = Sort::LinkSort<T>(DataHead, Function);
+
+			Node* Current = DataHead;
+			while (Current->Next != nullptr)
+			{
+				Current = Current->Next;
+			}
+			DataTail = Current;
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) != End();

@@ -176,6 +176,11 @@ namespace NxEn
 			Data = Current;
 		}
 
+		void Sort(Sort::CompareFunction<T> Function = nullptr)
+		{
+			Data = Sort::LinkSort<T>(Data, Function);
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) != End();

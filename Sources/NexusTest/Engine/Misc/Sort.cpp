@@ -212,7 +212,8 @@ namespace NxTs
 				ASSERT_EQ(Data3[Index] >= Data3[Right], true);
 			}
 		}
-	} 
+	}
+
 	TEST(Sort, Container)
 	{
 		NxEn::Array<uint64> Data = NxEn::Array<uint64>(10);

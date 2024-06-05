@@ -36,6 +36,13 @@ namespace NxEn
 			Sort::HeapifySort(Data, Data.GetCount(), Compare);
 		}
 
+		template<typename T, typename N>
+		static N* LinkSort(N* Root, CompareFunction<T> Compare = nullptr)
+		{
+			Sort::LinkSortSort<T, N>(&Root, Compare);
+			return Root;
+		}
+
 	private:
 		template<typename T, typename C>
 		static void MergeSortSort(C& Data, uint64 Count, CompareFunction<T> Compare = nullptr)
@@ -219,6 +226,78 @@ namespace NxEn
 			
 				Sort::HeapifySwap(Data, Count, Largest, Compare);
 			}
+		}
+
+		template<typename T, typename N>
+		static void LinkSortSort(N** HeadRef, CompareFunction<T> Compare = nullptr)
+		{
+			N* Head = *HeadRef;
+			if (Head == nullptr || Head->Next == nullptr)
+			{
+				return;
+			}
+
+			N* A = nullptr;
+			N* B = nullptr;
+			LinkSortSplit<N>(Head, &A, &B);
+
+			LinkSortSort<T, N>(&A);
+			LinkSortSort<T, N>(&B);
+
+			*HeadRef = LinkSortMerge<T, N>(A, B);
+		}
+
+		template<typename T, typename N>
+		static N* LinkSortMerge(N* A, N* B, CompareFunction<T> Compare = nullptr)
+		{
+			N* Result = nullptr;
+
+			if (A == nullptr)
+			{
+				return B;
+			}
+			else if (B == nullptr)
+			{
+				return A;
+			}
+
+			if (DoCompare(A->Value, B->Value, Compare))
+			{
+				Result = A;
+				Result->Next = LinkSortMerge<T, N>(A->Next, B);
+			}
+			else
+			{
+				Result = B;
+				Result->Next = LinkSortMerge<T, N>(A, B->Next);
+			}
+
+			return Result;
+		}
+
+		template<typename N>
+		static void LinkSortSplit(N* Source, N** FrontRef, N** BackRef)
+		{
+			N* Slow;
+			N* Fast;
+
+			Slow = Source;
+			Fast = Source->Next;
+
+			while (Fast != nullptr)
+			{
+				Fast = Fast->Next;
+				if (Fast != nullptr)
+				{
+					Slow = Slow->Next;
+					Fast = Fast->Next;
+				}
+			}
+
+			*FrontRef = Source;
+			*BackRef = Slow->Next;
+
+			Slow->Next = nullptr;
 		}
 
 		template<typename T>

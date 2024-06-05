@@ -368,6 +368,13 @@ namespace NxEn
 			}
 		}
 
+		T& Get() const
+		{
+			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+
+			return DataHead->Value;
+		}
+
 		T& GetNext(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
@@ -517,10 +524,27 @@ namespace NxEn
 			DataHead = Current;
 		}
 
-		void Sort()
+		void Sort(Sort::CompareFunction<T> Function = nullptr)
 		{
-			SortSort(&DataHead);
-			FixLinks();
+			DataHead = Sort::LinkSort<T>(DataHead, Function);
+			
+			Node* Current = DataHead;
+			Current->Prev = nullptr;
+			while (Current != nullptr)
+			{
+				Node* Prev = Current;
+				Current = Current->Next;
+
+				if (Current)
+				{
+					Current->Prev = Prev;
+				}
+				else
+				{
+					Prev->Next = nullptr;
+					DataTail = Prev;
+				}
+			}
 		}
 
 		bool Contains(const T& Other) const
@@ -669,97 +693,6 @@ namespace NxEn
 		void ValidateAllocator(Allocator* Allctr)
 		{
 			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-		}
-
-		static void SortSort(Node** HeadRef)
-		{
-			Node* Head = *HeadRef;	
-			if (Head == nullptr || Head->Next == nullptr)
-			{
-				return;
-			}
-
-			Node* A = nullptr;
-			Node* B = nullptr;
-			SortSplit(Head, &A, &B);
-
-			SortSort(&A);
-			SortSort(&B);
-
-			*HeadRef = SortMerge(A, B);
-		}
-
-		static Node* SortMerge(Node* A, Node* B)
-		{
-			Node* Result = nullptr;
-
-			if (A == nullptr)
-			{
-				return B;
-			}
-			else if (B == nullptr)
-			{
-				return A;
-			}
-
-			if (A->Value <= B->Value)
-			{
-				Result = A;
-				Result->Next = SortMerge(A->Next, B);
-			}
-			else
-			{
-				Result = B;
-				Result->Next = SortMerge(A, B->Next);
-			}
-
-			return Result;
-		}
-
-		static void SortSplit(Node* Source, Node** FrontRef, Node** BackRef)
-		{
-			Node* Slow;
-			Node* Fast;
-
-			Slow = Source;
-			Fast = Source->Next;
-
-			while (Fast != nullptr)
-			{
-				Fast = Fast->Next;
-				if (Fast != nullptr)
-				{
-					Slow = Slow->Next;
-					Fast = Fast->Next;
-				}
-			}
-
-			*FrontRef = Source;
-			*BackRef = Slow->Next;
-
-			Slow->Next = nullptr;
-		}
-
-		void FixLinks()
-		{
-			Node* Current = DataHead;
-			Current->Prev = nullptr;
-
-			while (Current != nullptr)
-			{
-				Node* Prev = Current;
-				Current = Current->Next;
-
-				if (Current)
-				{
-					Current->Prev = Prev;
-				}
-				else
-				{
-					Prev->Next = nullptr;
-					DataTail = Prev;
-				}
-			}
 		}
 
 		Allocator* Allocator;

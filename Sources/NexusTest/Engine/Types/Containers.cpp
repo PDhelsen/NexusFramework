@@ -456,6 +456,16 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
+		Test.Sort();
+		auto ItFirst = Test.Begin();
+		auto& ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
+		{
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
+		}
+
 		ContainerTest ToFind1 = ContainerTest(5);
 		ContainerTest ToFind2 = ContainerTest(100);
 		ASSERT_EQ(Test.Contains(ToFind1), true);
@@ -545,6 +555,7 @@ namespace NxTs
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
+		ASSERT_EQ(Test.Get().Integer, Test.First().Integer);
 		ASSERT_EQ(Test.TryGetPrev(&Test.First()), nullptr);
 		ASSERT_EQ(Test.TryGetNext(&Test.Last()), nullptr);
 
@@ -580,6 +591,16 @@ namespace NxTs
 		Test.Reverse();
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
+
+		Test.Sort();
+		auto ItFirst = Test.Begin();
+		auto& ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
+		{
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
+		}
 
 		ContainerTest ToFind1 = ContainerTest(5);
 		ContainerTest ToFind2 = ContainerTest(100);
@@ -641,6 +662,17 @@ namespace NxTs
 		}
 		ASSERT_EQ(Test.Begin()->Integer, 0);
 
+		Test.Reverse();
+		Test.Sort();
+		auto ItFirst = Test.Begin();
+		auto& ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
+		{
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
+		}
+
 		ContainerTest ToFind1 = ContainerTest(2);
 		ContainerTest ToFind2 = ContainerTest(100);
 		ASSERT_EQ(Test.Contains(ToFind1), true);
@@ -698,6 +730,17 @@ namespace NxTs
 			It.Integer = Index++;
 		}
 		ASSERT_EQ(Test.Begin()->Integer, 0);
+
+		Test.Reverse();
+		Test.Sort();
+		auto ItFirst = Test.Begin();
+		auto& ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
+		{
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
+		}
 
 		ContainerTest ToFind1 = ContainerTest(4);
 		ContainerTest ToFind2 = ContainerTest(100);
@@ -891,7 +934,7 @@ namespace NxTs
 		Copy.Clear();
 		ASSERT_EQ(Copy.GetCount(), 0);
 
-		ASSERT_EQ(Test.GetRoot().Integer, 0);
+		ASSERT_EQ(Test.Get().Integer, 0);
 		ASSERT_EQ(Test.GetParent(&Index1).Integer, Root.Integer);
 		ASSERT_EQ(Test.GetSibling(&Index1).Integer, 1);
 		ASSERT_EQ(Test.GetChild(&Index1).Integer, 1);

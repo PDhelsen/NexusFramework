@@ -162,7 +162,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Anchor = GetNode(Parent);
-			Node* Copy = GetNode(&Value.GetRoot());
+			Node* Copy = GetNode(&Value.Get());
 			return CopyNode(Anchor, Copy);
 		}
 
@@ -296,21 +296,11 @@ namespace NxEn
 			Data = nullptr;
 		}
 
-		T& GetRoot() const 
+		T& Get() const 
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 			
 			return Data->Value;
-		}
-
-		T* TryGetRoot() const
-		{
-			if (!Data)
-			{
-				return nullptr;
-			}
-
-			return &Data->Value;
 		}
 
 		T& GetParent(T* Child) const
