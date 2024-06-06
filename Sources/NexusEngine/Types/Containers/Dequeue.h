@@ -9,11 +9,11 @@
 
 namespace NxEn
 {
-	template<typename T, uint64 BucketSize = 10>
+	template<typename T, uint64 BS = 10>
 	class Dequeue
 	{
 	public:
-		using Iterator = BucketIterator<T, BucketSize>;
+		using Iterator = BucketIterator<T, BS>;
 
 		Dequeue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
@@ -469,6 +469,8 @@ namespace NxEn
 			IndexFront = 5;
 			IndexBack = 4;
 		}
+
+		inline static const uint64 BucketSize = BS;
 
 		Allocator* Allocator;
 		uint64 Buckets;

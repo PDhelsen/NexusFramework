@@ -68,7 +68,7 @@ namespace NxEn
 		uint64 Index;
 	};
 
-	template<typename T, uint64 BucketSize>
+	template<typename T, uint64 BS>
 	class BucketIterator
 	{
 	public:
@@ -154,6 +154,8 @@ namespace NxEn
 				}
 			}
 		}
+
+		inline static const uint64 BucketSize = BS;
 
 		T** Data;
 		uint64 Offset;
