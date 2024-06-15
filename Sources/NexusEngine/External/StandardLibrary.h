@@ -2,6 +2,7 @@
 
 // All the needed standard library features should be included here
 
+//TODO: Evaluate C lib vs C++ lib
 #include <iostream>
 #include <ctime>
 

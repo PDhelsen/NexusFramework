@@ -12,6 +12,7 @@ namespace NxEn
 	static const char* ConsoleColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
 	static const char* ConsoleFormatReset = "\033[m";
 
+	// TODO: Implementation - Console - Evaluate what goes in Logger and what goes in Platform
 	void PlatformWindows::WaitForUserToCloseConsole() const
 	{
 		std::cin.get();
@@ -62,10 +63,13 @@ namespace NxEn
 	void PlatformWindows::InitializeConsole()
 	{
 		HANDLE ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+
 		DWORD ConsoleOutDefaultMode = 0;
 		GetConsoleMode(ConsoleOut, &ConsoleOutDefaultMode);
 		DWORD ConsoleOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
 		DWORD ConsoleOutMode = ConsoleOutDefaultMode | ConsoleOutRequestMode;
 		SetConsoleMode(ConsoleOut, ConsoleOutMode);
+
+		SetConsoleOutputCP(CP_UTF8);
 	}
 }
