@@ -131,7 +131,7 @@ namespace NxEn
 		memset(Memory, Value, Size);
 	}
 
-	void Memory::MemCopy(void* Source, void* Destination, uint64 Size)
+	void Memory::MemCopy(const void* Source, void* Destination, uint64 Size)
 	{
 		NEXUS_ASSERT(Source != nullptr, "Trying to copy memory from null address")
 		NEXUS_ASSERT(Destination != nullptr, "Trying to copy memory to null address")

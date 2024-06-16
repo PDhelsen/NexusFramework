@@ -46,7 +46,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static void* OffsetPointer(void* Pointer, uint64 Offset);
 
 		NEXUS_ENGINE_API static void MemSet(void* Memory, uint8 Value, uint64 Size);
-		NEXUS_ENGINE_API static void MemCopy(void* Source, void* Destination, uint64 Size);
+		NEXUS_ENGINE_API static void MemCopy(const void* Source, void* Destination, uint64 Size);
 
 		NEXUS_ENGINE_API static void SetActiveAllocator(Allocator* Allocator) { Active = Allocator; }
 		NEXUS_ENGINE_API static Allocator* GetActiveAllocator() { return Active; }
