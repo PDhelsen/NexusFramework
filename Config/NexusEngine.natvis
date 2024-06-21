@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
-  
+
+	<Type Name="NxEn::String">
+		<DisplayString>{ Data }</DisplayString>
+		<Expand>
+			<Item Name="Size">Count</Item>
+			<ArrayItems>
+				<Size>Count + 1</Size>
+				<ValuePointer>Data</ValuePointer>
+			</ArrayItems>
+		</Expand>
+	</Type>
+	
   <Type Name="NxEn::Array&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
