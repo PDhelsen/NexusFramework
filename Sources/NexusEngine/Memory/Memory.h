@@ -45,6 +45,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static void* UnalignPointer(void* Pointer);
 		NEXUS_ENGINE_API static void* OffsetPointer(void* Pointer, uint64 Offset);
 
+		// TODO: Implementation - Memory - Memmove
 		NEXUS_ENGINE_API static void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_ENGINE_API static void MemCopy(const void* Source, void* Destination, uint64 Size);
 
