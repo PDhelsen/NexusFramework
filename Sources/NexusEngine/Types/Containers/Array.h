@@ -10,6 +10,7 @@
 
 namespace NxEn
 {
+	// TODO: Cleanup - Name - Allocator
 	// TODO: Optimization - Copy / Move - Operator + Self assignement check
 	template<typename T>
 	class Array
