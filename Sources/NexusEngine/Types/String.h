@@ -9,6 +9,7 @@
 
 namespace NxEn
 {
+	// TODO: Optimization - Copy / Move - Operator + Self assignement check
 	class String
 	{
 	public:

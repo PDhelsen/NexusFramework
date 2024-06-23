@@ -11,6 +11,7 @@
 
 namespace NxEn
 {
+	// TODO: Implementation - Containers - Union / Intersect / Exclude
 	template<typename T, class H = Fnv1a64, float LF = 1.0f>
 	class Set
 	{

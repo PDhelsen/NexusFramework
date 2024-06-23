@@ -42,7 +42,8 @@ namespace NxEn
 	public:
 		NEXUS_ENGINE_API Logger(LoggerVerbosity Verbosity);
 		NEXUS_ENGINE_API ~Logger();
-		
+
+		// TODO: Implementation - Logger - Support for String
 		NEXUS_ENGINE_API void Log(LoggerSource Source, LoggerVerbosity Verbosity, uint16 Channel, const char* Message, ...) const;
 
 		NEXUS_ENGINE_API void AddChannel(uint16 Channel, bool State = true);

@@ -6,6 +6,7 @@
 
 namespace NxEn
 {
+	// TODO: Architecture - Sort - Strategy Pattern
 	class Sort
 	{
 	public:
