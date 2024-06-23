@@ -4,30 +4,30 @@
 namespace NxEn
 {
 	String::String()
-		: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)
+		: Allctr(Memory::GetActiveAllocator()), Capacity(0), Count(0), Data(nullptr)
 	{
 	}
 
 	String::String(uint64 Bytes)
 	{
-		Allocate(Bytes, 0, nullptr);
+		Allocate(Bytes, 0, nullptr, Memory::GetActiveAllocator());
 	}
 
 	String::String(const char* Text)
 	{
 		uint64 Size = Length(Text);
-		Allocate(Size, Size, Text);
+		Allocate(Size, Size, Text, Memory::GetActiveAllocator());
 	}
 
 	String::String(const String& Other)
 	{
-		Allocate(Other.Capacity, Other.Count, Other.Data);
+		Allocate(Other.Capacity, Other.Count, Other.Data, Other.Allctr);
 	}
 
 	String::String(String&& Other) noexcept
-		: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 	{
-		Other.Allocator = nullptr;
+		Other.Allctr = nullptr;
 		Other.Capacity = 0;
 		Other.Count = 0;
 		Other.Data = nullptr;
@@ -36,6 +36,12 @@ namespace NxEn
 	String::~String()
 	{
 		Free();
+	}
+
+	String& String::operator=(const String& Other)
+	{
+		Allocate(Other.Capacity, Other.Count, Other.Data, Other.Allctr);
+		return *this;
 	}
 
 	String& String::operator+=(const String& Other)
@@ -272,12 +278,12 @@ namespace NxEn
 		return Move(Results);
 	}
 
-	void String::Allocate(uint64 Bytes, uint64 Size, const char* Text)
+	void String::Allocate(uint64 Bytes, uint64 Size, const char* Text, Allocator* Al)
 	{
 		ValidateCapacityCount(Bytes, Size);
 
-		Allocator = Memory::GetActiveAllocator();
-		Data = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+		Allctr = Al;
+		Data = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allctr);
 
 		if (Text)
 		{
@@ -290,13 +296,13 @@ namespace NxEn
 	void String::Reallocate(uint64 Bytes)
 	{
 		ValidateCapacityCount(Bytes, Count);
-		Data = (char*)Memory::Realloc(Data, Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+		Data = (char*)Memory::Realloc(Data, Capacity, NEXUS_MEMORY_ALIGN, Allctr);
 		ValidateNullTermination();
 	}
 
 	void String::Free()
 	{
-		Memory::Free(Data, Allocator);
+		Memory::Free(Data, Allctr);
 	}
 
 	void String::Append(const char* Text, uint64 Size)

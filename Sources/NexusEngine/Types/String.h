@@ -25,6 +25,7 @@ namespace NxEn
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
 
+		NEXUS_ENGINE_API String& operator=(const String& Other);
 		NEXUS_ENGINE_API String& operator+=(const String& Other);
 		NEXUS_ENGINE_API String& operator+=(const char* Other);
 		NEXUS_ENGINE_API String& operator-=(const String& Other);
@@ -110,7 +111,7 @@ namespace NxEn
 			Contains, Find, Split
 		};
 
-		void Allocate(uint64 Bytes, uint64 Size, const char* Text);
+		void Allocate(uint64 Bytes, uint64 Size, const char* Text, Allocator* Al);
 		void Reallocate(uint64 Bytes);
 		void Free();
 		void Append(const char* Text, uint64 Size);
@@ -124,32 +125,11 @@ namespace NxEn
 
 		static const uint8 GuessedFormatingSize = 8;
 
-		Allocator* Allocator;
+		Allocator* Allctr;
 		uint64 Capacity;
 		uint64 Count;
 		char* Data;
 	};
-
-	template<typename ...Args>
-	inline String String::Format(const char* Text, Args&& ...args)
-	{
-		String Result = String(Length(Text) + sizeof...(args) * GuessedFormatingSize);
-		Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
-		if (Result.Count >= Result.Capacity)
-		{
-			Result.Grow(Result.Count);
-			Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
-		}
-		return Result;
-	}
-
-	template<typename ...Args>
-	inline String String::Format(uint64 Size, const char* Text, Args&& ...args)
-	{
-		String Result = String(Size);
-		Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
-		return Result;
-	}
 
 	NEXUS_ENGINE_API bool operator==(const String& TextA, const String& TextB);
 	NEXUS_ENGINE_API bool operator==(const String& TextA, const char* TextB);
@@ -175,4 +155,36 @@ namespace NxEn
 	NEXUS_ENGINE_API String operator-(const String& TextA, const String& TextB);
 	NEXUS_ENGINE_API String operator-(const String& TextA, const char* TextB);
 	NEXUS_ENGINE_API String operator-(const char* TextA, const String& TextB);
+
+	template<typename ...Args>
+	inline String String::Format(const char* Text, Args&& ...args)
+	{
+		String Result = String(Length(Text) + sizeof...(args) * GuessedFormatingSize);
+		Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
+		if (Result.Count >= Result.Capacity)
+		{
+			Result.Grow(Result.Count);
+			Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
+		}
+		return Result;
+	}
+
+	template<typename ...Args>
+	inline String String::Format(uint64 Size, const char* Text, Args&& ...args)
+	{
+		String Result = String(Size);
+		Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
+		return Result;
+	}
+
+	template<class H>
+	struct Hash<String, H>
+	{
+		static H::HashLength HashObject(const String& Data, H::HashLength Seed = 0)
+		{
+			H Hashing = H(Seed);
+			Hashing.Accumulate(Data.C(), Data.GetCount());
+			return Hashing.Hash();
+		}
+	};
 }

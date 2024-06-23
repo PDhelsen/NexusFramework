@@ -134,4 +134,46 @@ namespace NxTs
 		ASSERT_EQ(NxEn::String::ToUnsignedInteger("100"), 100);
 		ASSERT_EQ(NxEn::String::ToDouble("-10.0"), -10.0f);
 	}
+
+	TEST(Type_String, Hash_Sort)
+	{
+		NxEn::Array<NxEn::String> Array = NxEn::Array<NxEn::String>(10);
+		Array[5] = NxEn::String("AAAA");
+		Array[9] = NxEn::String("ABCD");
+		Array[3] = NxEn::String("ABEF");
+		Array[7] = NxEn::String("ABEG");
+		Array[1] = NxEn::String("ABEG");
+		Array[4] = NxEn::String("BCDE");
+		Array[6] = NxEn::String("BDEF");
+		Array[8] = NxEn::String("EFGH");
+		Array[2] = NxEn::String("WWWW");
+		Array[0] = NxEn::String("WWWW");
+
+		Array.Sort();
+		auto ItFirst = Array.Begin();
+		auto& ItSecond = ++Array.Begin();
+		while (ItSecond != Array.End())
+		{
+			ASSERT_EQ(*ItFirst <= *ItSecond, true);
+			ItFirst++;
+			ItSecond++;
+		}
+
+		uint64 Hash1 = 0x2474E7FB1AEC9F05;
+		uint64 Hash2 = 0x77F122B9F752AACB;
+		NxEn::String String1 = NxEn::String("Test");
+		NxEn::String String2 = NxEn::String("This is a test text for testing the Hash function");
+		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String1), Hash1);
+		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String2), Hash2);
+
+		NxEn::Dictionary<NxEn::String, NxEn::String> Dictionary = NxEn::Dictionary<NxEn::String, NxEn::String>();
+		Dictionary.Append("Test - 1", "Test - 1");
+		Dictionary.Append("Test - 2", "Test - 2");
+		Dictionary.Append("Test - 3", "Test - 3");
+
+		for (auto& Kv : Dictionary)
+		{
+			ASSERT_EQ(Kv.GetKey(), Kv.GetValue());
+		}
+	}
 }
