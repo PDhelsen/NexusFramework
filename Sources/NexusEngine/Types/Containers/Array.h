@@ -11,6 +11,7 @@
 namespace NxEn
 {
 	// TODO: Cleanup - Name - Allocator
+	// TODO: Implementation - Memory - Initialize memory / Construct (Set, Dict)
 	// TODO: Optimization - Copy / Move - Operator + Self assignement check
 	template<typename T>
 	class Array
