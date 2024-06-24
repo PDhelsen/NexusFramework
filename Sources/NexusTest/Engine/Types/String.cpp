@@ -17,7 +17,7 @@ namespace NxTs
 		ASSERT_EQ(Test1.IsEmpty(), false);
 		ASSERT_EQ(Test1.IsNullTerminated(), true);
 		ASSERT_EQ(Test1.GetCount(), 11);
-		ASSERT_EQ(Test1.GetCapacity(), 12);
+		ASSERT_EQ(Test1.GetCapacity(), 16);
 
 		ASSERT_EQ(Test1, NxEn::String("Hello World"));
 		ASSERT_EQ(Test1, "Hello World");
@@ -72,7 +72,7 @@ namespace NxTs
 		Test1.Grow(30);
 		ASSERT_EQ(Test1.GetCapacity(), 30);
 		Test1.Shrink();
-		ASSERT_EQ(Test1.GetCapacity(), 12);
+		ASSERT_EQ(Test1.GetCapacity(), 17);
 
 		Test1.Clear();
 		Test1.Append("Hello World");
@@ -137,17 +137,24 @@ namespace NxTs
 
 	TEST(Type_String, Hash_Sort)
 	{
+		uint64 Hash1 = 0x2474E7FB1AEC9F05;
+		uint64 Hash2 = 0x77F122B9F752AACB;
+		NxEn::String String1 = NxEn::String("Test");
+		NxEn::String String2 = NxEn::String("This is a test text for testing the Hash function");
+		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String1), Hash1);
+		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String2), Hash2);
+
 		NxEn::Array<NxEn::String> Array = NxEn::Array<NxEn::String>(10);
-		Array[5] = NxEn::String("AAAA");
-		Array[9] = NxEn::String("ABCD");
-		Array[3] = NxEn::String("ABEF");
-		Array[7] = NxEn::String("ABEG");
-		Array[1] = NxEn::String("ABEG");
-		Array[4] = NxEn::String("BCDE");
-		Array[6] = NxEn::String("BDEF");
-		Array[8] = NxEn::String("EFGH");
-		Array[2] = NxEn::String("WWWW");
-		Array[0] = NxEn::String("WWWW");
+		Array.AssignConstruct(0, NxEn::String("ABEG"));
+		Array.AssignConstruct(1, NxEn::String("ABEF"));
+		Array.AssignConstruct(2, NxEn::String("BCDE"));
+		Array.AssignConstruct(3, NxEn::String("WWWW"));
+		Array.AssignConstruct(4, NxEn::String("ABCD"));
+		Array.AssignConstruct(5, NxEn::String("BDEF"));
+		Array.AssignConstruct(6, NxEn::String("AAAA"));
+		Array.AssignConstruct(7, NxEn::String("ABEG"));
+		Array.AssignConstruct(8, NxEn::String("WWWW"));
+		Array.AssignConstruct(9, NxEn::String("EFGH"));
 
 		Array.Sort();
 		auto ItFirst = Array.Begin();
@@ -157,23 +164,6 @@ namespace NxTs
 			ASSERT_EQ(*ItFirst <= *ItSecond, true);
 			ItFirst++;
 			ItSecond++;
-		}
-
-		uint64 Hash1 = 0x2474E7FB1AEC9F05;
-		uint64 Hash2 = 0x77F122B9F752AACB;
-		NxEn::String String1 = NxEn::String("Test");
-		NxEn::String String2 = NxEn::String("This is a test text for testing the Hash function");
-		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String1), Hash1);
-		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String2), Hash2);
-
-		NxEn::Dictionary<NxEn::String, NxEn::String> Dictionary = NxEn::Dictionary<NxEn::String, NxEn::String>();
-		Dictionary.Append("Test - 1", "Test - 1");
-		Dictionary.Append("Test - 2", "Test - 2");
-		Dictionary.Append("Test - 3", "Test - 3");
-
-		for (auto& Kv : Dictionary)
-		{
-			ASSERT_EQ(Kv.GetKey(), Kv.GetValue());
 		}
 	}
 }

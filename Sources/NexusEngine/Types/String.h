@@ -70,10 +70,10 @@ namespace NxEn
 		NEXUS_ENGINE_API List<const char*> SplitAll(const char* Substring, SearchMode Mode = SearchMode::Substring) const;
 
 		NEXUS_ENGINE_API uint64 IsEmpty() const { return Count == 0; }
-		NEXUS_ENGINE_API uint64 IsNullTerminated() const { return Data[Capacity - 1] == NullChar; }
+		NEXUS_ENGINE_API uint64 IsNullTerminated() const { return GetBuffer()[Count] == NullChar; }
 		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
 		NEXUS_ENGINE_API uint64 GetCapacity() const { return Capacity; }
-		NEXUS_ENGINE_API const char* C() const { return Data; }
+		NEXUS_ENGINE_API const char* C() const { return GetBuffer(); }
 
 		template<typename... Args>
 		static String Format(const char* Text, Args&&... args);
@@ -123,12 +123,23 @@ namespace NxEn
 		void Resize(uint64 Size);
 		const char* Search(const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results) const;
 
+		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
+		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
+		NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
+
 		static const uint8 GuessedFormatingSize = 8;
+		static const uint8 SmallStringCapacity = 16;
+
+		union Buffer
+		{
+			char* Large;
+			char Small[SmallStringCapacity];
+		};
 
 		Allocator* Allctr;
 		uint64 Capacity;
 		uint64 Count;
-		char* Data;
+		Buffer Data;
 	};
 
 	NEXUS_ENGINE_API bool operator==(const String& TextA, const String& TextB);
@@ -160,11 +171,11 @@ namespace NxEn
 	inline String String::Format(const char* Text, Args&& ...args)
 	{
 		String Result = String(Length(Text) + sizeof...(args) * GuessedFormatingSize);
-		Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
+		Result.Count = Frmt(Result.Capacity, Result.GetData(), Text, args...);
 		if (Result.Count >= Result.Capacity)
 		{
 			Result.Grow(Result.Count);
-			Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
+			Result.Count = Frmt(Result.Capacity, Result.GetData(), Text, args...);
 		}
 		return Result;
 	}
@@ -173,7 +184,7 @@ namespace NxEn
 	inline String String::Format(uint64 Size, const char* Text, Args&& ...args)
 	{
 		String Result = String(Size);
-		Result.Count = Frmt(Result.Capacity, Result.Data, Text, args...);
+		Result.Count = Frmt(Result.Capacity, Result.GetData(), Text, args...);
 		return Result;
 	}
 

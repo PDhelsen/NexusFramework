@@ -4,33 +4,46 @@
 namespace NxEn
 {
 	String::String()
-		: Allctr(Memory::GetActiveAllocator()), Capacity(0), Count(0), Data(nullptr)
+		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
+		ValidateNullTermination();
 	}
 
 	String::String(uint64 Bytes)
+		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Bytes, 0, nullptr, Memory::GetActiveAllocator());
 	}
 
 	String::String(const char* Text)
+		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = Length(Text);
 		Allocate(Size, Size, Text, Memory::GetActiveAllocator());
 	}
 
 	String::String(const String& Other)
+		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Other.Capacity, Other.Count, Other.Data, Other.Allctr);
+		Allocate(Other.Capacity, Other.Count, Other.GetBuffer(), Other.Allctr);
 	}
 
 	String::String(String&& Other) noexcept
-		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count)
 	{
+		if (Other.Sso())
+		{
+			Copy(Other.Data.Small, Data.Small, SmallStringCapacity);
+		}
+		else
+		{
+			Data.Large = Other.Data.Large;
+		}
+
 		Other.Allctr = nullptr;
 		Other.Capacity = 0;
 		Other.Count = 0;
-		Other.Data = nullptr;
+		Other.Data.Large = nullptr;
 	}
 
 	String::~String()
@@ -40,7 +53,8 @@ namespace NxEn
 
 	String& String::operator=(const String& Other)
 	{
-		Allocate(Other.Capacity, Other.Count, Other.Data, Other.Allctr);
+		Resize(Other.Count);
+		Copy(Other.GetBuffer(), GetData(), Other.Capacity);
 		return *this;
 	}
 
@@ -70,7 +84,7 @@ namespace NxEn
 
 	String& String::Append(const String& Text)
 	{
-		Append(Text.Data, Text.Count);
+		Append(Text.GetBuffer(), Text.Count);
 		return *this;
 	}
 
@@ -82,19 +96,19 @@ namespace NxEn
 
 	String& String::Assign(const String& OldText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Assign(OldText.Data, OldText.Count, NewText.Data, NewText.Count, Offset, Occurrence, All);
+		Assign(OldText.GetBuffer(), OldText.Count, NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
 		return *this;
 	}
 
 	String& String::Assign(const String& OldText, const char* NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Assign(OldText.Data, OldText.Count, NewText, Length(NewText), Offset, Occurrence, All);
+		Assign(OldText.GetBuffer(), OldText.Count, NewText, Length(NewText), Offset, Occurrence, All);
 		return *this;
 	}
 
 	String& String::Assign(const char* OldText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Assign(OldText, Length(OldText), NewText.Data, NewText.Count, Offset, Occurrence, All);
+		Assign(OldText, Length(OldText), NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
 		return *this;
 	}
 
@@ -106,19 +120,19 @@ namespace NxEn
 
 	String& String::Insert(const String& ReferenceText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Insert(ReferenceText.Data, ReferenceText.Count, NewText.Data, NewText.Count, Offset, Occurrence, All);
+		Insert(ReferenceText.GetBuffer(), ReferenceText.Count, NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
 		return *this;
 	}
 
 	String& String::Insert(const String& ReferenceText, const char* NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Insert(ReferenceText.Data, ReferenceText.Count, NewText, Length(NewText), Offset, Occurrence, All);
+		Insert(ReferenceText.GetBuffer(), ReferenceText.Count, NewText, Length(NewText), Offset, Occurrence, All);
 		return *this;
 	}
 
 	String& String::Insert(const char* ReferenceText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Insert(ReferenceText, Length(ReferenceText), NewText.Data, NewText.Count, Offset, Occurrence, All);
+		Insert(ReferenceText, Length(ReferenceText), NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
 		return *this;
 	}
 
@@ -130,7 +144,7 @@ namespace NxEn
 
 	String& String::Remove(const String& Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Remove(Text.Data, Text.Count, Offset, Occurrence, All);
+		Remove(Text.GetBuffer(), Text.Count, Offset, Occurrence, All);
 		return *this;
 	}
 
@@ -188,41 +202,41 @@ namespace NxEn
 
 	int8 String::Compare(const String& Substring) const
 	{
-		return Compare(Data, Substring.Data);
+		return Compare(GetBuffer(), Substring.GetBuffer());
 	}
 
 	int8 String::Compare(const char* Substring) const
 	{
-		return Compare(Data, Substring);
+		return Compare(GetBuffer(), Substring);
 	}
 
 	bool String::Start(const String& Substring) const
 	{
-		const char* Result = SearchStr(Data, Substring.Data);
-		return Result && Data == Result;
+		const char* Result = SearchStr(GetBuffer(), Substring.GetBuffer());
+		return Result && GetBuffer() == Result;
 	}
 
 	bool String::Start(const char* Substring) const
 	{
-		const char* Result = SearchStr(Data, Substring);
-		return Result && Data == Result;
+		const char* Result = SearchStr(GetBuffer(), Substring);
+		return Result && GetBuffer() == Result;
 	}
 
 	bool String::End(const String& Substring) const
 	{
-		const char* Result = SearchStr(Data, Substring.Data);
+		const char* Result = SearchStr(GetBuffer(), Substring.GetBuffer());
 		return Result && Substring.Count == Length(Result);
 	}
 
 	bool String::End(const char* Substring) const
 	{
-		const char* Result = SearchStr(Data, Substring);
+		const char* Result = SearchStr(GetBuffer(), Substring);
 		return Result && Length(Substring) == Length(Result);
 	}
 
 	bool String::Contains(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring.Data, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+		return Search(Substring.GetBuffer(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
 	}
 
 	bool String::Contains(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
@@ -232,7 +246,7 @@ namespace NxEn
 
 	const char* String::Find(const String& Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring.Data, SearchBehaviour::Find, Mode, Offset, nullptr);
+		return Search(Substring.GetBuffer(), SearchBehaviour::Find, Mode, Offset, nullptr);
 	}
 
 	const char* String::Find(const char* Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
@@ -243,7 +257,7 @@ namespace NxEn
 	List<const char*> String::FindAll(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
 		List<const char*> Results;
-		Search(Substring.Data, SearchBehaviour::Find, Mode, 0, &Results);
+		Search(Substring.GetBuffer(), SearchBehaviour::Find, Mode, 0, &Results);
 		return Move(Results);
 	}
 
@@ -256,7 +270,7 @@ namespace NxEn
 
 	const char* String::Split(const String& Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring.Data, SearchBehaviour::Split, Mode, Offset, nullptr);
+		return Search(Substring.GetBuffer(), SearchBehaviour::Split, Mode, Offset, nullptr);
 	}
 
 	const char* String::Split(const char* Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
@@ -267,7 +281,7 @@ namespace NxEn
 	List<const char*> String::SplitAll(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
 		List<const char*> Results;
-		Search(Substring.Data, SearchBehaviour::Split, Mode, 0, &Results);
+		Search(Substring.GetBuffer(), SearchBehaviour::Split, Mode, 0, &Results);
 		return Move(Results);
 	}
 
@@ -283,11 +297,14 @@ namespace NxEn
 		ValidateCapacityCount(Bytes, Size);
 
 		Allctr = Al;
-		Data = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+		if (!Sso())
+		{
+			Data.Large = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+		}
 
 		if (Text)
 		{
-			Memory::MemCopy(Text, Data, Capacity);
+			Memory::MemCopy(Text, GetData(), Capacity);
 		}
 
 		ValidateNullTermination();
@@ -295,20 +312,44 @@ namespace NxEn
 
 	void String::Reallocate(uint64 Bytes)
 	{
+		bool WasSso = Sso();
+
 		ValidateCapacityCount(Bytes, Count);
-		Data = (char*)Memory::Realloc(Data, Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+
+		if (!Sso() && !WasSso)
+		{
+			Data.Large = (char*)Memory::Realloc(Data.Large, Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+		}
+		else if (!Sso() && WasSso)
+		{
+			char Temp[SmallStringCapacity];
+			Copy(Data.Small, Temp, SmallStringCapacity);
+
+			Data.Large = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+			Copy(Temp, Data.Large, Capacity);
+		}
+		else
+		{
+			// Once grow over the Sso limit, it cannot go back to Sso.
+			// The cost of allocating has been paid, so there is no point to freeing the memory until the string is destroyed
+			NEXUS_ASSERT(false, "Not supposed to reallocate from sso to sso");
+		}
+
 		ValidateNullTermination();
 	}
 
 	void String::Free()
 	{
-		Memory::Free(Data, Allctr);
+		if (!Sso())
+		{
+			Memory::Free(Data.Large, Allctr);
+		}
 	}
 
 	void String::Append(const char* Text, uint64 Size)
 	{
 		Resize(Count + Size);
-		Concat(Text, Data, Capacity);
+		Concat(Text, GetData(), Capacity);
 	}
 
 	void String::Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset, uint64 Occurrence, bool All)
@@ -320,7 +361,7 @@ namespace NxEn
 
 		uint64 Index = 0;
 		uint64 Modified = 0;
-		char* Substring = Data;
+		char* Substring = GetData();
 		int64 SizeDiff = NewSize - OldSize;
 
 		do
@@ -365,7 +406,7 @@ namespace NxEn
 
 		uint64 Index = 0;
 		uint64 Modified = 0;
-		char* Substring = Data;
+		char* Substring = GetData();
 
 		do
 		{
@@ -398,7 +439,7 @@ namespace NxEn
 
 		uint64 Index = 0;
 		uint64 Removed = 0;
-		char* Substring = Data;
+		char* Substring = GetData();
 
 		do
 		{
@@ -431,13 +472,17 @@ namespace NxEn
 	void String::ValidateCapacityCount(uint64 Bytes, uint64 Size)
 	{
 		Count = Size;
-		Capacity = Bytes >= Count + 1 ? Bytes : Count + 1;
+
+		// Once the string exceed the Sso limit, it cannot go back under the Sso limit.
+		uint64 SmallString = !Sso() ? SmallStringCapacity + 1 : SmallStringCapacity;
+		uint64 SmallestCapacity = Count + 1 >= SmallString ? Count + 1 : SmallString;
+		Capacity = Bytes >= SmallestCapacity ? Bytes : SmallestCapacity;
 	}
 
 	void String::ValidateNullTermination()
 	{
-		Data[Count] = NullChar;
-		Data[Capacity - 1] = NullChar;
+		GetData()[Count] = NullChar;
+		GetData()[Capacity - 1] = NullChar;
 	}
 
 	void String::Resize(uint64 Size)
@@ -455,8 +500,8 @@ namespace NxEn
 	const char* String::Search(const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results) const
 	{
 		uint64 Index = 0;
-		const char* Previous = Data;
-		const char* Pointer = Data;
+		const char* Previous = GetBuffer();
+		const char* Pointer = GetBuffer();
 		const char* Result = nullptr;
 
 		do

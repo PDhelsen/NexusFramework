@@ -2,12 +2,14 @@
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
 	<Type Name="NxEn::String">
-		<DisplayString>{ Data }</DisplayString>
+		<Intrinsic Name="buffer" Expression="Capacity == SmallStringCapacity ? Data.Small : Data.Large" />
+		<DisplayString>{ buffer(), s8 }</DisplayString>
+		<StringView>buffer(), s8</StringView>
 		<Expand>
 			<Item Name="Size">Count</Item>
 			<ArrayItems>
 				<Size>Count + 1</Size>
-				<ValuePointer>Data</ValuePointer>
+				<ValuePointer>buffer()</ValuePointer>
 			</ArrayItems>
 		</Expand>
 	</Type>
