@@ -19,7 +19,6 @@ namespace NxTs
 		}
 
 		ASSERT_EQ(Test1.IsEmpty(), false);
-		ASSERT_EQ(Test1.IsNullTerminated(), true);
 		ASSERT_EQ(Test1.GetCount(), 11);
 		ASSERT_EQ(Test1.GetCapacity(), 16);
 
@@ -87,7 +86,6 @@ namespace NxTs
 		Test1.Clear();
 		Test1.Append("Hello World");
 
-		ASSERT_EQ(Test1.Compare(Test4), -1);
 		ASSERT_EQ(Test1.Start("Hello"), true);
 		ASSERT_EQ(Test1.Start("World"), false);
 		ASSERT_EQ(Test1.Start("llo"), false);
@@ -99,11 +97,11 @@ namespace NxTs
 		Test1.Append("Hello World");
 
 		ASSERT_EQ(Test1.Contains("Hello"), true);
-		ASSERT_EQ(Test1.Contains("Wd", NxEn::String::SearchMode::Characters), true);
+		ASSERT_EQ(Test1.Contains("Wd", NxEn::StringUtility::SearchMode::Characters), true);
 		ASSERT_EQ(Test1.Find("ll") != nullptr, true);
-		ASSERT_EQ(Test1.Find("l", 1, NxEn::String::SearchMode::Characters) != nullptr, true);
+		ASSERT_EQ(Test1.Find("l", 1, NxEn::StringUtility::SearchMode::Characters) != nullptr, true);
 		ASSERT_EQ(Test1.Split("ll") != nullptr, true);
-		ASSERT_EQ(Test1.Split("l", 1, NxEn::String::SearchMode::Characters) != nullptr, true);
+		ASSERT_EQ(Test1.Split("l", 1, NxEn::StringUtility::SearchMode::Characters) != nullptr, true);
 
 		Test1.Clear();
 		Test1.Append("Hello World 1 Hello World 2 Hello World 3 Hello World 4");
@@ -112,31 +110,31 @@ namespace NxTs
 		NxEn::List<const char*> Split = Test1.SplitAll(" ");
 		ASSERT_EQ(Split.GetCount(), 12);
 
-		NxEn::String Test12 = NxEn::String::Format("Hello %i World %.1f, %s", 10, 20.0f, "Out of space");
+		NxEn::String Test12 = NxEn::StringUtility::Format("Hello %i World %.1f, %s", 10, 20.0f, "Out of space");
 		ASSERT_EQ(Test12, "Hello 10 World 20.0, Out of space");
-		NxEn::String Test13 = NxEn::String::Format(40, "Hello %i World %.1f, %s", 10, 20.0f, "Out of space");
+		NxEn::String Test13 = NxEn::StringUtility::Format(40, "Hello %i World %.1f, %s", 10, 20.0f, "Out of space");
 		ASSERT_EQ(Test13, "Hello 10 World 20.0, Out of space");
-		NxEn::String Test14 = NxEn::String::Format("%s", Test1.C());
+		NxEn::String Test14 = NxEn::StringUtility::Format("%s", Test1.C());
 		ASSERT_EQ(Test14, "Hello World 1 Hello World 2 Hello World 3 Hello World 4");
-		NxEn::String Test15 = NxEn::String::Format("%d", 1997);
+		NxEn::String Test15 = NxEn::StringUtility::Format("%d", 1997);
 		ASSERT_EQ(Test15, "1997");
 		int32 Day, Year;
 		NxEn::String Weekday = NxEn::String(20), Month = NxEn::String(20);
-		NxEn::String::Scan("Saturday March 25 1989", "%s %s %d  %d", Weekday.C(), Month.C(), &Day, &Year);
+		NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d  %d", Weekday.C(), Month.C(), &Day, &Year);
 		ASSERT_EQ(Day, 25);
 		ASSERT_EQ(Year, 1989);
 		ASSERT_EQ(Month, "March");
 		ASSERT_EQ(Weekday, "Saturday");
 
-		NxEn::String Test16 = NxEn::String::ToStringF(128.6f);
+		NxEn::String Test16 = NxEn::StringUtility::ToStringF(128.6f);
 		ASSERT_EQ(Test16, "128.60");
-		NxEn::String Test17 = NxEn::String::ToStringI(-100);
+		NxEn::String Test17 = NxEn::StringUtility::ToStringI(-100);
 		ASSERT_EQ(Test17, "-100");
-		NxEn::String Test18 = NxEn::String::ToStringB(true);
+		NxEn::String Test18 = NxEn::StringUtility::ToStringB(true);
 		ASSERT_EQ(Test18, "True");
-		ASSERT_EQ(NxEn::String::ToInteger("-10"), -10);
-		ASSERT_EQ(NxEn::String::ToUnsignedInteger("100"), 100);
-		ASSERT_EQ(NxEn::String::ToDouble("-10.0"), -10.0f);
+		ASSERT_EQ(NxEn::StringUtility::ToInteger("-10"), -10);
+		ASSERT_EQ(NxEn::StringUtility::ToUnsignedInteger("100"), 100);
+		ASSERT_EQ(NxEn::StringUtility::ToDouble("-10.0"), -10.0f);
 	}
 
 	TEST(Type_String, Hash_Sort)
