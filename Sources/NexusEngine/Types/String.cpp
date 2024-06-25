@@ -84,6 +84,144 @@ namespace NxEn
 		return *this;
 	}
 
+	String operator+(const String& TextA, const String& TextB)
+	{
+		String Return = String(TextA.GetCount() + TextB.GetCount());
+		Return.Append(TextA);
+		Return.Append(TextB);
+		return Move(Return);
+	}
+
+	String operator+(const String& TextA, const char* TextB)
+	{
+		String Return = String(TextA.GetCount() + String::Length(TextB));
+		Return.Append(TextA);
+		Return.Append(TextB);
+		return Move(Return);
+	}
+
+	String operator+(const char* TextA, const String& TextB)
+	{
+		String Return = String(String::Length(TextA) + TextB.GetCount());
+		Return.Append(TextA);
+		Return.Append(TextB);
+		return Move(Return);
+	}
+
+	String operator-(const String& TextA, const String& TextB)
+	{
+		String Return = String(TextA.GetCount());
+		Return.Append(TextA);
+		Return.Remove(TextB, 0, 0, true);
+		return Move(Return);
+	}
+
+	String operator-(const String& TextA, const char* TextB)
+	{
+		String Return = String(TextA.GetCount());
+		Return.Append(TextA);
+		Return.Remove(TextB, 0, 0, true);
+		return Move(Return);
+	}
+
+	String operator-(const char* TextA, const String& TextB)
+	{
+		String Return = String(String::Length(TextA));
+		Return.Append(TextA);
+		Return.Remove(TextB, 0, 0, true);
+		return Move(Return);
+	}
+
+	bool operator==(const String& TextA, const String& TextB)
+	{
+		return TextA.GetCount() == TextB.GetCount() && String::Compare(TextA.C(), TextB.C()) == 0;
+	}
+
+	bool operator==(const String& TextA, const char* TextB)
+	{
+		return String::Compare(TextA.C(), TextB) == 0;
+	}
+
+	bool operator==(const char* TextA, const String& TextB)
+	{
+		return String::Compare(TextA, TextB.C()) == 0;
+	}
+
+	bool operator!=(const String& TextA, const String& TextB)
+	{
+		return !(TextA == TextB);
+	}
+
+	bool operator!=(const String& TextA, const char* TextB)
+	{
+		return !(TextA == TextB);
+	}
+
+	bool operator!=(const char* TextA, const String& TextB)
+	{
+		return !(TextA == TextB);
+	}
+
+	bool operator>(const String& TextA, const String& TextB)
+	{
+		return String::Compare(TextA.C(), TextB.C()) > 0;
+	}
+
+	bool operator>(const String& TextA, const char* TextB)
+	{
+		return String::Compare(TextA.C(), TextB) > 0;
+	}
+
+	bool operator>(const char* TextA, const String& TextB)
+	{
+		return String::Compare(TextA, TextB.C()) > 0;
+	}
+
+	bool operator>=(const String& TextA, const String& TextB)
+	{
+		return String::Compare(TextA.C(), TextB.C()) >= 0;
+	}
+
+	bool operator>=(const String& TextA, const char* TextB)
+	{
+		return String::Compare(TextA.C(), TextB) >= 0;
+	}
+
+	bool operator>=(const char* TextA, const String& TextB)
+	{
+		return String::Compare(TextA, TextB.C()) >= 0;
+	}
+
+	bool operator<(const String& TextA, const String& TextB)
+	{
+		return String::Compare(TextA.C(), TextB.C()) < 0;
+	}
+
+	bool operator<(const String& TextA, const char* TextB)
+	{
+		return String::Compare(TextA.C(), TextB) < 0;
+	}
+
+	bool operator<(const char* TextA, const String& TextB)
+	{
+		return String::Compare(TextA, TextB.C()) < 0;
+	}
+
+	bool operator<=(const String& TextA, const String& TextB)
+	{
+		return String::Compare(TextA.C(), TextB.C()) <= 0;
+	}
+
+	bool operator<=(const String& TextA, const char* TextB)
+	{
+		return String::Compare(TextA.C(), TextB) <= 0;
+	}
+
+	bool operator<=(const char* TextA, const String& TextB)
+	{
+		return String::Compare(TextA, TextB.C()) <= 0;
+	}
+
 	String& String::Append(const String& Text)
 	{
 		Append(Text.GetBuffer(), Text.Count);
@@ -200,98 +338,6 @@ namespace NxEn
 		}
 
 		Reallocate(Size);
-	}
-
-	int8 String::Compare(const String& Substring) const
-	{
-		return Compare(GetBuffer(), Substring.GetBuffer());
-	}
-
-	int8 String::Compare(const char* Substring) const
-	{
-		return Compare(GetBuffer(), Substring);
-	}
-
-	bool String::Start(const String& Substring) const
-	{
-		const char* Result = SearchStr(GetBuffer(), Substring.GetBuffer());
-		return Result && GetBuffer() == Result;
-	}
-
-	bool String::Start(const char* Substring) const
-	{
-		const char* Result = SearchStr(GetBuffer(), Substring);
-		return Result && GetBuffer() == Result;
-	}
-
-	bool String::End(const String& Substring) const
-	{
-		const char* Result = SearchStr(GetBuffer(), Substring.GetBuffer());
-		return Result && Substring.Count == Length(Result);
-	}
-
-	bool String::End(const char* Substring) const
-	{
-		const char* Result = SearchStr(GetBuffer(), Substring);
-		return Result && Length(Substring) == Length(Result);
-	}
-
-	bool String::Contains(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		return Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
-	}
-
-	bool String::Contains(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		return Search(GetBuffer(), Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
-	}
-
-	const char* String::Find(const String& Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		return Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Find, Mode, Offset, nullptr);
-	}
-
-	const char* String::Find(const char* Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		return Search(GetBuffer(), Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
-	}
-
-	List<const char*> String::FindAll(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		List<const char*> Results;
-		Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Find, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	List<const char*> String::FindAll(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		List<const char*> Results;
-		Search(GetBuffer(), Substring, SearchBehaviour::Find, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	const char* String::Split(const String& Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		return Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Split, Mode, Offset, nullptr);
-	}
-
-	const char* String::Split(const char* Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		return Search(GetBuffer(), Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
-	}
-
-	List<const char*> String::SplitAll(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		List<const char*> Results;
-		Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	List<const char*> String::SplitAll(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
-	{
-		List<const char*> Results;
-		Search(GetBuffer(), Substring, SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
 	}
 
 	int8 String::Compare(const String& Text, const String& Substring)
@@ -527,6 +573,34 @@ namespace NxEn
 		}
 	}
 
+	void String::Resize(uint64 Size)
+	{
+		Count = Size;
+
+		if (Count >= Capacity)
+		{
+			Reallocate(Count);
+		}
+
+		ValidateNullTermination();
+	}
+
+	void String::ValidateCapacityCount(uint64 Bytes, uint64 Size)
+	{
+		Count = Size;
+
+		// Once the string exceed the Sso limit, it cannot go back under the Sso limit.
+		uint64 SmallString = !Sso() ? SmallStringCapacity + 1 : SmallStringCapacity;
+		uint64 SmallestCapacity = Count + 1 >= SmallString ? Count + 1 : SmallString;
+		Capacity = Bytes >= SmallestCapacity ? Bytes : SmallestCapacity;
+	}
+
+	void String::ValidateNullTermination()
+	{
+		GetData()[Count] = NullChar;
+		GetData()[Capacity - 1] = NullChar;
+	}
+
 	void String::Append(const char* Text, uint64 Size)
 	{
 		Resize(Count + Size);
@@ -650,34 +724,6 @@ namespace NxEn
 		while (Substring && (All || (!All && Removed < Occurrence)));
 	}
 
-	void String::ValidateCapacityCount(uint64 Bytes, uint64 Size)
-	{
-		Count = Size;
-
-		// Once the string exceed the Sso limit, it cannot go back under the Sso limit.
-		uint64 SmallString = !Sso() ? SmallStringCapacity + 1 : SmallStringCapacity;
-		uint64 SmallestCapacity = Count + 1 >= SmallString ? Count + 1 : SmallString;
-		Capacity = Bytes >= SmallestCapacity ? Bytes : SmallestCapacity;
-	}
-
-	void String::ValidateNullTermination()
-	{
-		GetData()[Count] = NullChar;
-		GetData()[Capacity - 1] = NullChar;
-	}
-
-	void String::Resize(uint64 Size)
-	{
-		Count = Size;
-
-		if (Count >= Capacity)
-		{
-			Reallocate(Count);
-		}
-
-		ValidateNullTermination();
-	}
-
 	const char* String::Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results)
 	{
 		uint64 Index = 0;
@@ -726,143 +772,5 @@ namespace NxEn
 		}
 
 		return Result;
-	}
-
-	bool operator==(const String& TextA, const String& TextB)
-	{
-		return TextA.GetCount() == TextB.GetCount() && String::Compare(TextA.C(), TextB.C()) == 0;
-	}
-
-	bool operator==(const String& TextA, const char* TextB)
-	{
-		return String::Compare(TextA.C(), TextB) == 0;
-	}
-
-	bool operator==(const char* TextA, const String& TextB)
-	{
-		return String::Compare(TextA, TextB.C()) == 0;
-	}
-
-	bool operator!=(const String& TextA, const String& TextB)
-	{
-		return !(TextA == TextB);
-	}
-
-	bool operator!=(const String& TextA, const char* TextB)
-	{
-		return !(TextA == TextB);
-	}
-
-	bool operator!=(const char* TextA, const String& TextB)
-	{
-		return !(TextA == TextB);
-	}
-
-	bool operator>(const String& TextA, const String& TextB)
-	{
-		return String::Compare(TextA.C(), TextB.C()) > 0;
-	}
-
-	bool operator>(const String& TextA, const char* TextB)
-	{
-		return String::Compare(TextA.C(), TextB) > 0;
-	}
-
-	bool operator>(const char* TextA, const String& TextB)
-	{
-		return String::Compare(TextA, TextB.C()) > 0;
-	}
-
-	bool operator>=(const String& TextA, const String& TextB)
-	{
-		return String::Compare(TextA.C(), TextB.C()) >= 0;
-	}
-
-	bool operator>=(const String& TextA, const char* TextB)
-	{
-		return String::Compare(TextA.C(), TextB) >= 0;
-	}
-
-	bool operator>=(const char* TextA, const String& TextB)
-	{
-		return String::Compare(TextA, TextB.C()) >= 0;
-	}
-
-	bool operator<(const String& TextA, const String& TextB)
-	{
-		return String::Compare(TextA.C(), TextB.C()) < 0;
-	}
-
-	bool operator<(const String& TextA, const char* TextB)
-	{
-		return String::Compare(TextA.C(), TextB) < 0;
-	}
-
-	bool operator<(const char* TextA, const String& TextB)
-	{
-		return String::Compare(TextA, TextB.C()) < 0;
-	}
-
-	bool operator<=(const String& TextA, const String& TextB)
-	{
-		return String::Compare(TextA.C(), TextB.C()) <= 0;
-	}
-
-	bool operator<=(const String& TextA, const char* TextB)
-	{
-		return String::Compare(TextA.C(), TextB) <= 0;
-	}
-
-	bool operator<=(const char* TextA, const String& TextB)
-	{
-		return String::Compare(TextA, TextB.C()) <= 0;
-	}
-
-	String operator+(const String& TextA, const String& TextB)
-	{
-		String Return = String(TextA.GetCount() + TextB.GetCount());
-		Return.Append(TextA);
-		Return.Append(TextB);
-		return Move(Return);
-	}
-
-	String operator+(const String& TextA, const char* TextB)
-	{
-		String Return = String(TextA.GetCount() + String::Length(TextB));
-		Return.Append(TextA);
-		Return.Append(TextB);
-		return Move(Return);
-	}
-
-	String operator+(const char* TextA, const String& TextB)
-	{
-		String Return = String(String::Length(TextA) + TextB.GetCount());
-		Return.Append(TextA);
-		Return.Append(TextB);
-		return Move(Return);
-	}
-
-	String operator-(const String& TextA, const String& TextB)
-	{
-		String Return = String(TextA.GetCount());
-		Return.Append(TextA);
-		Return.Remove(TextB, 0, 0, true);
-		return Move(Return);
-	}
-
-	String operator-(const String& TextA, const char* TextB)
-	{
-		String Return = String(TextA.GetCount());
-		Return.Append(TextA);
-		Return.Remove(TextB, 0, 0, true);
-		return Move(Return);
-	}
-
-	String operator-(const char* TextA, const String& TextB)
-	{
-		String Return = String(String::Length(TextA));
-		Return.Append(TextA);
-		Return.Remove(TextB, 0, 0, true);
-		return Move(Return);
 	}
 }
