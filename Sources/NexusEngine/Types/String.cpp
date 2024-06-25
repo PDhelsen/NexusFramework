@@ -3,10 +3,12 @@
 
 namespace NxEn
 {
+	String String::Empty = String();
+
 	String::String()
 		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		ValidateNullTermination();
+		Allocate(SmallStringCapacity, 0, nullptr, Memory::GetActiveAllocator());
 	}
 
 	String::String(uint64 Bytes)
@@ -92,6 +94,26 @@ namespace NxEn
 	{
 		Append(Text, Length(Text));
 		return *this;
+	}
+
+	String& String::Replace(const String& Old, const String& New)
+	{
+		return Assign(Old, New, 0, 1, true);
+	}
+
+	String& String::Replace(const String& Old, const char* New)
+	{
+		return Assign(Old, New, 0, 1, true);
+	}
+
+	String& String::Replace(const char* Old, const String& New)
+	{
+		return Assign(Old, New, 0, 1, true);
+	}
+
+	String& String::Replace(const char* Old, const char* New)
+	{
+		return Assign(Old, New, 0, 1, true);
 	}
 
 	String& String::Assign(const String& OldText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
@@ -180,26 +202,6 @@ namespace NxEn
 		Reallocate(Size);
 	}
 
-	String& String::Replace(const String& Old, const String& New)
-	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Replace(const String& Old, const char* New)
-	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Replace(const char* Old, const String& New)
-	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Replace(const char* Old, const char* New)
-	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
 	int8 String::Compare(const String& Substring) const
 	{
 		return Compare(GetBuffer(), Substring.GetBuffer());
@@ -236,59 +238,238 @@ namespace NxEn
 
 	bool String::Contains(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring.GetBuffer(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+		return Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
 	}
 
 	bool String::Contains(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+		return Search(GetBuffer(), Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
 	}
 
 	const char* String::Find(const String& Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring.GetBuffer(), SearchBehaviour::Find, Mode, Offset, nullptr);
+		return Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Find, Mode, Offset, nullptr);
 	}
 
 	const char* String::Find(const char* Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
+		return Search(GetBuffer(), Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
 	}
 
 	List<const char*> String::FindAll(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
 		List<const char*> Results;
-		Search(Substring.GetBuffer(), SearchBehaviour::Find, Mode, 0, &Results);
+		Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Find, Mode, 0, &Results);
 		return Move(Results);
 	}
 
 	List<const char*> String::FindAll(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
 		List<const char*> Results;
-		Search(Substring, SearchBehaviour::Find, Mode, 0, &Results);
+		Search(GetBuffer(), Substring, SearchBehaviour::Find, Mode, 0, &Results);
 		return Move(Results);
 	}
 
 	const char* String::Split(const String& Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring.GetBuffer(), SearchBehaviour::Split, Mode, Offset, nullptr);
+		return Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Split, Mode, Offset, nullptr);
 	}
 
 	const char* String::Split(const char* Substring, uint64 Offset /*0*/, SearchMode Mode /*SearchMode::Substring*/) const
 	{
-		return Search(Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
+		return Search(GetBuffer(), Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
 	}
 
 	List<const char*> String::SplitAll(const String& Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
 		List<const char*> Results;
-		Search(Substring.GetBuffer(), SearchBehaviour::Split, Mode, 0, &Results);
+		Search(GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Split, Mode, 0, &Results);
 		return Move(Results);
 	}
 
 	List<const char*> String::SplitAll(const char* Substring, SearchMode Mode /*SearchMode::Substring*/) const
 	{
 		List<const char*> Results;
-		Search(Substring, SearchBehaviour::Split, Mode, 0, &Results);
+		Search(GetBuffer(), Substring, SearchBehaviour::Split, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	int8 String::Compare(const String& Text, const String& Substring)
+	{
+		return Compare(Text.GetBuffer(), Substring.GetBuffer());
+	}
+
+	int8 String::Compare(const String& Text, const char* Substring)
+	{
+		return Compare(Text.GetBuffer(), Substring);
+	}
+
+	int8 String::Compare(const char* Text, const String& Substring)
+	{
+		return Compare(Text, Substring.GetBuffer());
+	}
+
+	bool String::Start(const String& Text, const String& Substring)
+	{
+		const char* Result = SearchStr(Text.GetBuffer(), Substring.GetBuffer());
+		return Result && Text.GetBuffer() == Result;
+	}
+
+	bool String::Start(const String& Text, const char* Substring)
+	{
+		const char* Result = SearchStr(Text.GetBuffer(), Substring);
+		return Result && Text.GetBuffer() == Result;
+	}
+
+	bool String::Start(const char* Text, const String& Substring)
+	{
+		const char* Result = SearchStr(Text, Substring.GetBuffer());
+		return Result && Text == Result;
+	}
+
+	bool String::Start(const char* Text, const char* Substring)
+	{
+		const char* Result = SearchStr(Text, Substring);
+		return Result && Text == Result;
+	}
+
+	bool String::End(const String& Text, const String& Substring)
+	{
+		const char* Result = SearchStr(Text.GetBuffer(), Substring.GetBuffer());
+		return Result && Substring.Count == Length(Result);
+	}
+
+	bool String::End(const String& Text, const char* Substring)
+	{
+		const char* Result = SearchStr(Text.GetBuffer(), Substring);
+		return Result && Length(Substring) == Length(Result);
+	}
+
+	bool String::End(const char* Text, const String& Substring)
+	{
+		const char* Result = SearchStr(Text, Substring.GetBuffer());
+		return Result && Substring.Count == Length(Result);
+	}
+
+	bool String::End(const char* Text, const char* Substring)
+	{
+		const char* Result = SearchStr(Text, Substring);
+		return Result && Length(Substring) == Length(Result);
+	}
+
+	bool String::Contains(const String& Text, const String& Substring, SearchMode Mode)
+	{
+		return Search(Text.GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+	}
+
+	bool String::Contains(const String& Text, const char* Substring, SearchMode Mode)
+	{
+		return Search(Text.GetBuffer(), Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+	}
+
+	bool String::Contains(const char* Text, const String& Substring, SearchMode Mode)
+	{
+		return Search(Text, Substring.GetBuffer(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+	}
+
+	bool String::Contains(const char* Text, const char* Substring, SearchMode Mode)
+	{
+		return Search(Text, Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
+	}
+
+	const char* String::Find(const String& Text, const String& Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text.GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Find, Mode, Offset, nullptr);
+	}
+
+	const char* String::Find(const String& Text, const char* Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text.GetBuffer(), Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
+	}
+
+	const char* String::Find(const char* Text, const String& Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text, Substring.GetBuffer(), SearchBehaviour::Find, Mode, Offset, nullptr);
+	}
+
+	const char* String::Find(const char* Text, const char* Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text, Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
+	}
+
+	List<const char*> String::FindAll(const String& Text, const String& Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text.GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Find, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	List<const char*> String::FindAll(const String& Text, const char* Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text.GetBuffer(), Substring, SearchBehaviour::Find, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	List<const char*> String::FindAll(const char* Text, const String& Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text, Substring.GetBuffer(), SearchBehaviour::Find, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	List<const char*> String::FindAll(const char* Text, const char* Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text, Substring, SearchBehaviour::Find, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	const char* String::Split(const String& Text, const String& Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text.GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Split, Mode, Offset, nullptr);
+	}
+
+	const char* String::Split(const String& Text, const char* Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text.GetBuffer(), Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
+	}
+
+	const char* String::Split(const char* Text, const String& Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text, Substring.GetBuffer(), SearchBehaviour::Split, Mode, Offset, nullptr);
+	}
+
+	const char* String::Split(const char* Text, const char* Substring, uint64 Offset, SearchMode Mode)
+	{
+		return Search(Text, Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
+	}
+
+	List<const char*> String::SplitAll(const String& Text, const String& Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text.GetBuffer(), Substring.GetBuffer(), SearchBehaviour::Split, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	List<const char*> String::SplitAll(const String& Text, const char* Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text.GetBuffer(), Substring, SearchBehaviour::Split, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	List<const char*> String::SplitAll(const char* Text, const String& Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text, Substring.GetBuffer(), SearchBehaviour::Split, Mode, 0, &Results);
+		return Move(Results);
+	}
+
+	List<const char*> String::SplitAll(const char* Text, const char* Substring, SearchMode Mode)
+	{
+		List<const char*> Results;
+		Search(Text, Substring, SearchBehaviour::Split, Mode, 0, &Results);
 		return Move(Results);
 	}
 
@@ -497,11 +678,11 @@ namespace NxEn
 		ValidateNullTermination();
 	}
 
-	const char* String::Search(const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results) const
+	const char* String::Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results)
 	{
 		uint64 Index = 0;
-		const char* Previous = GetBuffer();
-		const char* Pointer = GetBuffer();
+		const char* Previous = Text;
+		const char* Pointer = Text;
 		const char* Result = nullptr;
 
 		do

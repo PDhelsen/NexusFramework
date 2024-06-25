@@ -5,6 +5,10 @@ namespace NxTs
 {
 	TEST(Type_String, String)
 	{
+		NxEn::String Empty = NxEn::String();
+		ASSERT_EQ(Empty, NxEn::String::Empty);
+		ASSERT_EQ(Empty.IsEmpty(), true);
+
 		NxEn::String Test1 = NxEn::String("Hello World");
 		NxEn::String Test2 = NxEn::String("World Hello");
 		NxEn::String Test3 = Test1;

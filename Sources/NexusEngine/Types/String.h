@@ -33,6 +33,10 @@ namespace NxEn
 
 		NEXUS_ENGINE_API String& Append(const String& Text);
 		NEXUS_ENGINE_API String& Append(const char* Text);
+		NEXUS_ENGINE_API String& Replace(const String& Old, const String& New);
+		NEXUS_ENGINE_API String& Replace(const String& Old, const char* New);
+		NEXUS_ENGINE_API String& Replace(const char* Old, const String& New);
+		NEXUS_ENGINE_API String& Replace(const char* Old, const char* New);
 		NEXUS_ENGINE_API String& Assign(const String& OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Assign(const String& OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Assign(const char* OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
@@ -48,10 +52,6 @@ namespace NxEn
 		NEXUS_ENGINE_API void Grow(uint64 Size);
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
 
-		NEXUS_ENGINE_API String& Replace(const String& Old, const String& New);
-		NEXUS_ENGINE_API String& Replace(const String& Old, const char* New);
-		NEXUS_ENGINE_API String& Replace(const char* Old, const String& New);
-		NEXUS_ENGINE_API String& Replace(const char* Old, const char* New);
 		NEXUS_ENGINE_API int8 Compare(const String& Substring) const;
 		NEXUS_ENGINE_API int8 Compare(const char* Substring) const;
 		NEXUS_ENGINE_API bool Start(const String& Substring) const;
@@ -80,6 +80,48 @@ namespace NxEn
 		template<typename... Args>
 		static String Format(uint64 Size, const char* Text, Args&&... args);
 
+		NEXUS_ENGINE_API static int8 Compare(const String& Text, const String& Substring);
+		NEXUS_ENGINE_API static int8 Compare(const String& Text, const char* Substring);
+		NEXUS_ENGINE_API static int8 Compare(const char* Text, const String& Substring);
+		NEXUS_ENGINE_API static bool Start(const String& Text, const String& Substring);
+		NEXUS_ENGINE_API static bool Start(const String& Text, const char* Substring);
+		NEXUS_ENGINE_API static bool Start(const char* Text, const String& Substring);
+		NEXUS_ENGINE_API static bool Start(const char* Text, const char* Substring);
+		NEXUS_ENGINE_API static bool End(const String& Text, const String& Substring);
+		NEXUS_ENGINE_API static bool End(const String& Text, const char* Substring);
+		NEXUS_ENGINE_API static bool End(const char* Text, const String& Substring);
+		NEXUS_ENGINE_API static bool End(const char* Text, const char* Substring);
+		NEXUS_ENGINE_API static bool Contains(const String& Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static bool Contains(const String& Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static bool Contains(const char* Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static bool Contains(const char* Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Find(const String& Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Find(const String& Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Find(const char* Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Find(const char* Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> FindAll(const String& Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> FindAll(const String& Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> FindAll(const char* Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> FindAll(const char* Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Split(const String& Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Split(const String& Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Split(const char* Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static const char* Split(const char* Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> SplitAll(const String& Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> SplitAll(const String& Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> SplitAll(const char* Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<const char*> SplitAll(const char* Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringI(int64 Number, const char* Frmt = "%d") { return Format(Frmt, Number); }
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringU(uint64 Number, const char* Frmt = "%d") { return Format(Frmt, Number); }
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringF(float Number, const char* Frmt = "%.2f") { return Format(Frmt, Number); }
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringD(double Number, const char* Frmt = "%.2f") { return Format(Frmt, Number); }
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringB(bool State, const char* Frmt = "%s") { return Format(Frmt, State ? "True" : "False"); }
+
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static  int64 ToInteger(const char* Text, int32 Radix = 10) { char* Ptr; return strtol(Text, &Ptr, Radix); }
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10) { char* Ptr; return strtoul(Text, &Ptr, Radix); }
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static double ToDouble(const char* Text) { char* Ptr; return strtod(Text, &Ptr); }
+
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static uint64 Length(const char* Text) { return strlen(Text); }
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static int8 Compare(const char* Text1, const char* Text2) { return strcmp(Text1, Text2); }
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static void Copy(const char* Source, char* Destination, uint64 Capacity) { strcpy_s(Destination, Capacity, Source); }
@@ -93,17 +135,8 @@ namespace NxEn
 #pragma warning(suppress : 4996)
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static void Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe) { if (NotSafe) strncpy(Destination, Source, Size); else Copy(Source, Destination, Capacity, Size); }
 
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static int64 ToInteger(const char* Text, int32 Radix = 10) { char* Ptr; return strtol(Text, &Ptr, Radix); }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10) { char* Ptr; return strtoul(Text, &Ptr, Radix); }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static double ToDouble(const char* Text) { char* Ptr; return strtod(Text, &Ptr); }
-
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringI(int64 Number, const char* Frmt = "%d") { return Format(Frmt, Number); }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringU(uint64 Number, const char* Frmt = "%d") { return Format(Frmt, Number); }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringF(float Number, const char* Frmt = "%.2f") { return Format(Frmt, Number); }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringD(double Number, const char* Frmt = "%.2f") { return Format(Frmt, Number); }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE static String ToStringB(bool State, const char* Frmt = "%s") { return Format(Frmt, State ? "True" : "False"); }
-
-		static const char NullChar = '\0';
+		NEXUS_ENGINE_API static const char NullChar = '\0';
+		NEXUS_ENGINE_API static String Empty;
 
 	private:
 		enum class SearchBehaviour
@@ -121,11 +154,12 @@ namespace NxEn
 		void ValidateCapacityCount(uint64 Bytes, uint64 Size);
 		void ValidateNullTermination();
 		void Resize(uint64 Size);
-		const char* Search(const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results) const;
 
 		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
 		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
 		NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
+
+		static const char* Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results);
 
 		static const uint8 GuessedFormatingSize = 8;
 		static const uint8 SmallStringCapacity = 16;
