@@ -73,7 +73,7 @@ namespace NxTs
 
 		NxEn::String Test3 = NxEn::StringUtility::Format("Hello %i World %.1f, %s", 10, 20.0f, Test1.C());
 		ASSERT_EQ(Test3, "Hello 10 World 20.0, Hello World");
-		int32 Day, Year;
+		int32 Day = 0, Year = 0;
 		NxEn::String Weekday = NxEn::String(20), Month = NxEn::String(20);
 		NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d  %d", Weekday.C(), Month.C(), &Day, &Year);
 		ASSERT_EQ(Day, 25);

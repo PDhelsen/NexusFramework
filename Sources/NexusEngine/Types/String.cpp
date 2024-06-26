@@ -315,38 +315,53 @@ namespace NxEn
 		return StringCApi::ToDouble(Text);
 	}
 
-	String StringUtility::ToStringI(int64 Number, const char* Frmt)
+	String StringUtility::ToStringI(int64 Number, const char* Format)
 	{
 		String Result = String();
-		StringCApi::ToStringI(Number, Result.GetCapacity(), Result.GetData(), Frmt);
+		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
+		{
+			return StringCApi::ToStringI(Number, Capacity, Data, Format);
+		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringU(uint64 Number, const char* Frmt)
+	String StringUtility::ToStringU(uint64 Number, const char* Format)
 	{
 		String Result = String();
-		StringCApi::ToStringU(Number, Result.GetCapacity(), Result.GetData(), Frmt);
+		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
+		{
+			return StringCApi::ToStringU(Number, Capacity, Data, Format);
+		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringF(float Number, const char* Frmt)
+	String StringUtility::ToStringF(float Number, const char* Format)
 	{
 		String Result = String();
-		StringCApi::ToStringF(Number, Result.GetCapacity(), Result.GetData(), Frmt);
+		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
+		{
+			return StringCApi::ToStringF(Number, Capacity, Data, Format);
+		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringD(double Number, const char* Frmt)
+	String StringUtility::ToStringD(double Number, const char* Format)
 	{
 		String Result = String();
-		StringCApi::ToStringD(Number, Result.GetCapacity(), Result.GetData(), Frmt);
+		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
+		{
+			return StringCApi::ToStringD(Number, Capacity, Data, Format);
+		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringB(bool State, const char* Frmt)
+	String StringUtility::ToStringB(bool State, const char* Format)
 	{
 		String Result = String();
-		StringCApi::ToStringB(State, Result.GetCapacity(), Result.GetData(), Frmt);
+		Result.Modify([State, Format](char* Data, uint64 Capacity) -> uint64
+		{
+			return StringCApi::ToStringB(State, Capacity, Data, Format);
+		});
 		return Move(Result);
 	}
 
