@@ -85,11 +85,11 @@ namespace NxTs
 		ASSERT_EQ(Builder, "ExtendedHello  ExtendedHello");
 
 		NxEn::String Functions = "Hello Not World Not Extended";
-		ASSERT_EQ(NxEn::StringUtility::Start(Functions, Test1), true);
-		ASSERT_EQ(NxEn::StringUtility::End(Functions, Test4), true);
-		ASSERT_EQ(NxEn::StringUtility::Contains(Functions, Test2), true);
-		ASSERT_EQ(NxEn::StringUtility::Find(Functions, Test2).IsEmpty(), false);
-		ASSERT_EQ(NxEn::StringUtility::Split(Functions, Test2).IsEmpty(), false);
+		ASSERT_EQ(Functions.Start(Test1), true);
+		ASSERT_EQ(Functions.End(Test4), true);
+		ASSERT_EQ(Functions.Contains(Test2), true);
+		ASSERT_EQ(Functions.Find(Test2).IsEmpty(), false);
+		ASSERT_EQ(Functions.Split(Test2).IsEmpty(), false);
 	}
 
 	TEST(Type_String, Utility)

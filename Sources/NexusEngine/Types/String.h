@@ -11,30 +11,12 @@ namespace NxEn
 {
 	// TODO: Optimization - Copy / Move - Operator + Self assignement check
 
+	class String;
+	class StringView;
+
 	//-----------------------------------------------------------------------------------------------------------------------
 	// String Data
 	//-----------------------------------------------------------------------------------------------------------------------
-
-	class String;
-
-	class StringView
-	{
-	public:
-		NEXUS_ENGINE_API StringView(const char* Text);
-		NEXUS_ENGINE_API StringView(const char* Text, uint64 Size);
-		NEXUS_ENGINE_API StringView(const String& Text);
-
-		NEXUS_ENGINE_API String ToString();
-		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size);
-
-		NEXUS_ENGINE_API const char* C() const { return Data; }
-		NEXUS_ENGINE_API bool IsEmpty() const { return Count == 0; }
-		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
-
-	private:
-		const char* Data;
-		uint64 Count;
-	};
 
 	class String
 	{
@@ -60,6 +42,14 @@ namespace NxEn
 		NEXUS_ENGINE_API String& Insert(const StringView& ReferenceText, const StringView& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Remove(const StringView& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Clear();
+
+		NEXUS_ENGINE_API bool Start(const StringView& Substring);
+		NEXUS_ENGINE_API bool End(const StringView& Substring);
+		NEXUS_ENGINE_API bool Contains(const StringView& Substring);
+		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0);
+		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring);
+		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0);
+		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring);
 
 		NEXUS_ENGINE_API void Grow(uint64 Size);
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
@@ -102,6 +92,33 @@ namespace NxEn
 		uint64 Capacity;
 		uint64 Count;
 		Buffer Data;
+	};
+
+	class StringView
+	{
+	public:
+		NEXUS_ENGINE_API StringView(const char* Text);
+		NEXUS_ENGINE_API StringView(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API StringView(const String& Text);
+
+		NEXUS_ENGINE_API bool Start(const StringView& Substring);
+		NEXUS_ENGINE_API bool End(const StringView& Substring);
+		NEXUS_ENGINE_API bool Contains(const StringView& Substring);
+		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0);
+		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring);
+		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0);
+		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring);
+
+		NEXUS_ENGINE_API String ToString() const;
+		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size) const;
+
+		NEXUS_ENGINE_API const char* C() const { return Data; }
+		NEXUS_ENGINE_API bool IsEmpty() const { return Count == 0; }
+		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
+
+	private:
+		const char* Data;
+		uint64 Count;
 	};
 
 	//-----------------------------------------------------------------------------------------------------------------------

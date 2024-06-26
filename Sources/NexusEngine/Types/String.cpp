@@ -4,36 +4,6 @@
 namespace NxEn
 {
 	//-----------------------------------------------------------------------------------------------------------------------
-	// String View
-	//-----------------------------------------------------------------------------------------------------------------------
-
-	StringView::StringView(const char* Text)
-		:Data(Text), Count(StringCApi::Length(Text))
-	{
-	}
-
-	StringView::StringView(const char* Text, uint64 Size)
-		:Data(Text), Count(Size)
-	{
-	}
-
-	StringView::StringView(const String& Text)
-		:Data(Text.C()), Count(Text.GetCount())
-	{
-	}
-
-	String StringView::ToString()
-	{
-		return Move(String(*this));
-	}
-
-	StringView StringView::ToView(uint64 Offset, uint64 Size)
-	{
-		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
-		return StringView(Data + Offset, Size);
-	}
-
-	//-----------------------------------------------------------------------------------------------------------------------
 	// String
 	//-----------------------------------------------------------------------------------------------------------------------
 
@@ -152,6 +122,41 @@ namespace NxEn
 	{
 		Resize(0);
 		return *this;
+	}
+
+	bool String::Start(const StringView& Substring)
+	{
+		return StringUtility::Start(C(), Substring);
+	}
+
+	bool String::End(const StringView& Substring)
+	{
+		return StringUtility::End(C(), Substring);
+	}
+
+	bool String::Contains(const StringView& Substring)
+	{
+		return StringUtility::Contains(C(), Substring);
+	}
+
+	StringView String::Find(const StringView& Substring, uint64 Offset)
+	{
+		return StringUtility::Find(C(), Substring, Offset);
+	}
+
+	List<StringView> String::FindAll(const StringView& Substring)
+	{
+		return Move(StringUtility::FindAll(C(), Substring));
+	}
+
+	StringView String::Split(const StringView& Substring, uint64 Offset)
+	{
+		return StringUtility::Split(C(), Substring, Offset);
+	}
+
+	List<StringView> String::SplitAll(const StringView& Substring)
+	{
+		return Move(StringUtility::SplitAll(C(), Substring));
 	}
 
 	void String::Grow(uint64 Size)
@@ -405,6 +410,71 @@ namespace NxEn
 
 			Index++;
 		} while (Substring && (All || (!All && Removed < Occurrence)));
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------------
+	// String View
+	//-----------------------------------------------------------------------------------------------------------------------
+
+	StringView::StringView(const char* Text)
+		:Data(Text), Count(StringCApi::Length(Text))
+	{
+	}
+
+	StringView::StringView(const char* Text, uint64 Size)
+		:Data(Text), Count(Size)
+	{
+	}
+
+	StringView::StringView(const String& Text)
+		:Data(Text.C()), Count(Text.GetCount())
+	{
+	}
+
+	bool StringView::Start(const StringView& Substring)
+	{
+		return StringUtility::Start(C(), Substring);
+	}
+
+	bool StringView::End(const StringView& Substring)
+	{
+		return StringUtility::End(C(), Substring);
+	}
+
+	bool StringView::Contains(const StringView& Substring)
+	{
+		return StringUtility::Contains(C(), Substring);
+	}
+
+	StringView StringView::Find(const StringView& Substring, uint64 Offset)
+	{
+		return StringUtility::Find(C(), Substring, Offset);
+	}
+
+	List<StringView> StringView::FindAll(const StringView& Substring)
+	{
+		return Move(StringUtility::FindAll(C(), Substring));
+	}
+
+	StringView StringView::Split(const StringView& Substring, uint64 Offset)
+	{
+		return StringUtility::Split(C(), Substring, Offset);
+	}
+
+	List<StringView> StringView::SplitAll(const StringView& Substring)
+	{
+		return Move(StringUtility::SplitAll(C(), Substring));
+	}
+
+	String StringView::ToString() const
+	{
+		return Move(String(*this));
+	}
+
+	StringView StringView::ToView(uint64 Offset, uint64 Size) const
+	{
+		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
+		return StringView(Data + Offset, Size);
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------------
