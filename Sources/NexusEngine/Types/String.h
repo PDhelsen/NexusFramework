@@ -15,6 +15,27 @@ namespace NxEn
 	// String Data
 	//-----------------------------------------------------------------------------------------------------------------------
 
+	class String;
+
+	class StringView
+	{
+	public:
+		NEXUS_ENGINE_API StringView(const char* Text);
+		NEXUS_ENGINE_API StringView(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API StringView(const String& Text);
+
+		NEXUS_ENGINE_API String ToString();
+		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size);
+
+		NEXUS_ENGINE_API const char* C() const { return Data; }
+		NEXUS_ENGINE_API bool IsEmpty() const { return Count == 0; }
+		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
+
+	private:
+		const char* Data;
+		uint64 Count;
+	};
+
 	class String
 	{
 		friend class StringUtility;
@@ -24,39 +45,31 @@ namespace NxEn
 		NEXUS_ENGINE_API String(uint64 Bytes);
 		NEXUS_ENGINE_API String(const char* Text);
 		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API String(const StringView& Text);
 		NEXUS_ENGINE_API String(const String& Other);
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
 
 		NEXUS_ENGINE_API String& operator=(const String& Other);
-		NEXUS_ENGINE_API String& operator+=(const String& Other);
-		NEXUS_ENGINE_API String& operator+=(const char* Other);
-		NEXUS_ENGINE_API String& operator-=(const String& Other);
-		NEXUS_ENGINE_API String& operator-=(const char* Other);
+		NEXUS_ENGINE_API String& operator+=(const StringView& Other);
+		NEXUS_ENGINE_API String& operator-=(const StringView& Other);
 
-		NEXUS_ENGINE_API String& Append(const String& Text);
-		NEXUS_ENGINE_API String& Append(const char* Text);
-		NEXUS_ENGINE_API String& Replace(const String& Old, const String& New);
-		NEXUS_ENGINE_API String& Replace(const String& Old, const char* New);
-		NEXUS_ENGINE_API String& Replace(const char* Old, const String& New);
-		NEXUS_ENGINE_API String& Replace(const char* Old, const char* New);
-		NEXUS_ENGINE_API String& Assign(const String& OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Assign(const String& OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Assign(const char* OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Assign(const char* OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const String& ReferenceText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const String& ReferenceText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const char* ReferenceText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const char* ReferenceText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Remove(const String& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Remove(const char* Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Append(const StringView& Text);
+		NEXUS_ENGINE_API String& Replace(const StringView& Old, const StringView& New);
+		NEXUS_ENGINE_API String& Assign(const StringView& OldText, const StringView& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Insert(const StringView& ReferenceText, const StringView& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Remove(const StringView& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Clear();
 
 		NEXUS_ENGINE_API void Grow(uint64 Size);
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
+		NEXUS_ENGINE_API void Validate();
+
+		NEXUS_ENGINE_API StringView ToView();
+		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size);
 
 		NEXUS_ENGINE_API const char* C() const { return GetBuffer(); }
-		NEXUS_ENGINE_API uint64 IsEmpty() const { return Count == 0; }
+		NEXUS_ENGINE_API bool IsEmpty() const { return Count == 0; }
 		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
 		NEXUS_ENGINE_API uint64 GetCapacity() const { return Capacity; }
 
@@ -111,6 +124,7 @@ namespace NxEn
 	{
 	public:
 		NEXUS_ENGINE_API static void Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe);
+		NEXUS_ENGINE_API static const char* SearchStr(const char* Source, const char* Substring, uint64 Size);
 
 		NEXUS_ENGINE_API static uint64 Length(const char* Text);
 		NEXUS_ENGINE_API static int8 Compare(const char* Text1, const char* Text2);
@@ -146,74 +160,50 @@ namespace NxEn
 		};
 
 		template<typename... Args>
-		static String Format(const char* Text, Args&&... args)
+		static String Format(const StringView& Text, Args&&... args)
 		{
-			String Result = String(StringCApi::Length(Text) + sizeof...(args) * GuessFormatingSize);
+			String Result = String(Text.GetCount() + sizeof...(args) * GuessFormatingSize);
 			Result.Modify([&Text, &args...](char* Data, uint64 Capacity) -> uint64
 			{
-				return StringCApi::Format(Capacity, Data, Text, args...);
+				return StringCApi::Format(Capacity, Data, Text.C(), args...);
 			});
 			return Move(Result);
 		}
 
 		template<typename... Args>
-		static String Format(uint64 Size, const char* Text, Args&&... args)
+		static String Format(uint64 Size, const StringView& Text, Args&&... args)
 		{
 			String Result = String(Size);
 			Result.Modify([&Text, &args...](char* Data, uint64 Capacity) -> uint64
 			{
-				return StringCApi::Format(Capacity, Data, Text, args...);
+				return StringCApi::Format(Capacity, Data, Text.C(), args...);
 			});
 			return Move(Result);
 		}
 
 		template<typename... Args>
-		static void Scan(const char* Text, Args&&... args)
+		static void Scan(const StringView& Text, Args&&... args)
 		{
-			StringCApi::Scan(Text, args...);
+			StringCApi::Scan(Text.C(), args...);
 		}
 
-		NEXUS_ENGINE_API static bool Start(const String& Text, const String& Substring);
-		NEXUS_ENGINE_API static bool Start(const String& Text, const char* Substring);
-		NEXUS_ENGINE_API static bool Start(const char* Text, const String& Substring);
-		NEXUS_ENGINE_API static bool Start(const char* Text, const char* Substring);
-		NEXUS_ENGINE_API static bool End(const String& Text, const String& Substring);
-		NEXUS_ENGINE_API static bool End(const String& Text, const char* Substring);
-		NEXUS_ENGINE_API static bool End(const char* Text, const String& Substring);
-		NEXUS_ENGINE_API static bool End(const char* Text, const char* Substring);
-		NEXUS_ENGINE_API static bool Contains(const String& Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static bool Contains(const String& Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static bool Contains(const char* Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static bool Contains(const char* Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Find(const String& Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Find(const String& Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Find(const char* Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Find(const char* Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> FindAll(const String& Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> FindAll(const String& Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> FindAll(const char* Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> FindAll(const char* Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Split(const String& Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Split(const String& Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Split(const char* Text, const String& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static const char* Split(const char* Text, const char* Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> SplitAll(const String& Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> SplitAll(const String& Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> SplitAll(const char* Text, const String& Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_ENGINE_API static List<const char*> SplitAll(const char* Text, const char* Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static bool Start(const StringView& Text, const StringView& Substring);
+		NEXUS_ENGINE_API static bool End(const StringView& Text, const StringView& Substring);
+		NEXUS_ENGINE_API static bool Contains(const StringView& Text, const StringView& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static StringView Find(const StringView& Text, const StringView& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<StringView> FindAll(const StringView& Text, const StringView& Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static StringView Split(const StringView& Text, const StringView& Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static List<StringView> SplitAll(const StringView& Text, const StringView& Substring, SearchMode Mode = SearchMode::Substring);
 
-		NEXUS_ENGINE_API static  int64 ToInteger(const String& Text, int32 Radix = 10);
-		NEXUS_ENGINE_API static  int64 ToInteger(const char* Text, int32 Radix = 10);
-		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const String& Text, int32 Radix = 10);
-		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10);
-		NEXUS_ENGINE_API static double ToDouble(const String& Text);
-		NEXUS_ENGINE_API static double ToDouble(const char* Text);
+		NEXUS_ENGINE_API static  int64 ToInteger(const StringView& Text, int32 Radix = 10);
+		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const StringView& Text, int32 Radix = 10);
+		NEXUS_ENGINE_API static double ToDouble(const StringView& Text);
 
-		NEXUS_ENGINE_API static String ToStringI(int64 Number, const char* Format = "%d");
-		NEXUS_ENGINE_API static String ToStringU(uint64 Number, const char* Format = "%d");
-		NEXUS_ENGINE_API static String ToStringF(float Number, const char* Format = "%.2f");
-		NEXUS_ENGINE_API static String ToStringD(double Number, const char* Format = "%.2f");
-		NEXUS_ENGINE_API static String ToStringB(bool State, const char* Format = "%s");
+		NEXUS_ENGINE_API static String ToStringI(int64 Number, StringView Format = "%d");
+		NEXUS_ENGINE_API static String ToStringU(uint64 Number, StringView Format = "%d");
+		NEXUS_ENGINE_API static String ToStringF(float Number, StringView Format = "%.2f");
+		NEXUS_ENGINE_API static String ToStringD(double Number, StringView Format = "%.2f");
+		NEXUS_ENGINE_API static String ToStringB(bool State, StringView Format = "%s");
 
 		NEXUS_ENGINE_API static const char NullChar = StringCApi::NullChar;
 
@@ -223,40 +213,35 @@ namespace NxEn
 			Contains, Find, Split
 		};
 
-		static const char* Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results);
+		static StringView Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
 
 		static const uint8 GuessFormatingSize = 8;
 	};
 
-	NEXUS_ENGINE_API String operator+(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API String operator+(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API String operator+(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API String operator-(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API String operator-(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API String operator-(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator==(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator==(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API bool operator==(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator!=(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator!=(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API bool operator!=(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator>(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator>(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API bool operator>(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator>=(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator>=(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API bool operator>=(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator<(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator<(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API bool operator<(const char* TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator<=(const String& TextA, const String& TextB);
-	NEXUS_ENGINE_API bool operator<=(const String& TextA, const char* TextB);
-	NEXUS_ENGINE_API bool operator<=(const char* TextA, const String& TextB);
+	NEXUS_ENGINE_API String operator+(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API String operator-(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API bool operator==(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API bool operator!=(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API bool operator>(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API bool operator>=(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API bool operator<(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API bool operator<=(const StringView& TextA, const StringView& TextB);
 
 	template<class H>
 	struct Hash<String, H>
 	{
 		static H::HashLength HashObject(const String& Data, H::HashLength Seed = 0)
+		{
+			H Hashing = H(Seed);
+			Hashing.Accumulate(Data.C(), Data.GetCount());
+			return Hashing.Hash();
+		}
+	};
+
+	template<class H>
+	struct Hash<StringView, H>
+	{
+		static H::HashLength HashObject(const StringView& Data, H::HashLength Seed = 0)
 		{
 			H Hashing = H(Seed);
 			Hashing.Accumulate(Data.C(), Data.GetCount());

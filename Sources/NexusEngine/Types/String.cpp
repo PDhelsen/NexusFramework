@@ -4,6 +4,36 @@
 namespace NxEn
 {
 	//-----------------------------------------------------------------------------------------------------------------------
+	// String View
+	//-----------------------------------------------------------------------------------------------------------------------
+
+	StringView::StringView(const char* Text)
+		:Data(Text), Count(StringCApi::Length(Text))
+	{
+	}
+
+	StringView::StringView(const char* Text, uint64 Size)
+		:Data(Text), Count(Size)
+	{
+	}
+
+	StringView::StringView(const String& Text)
+		:Data(Text.C()), Count(Text.GetCount())
+	{
+	}
+
+	String StringView::ToString()
+	{
+		return Move(String(*this));
+	}
+
+	StringView StringView::ToView(uint64 Offset, uint64 Size)
+	{
+		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
+		return StringView(Data + Offset, Size);
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------------
 	// String
 	//-----------------------------------------------------------------------------------------------------------------------
 
@@ -34,17 +64,17 @@ namespace NxEn
 		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
 	}
 
-	String::String(const String& Other)
-		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count)
+	String::String(const StringView& Text)
+		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		if (Other.Sso())
-		{
-			StringCApi::Copy(Other.Data.Small, Data.Small, SmallStringCapacity);
-		}
-		else
-		{
-			Data.Large = Other.Data.Large;
-		}
+		uint64 Size = Text.GetCount();
+		Allocate(Memory::GetActiveAllocator(), Size, Size, Text.C());
+	}
+
+	String::String(const String& Other)
+		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+	{
+		Allocate(Other.Allctr, Other.Capacity, Other.Count, Other.GetBuffer());
 	}
 
 	String::String(String&& Other) noexcept
@@ -77,119 +107,44 @@ namespace NxEn
 		return *this;
 	}
 
-	String& String::operator+=(const String& Other)
+	String& String::operator+=(const StringView& Other)
 	{
 		Append(Other);
 		return *this;
 	}
 
-	String& String::operator+=(const char* Other)
-	{
-		Append(Other);
-		return *this;
-	}
-
-	String& String::operator-=(const String& Other)
+	String& String::operator-=(const StringView& Other)
 	{
 		Remove(Other, 0, 0, true);
 		return *this;
 	}
 
-	String& String::operator-=(const char* Other)
+	String& String::Append(const StringView& Text)
 	{
-		Remove(Other, 0, 0, true);
+		Append(Text.C(), Text.GetCount());
 		return *this;
 	}
 
-	String& String::Append(const String& Text)
-	{
-		Append(Text.GetBuffer(), Text.Count);
-		return *this;
-	}
-
-	String& String::Append(const char* Text)
-	{
-		Append(Text, StringCApi::Length(Text));
-		return *this;
-	}
-
-	String& String::Replace(const String& Old, const String& New)
+	String& String::Replace(const StringView& Old, const StringView& New)
 	{
 		return Assign(Old, New, 0, 1, true);
 	}
 
-	String& String::Replace(const String& Old, const char* New)
+	String& String::Assign(const StringView& OldText, const StringView& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Replace(const char* Old, const String& New)
-	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Replace(const char* Old, const char* New)
-	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Assign(const String& OldText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Assign(OldText.GetBuffer(), OldText.Count, NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
+		Assign(OldText.C(), OldText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, All);
 		return *this;
 	}
 
-	String& String::Assign(const String& OldText, const char* NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Insert(const StringView& ReferenceText, const StringView& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Assign(OldText.GetBuffer(), OldText.Count, NewText, StringCApi::Length(NewText), Offset, Occurrence, All);
+		Insert(ReferenceText.C(), ReferenceText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, All);
 		return *this;
 	}
 
-	String& String::Assign(const char* OldText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Remove(const StringView& Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
-		Assign(OldText, StringCApi::Length(OldText), NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Assign(const char* OldText, const char* NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Assign(OldText, StringCApi::Length(OldText), NewText, StringCApi::Length(NewText), Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Insert(const String& ReferenceText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Insert(ReferenceText.GetBuffer(), ReferenceText.Count, NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Insert(const String& ReferenceText, const char* NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Insert(ReferenceText.GetBuffer(), ReferenceText.Count, NewText, StringCApi::Length(NewText), Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Insert(const char* ReferenceText, const String& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Insert(ReferenceText, StringCApi::Length(ReferenceText), NewText.GetBuffer(), NewText.Count, Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Insert(const char* ReferenceText, const char* NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Insert(ReferenceText, StringCApi::Length(ReferenceText), NewText, StringCApi::Length(NewText), Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Remove(const String& Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Remove(Text.GetBuffer(), Text.Count, Offset, Occurrence, All);
-		return *this;
-	}
-
-	String& String::Remove(const char* Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Remove(Text, StringCApi::Length(Text), Offset, Occurrence, All);
+		Remove(Text.C(), Text.GetCount(), Offset, Occurrence, All);
 		return *this;
 	}
 
@@ -217,6 +172,23 @@ namespace NxEn
 		}
 
 		Reallocate(Size);
+	}
+
+	void String::Validate()
+	{
+		Count = StringCApi::Length(C());
+		ValidateNullTermination();
+	}
+
+	StringView String::ToView()
+	{
+		return StringView(*this);
+	}
+
+	StringView String::ToView(uint64 Offset, uint64 Size)
+	{
+		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
+		return StringView(C() + Offset, Size);
 	}
 
 	void String::Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text)
@@ -304,7 +276,7 @@ namespace NxEn
 	void String::Append(const char* Text, uint64 Size)
 	{
 		Resize(Count + Size);
-		StringCApi::Concat(Text, GetData(), Capacity);
+		StringCApi::Concat(Text, GetData(), Capacity, Size);
 	}
 
 	void String::Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset, uint64 Occurrence, bool All)
@@ -321,7 +293,7 @@ namespace NxEn
 
 		do
 		{
-			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, OldText));
+			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, OldText, OldSize));
 
 			if (Substring)
 			{
@@ -373,7 +345,7 @@ namespace NxEn
 
 		do
 		{
-			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, ReferenceText));
+			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, ReferenceText, ReferenceSize));
 
 			if (Substring)
 			{
@@ -410,7 +382,7 @@ namespace NxEn
 
 		do
 		{
-			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, Text));
+			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, Text, Size));
 
 			if (Substring)
 			{
@@ -452,8 +424,58 @@ namespace NxEn
 		}
 	}
 
+	const char* StringCApi::SearchStr(const char* Source, const char* Substring, uint64 Size)
+	{
+		uint64 Count = 0;
+		bool Finding = false;
+		const char* Result = nullptr;
+		const char* Current = Source;
+		const char* Target = Substring;
+
+		while (*Current != NullChar)
+		{
+			if (*Current == *Target)
+			{
+				if (!Finding)
+				{
+					Count = 0;
+					Finding = true;
+					Result = Current;
+				}
+
+				Target++;
+				Count++;
+
+				if (Count == Size)
+				{
+					break;
+				}
+			}
+			else
+			{
+				Target = Substring;
+				Result = nullptr;
+				Finding = false;
+			}
+
+			Current++;
+		}
+
+		if (Count != Size)
+		{
+			Result = nullptr;
+		}
+
+		return Result;
+	}
+
 	uint64 StringCApi::Length(const char* Text)
 	{
+		if (!Text)
+		{
+			return 0;
+		}
+
 		return strlen(Text);
 	}
 
@@ -553,270 +575,133 @@ namespace NxEn
 	// String Utility
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	bool StringUtility::Start(const String& Text, const String& Substring)
+	bool StringUtility::Start(const StringView& Text, const StringView& Substring)
 	{
-		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C());
+		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C(), Substring.GetCount());
 		return Result && Text.C() == Result;
 	}
 
-	bool StringUtility::Start(const String& Text, const char* Substring)
+	bool StringUtility::End(const StringView& Text, const StringView& Substring)
 	{
-		const char* Result = StringCApi::SearchStr(Text.C(), Substring);
-		return Result && Text.C() == Result;
-	}
-
-	bool StringUtility::Start(const char* Text, const String& Substring)
-	{
-		const char* Result = StringCApi::SearchStr(Text, Substring.C());
-		return Result && Text == Result;
-	}
-
-	bool StringUtility::Start(const char* Text, const char* Substring)
-	{
-		const char* Result = StringCApi::SearchStr(Text, Substring);
-		return Result && Text == Result;
-	}
-
-	bool StringUtility::End(const String& Text, const String& Substring)
-	{
-		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C());
+		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C(), Substring.GetCount());
 		return Result && Substring.GetCount() == StringCApi::Length(Result);
 	}
 
-	bool StringUtility::End(const String& Text, const char* Substring)
+	bool StringUtility::Contains(const StringView& Text, const StringView& Substring, SearchMode Mode)
 	{
-		const char* Result = StringCApi::SearchStr(Text.C(), Substring);
-		return Result && StringCApi::Length(Substring) == StringCApi::Length(Result);
+		StringView Result = Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Contains, Mode, 0, nullptr);
+		return !Result.IsEmpty();
 	}
 
-	bool StringUtility::End(const char* Text, const String& Substring)
+	StringView StringUtility::Find(const StringView& Text, const StringView& Substring, uint64 Offset, SearchMode Mode)
 	{
-		const char* Result = StringCApi::SearchStr(Text, Substring.C());
-		return Result && Substring.GetCount() == StringCApi::Length(Result);
+		return Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, Offset, nullptr);
 	}
 
-	bool StringUtility::End(const char* Text, const char* Substring)
+	List<StringView> StringUtility::FindAll(const StringView& Text, const StringView& Substring, SearchMode Mode)
 	{
-		const char* Result = StringCApi::SearchStr(Text, Substring);
-		return Result && StringCApi::Length(Substring) == StringCApi::Length(Result);
-	}
-
-	bool StringUtility::Contains(const String& Text, const String& Substring, SearchMode Mode)
-	{
-		return Search(Text.C(), Substring.C(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
-	}
-
-	bool StringUtility::Contains(const String& Text, const char* Substring, SearchMode Mode)
-	{
-		return Search(Text.C(), Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
-	}
-
-	bool StringUtility::Contains(const char* Text, const String& Substring, SearchMode Mode)
-	{
-		return Search(Text, Substring.C(), SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
-	}
-
-	bool StringUtility::Contains(const char* Text, const char* Substring, SearchMode Mode)
-	{
-		return Search(Text, Substring, SearchBehaviour::Contains, Mode, 0, nullptr) != nullptr;
-	}
-
-	const char* StringUtility::Find(const String& Text, const String& Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text.C(), Substring.C(), SearchBehaviour::Find, Mode, Offset, nullptr);
-	}
-
-	const char* StringUtility::Find(const String& Text, const char* Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text.C(), Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
-	}
-
-	const char* StringUtility::Find(const char* Text, const String& Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text, Substring.C(), SearchBehaviour::Find, Mode, Offset, nullptr);
-	}
-
-	const char* StringUtility::Find(const char* Text, const char* Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text, Substring, SearchBehaviour::Find, Mode, Offset, nullptr);
-	}
-
-	List<const char*> StringUtility::FindAll(const String& Text, const String& Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text.C(), Substring.C(), SearchBehaviour::Find, Mode, 0, &Results);
+		List<StringView> Results;
+		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, 0, &Results);
 		return Move(Results);
 	}
 
-	List<const char*> StringUtility::FindAll(const String& Text, const char* Substring, SearchMode Mode)
+	StringView StringUtility::Split(const StringView& Text, const StringView& Substring, uint64 Offset, SearchMode Mode)
 	{
-		List<const char*> Results;
-		Search(Text.C(), Substring, SearchBehaviour::Find, Mode, 0, &Results);
+		return Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, Offset, nullptr);
+	}
+
+	List<StringView> StringUtility::SplitAll(const StringView& Text, const StringView& Substring, SearchMode Mode)
+	{
+		List<StringView> Results;
+		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, 0, &Results);
 		return Move(Results);
 	}
 
-	List<const char*> StringUtility::FindAll(const char* Text, const String& Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text, Substring.C(), SearchBehaviour::Find, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	List<const char*> StringUtility::FindAll(const char* Text, const char* Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text, Substring, SearchBehaviour::Find, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	const char* StringUtility::Split(const String& Text, const String& Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text.C(), Substring.C(), SearchBehaviour::Split, Mode, Offset, nullptr);
-	}
-
-	const char* StringUtility::Split(const String& Text, const char* Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text.C(), Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
-	}
-
-	const char* StringUtility::Split(const char* Text, const String& Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text, Substring.C(), SearchBehaviour::Split, Mode, Offset, nullptr);
-	}
-
-	const char* StringUtility::Split(const char* Text, const char* Substring, uint64 Offset, SearchMode Mode)
-	{
-		return Search(Text, Substring, SearchBehaviour::Split, Mode, Offset, nullptr);
-	}
-
-	List<const char*> StringUtility::SplitAll(const String& Text, const String& Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text.C(), Substring.C(), SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	List<const char*> StringUtility::SplitAll(const String& Text, const char* Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text.C(), Substring, SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	List<const char*> StringUtility::SplitAll(const char* Text, const String& Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text, Substring.C(), SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	List<const char*> StringUtility::SplitAll(const char* Text, const char* Substring, SearchMode Mode)
-	{
-		List<const char*> Results;
-		Search(Text, Substring, SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
-	}
-
-	int64 StringUtility::ToInteger(const String& Text, int32 Radix)
+	int64 StringUtility::ToInteger(const StringView& Text, int32 Radix)
 	{
 		return StringCApi::ToInteger(Text.C());
 	}
 
-	int64 StringUtility::ToInteger(const char* Text, int32 Radix)
-	{
-		return StringCApi::ToInteger(Text);
-	}
-
-	uint64 StringUtility::ToUnsignedInteger(const String& Text, int32 Radix)
+	uint64 StringUtility::ToUnsignedInteger(const StringView& Text, int32 Radix)
 	{
 		return StringCApi::ToUnsignedInteger(Text.C());
 	}
 
-	uint64 StringUtility::ToUnsignedInteger(const char* Text, int32 Radix)
-	{
-		return StringCApi::ToUnsignedInteger(Text);
-	}
-
-	double StringUtility::ToDouble(const String& Text)
+	double StringUtility::ToDouble(const StringView& Text)
 	{
 		return StringCApi::ToDouble(Text.C());
 	}
 
-	double StringUtility::ToDouble(const char* Text)
-	{
-		return StringCApi::ToDouble(Text);
-	}
-
-	String StringUtility::ToStringI(int64 Number, const char* Format)
+	String StringUtility::ToStringI(int64 Number, StringView Format)
 	{
 		String Result = String();
 		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
 		{
-			return StringCApi::ToStringI(Number, Capacity, Data, Format);
+			return StringCApi::ToStringI(Number, Capacity, Data, Format.C());
 		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringU(uint64 Number, const char* Format)
+	String StringUtility::ToStringU(uint64 Number, StringView Format)
 	{
 		String Result = String();
 		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
 		{
-			return StringCApi::ToStringU(Number, Capacity, Data, Format);
+			return StringCApi::ToStringU(Number, Capacity, Data, Format.C());
 		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringF(float Number, const char* Format)
+	String StringUtility::ToStringF(float Number, StringView Format)
 	{
 		String Result = String();
 		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
 		{
-			return StringCApi::ToStringF(Number, Capacity, Data, Format);
+			return StringCApi::ToStringF(Number, Capacity, Data, Format.C());
 		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringD(double Number, const char* Format)
+	String StringUtility::ToStringD(double Number, StringView Format)
 	{
 		String Result = String();
 		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
 		{
-			return StringCApi::ToStringD(Number, Capacity, Data, Format);
+			return StringCApi::ToStringD(Number, Capacity, Data, Format.C());
 		});
 		return Move(Result);
 	}
 
-	String StringUtility::ToStringB(bool State, const char* Format)
+	String StringUtility::ToStringB(bool State, StringView Format)
 	{
 		String Result = String();
 		Result.Modify([State, Format](char* Data, uint64 Capacity) -> uint64
 		{
-			return StringCApi::ToStringB(State, Capacity, Data, Format);
+			return StringCApi::ToStringB(State, Capacity, Data, Format.C());
 		});
 		return Move(Result);
 	}
 
-	const char* StringUtility::Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results)
+	StringView StringUtility::Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results)
 	{
 		uint64 Index = 0;
 		const char* Previous = Text;
 		const char* Pointer = Text;
-		const char* Result = nullptr;
+		StringView Result = nullptr;
 
 		do
 		{
 			switch (Mode)
 			{
-			case SearchMode::Substring: Pointer = StringCApi::SearchStr(Pointer, Substring); break;
+			case SearchMode::Substring: Pointer = StringCApi::SearchStr(Pointer, Substring, Size); break;
 			case SearchMode::Characters: Pointer = StringCApi::SearchChr(Pointer, Substring); break;
 			}
 
 			switch (Behaviour)
 			{
-			case SearchBehaviour::Contains: Result = Pointer; break;
-			case SearchBehaviour::Find: Result = Pointer; break;
-			case SearchBehaviour::Split: Result = Previous; break;
+			case SearchBehaviour::Contains: Result = StringView(Pointer); break;
+			case SearchBehaviour::Find: Result = StringView(Pointer); break;
+			case SearchBehaviour::Split: Result = StringView(Previous, StringCApi::Length(Previous) - StringCApi::Length(Pointer)); break;
 			}
 
 			if (!Pointer)
@@ -850,7 +735,7 @@ namespace NxEn
 	// Operator
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	String operator+(const String& TextA, const String& TextB)
+	String operator+(const StringView& TextA, const StringView& TextB)
 	{
 		String Return = String(TextA.GetCount() + TextB.GetCount());
 		Return.Append(TextA);
@@ -858,23 +743,7 @@ namespace NxEn
 		return Move(Return);
 	}
 
-	String operator+(const String& TextA, const char* TextB)
-	{
-		String Return = String(TextA.GetCount() + StringCApi::Length(TextB));
-		Return.Append(TextA);
-		Return.Append(TextB);
-		return Move(Return);
-	}
-
-	String operator+(const char* TextA, const String& TextB)
-	{
-		String Return = String(StringCApi::Length(TextA) + TextB.GetCount());
-		Return.Append(TextA);
-		Return.Append(TextB);
-		return Move(Return);
-	}
-
-	String operator-(const String& TextA, const String& TextB)
+	String operator-(const StringView& TextA, const StringView& TextB)
 	{
 		String Return = String(TextA.GetCount());
 		Return.Append(TextA);
@@ -882,109 +751,53 @@ namespace NxEn
 		return Move(Return);
 	}
 
-	String operator-(const String& TextA, const char* TextB)
-	{
-		String Return = String(TextA.GetCount());
-		Return.Append(TextA);
-		Return.Remove(TextB, 0, 0, true);
-		return Move(Return);
-	}
-
-	String operator-(const char* TextA, const String& TextB)
-	{
-		String Return = String(StringCApi::Length(TextA));
-		Return.Append(TextA);
-		Return.Remove(TextB, 0, 0, true);
-		return Move(Return);
-	}
-
-	bool operator==(const String& TextA, const String& TextB)
+	bool operator==(const StringView& TextA, const StringView& TextB)
 	{
 		return TextA.GetCount() == TextB.GetCount() && StringCApi::Compare(TextA.C(), TextB.C()) == 0;
 	}
 
-	bool operator==(const String& TextA, const char* TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB) == 0;
-	}
-
-	bool operator==(const char* TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA, TextB.C()) == 0;
-	}
-
-	bool operator!=(const String& TextA, const String& TextB)
+	bool operator!=(const StringView& TextA, const StringView& TextB)
 	{
 		return !(TextA == TextB);
 	}
 
-	bool operator!=(const String& TextA, const char* TextB)
+	bool operator>(const StringView& TextA, const StringView& TextB)
 	{
-		return !(TextA == TextB);
+		int8 Comparaison =  StringCApi::Compare(TextA.C(), TextB.C());
+		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
+		{
+			return TextA.GetCount() > TextB.GetCount();
+		}
+		return Comparaison > 0;
 	}
 
-	bool operator!=(const char* TextA, const String& TextB)
+	bool operator>=(const StringView& TextA, const StringView& TextB)
 	{
-		return !(TextA == TextB);
+		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
+		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
+		{
+			return TextA.GetCount() >= TextB.GetCount();
+		}
+		return Comparaison >= 0;
 	}
 
-	bool operator>(const String& TextA, const String& TextB)
+	bool operator<(const StringView& TextA, const StringView& TextB)
 	{
-		return StringCApi::Compare(TextA.C(), TextB.C()) > 0;
+		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
+		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
+		{
+			return TextA.GetCount() < TextB.GetCount();
+		}
+		return Comparaison < 0;
 	}
 
-	bool operator>(const String& TextA, const char* TextB)
+	bool operator<=(const StringView& TextA, const StringView& TextB)
 	{
-		return StringCApi::Compare(TextA.C(), TextB) > 0;
-	}
-
-	bool operator>(const char* TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA, TextB.C()) > 0;
-	}
-
-	bool operator>=(const String& TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB.C()) >= 0;
-	}
-
-	bool operator>=(const String& TextA, const char* TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB) >= 0;
-	}
-
-	bool operator>=(const char* TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA, TextB.C()) >= 0;
-	}
-
-	bool operator<(const String& TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB.C()) < 0;
-	}
-
-	bool operator<(const String& TextA, const char* TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB) < 0;
-	}
-
-	bool operator<(const char* TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA, TextB.C()) < 0;
-	}
-
-	bool operator<=(const String& TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB.C()) <= 0;
-	}
-
-	bool operator<=(const String& TextA, const char* TextB)
-	{
-		return StringCApi::Compare(TextA.C(), TextB) <= 0;
-	}
-
-	bool operator<=(const char* TextA, const String& TextB)
-	{
-		return StringCApi::Compare(TextA, TextB.C()) <= 0;
+		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
+		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
+		{
+			return TextA.GetCount() <= TextB.GetCount();
+		}
+		return Comparaison <= 0;
 	}
 }

@@ -11,7 +11,7 @@ namespace NxTs
 		ASSERT_EQ(Empty, NxEn::String::Empty);
 		ASSERT_EQ(Empty.IsEmpty(), true);
 
-		NxEn::String Test2 = NxEn::String("World Hello");
+		NxEn::String Test2 = "World Hello";
 		NxEn::String Test3 = Test;
 		NxEn::String Test4 = Move(Test2);
 		{
@@ -47,6 +47,51 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCapacity(), 17);
 	}
 
+	TEST(Type_String, View)
+	{
+		NxEn::String Reference = "Hello World Extended";
+
+		NxEn::StringView Test0 = Reference.ToView();
+		NxEn::StringView Test1 = Reference.ToView(0, 5);
+		NxEn::StringView Test2 = Reference.ToView(6, 5);
+		NxEn::StringView Test3 = Reference.ToView(3, 8);
+		NxEn::StringView Test4 = Reference.ToView(12, 8);
+
+		ASSERT_EQ(Reference.C() == Test0.C(), true);
+		ASSERT_EQ(Reference.C() == Test1.C(), true);
+
+		ASSERT_EQ(Reference == Test0, true);
+		ASSERT_EQ(Reference > Test1, true);
+		ASSERT_EQ(Reference < Test2, true);
+		ASSERT_EQ(Reference > Test4, true);
+
+		NxEn::Array<NxEn::StringView> Array = NxEn::Array<NxEn::StringView>(6);
+		Array.AssignConstruct(0, Reference);
+		Array.AssignConstruct(1, Test0);
+		Array.AssignConstruct(2, Test1);
+		Array.AssignConstruct(3, Test2);
+		Array.AssignConstruct(4, Test3);
+		Array.AssignConstruct(5, Test4);
+		Array.Sort();
+
+		NxEn::String Builder = Reference;
+		Builder.Append(Test1);
+		ASSERT_EQ(Builder, "Hello World ExtendedHello");
+		Builder.Assign(Test1, Test4);
+		ASSERT_EQ(Builder, "Extended World ExtendedHello");
+		Builder.Insert(Test4, Test1);
+		ASSERT_EQ(Builder, "ExtendedHello World ExtendedHello");
+		Builder.Remove(Test2);
+		ASSERT_EQ(Builder, "ExtendedHello  ExtendedHello");
+
+		NxEn::String Functions = "Hello Not World Not Extended";
+		ASSERT_EQ(NxEn::StringUtility::Start(Functions, Test1), true);
+		ASSERT_EQ(NxEn::StringUtility::End(Functions, Test4), true);
+		ASSERT_EQ(NxEn::StringUtility::Contains(Functions, Test2), true);
+		ASSERT_EQ(NxEn::StringUtility::Find(Functions, Test2).IsEmpty(), false);
+		ASSERT_EQ(NxEn::StringUtility::Split(Functions, Test2).IsEmpty(), false);
+	}
+
 	TEST(Type_String, Utility)
 	{
 		NxEn::String Test1 = NxEn::String("Hello World");
@@ -60,22 +105,24 @@ namespace NxTs
 
 		ASSERT_EQ(NxEn::StringUtility::Contains(Test1, "Hello"), true);
 		ASSERT_EQ(NxEn::StringUtility::Contains(Test1, "Wd", NxEn::StringUtility::SearchMode::Characters), true);
-		ASSERT_EQ(NxEn::StringUtility::Find(Test1, "ll") != nullptr, true);
-		ASSERT_EQ(NxEn::StringUtility::Find(Test1, "l", 1, NxEn::StringUtility::SearchMode::Characters) != nullptr, true);
-		ASSERT_EQ(NxEn::StringUtility::Split(Test1, "ll") != nullptr, true);
-		ASSERT_EQ(NxEn::StringUtility::Split(Test1, "l", 1, NxEn::StringUtility::SearchMode::Characters) != nullptr, true);
+		ASSERT_EQ(NxEn::StringUtility::Find(Test1, "ll").IsEmpty(), false);
+		ASSERT_EQ(NxEn::StringUtility::Find(Test1, "l", 1, NxEn::StringUtility::SearchMode::Characters).IsEmpty(), false);
+		ASSERT_EQ(NxEn::StringUtility::Split(Test1, "ll").IsEmpty(), false);
+		ASSERT_EQ(NxEn::StringUtility::Split(Test1, "l", 2, NxEn::StringUtility::SearchMode::Characters).IsEmpty(), false);
 
 		NxEn::String Test2 = NxEn::String("Hello World 1 Hello World 2 Hello World 3 Hello World 4");
-		NxEn::List<const char*> Found = NxEn::StringUtility::FindAll(Test2, "Hello");
+		NxEn::List<NxEn::StringView> Found = NxEn::StringUtility::FindAll(Test2, "Hello");
 		ASSERT_EQ(Found.GetCount(), 4);
-		NxEn::List<const char*> Split = NxEn::StringUtility::SplitAll(Test2, " ");
+		NxEn::List<NxEn::StringView> Split = NxEn::StringUtility::SplitAll(Test2, " ");
 		ASSERT_EQ(Split.GetCount(), 12);
 
 		NxEn::String Test3 = NxEn::StringUtility::Format("Hello %i World %.1f, %s", 10, 20.0f, Test1.C());
 		ASSERT_EQ(Test3, "Hello 10 World 20.0, Hello World");
 		int32 Day = 0, Year = 0;
-		NxEn::String Weekday = NxEn::String(20), Month = NxEn::String(20);
+		NxEn::String Weekday = NxEn::String(), Month = NxEn::String();
 		NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d  %d", Weekday.C(), Month.C(), &Day, &Year);
+		Weekday.Validate();
+		Month.Validate();
 		ASSERT_EQ(Day, 25);
 		ASSERT_EQ(Year, 1989);
 		ASSERT_EQ(Month, "March");
