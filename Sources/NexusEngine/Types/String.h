@@ -65,8 +65,8 @@ namespace NxEn
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
 		NEXUS_ENGINE_API void Validate();
 
-		NEXUS_ENGINE_API StringView ToView();
-		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size);
+		NEXUS_ENGINE_API StringView ToView() const;
+		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size) const;
 
 		NEXUS_ENGINE_API const char* C() const { return GetBuffer(); }
 		NEXUS_ENGINE_API bool IsEmpty() const { return Count == 0; }
@@ -77,28 +77,16 @@ namespace NxEn
 		NEXUS_ENGINE_API static const uint8 SmallStringCapacity = 16;
 
 	private:
-		NEXUS_ENGINE_API void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
-		NEXUS_ENGINE_API void Reallocate(uint64 Bytes);
-		NEXUS_ENGINE_API void Free();
-		NEXUS_ENGINE_API void Resize(uint64 Size);
-		NEXUS_ENGINE_API void ValidateCapacityCount(uint64 Bytes, uint64 Size);
-		NEXUS_ENGINE_API void ValidateNullTermination();
-		NEXUS_ENGINE_API void Append(const char* Text, uint64 Size);
-		NEXUS_ENGINE_API void Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
-
-		template<typename ModifyFunction>
-		void Modify(ModifyFunction&& Function)
-		{
-			Count = Function(GetData(), Capacity);
-			if (Count >= Capacity)
-			{
-				Grow(Count);
-				Count = Function(GetData(), Capacity);
-			}
-			ValidateNullTermination();
-		}
+		void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
+		void Reallocate(uint64 Bytes);
+		void Free();
+		void Resize(uint64 Size);
+		void ValidateCapacityCount(uint64 Bytes, uint64 Size);
+		void ValidateNullTermination();
+		void Append(const char* Text, uint64 Size);
+		void Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
 
 		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
 		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
@@ -163,10 +151,13 @@ namespace NxEn
 		static String Format(const StringView& Text, Args&&... args)
 		{
 			String Result = String(Text.GetCount() + sizeof...(args) * GuessFormatingSize);
-			Result.Modify([&Text, &args...](char* Data, uint64 Capacity) -> uint64
+			uint64 Size = StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text.C(), args...);
+			if (Size >= Result.GetCapacity())
 			{
-				return StringCApi::Format(Capacity, Data, Text.C(), args...);
-			});
+				Result.Grow(Size);
+				StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text.C(), args...);
+			}
+			Result.Validate();
 			return Move(Result);
 		}
 
@@ -174,10 +165,8 @@ namespace NxEn
 		static String Format(uint64 Size, const StringView& Text, Args&&... args)
 		{
 			String Result = String(Size);
-			Result.Modify([&Text, &args...](char* Data, uint64 Capacity) -> uint64
-			{
-				return StringCApi::Format(Capacity, Data, Text.C(), args...);
-			});
+			StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text.C(), args...);
+			Result.Validate();
 			return Move(Result);
 		}
 

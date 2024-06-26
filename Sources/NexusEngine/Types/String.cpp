@@ -180,12 +180,12 @@ namespace NxEn
 		ValidateNullTermination();
 	}
 
-	StringView String::ToView()
+	StringView String::ToView() const
 	{
 		return StringView(*this);
 	}
 
-	StringView String::ToView(uint64 Offset, uint64 Size)
+	StringView String::ToView(uint64 Offset, uint64 Size) const
 	{
 		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
 		return StringView(C() + Offset, Size);
@@ -635,50 +635,40 @@ namespace NxEn
 	String StringUtility::ToStringI(int64 Number, StringView Format)
 	{
 		String Result = String();
-		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
-		{
-			return StringCApi::ToStringI(Number, Capacity, Data, Format.C());
-		});
+		StringCApi::ToStringI(Number, Result.GetCapacity(), Result.GetData(), Format.C());
+		Result.Validate();
 		return Move(Result);
 	}
 
 	String StringUtility::ToStringU(uint64 Number, StringView Format)
 	{
 		String Result = String();
-		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
-		{
-			return StringCApi::ToStringU(Number, Capacity, Data, Format.C());
-		});
+		StringCApi::ToStringU(Number, Result.GetCapacity(), Result.GetData(), Format.C());
+		Result.Validate();
 		return Move(Result);
 	}
 
 	String StringUtility::ToStringF(float Number, StringView Format)
 	{
 		String Result = String();
-		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
-		{
-			return StringCApi::ToStringF(Number, Capacity, Data, Format.C());
-		});
+		StringCApi::ToStringF(Number, Result.GetCapacity(), Result.GetData(), Format.C());
+		Result.Validate();
 		return Move(Result);
 	}
 
 	String StringUtility::ToStringD(double Number, StringView Format)
 	{
 		String Result = String();
-		Result.Modify([Number, Format](char* Data, uint64 Capacity) -> uint64
-		{
-			return StringCApi::ToStringD(Number, Capacity, Data, Format.C());
-		});
+		StringCApi::ToStringD(Number, Result.GetCapacity(), Result.GetData(), Format.C());
+		Result.Validate();
 		return Move(Result);
 	}
 
 	String StringUtility::ToStringB(bool State, StringView Format)
 	{
 		String Result = String();
-		Result.Modify([State, Format](char* Data, uint64 Capacity) -> uint64
-		{
-			return StringCApi::ToStringB(State, Capacity, Data, Format.C());
-		});
+		StringCApi::ToStringB(State, Result.GetCapacity(), Result.GetData(), Format.C());
+		Result.Validate();
 		return Move(Result);
 	}
 
