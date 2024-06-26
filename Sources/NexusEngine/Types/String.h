@@ -58,14 +58,13 @@ namespace NxEn
 		template<typename... Args>
 		static String Format(const char* Text, Args&&... args)
 		{
-			String Result = String(StringCApi::Length(Text) + sizeof...(args) * GuessedFormatingSize);
+			String Result = String(StringCApi::Length(Text) + sizeof...(args) * GuessFormatingSize);
 			Result.Count = StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text, args...);
 			if (Result.GetCount() >= Result.GetCapacity())
 			{
 				Result.Grow(Result.GetCount());
 				Result.Count = StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text, args...);
 			}
-			Result.ValidateNullTermination();
 			return Result;
 		}
 
@@ -74,7 +73,6 @@ namespace NxEn
 		{
 			String Result = String(Size);
 			Result.Count = StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text, args...);
-			Result.ValidateNullTermination();
 			return Result;
 		}
 
@@ -134,9 +132,9 @@ namespace NxEn
 			Contains, Find, Split
 		};
 
-		NEXUS_ENGINE_API static const char* Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results);
+		static const char* Search(const char* Text, const char* Substring, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<const char*>* Results);
 
-		static const uint8 GuessedFormatingSize = 8;
+		static const uint8 GuessFormatingSize = 8;
 	};
 
 	NEXUS_ENGINE_API String operator+(const String& TextA, const String& TextB);
@@ -208,21 +206,6 @@ namespace NxEn
 		NEXUS_ENGINE_API void Grow(uint64 Size);
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
 
-		NEXUS_ENGINE_API bool Start(const String& Substring) const;
-		NEXUS_ENGINE_API bool Start(const char* Substring) const;
-		NEXUS_ENGINE_API bool End(const String& Substring) const;
-		NEXUS_ENGINE_API bool End(const char* Substring) const;
-		NEXUS_ENGINE_API bool Contains(const String& Substring, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API bool Contains(const char* Substring, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API const char* Find(const String& Substring, uint64 Offset = 0, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API const char* Find(const char* Substring, uint64 Offset = 0, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API List<const char*> FindAll(const String& Substring, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API List<const char*> FindAll(const char* Substring, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API const char* Split(const String& Substring, uint64 Offset = 0, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API const char* Split(const char* Substring, uint64 Offset = 0, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API List<const char*> SplitAll(const String& Substring, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-		NEXUS_ENGINE_API List<const char*> SplitAll(const char* Substring, StringUtility::SearchMode Mode = StringUtility::SearchMode::Substring) const;
-
 		NEXUS_ENGINE_API const char* C() const { return GetBuffer(); }
 		NEXUS_ENGINE_API uint64 IsEmpty() const { return Count == 0; }
 		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
@@ -232,20 +215,20 @@ namespace NxEn
 		NEXUS_ENGINE_API static const uint8 SmallStringCapacity = 16;
 
 	private:
-		NEXUS_ENGINE_API void Allocate(uint64 Bytes, uint64 Size, const char* Text, Allocator* Al);
-		NEXUS_ENGINE_API void Reallocate(uint64 Bytes);
-		NEXUS_ENGINE_API void Free();
-		NEXUS_ENGINE_API void Resize(uint64 Size);
-		NEXUS_ENGINE_API void ValidateCapacityCount(uint64 Bytes, uint64 Size);
-		NEXUS_ENGINE_API void ValidateNullTermination();
-		NEXUS_ENGINE_API void Append(const char* Text, uint64 Size);
-		NEXUS_ENGINE_API void Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
+		void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
+		void Reallocate(uint64 Bytes);
+		void Free();
+		void Resize(uint64 Size);
+		void ValidateCapacityCount(uint64 Bytes, uint64 Size);
+		void ValidateNullTermination();
+		void Append(const char* Text, uint64 Size);
+		void Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
 
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
+		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
+		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
+		NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
 
 		union Buffer
 		{

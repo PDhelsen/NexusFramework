@@ -550,32 +550,39 @@ namespace NxEn
 	String::String()
 		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(SmallStringCapacity, 0, nullptr, Memory::GetActiveAllocator());
+		Allocate(Memory::GetActiveAllocator(), SmallStringCapacity, 0, nullptr);
 	}
 
 	String::String(uint64 Bytes)
 		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Bytes, 0, nullptr, Memory::GetActiveAllocator());
+		Allocate(Memory::GetActiveAllocator(), Bytes, 0, nullptr);
 	}
 
 	String::String(const char* Text)
 		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = StringCApi::Length(Text);
-		Allocate(Size, Size, Text, Memory::GetActiveAllocator());
+		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
 	}
 
 	String::String(const char* Text, uint64 Size)
 		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Size, Size, Text, Memory::GetActiveAllocator());
+		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
 	}
 
 	String::String(const String& Other)
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count)
 	{
-		Allocate(Other.Capacity, Other.Count, Other.GetBuffer(), Other.Allctr);
+		if (Other.Sso())
+		{
+			StringCApi::Copy(Other.Data.Small, Data.Small, SmallStringCapacity);
+		}
+		else
+		{
+			Data.Large = Other.Data.Large;
+		}
 	}
 
 	String::String(String&& Other) noexcept
@@ -604,7 +611,7 @@ namespace NxEn
 	String& String::operator=(const String& Other)
 	{
 		Resize(Other.Count);
-		StringCApi::Copy(Other.GetBuffer(), GetData(), Other.Capacity);
+		StringCApi::Copy(Other.GetBuffer(), GetData(), Capacity);
 		return *this;
 	}
 
@@ -750,77 +757,7 @@ namespace NxEn
 		Reallocate(Size);
 	}
 
-	bool String::Start(const String& Substring) const
-	{
-		return StringUtility::Start(*this, Substring);
-	}
-
-	bool String::Start(const char* Substring) const
-	{
-		return StringUtility::Start(*this, Substring);
-	}
-
-	bool String::End(const String& Substring) const
-	{
-		return StringUtility::End(*this, Substring);
-	}
-
-	bool String::End(const char* Substring) const
-	{
-		return StringUtility::End(*this, Substring);
-	}
-
-	bool String::Contains(const String& Substring, StringUtility::SearchMode Mode) const
-	{
-		return StringUtility::Contains(*this, Substring, Mode);
-	}
-
-	bool String::Contains(const char* Substring, StringUtility::SearchMode Mode) const
-	{
-		return StringUtility::Contains(*this, Substring, Mode);
-	}
-
-	const char* String::Find(const String& Substring, uint64 Offset, StringUtility::SearchMode Mode) const
-	{
-		return StringUtility::Find(*this, Substring, Offset, Mode);
-	}
-
-	const char* String::Find(const char* Substring, uint64 Offset, StringUtility::SearchMode Mode) const
-	{
-		return StringUtility::Find(*this, Substring, Offset, Mode);
-	}
-
-	List<const char*> String::FindAll(const String& Substring, StringUtility::SearchMode Mode) const
-	{
-		return Move(StringUtility::FindAll(*this, Substring, Mode));
-	}
-
-	List<const char*> String::FindAll(const char* Substring, StringUtility::SearchMode Mode) const
-	{
-		return Move(StringUtility::FindAll(*this, Substring, Mode));
-	}
-
-	const char* String::Split(const String& Substring, uint64 Offset, StringUtility::SearchMode Mode) const
-	{
-		return StringUtility::Split(*this, Substring, Offset, Mode);
-	}
-
-	const char* String::Split(const char* Substring, uint64 Offset, StringUtility::SearchMode Mode) const
-	{
-		return StringUtility::Split(*this, Substring, Offset, Mode);
-	}
-
-	List<const char*> String::SplitAll(const String& Substring, StringUtility::SearchMode Mode) const
-	{
-		return Move(StringUtility::SplitAll(*this, Substring, Mode));
-	}
-
-	List<const char*> String::SplitAll(const char* Substring, StringUtility::SearchMode Mode) const
-	{
-		return Move(StringUtility::SplitAll(*this, Substring, Mode));
-	}
-
-	void String::Allocate(uint64 Bytes, uint64 Size, const char* Text, Allocator* Al)
+	void String::Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text)
 	{
 		ValidateCapacityCount(Bytes, Size);
 
@@ -931,11 +868,19 @@ namespace NxEn
 					if (SizeDiff > 0)
 					{
 						Resize(Count + SizeDiff);
-						Memory::MemCopy(Substring + OldSize, Substring + NewSize, StringCApi::Length(Substring));
+						uint64 Remaining = StringCApi::Length(Substring + OldSize);
+						if (Remaining > 0)
+						{
+							Memory::MemCopy(Substring + OldSize, Substring + NewSize, Remaining);
+						}
 					}
 					else if (SizeDiff < 0)
 					{
-						Memory::MemCopy(Substring + OldSize, Substring + NewSize, StringCApi::Length(Substring));
+						uint64 Remaining = StringCApi::Length(Substring + OldSize);
+						if (Remaining > 0)
+						{
+							Memory::MemCopy(Substring + OldSize, Substring + NewSize, Remaining);
+						}
 						Resize(Count + SizeDiff);
 					}
 
@@ -975,7 +920,11 @@ namespace NxEn
 				if (Index >= Offset)
 				{
 					Resize(Count + NewSize);
-					Memory::MemCopy(Substring, Substring + NewSize, StringCApi::Length(Substring));
+					uint64 Remaining = StringCApi::Length(Substring);
+					if (Remaining > 0)
+					{
+						Memory::MemCopy(Substring, Substring + NewSize, StringCApi::Length(Substring));
+					}
 					StringCApi::Copy(NewText, Substring, Capacity, NewSize, true);
 
 					Modified++;
