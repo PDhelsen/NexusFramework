@@ -11,7 +11,97 @@ namespace NxEn
 {
 	// TODO: Optimization - Copy / Move - Operator + Self assignement check
 
-	class String;
+	//-----------------------------------------------------------------------------------------------------------------------
+	// String Data
+	//-----------------------------------------------------------------------------------------------------------------------
+
+	class String
+	{
+		friend class StringUtility;
+
+	public:
+		NEXUS_ENGINE_API String();
+		NEXUS_ENGINE_API String(uint64 Bytes);
+		NEXUS_ENGINE_API String(const char* Text);
+		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API String(const String& Other);
+		NEXUS_ENGINE_API String(String&& Other) noexcept;
+		NEXUS_ENGINE_API ~String();
+
+		NEXUS_ENGINE_API String& operator=(const String& Other);
+		NEXUS_ENGINE_API String& operator+=(const String& Other);
+		NEXUS_ENGINE_API String& operator+=(const char* Other);
+		NEXUS_ENGINE_API String& operator-=(const String& Other);
+		NEXUS_ENGINE_API String& operator-=(const char* Other);
+
+		NEXUS_ENGINE_API String& Append(const String& Text);
+		NEXUS_ENGINE_API String& Append(const char* Text);
+		NEXUS_ENGINE_API String& Replace(const String& Old, const String& New);
+		NEXUS_ENGINE_API String& Replace(const String& Old, const char* New);
+		NEXUS_ENGINE_API String& Replace(const char* Old, const String& New);
+		NEXUS_ENGINE_API String& Replace(const char* Old, const char* New);
+		NEXUS_ENGINE_API String& Assign(const String& OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Assign(const String& OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Assign(const char* OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Assign(const char* OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Insert(const String& ReferenceText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Insert(const String& ReferenceText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Insert(const char* ReferenceText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Insert(const char* ReferenceText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Remove(const String& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Remove(const char* Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Clear();
+
+		NEXUS_ENGINE_API void Grow(uint64 Size);
+		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
+
+		NEXUS_ENGINE_API const char* C() const { return GetBuffer(); }
+		NEXUS_ENGINE_API uint64 IsEmpty() const { return Count == 0; }
+		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
+		NEXUS_ENGINE_API uint64 GetCapacity() const { return Capacity; }
+
+		NEXUS_ENGINE_API static String Empty;
+		NEXUS_ENGINE_API static const uint8 SmallStringCapacity = 16;
+
+	private:
+		NEXUS_ENGINE_API void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
+		NEXUS_ENGINE_API void Reallocate(uint64 Bytes);
+		NEXUS_ENGINE_API void Free();
+		NEXUS_ENGINE_API void Resize(uint64 Size);
+		NEXUS_ENGINE_API void ValidateCapacityCount(uint64 Bytes, uint64 Size);
+		NEXUS_ENGINE_API void ValidateNullTermination();
+		NEXUS_ENGINE_API void Append(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API void Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
+
+		template<typename ModifyFunction>
+		void Modify(ModifyFunction&& Function)
+		{
+			Count = Function(GetData(), Capacity);
+			if (Count >= Capacity)
+			{
+				Grow(Count);
+				Count = Function(GetData(), Capacity);
+			}
+			ValidateNullTermination();
+		}
+
+		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
+		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
+		NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
+
+		union Buffer
+		{
+			char* Large;
+			char Small[SmallStringCapacity];
+		};
+
+		Allocator* Allctr;
+		uint64 Capacity;
+		uint64 Count;
+		Buffer Data;
+	};
 
 	//-----------------------------------------------------------------------------------------------------------------------
 	// String Functions
@@ -162,98 +252,6 @@ namespace NxEn
 	NEXUS_ENGINE_API bool operator<=(const String& TextA, const String& TextB);
 	NEXUS_ENGINE_API bool operator<=(const String& TextA, const char* TextB);
 	NEXUS_ENGINE_API bool operator<=(const char* TextA, const String& TextB);
-
-	//-----------------------------------------------------------------------------------------------------------------------
-	// String Data
-	//-----------------------------------------------------------------------------------------------------------------------
-
-	class String
-	{
-		friend StringUtility;
-
-	public:
-		NEXUS_ENGINE_API String();
-		NEXUS_ENGINE_API String(uint64 Bytes);
-		NEXUS_ENGINE_API String(const char* Text);
-		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
-		NEXUS_ENGINE_API String(const String& Other);
-		NEXUS_ENGINE_API String(String&& Other) noexcept;
-		NEXUS_ENGINE_API ~String();
-
-		NEXUS_ENGINE_API String& operator=(const String& Other);
-		NEXUS_ENGINE_API String& operator+=(const String& Other);
-		NEXUS_ENGINE_API String& operator+=(const char* Other);
-		NEXUS_ENGINE_API String& operator-=(const String& Other);
-		NEXUS_ENGINE_API String& operator-=(const char* Other);
-
-		NEXUS_ENGINE_API String& Append(const String& Text);
-		NEXUS_ENGINE_API String& Append(const char* Text);
-		NEXUS_ENGINE_API String& Replace(const String& Old, const String& New);
-		NEXUS_ENGINE_API String& Replace(const String& Old, const char* New);
-		NEXUS_ENGINE_API String& Replace(const char* Old, const String& New);
-		NEXUS_ENGINE_API String& Replace(const char* Old, const char* New);
-		NEXUS_ENGINE_API String& Assign(const String& OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Assign(const String& OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Assign(const char* OldText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Assign(const char* OldText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const String& ReferenceText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const String& ReferenceText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const char* ReferenceText, const String& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const char* ReferenceText, const char* NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Remove(const String& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Remove(const char* Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Clear();
-
-		NEXUS_ENGINE_API void Grow(uint64 Size);
-		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
-
-		NEXUS_ENGINE_API const char* C() const { return GetBuffer(); }
-		NEXUS_ENGINE_API uint64 IsEmpty() const { return Count == 0; }
-		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
-		NEXUS_ENGINE_API uint64 GetCapacity() const { return Capacity; }
-
-		NEXUS_ENGINE_API static String Empty;
-		NEXUS_ENGINE_API static const uint8 SmallStringCapacity = 16;
-
-	private:
-		NEXUS_ENGINE_API void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
-		NEXUS_ENGINE_API void Reallocate(uint64 Bytes);
-		NEXUS_ENGINE_API void Free();
-		NEXUS_ENGINE_API void Resize(uint64 Size);
-		NEXUS_ENGINE_API void ValidateCapacityCount(uint64 Bytes, uint64 Size);
-		NEXUS_ENGINE_API void ValidateNullTermination();
-		NEXUS_ENGINE_API void Append(const char* Text, uint64 Size);
-		NEXUS_ENGINE_API void Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
-
-		template<typename ModifyFunction>
-		void Modify(ModifyFunction&& Function)
-		{
-			Count = Function(GetData(), Capacity);
-			if (Count >= Capacity)
-			{
-				Grow(Count);
-				Count = Function(GetData(), Capacity);
-			}
-			ValidateNullTermination();
-		}
-
-		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
-		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
-		NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
-
-		union Buffer
-		{
-			char* Large;
-			char Small[SmallStringCapacity];
-		};
-
-		Allocator* Allctr;
-		uint64 Capacity;
-		uint64 Count;
-		Buffer Data;
-	};
 
 	template<class H>
 	struct Hash<String, H>
