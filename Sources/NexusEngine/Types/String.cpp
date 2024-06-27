@@ -124,37 +124,37 @@ namespace NxEn
 		return *this;
 	}
 
-	bool String::Start(const StringView& Substring)
+	bool String::Start(const StringView& Substring) const
 	{
 		return StringUtility::Start(C(), Substring);
 	}
 
-	bool String::End(const StringView& Substring)
+	bool String::End(const StringView& Substring) const
 	{
 		return StringUtility::End(C(), Substring);
 	}
 
-	bool String::Contains(const StringView& Substring)
+	bool String::Contains(const StringView& Substring) const
 	{
 		return StringUtility::Contains(C(), Substring);
 	}
 
-	StringView String::Find(const StringView& Substring, uint64 Offset)
+	StringView String::Find(const StringView& Substring, uint64 Offset) const
 	{
 		return StringUtility::Find(C(), Substring, Offset);
 	}
 
-	List<StringView> String::FindAll(const StringView& Substring)
+	List<StringView> String::FindAll(const StringView& Substring) const
 	{
 		return Move(StringUtility::FindAll(C(), Substring));
 	}
 
-	StringView String::Split(const StringView& Substring, uint64 Offset)
+	StringView String::Split(const StringView& Substring, uint64 Offset) const
 	{
 		return StringUtility::Split(C(), Substring, Offset);
 	}
 
-	List<StringView> String::SplitAll(const StringView& Substring)
+	List<StringView> String::SplitAll(const StringView& Substring) const
 	{
 		return Move(StringUtility::SplitAll(C(), Substring));
 	}
@@ -431,37 +431,37 @@ namespace NxEn
 	{
 	}
 
-	bool StringView::Start(const StringView& Substring)
+	bool StringView::Start(const StringView& Substring) const
 	{
 		return StringUtility::Start(C(), Substring);
 	}
 
-	bool StringView::End(const StringView& Substring)
+	bool StringView::End(const StringView& Substring) const
 	{
 		return StringUtility::End(C(), Substring);
 	}
 
-	bool StringView::Contains(const StringView& Substring)
+	bool StringView::Contains(const StringView& Substring) const
 	{
 		return StringUtility::Contains(C(), Substring);
 	}
 
-	StringView StringView::Find(const StringView& Substring, uint64 Offset)
+	StringView StringView::Find(const StringView& Substring, uint64 Offset) const
 	{
 		return StringUtility::Find(C(), Substring, Offset);
 	}
 
-	List<StringView> StringView::FindAll(const StringView& Substring)
+	List<StringView> StringView::FindAll(const StringView& Substring) const
 	{
 		return Move(StringUtility::FindAll(C(), Substring));
 	}
 
-	StringView StringView::Split(const StringView& Substring, uint64 Offset)
+	StringView StringView::Split(const StringView& Substring, uint64 Offset) const
 	{
 		return StringUtility::Split(C(), Substring, Offset);
 	}
 
-	List<StringView> StringView::SplitAll(const StringView& Substring)
+	List<StringView> StringView::SplitAll(const StringView& Substring) const
 	{
 		return Move(StringUtility::SplitAll(C(), Substring));
 	}

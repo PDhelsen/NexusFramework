@@ -44,13 +44,13 @@ namespace NxEn
 		NEXUS_ENGINE_API String& Remove(const StringView& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Clear();
 
-		NEXUS_ENGINE_API bool Start(const StringView& Substring);
-		NEXUS_ENGINE_API bool End(const StringView& Substring);
-		NEXUS_ENGINE_API bool Contains(const StringView& Substring);
-		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0);
-		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring);
-		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0);
-		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring);
+		NEXUS_ENGINE_API bool Start(const StringView& Substring) const;
+		NEXUS_ENGINE_API bool End(const StringView& Substring) const;
+		NEXUS_ENGINE_API bool Contains(const StringView& Substring) const;
+		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring) const;
+		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring) const;
 
 		NEXUS_ENGINE_API void Grow(uint64 Size);
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);
@@ -102,13 +102,13 @@ namespace NxEn
 		NEXUS_ENGINE_API StringView(const char* Text, uint64 Size);
 		NEXUS_ENGINE_API StringView(const String& Text);
 
-		NEXUS_ENGINE_API bool Start(const StringView& Substring);
-		NEXUS_ENGINE_API bool End(const StringView& Substring);
-		NEXUS_ENGINE_API bool Contains(const StringView& Substring);
-		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0);
-		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring);
-		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0);
-		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring);
+		NEXUS_ENGINE_API bool Start(const StringView& Substring) const;
+		NEXUS_ENGINE_API bool End(const StringView& Substring) const;
+		NEXUS_ENGINE_API bool Contains(const StringView& Substring) const;
+		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring) const;
+		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring) const;
 
 		NEXUS_ENGINE_API String ToString() const;
 		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size) const;
