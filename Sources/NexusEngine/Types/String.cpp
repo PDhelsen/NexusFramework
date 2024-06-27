@@ -493,9 +493,24 @@ namespace NxEn
 		return Id == Other.Id;
 	}
 
+	bool StringId::operator==(GUID Other) const
+	{
+		return Id == Other;
+	}
+
 	bool StringId::operator!=(const StringId& Other) const
 	{
 		return !(*this == Other);
+	}
+
+	bool StringId::operator!=(GUID Other) const
+	{
+		return !(*this == Other);
+	}
+
+	StringId::operator GUID() const
+	{
+		return Id;
 	}
 
 	GUID StringId::InternString(const StringView& Text)
@@ -506,6 +521,11 @@ namespace NxEn
 			Tables.AppendConstruct(Id, Text);
 		}
 		return Id;
+	}
+
+	StringId operator""_Sid(const char* Text, uint64 Size)
+	{
+		return StringId(StringView(Text, Size));
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------------

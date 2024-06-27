@@ -128,7 +128,10 @@ namespace NxEn
 		NEXUS_ENGINE_API explicit StringId(const StringView& Text);
 
 		NEXUS_ENGINE_API bool operator==(const StringId& Other) const;
+		NEXUS_ENGINE_API bool operator==(GUID Other) const;
 		NEXUS_ENGINE_API bool operator!=(const StringId& Other) const;
+		NEXUS_ENGINE_API bool operator!=(GUID Other) const;
+		NEXUS_ENGINE_API operator GUID() const;
 
 		NEXUS_ENGINE_API const String& ToString() const { return Tables[Id]; };
 		NEXUS_ENGINE_API const GUID GetId() const { return Id; };
@@ -140,6 +143,8 @@ namespace NxEn
 
 		const GUID Id;
 	};
+
+	NEXUS_ENGINE_API StringId operator""_Sid(const char* Text, uint64 Size);
 
 	//-----------------------------------------------------------------------------------------------------------------------
 	// String Functions
@@ -284,3 +289,5 @@ namespace NxEn
 		}
 	};
 }
+
+using NxEn::operator""_Sid;

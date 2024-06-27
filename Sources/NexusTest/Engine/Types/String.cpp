@@ -1,6 +1,7 @@
 #include "Core/NexusTestPch.h"
 #include "Types/String.h"
 
+
 namespace NxTs
 {
 	TEST(Type_String, String)
@@ -94,7 +95,7 @@ namespace NxTs
 
 	TEST(Type_String, Id)
 	{
-		NxEn::StringId Id = NxEn::StringId("Hello World");
+		NxEn::StringId Id = "Hello World"_Sid;
 
 		NxEn::StringId Test1 = NxEn::StringId("Hello World");
 		NxEn::StringId Test2 = NxEn::StringId("World Hello");
