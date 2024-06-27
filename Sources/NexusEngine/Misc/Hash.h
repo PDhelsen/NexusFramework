@@ -7,9 +7,13 @@
 
 namespace NxEn
 {
+	using GUID = uint64;
+
 	class Fnv1a64;
 
-	using GUID = uint64;
+	//-----------------------------------------------------------------------------------------------------------------------
+	// Hash Proxy
+	//-----------------------------------------------------------------------------------------------------------------------
 
 	// TODO: Architecture - Hash - Strategy Pattern
 	template<typename T = const void*, class H = Fnv1a64>
@@ -30,6 +34,100 @@ namespace NxEn
 			return H::Combine(HashA, HashB);
 		}
 	};
+
+	template<class H>
+	struct Hash<bool, H>
+	{
+		static H::HashLength HashObject(const bool& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<char, H>
+	{
+		static H::HashLength HashObject(const char& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<int8, H>
+	{
+		static H::HashLength HashObject(const int8& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<int16, H>
+	{
+		static H::HashLength HashObject(const int16& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<int32, H>
+	{
+		static H::HashLength HashObject(const int32& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<int64, H>
+	{
+		static H::HashLength HashObject(const int64& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<uint8, H>
+	{
+		static H::HashLength HashObject(const uint8& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<uint16, H>
+	{
+		static H::HashLength HashObject(const uint16& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<uint32, H>
+	{
+		static H::HashLength HashObject(const uint32& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	template<class H>
+	struct Hash<uint64, H>
+	{
+		static H::HashLength HashObject(const uint64& Data, H::HashLength Seed = 0)
+		{
+			return Data;
+		}
+	};
+
+	//-----------------------------------------------------------------------------------------------------------------------
+	// Hash Function
+	//-----------------------------------------------------------------------------------------------------------------------
 
 	template<typename T>
 	class HashFunction
