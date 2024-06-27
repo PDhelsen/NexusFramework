@@ -9,6 +9,8 @@ namespace NxEn
 {
 	class Fnv1a64;
 
+	using GUID = uint64;
+
 	// TODO: Architecture - Hash - Strategy Pattern
 	template<typename T = const void*, class H = Fnv1a64>
 	struct Hash

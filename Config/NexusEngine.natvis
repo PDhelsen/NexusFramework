@@ -25,6 +25,10 @@
 			</ArrayItems>
 		</Expand>
 	</Type>
+
+	<Type Name="NxEn::StringId">
+		<DisplayString>{ Id }</DisplayString>
+	</Type>
 	
   <Type Name="NxEn::Array&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>

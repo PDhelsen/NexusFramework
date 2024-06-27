@@ -478,6 +478,37 @@ namespace NxEn
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------------
+	// String Id
+	//-----------------------------------------------------------------------------------------------------------------------
+
+	Dictionary<GUID, String> StringId::Tables = Dictionary<GUID, String>();
+
+	StringId::StringId(const StringView& Text)
+		: Id(InternString(Text))
+	{
+	}
+
+	bool StringId::operator==(const StringId& Other) const
+	{
+		return Id == Other.Id;
+	}
+
+	bool StringId::operator!=(const StringId& Other) const
+	{
+		return !(*this == Other);
+	}
+
+	GUID StringId::InternString(const StringView& Text)
+	{
+		GUID Id = Hash<StringView>::HashObject(Text);
+		if (!Tables.ContainsKey(Id))
+		{
+			Tables.AppendConstruct(Id, Text);
+		}
+		return Id;
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------------
 	// String C Api
 	//-----------------------------------------------------------------------------------------------------------------------
 

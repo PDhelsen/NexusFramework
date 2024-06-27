@@ -12,7 +12,8 @@ namespace NxEn
 	// TODO: Optimization - Copy / Move - Operator + Self assignement check
 
 	class String;
-	class StringView;
+	struct StringView;
+	struct StringId;
 
 	//-----------------------------------------------------------------------------------------------------------------------
 	// String Data
@@ -94,7 +95,7 @@ namespace NxEn
 		Buffer Data;
 	};
 
-	class StringView
+	struct StringView
 	{
 	public:
 		NEXUS_ENGINE_API StringView(const char* Text);
@@ -119,6 +120,25 @@ namespace NxEn
 	private:
 		const char* Data;
 		uint64 Count;
+	};
+
+	struct StringId
+	{
+	public:
+		NEXUS_ENGINE_API explicit StringId(const StringView& Text);
+
+		NEXUS_ENGINE_API bool operator==(const StringId& Other) const;
+		NEXUS_ENGINE_API bool operator!=(const StringId& Other) const;
+
+		NEXUS_ENGINE_API const String& ToString() const { return Tables[Id]; };
+		NEXUS_ENGINE_API const GUID GetId() const { return Id; };
+
+	private:
+		static GUID InternString(const StringView& Text);
+
+		static Dictionary<GUID, String> Tables;
+
+		const GUID Id;
 	};
 
 	//-----------------------------------------------------------------------------------------------------------------------
@@ -252,6 +272,15 @@ namespace NxEn
 			H Hashing = H(Seed);
 			Hashing.Accumulate(Data.C(), Data.GetCount());
 			return Hashing.Hash();
+		}
+	};
+
+	template<class H>
+	struct Hash<StringId, H>
+	{
+		static H::HashLength HashObject(const StringId& Data, H::HashLength Seed = 0)
+		{
+			return Data.GetId();
 		}
 	};
 }
