@@ -9,6 +9,7 @@
 
 #include "Types/Integer.h"
 #include "Types/Enum.h"
+#include "Types/String.h"
 #include "Types/Timestamp.h"
 #include "Types/Containers/Node.h"
 #include "Types/Containers/Iterator.h"

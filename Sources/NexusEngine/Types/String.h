@@ -3,6 +3,7 @@
 #include "Core/NexusEngineCore.h"
 #include "Types/Integer.h"
 #include "Types/Containers/List.h"
+#include "Types/Containers/Dictionary.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
 #include "External/StandardLibrary.h"
