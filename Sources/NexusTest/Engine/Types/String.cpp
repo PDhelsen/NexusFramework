@@ -1,7 +1,6 @@
 #include "Core/NexusTestPch.h"
 #include "Types/String.h"
 
-
 namespace NxTs
 {
 	TEST(Type_String, String)
@@ -46,6 +45,21 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCapacity(), 100);
 		Test.Shrink();
 		ASSERT_EQ(Test.GetCapacity(), 17);
+
+		NxEn::String TestFormat = NxEn::String();
+		TestFormat.Format("Hello %i World %.1f, %s", 10, 20.0f, "Hello World");
+		ASSERT_EQ(TestFormat, "Hello 10 World 20.0, Hello World");
+		NxEn::String TestScan1;
+		NxEn::String TestScan2;
+		int32 TestScan3;
+		float TestScan4;
+		TestFormat.Scan("%s %d %s %f", TestScan1.C(), &TestScan3, TestScan2.C(), &TestScan4);
+		TestScan1.Validate();
+		TestScan2.Validate();
+		ASSERT_EQ(TestScan1, "Hello");
+		ASSERT_EQ(TestScan2, "World");
+		ASSERT_EQ(TestScan3, 10);
+		ASSERT_EQ(TestScan4, 20.0f);
 	}
 
 	TEST(Type_String, View)
@@ -135,7 +149,7 @@ namespace NxTs
 		ASSERT_EQ(Test3, "Hello 10 World 20.0, Hello World");
 		int32 Day = 0, Year = 0;
 		NxEn::String Weekday = NxEn::String(), Month = NxEn::String();
-		NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d  %d", Weekday.C(), Month.C(), &Day, &Year);
+		NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d %d", Weekday.C(), Month.C(), &Day, &Year);
 		Weekday.Validate();
 		Month.Validate();
 		ASSERT_EQ(Day, 25);

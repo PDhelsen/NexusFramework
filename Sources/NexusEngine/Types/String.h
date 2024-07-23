@@ -45,6 +45,13 @@ namespace NxEn
 		NEXUS_ENGINE_API String& Remove(const StringView& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Clear();
 
+		template<typename... Args>
+		void Format(const StringView& Format, Args&&... args);
+		template<typename... Args>
+		void Format(uint64 Size, const StringView& Format, Args&&... args);
+		template<typename... Args>
+		void Scan(const StringView& Format, Args&&... args);
+
 		NEXUS_ENGINE_API bool Start(const StringView& Substring) const;
 		NEXUS_ENGINE_API bool End(const StringView& Substring) const;
 		NEXUS_ENGINE_API bool Contains(const StringView& Substring) const;
@@ -72,7 +79,7 @@ namespace NxEn
 		void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
 		void Reallocate(uint64 Bytes);
 		void Free();
-		void Resize(uint64 Size);
+		NEXUS_ENGINE_API void Resize(uint64 Size);
 		void ValidateCapacityCount(uint64 Bytes, uint64 Size);
 		void ValidateNullTermination();
 		void Append(const char* Text, uint64 Size);
@@ -145,8 +152,6 @@ namespace NxEn
 		const GUID Id;
 	};
 
-	NEXUS_ENGINE_API StringId operator""_Sid(const char* Text, uint64 Size);
-
 	//-----------------------------------------------------------------------------------------------------------------------
 	// String Functions
 	//-----------------------------------------------------------------------------------------------------------------------
@@ -191,33 +196,11 @@ namespace NxEn
 		};
 
 		template<typename... Args>
-		static String Format(const StringView& Text, Args&&... args)
-		{
-			String Result = String(Text.GetCount() + sizeof...(args) * GuessFormatingSize);
-			uint64 Size = StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text.C(), args...);
-			if (Size >= Result.GetCapacity())
-			{
-				Result.Grow(Size);
-				StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text.C(), args...);
-			}
-			Result.Validate();
-			return Move(Result);
-		}
-
+		static String Format(const StringView& Format, Args&&... args);
 		template<typename... Args>
-		static String Format(uint64 Size, const StringView& Text, Args&&... args)
-		{
-			String Result = String(Size);
-			StringCApi::Format(Result.GetCapacity(), Result.GetData(), Text.C(), args...);
-			Result.Validate();
-			return Move(Result);
-		}
-
+		static String Format(uint64 Size, const StringView& Format, Args&&... args);
 		template<typename... Args>
-		static void Scan(const StringView& Text, Args&&... args)
-		{
-			StringCApi::Scan(Text.C(), args...);
-		}
+		static void Scan(const StringView& Text, const StringView& Format, Args&&... args);
 
 		NEXUS_ENGINE_API static bool Start(const StringView& Text, const StringView& Substring);
 		NEXUS_ENGINE_API static bool End(const StringView& Text, const StringView& Substring);
@@ -258,6 +241,59 @@ namespace NxEn
 	NEXUS_ENGINE_API bool operator>=(const StringView& TextA, const StringView& TextB);
 	NEXUS_ENGINE_API bool operator<(const StringView& TextA, const StringView& TextB);
 	NEXUS_ENGINE_API bool operator<=(const StringView& TextA, const StringView& TextB);
+	NEXUS_ENGINE_API StringId operator""_Sid(const char* Text, uint64 Size);
+
+	//-----------------------------------------------------------------------------------------------------------------------
+	// String Template Implementation
+	//-----------------------------------------------------------------------------------------------------------------------
+
+	template<typename... Args>
+	void String::Format(const StringView& Format, Args&&... args)
+	{
+		uint64 Size = StringCApi::Format(GetCapacity(), GetData(), Format.C(), args...);
+		if (Size >= GetCapacity())
+		{
+			Resize(Size);
+			StringCApi::Format(GetCapacity(), GetData(), Format.C(), args...);
+		}
+		Validate();
+	}
+
+	template<typename... Args>
+	void String::Format(uint64 Size, const StringView& Format, Args&&... args)
+	{
+		Resize(Size);
+		StringCApi::Format(GetCapacity(), GetData(), Format.C(), args...);
+		Validate();
+	}
+
+	template<typename... Args>
+	void String::Scan(const StringView& Format, Args&&... args)
+	{
+		StringCApi::Scan(C(), Format.C(), args...);
+	}
+
+	template<typename... Args>
+	static String StringUtility::Format(const StringView& Format, Args&&... args)
+	{
+		String Result = String(Format.GetCount() + sizeof...(args) * GuessFormatingSize);
+		Result.Format(Format, args...);
+		return Move(Result);
+	}
+
+	template<typename... Args>
+	static String StringUtility::Format(uint64 Size, const StringView& Format, Args&&... args)
+	{
+		String Result = String(Size);
+		Result.Format(Size, Format, args...);
+		return Move(Result);
+	}
+
+	template<typename... Args>
+	static void StringUtility::Scan(const StringView& Text, const StringView& Format, Args&&... args)
+	{
+		StringCApi::Scan(Text.C(), Format.C(), args...);
+	}
 
 	template<class H>
 	struct Hash<String, H>

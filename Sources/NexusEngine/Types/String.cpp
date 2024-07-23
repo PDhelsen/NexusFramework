@@ -523,11 +523,6 @@ namespace NxEn
 		return Id;
 	}
 
-	StringId operator""_Sid(const char* Text, uint64 Size)
-	{
-		return StringId(StringView(Text, Size));
-	}
-
 	//-----------------------------------------------------------------------------------------------------------------------
 	// String C Api
 	//-----------------------------------------------------------------------------------------------------------------------
@@ -910,5 +905,10 @@ namespace NxEn
 			return TextA.GetCount() <= TextB.GetCount();
 		}
 		return Comparaison <= 0;
+	}
+
+	StringId operator""_Sid(const char* Text, uint64 Size)
+	{
+		return StringId(StringView(Text, Size));
 	}
 }
