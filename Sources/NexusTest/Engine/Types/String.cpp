@@ -1,6 +1,7 @@
 #include "Core/NexusTestPch.h"
 
 #include "Types/String.h"
+#include "Types/StringFunctions.h"
 
 namespace NxTs
 {
@@ -46,21 +47,6 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCapacity(), 100);
 		Test.Shrink();
 		ASSERT_EQ(Test.GetCapacity(), 17);
-
-		NxEn::String TestFormat = NxEn::String();
-		TestFormat.Format("Hello %i World %.1f, %s", 10, 20.0f, "Hello World");
-		ASSERT_EQ(TestFormat, "Hello 10 World 20.0, Hello World");
-		NxEn::String TestScan1;
-		NxEn::String TestScan2;
-		int32 TestScan3;
-		float TestScan4;
-		TestFormat.Scan("%s %d %s %f", TestScan1.C(), &TestScan3, TestScan2.C(), &TestScan4);
-		TestScan1.Validate();
-		TestScan2.Validate();
-		ASSERT_EQ(TestScan1, "Hello");
-		ASSERT_EQ(TestScan2, "World");
-		ASSERT_EQ(TestScan3, 10);
-		ASSERT_EQ(TestScan4, 20.0f);
 	}
 
 	TEST(Type_String, View)

@@ -1,0 +1,38 @@
+#pragma once
+
+#include "Core/NexusEngine.h"
+#include "Types/Integer.h"
+
+namespace NxEn
+{
+	class StringCApi
+	{
+	public:
+		NEXUS_ENGINE_API static void Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe);
+		NEXUS_ENGINE_API static const char* SearchStr(const char* Source, const char* Substring, uint64 Size);
+
+		NEXUS_ENGINE_API static uint64 Length(const char* Text);
+		NEXUS_ENGINE_API static int8 Compare(const char* Text1, const char* Text2);
+		NEXUS_ENGINE_API static int8 Compare(const char* Text1, const char* Text2, uint64 Size);
+		NEXUS_ENGINE_API static void Copy(const char* Source, char* Destination, uint64 Capacity);
+		NEXUS_ENGINE_API static void Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size);
+		NEXUS_ENGINE_API static void Concat(const char* Source, char* Destination, uint64 Capacity);
+		NEXUS_ENGINE_API static void Concat(const char* Source, char* Destination, uint64 Capacity, uint64 Size);
+		NEXUS_ENGINE_API static const char* SearchStr(const char* Source, const char* Substring);
+		NEXUS_ENGINE_API static const char* SearchChr(const char* Source, const char* Substring);
+		NEXUS_ENGINE_API static uint64 Format(uint64 Capacity, char* Text, const char* Format, ...);
+		NEXUS_ENGINE_API static void Scan(const char* Text, const char* Format, ...);
+
+		NEXUS_ENGINE_API static  int64 ToInteger(const char* Text, int32 Radix = 10);
+		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10);
+		NEXUS_ENGINE_API static double ToDouble(const char* Text);
+
+		NEXUS_ENGINE_API static uint64 ToStringI(int64 Number, uint64 Capacity, char* Text, const char* Frmt = "%d");
+		NEXUS_ENGINE_API static uint64 ToStringU(uint64 Number, uint64 Capacity, char* Text, const char* Frmt = "%d");
+		NEXUS_ENGINE_API static uint64 ToStringF(float Number, uint64 Capacity, char* Text, const char* Frmt = "%.2f");
+		NEXUS_ENGINE_API static uint64 ToStringD(double Number, uint64 Capacity, char* Text, const char* Frmt = "%.2f");
+		NEXUS_ENGINE_API static uint64 ToStringB(bool State, uint64 Capacity, char* Text, const char* Frmt = "%s");
+
+		NEXUS_ENGINE_API static const char NullChar = '\0';
+	};
+}
