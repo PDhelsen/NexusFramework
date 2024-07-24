@@ -358,7 +358,7 @@ namespace NxEn
 		}
 
 		K = 0;
-		const uint8_t* Tail = reinterpret_cast<const uint8*>(Pointer + NbBlocks * 4);
+		const uint8* Tail = reinterpret_cast<const uint8*>(Pointer + NbBlocks * 4);
 		switch (Length & 3)
 		{
 #pragma warning(push)
