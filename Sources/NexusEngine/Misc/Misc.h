@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
-#include "Types/Integer.h"
+#include "Core/NexusEngineCore.h"
 
 namespace NxEn
 {

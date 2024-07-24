@@ -31,14 +31,6 @@
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
 
-#include "Memory/Memory.h"
-#include "Memory/Handle/Handle.h"
-#include "Memory/Handle/HandleManager.h"
-#include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/StackAllocator.h"
-#include "Memory/Allocator/HeapAllocator.h"
-#include "Memory/Allocator/PoolAllocator.h"
-
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"
 
@@ -46,3 +38,11 @@
 #include "Misc/Hash.h"
 #include "Misc/Misc.h"
 #include "Misc/Sort.h"
+
+#include "Memory/Memory.h"
+#include "Memory/Handle/Handle.h"
+#include "Memory/Handle/HandleManager.h"
+#include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/StackAllocator.h"
+#include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Allocator/PoolAllocator.h"
