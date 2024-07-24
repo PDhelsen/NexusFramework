@@ -2,11 +2,12 @@
 
 #include "Core/NexusEngine.h"
 #include "Memory/Handle/Handle.h"
-#include "Memory/Allocator/PoolAllocator.h"
 
 namespace NxEn
 {
 	// Manage the global array of data pointer referenced by the Handle
+
+	class PoolAllocator;
 
 	class HandleManager
 	{
@@ -32,7 +33,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
 		// TEMP: Replace - Container - Once we have custom pool
-		PoolAllocator Pool;
+		PoolAllocator* Pool;
 
 		static HandleManager* Instance;
 	};

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Integer.h"
+#include "Types/Integer.h"
 
 namespace NxEn
 {

@@ -6,17 +6,20 @@ namespace NxEn
 	HandleManager* HandleManager::Instance = new HandleManager();
 
 	HandleManager::HandleManager()
-		: Pool(PoolAllocator(NEXUS_HANDLE_COUNT, sizeof(void*)))
 	{
+		AllocatorActive Active(nullptr);
+		Pool = new PoolAllocator(NEXUS_HANDLE_COUNT, sizeof(void*));
 	}
 
 	HandleManager::~HandleManager()
 	{
+		AllocatorActive Active(nullptr);
+		delete Pool;
 	}
 
 	void* HandleManager::AllocateHandle(void* Pointer)
 	{
-		uint64* Handle = (uint64*)Pool.Allocate();
+		uint64* Handle = (uint64*)Pool->Allocate();
 		*Handle = reinterpret_cast<uint64>(Pointer);
 		return Handle;
 	}
@@ -29,7 +32,7 @@ namespace NxEn
 	
 	void HandleManager::FreeHandle(void* Handle)
 	{
-		Pool.Free(Handle);
+		Pool->Free(Handle);
 	}
 
 	// TODO: Optimization - Algo - Retreive handle
@@ -37,7 +40,7 @@ namespace NxEn
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		uint64* Memory = (uint64*)Pool.GetMemoryBlock();
+		uint64* Memory = (uint64*)Pool->GetMemoryBlock();
 		for (int i = 0; i < NEXUS_HANDLE_COUNT; i++)
 		{
 			uint64 Handle = Memory[i];
