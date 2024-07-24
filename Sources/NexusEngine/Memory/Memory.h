@@ -4,11 +4,6 @@
 #include "Types/Integer.h"
 #include "Debug/Assert.h"
 
-#include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/StackAllocator.h"
-#include "Memory/Allocator/HeapAllocator.h"
-#include "Memory/Allocator/PoolAllocator.h"
-
 namespace NxEn
 {
 	// Memory
@@ -22,6 +17,11 @@ namespace NxEn
 #define NEXUS_HEAP_SIZE 1024 * 1024
 
 #define NEXUS_HANDLE_COUNT 1024
+
+	class Allocator;
+	class StackAllocator;
+	class HeapAllocator;
+	class PoolAllocator;
 
 	class Memory
 	{
