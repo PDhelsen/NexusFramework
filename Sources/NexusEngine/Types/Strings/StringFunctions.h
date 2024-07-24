@@ -1,12 +1,11 @@
 #pragma once
 
 #include "Core/NexusEngine.h"
-#include "Misc/References.h"
 #include "Types/Integer.h"
-#include "Types/String.h"
-#include "Types/StringView.h"
-#include "Types/StringId.h"
-#include "Types/StringCApi.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
+#include "Types/Strings/StringId.h"
+#include "Types/Strings/StringCApi.h"
 
 namespace NxEn
 {

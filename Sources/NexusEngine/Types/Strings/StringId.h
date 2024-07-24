@@ -3,8 +3,8 @@
 #include "Core/NexusEngine.h"
 #include "Misc/Hash.h"
 #include "Types/Integer.h"
-#include "Types/String.h"
-#include "Types/StringView.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
 
 namespace NxEn
 {

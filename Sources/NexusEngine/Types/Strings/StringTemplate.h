@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Misc/Hash.h"
-#include "Types/String.h"
-#include "Types/StringFunctions.h"
-#include "Types/StringCApi.h"
+#include "Misc/References.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringFunctions.h"
+#include "Types/Strings/StringCApi.h"
 
 namespace NxEn
 {

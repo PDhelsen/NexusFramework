@@ -2,7 +2,7 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
-#include "Types/String.h"
+#include "Types/Strings/String.h"
 
 namespace NxEn
 {

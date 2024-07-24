@@ -1,7 +1,11 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/String.h"
-#include "Types/StringFunctions.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringId.h"
+#include "Types/Strings/StringView.h"
+#include "Types/Strings/StringCApi.h"
+#include "Types/Strings/StringFunctions.h"
+#include "Types/Strings/StringTemplate.h"
 
 namespace NxTs
 {
