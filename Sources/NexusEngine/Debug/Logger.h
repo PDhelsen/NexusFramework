@@ -8,9 +8,6 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 
-// TEMP: Remove - Container - Once we have custom dictionary
-#include "External/StandardLibrary.h"
-
 namespace NxEn
 {
 	class Fnv1a64;
