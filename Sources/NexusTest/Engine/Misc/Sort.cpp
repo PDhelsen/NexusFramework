@@ -1,7 +1,6 @@
 #include "Core/NexusTestPch.h"
 
 #include "Misc/Sort.h"
-#include "Types/Containers/Array.h"
 
 namespace NxTs
 {
