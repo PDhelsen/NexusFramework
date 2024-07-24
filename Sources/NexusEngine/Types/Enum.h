@@ -4,8 +4,8 @@
 // The Enum to String macro needs to be used in .h & .cpp. The .h macro needs to be used inside a class
 
 #define NEXUS_ENUM_TO_STRING_DEFINITION(EnumType)\
-const char* EnumType##ToString(EnumType Value) const;\
-const char* EnumType##ToString(uint64 Value) const;
+NEXUS_ENGINE_API const char* EnumType##ToString(EnumType Value) const;\
+NEXUS_ENGINE_API const char* EnumType##ToString(uint64 Value) const;
 #define NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(EnumType, Class, Count, ...)\
 static const char* EnumType##Strings[Count] = { __VA_ARGS__ };\
 const char* Class##EnumType##ToString(EnumType Value) const { return EnumType##Strings[(uint64)Value]; }\
