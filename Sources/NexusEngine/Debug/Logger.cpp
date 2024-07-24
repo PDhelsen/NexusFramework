@@ -21,8 +21,9 @@ namespace NxEn
 		StringBuilderMessage = String(1024);
 		StringBuilderFormat = String(1024);
 
-		Channels = new std::unordered_map<uint16, bool>();
-		AddChannel(0, true);
+		Channels = new Dictionary<StringView, bool, Fnv1a64, 1.0f>();
+		AddChannel(ChannelDefault, true);
+		AddChannel(ChannelAssert, true);
 	}
 
 	Logger::~Logger()
@@ -30,27 +31,27 @@ namespace NxEn
 		delete Channels;
 	}
 
-	void Logger::AddChannel(uint16 Channel, bool State /*true*/)
+	void Logger::AddChannel(const StringView& Channel, bool State /*true*/)
 	{
-		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %d", Channel)
-		Channels->emplace(Channel, State);
+		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %s", Channel.C())
+		Channels->AppendConstruct(Channel, State);
 	}
 
-	void Logger::SetChannel(uint16 Channel, bool State)
+	void Logger::SetChannel(const StringView& Channel, bool State)
 	{
-		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
-		Channels->at(Channel) = State;
+		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
+		Channels->Get(Channel) = State;
 	}
 
-	bool Logger::HasChannel(uint16 Channel) const
+	bool Logger::HasChannel(const StringView& Channel) const
 	{
-		return Channels->find(Channel) != Channels->end();
+		return Channels->ContainsKey(Channel);
 	}
 
-	bool Logger::CheckChannel(uint16 Channel) const
+	bool Logger::CheckChannel(const StringView& Channel) const
 	{
-		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %d", Channel)
-		return Channels->at(Channel);
+		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
+		return Channels->Get(Channel);
 	}
 
 	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
@@ -63,7 +64,7 @@ namespace NxEn
 		VerbosityMask = SetFlag(VerbosityMask, Verbosity, State);
 	}
 
-	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, uint16 Channel) const
+	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, const StringView& Channel) const
 	{
 		return Platform::GetInstance() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
 	}

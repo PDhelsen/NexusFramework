@@ -7,6 +7,6 @@ namespace NxEd
 {
 	void HelloWorld()
 	{
-		NEXUS_LOG(Editor, Info, 0, "Hello World")
+		NEXUS_LOG(Editor, Info, "Default", "Hello World")
 	}
 }

@@ -8,12 +8,12 @@ namespace NxTs
 	{
 		NxEn::Logger* Logger = NxEn::Logger::GetInstance();
 
-		Logger->AddChannel(1, false);
-		ASSERT_EQ(Logger->HasChannel(1), true);
-		ASSERT_EQ(Logger->CheckChannel(1), false);
+		Logger->AddChannel("Test", false);
+		ASSERT_EQ(Logger->HasChannel("Test"), true);
+		ASSERT_EQ(Logger->CheckChannel("Test"), false);
 
-		Logger->SetChannel(1, true);
-		ASSERT_EQ(Logger->CheckChannel(1), true);
+		Logger->SetChannel("Test", true);
+		ASSERT_EQ(Logger->CheckChannel("Test"), true);
 	}
 
 	TEST(Logger, Verbosity)

@@ -13,6 +13,9 @@
 
 namespace NxEn
 {
+	class Fnv1a64;
+	template <typename K, typename T, class H, float LF> class Dictionary;
+
 	// Logger
 	// There is globally available logger. It is also possible to create local logger.
 	// Keep the Verbosity & Source enum sync with the const char array in the cpp file
@@ -48,12 +51,12 @@ namespace NxEn
 		NEXUS_ENGINE_API ~Logger();
 
 		template<typename... Args>
-		void Log(LoggerSource Source, LoggerVerbosity Verbosity, uint16 Channel, const StringView& Message, Args&&... args);
+		void Log(LoggerSource Source, LoggerVerbosity Verbosity, const StringView& Channel, const StringView& Message, Args&&... args);
 
-		NEXUS_ENGINE_API void AddChannel(uint16 Channel, bool State = true);
-		NEXUS_ENGINE_API void SetChannel(uint16 Channel, bool State);
-		NEXUS_ENGINE_API bool HasChannel(uint16 Channel) const;
-		NEXUS_ENGINE_API bool CheckChannel(uint16 Channel) const;
+		NEXUS_ENGINE_API void AddChannel(const StringView& Channel, bool State = true);
+		NEXUS_ENGINE_API void SetChannel(const StringView& Channel, bool State);
+		NEXUS_ENGINE_API bool HasChannel(const StringView& Channel) const;
+		NEXUS_ENGINE_API bool CheckChannel(const StringView& Channel) const;
 
 		NEXUS_ENGINE_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
@@ -63,24 +66,27 @@ namespace NxEn
 		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
 		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
+		NEXUS_ENGINE_API inline static const String ChannelDefault = "Default";
+		NEXUS_ENGINE_API inline static const String ChannelAssert = "Assert";
+		NEXUS_ENGINE_API inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
+
 	private:
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE bool ShouldPrint(LoggerVerbosity Verbosity, uint16 Channel) const;
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE bool ShouldPrint(LoggerVerbosity Verbosity, const StringView& Channel) const;
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void Print(const String& Message, uint8 Verbosity) const;
 
-		const String Format = "[%02d:%02d:%02d][%7s][%7s][%i] %s\n";
 		static Logger* Instance;
 
 		// TEMP: Replace - String - Once we have custom string
-		std::unordered_map<uint16, bool>* Channels;
+		Dictionary<StringView, bool, Fnv1a64, 1.0f>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;
 		String StringBuilderFormat;
 	};
 
 	template<typename... Args>
-	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, uint16 Channel, const StringView& Message, Args&&... args)
+	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, const StringView& Channel, const StringView& Message, Args&&... args)
 	{
 		if (!ShouldPrint(Verbosity, Channel))
 		{
@@ -94,7 +100,7 @@ namespace NxEn
 		GatherInfo(VerbosityLevel, Source, Hours, Minutes, Seconds, SourceString, VerbosityString);
 
 		StringBuilderMessage.Format(Message, args...);
-		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, SourceString.C(), VerbosityString.C(), Channel, StringBuilderMessage.C());
+		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, SourceString.C(), VerbosityString.C(), Channel.C(), StringBuilderMessage.C());
 
 		Print(StringBuilderFormat, VerbosityLevel);
 	}

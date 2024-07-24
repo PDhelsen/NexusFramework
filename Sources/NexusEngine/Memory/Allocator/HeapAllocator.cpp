@@ -137,7 +137,7 @@ namespace NxEn
 	// TODO: Optimization - Algo - Defragment memory
 	void HeapAllocator::Defragment()
 	{
-		NEXUS_LOG(Engine, Info, 0, "Starting defragmentation (Current amount : %d)", UsedAmount());
+		NEXUS_LOG(Engine, Info, "Default", "Starting defragmentation (Current amount : %d)", UsedAmount());
 
 		HeapSlot* Slot = Root;
 		while (true)
@@ -185,7 +185,7 @@ namespace NxEn
 				Memory::MemCopy(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = GetHeapSlotData(Slot);
 				HandleManager::GetInstance()->UpdateHandle(Handle, Data);
-				NEXUS_LOG(Engine, Info, 0, "Moved from %p to %p", Slot->Next, Slot);
+				NEXUS_LOG(Engine, Info, "Default", "Moved from %p to %p", Slot->Next, Slot);
 
 				// Update HeapSlot
 				uint64 NewAddress = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot) + NextSize;
@@ -199,7 +199,7 @@ namespace NxEn
 			}
 		}
 
-		NEXUS_LOG(Engine, Info, 0, "End defragmentation (Current amount : %d)", UsedAmount());
+		NEXUS_LOG(Engine, Info, "Default", "End defragmentation (Current amount : %d)", UsedAmount());
 	}
 
 	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const

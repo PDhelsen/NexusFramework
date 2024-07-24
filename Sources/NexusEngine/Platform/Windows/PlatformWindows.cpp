@@ -33,7 +33,7 @@ namespace NxEn
 		auto dll = LoadLibraryA(DllName);
 		if (dll == nullptr)
 		{
-			NEXUS_LOG(Engine, Error, 0, "Failed to load library")
+			NEXUS_LOG(Engine, Error, "Default", "Failed to load library")
 			return;
 		}
 
@@ -41,7 +41,7 @@ namespace NxEn
 		ProjectFunction function = (ProjectFunction)GetProcAddress(dll, MAKEINTRESOURCEA(Ordinal));
 		if (function == nullptr)
 		{
-			NEXUS_LOG(Engine, Error, 0, "Failed to load function")
+			NEXUS_LOG(Engine, Error, "Default", "Failed to load function")
 			FreeLibrary(dll);
 			return;
 		}

@@ -98,4 +98,13 @@ namespace NxEn
 			return Data.GetId();
 		}
 	};
+
+	template<class H>
+	struct Hash<const char*, H>
+	{
+		static H::HashLength HashObject(const char* Data, H::HashLength Seed = 0)
+		{
+			return H::Hash(Data, StringCApi::Length(Data), Seed);
+		}
+	};
 }
