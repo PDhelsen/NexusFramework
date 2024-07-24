@@ -3,7 +3,6 @@
 #include "External/Intrinsics.h"
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
-#include "Debug/Assert.h"
 
 namespace NxEn
 {
