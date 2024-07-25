@@ -26,30 +26,30 @@ namespace NxEn
 		NEXUS_ENGINE_API ~String();
 
 		NEXUS_ENGINE_API String& operator=(const String& Other);
-		NEXUS_ENGINE_API String& operator+=(const StringView& Other);
-		NEXUS_ENGINE_API String& operator-=(const StringView& Other);
+		NEXUS_ENGINE_API String& operator+=(StringView Other);
+		NEXUS_ENGINE_API String& operator-=(StringView Other);
 
-		NEXUS_ENGINE_API String& Append(const StringView& Text);
-		NEXUS_ENGINE_API String& Replace(const StringView& Old, const StringView& New);
-		NEXUS_ENGINE_API String& Assign(const StringView& OldText, const StringView& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Insert(const StringView& ReferenceText, const StringView& NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
-		NEXUS_ENGINE_API String& Remove(const StringView& Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Append(StringView Text);
+		NEXUS_ENGINE_API String& Replace(StringView Old, StringView New);
+		NEXUS_ENGINE_API String& Assign(StringView OldText, StringView NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Insert(StringView ReferenceText, StringView NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Remove(StringView Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Clear();
 
 		template<typename... Args>
-		void Format(const StringView& Format, Args&&... args);
+		void Format(StringView Format, Args&&... args);
 		template<typename... Args>
-		void Format(uint64 Size, const StringView& Format, Args&&... args);
+		void Format(uint64 Size, StringView Format, Args&&... args);
 		template<typename... Args>
-		uint64 Scan(const StringView& Format, Args&&... args);
+		uint64 Scan(StringView Format, Args&&... args);
 
-		NEXUS_ENGINE_API bool Start(const StringView& Substring) const;
-		NEXUS_ENGINE_API bool End(const StringView& Substring) const;
-		NEXUS_ENGINE_API bool Contains(const StringView& Substring) const;
-		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0) const;
-		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring) const;
-		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0) const;
-		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring) const;
+		NEXUS_ENGINE_API bool Start(StringView Substring) const;
+		NEXUS_ENGINE_API bool End(StringView Substring) const;
+		NEXUS_ENGINE_API bool Contains(StringView Substring) const;
+		NEXUS_ENGINE_API StringView Find(StringView Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> FindAll(StringView Substring) const;
+		NEXUS_ENGINE_API StringView Split(StringView Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> SplitAll(StringView Substring) const;
 
 		NEXUS_ENGINE_API void Grow(uint64 Size);
 		NEXUS_ENGINE_API void Shrink(uint64 Size = 0);

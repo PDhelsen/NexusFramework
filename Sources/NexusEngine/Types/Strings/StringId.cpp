@@ -5,7 +5,7 @@ namespace NxEn
 {
 	Dictionary<GUID, String> StringId::Tables = Dictionary<GUID, String>();
 
-	StringId::StringId(const StringView& Text)
+	StringId::StringId(StringView Text)
 		: Id(InternString(Text))
 	{
 	}
@@ -45,7 +45,7 @@ namespace NxEn
 		return Id;
 	}
 
-	GUID StringId::InternString(const StringView& Text)
+	GUID StringId::InternString(StringView Text)
 	{
 		GUID Id = Hash<StringView>::HashObject(Text);
 		if (!Tables.ContainsKey(Id))

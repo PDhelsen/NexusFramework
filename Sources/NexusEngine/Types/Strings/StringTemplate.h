@@ -9,25 +9,25 @@
 namespace NxEn
 {
 	template<typename... Args>
-	void String::Format(const StringView& Format, Args&&... args)
+	void String::Format(StringView Format, Args&&... args)
 	{
 		StringUtility::Format(*this, Format, args...);
 	}
 
 	template<typename... Args>
-	void String::Format(uint64 Size, const StringView& Format, Args&&... args)
+	void String::Format(uint64 Size, StringView Format, Args&&... args)
 	{
 		StringUtility::Format(*this, Format, args...);
 	}
 
 	template<typename... Args>
-	uint64 String::Scan(const StringView& Format, Args&&... args)
+	uint64 String::Scan(StringView Format, Args&&... args)
 	{
 		return StringUtility::Scan(*this, Format, args...);
 	}
 
 	template<typename ...Args>
-	void StringUtility::Format(String& Text, const StringView& Format, Args && ...args)
+	void StringUtility::Format(String& Text, StringView Format, Args && ...args)
 	{
 		uint64 Size = StringCApi::Format(Text.GetCapacity(), Text.GetData(), Format.C(), args...);
 		if (Size >= Text.GetCapacity())
@@ -39,7 +39,7 @@ namespace NxEn
 	}
 
 	template<typename ...Args>
-	void StringUtility::Format(String& Text, uint64 Size, const StringView& Format, Args && ...args)
+	void StringUtility::Format(String& Text, uint64 Size, StringView Format, Args && ...args)
 	{
 		Text.Resize(Size);
 		StringCApi::Format(Text.GetCapacity(), Text.GetData(), Format.C(), args...);
@@ -47,7 +47,7 @@ namespace NxEn
 	}
 
 	template<typename... Args>
-	static String StringUtility::Format(const StringView& Format, Args&&... args)
+	static String StringUtility::Format(StringView Format, Args&&... args)
 	{
 		String Result = String(Format.GetCount() + sizeof...(args) * GuessFormatingSize);
 		Result.Format(Format, args...);
@@ -55,7 +55,7 @@ namespace NxEn
 	}
 
 	template<typename... Args>
-	static String StringUtility::Format(uint64 Size, const StringView& Format, Args&&... args)
+	static String StringUtility::Format(uint64 Size, StringView Format, Args&&... args)
 	{
 		String Result = String(Size);
 		Result.Format(Size, Format, args...);
@@ -63,7 +63,7 @@ namespace NxEn
 	}
 
 	template<typename... Args>
-	static uint64 StringUtility::Scan(const StringView& Text, const StringView& Format, Args&&... args)
+	static uint64 StringUtility::Scan(StringView Text, StringView Format, Args&&... args)
 	{
 		return StringCApi::Scan(Text.C(), Format.C(), args...);
 	}
@@ -91,7 +91,7 @@ namespace NxEn
 	template<class H>
 	struct Hash<StringView, H>
 	{
-		static H::HashLength HashObject(const StringView& Data, H::HashLength Seed = 0)
+		static H::HashLength HashObject(StringView Data, H::HashLength Seed = 0)
 		{
 			H Hashing = H(Seed);
 			Hashing.Accumulate(Data.C(), Data.GetCount());

@@ -13,13 +13,13 @@ namespace NxEn
 		NEXUS_ENGINE_API StringView(const char* Text, uint64 Size);
 		NEXUS_ENGINE_API StringView(const String& Text);
 
-		NEXUS_ENGINE_API bool Start(const StringView& Substring) const;
-		NEXUS_ENGINE_API bool End(const StringView& Substring) const;
-		NEXUS_ENGINE_API bool Contains(const StringView& Substring) const;
-		NEXUS_ENGINE_API StringView Find(const StringView& Substring, uint64 Offset = 0) const;
-		NEXUS_ENGINE_API List<StringView> FindAll(const StringView& Substring) const;
-		NEXUS_ENGINE_API StringView Split(const StringView& Substring, uint64 Offset = 0) const;
-		NEXUS_ENGINE_API List<StringView> SplitAll(const StringView& Substring) const;
+		NEXUS_ENGINE_API bool Start(StringView Substring) const;
+		NEXUS_ENGINE_API bool End(StringView Substring) const;
+		NEXUS_ENGINE_API bool Contains(StringView Substring) const;
+		NEXUS_ENGINE_API StringView Find(StringView Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> FindAll(StringView Substring) const;
+		NEXUS_ENGINE_API StringView Split(StringView Substring, uint64 Offset = 0) const;
+		NEXUS_ENGINE_API List<StringView> SplitAll(StringView Substring) const;
 
 		NEXUS_ENGINE_API String ToString() const;
 		NEXUS_ENGINE_API StringView ToView(uint64 Offset, uint64 Size) const;

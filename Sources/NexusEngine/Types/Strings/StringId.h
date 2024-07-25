@@ -13,7 +13,7 @@ namespace NxEn
 	struct StringId
 	{
 	public:
-		NEXUS_ENGINE_API explicit StringId(const StringView& Text);
+		NEXUS_ENGINE_API explicit StringId(StringView Text);
 
 		NEXUS_ENGINE_API bool operator==(const StringId& Other) const;
 		NEXUS_ENGINE_API bool operator==(GUID Other) const;
@@ -25,7 +25,7 @@ namespace NxEn
 		NEXUS_ENGINE_API const GUID GetId() const;
 
 	private:
-		static GUID InternString(const StringView& Text);
+		static GUID InternString(StringView Text);
 
 		static Dictionary<GUID, String, Fnv1a64, 1.0f> Tables;
 

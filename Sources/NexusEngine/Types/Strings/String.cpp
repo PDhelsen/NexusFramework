@@ -66,42 +66,42 @@ namespace NxEn
 		return *this;
 	}
 
-	String& String::operator+=(const StringView& Other)
+	String& String::operator+=(StringView Other)
 	{
 		Append(Other);
 		return *this;
 	}
 
-	String& String::operator-=(const StringView& Other)
+	String& String::operator-=(StringView Other)
 	{
 		Remove(Other, 0, 0, true);
 		return *this;
 	}
 
-	String& String::Append(const StringView& Text)
+	String& String::Append(StringView Text)
 	{
 		Append(Text.C(), Text.GetCount());
 		return *this;
 	}
 
-	String& String::Replace(const StringView& Old, const StringView& New)
+	String& String::Replace(StringView Old, StringView New)
 	{
 		return Assign(Old, New, 0, 1, true);
 	}
 
-	String& String::Assign(const StringView& OldText, const StringView& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Assign(StringView OldText, StringView NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
 		Assign(OldText.C(), OldText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, All);
 		return *this;
 	}
 
-	String& String::Insert(const StringView& ReferenceText, const StringView& NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Insert(StringView ReferenceText, StringView NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
 		Insert(ReferenceText.C(), ReferenceText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, All);
 		return *this;
 	}
 
-	String& String::Remove(const StringView& Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Remove(StringView Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
 	{
 		Remove(Text.C(), Text.GetCount(), Offset, Occurrence, All);
 		return *this;
@@ -113,37 +113,37 @@ namespace NxEn
 		return *this;
 	}
 
-	bool String::Start(const StringView& Substring) const
+	bool String::Start(StringView Substring) const
 	{
 		return StringUtility::Start(C(), Substring);
 	}
 
-	bool String::End(const StringView& Substring) const
+	bool String::End(StringView Substring) const
 	{
 		return StringUtility::End(C(), Substring);
 	}
 
-	bool String::Contains(const StringView& Substring) const
+	bool String::Contains(StringView Substring) const
 	{
 		return StringUtility::Contains(C(), Substring);
 	}
 
-	StringView String::Find(const StringView& Substring, uint64 Offset) const
+	StringView String::Find(StringView Substring, uint64 Offset) const
 	{
 		return StringUtility::Find(C(), Substring, Offset);
 	}
 
-	List<StringView> String::FindAll(const StringView& Substring) const
+	List<StringView> String::FindAll(StringView Substring) const
 	{
 		return Move(StringUtility::FindAll(C(), Substring));
 	}
 
-	StringView String::Split(const StringView& Substring, uint64 Offset) const
+	StringView String::Split(StringView Substring, uint64 Offset) const
 	{
 		return StringUtility::Split(C(), Substring, Offset);
 	}
 
-	List<StringView> String::SplitAll(const StringView& Substring) const
+	List<StringView> String::SplitAll(StringView Substring) const
 	{
 		return Move(StringUtility::SplitAll(C(), Substring));
 	}

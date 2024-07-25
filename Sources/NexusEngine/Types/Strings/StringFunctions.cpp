@@ -3,59 +3,59 @@
 
 namespace NxEn
 {
-	bool StringUtility::Start(const StringView& Text, const StringView& Substring)
+	bool StringUtility::Start(StringView Text, StringView Substring)
 	{
 		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C(), Substring.GetCount());
 		return Result && Text.C() == Result;
 	}
 
-	bool StringUtility::End(const StringView& Text, const StringView& Substring)
+	bool StringUtility::End(StringView Text, StringView Substring)
 	{
 		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C(), Substring.GetCount());
 		return Result && Substring.GetCount() == StringCApi::Length(Result);
 	}
 
-	bool StringUtility::Contains(const StringView& Text, const StringView& Substring, SearchMode Mode)
+	bool StringUtility::Contains(StringView Text, StringView Substring, SearchMode Mode)
 	{
 		StringView Result = Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Contains, Mode, 0, nullptr);
 		return !Result.IsEmpty();
 	}
 
-	StringView StringUtility::Find(const StringView& Text, const StringView& Substring, uint64 Offset, SearchMode Mode)
+	StringView StringUtility::Find(StringView Text, StringView Substring, uint64 Offset, SearchMode Mode)
 	{
 		return Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, Offset, nullptr);
 	}
 
-	List<StringView> StringUtility::FindAll(const StringView& Text, const StringView& Substring, SearchMode Mode)
+	List<StringView> StringUtility::FindAll(StringView Text, StringView Substring, SearchMode Mode)
 	{
 		List<StringView> Results;
 		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, 0, &Results);
 		return Move(Results);
 	}
 
-	StringView StringUtility::Split(const StringView& Text, const StringView& Substring, uint64 Offset, SearchMode Mode)
+	StringView StringUtility::Split(StringView Text, StringView Substring, uint64 Offset, SearchMode Mode)
 	{
 		return Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, Offset, nullptr);
 	}
 
-	List<StringView> StringUtility::SplitAll(const StringView& Text, const StringView& Substring, SearchMode Mode)
+	List<StringView> StringUtility::SplitAll(StringView Text, StringView Substring, SearchMode Mode)
 	{
 		List<StringView> Results;
 		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, 0, &Results);
 		return Move(Results);
 	}
 
-	int64 StringUtility::ToInteger(const StringView& Text, int32 Radix)
+	int64 StringUtility::ToInteger(StringView Text, int32 Radix)
 	{
 		return StringCApi::ToInteger(Text.C());
 	}
 
-	uint64 StringUtility::ToUnsignedInteger(const StringView& Text, int32 Radix)
+	uint64 StringUtility::ToUnsignedInteger(StringView Text, int32 Radix)
 	{
 		return StringCApi::ToUnsignedInteger(Text.C());
 	}
 
-	double StringUtility::ToDouble(const StringView& Text)
+	double StringUtility::ToDouble(StringView Text)
 	{
 		return StringCApi::ToDouble(Text.C());
 	}
@@ -153,7 +153,7 @@ namespace NxEn
 	// Operator
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	String operator+(const StringView& TextA, const StringView& TextB)
+	String operator+(StringView TextA, StringView TextB)
 	{
 		String Return = String(TextA.GetCount() + TextB.GetCount());
 		Return.Append(TextA);
@@ -161,7 +161,7 @@ namespace NxEn
 		return Move(Return);
 	}
 
-	String operator-(const StringView& TextA, const StringView& TextB)
+	String operator-(StringView TextA, StringView TextB)
 	{
 		String Return = String(TextA.GetCount());
 		Return.Append(TextA);
@@ -169,17 +169,17 @@ namespace NxEn
 		return Move(Return);
 	}
 
-	bool operator==(const StringView& TextA, const StringView& TextB)
+	bool operator==(StringView TextA, StringView TextB)
 	{
 		return TextA.GetCount() == TextB.GetCount() && StringCApi::Compare(TextA.C(), TextB.C()) == 0;
 	}
 
-	bool operator!=(const StringView& TextA, const StringView& TextB)
+	bool operator!=(StringView TextA, StringView TextB)
 	{
 		return !(TextA == TextB);
 	}
 
-	bool operator>(const StringView& TextA, const StringView& TextB)
+	bool operator>(StringView TextA, StringView TextB)
 	{
 		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
 		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
@@ -189,7 +189,7 @@ namespace NxEn
 		return Comparaison > 0;
 	}
 
-	bool operator>=(const StringView& TextA, const StringView& TextB)
+	bool operator>=(StringView TextA, StringView TextB)
 	{
 		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
 		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
@@ -199,7 +199,7 @@ namespace NxEn
 		return Comparaison >= 0;
 	}
 
-	bool operator<(const StringView& TextA, const StringView& TextB)
+	bool operator<(StringView TextA, StringView TextB)
 	{
 		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
 		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())
@@ -209,7 +209,7 @@ namespace NxEn
 		return Comparaison < 0;
 	}
 
-	bool operator<=(const StringView& TextA, const StringView& TextB)
+	bool operator<=(StringView TextA, StringView TextB)
 	{
 		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C());
 		if (Comparaison == 0 && TextA.GetCount() != TextB.GetCount())

@@ -18,37 +18,37 @@ namespace NxEn
 	{
 	}
 
-	bool StringView::Start(const StringView& Substring) const
+	bool StringView::Start(StringView Substring) const
 	{
 		return StringUtility::Start(C(), Substring);
 	}
 
-	bool StringView::End(const StringView& Substring) const
+	bool StringView::End(StringView Substring) const
 	{
 		return StringUtility::End(C(), Substring);
 	}
 
-	bool StringView::Contains(const StringView& Substring) const
+	bool StringView::Contains(StringView Substring) const
 	{
 		return StringUtility::Contains(C(), Substring);
 	}
 
-	StringView StringView::Find(const StringView& Substring, uint64 Offset) const
+	StringView StringView::Find(StringView Substring, uint64 Offset) const
 	{
 		return StringUtility::Find(C(), Substring, Offset);
 	}
 
-	List<StringView> StringView::FindAll(const StringView& Substring) const
+	List<StringView> StringView::FindAll(StringView Substring) const
 	{
 		return Move(StringUtility::FindAll(C(), Substring));
 	}
 
-	StringView StringView::Split(const StringView& Substring, uint64 Offset) const
+	StringView StringView::Split(StringView Substring, uint64 Offset) const
 	{
 		return StringUtility::Split(C(), Substring, Offset);
 	}
 
-	List<StringView> StringView::SplitAll(const StringView& Substring) const
+	List<StringView> StringView::SplitAll(StringView Substring) const
 	{
 		return Move(StringUtility::SplitAll(C(), Substring));
 	}

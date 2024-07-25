@@ -28,24 +28,24 @@ namespace NxEn
 		delete Channels;
 	}
 
-	void Logger::AddChannel(const StringView& Channel, bool State /*true*/)
+	void Logger::AddChannel(StringView Channel, bool State /*true*/)
 	{
 		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %s", Channel.C())
 		Channels->AppendConstruct(Channel, State);
 	}
 
-	void Logger::SetChannel(const StringView& Channel, bool State)
+	void Logger::SetChannel(StringView Channel, bool State)
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
 		Channels->Get(Channel) = State;
 	}
 
-	bool Logger::HasChannel(const StringView& Channel) const
+	bool Logger::HasChannel(StringView Channel) const
 	{
 		return Channels->ContainsKey(Channel);
 	}
 
-	bool Logger::CheckChannel(const StringView& Channel) const
+	bool Logger::CheckChannel(StringView Channel) const
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
 		return Channels->Get(Channel);
@@ -61,7 +61,7 @@ namespace NxEn
 		VerbosityMask = SetFlag(VerbosityMask, Verbosity, State);
 	}
 
-	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, const StringView& Channel) const
+	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, StringView Channel) const
 	{
 		return Platform::GetInstance() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
 	}
@@ -82,7 +82,7 @@ namespace NxEn
 		SourceString = LoggerSourceToString(Source);
 	}
 
-	void Logger::Print(const StringView& Message, uint8 Verbosity) const
+	void Logger::Print(StringView Message, uint8 Verbosity) const
 	{
 		Platform* Platform = Platform::GetInstance();
 		Platform->WriteToConsole(Message, Colors[Verbosity]);

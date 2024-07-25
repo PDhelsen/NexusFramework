@@ -11,9 +11,9 @@ namespace NxEn
 
 	public:
 		NEXUS_ENGINE_API void WaitForUserToCloseConsole() const override;
-		NEXUS_ENGINE_API void WriteToConsole(const StringView& Message, ConsoleColor Color = ConsoleColor::White) const override;
-		NEXUS_ENGINE_API void WriteToOutput(const StringView& Message) const override;
-		NEXUS_ENGINE_API void ExecuteFromDll(const StringView& DllName, uint8 Ordinal) const override;
+		NEXUS_ENGINE_API void WriteToConsole(StringView Message, ConsoleColor Color = ConsoleColor::White) const override;
+		NEXUS_ENGINE_API void WriteToOutput(StringView Message) const override;
+		NEXUS_ENGINE_API void ExecuteFromDll(StringView DllName, uint8 Ordinal) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 

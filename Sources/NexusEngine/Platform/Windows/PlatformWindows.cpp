@@ -17,17 +17,17 @@ namespace NxEn
 		std::cin.get();
 	}
 
-	void PlatformWindows::WriteToConsole(const StringView& Message, ConsoleColor Color /*ConsoleColor::White*/) const
+	void PlatformWindows::WriteToConsole(StringView Message, ConsoleColor Color /*ConsoleColor::White*/) const
 	{
 		std::cout << ConsoleColors[(uint8)Color].C() << Message.C() << ConsoleFormatReset.C();
 	}
 
-	void PlatformWindows::WriteToOutput(const StringView& Message) const
+	void PlatformWindows::WriteToOutput(StringView Message) const
 	{
 		OutputDebugStringA(Message.C());
 	}
 
-	void PlatformWindows::ExecuteFromDll(const StringView& DllName, uint8 Ordinal) const
+	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
 		auto Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
