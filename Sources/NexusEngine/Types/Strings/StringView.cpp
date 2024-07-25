@@ -55,7 +55,7 @@ namespace NxEn
 
 	String StringView::ToString() const
 	{
-		return Move(String(*this));
+		return Move(String(C(), Count));
 	}
 
 	StringView StringView::ToView(uint64 Offset, uint64 Size) const

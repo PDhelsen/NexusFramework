@@ -30,13 +30,6 @@ namespace NxEn
 		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
 	}
 
-	String::String(const StringView& Text)
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
-	{
-		uint64 Size = Text.GetCount();
-		Allocate(Memory::GetActiveAllocator(), Size, Size, Text.C());
-	}
-
 	String::String(const String& Other)
 		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{

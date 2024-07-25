@@ -21,7 +21,6 @@ namespace NxEn
 		NEXUS_ENGINE_API String(uint64 Bytes);
 		NEXUS_ENGINE_API String(const char* Text);
 		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
-		NEXUS_ENGINE_API String(const StringView& Text);
 		NEXUS_ENGINE_API String(const String& Other);
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
