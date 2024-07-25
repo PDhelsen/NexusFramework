@@ -90,6 +90,9 @@ namespace NxTs
 		Builder.Remove(Test2);
 		ASSERT_EQ(Builder, "ExtendedHello  ExtendedHello");
 
+		NxEn::String Convert = Test2.ToString();
+		ASSERT_EQ(Convert, "World");
+
 		NxEn::String Functions = "Hello Not World Not Extended";
 		ASSERT_EQ(Functions.Start(Test1), true);
 		ASSERT_EQ(Functions.End(Test4), true);

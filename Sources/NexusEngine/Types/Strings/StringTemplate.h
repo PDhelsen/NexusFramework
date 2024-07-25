@@ -69,6 +69,15 @@ namespace NxEn
 	}
 
 	template<class H>
+	struct Hash<const char*, H>
+	{
+		static H::HashLength HashObject(const char* Data, H::HashLength Seed = 0)
+		{
+			return H::Hash(Data, StringCApi::Length(Data), Seed);
+		}
+	};
+
+	template<class H>
 	struct Hash<String, H>
 	{
 		static H::HashLength HashObject(const String& Data, H::HashLength Seed = 0)
@@ -96,15 +105,6 @@ namespace NxEn
 		static H::HashLength HashObject(const StringId& Data, H::HashLength Seed = 0)
 		{
 			return Data.GetId();
-		}
-	};
-
-	template<class H>
-	struct Hash<const char*, H>
-	{
-		static H::HashLength HashObject(const char* Data, H::HashLength Seed = 0)
-		{
-			return H::Hash(Data, StringCApi::Length(Data), Seed);
 		}
 	};
 }
