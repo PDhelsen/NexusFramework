@@ -16,11 +16,8 @@ namespace NxEn
 	Logger* Logger::Instance = new Logger(LoggerVerbosity::All);
 
 	Logger::Logger(LoggerVerbosity Verbosity)
-		: VerbosityMask(Verbosity)
+		: VerbosityMask(Verbosity), StringBuilderMessage(1024), StringBuilderFormat(1024)
 	{
-		StringBuilderMessage = String(1024);
-		StringBuilderFormat = String(1024);
-
 		Channels = new Dictionary<StringView, bool, Fnv1a64, 1.0f>();
 		AddChannel(ChannelDefault, true);
 		AddChannel(ChannelAssert, true);
@@ -85,10 +82,10 @@ namespace NxEn
 		SourceString = LoggerSourceToString(Source);
 	}
 
-	void Logger::Print(const String& Message, uint8 Verbosity) const
+	void Logger::Print(const StringView& Message, uint8 Verbosity) const
 	{
 		Platform* Platform = Platform::GetInstance();
-		Platform->WriteToConsole(Message.C(), Colors[Verbosity]);
-		Platform->WriteToOutput(Message.C());
+		Platform->WriteToConsole(Message, Colors[Verbosity]);
+		Platform->WriteToOutput(Message);
 	}
 }

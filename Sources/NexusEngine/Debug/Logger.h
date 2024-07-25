@@ -71,7 +71,7 @@ namespace NxEn
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE bool ShouldPrint(LoggerVerbosity Verbosity, const StringView& Channel) const;
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void Print(const String& Message, uint8 Verbosity) const;
+		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void Print(const StringView& Message, uint8 Verbosity) const;
 
 		static Logger* Instance;
 

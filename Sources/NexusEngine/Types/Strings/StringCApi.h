@@ -21,7 +21,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static const char* SearchStr(const char* Source, const char* Substring);
 		NEXUS_ENGINE_API static const char* SearchChr(const char* Source, const char* Substring);
 		NEXUS_ENGINE_API static uint64 Format(uint64 Capacity, char* Text, const char* Format, ...);
-		NEXUS_ENGINE_API static void Scan(const char* Text, const char* Format, ...);
+		NEXUS_ENGINE_API static uint64 Scan(const char* Text, const char* Format, ...);
 
 		NEXUS_ENGINE_API static  int64 ToInteger(const char* Text, int32 Radix = 10);
 		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10);

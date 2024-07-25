@@ -21,9 +21,9 @@ namespace NxEn
 	}
 
 	template<typename... Args>
-	void String::Scan(const StringView& Format, Args&&... args)
+	uint64 String::Scan(const StringView& Format, Args&&... args)
 	{
-		StringUtility::Scan(*this, Format, args...);
+		return StringUtility::Scan(*this, Format, args...);
 	}
 
 	template<typename ...Args>
@@ -63,9 +63,9 @@ namespace NxEn
 	}
 
 	template<typename... Args>
-	static void StringUtility::Scan(const StringView& Text, const StringView& Format, Args&&... args)
+	static uint64 StringUtility::Scan(const StringView& Text, const StringView& Format, Args&&... args)
 	{
-		StringCApi::Scan(Text.C(), Format.C(), args...);
+		return StringCApi::Scan(Text.C(), Format.C(), args...);
 	}
 
 	template<class H>

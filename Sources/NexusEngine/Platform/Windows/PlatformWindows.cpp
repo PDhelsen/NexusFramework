@@ -9,8 +9,8 @@ namespace NxEn
 {
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 	// Keep synced with the enum in the Platform.h
-	static const char* ConsoleColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
-	static const char* ConsoleFormatReset = "\033[m";
+	static const String ConsoleColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
+	static const String ConsoleFormatReset = "\033[m";
 
 	// TODO: Implementation - Console - Evaluate what goes in Logger and what goes in Platform
 	void PlatformWindows::WaitForUserToCloseConsole() const
@@ -18,37 +18,37 @@ namespace NxEn
 		std::cin.get();
 	}
 
-	void PlatformWindows::WriteToConsole(const char* Message, ConsoleColor Color /*ConsoleColor::White*/) const
+	void PlatformWindows::WriteToConsole(const StringView& Message, ConsoleColor Color /*ConsoleColor::White*/) const
 	{
-		std::cout << ConsoleColors[(uint8)Color] << Message << ConsoleFormatReset;
+		std::cout << ConsoleColors[(uint8)Color].C() << Message.C() << ConsoleFormatReset.C();
 	}
 
-	void PlatformWindows::WriteToOutput(const char* Message) const
+	void PlatformWindows::WriteToOutput(const StringView& Message) const
 	{
-		OutputDebugStringA(Message);
+		OutputDebugStringA(Message.C());
 	}
 
-	void PlatformWindows::ExecuteFromDll(const char* DllName, uint8 Ordinal) const
+	void PlatformWindows::ExecuteFromDll(const StringView& DllName, uint8 Ordinal) const
 	{
-		auto dll = LoadLibraryA(DllName);
-		if (dll == nullptr)
+		auto Dll = LoadLibraryA(DllName.C());
+		if (Dll == nullptr)
 		{
 			NEXUS_LOG(Engine, Error, "Default", "Failed to load library")
 			return;
 		}
 
 		typedef void(CALLBACK* ProjectFunction)();
-		ProjectFunction function = (ProjectFunction)GetProcAddress(dll, MAKEINTRESOURCEA(Ordinal));
-		if (function == nullptr)
+		ProjectFunction Function = (ProjectFunction)GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal));
+		if (Function == nullptr)
 		{
 			NEXUS_LOG(Engine, Error, "Default", "Failed to load function")
-			FreeLibrary(dll);
+			FreeLibrary(Dll);
 			return;
 		}
 
-		function();
+		Function();
 
-		FreeLibrary(dll);
+		FreeLibrary(Dll);
 	}
 
 	PlatformWindows::PlatformWindows()

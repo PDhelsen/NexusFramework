@@ -7,15 +7,15 @@ namespace NxEn
     {
     }
 
-    void PlatformNone::WriteToConsole(const char* Message, ConsoleColor Color) const
+    void PlatformNone::WriteToConsole(const StringView& Message, ConsoleColor Color) const
     {
     }
 
-    void PlatformNone::WriteToOutput(const char* Message) const
+    void PlatformNone::WriteToOutput(const StringView& Message) const
     {
     }
 
-    void PlatformNone::ExecuteFromDll(const char* DllName, uint8 Ordinal) const
+    void PlatformNone::ExecuteFromDll(const StringView& DllName, uint8 Ordinal) const
     {
     }
 

@@ -140,13 +140,14 @@ namespace NxTs
 		ASSERT_EQ(Test3, "Hello 10 World 20.0, Hello World");
 		int32 Day = 0, Year = 0;
 		NxEn::String Weekday = NxEn::String(), Month = NxEn::String();
-		NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d %d", Weekday.C(), Month.C(), &Day, &Year);
+		uint64 ScanCount = NxEn::StringUtility::Scan("Saturday March 25 1989", "%s %s %d %d", Weekday.C(), Month.C(), &Day, &Year);
 		Weekday.Validate();
 		Month.Validate();
 		ASSERT_EQ(Day, 25);
 		ASSERT_EQ(Year, 1989);
 		ASSERT_EQ(Month, "March");
 		ASSERT_EQ(Weekday, "Saturday");
+		ASSERT_EQ(ScanCount, 4);
 
 		ASSERT_EQ(NxEn::StringUtility::ToStringF(128.6f), "128.60");
 		ASSERT_EQ(NxEn::StringUtility::ToStringI(-100), "-100");

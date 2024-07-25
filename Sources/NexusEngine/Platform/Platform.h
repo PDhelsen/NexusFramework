@@ -30,9 +30,9 @@ namespace NxEn
 		};
 
 		NEXUS_ENGINE_API virtual void WaitForUserToCloseConsole() const = 0;
-		NEXUS_ENGINE_API virtual void WriteToConsole(const char* Message, ConsoleColor Color = ConsoleColor::White) const = 0;
-		NEXUS_ENGINE_API virtual void WriteToOutput(const char* Message) const = 0;
-		NEXUS_ENGINE_API virtual void ExecuteFromDll(const char* DllName, uint8 Ordinal) const = 0;
+		NEXUS_ENGINE_API virtual void WriteToConsole(const StringView& Message, ConsoleColor Color = ConsoleColor::White) const = 0;
+		NEXUS_ENGINE_API virtual void WriteToOutput(const StringView& Message) const = 0;
+		NEXUS_ENGINE_API virtual void ExecuteFromDll(const StringView& DllName, uint8 Ordinal) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

@@ -115,14 +115,14 @@ namespace NxEn
 
 	uint64 StringCApi::Format(uint64 Capacity, char* Text, const char* Format, ...)
 	{
-		uint64 Size = 0;
-		NEXUS_VA(Format, Size = vsnprintf(Text, Capacity, Format, ArgList));
+		NEXUS_VA(Format, uint64 Size = vsnprintf(Text, Capacity, Format, ArgList));
 		return Size;
 	}
 
-	void StringCApi::Scan(const char* Text, const char* Format, ...)
+	uint64 StringCApi::Scan(const char* Text, const char* Format, ...)
 	{
-		NEXUS_VA(Format, vsscanf(Text, Format, ArgList));
+		NEXUS_VA(Format, uint64 Count = vsscanf(Text, Format, ArgList));
+		return Count;
 	}
 
 	int64 StringCApi::ToInteger(const char* Text, int32 Radix)

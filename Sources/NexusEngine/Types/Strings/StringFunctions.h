@@ -26,7 +26,7 @@ namespace NxEn
 		template<typename... Args>
 		static String Format(uint64 Size, const StringView& Format, Args&&... args);
 		template<typename... Args>
-		static void Scan(const StringView& Text, const StringView& Format, Args&&... args);
+		static uint64 Scan(const StringView& Text, const StringView& Format, Args&&... args);
 
 		NEXUS_ENGINE_API static bool Start(const StringView& Text, const StringView& Substring);
 		NEXUS_ENGINE_API static bool End(const StringView& Text, const StringView& Substring);

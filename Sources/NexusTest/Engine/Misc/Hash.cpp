@@ -30,8 +30,8 @@ namespace NxEn
 
 namespace NxTs
 {
-	const char* TestSmall = "Test";
-	const char* TestLong = "This is a test text for testing the Hash function";
+	const NxEn::String TestSmall = "Test";
+	const NxEn::String TestLong = "This is a test text for testing the Hash function";
 
 	uint32 XxHash32Small = 0xeac53571;
 	uint32 XxHash32Long = 0x3ba1b2d6;
@@ -48,19 +48,19 @@ namespace NxTs
 
 	TEST(Hash, XxHash32)
 	{
-		uint32 Hash1 = NxEn::XxHash32::Hash(TestSmall, 4);
-		uint32 Hash2 = NxEn::XxHash32::Hash(TestLong, 49);
+		uint32 Hash1 = NxEn::XxHash32::Hash(TestSmall.C(), 4);
+		uint32 Hash2 = NxEn::XxHash32::Hash(TestLong.C(), 49);
 
 		ASSERT_EQ(Hash1, XxHash32Small);
 		ASSERT_EQ(Hash2, XxHash32Long);
 
 		NxEn::XxHash32 Test = NxEn::XxHash32(10);
-		Test.Accumulate(TestSmall, 4);
-		Test.Accumulate(TestLong, 49);
+		Test.Accumulate(TestSmall.C(), 4);
+		Test.Accumulate(TestLong.C(), 49);
 		uint32 Hash = Test.Hash();
 
 		NxEn::XxHash32 TestChain = NxEn::XxHash32(10);
-		TestChain.Accumulate(TestSmall, 4).Accumulate(TestLong, 49);
+		TestChain.Accumulate(TestSmall.C(), 4).Accumulate(TestLong.C(), 49);
 		uint32 HashChain = Test.Hash();
 
 		ASSERT_EQ(Hash, HashChain);
@@ -68,19 +68,19 @@ namespace NxTs
 
 	TEST(Hash, XxHash64)
 	{
-		uint64 Hash1 = NxEn::XxHash64::Hash(TestSmall, 4);
-		uint64 Hash2 = NxEn::XxHash64::Hash(TestLong, 49);
+		uint64 Hash1 = NxEn::XxHash64::Hash(TestSmall.C(), 4);
+		uint64 Hash2 = NxEn::XxHash64::Hash(TestLong.C(), 49);
 
 		ASSERT_EQ(Hash1, XxHash64Small);
 		ASSERT_EQ(Hash2, XxHash64Long);
 
 		NxEn::XxHash64 Test = NxEn::XxHash64(10);
-		Test.Accumulate(TestSmall, 4);
-		Test.Accumulate(TestLong, 49);
+		Test.Accumulate(TestSmall.C(), 4);
+		Test.Accumulate(TestLong.C(), 49);
 		uint64 Hash = Test.Hash();
 
 		NxEn::XxHash64 TestChain = NxEn::XxHash64(10);
-		TestChain.Accumulate(TestSmall, 4).Accumulate(TestLong, 49);
+		TestChain.Accumulate(TestSmall.C(), 4).Accumulate(TestLong.C(), 49);
 		uint64 HashChain = Test.Hash();
 
 		ASSERT_EQ(Hash, HashChain);
@@ -88,19 +88,19 @@ namespace NxTs
 
 	TEST(Hash, Murmur32)
 	{
-		uint32 Hash1 = NxEn::Murmur32::Hash(TestSmall, 4);
-		uint32 Hash2 = NxEn::Murmur32::Hash(TestLong, 49);
+		uint32 Hash1 = NxEn::Murmur32::Hash(TestSmall.C(), 4);
+		uint32 Hash2 = NxEn::Murmur32::Hash(TestLong.C(), 49);
 
 		ASSERT_EQ(Hash1, Murmur32Small);
 		ASSERT_EQ(Hash2, Murmur32Long);
 
 		NxEn::Murmur32 Test = NxEn::Murmur32(10);
-		Test.Accumulate(TestSmall, 4);
-		Test.Accumulate(TestLong, 49);
+		Test.Accumulate(TestSmall.C(), 4);
+		Test.Accumulate(TestLong.C(), 49);
 		uint32 Hash = Test.Hash();
 
 		NxEn::Murmur32 TestChain = NxEn::Murmur32(10);
-		TestChain.Accumulate(TestSmall, 4).Accumulate(TestLong, 49);
+		TestChain.Accumulate(TestSmall.C(), 4).Accumulate(TestLong.C(), 49);
 		uint32 HashChain = Test.Hash();
 
 		ASSERT_EQ(Hash, HashChain);
@@ -108,19 +108,19 @@ namespace NxTs
 
 	TEST(Hash, Fnv164)
 	{
-		uint64 Hash1 = NxEn::Fnv164::Hash(TestSmall, 4);
-		uint64 Hash2 = NxEn::Fnv164::Hash(TestLong, 49);
+		uint64 Hash1 = NxEn::Fnv164::Hash(TestSmall.C(), 4);
+		uint64 Hash2 = NxEn::Fnv164::Hash(TestLong.C(), 49);
 
 		ASSERT_EQ(Hash1, Fnv164Small);
 		ASSERT_EQ(Hash2, Fnv164Long);
 
 		NxEn::Fnv164 Test = NxEn::Fnv164(10);
-		Test.Accumulate(TestSmall, 4);
-		Test.Accumulate(TestLong, 49);
+		Test.Accumulate(TestSmall.C(), 4);
+		Test.Accumulate(TestLong.C(), 49);
 		uint64 Hash = Test.Hash();
 
 		NxEn::Fnv164 TestChain = NxEn::Fnv164(10);
-		TestChain.Accumulate(TestSmall, 4).Accumulate(TestLong, 49);
+		TestChain.Accumulate(TestSmall.C(), 4).Accumulate(TestLong.C(), 49);
 		uint64 HashChain = Test.Hash();
 
 		ASSERT_EQ(Hash, HashChain);
@@ -128,19 +128,19 @@ namespace NxTs
 
 	TEST(Hash, Fnv1a64)
 	{
-		uint64 Hash1 = NxEn::Fnv1a64::Hash(TestSmall, 4);
-		uint64 Hash2 = NxEn::Fnv1a64::Hash(TestLong, 49);
+		uint64 Hash1 = NxEn::Fnv1a64::Hash(TestSmall.C(), 4);
+		uint64 Hash2 = NxEn::Fnv1a64::Hash(TestLong.C(), 49);
 
 		ASSERT_EQ(Hash1, Fnv1a64Small);
 		ASSERT_EQ(Hash2, Fnv1a64Long);
 
 		NxEn::Fnv1a64 Test = NxEn::Fnv1a64(10);
-		Test.Accumulate(TestSmall, 4);
-		Test.Accumulate(TestLong, 49);
+		Test.Accumulate(TestSmall.C(), 4);
+		Test.Accumulate(TestLong.C(), 49);
 		uint64 Hash = Test.Hash();
 
 		NxEn::Fnv1a64 TestChain = NxEn::Fnv1a64(10);
-		TestChain.Accumulate(TestSmall, 4).Accumulate(TestLong, 49);
+		TestChain.Accumulate(TestSmall.C(), 4).Accumulate(TestLong.C(), 49);
 		uint64 HashChain = Test.Hash();
 
 		ASSERT_EQ(Hash, HashChain);
@@ -148,8 +148,8 @@ namespace NxTs
 
 	TEST(Hash, Hash)
 	{
-		uint64 Hash1 = NxEn::Hash<>::HashData(TestSmall, 4);
-		uint64 Hash2 = NxEn::Hash<>::HashData(TestLong, 49);
+		uint64 Hash1 = NxEn::Hash<>::HashData(TestSmall.C(), 4);
+		uint64 Hash2 = NxEn::Hash<>::HashData(TestLong.C(), 49);
 
 		ASSERT_EQ(Hash1, Fnv1a64Small);
 		ASSERT_EQ(Hash2, Fnv1a64Long);
@@ -162,8 +162,8 @@ namespace NxTs
 
 		uint64 Hash5 = NxEn::Hash<>::Combine(Hash1, Hash2);
 
-		uint32 Hash6 = NxEn::Hash<const void*, NxEn::XxHash32>::HashData(TestSmall, 4);
-		uint32 Hash7 = NxEn::Hash<const void*, NxEn::XxHash32>::HashData(TestLong, 49);
+		uint32 Hash6 = NxEn::Hash<NxEn::String, NxEn::XxHash32>::HashObject(TestSmall);
+		uint32 Hash7 = NxEn::Hash<NxEn::String, NxEn::XxHash32>::HashObject(TestLong);
 
 		ASSERT_EQ(Hash6, XxHash32Small);
 		ASSERT_EQ(Hash7, XxHash32Long);

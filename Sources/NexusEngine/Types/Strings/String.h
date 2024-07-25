@@ -42,7 +42,7 @@ namespace NxEn
 		template<typename... Args>
 		void Format(uint64 Size, const StringView& Format, Args&&... args);
 		template<typename... Args>
-		void Scan(const StringView& Format, Args&&... args);
+		uint64 Scan(const StringView& Format, Args&&... args);
 
 		NEXUS_ENGINE_API bool Start(const StringView& Substring) const;
 		NEXUS_ENGINE_API bool End(const StringView& Substring) const;
