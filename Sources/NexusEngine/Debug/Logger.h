@@ -13,10 +13,6 @@ namespace NxEn
 	class Fnv1a64;
 	template <typename K, typename T, class H, float LF> class Dictionary;
 
-	// Logger
-	// There is globally available logger. It is also possible to create local logger.
-	// Keep the Verbosity & Source enum sync with the const char array in the cpp file
-
 	enum class LoggerVerbosity : uint8
 	{
 		None	= 0,

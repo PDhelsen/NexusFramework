@@ -12,7 +12,6 @@ namespace NxEn
 	static const String ConsoleColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
 	static const String ConsoleFormatReset = "\033[m";
 
-	// TODO: Implementation - Console - Evaluate what goes in Logger and what goes in Platform
 	void PlatformWindows::WaitForUserToCloseConsole() const
 	{
 		std::cin.get();

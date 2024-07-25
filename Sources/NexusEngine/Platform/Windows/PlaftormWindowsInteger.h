@@ -1,8 +1,5 @@
 #pragma once
 
-// Define the bytes precision of the integer types.
-// This file define the Win64 integer type
-
 struct PlatformWindowInteger
 {
 	typedef	signed char			int8;

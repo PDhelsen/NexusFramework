@@ -5,8 +5,6 @@
 
 namespace NxEn
 {
-	// Empty implementation used when no platform are defined
-
 	class PlatformNone : public Platform
 	{
 		friend Platform;

@@ -7,9 +7,6 @@
 
 namespace NxEn
 {
-	// Memory
-	// Static class that provide global function to handle memory (malloc / free, operator, placement new)
-
 #define NEXUS_MEMORY_ALIGN 16
 
 // TODO: Implementation - Allocators - Allocator Manager

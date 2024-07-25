@@ -1,7 +1,5 @@
 #pragma once
 
-// All the needed standard library features should be included here
-
 //TODO: Evaluate - Project - C lib vs C++ lib
 #include <iostream>
 #include <ctime>

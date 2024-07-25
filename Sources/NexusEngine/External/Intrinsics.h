@@ -1,7 +1,5 @@
 #pragma once
 
-// All the compiler intrinsics functions
-
 #if NEXUS_MSVC
 	#include <intrin.h>
 	

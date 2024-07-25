@@ -1,8 +1,5 @@
 #pragma once
 
-// Define the bytes precision of the integer types.
-// This file forward the current platform definition
-
 #include "Platform/PlatformInteger.h"
 
 typedef	PlaftormInteger::int8		int8;

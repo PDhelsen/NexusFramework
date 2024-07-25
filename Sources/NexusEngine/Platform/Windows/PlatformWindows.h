@@ -5,9 +5,6 @@
 
 namespace NxEn
 {
-	// Windows implementation of the platform API
-	// Only Windows x64 is supported
-
 	class PlatformWindows : public Platform
 	{
 		friend Platform;

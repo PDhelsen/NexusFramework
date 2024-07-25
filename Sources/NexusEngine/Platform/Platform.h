@@ -4,15 +4,11 @@
 
 namespace NxEn
 {
-	// All the supported platforms
-
 	enum class PlatformTarget : uint8
 	{
 		None,
 		Windows
 	};
-
-	// Abstract API of platform dependant code
 
 	class Platform
 	{

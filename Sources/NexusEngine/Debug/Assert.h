@@ -2,9 +2,6 @@
 
 #include "Debug/Logger.h"
 
-// Assert Macro (compile time and runtime)
-// They are stripped in Distrib builds
-
 #if NEXUS_DEBUG || NEXUS_RELEASE
 	#if NEXUS_WINDOWS
 		#define NEXUS_BREAK __debugbreak();

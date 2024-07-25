@@ -4,9 +4,6 @@
 
 namespace NxEn
 {
-	// Time
-	// Signleton that manage the global time of the Application (Now, Timestemp, ...)
-
 	class Time
 	{
 	public:

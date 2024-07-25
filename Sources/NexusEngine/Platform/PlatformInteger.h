@@ -1,8 +1,5 @@
 #pragma once
 
-// Define the bytes precision of the integer types.
-// This file forward the platform-dependant definition
-
 #include "Platform/None/PlaftormNoneInteger.h"
 #include "Platform/Windows/PlaftormWindowsInteger.h"
 
