@@ -300,9 +300,13 @@ namespace NxEn
 			{
 				if (Index >= Offset)
 				{
+					uint64 Position = Substring - GetData();
+
 					if (SizeDiff > 0)
 					{
 						Resize(Count + SizeDiff);
+						Substring = GetData() + Position;
+
 						uint64 Remaining = StringCApi::Length(Substring + OldSize);
 						if (Remaining > 0)
 						{
@@ -316,6 +320,7 @@ namespace NxEn
 						{
 							Memory::MemCopy(Substring + OldSize, Substring + NewSize, Remaining);
 						}
+
 						Resize(Count + SizeDiff);
 					}
 
@@ -351,15 +356,19 @@ namespace NxEn
 			if (Substring)
 			{
 				Substring += ReferenceSize;
+				uint64 Position = Substring - GetData();
 
 				if (Index >= Offset)
 				{
 					Resize(Count + NewSize);
+					Substring = GetData() + Position;
+
 					uint64 Remaining = StringCApi::Length(Substring);
 					if (Remaining > 0)
 					{
 						Memory::MemCopy(Substring, Substring + NewSize, StringCApi::Length(Substring));
 					}
+
 					StringCApi::Copy(NewText, Substring, Capacity, NewSize, true);
 
 					Modified++;
