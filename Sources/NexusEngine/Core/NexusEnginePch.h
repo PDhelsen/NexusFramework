@@ -5,6 +5,9 @@
 // Also, avoid to include files that will change often
 
 
+#include "External/Intrinsics.h"
+#include "External/StandardLibrary.h"
+
 #include "Core/NexusEngine.h"
 
 #include "Types/Integer.h"

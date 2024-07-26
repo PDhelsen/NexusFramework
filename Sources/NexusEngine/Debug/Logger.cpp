@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "Logger.h"
 
-#include "External/StandardLibrary.h"
-
 #include "Application/Time.h"
 #include "Platform/Platform.h"
 

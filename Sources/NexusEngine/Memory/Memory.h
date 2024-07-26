@@ -1,6 +1,5 @@
 #pragma once
 
-#include "External/StandardLibrary.h"
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 #include "Debug/Assert.h"

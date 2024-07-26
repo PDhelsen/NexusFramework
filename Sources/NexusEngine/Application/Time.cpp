@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "Time.h"
 
-#include "External/StandardLibrary.h"
-
 namespace NxEn
 {
 	Time* Time::Instance = new Time();

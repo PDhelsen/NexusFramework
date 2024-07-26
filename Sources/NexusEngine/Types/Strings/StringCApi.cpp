@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "StringCApi.h"
 
-#include "External/StandardLibrary.h"
-
 namespace NxEn
 {
 	void StringCApi::Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe)

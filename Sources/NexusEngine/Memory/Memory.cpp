@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "Memory.h"
 
-#include "External/StandardLibrary.h"
-
 namespace NxEn
 {
 	StackAllocator* Memory::Stack = new StackAllocator(NEXUS_STACK_SIZE);

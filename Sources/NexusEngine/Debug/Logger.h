@@ -1,6 +1,5 @@
 #pragma once 
 
-#include "External/Intrinsics.h"
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 #include "Types/Enum.h"
@@ -64,10 +63,10 @@ namespace NxEn
 		NEXUS_ENGINE_API inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 
 	private:
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE bool ShouldPrint(LoggerVerbosity Verbosity, StringView Channel) const;
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
-		NEXUS_ENGINE_API NEXUS_FORCE_INLINE void Print(StringView Message, uint8 Verbosity) const;
+		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, StringView Channel) const;
+		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
+		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
+		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
 
 		static Logger* Instance;
 

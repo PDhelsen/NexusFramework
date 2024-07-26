@@ -1,6 +1,5 @@
 #pragma once
 
-#include "External/Intrinsics.h"
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 
@@ -78,9 +77,9 @@ namespace NxEn
 		NEXUS_ENGINE_API void Insert(const char* ReferenceText, uint64 ReferenceSize, const char* NewText, uint64 NewSize, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API void Remove(const char* Text, uint64 Size, uint64 Offset, uint64 Occurrence, bool All);
 
-		NEXUS_FORCE_INLINE const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
-		NEXUS_FORCE_INLINE char* GetData() { return Sso() ? Data.Small : Data.Large; }
-		NEXUS_FORCE_INLINE bool Sso() const { return Capacity <= SmallStringCapacity; }
+		inline const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
+		inline char* GetData() { return Sso() ? Data.Small : Data.Large; }
+		inline bool Sso() const { return Capacity <= SmallStringCapacity; }
 
 		union Buffer
 		{
