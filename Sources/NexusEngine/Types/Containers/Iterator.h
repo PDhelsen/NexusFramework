@@ -5,7 +5,7 @@
 
 namespace NxEn
 {
-	// TODO: Project - Nativs - Iterator
+	// TODO: Implementation - Nativs - Iterator
 	template<typename T>
 	class BlockIterator
 	{

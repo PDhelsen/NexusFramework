@@ -1,6 +1,6 @@
 #pragma once
 
-//TODO: Evaluate - Project - C lib vs C++ lib
+//TODO: Implementation - Project - C lib vs C++ lib
 #include <iostream>
 #include <ctime>
 

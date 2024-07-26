@@ -6,7 +6,7 @@
 
 namespace NxEn
 {
-	// TODO: Optimization - Copy / Move - Operator + Self assignement check
+	// TODO: Implementation - Copy / Move - Operator + Self assignement check
 
 	class Allocator;
 	struct StringView;

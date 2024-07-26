@@ -71,7 +71,7 @@ namespace NxEn
 
 		static Logger* Instance;
 
-		// TEMP: Replace - String - Once we have custom string
+		// TEMP: Replace - String - Once string is fixed
 		Dictionary<StringView, bool, Fnv1a64, 1.0f>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;

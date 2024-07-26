@@ -19,7 +19,7 @@ namespace NxEn
 
 	class Allocator
 	{
-		// TEMP: Remove - Container - Once HandleManager replace PoolAllocator by pool container
+		// TODO: Implementation - Handle - Remove once HandleManager replace PoolAllocator by pool container
 		friend HandleManager;
 
 	public:
