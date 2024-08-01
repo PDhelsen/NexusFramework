@@ -5,8 +5,6 @@
 
 namespace NxEn
 {
-	// TODO: Implementation - Copy / Move - Operator + Self assignement check
-
 	class Allocator;
 	struct StringView;
 	template <typename T> class List;
@@ -25,6 +23,7 @@ namespace NxEn
 		NEXUS_ENGINE_API ~String();
 
 		NEXUS_ENGINE_API String& operator=(const String& Other);
+		NEXUS_ENGINE_API String& operator=(String&& Other) noexcept;
 		NEXUS_ENGINE_API String& operator+=(StringView Other);
 		NEXUS_ENGINE_API String& operator-=(StringView Other);
 

@@ -48,10 +48,10 @@ namespace NxEn
 			Data.Large = Other.Data.Large;
 		}
 
-		Other.Allctr = nullptr;
-		Other.Capacity = 0;
 		Other.Count = 0;
+		Other.Capacity = SmallStringCapacity;
 		Other.Data.Large = nullptr;
+		ValidateNullTermination();
 	}
 
 	String::~String()
@@ -61,8 +61,43 @@ namespace NxEn
 
 	String& String::operator=(const String& Other)
 	{
+		if (*this == Other)
+		{
+			return *this;
+		}
+
 		Resize(Other.Count);
 		StringCApi::Copy(Other.GetBuffer(), GetData(), Capacity);
+		return *this;
+	}
+
+	String& String::operator=(String&& Other) noexcept
+	{
+		if (*this == Other)
+		{
+			return *this;
+		}
+
+		Free();
+
+		Allctr = Other.Allctr;
+		Capacity = Other.Capacity;
+		Count = Other.Count;
+
+		if (Other.Sso())
+		{
+			StringCApi::Copy(Other.Data.Small, Data.Small, SmallStringCapacity);
+		}
+		else
+		{
+			Data.Large = Other.Data.Large;
+		}
+
+		Other.Count = 0;
+		Other.Capacity = SmallStringCapacity;
+		Other.Data.Large = nullptr;
+		ValidateNullTermination();
+
 		return *this;
 	}
 
@@ -225,6 +260,7 @@ namespace NxEn
 		{
 			// Once grow over the Sso limit, it cannot go back to Sso.
 			// The cost of allocating has been paid, so there is no point to freeing the memory until the string is destroyed
+			// The only exception is when using the move constructor / operator
 			NEXUS_ASSERT(false, "Not supposed to reallocate from sso to sso");
 		}
 

@@ -20,6 +20,16 @@ namespace NxTs
 		NxEn::String Test2 = "World Hello";
 		NxEn::String Test3 = Test;
 		NxEn::String Test4 = Move(Test2);
+
+		ASSERT_EQ(Test2, "");
+		ASSERT_EQ(Test3, "Hello World");
+		ASSERT_EQ(Test4, "World Hello");
+
+		Test2 = Move(Test4);
+
+		ASSERT_EQ(Test2, "World Hello");
+		ASSERT_EQ(Test4, "");
+
 		{
 			NxEn::String Test5 = NxEn::String("Hello World");
 			ASSERT_EQ(Test5.IsEmpty(), false);
