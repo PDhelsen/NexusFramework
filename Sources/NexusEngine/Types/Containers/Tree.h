@@ -53,6 +53,39 @@ namespace NxEn
 			return Copy;
 		}
 
+		Tree<T>& operator=(const Tree<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		Tree<T>& operator=(Tree<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		bool operator==(const Tree<T>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;

@@ -54,6 +54,42 @@ namespace NxEn
 			return Copy;
 		}
 
+		LinkedList<T>& operator=(const LinkedList<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			DataHead = Other.DataHead;
+			DataTail = Other.DataTail;
+
+			return *this;
+		}
+
+		LinkedList<T>& operator=(LinkedList<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			DataHead = Other.DataHead;
+			DataTail = Other.DataTail;
+
+			Other.Count = 0;
+			Other.DataHead = nullptr;
+			Other.DataTail = nullptr;
+
+			return *this;
+		}
+
 		bool operator==(const LinkedList<T>& Other) const
 		{
 			return Count == Other.Count && DataHead == Other.DataHead && DataTail == Other.DataTail;

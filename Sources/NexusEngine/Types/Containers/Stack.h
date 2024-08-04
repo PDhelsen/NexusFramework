@@ -54,6 +54,39 @@ namespace NxEn
 			return Copy;
 		}
 
+		Stack<T>& operator=(const Stack<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		Stack<T>& operator=(Stack<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		bool operator==(const Stack<T>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;

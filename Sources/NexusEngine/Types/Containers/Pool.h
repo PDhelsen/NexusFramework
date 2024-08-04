@@ -54,6 +54,42 @@ namespace NxEn
 			Free();
 		}
 
+		Pool<T>& operator=(const Pool<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+			Own = Other.Own;
+
+			return *this;
+		}
+
+		Pool<T>& operator=(Pool<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+			Free();
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+			Own = Other.Own;
+
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		bool operator==(const Pool<T>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;

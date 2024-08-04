@@ -64,6 +64,43 @@ namespace NxEn
 			return Copy;
 		}
 
+		Dictionary<K, T, H, LF>& operator=(const Dictionary<K, T, H, LF>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		Dictionary<K, T, H, LF>& operator=(Dictionary<K, T, H, LF>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+			Free(Data);
+
+			Allocator = Other.Allocator;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			Other.Buckets = 0;
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		T& operator[](const K& Key) const
 		{
 			return Get(Key);

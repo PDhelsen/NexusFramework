@@ -64,6 +64,43 @@ namespace NxEn
 			return Copy;
 		}
 
+		Set<T, H, LF>& operator=(const Set<T, H, LF>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		Set<T, H, LF>& operator=(Set<T, H, LF>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+			Free(Data);
+
+			Allocator = Other.Allocator;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			Other.Buckets = 0;
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		bool operator==(const Set<T, H, LF>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;

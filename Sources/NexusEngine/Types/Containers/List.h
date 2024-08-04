@@ -53,6 +53,43 @@ namespace NxEn
 			return Copy;
 		}
 
+		List<T>& operator=(const List<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Capacity = Other.Capacity;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		List<T>& operator=(List<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+			Free();
+
+			Allocator = Other.Allocator;
+			Capacity = Other.Capacity;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			Other.Capacity = 0;
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		T& operator[](uint64 Index) const
 		{
 			return Get(Index);

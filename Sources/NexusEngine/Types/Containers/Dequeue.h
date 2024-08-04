@@ -67,6 +67,47 @@ namespace NxEn
 			return Copy;
 		}
 
+		Dequeue<T>& operator=(const Dequeue<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			IndexFront = Other.IndexFront;
+			IndexBack = Other.IndexBack;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		Dequeue<T>& operator=(Dequeue<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Clear();
+			Free();
+
+			Allocator = Other.Allocator;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			IndexFront = Other.IndexFront;
+			IndexBack = Other.IndexBack;
+			Data = Other.Data;
+
+			Other.Capacity = 0;
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
+		}
+
 		T& operator[](uint64 Index) const
 		{
 			return Get(Index);

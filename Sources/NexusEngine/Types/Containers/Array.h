@@ -12,7 +12,7 @@ namespace NxEn
 {
 	// TODO: Cleanup - Name - Allocator
 	// TODO: Implementation - Memory - Initialize memory / Construct (Set, Dict)
-	// TODO: Implementation - Copy / Move - Operator + Self assignement check
+
 	template<typename T>
 	class Array
 	{
@@ -53,6 +53,40 @@ namespace NxEn
 			}
 
 			return Copy;
+		}
+
+		Array<T>& operator=(const Array<T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			return *this;
+		}
+
+		Array<T>& operator=(Array<T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Destruct(0, Count);
+			Free();
+
+			Allocator = Other.Allocator;
+			Count = Other.Count;
+			Data = Other.Data;
+
+			Other.Count = 0;
+			Other.Data = nullptr;
+
+			return *this;
 		}
 
 		T& operator[](uint64 Index) const

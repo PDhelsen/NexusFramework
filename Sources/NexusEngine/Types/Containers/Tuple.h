@@ -24,7 +24,7 @@ namespace NxEn
 		}
 
 		Tuple(Tuple<T1, T2>&& Other) noexcept
-			: First(Other.F), Second(Other.S)
+			: First(Move(Other.F)), Second(Move(Other.S))
 		{
 		}
 
@@ -36,6 +36,32 @@ namespace NxEn
 		Tuple<T1, T2> Copy() const
 		{
 			return Tuple<T1, T2>(First, Second);
+		}
+
+		Tuple<T1, T2>& operator=(const Tuple<T1, T2>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			First = Other.First;
+			Second = Other.Second;
+
+			return *this;
+		}
+
+		Tuple<T1, T2>& operator=(Tuple<T1, T2>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			First = Move(Other.First);
+			Second = Move(Other.Second);
+
+			return *this;
 		}
 
 		bool operator==(const Tuple<T1, T2>& Other) const
