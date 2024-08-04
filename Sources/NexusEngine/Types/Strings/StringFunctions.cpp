@@ -30,7 +30,7 @@ namespace NxEn
 	{
 		List<StringView> Results;
 		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, 0, &Results);
-		return Move(Results);
+		return Results;
 	}
 
 	StringView StringUtility::Split(StringView Text, StringView Substring, uint64 Offset, SearchMode Mode)
@@ -42,7 +42,7 @@ namespace NxEn
 	{
 		List<StringView> Results;
 		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, 0, &Results);
-		return Move(Results);
+		return Results;
 	}
 
 	int64 StringUtility::ToInteger(StringView Text, int32 Radix)
@@ -65,7 +65,7 @@ namespace NxEn
 		String Result = String();
 		StringCApi::ToStringI(Number, Result.GetCapacity(), Result.GetData(), Format.C());
 		Result.Validate();
-		return Move(Result);
+		return Result;
 	}
 
 	String StringUtility::ToStringU(uint64 Number, StringView Format)
@@ -73,7 +73,7 @@ namespace NxEn
 		String Result = String();
 		StringCApi::ToStringU(Number, Result.GetCapacity(), Result.GetData(), Format.C());
 		Result.Validate();
-		return Move(Result);
+		return Result;
 	}
 
 	String StringUtility::ToStringF(float Number, StringView Format)
@@ -81,7 +81,7 @@ namespace NxEn
 		String Result = String();
 		StringCApi::ToStringF(Number, Result.GetCapacity(), Result.GetData(), Format.C());
 		Result.Validate();
-		return Move(Result);
+		return Result;
 	}
 
 	String StringUtility::ToStringD(double Number, StringView Format)
@@ -89,7 +89,7 @@ namespace NxEn
 		String Result = String();
 		StringCApi::ToStringD(Number, Result.GetCapacity(), Result.GetData(), Format.C());
 		Result.Validate();
-		return Move(Result);
+		return Result;
 	}
 
 	String StringUtility::ToStringB(bool State, StringView Format)
@@ -97,7 +97,7 @@ namespace NxEn
 		String Result = String();
 		StringCApi::ToStringB(State, Result.GetCapacity(), Result.GetData(), Format.C());
 		Result.Validate();
-		return Move(Result);
+		return Result;
 	}
 
 	StringView StringUtility::Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results)
@@ -158,7 +158,7 @@ namespace NxEn
 		String Return = String(TextA.GetCount() + TextB.GetCount());
 		Return.Append(TextA);
 		Return.Append(TextB);
-		return Move(Return);
+		return Return;
 	}
 
 	String operator-(StringView TextA, StringView TextB)
@@ -166,7 +166,7 @@ namespace NxEn
 		String Return = String(TextA.GetCount());
 		Return.Append(TextA);
 		Return.Remove(TextB, 0, 0, true);
-		return Move(Return);
+		return Return;
 	}
 
 	bool operator==(StringView TextA, StringView TextB)

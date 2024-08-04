@@ -170,7 +170,7 @@ namespace NxEn
 
 	List<StringView> String::FindAll(StringView Substring) const
 	{
-		return Move(StringUtility::FindAll(C(), Substring));
+		return StringUtility::FindAll(C(), Substring);
 	}
 
 	StringView String::Split(StringView Substring, uint64 Offset) const
@@ -180,7 +180,7 @@ namespace NxEn
 
 	List<StringView> String::SplitAll(StringView Substring) const
 	{
-		return Move(StringUtility::SplitAll(C(), Substring));
+		return StringUtility::SplitAll(C(), Substring);
 	}
 
 	void String::Grow(uint64 Size)

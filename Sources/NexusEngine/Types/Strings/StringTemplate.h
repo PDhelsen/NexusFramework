@@ -51,7 +51,7 @@ namespace NxEn
 	{
 		String Result = String(Format.GetCount() + sizeof...(args) * GuessFormatingSize);
 		Result.Format(Format, args...);
-		return Move(Result);
+		return Result;
 	}
 
 	template<typename... Args>
@@ -59,7 +59,7 @@ namespace NxEn
 	{
 		String Result = String(Size);
 		Result.Format(Size, Format, args...);
-		return Move(Result);
+		return Result;
 	}
 
 	template<typename... Args>

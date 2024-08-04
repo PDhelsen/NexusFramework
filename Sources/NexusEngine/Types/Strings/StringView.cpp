@@ -40,7 +40,7 @@ namespace NxEn
 
 	List<StringView> StringView::FindAll(StringView Substring) const
 	{
-		return Move(StringUtility::FindAll(C(), Substring));
+		return StringUtility::FindAll(C(), Substring);
 	}
 
 	StringView StringView::Split(StringView Substring, uint64 Offset) const
@@ -50,12 +50,12 @@ namespace NxEn
 
 	List<StringView> StringView::SplitAll(StringView Substring) const
 	{
-		return Move(StringUtility::SplitAll(C(), Substring));
+		return StringUtility::SplitAll(C(), Substring);
 	}
 
 	String StringView::ToString() const
 	{
-		return Move(String(C(), Count));
+		return String(C(), Count);
 	}
 
 	StringView StringView::ToView(uint64 Offset, uint64 Size) const
