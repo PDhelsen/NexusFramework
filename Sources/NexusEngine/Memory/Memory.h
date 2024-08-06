@@ -61,6 +61,7 @@ namespace NxEn
 		static Allocator* Active;
 	};
 
+	//TODO: Implementation - Memory - Evalute construct function
 	template<typename T, typename... Args>
 	T* Memory::Construct(void* Pointer, Args&&... args)
 	{
