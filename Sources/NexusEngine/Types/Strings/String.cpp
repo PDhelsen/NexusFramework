@@ -51,6 +51,7 @@ namespace NxEn
 		Other.Count = 0;
 		Other.Capacity = SmallStringCapacity;
 		Other.Data.Large = nullptr;
+
 		ValidateNullTermination();
 	}
 
@@ -96,6 +97,7 @@ namespace NxEn
 		Other.Count = 0;
 		Other.Capacity = SmallStringCapacity;
 		Other.Data.Large = nullptr;
+
 		ValidateNullTermination();
 
 		return *this;
