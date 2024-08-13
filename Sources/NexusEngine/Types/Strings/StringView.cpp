@@ -3,6 +3,11 @@
 
 namespace NxEn
 {
+	StringView::StringView()
+		:Data(""), Count(0)
+	{
+	}
+
 	StringView::StringView(const char* Text)
 		:Data(Text), Count(StringCApi::Length(Text))
 	{

@@ -3,6 +3,8 @@
 
 namespace NxEn
 {
+	//TODO: Implementation - Strings - Handle nullptr
+
 	void StringCApi::Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe)
 	{
 		if (NotSafe)

@@ -9,6 +9,7 @@ namespace NxEn
 	struct StringView
 	{
 	public:
+		NEXUS_ENGINE_API StringView();
 		NEXUS_ENGINE_API StringView(const char* Text);
 		NEXUS_ENGINE_API StringView(const char* Text, uint64 Size);
 		NEXUS_ENGINE_API StringView(const String& Text);
