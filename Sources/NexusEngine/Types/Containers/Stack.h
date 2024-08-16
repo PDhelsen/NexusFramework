@@ -100,7 +100,7 @@ namespace NxEn
 		T& Append(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			AppendNode(Instance);
 			return Instance->Value;
@@ -109,7 +109,7 @@ namespace NxEn
 		T& Append(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			AppendNode(Instance);
 			return Instance->Value;
@@ -119,7 +119,7 @@ namespace NxEn
 		T& AppendConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			AppendNode(Instance);
 			return Instance->Value;
@@ -145,6 +145,7 @@ namespace NxEn
 			
 			Node* Instance = Data;
 			RemoveNode();
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -249,8 +250,18 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(Node* Instance, Args&&... args)
+		{
+			Memory::Construct<T>(&Instance->Value, args...);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void AppendNode(Node* Instance)

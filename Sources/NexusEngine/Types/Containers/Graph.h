@@ -145,14 +145,15 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
 			Node* Instance = GetNode(Position);
-			Memory::Construct<T>(&Instance->Value, args...);
+			Destruct(Instance);
+			Construct(Instance, args...);
 			return Instance->Value;
 		}
 
 		T& Append(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			AppendNode(Instance);
 			return Instance->Value;
@@ -161,7 +162,7 @@ namespace NxEn
 		T& Append(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			AppendNode(Instance);
 			return Instance->Value;
@@ -171,7 +172,7 @@ namespace NxEn
 		T& AppendConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			AppendNode(Instance);
 			return Instance->Value;
@@ -195,6 +196,7 @@ namespace NxEn
 			
 			Node* Instance = GetNode(Value);
 			RemoveNode(Instance);
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -204,6 +206,7 @@ namespace NxEn
 			while (Current)
 			{
 				Node* Next = Current->Next;
+				Destruct(Current);
 				Free(Current);
 				Current = Next;
 			}
@@ -392,12 +395,40 @@ namespace NxEn
 			return Instance;
 		}
 
+		Connection* Allocate(Node* A, Node* B, ConnectionType Type)
+		{
+			A->Count++;
+
+			Connection* Connect = (Connection*)Memory::Allocate(sizeof(Connection), NEXUS_MEMORY_ALIGN, Allocator);
+			Connect->Target = B;
+			Connect->Type = Type;
+			Connect->Next = nullptr;
+			return Connect;
+		}
+
 		void Free(Node* Instance)
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		void Free(Connection* Instance, Node* A, Node* B)
+		{
+			A->Count--;
+
+			Memory::Free(Instance, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(Node* Instance, Args&&... args)
+		{
+			Memory::Construct<T>(&Instance->Value, args...);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void AppendNode(Node* Instance)
@@ -442,11 +473,7 @@ namespace NxEn
 				Current = Current->Next;
 			}
 
-			Connection* Connect = (Connection*)Memory::Allocate(sizeof(Connection), NEXUS_MEMORY_ALIGN, Allocator);
-			Connect->Target = B;
-			Connect->Type = Type;
-			Connect->Next = nullptr;
-			A->Count++;
+			Connection* Connect = Allocate(A, B, Type);
 
 			if (Prev)
 			{
@@ -488,8 +515,7 @@ namespace NxEn
 				A->Connection = Current->Next;
 			}
 
-			Memory::Free(Current, Allocator);
-			A->Count--;
+			Free(Current, A, B);
 		}
 
 		static Node* GetNode(T* Value)

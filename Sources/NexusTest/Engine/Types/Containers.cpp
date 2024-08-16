@@ -135,14 +135,12 @@ namespace NxTs
 {
 	TEST(Type_Containers, Array)
 	{
-		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(10);
-		Test.Initialize(5);
+		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(10, nullptr, 5);
 		ASSERT_EQ(Test.GetCount(), 10);
 		ASSERT_EQ(Test[0].Integer, 5);
 	
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5);
-		Range.Initialize(4);
+		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5, nullptr, 4);
 
 		Test.Assign(0, Container1);
 		Test.Assign(1, ContainerTest(2));
@@ -874,13 +872,13 @@ namespace NxTs
 	TEST(Type_Containers, Tree)
 	{
 		NxEn::Tree<ContainerTest> Test = NxEn::Tree<ContainerTest>();
-		ContainerTest& Root = Test.Initialize(0);
+		ContainerTest& Root = Test.Append(nullptr, 0);
 		ASSERT_EQ(Test.GetCount(), 1);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
 		ContainerTest Container1 = ContainerTest(1);
 		NxEn::Tree<ContainerTest> Range = NxEn::Tree<ContainerTest>();
-		ContainerTest& RangeRoot = Range.Initialize(0);
+		ContainerTest& RangeRoot = Range.Append(nullptr, 0);
 		Range.Append(&RangeRoot, 4);
 		Range.Append(&RangeRoot, 4);
 		Range.Append(&RangeRoot, 4);
@@ -1174,7 +1172,6 @@ namespace NxTs
 	TEST(Type_Containers, Range)
 	{
 		NxEn::Array<ContainerTest> Container1(10);
-		Container1.Initialize(0);
 		Container1.Assign(0, 18);
 		Container1.Assign(1, 24);
 		Container1.Assign(2, 36);
@@ -1217,7 +1214,7 @@ namespace NxTs
 		Container6.Append(45);
 
 		NxEn::Tree<ContainerTest> Container7;
-		ContainerTest& Root = Container7.Initialize(36);
+		ContainerTest& Root = Container7.Append(nullptr, 36);
 		Container7.Append(&Root, 24);
 		Container7.Append(&Root, 18);
 		Container7.Append(&Root, 58);
@@ -1244,14 +1241,90 @@ namespace NxTs
 		Container2.AppendRange(Container9);
 
 		NxEn::List<NxEn::KeyValuePair<ContainerTest, ContainerTest>> Pair;
-		Pair.Append({0, 18});
-		Pair.Append({1, 24});
-		Pair.Append({2, 36});
-		Pair.Append({3, 45});
-		Pair.Append({4, 58});
+		Pair.Append({ ContainerTest(1), ContainerTest(10) });
+		Pair.Append({ ContainerTest(2), ContainerTest(20) });
 
 		NxEn::Dictionary<ContainerTest, ContainerTest> Container10;
 		Container10.AppendRange(Pair);
 		Pair.AppendRange(Container10);
+	}
+
+	TEST(Type_Containers, Strings)
+	{
+		const char* Text = "Hello World";
+		NxEn::String Data = Text;
+
+		NxEn::Array<NxEn::String> Array = NxEn::Array<NxEn::String>(10);
+		Array.Assign(0, Data);
+		Array.Assign(0, Text);
+		Array[0] = Data;
+		Array[0] = Text;
+
+		NxEn::List<NxEn::String> List = NxEn::List<NxEn::String>();
+		List.Append(Data);
+		List.Append(Text);
+		List.Insert(1, Data);
+		List.Insert(1, Text);
+		List[1] = Data;
+		List[1] = Text;
+		List.Remove(1);
+		List.Remove(1);
+
+		NxEn::Dequeue<NxEn::String> Dequeue = NxEn::Dequeue<NxEn::String>();
+		Dequeue.AppendFront(Data);
+		Dequeue.AppendBack(Text);
+		List[1] = Data;
+		List[1] = Text;
+		Dequeue.RemoveFront();
+		Dequeue.RemoveBack();
+
+		NxEn::LinkedList<NxEn::String> LinkedList = NxEn::LinkedList<NxEn::String>();
+		LinkedList.AppendFront(Data);
+		LinkedList.AppendBack(Text);
+		LinkedList.RemoveFront();
+		LinkedList.RemoveBack();
+
+		NxEn::Stack<NxEn::String> Stack = NxEn::Stack<NxEn::String>();
+		Stack.Append(Data);
+		Stack.Append(Text);
+		Stack.Remove();
+		Stack.Remove();
+
+		NxEn::Queue<NxEn::String> Queue = NxEn::Queue<NxEn::String>();
+		Queue.Append(Data);
+		Queue.Append(Text);
+		Queue.Remove();
+		Queue.Remove();
+
+		NxEn::Set<NxEn::String> Set = NxEn::Set<NxEn::String>();
+		Set.Append(Data);
+		Set.Append(Text);
+		Set.Remove(Data);
+
+		NxEn::Dictionary<NxEn::String, NxEn::String> Dictionary = NxEn::Dictionary<NxEn::String, NxEn::String>();
+		Dictionary.Append("Key 1", Data);
+		Dictionary.Append("Key 2", Text);
+		Dictionary.AppendConstruct("Key 3", "Hello World");
+		Dictionary.Remove("Key 1");
+
+		NxEn::Tree<NxEn::String> Tree = NxEn::Tree<NxEn::String>();
+		NxEn::String& Root = Tree.Append(nullptr, Data);
+		Tree.Append(&Root, Text);
+		Tree.Remove(&Root);
+
+		NxEn::Graph<NxEn::String> Graph = NxEn::Graph<NxEn::String>();
+		NxEn::String& A = Graph.Append(Data);
+		NxEn::String& B = Graph.Append(Text);
+		Graph.Connect(&A, &B);
+		Graph.Disconnect(&A, &B);
+		Graph.Remove(&A);
+		Graph.Remove(&B);
+
+		NxEn::Pool<NxEn::String> Pool = NxEn::Pool<NxEn::String>();
+		NxEn::String& C = Pool.Acquire();
+		Pool.Recycle(C);
+
+		NxEn::Tuple<NxEn::String, NxEn::String> Tuple = NxEn::Tuple<NxEn::String, NxEn::String>(Data, Text);
+		Tuple.SetFirst(Tuple.GetSecond());
 	}
 }

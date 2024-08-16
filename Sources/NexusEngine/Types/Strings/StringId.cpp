@@ -50,7 +50,7 @@ namespace NxEn
 		GUID Id = Hash<StringView>::HashObject(Text);
 		if (!Tables.ContainsKey(Id))
 		{
-			Tables.AppendConstruct(Id, Text.ToString());
+			Tables.Append(Move(Id), Move(Text.ToString()));
 		}
 		return Id;
 	}

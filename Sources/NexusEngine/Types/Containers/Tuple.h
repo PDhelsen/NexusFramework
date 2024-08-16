@@ -116,6 +116,13 @@ namespace NxEn
 			First = Move(Value);
 		}
 
+		template<typename... Args>
+		void SetFirstConstruct(Args&&... args)
+		{
+			Memory::Destruct(&First);
+			Memory::Construct(&First, args...);
+		}
+
 		void SetSecond(const T2& Value)
 		{
 			Second = Value;
@@ -124,6 +131,13 @@ namespace NxEn
 		void SetSecond(T2&& Value)
 		{
 			Second = Move(Value);
+		}
+
+		template<typename... Args>
+		void SetSecondConstruct(Args&&... args)
+		{
+			Memory::Destruct(&Second);
+			Memory::Construct(&Second, args...);
 		}
 
 		void Swap()

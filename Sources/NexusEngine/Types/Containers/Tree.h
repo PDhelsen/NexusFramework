@@ -42,7 +42,7 @@ namespace NxEn
 		Tree<T> Copy() const
 		{
 			Tree<T> Copy = Tree<T>(Allocator);
-			Copy.Initialize(Data->Value);
+			Copy.Append(nullptr, Data->Value);
 			
 			Node* RootChild = Data->Child;
 			while (RootChild)
@@ -96,28 +96,6 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		T& Initialize(const T& Value)
-		{
-			Data = Allocate();
-			Data->Value = Value;
-			return Data->Value;
-		}
-
-		T& Initialize(T&& Value)
-		{
-			Data = Allocate();
-			Data->Value = Move(Value);
-			return Data->Value;
-		}
-
-		template<typename... Args>
-		T& InitializeConstruct(Args&&... args)
-		{
-			Data = Allocate();
-			Memory::Construct<T>(&Data->Value, args...);
-			return Data->Value;
-		}
-
 		T& Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
@@ -145,17 +123,15 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = GetNode(Position);
-			Memory::Construct<T>(&Instance->Value, args...);
+			Destruct(Instance);
+			Construct(Instance, args...);
 			return Instance->Value;
 		}
 
 		T& Append(T* Parent, const T& Value)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
-
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			Node* Anchor = GetNode(Parent);
 			AppendNode(Anchor, Instance);
@@ -164,11 +140,8 @@ namespace NxEn
 
 		T& Append(T* Parent, T&& Value)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
-
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			Node* Anchor = GetNode(Parent);
 			AppendNode(Anchor, Instance);
@@ -178,11 +151,8 @@ namespace NxEn
 		template<typename... Args>
 		T& AppendConstruct(T* Parent, Args&&... args)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
-
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			Node* Anchor = GetNode(Parent);
 			AppendNode(Anchor, Instance);
@@ -191,9 +161,6 @@ namespace NxEn
 
 		T& AppendRange(T* Parent, const Tree<T>& Value)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
-
 			Node* Anchor = GetNode(Parent);
 			Node* Copy = GetNode(&Value.Get());
 			return CopyNode(Anchor, Copy);
@@ -202,9 +169,6 @@ namespace NxEn
 		template<typename C>
 		T& AppendRange(T* Parent, const C& Value)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
-
 			typename C::Iterator It = Value.Begin();
 			T& Return = Append(Parent, *It);
 
@@ -222,8 +186,8 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Value;
-		
+			Construct(Instance, Value);
+
 			Node* Anchor = GetNode(Sibling);
 			InsertNodeSibling(Anchor, Instance);
 			return Instance->Value;
@@ -235,7 +199,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			Node* Anchor = GetNode(Sibling);
 			InsertNodeSibling(Anchor, Instance);
@@ -249,7 +213,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			Node* Anchor = GetNode(Sibling);
 			InsertNodeSibling(Anchor, Instance);
@@ -262,7 +226,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			Node* Anchor = GetNode(Parent);
 			InsertNodeChild(Anchor, Instance);
@@ -275,7 +239,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			Node* Anchor = GetNode(Parent);
 			InsertNodeChild(Anchor, Instance);
@@ -289,7 +253,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
 
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			Node* Anchor = GetNode(Parent);
 			InsertNodeChild(Anchor, Instance);
@@ -504,15 +468,33 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(Node* Instance, Args&&... args)
+		{
+			Memory::Construct<T>(&Instance->Value, args...);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void AppendNode(Node* Parent, Node* Child)
 		{
 			Child->Parent = Parent;
 
-			if (Parent->Child)
+			if (Parent == nullptr && Data == nullptr)
+			{
+				Data = Child;
+			}
+			else if (Parent == nullptr && Data != nullptr)
+			{
+				NEXUS_ASSERT(false, "Trying to replace root of the tree is not allowed");
+			}
+			else if (Parent->Child)
 			{
 				Node* Sibling = Parent->Child;
 				while (Sibling->Sibling != nullptr)
@@ -520,13 +502,13 @@ namespace NxEn
 					Sibling = Sibling->Sibling;
 				}
 				Sibling->Sibling = Child;
+				Parent->Count++;
 			}
 			else
 			{
 				Parent->Child = Child;
+				Parent->Count++;
 			}
-
-			Parent->Count++;
 		}
 
 		void InsertNodeSibling(Node* Sibling, Node* Instance)
@@ -534,7 +516,10 @@ namespace NxEn
 			Instance->Parent = Sibling->Parent;
 			Instance->Sibling = Sibling->Sibling;
 			Sibling->Sibling = Instance;
-			Sibling->Parent->Count++;
+			if (Sibling->Parent)
+			{
+				Sibling->Parent->Count++;
+			}
 		}
 
 		void InsertNodeChild(Node* Parent, Node* Instance)
@@ -588,6 +573,7 @@ namespace NxEn
 				Parent->Count--;
 			}
 
+			Destruct(Instance);
 			Free(Instance);
 		}
 

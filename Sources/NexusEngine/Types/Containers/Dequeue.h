@@ -150,7 +150,8 @@ namespace NxEn
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
-			Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
+			Destruct(Index, 1);
+			Construct(Index, 1, args...);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -176,14 +177,14 @@ namespace NxEn
 		T& AppendBack(const T& Value)
 		{
 			AppendBucket(true);
-			Data[Buckets - 1][IndexBack] = Value;
+			Construct(Count - 1, 1, Value);
 			return Data[Buckets - 1][IndexBack];
 		}
 
 		T& AppendBack(T&& Value)
 		{
 			AppendBucket(true);
-			Data[Buckets - 1][IndexBack] = Move(Value);
+			Construct(Count - 1, 1, Move(Value));
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -191,7 +192,7 @@ namespace NxEn
 		T& AppendBackConstruct(Args&&... args)
 		{
 			AppendBucket(true);
-			Memory::Construct<T>(&Data[Buckets - 1][IndexBack], args...);
+			Construct(Count - 1, 1, args...);
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -212,14 +213,14 @@ namespace NxEn
 		T& AppendFront(const T& Value)
 		{
 			AppendBucket(false);
-			Data[0][IndexFront] = Value;
+			Construct(0, 1, Value);
 			return Data[0][IndexFront];
 		}
 
 		T& AppendFront(T&& Value)
 		{
 			AppendBucket(false);
-			Data[0][IndexFront] = Move(Value);
+			Construct(0, 1, Move(Value));
 			return Data[0][IndexFront];
 		}
 
@@ -227,7 +228,7 @@ namespace NxEn
 		T& AppendFrontConstruct(Args&&... args)
 		{
 			AppendBucket(false);
-			Memory::Construct<T>(&Data[0][IndexFront], args...);
+			Construct(0, 1, args...);
 			return Data[0][IndexFront];
 		}
 
@@ -246,6 +247,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 
+			Destruct(Count - 1, 1);
 			RemoveBucket(true);
 		}
 
@@ -253,6 +255,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 			
+			Destruct(0, 1);
 			RemoveBucket(false);
 		}
 
@@ -397,6 +400,17 @@ namespace NxEn
 			}
 		}
 
+		template<typename... Args>
+		void Construct(uint64 Index, uint64 Size, Args&&... args)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index + Offset, BucketIndex, DataIndex);
+				Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
+			}
+		}
+
 		void Destruct(uint64 Index, uint64 Size)
 		{
 			for (uint64 Offset = 0; Offset < Size; Offset++)
@@ -451,8 +465,6 @@ namespace NxEn
 
 		void RemoveBucket(bool RemoveBack)
 		{
-			Destruct(RemoveBack ? Count - 1 : 0, 1);
-			
 			Count--;
 
 			if ((RemoveBack && IndexBack == 0) || (!RemoveBack && IndexFront == BucketSize - 1))

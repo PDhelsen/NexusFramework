@@ -107,6 +107,7 @@ namespace NxEn
 			if (IsEmpty())
 			{
 				Node* Instance = Allocate();
+				Construct(Instance);
 				Value = &Instance->Value;
 			}
 			else
@@ -136,6 +137,7 @@ namespace NxEn
 			while (Data)
 			{
 				Node* Next = Data->Next;
+				Destruct(Data);
 				Free(Data);
 				Data = Next;
 			}
@@ -158,7 +160,6 @@ namespace NxEn
 		{
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
 			Instance->Next = nullptr;
-			Memory::Construct<T>(&Instance->Value);
 			return Instance;
 		}
 
@@ -173,8 +174,17 @@ namespace NxEn
 
 		void Free(Node* Instance)
 		{
-			Memory::Destruct<T>(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		void Construct(Node* Instance)
+		{
+			Memory::Construct<T>(&Instance->Value);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

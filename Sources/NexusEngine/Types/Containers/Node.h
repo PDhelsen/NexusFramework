@@ -66,35 +66,27 @@ namespace NxEn
 
 		}
 
-		KeyValuePair(const K& Key, T&& Value)
-			: Key(Key), Value(Move(Value))
+		KeyValuePair(K&& Key, T&& Value)
+			: Key(Move(Key)), Value(Move(Value))
 		{
 
-		}
-
-		void Initialize(const K& InitialKey, const T& InitialValue)
-		{
-			Key = InitialKey;
-			Value = InitialValue;
-		}
-
-		void Initialize(const K& InitialKey, T&& InitialValue)
-		{
-			Key = InitialKey;
-			Value = Move(InitialValue);
 		}
 
 		template<typename... Args>
-		void Initialize(const K& InitialKey, Args&&... args)
+		KeyValuePair(K&& Key, Args&&... args)
+			: Key(Move(Key)), Value(args...)
 		{
-			Key = InitialKey;
-			Memory::Construct<T>(&Value, args...);
+
 		}
 
 		void SetValue(const T& Other) { Value = Other; }
 		void SetValue(T&& Other) { Value = Move(Other); }
 		template<typename... Args>
-		void SetValue(Args&&... args) { Memory::Construct<T>(&Value, args...); }
+		void SetValue(Args&&... args)
+		{
+			Memory::Destruct(&Value);
+			Memory::Construct<T>(&Value, args...);
+		}
 
 		const K& GetKey() const { return Key; }
 		T& GetValue() { return Value; }

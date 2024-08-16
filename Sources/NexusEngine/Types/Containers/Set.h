@@ -126,7 +126,7 @@ namespace NxEn
 			}
 			
 			Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			AppendNode(Index, Instance);
 			return Instance->Value;
@@ -147,7 +147,7 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			AppendNode(Index, Instance);
 			return Instance->Value;
@@ -174,6 +174,7 @@ namespace NxEn
 			NEXUS_ASSERT(Instance, "Value not in Set");
 
 			RemoveNode(Index, Instance);
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -186,6 +187,7 @@ namespace NxEn
 				{
 					Node* ToRemove = Current;
 					Current = Current->Next;
+					Destruct(ToRemove);
 					Free(ToRemove);
 				}
 
@@ -274,8 +276,18 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(Node* Instance, Args&&... args)
+		{
+			Memory::Construct<T>(&Instance->Value, args...);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void AppendNode(uint64 Index, Node* Instance)

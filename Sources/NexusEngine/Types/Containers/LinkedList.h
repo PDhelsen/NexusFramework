@@ -127,14 +127,15 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = GetNode(Position);
-			Memory::Construct<T>(&Instance->Value, args...);
+			Destruct(Instance);
+			Construct(Instance, args...);
 			return Instance->Value;
 		}
 
 		T& AppendBack(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			AppendNodeTail(Instance);
 			return Instance->Value;
@@ -143,7 +144,7 @@ namespace NxEn
 		T& AppendBack(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			AppendNodeTail(Instance);
 			return Instance->Value;
@@ -153,7 +154,7 @@ namespace NxEn
 		T& AppendBackConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			AppendNodeTail(Instance);
 			return Instance->Value;
@@ -175,7 +176,7 @@ namespace NxEn
 		T& AppendFront(const T& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			AppendNodeHead(Instance);
 			return Instance->Value;
@@ -184,7 +185,7 @@ namespace NxEn
 		T& AppendFront(T&& Value)
 		{
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			AppendNodeHead(Instance);
 			return Instance->Value;
@@ -194,7 +195,7 @@ namespace NxEn
 		T& AppendFrontConstruct(Args&&... args)
 		{
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			AppendNodeHead(Instance);
 			return Instance->Value;
@@ -217,7 +218,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
@@ -230,7 +231,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
@@ -244,7 +245,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
@@ -275,7 +276,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Value;
+			Construct(Instance, Value);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
@@ -288,7 +289,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Instance->Value = Move(Value);
+			Construct(Instance, Move(Value));
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
@@ -302,7 +303,7 @@ namespace NxEn
 			NEXUS_ASSERT(!IsEmpty(), "List is empty");
 
 			Node* Instance = Allocate();
-			Memory::Construct<T>(&Instance->Value, args...);
+			Construct(Instance, args...);
 
 			Node* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
@@ -332,6 +333,7 @@ namespace NxEn
 			
 			Node* Instance = DataTail;
 			RemoveNode(Instance);
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -353,6 +355,7 @@ namespace NxEn
 			
 			Node* Instance = DataHead;
 			RemoveNode(Instance);
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -375,6 +378,7 @@ namespace NxEn
 
 			Node* Instance = GetNode(Position);
 			RemoveNode(Instance);
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -392,6 +396,7 @@ namespace NxEn
 				Node* Instance = Start;
 				Start = Start->Next;
 				RemoveNode(Instance);
+				Destruct(Instance);
 				Free(Instance);
 			}
 		}
@@ -619,8 +624,18 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(Node* Instance, Args&&... args)
+		{
+			Memory::Construct<T>(&Instance->Value, args...);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void AppendNodeTail(Node* Instance)

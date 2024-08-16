@@ -54,7 +54,7 @@ namespace NxEn
 				while (Current)
 				{
 					Node* NodeCopy = Copy.Allocate();
-					NodeCopy->Value.Initialize(Current->Value.GetKey(), Current->Value.GetValue());
+					NodeCopy->Value = Current->Value;
 					Copy.AppendNode(Index, NodeCopy);
 
 					Current = Current->Next;
@@ -176,13 +176,13 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->Value.Initialize(Key, Value);
+			Construct(Instance, Key, Value);
 
 			AppendNode(Index, Instance);
 			return Instance->Value.GetValue();
 		}
 
-		T& Append(const K& Key, T&& Value)
+		T& Append(K&& Key, T&& Value)
 		{
 			uint64 Index = GetIndex(Key);
 			Node* Instance = GetNode(Index, Key);
@@ -197,14 +197,14 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->Value.Initialize(Key, Move(Value));
+			Construct(Instance, Move(Key), Move(Value));
 
 			AppendNode(Index, Instance);
 			return Instance->Value.GetValue();
 		}
 
 		template<typename... Args>
-		T& AppendConstruct(const K& Key, Args&&... args)
+		T& AppendConstruct(K&& Key, Args&&... args)
 		{
 			uint64 Index = GetIndex(Key);
 			Node* Instance = GetNode(Index, Key);
@@ -219,7 +219,7 @@ namespace NxEn
 			}
 
 			Instance = Allocate();
-			Instance->Value.Initialize(Key, args...);
+			Construct(Instance, Move(Key), args...);
 
 			AppendNode(Index, Instance);
 			return Instance->Value.GetValue();
@@ -246,6 +246,7 @@ namespace NxEn
 			NEXUS_ASSERT(Instance, "Key not in Dictionary");
 
 			RemoveNode(Index, Instance);
+			Destruct(Instance);
 			Free(Instance);
 		}
 
@@ -256,8 +257,9 @@ namespace NxEn
 				Node* Current = Data[Index];
 				while (Current)
 				{
-					Node* ToRemove = Current;
+					Node* ToRemove = Current; 
 					Current = Current->Next;
+					Destruct(ToRemove);
 					Free(ToRemove);
 				}
 
@@ -398,8 +400,18 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Destruct(&Instance->Value);
 			Memory::Free(Instance, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(Node* Instance, Args&&... args)
+		{
+			Memory::Construct<KeyValuePair<K, T>>(&Instance->Value, args...);
+		}
+
+		void Destruct(Node* Instance)
+		{
+			Memory::Destruct(&Instance->Value);
 		}
 
 		void AppendNode(uint64 Index, Node* Instance)

@@ -11,7 +11,6 @@
 namespace NxEn
 {
 	// TODO: Cleanup - Name - Allocator
-	// TODO: Implementation - Memory - Initialize memory / Construct (Set, Dict)
 
 	template<typename T>
 	class Array
@@ -19,11 +18,13 @@ namespace NxEn
 	public:
 		using Iterator = BlockIterator<T>;
 
-		Array(uint64 Size, Allocator* Allctr = nullptr)
+		template<typename... Args>
+		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)
 			: Allocator(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 			Allocate(Size);
+			Construct(0, Count, args...);
 		}
 
 		Array(const Array<T>& Other)
@@ -104,15 +105,6 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		template<typename... Args>
-		void Initialize(Args&&... args)
-		{
-			for (uint64 Index = 0; Index < Count; Index++)
-			{
-				Memory::Construct<T>(&Data[Index], args...);
-			}
-		}
-
 		T& Assign(uint64 Index, const T& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
@@ -134,7 +126,8 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Memory::Construct<T>(&Data[Index], args...);
+			Destruct(Index, 1);
+			Construct(Index, 1, args...);
 			return Data[Index];
 		}
 
@@ -256,6 +249,15 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(uint64 Index, uint64 Size, Args&&... args)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				Memory::Construct<T>(&Data[Index + Offset], args...);
+			}
 		}
 
 		void Destruct(uint64 Index, uint64 Size)

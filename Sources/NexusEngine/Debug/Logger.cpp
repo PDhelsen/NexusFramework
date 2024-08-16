@@ -29,7 +29,7 @@ namespace NxEn
 	void Logger::AddChannel(StringView Channel, bool State /*true*/)
 	{
 		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %s", Channel.C())
-		Channels->AppendConstruct(Channel, State);
+		Channels->Append(Channel, State);
 	}
 
 	void Logger::SetChannel(StringView Channel, bool State)

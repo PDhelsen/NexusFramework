@@ -126,7 +126,8 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Memory::Construct<T>(&Data[Index], args...);
+			Destruct(Index, 1);
+			Construct(Index, 1, args...);
 			return Data[Index];
 		}
 
@@ -148,14 +149,14 @@ namespace NxEn
 		T& Append(const T& Value)
 		{
 			Resize(++Count);
-			Data[Count - 1] = Value;
+			Construct(Count - 1, 1, Value);
 			return Data[Count - 1];
 		}
 
 		T& Append(T&& Value)
 		{
 			Resize(++Count);
-			Data[Count - 1] = Move(Value);
+			Construct(Count - 1, 1, Move(Value));
 			return Data[Count - 1];
 		}
 
@@ -163,7 +164,7 @@ namespace NxEn
 		T& AppendConstruct(Args&&... args)
 		{
 			Resize(++Count);
-			Memory::Construct<T>(&Data[Count - 1], args...);
+			Construct(Count - 1, 1, args...);
 			return Data[Count - 1];
 		}
 
@@ -176,7 +177,7 @@ namespace NxEn
 			uint64 Offset = 0;
 			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Data[Index + Offset] = *It;
+				Construct(Index + Offset, 1, *It);
 			}
 	
 			return Data[Index];
@@ -188,7 +189,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Data[Index] = Value;
+			Construct(Index, 1, Value);
 			return Data[Index];
 		}
 
@@ -198,7 +199,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Data[Index] = Move(Value);
+			Construct(Index, 1, Move(Value));
 			return Data[Index];
 		}
 
@@ -209,7 +210,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Memory::Construct<T>(&Data[Index], args...);
+			Construct(Index, 1, args...);
 			return Data[Index];
 		}
 
@@ -224,7 +225,7 @@ namespace NxEn
 			uint64 Offset = 0;
 			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Data[Index + Offset] = *It;
+				Construct(Index + Offset, 1, *It);
 			}
 		
 			return Data[Index];
@@ -406,6 +407,15 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Allocator);
+		}
+
+		template<typename... Args>
+		void Construct(uint64 Index, uint64 Size, Args&&... args)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				Memory::Construct<T>(&Data[Index + Offset], args...);
+			}
 		}
 
 		void Destruct(uint64 Index, uint64 Size)
