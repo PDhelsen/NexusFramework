@@ -1249,6 +1249,61 @@ namespace NxTs
 		Pair.AppendRange(Container10);
 	}
 
+	TEST(Type_Containers, Containers)
+	{
+		NxEn::List<ContainerTest> List;
+		List.Append(36);
+		List.Append(58);
+		List.Append(45);
+		List.Append(24);
+		List.Append(18);
+
+		NxEn::LinkedList<ContainerTest> LinkedList;
+		LinkedList.AppendBack(36);
+		LinkedList.AppendBack(24);
+		LinkedList.AppendBack(18);
+		LinkedList.AppendBack(58);
+		LinkedList.AppendBack(45);
+
+		NxEn::Array<NxEn::List<ContainerTest>> Container1 = NxEn::Array<NxEn::List<ContainerTest>>(5);
+		Container1.Assign(0, List);
+		ASSERT_EQ(Container1[0][2].Integer, 45);
+		NxEn::List<NxEn::List<ContainerTest>> Container2 = NxEn::List<NxEn::List<ContainerTest>>(5);
+		Container2.Append(List);
+		ASSERT_EQ(Container2[0][2].Integer, 45);
+		NxEn::LinkedList<NxEn::List<ContainerTest>> Container3 = NxEn::LinkedList<NxEn::List<ContainerTest>>();
+		Container3.AppendBack(List);
+		ASSERT_EQ(Container3.Get()[2].Integer, 45);
+		NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>> Container4 = NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>>();
+		Container4.Append(ContainerTest(42), List);
+		ASSERT_EQ(Container4[ContainerTest(42)][2].Integer, 45);
+		NxEn::Tree<NxEn::List<ContainerTest>> Container5 = NxEn::Tree<NxEn::List<ContainerTest>>();
+		Container5.Append(nullptr, List);
+		ASSERT_EQ(Container5.Get()[2].Integer, 45);
+
+		NxEn::Array<NxEn::LinkedList<ContainerTest>> Container6 = NxEn::Array<NxEn::LinkedList<ContainerTest>>(5);
+		Container6.Assign(0, LinkedList);
+		ASSERT_EQ(Container6[0].Get().Integer, 36);
+		NxEn::List<NxEn::LinkedList<ContainerTest>> Container7 = NxEn::List<NxEn::LinkedList<ContainerTest>>(5);
+		Container7.Append(LinkedList);
+		ASSERT_EQ(Container7[0].Get().Integer, 36);
+		NxEn::LinkedList<NxEn::LinkedList<ContainerTest>> Container8 = NxEn::LinkedList<NxEn::LinkedList<ContainerTest>>();
+		Container8.AppendBack(LinkedList);
+		ASSERT_EQ(Container8.Get().Get().Integer, 36);
+		NxEn::Dictionary<ContainerTest, NxEn::LinkedList<ContainerTest>> Container9 = NxEn::Dictionary<ContainerTest, NxEn::LinkedList<ContainerTest>>();
+		Container9.Append(ContainerTest(42), LinkedList);
+		ASSERT_EQ(Container9[ContainerTest(42)].Get().Integer, 36);
+		NxEn::Tree<NxEn::LinkedList<ContainerTest>> Container10 = NxEn::Tree<NxEn::LinkedList<ContainerTest>>();
+		Container10.Append(nullptr, LinkedList);
+		ASSERT_EQ(Container10.Get().Get().Integer, 36);
+
+		List[2] = 55;
+		LinkedList.Get() = 55;
+
+		ASSERT_EQ(Container1[0][2].Integer, 55);
+		ASSERT_EQ(Container6[0].Get().Integer, 55);
+	}
+
 	TEST(Type_Containers, Strings)
 	{
 		const char* Text = "Hello World";
