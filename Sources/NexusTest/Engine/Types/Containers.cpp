@@ -1218,6 +1218,35 @@ namespace NxTs
 		Pair.AppendRange(Container10);
 	}
 
+	TEST(Type_Containers, Container)
+	{
+		NxEn::List<ContainerTest> Test;
+		Test.Append(1);
+		Test.Append(2);
+		Test.Append(3);
+		Test.Append(4);
+		Test.Append(5);
+
+		NxEn::List<NxEn::List<ContainerTest>> List;
+		List.Append(Test);
+
+		NxEn::LinkedList<NxEn::List<ContainerTest>> LinkedList;
+		LinkedList.AppendBack(Test);
+
+		NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>> Dictionary;
+		Dictionary.Append(ContainerTest(10), Test);
+
+		ASSERT_EQ(Test[2].Integer, List[0][2].Integer);
+		ASSERT_EQ(Test[2].Integer, LinkedList.Get()[2].Integer);
+		ASSERT_EQ(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
+
+		Test[2].Integer = 10;
+
+		ASSERT_NE(Test[2].Integer, List[0][2].Integer);
+		ASSERT_NE(Test[2].Integer, LinkedList.Get()[2].Integer);
+		ASSERT_NE(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
+	}
+
 	TEST(Type_Containers, NativeType)
 	{
 		NxEn::List<uint64> TestUint;
