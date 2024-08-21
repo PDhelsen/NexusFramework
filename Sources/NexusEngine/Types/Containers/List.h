@@ -30,7 +30,7 @@ namespace NxEn
 
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				Construct(Index, 1, Other[Index]);
+				Construct(Index, Other[Index]);
 			}
 		}
 
@@ -120,7 +120,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Destruct(Index, 1);
-			Construct(Index, 1, args...);
+			Construct(Index, args...);
 			return Data[Index];
 		}
 
@@ -142,14 +142,14 @@ namespace NxEn
 		T& Append(const T& Value)
 		{
 			Resize(++Count);
-			Construct(Count - 1, 1, Value);
+			Construct(Count - 1, Value);
 			return Data[Count - 1];
 		}
 
 		T& Append(T&& Value)
 		{
 			Resize(++Count);
-			Construct(Count - 1, 1, Move(Value));
+			Construct(Count - 1, Move(Value));
 			return Data[Count - 1];
 		}
 
@@ -157,7 +157,7 @@ namespace NxEn
 		T& AppendConstruct(Args&&... args)
 		{
 			Resize(++Count);
-			Construct(Count - 1, 1, args...);
+			Construct(Count - 1, args...);
 			return Data[Count - 1];
 		}
 
@@ -170,7 +170,7 @@ namespace NxEn
 			uint64 Offset = 0;
 			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Construct(Index + Offset, 1, *It);
+				Construct(Index + Offset, *It);
 			}
 	
 			return Data[Index];
@@ -182,7 +182,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Construct(Index, 1, Value);
+			Construct(Index, Value);
 			return Data[Index];
 		}
 
@@ -192,7 +192,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Construct(Index, 1, Move(Value));
+			Construct(Index, Move(Value));
 			return Data[Index];
 		}
 
@@ -203,7 +203,7 @@ namespace NxEn
 
 			Resize(++Count);
 			Shift(Index, 1, true);
-			Construct(Index, 1, args...);
+			Construct(Index, args...);
 			return Data[Index];
 		}
 
@@ -218,7 +218,7 @@ namespace NxEn
 			uint64 Offset = 0;
 			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
 			{
-				Construct(Index + Offset, 1, *It);
+				Construct(Index + Offset, *It);
 			}
 		
 			return Data[Index];
@@ -403,12 +403,9 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void Construct(uint64 Index, uint64 Size, Args&&... args)
+		void Construct(uint64 Index, Args&&... args)
 		{
-			for (uint64 Offset = 0; Offset < Size; Offset++)
-			{
-				Memory::Construct<T>(&Data[Index + Offset], args...);
-			}
+			Memory::Construct<T>(&Data[Index], args...);
 		}
 
 		void Destruct(uint64 Index, uint64 Size)

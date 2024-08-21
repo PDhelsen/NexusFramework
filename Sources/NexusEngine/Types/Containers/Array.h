@@ -24,7 +24,7 @@ namespace NxEn
 		{
 			ValidateAllocator(Allctr);
 			Allocate(Size);
-			Construct(0, Count, args...);
+			ConstructRange(0, Count, args...);
 		}
 
 		Array(const Array<T>& Other)
@@ -34,7 +34,7 @@ namespace NxEn
 
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				Construct(Index, 1, Other[Index]);
+				Construct(Index, Other[Index]);
 			}
 		}
 
@@ -121,7 +121,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
 			Destruct(Index, 1);
-			Construct(Index, 1, args...);
+			Construct(Index, args...);
 			return Data[Index];
 		}
 
@@ -246,7 +246,13 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void Construct(uint64 Index, uint64 Size, Args&&... args)
+		void Construct(uint64 Index, Args&&... args)
+		{
+			Memory::Construct<T>(&Data[Index], args...);
+		}
+
+		template<typename... Args>
+		void ConstructRange(uint64 Index, uint64 Size, Args&&... args)
 		{
 			for (uint64 Offset = 0; Offset < Size; Offset++)
 			{

@@ -33,11 +33,6 @@ namespace NxEn
 			
 		}
 
-		Tuple<T1, T2> Copy() const
-		{
-			return Tuple<T1, T2>(First, Second);
-		}
-
 		Tuple<T1, T2>& operator=(const Tuple<T1, T2>& Other)
 		{
 			if (*this == Other)

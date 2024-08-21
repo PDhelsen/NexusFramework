@@ -32,10 +32,7 @@ namespace NxEn
 			Allocate(Size);
 		}
 
-		Pool(const Pool<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data), Own(Other.Own)
-		{
-		}
+		Pool(const Pool<T>& Other) = delete;
 
 		Pool(Pool<T>&& Other) noexcept
 			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data), Own(Other.Own)

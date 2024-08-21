@@ -36,7 +36,7 @@ namespace NxEn
 
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				Construct(Index, 1, Other[Index]);
+				Construct(Index, Other[Index]);
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace NxEn
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			Destruct(Index, 1);
-			Construct(Index, 1, args...);
+			Construct(Index, args...);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -162,14 +162,14 @@ namespace NxEn
 		T& AppendBack(const T& Value)
 		{
 			AppendBucket(true);
-			Construct(Count - 1, 1, Value);
+			Construct(Count - 1, Value);
 			return Data[Buckets - 1][IndexBack];
 		}
 
 		T& AppendBack(T&& Value)
 		{
 			AppendBucket(true);
-			Construct(Count - 1, 1, Move(Value));
+			Construct(Count - 1, Move(Value));
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -177,7 +177,7 @@ namespace NxEn
 		T& AppendBackConstruct(Args&&... args)
 		{
 			AppendBucket(true);
-			Construct(Count - 1, 1, args...);
+			Construct(Count - 1, args...);
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -198,14 +198,14 @@ namespace NxEn
 		T& AppendFront(const T& Value)
 		{
 			AppendBucket(false);
-			Construct(0, 1, Value);
+			Construct(0, Value);
 			return Data[0][IndexFront];
 		}
 
 		T& AppendFront(T&& Value)
 		{
 			AppendBucket(false);
-			Construct(0, 1, Move(Value));
+			Construct(0, Move(Value));
 			return Data[0][IndexFront];
 		}
 
@@ -213,7 +213,7 @@ namespace NxEn
 		T& AppendFrontConstruct(Args&&... args)
 		{
 			AppendBucket(false);
-			Construct(0, 1, args...);
+			Construct(0, args...);
 			return Data[0][IndexFront];
 		}
 
@@ -386,14 +386,11 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void Construct(uint64 Index, uint64 Size, Args&&... args)
+		void Construct(uint64 Index, Args&&... args)
 		{
-			for (uint64 Offset = 0; Offset < Size; Offset++)
-			{
-				uint64 BucketIndex, DataIndex;
-				GetIndex(Index + Offset, BucketIndex, DataIndex);
-				Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
-			}
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
 		}
 
 		void Destruct(uint64 Index, uint64 Size)
