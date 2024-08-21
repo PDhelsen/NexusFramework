@@ -24,8 +24,14 @@ namespace NxEn
 		}
 
 		LinkedList(const LinkedList<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
+			: Allocator(Other.Allocator), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
+			Node* Current = Other.DataHead;
+			while (Current)
+			{
+				AppendBack(Current->Value);
+				Current = Current->Next;
+			}
 		}
 
 		LinkedList(LinkedList<T>&& Other) noexcept
@@ -38,20 +44,6 @@ namespace NxEn
 		~LinkedList()
 		{
 			Clear();
-		}
-
-		LinkedList<T> Copy() const
-		{
-			LinkedList Copy = LinkedList(Allocator);
-
-			Node* Current = DataHead;
-			while (Current != nullptr)
-			{
-				Copy.AppendBack(Current->Value);
-				Current = Current->Next;
-			}
-
-			return Copy;
 		}
 
 		LinkedList<T>& operator=(const LinkedList<T>& Other)

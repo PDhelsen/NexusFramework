@@ -28,8 +28,22 @@ namespace NxEn
 		}
 
 		Set(const Set<T, H, LF>& Other)
-			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(0), Data(nullptr)
 		{
+			Allocate(Buckets);
+
+			for (uint64 Index = 0; Index < Buckets; Index++)
+			{
+				Node* Current = Other.Data[Index];
+				while (Current)
+				{
+					Node* Copy = Allocate();
+					Construct(Copy, Current->Value);
+					AppendNode(Index, Copy);
+
+					Current = Current->Next;
+				}
+			}
 		}
 
 		Set(Set<T, H, LF>&& Other) noexcept
@@ -42,26 +56,6 @@ namespace NxEn
 		{
 			Clear();
 			Free(Data);
-		}
-
-		Set<T, H, LF> Copy() const
-		{
-			Set<T, H, LF> Copy = Set<T, H, LF>(Buckets, Allocator);
-			
-			for (uint64 Index = 0; Index < Buckets; Index++)
-			{
-				Node* Current = Data[Index];
-				while (Current)
-				{
-					Node* NodeCopy = Copy.Allocate();
-					NodeCopy->Value = Current->Value;
-					Copy.AppendNode(Index, NodeCopy);
-
-					Current = Current->Next;
-				}
-			}
-
-			return Copy;
 		}
 
 		Set<T, H, LF>& operator=(const Set<T, H, LF>& Other)

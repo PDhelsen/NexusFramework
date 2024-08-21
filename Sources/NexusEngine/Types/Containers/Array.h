@@ -28,8 +28,14 @@ namespace NxEn
 		}
 
 		Array(const Array<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Count(Other.Count), Data(nullptr)
 		{
+			Allocate(Count);
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				Construct(Index, 1, Other[Index]);
+			}
 		}
 
 		Array(Array<T>&& Other) noexcept
@@ -42,18 +48,6 @@ namespace NxEn
 		{
 			Destruct(0, Count);
 			Free();
-		}
-
-		Array<T> Copy() const
-		{
-			Array<T> Copy = Array<T>(Count, Allocator);
-
-			for (uint64 Index = 0; Index < Count; Index++)
-			{
-				Copy.Data[Index] = Data[Index];
-			}
-
-			return Copy;
 		}
 
 		Array<T>& operator=(const Array<T>& Other)

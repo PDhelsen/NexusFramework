@@ -24,8 +24,14 @@ namespace NxEn
 		}
 
 		List(const List<T>& Other)
-			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
+			Allocate(Capacity);
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				Construct(Index, 1, Other[Index]);
+			}
 		}
 
 		List(List<T>&& Other) noexcept
@@ -38,19 +44,6 @@ namespace NxEn
 		{
 			Clear();
 			Free();
-		}
-
-		List<T> Copy() const
-		{
-			List<T> Copy = List<T>(Capacity, Allocator);
-			Copy.Count = Count;
-
-			for (uint64 Index = 0; Index < Count; Index++)
-			{
-				Copy.Data[Index] = Data[Index];
-			}
-
-			return Copy;
 		}
 
 		List<T>& operator=(const List<T>& Other)

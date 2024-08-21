@@ -24,8 +24,14 @@ namespace NxEn
 		}
 
 		Queue(const Queue<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
+			: Allocator(Other.Allocator), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
+			Node* Current = Other.DataHead;
+			while (Current)
+			{
+				Append(Current->Value);
+				Current = Current->Next;
+			}
 		}
 
 		Queue(Queue<T>&& Other) noexcept
@@ -38,20 +44,6 @@ namespace NxEn
 		~Queue()
 		{
 			Clear();
-		}
-
-		Queue<T> Copy() const
-		{
-			Queue<T> Copy = Queue<T>(Allocator);
-
-			Node* Current = DataHead;
-			while (Current)
-			{
-				Copy.Append(Current->Value);
-				Current = Current->Next;
-			}
-
-			return Copy;
 		}
 
 		Queue<T>& operator=(const Queue<T>& Other)

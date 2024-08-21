@@ -47,7 +47,7 @@ namespace NxEn
 		template<typename T, typename C>
 		static void MergeSortSort(C& Data, uint64 Count, CompareFunction<T> Compare = nullptr)
 		{
-			C Copy = Data.Copy();
+			C Copy = Data;
 			Sort::MergeSortSplit(Data, Copy, 0, Count, Compare);
 		}
 

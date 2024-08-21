@@ -24,8 +24,9 @@ namespace NxEn
 		}
 
 		Tree(const Tree<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Count(0), Data(nullptr)
 		{
+			AppendRange(nullptr, Other);
 		}
 
 		Tree(Tree<T>&& Other) noexcept
@@ -37,20 +38,6 @@ namespace NxEn
 		~Tree()
 		{
 			Clear();
-		}
-
-		Tree<T> Copy() const
-		{
-			Tree<T> Copy = Tree<T>(Allocator);
-			Copy.Append(nullptr, Data->Value);
-			
-			Node* RootChild = Data->Child;
-			while (RootChild)
-			{
-				Copy.CopyNode(Copy.Data, RootChild);
-				RootChild = RootChild->Sibling;
-			}
-			return Copy;
 		}
 
 		Tree<T>& operator=(const Tree<T>& Other)
@@ -579,14 +566,9 @@ namespace NxEn
 
 		T& CopyNode(Node* Parent, Node* Instance)
 		{
-			T& Return = Append(&Parent->Value, Instance->Value);
+			T& Return = Append(Parent != nullptr ? &Parent->Value : nullptr, Instance->Value);
 
-			Node* Copy = Parent->Child;
-			while (Copy->Sibling)
-			{
-				Copy = Copy->Sibling;
-			}
-			
+			Node* Copy = GetNode(&Return);
 			Node* Child = Instance->Child;
 			while (Child)
 			{

@@ -25,8 +25,19 @@ namespace NxEn
 		}
 
 		Dequeue(const Dequeue<T>& Other)
-			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(Other.Data)
+			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
+			Allocate(Buckets);
+
+			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
+			{
+				Allocate(Bucket, BucketSize);
+			}
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				Construct(Index, 1, Other[Index]);
+			}
 		}
 
 		Dequeue(Dequeue<T>&& Other) noexcept
@@ -39,32 +50,6 @@ namespace NxEn
 		{
 			Clear();
 			Free();
-		}
-
-		Dequeue<T> Copy() const
-		{
-			Dequeue<T> Copy = Dequeue(Allocator);
-			
-			Copy.Buckets = Buckets;
-			Copy.Count = Count;
-			Copy.IndexFront = IndexFront;
-			Copy.IndexBack = IndexBack;
-
-			Copy.Reallocate(Buckets);
-			for (uint64 Bucket = 1; Bucket < Buckets; Bucket++)
-			{
-				Copy.Allocate(Bucket, BucketSize);
-			}
-
-			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
-			{
-				for (uint64 Index = 0; Index < BucketSize; Index++)
-				{
-					Copy.Data[Bucket][Index] = Data[Bucket][Index];
-				}
-			}
-
-			return Copy;
 		}
 
 		Dequeue<T>& operator=(const Dequeue<T>& Other)

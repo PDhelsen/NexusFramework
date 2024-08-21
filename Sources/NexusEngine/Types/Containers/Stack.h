@@ -24,8 +24,16 @@ namespace NxEn
 		}
 
 		Stack(const Stack<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Count(0), Data(nullptr)
 		{
+			Node* Current = Other.Data;
+			while (Current)
+			{
+				Append(Current->Value);
+				Current = Current->Next;
+			}
+
+			Reverse();
 		}
 
 		Stack(Stack<T>&& Other) noexcept
@@ -37,21 +45,6 @@ namespace NxEn
 		~Stack()
 		{
 			Clear();
-		}
-
-		Stack<T> Copy() const
-		{
-			Stack<T> Copy = Stack<T>(Allocator);
-			
-			Node* Current = Data;
-			while (Current)
-			{
-				Copy.Append(Current->Value);
-				Current = Current->Next;
-			}
-			Copy.Reverse();
-
-			return Copy;
 		}
 
 		Stack<T>& operator=(const Stack<T>& Other)

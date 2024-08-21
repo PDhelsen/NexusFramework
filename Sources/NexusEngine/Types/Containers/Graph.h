@@ -26,8 +26,34 @@ namespace NxEn
 		}
 
 		Graph(const Graph<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Allocator(Other.Allocator), Count(0), Data(nullptr)
 		{
+			Node* Current = Other.Data;
+			while (Current)
+			{
+				Append(Current->Value);
+				Current = Current->Next;
+			}
+
+			Current = Other.Data;
+			while (Current)
+			{
+				Iterator From = Find(Current->Value);
+
+				Connection* Link = Current->Connection;
+				while (Link)
+				{
+					if (Link->Type == ConnectionType::To)
+					{
+						Iterator To = Find(Link->Target->Value);
+						Connect(&(*From), &(*To));
+					}
+
+					Link = Link->Next;
+				}
+
+				Current = Current->Next;
+			}
 		}
 
 		Graph(Graph<T>&& Other) noexcept
@@ -39,40 +65,6 @@ namespace NxEn
 		~Graph()
 		{
 			Clear();
-		}
-
-		Graph<T> Copy() const
-		{
-			Graph<T> Copy = Graph<T>(Allocator);
-			
-			Node* Current = Data;
-			while (Current)
-			{
-				Copy.Append(Current->Value);
-				Current = Current->Next;
-			}
-
-			Current = Data;
-			while (Current)
-			{
-				Iterator Data = Copy.Find(Current->Value);
-
-				Connection* Connect = Current->Connection;
-				while (Connect)
-				{
-					if (Connect->Type == ConnectionType::To)
-					{
-						Iterator Target = Copy.Find(Connect->Target->Value);
-						Copy.Connect(&(*Data), &(*Target));
-					}
-
-					Connect = Connect->Next;
-				}
-				
-				Current = Current->Next;
-			}
-
-			return Copy;
 		}
 
 		Graph<T>& operator=(const Graph<T>& Other)
