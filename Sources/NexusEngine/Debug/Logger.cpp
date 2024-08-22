@@ -17,6 +17,8 @@ namespace NxEn
 		: VerbosityMask(Verbosity), StringBuilderMessage(1024), StringBuilderFormat(1024)
 	{
 		Channels = new Dictionary<StringView, bool, Fnv1a64, 1.0f>();
+
+		//TODO: Implementation - Logger - Initialize logger channel
 		AddChannel(ChannelDefault, true);
 		AddChannel(ChannelAssert, true);
 		AddChannel("Performance", true);
