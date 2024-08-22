@@ -26,6 +26,8 @@ namespace NxEn
 		Stack(const Stack<T>& Other)
 			: Allocator(Other.Allocator), Count(0), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Stack - Copy constructor");
+
 			Node* Current = Other.Data;
 			while (Current)
 			{
@@ -49,14 +51,23 @@ namespace NxEn
 
 		Stack<T>& operator=(const Stack<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Stack - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Clear();
+
 			Allocator = Other.Allocator;
-			Count = Other.Count;
-			Data = Other.Data;
+
+			Node* Current = Other.Data;
+			while (Current)
+			{
+				AppendBack(Current->Value);
+				Current = Current->Next;
+			}
 
 			return *this;
 		}

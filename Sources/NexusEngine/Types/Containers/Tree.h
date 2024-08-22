@@ -26,6 +26,8 @@ namespace NxEn
 		Tree(const Tree<T>& Other)
 			: Allocator(Other.Allocator), Count(0), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Tree - Copy constructor");
+
 			AppendRange(nullptr, Other);
 		}
 
@@ -42,14 +44,18 @@ namespace NxEn
 
 		Tree<T>& operator=(const Tree<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Tree - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Clear();
+
 			Allocator = Other.Allocator;
-			Count = Other.Count;
-			Data = Other.Data;
+
+			AppendRange(nullptr, Other);
 
 			return *this;
 		}

@@ -30,6 +30,8 @@ namespace NxEn
 		Array(const Array<T>& Other)
 			: Allocator(Other.Allocator), Count(Other.Count), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Array - Copy constructor");
+
 			Allocate(Count);
 
 			for (uint64 Index = 0; Index < Count; Index++)
@@ -52,14 +54,25 @@ namespace NxEn
 
 		Array<T>& operator=(const Array<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Array - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Destruct(0, Count);
+			Free();
+
 			Allocator = Other.Allocator;
 			Count = Other.Count;
-			Data = Other.Data;
+
+			Allocate(Count);
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				Construct(Index, Other[Index]);
+			}
 
 			return *this;
 		}

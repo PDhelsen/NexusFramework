@@ -51,20 +51,7 @@ namespace NxEn
 			Free();
 		}
 
-		Pool<T>& operator=(const Pool<T>& Other)
-		{
-			if (*this == Other)
-			{
-				return *this;
-			}
-
-			Allocator = Other.Allocator;
-			Count = Other.Count;
-			Data = Other.Data;
-			Own = Other.Own;
-
-			return *this;
-		}
+		Pool<T>& operator=(const Pool<T>& Other) = delete;
 
 		Pool<T>& operator=(Pool<T>&& Other) noexcept
 		{

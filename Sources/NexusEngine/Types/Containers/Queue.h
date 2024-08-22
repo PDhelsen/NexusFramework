@@ -26,6 +26,8 @@ namespace NxEn
 		Queue(const Queue<T>& Other)
 			: Allocator(Other.Allocator), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Queue - Copy constructor");
+
 			Node* Current = Other.DataHead;
 			while (Current)
 			{
@@ -48,15 +50,23 @@ namespace NxEn
 
 		Queue<T>& operator=(const Queue<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Queue - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Clear();
+
 			Allocator = Other.Allocator;
-			Count = Other.Count;
-			DataHead = Other.DataHead;
-			DataTail = Other.DataTail;
+
+			Node* Current = Other.DataHead;
+			while (Current)
+			{
+				AppendBack(Current->Value);
+				Current = Current->Next;
+			}
 
 			return *this;
 		}

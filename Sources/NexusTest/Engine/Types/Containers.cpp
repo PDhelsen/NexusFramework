@@ -1227,21 +1227,38 @@ namespace NxTs
 		Test.Append(4);
 		Test.Append(5);
 
+		NxEn::Array<NxEn::List<ContainerTest>> Array = NxEn::Array<NxEn::List<ContainerTest>>(5);
+		Array.Assign(0, Test);
+
 		NxEn::List<NxEn::List<ContainerTest>> List;
 		List.Append(Test);
+		Test.Append(1);
+		Test.Append(2);
+		Test.Append(3);
+		Test.Append(4);
+		Test.Append(5);
+		List.Assign(0, Test);
 
 		NxEn::LinkedList<NxEn::List<ContainerTest>> LinkedList;
 		LinkedList.AppendBack(Test);
 
 		NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>> Dictionary;
 		Dictionary.Append(ContainerTest(10), Test);
+		Test.Append(1);
+		Test.Append(2);
+		Test.Append(3);
+		Test.Append(4);
+		Test.Append(5);
+		Dictionary.Assign(ContainerTest(10), Test);
 
+		ASSERT_EQ(Test[2].Integer, Array[0][2].Integer);
 		ASSERT_EQ(Test[2].Integer, List[0][2].Integer);
 		ASSERT_EQ(Test[2].Integer, LinkedList.Get()[2].Integer);
 		ASSERT_EQ(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
 
 		Test[2].Integer = 10;
 
+		ASSERT_NE(Test[2].Integer, Array[0][2].Integer);
 		ASSERT_NE(Test[2].Integer, List[0][2].Integer);
 		ASSERT_NE(Test[2].Integer, LinkedList.Get()[2].Integer);
 		ASSERT_NE(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);

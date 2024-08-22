@@ -26,6 +26,8 @@ namespace NxEn
 		List(const List<T>& Other)
 			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "List - Copy constructor");
+
 			Allocate(Capacity);
 
 			for (uint64 Index = 0; Index < Count; Index++)
@@ -48,15 +50,26 @@ namespace NxEn
 
 		List<T>& operator=(const List<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "List - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Destruct(0, Count);
+			Free();
+
 			Allocator = Other.Allocator;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
-			Data = Other.Data;
+
+			Allocate(Capacity);
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				Construct(Index, Other[Index]);
+			}
 
 			return *this;
 		}

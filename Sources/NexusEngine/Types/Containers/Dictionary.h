@@ -30,6 +30,8 @@ namespace NxEn
 		Dictionary(const Dictionary<K, T, H, LF>& Other)
 			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(0), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Dictionary - Copy constructor");
+
 			Allocate(Buckets);
 
 			for (uint64 Index = 0; Index < Buckets; Index++)
@@ -60,15 +62,33 @@ namespace NxEn
 
 		Dictionary<K, T, H, LF>& operator=(const Dictionary<K, T, H, LF>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Dictionary - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Clear();
+			Free(Data);
+
 			Allocator = Other.Allocator;
 			Buckets = Other.Buckets;
-			Count = Other.Count;
-			Data = Other.Data;
+
+			Allocate(Buckets);
+
+			for (uint64 Index = 0; Index < Buckets; Index++)
+			{
+				Node* Current = Other.Data[Index];
+				while (Current)
+				{
+					Node* Copy = Allocate();
+					Construct(Copy, Current->Value);
+					AppendNode(Index, Copy);
+
+					Current = Current->Next;
+				}
+			}
 
 			return *this;
 		}

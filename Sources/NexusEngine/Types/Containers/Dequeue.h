@@ -27,6 +27,8 @@ namespace NxEn
 		Dequeue(const Dequeue<T>& Other)
 			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Dequeue - Copy constructor");
+
 			Allocate(Buckets);
 
 			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
@@ -54,17 +56,33 @@ namespace NxEn
 
 		Dequeue<T>& operator=(const Dequeue<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Dequeue - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
+
+			Clear();
+			Free();
 
 			Allocator = Other.Allocator;
 			Buckets = Other.Buckets;
 			Count = Other.Count;
 			IndexFront = Other.IndexFront;
 			IndexBack = Other.IndexBack;
-			Data = Other.Data;
+
+			Allocate(Buckets);
+
+			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
+			{
+				Allocate(Bucket, BucketSize);
+			}
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				Construct(Index, Other[Index]);
+			}
 
 			return *this;
 		}

@@ -28,6 +28,8 @@ namespace NxEn
 		Graph(const Graph<T>& Other)
 			: Allocator(Other.Allocator), Count(0), Data(nullptr)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Graph - Copy constructor");
+
 			Node* Current = Other.Data;
 			while (Current)
 			{
@@ -69,14 +71,43 @@ namespace NxEn
 
 		Graph<T>& operator=(const Graph<T>& Other)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "Graph - Assignement operator");
+
 			if (*this == Other)
 			{
 				return *this;
 			}
 
+			Clear();
+
 			Allocator = Other.Allocator;
-			Count = Other.Count;
-			Data = Other.Data;
+
+			Node* Current = Other.Data;
+			while (Current)
+			{
+				Append(Current->Value);
+				Current = Current->Next;
+			}
+
+			Current = Other.Data;
+			while (Current)
+			{
+				Iterator From = Find(Current->Value);
+
+				Connection* Link = Current->Connection;
+				while (Link)
+				{
+					if (Link->Type == ConnectionType::To)
+					{
+						Iterator To = Find(Link->Target->Value);
+						Connect(&(*From), &(*To));
+					}
+
+					Link = Link->Next;
+				}
+
+				Current = Current->Next;
+			}
 
 			return *this;
 		}
