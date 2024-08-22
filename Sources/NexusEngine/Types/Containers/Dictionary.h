@@ -186,7 +186,7 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				Resize(Buckets + Buckets / 2);
+				Resize(GrowPolicy());
 			}
 
 			Instance = Allocate();
@@ -207,7 +207,7 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				Resize(Buckets + Buckets / 2);
+				Resize(GrowPolicy());
 			}
 
 			Instance = Allocate();
@@ -229,7 +229,7 @@ namespace NxEn
 
 			if (GetLoadFactor() > LoadFactorThreshold)
 			{
-				Resize(Buckets + Buckets / 2);
+				Resize(GrowPolicy());
 			}
 
 			Instance = Allocate();
@@ -519,6 +519,11 @@ namespace NxEn
 		void ValidateBucket(uint64 Size)
 		{
 			Buckets = Size > 3 ? Size : 3;
+		}
+
+		uint64 GrowPolicy()
+		{
+			return Buckets * 2;
 		}
 
 		inline static const uint64 DefaultSize = 16;

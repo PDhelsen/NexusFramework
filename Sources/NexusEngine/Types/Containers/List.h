@@ -442,7 +442,7 @@ namespace NxEn
 
 			if (Count > Capacity)
 			{
-				Reallocate(Capacity + Capacity / 2);
+				Reallocate(GrowPolicy());
 			}
 		}
 
@@ -455,6 +455,11 @@ namespace NxEn
 		{ 
 			uint64 Lowest = Count > 2 ? Count : 2;
 			Capacity = Size > Lowest ? Size : Lowest;
+		}
+
+		uint64 GrowPolicy()
+		{
+			return Capacity * 2;
 		}
 
 		Allocator* Allocator;
