@@ -14,10 +14,10 @@ namespace NxEn
 	class Graph
 	{
 	public:
-		using Node = LinkedNodeGraph<T>;
-		using Connection = LinkedConnectionGraph<T>;
-		using ConnectionType = LinkedConnectionType;
-		using Iterator = LinkedIteratorGraph<T, Node>;
+		using Node = NodeGraph<T>;
+		using Connection = NodeGraphConnection<T>;
+		using ConnectionType = NodeGraphConnectionType;
+		using Iterator = IteratorNodeGraph<T, Node>;
 
 		Graph(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)

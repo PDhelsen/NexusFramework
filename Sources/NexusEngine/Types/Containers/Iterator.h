@@ -7,37 +7,37 @@ namespace NxEn
 {
 	// TODO: Implementation - Nativs - Iterator
 	template<typename T>
-	class BlockIterator
+	class IteratorBlock
 	{
 	public:
-		BlockIterator(T* Pointer, uint64 Idx)
+		IteratorBlock(T* Pointer, uint64 Idx)
 			: Data(Pointer), Index(Idx)
 		{
 
 		}
 
-		BlockIterator& operator++()
+		IteratorBlock& operator++()
 		{
 			Index++;
 			return *this;
 		}
 
-		BlockIterator operator++(int32)
+		IteratorBlock operator++(int32)
 		{
-			BlockIterator Temp = *this;
+			IteratorBlock Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		BlockIterator& operator--()
+		IteratorBlock& operator--()
 		{
 			Index--;
 			return *this;
 		}
 
-		BlockIterator operator--(int32)
+		IteratorBlock operator--(int32)
 		{
-			BlockIterator Temp = *this;
+			IteratorBlock Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -52,12 +52,12 @@ namespace NxEn
 			return Data[Index];
 		}
 
-		bool operator==(const BlockIterator& Other) const
+		bool operator==(const IteratorBlock& Other) const
 		{
 			return Data == Other.Data && Index == Other.Index;
 		}
 
-		bool operator!=(const BlockIterator& Other) const
+		bool operator!=(const IteratorBlock& Other) const
 		{
 			return !(*this == Other);
 		}
@@ -70,37 +70,37 @@ namespace NxEn
 	};
 
 	template<typename T, uint64 BS>
-	class BucketIterator
+	class IteratorBucket
 	{
 	public:
-		BucketIterator(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
+		IteratorBucket(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
 			: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
 		{
 
 		}
 
-		BucketIterator& operator++()
+		IteratorBucket& operator++()
 		{
 			MoveToNext(true);
 			return *this;
 		}
 
-		BucketIterator operator++(int32)
+		IteratorBucket operator++(int32)
 		{
-			BucketIterator Temp = *this;
+			IteratorBucket Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		BucketIterator& operator--()
+		IteratorBucket& operator--()
 		{
 			MoveToNext(false);
 			return *this;
 		}
 
-		BucketIterator operator--(int32)
+		IteratorBucket operator--(int32)
 		{
-			BucketIterator Temp = *this;
+			IteratorBucket Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -115,12 +115,12 @@ namespace NxEn
 			return Data[BucketIndex][DataIndex];
 		}
 
-		bool operator==(const BucketIterator& Other) const
+		bool operator==(const IteratorBucket& Other) const
 		{
 			return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 		}
 
-		bool operator!=(const BucketIterator& Other) const
+		bool operator!=(const IteratorBucket& Other) const
 		{
 			return !(*this == Other);
 		}
@@ -165,23 +165,27 @@ namespace NxEn
 	};
 
 	template<typename T, typename N>
-	class LinkedIteratorSimple
+	class IteratorHashmap
 	{
 	public:
-		LinkedIteratorSimple(N* Pointer)
-			: Current(Pointer)
+		IteratorHashmap(N** Data, N* Current, uint64 Buckets, uint64 Index)
+			: Data(Data), Current(Current), Buckets(Buckets), Index(Index)
 		{
-
+			if (Current == nullptr && Index != Buckets)
+			{
+				MoveToNext();
+			}
 		}
 
-		LinkedIteratorSimple& operator++()
+		IteratorHashmap& operator++()
 		{
-			return Next();
+			MoveToNext();
+			return *this;
 		}
 
-		LinkedIteratorSimple operator++(int32)
+		IteratorHashmap operator++(int32)
 		{
-			LinkedIteratorSimple Temp = *this;
+			IteratorHashmap Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -196,17 +200,88 @@ namespace NxEn
 			return Current->Value;
 		}
 
-		bool operator==(const LinkedIteratorSimple& Other) const
+		bool operator==(const IteratorHashmap& Other) const
 		{
-			return Current == Other.Current;
+			return Current == Other.Current && Index == Other.Index;
 		}
 
-		bool operator!=(const LinkedIteratorSimple& Other) const
+		bool operator!=(const IteratorHashmap& Other) const
 		{
 			return !(*this == Other);
 		}
 
-		LinkedIteratorSimple& Next()
+	private:
+		void MoveToNext()
+		{
+			if (Current && Current->Next != nullptr)
+			{
+				Current = Current->Next;
+			}
+			else
+			{
+				do
+				{
+					Index++;
+					if (Index >= Buckets)
+					{
+						Current = nullptr;
+						break;
+					}
+
+					Current = Data[Index];
+				} while (Current == nullptr);
+			}
+		}
+
+		N** Data;
+		N* Current;
+		uint64 Buckets;
+		uint64 Index;
+	};
+
+	template<typename T, typename N>
+	class IteratorNodeSimple
+	{
+	public:
+		IteratorNodeSimple(N* Pointer)
+			: Current(Pointer)
+		{
+
+		}
+
+		IteratorNodeSimple& operator++()
+		{
+			return Next();
+		}
+
+		IteratorNodeSimple operator++(int32)
+		{
+			IteratorNodeSimple Temp = *this;
+			++(*this);
+			return Temp;
+		}
+
+		T* operator->() const
+		{
+			return &Current->Value;
+		}
+
+		T& operator*() const
+		{
+			return Current->Value;
+		}
+
+		bool operator==(const IteratorNodeSimple& Other) const
+		{
+			return Current == Other.Current;
+		}
+
+		bool operator!=(const IteratorNodeSimple& Other) const
+		{
+			return !(*this == Other);
+		}
+
+		IteratorNodeSimple& Next()
 		{
 			if (Current)
 			{
@@ -220,35 +295,35 @@ namespace NxEn
 	};
 
 	template<typename T, typename N>
-	class LinkedIteratorDouble
+	class IteratorNodeDouble
 	{
 	public:
-		LinkedIteratorDouble(N* Pointer)
+		IteratorNodeDouble(N* Pointer)
 			: Current(Pointer)
 		{
 
 		}
 
-		LinkedIteratorDouble& operator++()
+		IteratorNodeDouble& operator++()
 		{
 			return Next();
 		}
 
-		LinkedIteratorDouble operator++(int32)
+		IteratorNodeDouble operator++(int32)
 		{
-			LinkedIteratorDouble Temp = *this;
+			IteratorNodeDouble Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		LinkedIteratorDouble& operator--()
+		IteratorNodeDouble& operator--()
 		{
 			return Previous();
 		}
 
-		LinkedIteratorDouble operator--(int32)
+		IteratorNodeDouble operator--(int32)
 		{
-			LinkedIteratorDouble Temp = *this;
+			IteratorNodeDouble Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -263,17 +338,17 @@ namespace NxEn
 			return Current->Value;
 		}
 
-		bool operator==(const LinkedIteratorDouble& Other) const
+		bool operator==(const IteratorNodeDouble& Other) const
 		{
 			return Current == Other.Current;
 		}
 
-		bool operator!=(const LinkedIteratorDouble& Other) const
+		bool operator!=(const IteratorNodeDouble& Other) const
 		{
 			return !(*this == Other);
 		}
 
-		LinkedIteratorDouble& Next()
+		IteratorNodeDouble& Next()
 		{
 			if (Current)
 			{
@@ -282,7 +357,7 @@ namespace NxEn
 			return *this;
 		}
 
-		LinkedIteratorDouble& Previous()
+		IteratorNodeDouble& Previous()
 		{
 			if (Current)
 			{
@@ -296,23 +371,23 @@ namespace NxEn
 	};
 
 	template<typename T, typename N>
-	class LinkedIteratorTree
+	class IteratorNodeTree
 	{
 	public:
-		LinkedIteratorTree(N* Pointer)
+		IteratorNodeTree(N* Pointer)
 			: Current(Pointer)
 		{
 		}
 
-		LinkedIteratorTree& operator++()
+		IteratorNodeTree& operator++()
 		{
 			MoveToNext();
 			return *this;
 		}
 
-		LinkedIteratorTree operator++(int32)
+		IteratorNodeTree operator++(int32)
 		{
-			LinkedIteratorTree Temp = *this;
+			IteratorNodeTree Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -327,17 +402,17 @@ namespace NxEn
 			return Current->Value;
 		}
 
-		bool operator==(const LinkedIteratorTree& Other) const
+		bool operator==(const IteratorNodeTree& Other) const
 		{
 			return Current == Other.Current;
 		}
 
-		bool operator!=(const LinkedIteratorTree& Other) const
+		bool operator!=(const IteratorNodeTree& Other) const
 		{
 			return !(*this == Other);
 		}
 
-		LinkedIteratorTree& Parent()
+		IteratorNodeTree& Parent()
 		{
 			if (Current)
 			{
@@ -346,7 +421,7 @@ namespace NxEn
 			return *this;
 		}
 
-		LinkedIteratorTree& Sibling()
+		IteratorNodeTree& Sibling()
 		{
 			if (Current)
 			{
@@ -355,7 +430,7 @@ namespace NxEn
 			return *this;
 		}
 
-		LinkedIteratorTree& Child()
+		IteratorNodeTree& Child()
 		{
 			if (Current)
 			{
@@ -394,16 +469,16 @@ namespace NxEn
 	};
 
 	template<typename T, typename N>
-	class LinkedIteratorGraph
+	class IteratorNodeGraph
 	{
 	public:
-		LinkedIteratorGraph(N* Pointer)
+		IteratorNodeGraph(N* Pointer)
 			: Current(Pointer)
 		{
 
 		}
 
-		LinkedIteratorGraph& operator++()
+		IteratorNodeGraph& operator++()
 		{
 			if (Current)
 			{
@@ -412,9 +487,9 @@ namespace NxEn
 			return *this;
 		}
 
-		LinkedIteratorGraph operator++(int32)
+		IteratorNodeGraph operator++(int32)
 		{
-			LinkedIteratorGraph Temp = *this;
+			IteratorNodeGraph Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -429,20 +504,20 @@ namespace NxEn
 			return Current->Value;
 		}
 
-		bool operator==(const LinkedIteratorGraph& Other) const
+		bool operator==(const IteratorNodeGraph& Other) const
 		{
 			return Current == Other.Current;
 		}
 
-		bool operator!=(const LinkedIteratorGraph& Other) const
+		bool operator!=(const IteratorNodeGraph& Other) const
 		{
 			return !(*this == Other);
 		}
 
-		LinkedIteratorGraph& Connections(LinkedConnectionType Type, uint64 Index)
+		IteratorNodeGraph& Connections(NodeGraphConnectionType Type, uint64 Index)
 		{
 			uint64 Idx = 0;
-			LinkedConnectionGraph<T>* Connect = Current->Connection;
+			NodeGraphConnection<T>* Connect = Current->Connection;
 			while (Connect)
 			{
 				if (Connect->Type == Type)
@@ -472,80 +547,5 @@ namespace NxEn
 
 	private:
 		N* Current;
-	};
-
-	template<typename T, typename N>
-	class HashmapIterator
-	{
-	public:
-		HashmapIterator(N** Data, N* Current, uint64 Buckets, uint64 Index)
-			: Data(Data), Current(Current), Buckets(Buckets), Index(Index)
-		{
-			if (Current == nullptr && Index != Buckets)
-			{
-				MoveToNext();
-			}
-		}
-
-		HashmapIterator& operator++()
-		{
-			MoveToNext();
-			return *this;
-		}
-
-		HashmapIterator operator++(int32)
-		{
-			HashmapIterator Temp = *this;
-			++(*this);
-			return Temp;
-		}
-
-		T* operator->() const
-		{
-			return &Current->Value;
-		}
-
-		T& operator*() const
-		{
-			return Current->Value;
-		}
-
-		bool operator==(const HashmapIterator& Other) const
-		{
-			return Current == Other.Current && Index == Other.Index;
-		}
-
-		bool operator!=(const HashmapIterator& Other) const
-		{
-			return !(*this == Other);
-		}
-
-	private:
-		void MoveToNext()
-		{
-			if (Current && Current->Next != nullptr)
-			{
-				Current = Current->Next;
-			}
-			else
-			{
-				do
-				{
-					Index++;
-					if (Index >= Buckets)
-					{
-						Current = nullptr;
-						break;
-					}
-
-					Current = Data[Index];
-				} while (Current == nullptr);
-			}
-		}
-
-		N** Data;
-		N* Current;
-		uint64 Buckets;
-		uint64 Index;
 	};
 }

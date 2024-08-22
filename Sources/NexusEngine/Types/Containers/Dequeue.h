@@ -13,7 +13,7 @@ namespace NxEn
 	class Dequeue
 	{
 	public:
-		using Iterator = BucketIterator<T, BS>;
+		using Iterator = IteratorBucket<T, BS>;
 
 		Dequeue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)

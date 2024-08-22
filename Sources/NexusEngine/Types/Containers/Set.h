@@ -17,8 +17,8 @@ namespace NxEn
 	class Set
 	{
 	public:
-		using Node = LinkedNodeSimple<T>;
-		using Iterator = HashmapIterator<const T, Node>;
+		using Node = NodeSimple<T>;
+		using Iterator = IteratorHashmap<const T, Node>;
 
 		Set(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)

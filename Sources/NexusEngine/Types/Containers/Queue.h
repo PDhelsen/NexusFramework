@@ -14,8 +14,8 @@ namespace NxEn
 	class Queue
 	{
 	public:
-		using Node = LinkedNodeSimple<T>;
-		using Iterator = LinkedIteratorSimple<T, Node>;
+		using Node = NodeSimple<T>;
+		using Iterator = IteratorNodeSimple<T, Node>;
 
 		Queue(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), DataHead(nullptr), DataTail(nullptr)

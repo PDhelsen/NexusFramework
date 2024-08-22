@@ -16,7 +16,7 @@ namespace NxEn
 	class Array
 	{
 	public:
-		using Iterator = BlockIterator<T>;
+		using Iterator = IteratorBlock<T>;
 
 		template<typename... Args>
 		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)

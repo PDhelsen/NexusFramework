@@ -14,8 +14,8 @@ namespace NxEn
 	class Tree
 	{
 	public:
-		using Node = LinkedNodeTree<T>;
-		using Iterator = LinkedIteratorTree<T, Node>;
+		using Node = NodeTree<T>;
+		using Iterator = IteratorNodeTree<T, Node>;
 
 		Tree(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)

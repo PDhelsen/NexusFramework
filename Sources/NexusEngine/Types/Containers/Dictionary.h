@@ -17,8 +17,8 @@ namespace NxEn
 	class Dictionary
 	{
 	public:
-		using Node = LinkedNodeSimple<KeyValuePair<K, T>>;
-		using Iterator = HashmapIterator<KeyValuePair<K, T>, Node>;
+		using Node = NodeSimple<KeyValuePair<K, T>>;
+		using Iterator = IteratorHashmap<KeyValuePair<K, T>, Node>;
 
 		Dictionary(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)

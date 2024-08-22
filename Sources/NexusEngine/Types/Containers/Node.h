@@ -7,54 +7,66 @@
 namespace NxEn
 {
 	template<typename T>
-	struct LinkedNodeSimple
+	struct NodeGraphConnection;
+
+	// -------------------------------
+	// Nodes
+	// -------------------------------
+
+	template<typename T>
+	struct NodeSimple
 	{
 		T Value;
-		LinkedNodeSimple* Next;
+		NodeSimple* Next;
 	};
 
 	template<typename T>
-	struct LinkedNodeDouble
+	struct NodeDouble
 	{
 		T Value;
-		LinkedNodeDouble* Next;
-		LinkedNodeDouble* Prev;
+		NodeDouble* Next;
+		NodeDouble* Prev;
 	};
 
 	template<typename T>
-	struct LinkedNodeTree
+	struct NodeTree
 	{
 		T Value;
 		uint64 Count;
-		LinkedNodeTree* Parent;
-		LinkedNodeTree* Sibling;
-		LinkedNodeTree* Child;
+		NodeTree* Parent;
+		NodeTree* Sibling;
+		NodeTree* Child;
 	};
 
 	template<typename T>
-	struct LinkedConnectionGraph;
-	
-	enum class LinkedConnectionType : uint8
+	struct NodeGraph
+	{
+		T Value;
+		uint64 Count;
+		NodeGraph<T>* Next;
+		NodeGraphConnection<T>* Connection;
+	};
+
+	// -------------------------------
+	// Connections
+	// -------------------------------
+
+	enum class NodeGraphConnectionType : uint8
 	{
 		From, To
 	};
 
 	template<typename T>
-	struct LinkedNodeGraph
+	struct NodeGraphConnection
 	{
-		T Value;
-		uint64 Count;
-		LinkedNodeGraph<T>* Next;
-		LinkedConnectionGraph<T>* Connection;
+		NodeGraph<T>* Target;
+		NodeGraphConnection<T>* Next;
+		NodeGraphConnectionType Type;
 	};
 
-	template<typename T>
-	struct LinkedConnectionGraph
-	{
-		LinkedConnectionType Type;
-		LinkedNodeGraph<T>* Target;
-		LinkedConnectionGraph<T>* Next;
-	};
+	// -------------------------------
+	// Key - Value
+	// -------------------------------
 
 	template<typename K, typename T>
 	class KeyValuePair

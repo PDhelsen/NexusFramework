@@ -14,8 +14,8 @@ namespace NxEn
 	class Stack
 	{
 	public:
-		using Node = LinkedNodeSimple<T>;
-		using Iterator = LinkedIteratorSimple<T, Node>;
+		using Node = NodeSimple<T>;
+		using Iterator = IteratorNodeSimple<T, Node>;
 
 		Stack(Allocator* Allctr = nullptr)
 			: Allocator(nullptr), Count(0), Data(nullptr)

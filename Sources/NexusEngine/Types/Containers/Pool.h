@@ -13,7 +13,7 @@ namespace NxEn
 	template<typename T>
 	class Pool
 	{
-		using Node = LinkedNodeSimple<T>;
+		using Node = NodeSimple<T>;
 
 	public:
 		Pool(Allocator* Allctr = nullptr)

@@ -14,8 +14,8 @@ namespace NxEn
 	class LinkedList
 	{
 	public:
-		using Node = LinkedNodeDouble<T>;
-		using Iterator = LinkedIteratorDouble<T, Node>;
+		using Node = NodeDouble<T>;
+		using Iterator = IteratorNodeDouble<T, Node>;
 
 		LinkedList(Allocator* Allctr = nullptr)
 			: Allocator(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
