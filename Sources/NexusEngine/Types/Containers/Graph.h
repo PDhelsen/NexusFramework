@@ -375,7 +375,7 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 

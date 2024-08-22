@@ -105,7 +105,7 @@ namespace NxEn
 		T& Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			Instance->Value = Value;
@@ -115,7 +115,7 @@ namespace NxEn
 		T& Assign(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			Instance->Value = Move(Value);
@@ -126,7 +126,7 @@ namespace NxEn
 		T& AssignConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			Destruct(Instance);
@@ -217,7 +217,7 @@ namespace NxEn
 		T& InsertBack(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = Allocate();
 			Construct(Instance, Value);
@@ -230,7 +230,7 @@ namespace NxEn
 		T& InsertBack(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = Allocate();
 			Construct(Instance, Move(Value));
@@ -244,7 +244,7 @@ namespace NxEn
 		T& InsertBackConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = Allocate();
 			Construct(Instance, args...);
@@ -258,7 +258,7 @@ namespace NxEn
 		T& InsertBackRange(T* Position, const C& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Anchor = GetNode(Position);
 			Node* Return = Anchor;
@@ -275,7 +275,7 @@ namespace NxEn
 		T& InsertFront(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = Allocate();
 			Construct(Instance, Value);
@@ -288,7 +288,7 @@ namespace NxEn
 		T& InsertFront(T* Position, T&& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = Allocate();
 			Construct(Instance, Move(Value));
@@ -302,7 +302,7 @@ namespace NxEn
 		T& InsertFrontConstruct(T* Position, Args&&... args)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = Allocate();
 			Construct(Instance, args...);
@@ -316,7 +316,7 @@ namespace NxEn
 		T& InsertFrontRange(T* Position, const C& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Anchor = GetNode(Position);
 
@@ -331,7 +331,7 @@ namespace NxEn
 
 		void RemoveBack()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
 			Node* Instance = DataTail;
 			RemoveNode(Instance);
@@ -342,7 +342,7 @@ namespace NxEn
 		void RemoveBack(T* Position)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position)->Prev;
 			while (DataTail != Instance)
@@ -353,7 +353,7 @@ namespace NxEn
 
 		void RemoveFront()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
 			Node* Instance = DataHead;
 			RemoveNode(Instance);
@@ -364,7 +364,7 @@ namespace NxEn
 		void RemoveFront(T* Position)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position)->Next;
 			while (DataHead != Instance)
@@ -376,7 +376,7 @@ namespace NxEn
 		void Remove(T* Position)
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			RemoveNode(Instance);
@@ -388,7 +388,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(From != nullptr, "From is null");
 			NEXUS_ASSERT(To != nullptr, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Start = GetNode(From);
 			Node* End = GetNode(To)->Next;
@@ -413,7 +413,7 @@ namespace NxEn
 
 		T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			return DataHead->Value;
 		}
@@ -421,7 +421,7 @@ namespace NxEn
 		T& GetNext(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			NEXUS_ASSERT(Instance != DataTail, "Cannot get next on Tail");
@@ -432,7 +432,7 @@ namespace NxEn
 		T* TryGetNext(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			if (Instance == DataTail)
@@ -446,7 +446,7 @@ namespace NxEn
 		T& GetPrev(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			NEXUS_ASSERT(Instance != DataHead, "Cannot get prev on Head");
@@ -457,7 +457,7 @@ namespace NxEn
 		T* TryGetPrev(T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			Node* Instance = GetNode(Position);
 			if (Instance == DataHead)
@@ -470,14 +470,14 @@ namespace NxEn
 
 		T& First() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			return DataHead->Value;
 		}
 
 		T& Last() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
 			return DataTail->Value;
 		}
@@ -485,7 +485,7 @@ namespace NxEn
 		bool IsNext(T* Position, T* Next) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
 			return GetNode(Position)->Next == GetNode(Next);
 		}
@@ -493,7 +493,7 @@ namespace NxEn
 		bool IsPrevious(T* Position, T* Prev) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
 			return GetNode(Position)->Prev == GetNode(Prev);
 		}
@@ -502,7 +502,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
 			return IsNext(A, B) || IsPrev(A, B);
 		}
@@ -536,7 +536,7 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "List is empty");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
