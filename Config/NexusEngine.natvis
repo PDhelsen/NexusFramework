@@ -179,4 +179,53 @@
     </Expand>
   </Type>
 
+	<Type Name="NxEn::IteratorBlock&lt;*&gt;">
+		<DisplayString>{ Data[Index] }</DisplayString>
+		<Expand>
+			<Item Name="Value">Data[Index]</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::IteratorBucket&lt;*&gt;">
+		<DisplayString>{ Data[BucketIndex][DataIndex] }</DisplayString>
+		<Expand>
+			<Item Name="Value">Data[BucketIndex][DataIndex]</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::IteratorHashmap&lt;*&gt;">
+		<DisplayString>{ Current->Value }</DisplayString>
+		<Expand>
+			<Item Name="Value">Current->Value</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::IteratorNodeSimple&lt;*&gt;">
+		<DisplayString>{ Current->Value }</DisplayString>
+		<Expand>
+			<Item Name="Value">Current->Value</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::IteratorNodeDouble&lt;*&gt;">
+		<DisplayString>{ Current->Value }</DisplayString>
+		<Expand>
+			<Item Name="Value">Current->Value</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::IteratorNodeTree&lt;*&gt;">
+		<DisplayString>{ Current->Value }</DisplayString>
+		<Expand>
+			<Item Name="Value">Current->Value</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::IteratorNodeGraph&lt;*&gt;">
+		<DisplayString>{ Current->Value }</DisplayString>
+		<Expand>
+			<Item Name="Value">Current->Value</Item>
+		</Expand>
+	</Type>
+
 </AutoVisualizer>
