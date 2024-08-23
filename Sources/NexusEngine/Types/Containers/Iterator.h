@@ -17,8 +17,7 @@ namespace NxEn
 
 		IteratorBlock& operator++()
 		{
-			Index++;
-			return *this;
+			return Next();
 		}
 
 		IteratorBlock operator++(int32)
@@ -30,8 +29,7 @@ namespace NxEn
 
 		IteratorBlock& operator--()
 		{
-			Index--;
-			return *this;
+			return Previous();
 		}
 
 		IteratorBlock operator--(int32)
@@ -43,12 +41,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Data[Index];
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Data[Index];
+			return Get();
 		}
 
 		bool operator==(const IteratorBlock& Other) const
@@ -59,6 +57,28 @@ namespace NxEn
 		bool operator!=(const IteratorBlock& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		T& Get() const
+		{
+			return Data[Index];
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
+		IteratorBlock& Next()
+		{
+			Index++;
+			return *this;
+		}
+
+		IteratorBlock& Previous()
+		{
+			Index--;
+			return *this;
 		}
 
 		uint64 GetIndex() const { return Index; }
@@ -80,8 +100,7 @@ namespace NxEn
 
 		IteratorBucket& operator++()
 		{
-			MoveToNext(true);
-			return *this;
+			return Next();
 		}
 
 		IteratorBucket operator++(int32)
@@ -93,8 +112,7 @@ namespace NxEn
 
 		IteratorBucket& operator--()
 		{
-			MoveToNext(false);
-			return *this;
+			return Previous();
 		}
 
 		IteratorBucket operator--(int32)
@@ -106,12 +124,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Data[BucketIndex][DataIndex];
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Data[BucketIndex][DataIndex];
+			return Get();
 		}
 
 		bool operator==(const IteratorBucket& Other) const
@@ -124,37 +142,49 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		uint64 GetIndex() const { return BucketIndex * BucketSize + DataIndex - Offset; }
-
-	private:
-		void MoveToNext(bool Forward)
+		T& Get() const
 		{
-			if (Forward)
+			return Data[BucketIndex][DataIndex];
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
+		IteratorBucket& Next()
+		{
+			if (DataIndex == BucketSize - 1)
 			{
-				if (DataIndex == BucketSize - 1)
-				{
-					BucketIndex++;
-					DataIndex = 0;
-				}
-				else
-				{
-					DataIndex++;
-				}
+				BucketIndex++;
+				DataIndex = 0;
 			}
 			else
 			{
-				if (DataIndex == 0)
-				{
-					BucketIndex--;
-					DataIndex = BucketSize - 1;
-				}
-				else
-				{
-					DataIndex--;
-				}
+				DataIndex++;
 			}
+
+			return *this;
 		}
 
+		IteratorBucket& Previous()
+		{
+			if (DataIndex == 0)
+			{
+				BucketIndex--;
+				DataIndex = BucketSize - 1;
+			}
+			else
+			{
+				DataIndex--;
+			}
+
+			return *this;
+		}
+
+		uint64 GetIndex() const { return BucketIndex * BucketSize + DataIndex - Offset; }
+
+	private:
 		inline static const uint64 BucketSize = BS;
 
 		T** Data;
@@ -172,14 +202,13 @@ namespace NxEn
 		{
 			if (Current == nullptr && Index != Buckets)
 			{
-				MoveToNext();
+				Next();
 			}
 		}
 
 		IteratorHashmap& operator++()
 		{
-			MoveToNext();
-			return *this;
+			return Next();
 		}
 
 		IteratorHashmap operator++(int32)
@@ -191,12 +220,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Current->Value;
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Current->Value;
+			return Get();
 		}
 
 		bool operator==(const IteratorHashmap& Other) const
@@ -209,8 +238,17 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-	private:
-		void MoveToNext()
+		T& Get() const
+		{
+			return Current->Value;;
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
+		IteratorHashmap& Next()
 		{
 			if (Current && Current->Next != nullptr)
 			{
@@ -230,8 +268,11 @@ namespace NxEn
 					Current = Data[Index];
 				} while (Current == nullptr);
 			}
+
+			return *this;
 		}
 
+	private:
 		N** Data;
 		N* Current;
 		uint64 Buckets;
@@ -262,12 +303,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Current->Value;
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Current->Value;
+			return Get();
 		}
 
 		bool operator==(const IteratorNodeSimple& Other) const
@@ -280,12 +321,23 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
+		T& Get() const
+		{
+			return Current->Value;
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
 		IteratorNodeSimple& Next()
 		{
 			if (Current)
 			{
 				Current = Current->Next;
 			}
+
 			return *this;
 		}
 
@@ -329,12 +381,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Current->Value;
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Current->Value;
+			return Get();
 		}
 
 		bool operator==(const IteratorNodeDouble& Other) const
@@ -347,12 +399,23 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
+		T& Get() const
+		{
+			return Current->Value;;
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
 		IteratorNodeDouble& Next()
 		{
 			if (Current)
 			{
 				Current = Current->Next;
 			}
+
 			return *this;
 		}
 
@@ -362,6 +425,7 @@ namespace NxEn
 			{
 				Current = Current->Prev;
 			}
+
 			return *this;
 		}
 
@@ -380,8 +444,7 @@ namespace NxEn
 
 		IteratorNodeTree& operator++()
 		{
-			MoveToNext();
-			return *this;
+			return Next();
 		}
 
 		IteratorNodeTree operator++(int32)
@@ -393,12 +456,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Current->Value;
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Current->Value;
+			return Get();
 		}
 
 		bool operator==(const IteratorNodeTree& Other) const
@@ -409,6 +472,43 @@ namespace NxEn
 		bool operator!=(const IteratorNodeTree& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		T& Get() const
+		{
+			return Current->Value;;
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
+		IteratorNodeTree& Next()
+		{
+			if (Current && Current->Child)
+			{
+				Current = Current->Child;
+			}
+			else if (Current && Current->Sibling)
+			{
+				Current = Current->Sibling;
+			}
+			else
+			{
+				while (Current)
+				{
+					if (Current->Parent && Current->Parent->Sibling)
+					{
+						Current = Current->Parent->Sibling;
+						break;
+					}
+
+					Current = Current->Parent;
+				}
+			}
+
+			return *this;
 		}
 
 		IteratorNodeTree& Parent()
@@ -439,31 +539,6 @@ namespace NxEn
 		}
 
 	private:
-		void MoveToNext()
-		{
-			if (Current && Current->Child)
-			{
-				Current = Current->Child;
-			}
-			else if (Current && Current->Sibling)
-			{
-				Current = Current->Sibling;
-			}
-			else
-			{
-				while (Current)
-				{
-					if (Current->Parent && Current->Parent->Sibling)
-					{
-						Current = Current->Parent->Sibling;
-						break;
-					}
-
-					Current = Current->Parent;
-				}
-			}
-		}
-
 		N* Current;
 	};
 
@@ -479,11 +554,7 @@ namespace NxEn
 
 		IteratorNodeGraph& operator++()
 		{
-			if (Current)
-			{
-				Current = Current->Next;
-			}
-			return *this;
+			return Next();
 		}
 
 		IteratorNodeGraph operator++(int32)
@@ -495,12 +566,12 @@ namespace NxEn
 
 		T* operator->() const
 		{
-			return &Current->Value;
+			return &Get();
 		}
 
 		T& operator*() const
 		{
-			return Current->Value;
+			return Get();
 		}
 
 		bool operator==(const IteratorNodeGraph& Other) const
@@ -511,6 +582,26 @@ namespace NxEn
 		bool operator!=(const IteratorNodeGraph& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		T& Get() const
+		{
+			return Current->Value;;
+		}
+
+		void Move()
+		{
+			Next();
+		}
+
+		IteratorNodeGraph& Next()
+		{
+			if (Current)
+			{
+				Current = Current->Next;
+			}
+
+			return *this;
 		}
 
 		IteratorNodeGraph& Connections(NodeGraphConnectionType Type, uint64 Index)
