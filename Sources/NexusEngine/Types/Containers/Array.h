@@ -10,8 +10,6 @@
 
 namespace NxEn
 {
-	// TODO: Cleanup - Name - Allocator
-
 	template<typename T>
 	class Array
 	{
@@ -20,7 +18,7 @@ namespace NxEn
 
 		template<typename... Args>
 		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)
-			: Allocator(nullptr), Count(0), Data(nullptr)
+			: Alloc(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 			Allocate(Size);
@@ -28,7 +26,7 @@ namespace NxEn
 		}
 
 		Array(const Array<T>& Other)
-			: Allocator(Other.Allocator), Count(Other.Count), Data(nullptr)
+			: Alloc(Other.Alloc), Count(Other.Count), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Array - Copy constructor");
 
@@ -41,7 +39,7 @@ namespace NxEn
 		}
 
 		Array(Array<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -64,7 +62,7 @@ namespace NxEn
 			Destruct(0, Count);
 			Free();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Count = Other.Count;
 
 			Allocate(Count);
@@ -87,7 +85,7 @@ namespace NxEn
 			Destruct(0, Count);
 			Free();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Count = Other.Count;
 			Data = Other.Data;
 
@@ -250,12 +248,12 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Allocator);
+			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Alloc);
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Allocator);
+			Memory::Free(Data, Alloc);
 		}
 
 		template<typename... Args>
@@ -283,7 +281,7 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateCapacity(uint64 Size)
@@ -291,7 +289,7 @@ namespace NxEn
 			Count = Size > 1 ? Size : 1;
 		}
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Count;
 		T* Data;
 	};

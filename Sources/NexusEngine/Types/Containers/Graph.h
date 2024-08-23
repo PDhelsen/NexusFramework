@@ -20,13 +20,13 @@ namespace NxEn
 		using Iterator = IteratorNodeGraph<T, Node>;
 
 		Graph(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Data(nullptr)
+			: Alloc(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Graph(const Graph<T>& Other)
-			: Allocator(Other.Allocator), Count(0), Data(nullptr)
+			: Alloc(Other.Alloc), Count(0), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Graph - Copy constructor");
 
@@ -59,7 +59,7 @@ namespace NxEn
 		}
 
 		Graph(Graph<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -80,7 +80,7 @@ namespace NxEn
 
 			Clear();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 
 			Node* Current = Other.Data;
 			while (Current)
@@ -121,7 +121,7 @@ namespace NxEn
 
 			Clear();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Count = Other.Count;
 			Data = Other.Data;
 
@@ -411,7 +411,7 @@ namespace NxEn
 		{
 			Count++;
 
-			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			Instance->Count = 0;
 			Instance->Next = nullptr;
 			Instance->Connection = nullptr;
@@ -422,7 +422,7 @@ namespace NxEn
 		{
 			A->Count++;
 
-			Connection* Connect = (Connection*)Memory::Allocate(sizeof(Connection), NEXUS_MEMORY_ALIGN, Allocator);
+			Connection* Connect = (Connection*)Memory::Allocate(sizeof(Connection), NEXUS_MEMORY_ALIGN, Alloc);
 			Connect->Target = B;
 			Connect->Type = Type;
 			Connect->Next = nullptr;
@@ -433,14 +433,14 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Free(Instance, Allocator);
+			Memory::Free(Instance, Alloc);
 		}
 
 		void Free(Connection* Instance, Node* A, Node* B)
 		{
 			A->Count--;
 
-			Memory::Free(Instance, Allocator);
+			Memory::Free(Instance, Alloc);
 		}
 
 		template<typename... Args>
@@ -548,10 +548,10 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Count;
 		Node* Data;
 	};

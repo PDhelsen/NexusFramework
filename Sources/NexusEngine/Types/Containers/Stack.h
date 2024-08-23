@@ -18,13 +18,13 @@ namespace NxEn
 		using Iterator = IteratorNodeSimple<T, Node>;
 
 		Stack(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Data(nullptr)
+			: Alloc(nullptr), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Stack(const Stack<T>& Other)
-			: Allocator(Other.Allocator), Count(0), Data(nullptr)
+			: Alloc(Other.Alloc), Count(0), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Stack - Copy constructor");
 
@@ -39,7 +39,7 @@ namespace NxEn
 		}
 
 		Stack(Stack<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data)
+			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -60,7 +60,7 @@ namespace NxEn
 
 			Clear();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 
 			Node* Current = Other.Data;
 			while (Current)
@@ -81,7 +81,7 @@ namespace NxEn
 
 			Clear();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Count = Other.Count;
 			Data = Other.Data;
 
@@ -245,7 +245,7 @@ namespace NxEn
 		{
 			Count++;
 
-			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			Instance->Next = nullptr;
 			return Instance;
 		}
@@ -254,7 +254,7 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Free(Instance, Allocator);
+			Memory::Free(Instance, Alloc);
 		}
 
 		template<typename... Args>
@@ -289,10 +289,10 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Count;
 		Node* Data;
 	};

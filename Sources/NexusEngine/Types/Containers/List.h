@@ -17,14 +17,14 @@ namespace NxEn
 		using Iterator = IteratorBlock<T>;
 
 		List(uint64 Size = 2, Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Capacity(0), Count(0), Data(nullptr)
+			: Alloc(nullptr), Capacity(0), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 			Allocate(Size);
 		}
 
 		List(const List<T>& Other)
-			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
+			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "List - Copy constructor");
 
@@ -37,7 +37,7 @@ namespace NxEn
 		}
 
 		List(List<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -60,7 +60,7 @@ namespace NxEn
 			Destruct(0, Count);
 			Free();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
 
@@ -84,7 +84,7 @@ namespace NxEn
 			Clear();
 			Free();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
 			Data = Other.Data;
@@ -401,18 +401,18 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
 		}
 
 		void Reallocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Allocator);
+			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Allocator);
+			Memory::Free(Data, Alloc);
 		}
 
 		template<typename... Args>
@@ -448,7 +448,7 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateCapacity(uint64 Size)
@@ -462,7 +462,7 @@ namespace NxEn
 			return Capacity * 2;
 		}
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Capacity;
 		uint64 Count;
 		T* Data;

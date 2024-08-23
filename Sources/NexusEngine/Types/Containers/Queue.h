@@ -18,13 +18,13 @@ namespace NxEn
 		using Iterator = IteratorNodeSimple<T, Node>;
 
 		Queue(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), DataHead(nullptr), DataTail(nullptr)
+			: Alloc(nullptr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			ValidateAllocator(Allctr);
 		}
 
 		Queue(const Queue<T>& Other)
-			: Allocator(Other.Allocator), Count(0), DataHead(nullptr), DataTail(nullptr)
+			: Alloc(Other.Alloc), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Queue - Copy constructor");
 
@@ -37,7 +37,7 @@ namespace NxEn
 		}
 
 		Queue(Queue<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
+			: Alloc(Other.Alloc), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
 			Other.DataHead = nullptr;
 			Other.DataTail = nullptr;
@@ -59,7 +59,7 @@ namespace NxEn
 
 			Clear();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 
 			Node* Current = Other.DataHead;
 			while (Current)
@@ -80,7 +80,7 @@ namespace NxEn
 
 			Clear();
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Count = Other.Count;
 			DataHead = Other.DataHead;
 			DataTail = Other.DataTail;
@@ -254,7 +254,7 @@ namespace NxEn
 		{
 			Count++;
 
-			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			Instance->Next = nullptr;
 			return Instance;
 		}
@@ -263,7 +263,7 @@ namespace NxEn
 		{
 			Count--;
 
-			Memory::Free(Instance, Allocator);
+			Memory::Free(Instance, Alloc);
 		}
 
 		template<typename... Args>
@@ -308,10 +308,10 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Count;
 		Node* DataHead;
 		Node* DataTail;

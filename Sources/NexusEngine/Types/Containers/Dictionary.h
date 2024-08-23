@@ -21,14 +21,14 @@ namespace NxEn
 		using Iterator = IteratorHashmap<KeyValuePair<K, T>, Node>;
 
 		Dictionary(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Buckets(0), Count(0), Data(nullptr)
+			: Alloc(nullptr), Buckets(0), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
 			Allocate(Size);
 		}
 
 		Dictionary(const Dictionary<K, T, H, LF>& Other)
-			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(0), Data(nullptr)
+			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(0), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Dictionary - Copy constructor");
 
@@ -49,7 +49,7 @@ namespace NxEn
 		}
 
 		Dictionary(Dictionary<K, T, H, LF>&& Other) noexcept
-			: Allocator(Other.Allocator), Buckets(Other.Buckets), Count(Other.Count), Data(Other.Data)
+			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -72,7 +72,7 @@ namespace NxEn
 			Clear();
 			Free(Data);
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Buckets = Other.Buckets;
 
 			Allocate(Buckets);
@@ -103,7 +103,7 @@ namespace NxEn
 			Clear();
 			Free(Data);
 
-			Allocator = Other.Allocator;
+			Alloc = Other.Alloc;
 			Buckets = Other.Buckets;
 			Count = Other.Count;
 			Data = Other.Data;
@@ -389,7 +389,7 @@ namespace NxEn
 		{
 			ValidateBucket(Size);
 
-			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Allocator);
+			Data = (Node**)Memory::Allocate(sizeof(Node*) * Buckets, NEXUS_MEMORY_ALIGN, Alloc);
 			for (uint64 Index = 0; Index < Buckets; Index++)
 			{
 				Data[Index] = nullptr;
@@ -400,21 +400,21 @@ namespace NxEn
 		{
 			Count++;
 
-			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			Node* New = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			New->Next = nullptr;
 			return New;
 		}
 
 		void Free(Node** Pointer)
 		{
-			Memory::Free(Pointer, Allocator);
+			Memory::Free(Pointer, Alloc);
 		}
 
 		void Free(Node* Instance)
 		{
 			Count--;
 
-			Memory::Free(Instance, Allocator);
+			Memory::Free(Instance, Alloc);
 		}
 
 		template<typename... Args>
@@ -513,7 +513,7 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateBucket(uint64 Size)
@@ -529,7 +529,7 @@ namespace NxEn
 		inline static const uint64 DefaultSize = 16;
 		inline static const float LoadFactorThreshold = LF;
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Buckets;
 		uint64 Count;
 		Node** Data;
