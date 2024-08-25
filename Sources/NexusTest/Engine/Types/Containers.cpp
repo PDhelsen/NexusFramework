@@ -2,16 +2,17 @@
 
 #include "Types/Containers/Array.h"
 #include "Types/Containers/List.h"
-#include "Types/Containers/Pool.h"
+#include "Types/Containers/Dequeue.h"
 #include "Types/Containers/LinkedList.h"
 #include "Types/Containers/Stack.h"
 #include "Types/Containers/Queue.h"
-#include "Types/Containers/Dequeue.h"
-#include "Types/Containers/Tuple.h"
-#include "Types/Containers/Tree.h"
-#include "Types/Containers/Graph.h"
 #include "Types/Containers/Set.h"
 #include "Types/Containers/Dictionary.h"
+#include "Types/Containers/Tree.h"
+#include "Types/Containers/Graph.h"
+#include "Types/Containers/Collection.h"
+#include "Types/Containers/Pool.h"
+#include "Types/Containers/Tuple.h"
 
 namespace NxTs
 {
@@ -1043,6 +1044,33 @@ namespace NxTs
 		ASSERT_EQ(Test.Contains(ToFind2), false);
 		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
+	}
+
+	TEST(Type_Containers, Collection)
+	{
+		NxEn::List<ContainerTest> Data1 = NxEn::List<ContainerTest>(5);
+		Data1.Append(1);
+		Data1.Append(2);
+		Data1.Append(3);
+		Data1.Append(4);
+		Data1.Append(5);
+
+		NxEn::Queue<ContainerTest> Data2 = NxEn::Queue<ContainerTest>();
+		Data2.Append(1);
+		Data2.Append(2);
+		Data2.Append(3);
+		Data2.Append(4);
+		Data2.Append(5);
+
+		uint64 Index = 0;
+		NxEn::Collection<ContainerTest> Test = Data2;
+		for (auto& It = Test.Current(); It != Test.End(); ++It)
+		{
+			ASSERT_EQ(It->Integer, ++Index);
+		}
+
+		auto& It = Test.Reset();
+		ASSERT_EQ((*It).Integer, 1);
 	}
 
 	TEST(Type_Containers, Pool)

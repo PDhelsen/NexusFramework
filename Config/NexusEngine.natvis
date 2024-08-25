@@ -179,6 +179,13 @@
     </Expand>
   </Type>
 
+	<Type Name="NxEn::Collection&lt;*&gt;::Wrapper&lt;*&gt;">
+		<DisplayString>{ Iterator }</DisplayString>
+		<Expand>
+			<Item Name="Value">Iterator</Item>
+		</Expand>
+	</Type>
+
 	<Type Name="NxEn::IteratorBlock&lt;*&gt;">
 		<DisplayString>{ Data[Index] }</DisplayString>
 		<Expand>

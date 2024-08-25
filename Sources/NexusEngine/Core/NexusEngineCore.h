@@ -31,6 +31,7 @@
 #include "Types/Containers/Dictionary.h"
 #include "Types/Containers/Tree.h"
 #include "Types/Containers/Graph.h"
+#include "Types/Containers/Collection.h"
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
 
