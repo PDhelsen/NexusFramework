@@ -8,7 +8,6 @@ namespace NxEn
 {
 #define NEXUS_MEMORY_ALIGN 16
 
-// TODO: Implementation - Allocators - Allocator Manager
 #define NEXUS_ALLOCATOR_DEFAULT NxEn::Memory::GetHeap()
 #define NEXUS_STACK_SIZE 1024
 #define NEXUS_HEAP_SIZE 1024 * 1024
@@ -53,7 +52,6 @@ namespace NxEn
 		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return Heap; }
 
 	private:
-		// TODO: Implementation - Allocators - Allocator Manager
 		static StackAllocator* Stack;
 		static HeapAllocator* Heap;
 

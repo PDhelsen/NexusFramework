@@ -18,7 +18,6 @@ namespace NxEn
 	{
 		Channels = new Dictionary<StringView, bool, Fnv1a64, 1.0f>();
 
-		//TODO: Implementation - Logger - Initialize logger channel
 		AddChannel(ChannelDefault, true);
 		AddChannel(ChannelAssert, true);
 		AddChannel("Performance", true);
