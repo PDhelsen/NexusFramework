@@ -15,28 +15,28 @@ namespace NxEn
 
 		}
 
-		IteratorBlock& operator++()
+		IteratorBlock<T>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorBlock operator++(int32)
+		IteratorBlock<T> operator++(int32)
 		{
-			IteratorBlock Temp = *this;
+			IteratorBlock<T> Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		IteratorBlock& operator--()
+		IteratorBlock<T>& operator--()
 		{
 			Reverse();
 			return *this;
 		}
 
-		IteratorBlock operator--(int32)
+		IteratorBlock<T> operator--(int32)
 		{
-			IteratorBlock Temp = *this;
+			IteratorBlock<T> Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -51,17 +51,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorBlock& Other) const
+		bool operator==(const IteratorBlock<T>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorBlock& Other) const
+		bool operator!=(const IteratorBlock<T>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorBlock& Other) const
+		bool Equals(const IteratorBlock<T>& Other) const
 		{
 			return Data == Other.Data && Index == Other.Index;
 		}
@@ -86,13 +86,13 @@ namespace NxEn
 			Index--;
 		}
 
-		IteratorBlock& Next()
+		IteratorBlock<T>& Next()
 		{
 			Next();
 			return *this;
 		}
 
-		IteratorBlock& Previous()
+		IteratorBlock<T>& Previous()
 		{
 			Previous();
 			return *this;
@@ -113,28 +113,28 @@ namespace NxEn
 
 		}
 
-		IteratorBucket& operator++()
+		IteratorBucket<T, BS>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorBucket operator++(int32)
+		IteratorBucket<T, BS> operator++(int32)
 		{
-			IteratorBucket Temp = *this;
+			IteratorBucket<T, BS> Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		IteratorBucket& operator--()
+		IteratorBucket<T, BS>& operator--()
 		{
 			Reverse();
 			return *this;
 		}
 
-		IteratorBucket operator--(int32)
+		IteratorBucket<T, BS> operator--(int32)
 		{
-			IteratorBucket Temp = *this;
+			IteratorBucket<T, BS> Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -149,17 +149,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorBucket& Other) const
+		bool operator==(const IteratorBucket<T, BS>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorBucket& Other) const
+		bool operator!=(const IteratorBucket<T, BS>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorBucket& Other) const
+		bool Equals(const IteratorBucket<T, BS>& Other) const
 		{
 			return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 		}
@@ -200,13 +200,13 @@ namespace NxEn
 			}
 		}
 
-		IteratorBucket& Next()
+		IteratorBucket<T, BS>& Next()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorBucket& Previous()
+		IteratorBucket<T, BS>& Previous()
 		{
 			Reverse();
 			return *this;
@@ -234,15 +234,15 @@ namespace NxEn
 			}
 		}
 
-		IteratorHashmap& operator++()
+		IteratorHashmap<T, N>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorHashmap operator++(int32)
+		IteratorHashmap<T, N> operator++(int32)
 		{
-			IteratorHashmap Temp = *this;
+			IteratorHashmap<T, N> Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -257,17 +257,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorHashmap& Other) const
+		bool operator==(const IteratorHashmap<T, N>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorHashmap& Other) const
+		bool operator!=(const IteratorHashmap<T, N>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorHashmap& Other) const
+		bool Equals(const IteratorHashmap<T, N>& Other) const
 		{
 			return Current == Other.Current && Index == Other.Index;
 		}
@@ -304,7 +304,7 @@ namespace NxEn
 			}
 		}
 
-		IteratorHashmap& Next()
+		IteratorHashmap<T, N>& Next()
 		{
 			Iterate();
 			return *this;
@@ -327,15 +327,15 @@ namespace NxEn
 
 		}
 
-		IteratorNodeSimple& operator++()
+		IteratorNodeSimple<T, N>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorNodeSimple operator++(int32)
+		IteratorNodeSimple<T, N> operator++(int32)
 		{
-			IteratorNodeSimple Temp = *this;
+			IteratorNodeSimple<T, N> Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -350,17 +350,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorNodeSimple& Other) const
+		bool operator==(const IteratorNodeSimple<T, N>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorNodeSimple& Other) const
+		bool operator!=(const IteratorNodeSimple<T, N>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorNodeSimple& Other) const
+		bool Equals(const IteratorNodeSimple<T, N>& Other) const
 		{
 			return Current == Other.Current;
 		}
@@ -383,7 +383,7 @@ namespace NxEn
 			}
 		}
 
-		IteratorNodeSimple& Next()
+		IteratorNodeSimple<T, N>& Next()
 		{
 			Iterate();
 			return *this;
@@ -403,28 +403,28 @@ namespace NxEn
 
 		}
 
-		IteratorNodeDouble& operator++()
+		IteratorNodeDouble<T, N>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorNodeDouble operator++(int32)
+		IteratorNodeDouble<T, N> operator++(int32)
 		{
-			IteratorNodeDouble Temp = *this;
+			IteratorNodeDouble<T, N> Temp = *this;
 			++(*this);
 			return Temp;
 		}
 
-		IteratorNodeDouble& operator--()
+		IteratorNodeDouble<T, N>& operator--()
 		{
 			Reverse();
 			return *this;
 		}
 
-		IteratorNodeDouble operator--(int32)
+		IteratorNodeDouble<T, N> operator--(int32)
 		{
-			IteratorNodeDouble Temp = *this;
+			IteratorNodeDouble<T, N> Temp = *this;
 			--(*this);
 			return Temp;
 		}
@@ -439,17 +439,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorNodeDouble& Other) const
+		bool operator==(const IteratorNodeDouble<T, N>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorNodeDouble& Other) const
+		bool operator!=(const IteratorNodeDouble<T, N>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorNodeDouble& Other) const
+		bool Equals(const IteratorNodeDouble<T, N>& Other) const
 		{
 			return Current == Other.Current;
 		}
@@ -480,13 +480,13 @@ namespace NxEn
 			}
 		}
 
-		IteratorNodeDouble& Next()
+		IteratorNodeDouble<T, N>& Next()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorNodeDouble& Previous()
+		IteratorNodeDouble<T, N>& Previous()
 		{
 			Reverse();
 			return *this;
@@ -505,15 +505,15 @@ namespace NxEn
 		{
 		}
 
-		IteratorNodeTree& operator++()
+		IteratorNodeTree<T, N>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorNodeTree operator++(int32)
+		IteratorNodeTree<T, N> operator++(int32)
 		{
-			IteratorNodeTree Temp = *this;
+			IteratorNodeTree<T, N> Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -528,17 +528,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorNodeTree& Other) const
+		bool operator==(const IteratorNodeTree<T, N>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorNodeTree& Other) const
+		bool operator!=(const IteratorNodeTree<T, N>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorNodeTree& Other) const
+		bool Equals(const IteratorNodeTree<T, N>& Other) const
 		{
 			return Current == Other.Current;
 		}
@@ -578,13 +578,13 @@ namespace NxEn
 			}
 		}
 
-		IteratorNodeTree& Next()
+		IteratorNodeTree<T, N>& Next()
 		{
 			Next();
 			return *this;
 		}
 
-		IteratorNodeTree& Parent()
+		IteratorNodeTree<T, N>& Parent()
 		{
 			if (Current)
 			{
@@ -593,7 +593,7 @@ namespace NxEn
 			return *this;
 		}
 
-		IteratorNodeTree& Sibling()
+		IteratorNodeTree<T, N>& Sibling()
 		{
 			if (Current)
 			{
@@ -602,7 +602,7 @@ namespace NxEn
 			return *this;
 		}
 
-		IteratorNodeTree& Child()
+		IteratorNodeTree<T, N>& Child()
 		{
 			if (Current)
 			{
@@ -625,15 +625,15 @@ namespace NxEn
 
 		}
 
-		IteratorNodeGraph& operator++()
+		IteratorNodeGraph<T, N>& operator++()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorNodeGraph operator++(int32)
+		IteratorNodeGraph<T, N> operator++(int32)
 		{
-			IteratorNodeGraph Temp = *this;
+			IteratorNodeGraph<T, N> Temp = *this;
 			++(*this);
 			return Temp;
 		}
@@ -648,17 +648,17 @@ namespace NxEn
 			return Get();
 		}
 
-		bool operator==(const IteratorNodeGraph& Other) const
+		bool operator==(const IteratorNodeGraph<T, N>& Other) const
 		{
 			return Equals(Other);
 		}
 
-		bool operator!=(const IteratorNodeGraph& Other) const
+		bool operator!=(const IteratorNodeGraph<T, N>& Other) const
 		{
 			return !Equals(Other);
 		}
 
-		bool Equals(const IteratorNodeGraph& Other) const
+		bool Equals(const IteratorNodeGraph<T, N>& Other) const
 		{
 			return Current == Other.Current;
 		}
@@ -681,13 +681,13 @@ namespace NxEn
 			}
 		}
 
-		IteratorNodeGraph& Next()
+		IteratorNodeGraph<T, N>& Next()
 		{
 			Iterate();
 			return *this;
 		}
 
-		IteratorNodeGraph& Connections(NodeGraphConnectionType Type, uint64 Index)
+		IteratorNodeGraph<T, N>& Connections(NodeGraphConnectionType Type, uint64 Index)
 		{
 			uint64 Idx = 0;
 			NodeGraphConnection<T>* Connect = Current->Connection;

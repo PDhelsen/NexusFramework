@@ -24,7 +24,7 @@ namespace NxEn
 			Allocate(0, BucketSize);
 		}
 
-		Dequeue(const Dequeue<T>& Other)
+		Dequeue(const Dequeue<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Dequeue - Copy constructor");
@@ -42,7 +42,7 @@ namespace NxEn
 			}
 		}
 
-		Dequeue(Dequeue<T>&& Other) noexcept
+		Dequeue(Dequeue<T, BS>&& Other) noexcept
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(Other.Data)
 		{
 			Data = nullptr;
@@ -54,7 +54,7 @@ namespace NxEn
 			Free();
 		}
 
-		Dequeue<T>& operator=(const Dequeue<T>& Other)
+		Dequeue<T, BS>& operator=(const Dequeue<T, BS>& Other)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Dequeue - Assignement operator");
 
@@ -87,7 +87,7 @@ namespace NxEn
 			return *this;
 		}
 
-		Dequeue<T>& operator=(Dequeue<T>&& Other) noexcept
+		Dequeue<T, BS>& operator=(Dequeue<T, BS>&& Other) noexcept
 		{
 			if (*this == Other)
 			{
@@ -116,12 +116,12 @@ namespace NxEn
 			return Get(Index);
 		}
 
-		bool operator==(const Dequeue<T>& Other) const
+		bool operator==(const Dequeue<T, BS>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const Dequeue<T>& Other) const
+		bool operator!=(const Dequeue<T, BS>& Other) const
 		{
 			return !(*this == Other);
 		}

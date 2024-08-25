@@ -17,15 +17,15 @@ namespace NxEn
 	struct NodeSimple
 	{
 		T Value;
-		NodeSimple* Next;
+		NodeSimple<T>* Next;
 	};
 
 	template<typename T>
 	struct NodeDouble
 	{
 		T Value;
-		NodeDouble* Next;
-		NodeDouble* Prev;
+		NodeDouble<T>* Next;
+		NodeDouble<T>* Prev;
 	};
 
 	template<typename T>
@@ -33,9 +33,9 @@ namespace NxEn
 	{
 		T Value;
 		uint64 Count;
-		NodeTree* Parent;
-		NodeTree* Sibling;
-		NodeTree* Child;
+		NodeTree<T>* Parent;
+		NodeTree<T>* Sibling;
+		NodeTree<T>* Child;
 	};
 
 	template<typename T>

@@ -31,20 +31,20 @@ namespace NxEn
 				return Get();
 			}
 
-			bool operator==(const Interface& Other) const
+			bool operator==(const Interface<T>& Other) const
 			{
 				return Equals(Other);
 			}
 
-			bool operator!=(const Interface& Other) const
+			bool operator!=(const Interface<T>& Other) const
 			{
 				return !Equals(Other);
 			}
 
-			virtual bool Equals(const Interface& Other) const = 0;
+			virtual bool Equals(const Interface<T>& Other) const = 0;
 			virtual T& Get() const = 0;
 			virtual void Iterate() = 0;
-			virtual void Copy(const Interface& Other) = 0;
+			virtual void Copy(const Interface<T>& Other) = 0;
 		};
 
 		template<typename T, typename I>
