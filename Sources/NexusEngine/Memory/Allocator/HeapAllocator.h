@@ -13,17 +13,23 @@ namespace NxEn
     // It should look like :
     // Root (16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + ... 
 
-    struct HeapSlot
-    {
-        HeapSlot* Next;
-        bool Free;
-    };
-
     class HeapAllocator : public Allocator
     {
+	private:
+		struct HeapSlot
+		{
+			HeapSlot* Next;
+			bool Free;
+		};
+
     public:
         NEXUS_ENGINE_API HeapAllocator(uint64 Size);
+		NEXUS_ENGINE_API HeapAllocator(const HeapAllocator& Other) = delete;
+		NEXUS_ENGINE_API HeapAllocator(HeapAllocator&& Other) noexcept = delete;
         NEXUS_ENGINE_API ~HeapAllocator();
+
+		NEXUS_ENGINE_API HeapAllocator& operator=(const HeapAllocator& Other) = delete;
+		NEXUS_ENGINE_API HeapAllocator& operator=(HeapAllocator&& Other) noexcept = delete;
 
         NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = 0) override;
         NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) override;

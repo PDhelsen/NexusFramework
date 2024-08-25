@@ -4,6 +4,8 @@
 
 namespace NxEn
 {
+	// TODO: Implementation - Math - Math API
+
 	NEXUS_ENGINE_API bool IsPowerOfTwo(uint64 Number);
 	NEXUS_ENGINE_API int32 LogTwoPowerOfTwo(uint32 Number);
 

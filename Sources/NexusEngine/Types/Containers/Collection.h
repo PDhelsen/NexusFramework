@@ -5,8 +5,6 @@
 
 namespace NxEn
 {
-	// FIXME: Leak - Memory - Explicit Copy / Move Constructor / Operator
-
 	template<typename T>
 	class Collection
 	{
@@ -96,6 +94,9 @@ namespace NxEn
 			IteratorEnd = new Wrapper<T, typename C::Iterator>(Container.End());
 		}
 
+		Collection(const Collection<T>& Other) = delete;
+		Collection(Collection<T>&& Other) noexcept = delete;
+		
 		~Collection()
 		{
 			AllocatorActive Active(Alloc);
@@ -103,6 +104,9 @@ namespace NxEn
 			delete IteratorBegin;
 			delete IteratorEnd;
 		}
+
+		Collection<T>& operator=(const Collection<T>& Other) = delete;
+		Collection<T>& operator=(Collection<T>&& Other) noexcept = delete;
 
 		Iterator& Reset() { IteratorCurrent->Copy(*IteratorBegin); return *IteratorCurrent; }
 		Iterator& Current() const { return *IteratorCurrent; }

@@ -33,17 +33,7 @@ namespace NxEn
 		}
 
 		Pool(const Pool<T>& Other) = delete;
-
-		Pool(Pool<T>&& Other) noexcept
-			: Allocator(Other.Allocator), Count(Other.Count), Data(Other.Data), Own(Other.Own)
-		{
-			Other.Data = nullptr;
-
-			if (Other.Own)
-			{
-				Other.Allocator = nullptr;
-			}
-		}
+		Pool(Pool<T>&& Other) noexcept = delete;
 
 		~Pool()
 		{
@@ -52,27 +42,7 @@ namespace NxEn
 		}
 
 		Pool<T>& operator=(const Pool<T>& Other) = delete;
-
-		Pool<T>& operator=(Pool<T>&& Other) noexcept
-		{
-			if (*this == Other)
-			{
-				return *this;
-			}
-
-			Clear();
-			Free();
-
-			Allocator = Other.Allocator;
-			Count = Other.Count;
-			Data = Other.Data;
-			Own = Other.Own;
-
-			Other.Count = 0;
-			Other.Data = nullptr;
-
-			return *this;
-		}
+		Pool<T>& operator=(Pool<T>&& Other) noexcept = delete;
 
 		bool operator==(const Pool<T>& Other) const
 		{

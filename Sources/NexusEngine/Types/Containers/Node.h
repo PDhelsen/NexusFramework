@@ -91,6 +91,52 @@ namespace NxEn
 
 		}
 
+		KeyValuePair(const KeyValuePair<K, T>& Other)
+			: Key(Other.Key), Value(Other.Value)
+		{
+		}
+
+		KeyValuePair(KeyValuePair<K, T>&& Other) noexcept
+			: Key(Move(Other.Key)), Value(Move(Other.Value))
+		{
+		}
+
+		KeyValuePair<K, T>& operator=(const KeyValuePair<K, T>& Other)
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Key = Other.Key;
+			Value = Other.Value;
+
+			return *this;
+		}
+
+		KeyValuePair<K, T>& operator=(KeyValuePair<K, T>&& Other) noexcept
+		{
+			if (*this == Other)
+			{
+				return *this;
+			}
+
+			Key = Move(Other.Key);
+			Value = Move(Other.Value);
+
+			return *this;
+		}
+
+		bool operator==(const KeyValuePair<K, T>& Other) const
+		{
+			return Key == Other.Key && Value == Other.Value;
+		}
+
+		bool operator!=(const KeyValuePair<K, T>& Other) const
+		{
+			return !(*this == Other);
+		}
+
 		void SetValue(const T& Other) { Value = Other; }
 		void SetValue(T&& Other) { Value = Move(Other); }
 		template<typename... Args>

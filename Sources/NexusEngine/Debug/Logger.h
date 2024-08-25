@@ -40,7 +40,12 @@ namespace NxEn
 	{
 	public:
 		NEXUS_ENGINE_API Logger(LoggerVerbosity Verbosity);
+		NEXUS_ENGINE_API Logger(const Logger& Other) = delete;
+		NEXUS_ENGINE_API Logger(Logger&& Other) noexcept = delete;
 		NEXUS_ENGINE_API ~Logger();
+
+		NEXUS_ENGINE_API Logger& operator=(const Logger& Other) = delete;
+		NEXUS_ENGINE_API Logger& operator=(Logger&& Other) noexcept = delete;
 
 		template<typename... Args>
 		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringView Channel, StringView Message, Args&&... args);
@@ -58,16 +63,13 @@ namespace NxEn
 		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
 		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
-		NEXUS_ENGINE_API inline static const String ChannelDefault = "Default";
-		NEXUS_ENGINE_API inline static const String ChannelAssert = "Assert";
-		NEXUS_ENGINE_API inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
-
 	private:
 		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, StringView Channel) const;
 		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
 		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
 
+		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 		static Logger* Instance;
 
 		// TEMP: Replace - String - Once string is fixed

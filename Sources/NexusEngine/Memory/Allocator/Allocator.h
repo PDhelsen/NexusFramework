@@ -40,7 +40,12 @@ namespace NxEn
 
 	protected:
 		Allocator(uint64 Size);
+		Allocator(const Allocator& Other) = delete;
+		Allocator(Allocator&& Other) noexcept = delete;
 		~Allocator();
+
+		Allocator& operator=(const Allocator& Other) = delete;
+		Allocator& operator=(Allocator&& Other) noexcept = delete;
 
 		void WipeoutMemory();
 		void EraseMemory(void* Memory, uint64 Size);

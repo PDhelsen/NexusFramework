@@ -209,7 +209,7 @@ namespace NxEn
 		return Size;
 	}
 
-	HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
+	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
 		HeapSlot* Slot = Root;
 		while (!Slot->Free || GetHeapSlotSize(Slot) < Size)

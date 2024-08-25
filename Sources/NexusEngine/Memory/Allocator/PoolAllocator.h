@@ -12,7 +12,12 @@ namespace NxEn
     {
     public:
         NEXUS_ENGINE_API PoolAllocator(uint64 Count, uint64 Stride);
-        NEXUS_ENGINE_API ~PoolAllocator();
+		NEXUS_ENGINE_API PoolAllocator(const PoolAllocator& Other) = delete;
+		NEXUS_ENGINE_API PoolAllocator(PoolAllocator&& Other) noexcept = delete;
+		NEXUS_ENGINE_API ~PoolAllocator();
+
+		NEXUS_ENGINE_API PoolAllocator& operator=(const PoolAllocator& Other) = delete;
+		NEXUS_ENGINE_API PoolAllocator& operator=(PoolAllocator&& Other) noexcept = delete;
 
         NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = 0) override;
         NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) override;

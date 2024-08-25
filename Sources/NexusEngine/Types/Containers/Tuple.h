@@ -19,12 +19,12 @@ namespace NxEn
 		}
 
 		Tuple(const Tuple<T1, T2>& Other)
-			: First(Other.F), Second(Other.S)
+			: First(Other.First), Second(Other.Second)
 		{
 		}
 
 		Tuple(Tuple<T1, T2>&& Other) noexcept
-			: First(Move(Other.F)), Second(Move(Other.S))
+			: First(Move(Other.First)), Second(Move(Other.Second))
 		{
 		}
 
