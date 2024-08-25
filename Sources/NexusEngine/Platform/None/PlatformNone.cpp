@@ -3,15 +3,15 @@
 
 namespace NxEn
 {
-    void PlatformNone::WaitForUserToCloseConsole() const
+    void PlatformNone::WaitForUserToCloseTerminal() const
     {
     }
 
-    void PlatformNone::WriteToConsole(StringView Message, ConsoleColor Color) const
+    void PlatformNone::WriteToTerminal(StringView Message, TerminalColor Color) const
     {
     }
 
-    void PlatformNone::WriteToOutput(StringView Message) const
+    void PlatformNone::WriteToDebugger(StringView Message) const
     {
     }
 

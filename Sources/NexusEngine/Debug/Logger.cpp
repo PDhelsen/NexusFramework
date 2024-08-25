@@ -9,7 +9,7 @@ namespace NxEn
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, Logger::, "Engine", "Editor", "App", "Project");
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, Logger::, 4, "Fatal", "Error", "Warning", "Info");
-	static Platform::ConsoleColor Colors[4] = { Platform::ConsoleColor::Magenta, Platform::ConsoleColor::Red, Platform::ConsoleColor::Yellow, Platform::ConsoleColor::White };
+	static Platform::TerminalColor Colors[4] = { Platform::TerminalColor::Magenta, Platform::TerminalColor::Red, Platform::TerminalColor::Yellow, Platform::TerminalColor::White };
 
 	Logger* Logger::Instance = new Logger(LoggerVerbosity::All);
 
@@ -85,7 +85,7 @@ namespace NxEn
 	void Logger::Print(StringView Message, uint8 Verbosity) const
 	{
 		Platform* Platform = Platform::GetInstance();
-		Platform->WriteToConsole(Message, Colors[Verbosity]);
-		Platform->WriteToOutput(Message);
+		Platform->WriteToTerminal(Message, Colors[Verbosity]);
+		Platform->WriteToDebugger(Message);
 	}
 }

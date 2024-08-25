@@ -10,9 +10,9 @@ namespace NxEn
 		friend Platform;
 
 	public:
-		NEXUS_ENGINE_API void WaitForUserToCloseConsole() const override;
-		NEXUS_ENGINE_API void WriteToConsole(StringView Message, ConsoleColor Color = ConsoleColor::White) const override;
-		NEXUS_ENGINE_API void WriteToOutput(StringView Message) const override;
+		NEXUS_ENGINE_API void WaitForUserToCloseTerminal() const override;
+		NEXUS_ENGINE_API void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const override;
+		NEXUS_ENGINE_API void WriteToDebugger(StringView Message) const override;
 		NEXUS_ENGINE_API void ExecuteFromDll(StringView DllName, uint8 Ordinal) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
@@ -22,6 +22,6 @@ namespace NxEn
 		~PlatformWindows();
 
 	private:
-		void InitializeConsole();
+		void InitializeTerminal();
 	};
 }

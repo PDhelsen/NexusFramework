@@ -7,20 +7,20 @@ namespace NxEn
 {
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 	// Keep synced with the enum in the Platform.h
-	static const String ConsoleColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
-	static const String ConsoleFormatReset = "\033[m";
+	static const String TerminalColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
+	static const String TerminalFormatReset = "\033[m";
 
-	void PlatformWindows::WaitForUserToCloseConsole() const
+	void PlatformWindows::WaitForUserToCloseTerminal() const
 	{
 		std::cin.get();
 	}
 
-	void PlatformWindows::WriteToConsole(StringView Message, ConsoleColor Color /*ConsoleColor::White*/) const
+	void PlatformWindows::WriteToTerminal(StringView Message, TerminalColor Color /*TerminalColor::White*/) const
 	{
-		std::cout << ConsoleColors[(uint8)Color].C() << Message.C() << ConsoleFormatReset.C();
+		std::cout << TerminalColors[(uint8)Color].C() << Message.C() << TerminalFormatReset.C();
 	}
 
-	void PlatformWindows::WriteToOutput(StringView Message) const
+	void PlatformWindows::WriteToDebugger(StringView Message) const
 	{
 		OutputDebugStringA(Message.C());
 	}
@@ -50,22 +50,22 @@ namespace NxEn
 
 	PlatformWindows::PlatformWindows()
 	{
-		InitializeConsole();
+		InitializeTerminal();
 	}
 
 	PlatformWindows::~PlatformWindows()
 	{
 	}
 
-	void PlatformWindows::InitializeConsole()
+	void PlatformWindows::InitializeTerminal()
 	{
-		HANDLE ConsoleOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		HANDLE TerminalOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		DWORD ConsoleOutDefaultMode = 0;
-		GetConsoleMode(ConsoleOut, &ConsoleOutDefaultMode);
-		DWORD ConsoleOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-		DWORD ConsoleOutMode = ConsoleOutDefaultMode | ConsoleOutRequestMode;
-		SetConsoleMode(ConsoleOut, ConsoleOutMode);
+		DWORD TerminalOutDefaultMode = 0;
+		GetConsoleMode(TerminalOut, &TerminalOutDefaultMode);
+		DWORD TerminalOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+		DWORD TerminalOutMode = TerminalOutDefaultMode | TerminalOutRequestMode;
+		SetConsoleMode(TerminalOut, TerminalOutMode);
 
 		SetConsoleOutputCP(CP_UTF8);
 	}

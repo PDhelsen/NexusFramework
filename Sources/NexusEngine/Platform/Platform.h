@@ -13,7 +13,7 @@ namespace NxEn
 	class Platform
 	{
 	public:
-		enum class ConsoleColor : uint8
+		enum class TerminalColor : uint8
 		{
 			White,
 			Black,
@@ -25,9 +25,9 @@ namespace NxEn
 			Magenta
 		};
 
-		NEXUS_ENGINE_API virtual void WaitForUserToCloseConsole() const = 0;
-		NEXUS_ENGINE_API virtual void WriteToConsole(StringView Message, ConsoleColor Color = ConsoleColor::White) const = 0;
-		NEXUS_ENGINE_API virtual void WriteToOutput(StringView Message) const = 0;
+		NEXUS_ENGINE_API virtual void WaitForUserToCloseTerminal() const = 0;
+		NEXUS_ENGINE_API virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
+		NEXUS_ENGINE_API virtual void WriteToDebugger(StringView Message) const = 0;
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
