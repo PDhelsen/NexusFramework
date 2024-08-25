@@ -488,14 +488,14 @@ namespace NxEn
 
 		void Resize(uint64 Size)
 		{
-			Node** TempArray = Data;
-			uint64 TempCapacity = Buckets;
+			Node** Temp = Data;
+			uint64 Length = Buckets;
 
 			Allocate(Size);
 
-			for (uint64 TempIndex = 0; TempIndex < TempCapacity; TempIndex++)
+			for (uint64 Index = 0; Index < Length; Index++)
 			{
-				Node* Current = TempArray[TempIndex];
+				Node* Current = Temp[Index];
 				while (Current)
 				{
 					Node* Next = Current->Next;
@@ -508,7 +508,7 @@ namespace NxEn
 				}
 			}
 
-			Free(TempArray);
+			Free(Temp);
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
