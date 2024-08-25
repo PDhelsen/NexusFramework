@@ -48,12 +48,12 @@ namespace NxEn
 		NEXUS_ENGINE_API Logger& operator=(Logger&& Other) noexcept = delete;
 
 		template<typename... Args>
-		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringView Channel, StringView Message, Args&&... args);
+		void Log(LoggerSource Source, LoggerVerbosity Verbosity, const String& Channel, StringView Message, Args&&... args);
 
-		NEXUS_ENGINE_API void AddChannel(StringView Channel, bool State = true);
-		NEXUS_ENGINE_API void SetChannel(StringView Channel, bool State);
-		NEXUS_ENGINE_API bool HasChannel(StringView Channel) const;
-		NEXUS_ENGINE_API bool CheckChannel(StringView Channel) const;
+		NEXUS_ENGINE_API void AddChannel(const String& Channel, bool State = true);
+		NEXUS_ENGINE_API void SetChannel(const String& Channel, bool State);
+		NEXUS_ENGINE_API bool HasChannel(const String& Channel) const;
+		NEXUS_ENGINE_API bool CheckChannel(const String& Channel) const;
 
 		NEXUS_ENGINE_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
@@ -64,7 +64,7 @@ namespace NxEn
 		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
 	private:
-		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, StringView Channel) const;
+		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const;
 		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
 		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
@@ -72,15 +72,14 @@ namespace NxEn
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 		static Logger* Instance;
 
-		// TEMP: Replace - String - Once string is fixed
-		Dictionary<StringView, bool, Fnv1a64, 1.0f>* Channels;
+		Dictionary<String, bool, Fnv1a64, 1.0f>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;
 		String StringBuilderFormat;
 	};
 
 	template<typename... Args>
-	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, StringView Channel, StringView Message, Args&&... args)
+	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, const String& Channel, StringView Message, Args&&... args)
 	{
 		if (!ShouldPrint(Verbosity, Channel))
 		{
