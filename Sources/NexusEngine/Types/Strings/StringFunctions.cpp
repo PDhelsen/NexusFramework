@@ -105,7 +105,7 @@ namespace NxEn
 		uint64 Index = 0;
 		const char* Previous = Text;
 		const char* Pointer = Text;
-		StringView Result = nullptr;
+		StringView Result;
 
 		do
 		{
@@ -115,16 +115,16 @@ namespace NxEn
 			case SearchMode::Characters: Pointer = StringCApi::SearchChr(Pointer, Substring); break;
 			}
 
+			if (!Pointer)
+			{
+				break;
+			}
+
 			switch (Behaviour)
 			{
 			case SearchBehaviour::Contains: Result = StringView(Pointer); break;
 			case SearchBehaviour::Find: Result = StringView(Pointer); break;
 			case SearchBehaviour::Split: Result = StringView(Previous, StringCApi::Length(Previous) - StringCApi::Length(Pointer)); break;
-			}
-
-			if (!Pointer)
-			{
-				break;
 			}
 
 			if (Results)

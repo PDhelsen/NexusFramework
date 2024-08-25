@@ -3,8 +3,6 @@
 
 namespace NxEn
 {
-	//TODO: Implementation - Strings - Handle nullptr
-
 	void StringCApi::Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe)
 	{
 		if (NotSafe)
@@ -65,11 +63,6 @@ namespace NxEn
 
 	uint64 StringCApi::Length(const char* Text)
 	{
-		if (!Text)
-		{
-			return 0;
-		}
-
 		return strlen(Text);
 	}
 
