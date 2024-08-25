@@ -170,7 +170,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Last().Integer, Test[Test.GetCount() - 1].Integer);
 
 		ASSERT_EQ(Test.GetIterator(5)->Integer, Test[5].Integer);
-		ASSERT_EQ(Test.GetIterator(5).GetIndex(), 5);
+		ASSERT_EQ(Test.GetIterator(5).Id(), 5);
 		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
 		ASSERT_NE(Test.End()->Integer, Test.Last().Integer);
 		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
@@ -299,7 +299,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Last().Integer, Test[Test.GetCount() - 1].Integer);
 
 		ASSERT_EQ(Test.GetIterator(5)->Integer, Test[5].Integer);
-		ASSERT_EQ(Test.GetIterator(5).GetIndex(), 5);
+		ASSERT_EQ(Test.GetIterator(5).Id(), 5);
 		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
 		ASSERT_NE(Test.End()->Integer, Test.Last().Integer);
 		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
@@ -425,7 +425,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Last().Integer, Test[Test.GetCount() - 1].Integer);
 
 		ASSERT_EQ(Test.GetIterator(5)->Integer, Test[5].Integer);
-		ASSERT_EQ(Test.GetIterator(5).GetIndex(), 5);
+		ASSERT_EQ(Test.GetIterator(5).Id(), 5);
 		ASSERT_EQ(Test.Begin()->Integer, Test.First().Integer);
 		ASSERT_NE(Test.End()->Integer, Test.Last().Integer);
 		ASSERT_EQ(Test.BeginReverse()->Integer, Test.Last().Integer);
