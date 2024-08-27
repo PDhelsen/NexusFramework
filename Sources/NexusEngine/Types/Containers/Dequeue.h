@@ -202,15 +202,14 @@ namespace NxEn
 		template<typename C>
 		T& AppendBackRange(const C& Value)
 		{
-			uint64 BucketIndex = Buckets - 1;
-			uint64 DataIndex = IndexBack;
+			uint64 Index = Count;
 
 			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				AppendBack(*It);
 			}
 
-			return Data[BucketIndex][DataIndex];
+			return Get(Index);
 		}
 
 		T& AppendFront(const T& Value)
@@ -243,7 +242,7 @@ namespace NxEn
 				AppendFront(*It);
 			}
 
-			return Data[0][IndexFront];
+			return Get(Value.Count - 1);
 		}
 
 		void RemoveBack()
