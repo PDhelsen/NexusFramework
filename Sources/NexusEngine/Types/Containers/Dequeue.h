@@ -20,8 +20,6 @@ namespace NxEn
 		{
 			ValidateAllocator(Allctr);
 			ValidateDefaultState();
-			Allocate(1);
-			Allocate(0, BucketSize);
 		}
 
 		Dequeue(const Dequeue<T, BS>& Other)
@@ -29,7 +27,10 @@ namespace NxEn
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Dequeue - Copy constructor");
 
-			Allocate(Buckets);
+			if (Buckets)
+			{
+				Allocate(Buckets);
+			}
 
 			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
 			{
@@ -51,7 +52,6 @@ namespace NxEn
 		~Dequeue()
 		{
 			Clear();
-			Free();
 		}
 
 		Dequeue<T, BS>& operator=(const Dequeue<T, BS>& Other)
@@ -64,7 +64,6 @@ namespace NxEn
 			}
 
 			Clear();
-			Free();
 
 			Alloc = Other.Alloc;
 			Buckets = Other.Buckets;
@@ -72,7 +71,10 @@ namespace NxEn
 			IndexFront = Other.IndexFront;
 			IndexBack = Other.IndexBack;
 
-			Allocate(Buckets);
+			if (Buckets)
+			{
+				Allocate(Buckets);
+			}
 
 			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
 			{
@@ -95,7 +97,6 @@ namespace NxEn
 			}
 
 			Clear();
-			Free();
 
 			Alloc = Other.Alloc;
 			Buckets = Other.Buckets;
@@ -265,10 +266,9 @@ namespace NxEn
 		{
 			Destruct(0, Count);
 			Free(0, Buckets);
-			
+			Free();
+
 			ValidateDefaultState();
-			Reallocate(1);
-			Allocate(0, BucketSize);
 		}
 
 		T& Get(uint64 Index) const
@@ -433,7 +433,15 @@ namespace NxEn
 
 			if ((AppendBack && IndexBack == BucketSize - 1) || (!AppendBack && IndexFront == 0))
 			{
-				Reallocate(++Buckets);
+				Buckets++;
+				if (Buckets <= 1)
+				{
+					Allocate(Buckets);
+				}
+				else
+				{
+					Reallocate(Buckets);
+				}
 				if (!AppendBack)
 				{
 					Shift(true);
@@ -473,8 +481,15 @@ namespace NxEn
 				{
 					Shift(false);
 				}
-				;
-				Reallocate(--Buckets);
+				Buckets--;
+				if (Buckets > 0)
+				{
+					Reallocate(Buckets);
+				}
+				else
+				{
+					Free();
+				}
 
 				if (RemoveBack)
 				{
@@ -518,8 +533,8 @@ namespace NxEn
 		void ValidateDefaultState()
 		{
 			Count = 0;
-			IndexFront = 5;
-			IndexBack = 4;
+			IndexFront = 0;
+			IndexBack = BucketSize - 1;
 		}
 
 		inline static const uint64 BucketSize = BS;
