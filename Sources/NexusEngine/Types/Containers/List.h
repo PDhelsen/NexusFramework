@@ -57,7 +57,7 @@ namespace NxEn
 				return *this;
 			}
 
-			Destruct(0, Count);
+			DestructRange(0, Count);
 			Free();
 
 			Alloc = Other.Alloc;
@@ -132,7 +132,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Destruct(Index, 1);
+			Destruct(Index);
 			Construct(Index, args...);
 			return Data[Index];
 		}
@@ -241,7 +241,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Destruct(Index, 1);
+			Destruct(Index);
 			Shift(Index, 1, false);
 			Resize(--Count);
 		}
@@ -251,7 +251,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), "Invalid Index");
 
-			Destruct(Index, Size);
+			DestructRange(Index, Size);
 			Shift(Index, Size, false);
 			Resize(Count - Size);
 		}
@@ -260,7 +260,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
 			
-			Destruct(Count - 1, 1);
+			Destruct(Count - 1);
 			Resize(--Count);
 		}
 
@@ -274,7 +274,7 @@ namespace NxEn
 
 		void Clear(bool ShrinkToZero = false)
 		{
-			Destruct(0, Count);
+			DestructRange(0, Count);
 			Resize(0);
 			if (ShrinkToZero)
 			{
@@ -421,7 +421,12 @@ namespace NxEn
 			Memory::Construct<T>(&Data[Index], args...);
 		}
 
-		void Destruct(uint64 Index, uint64 Size)
+		void Destruct(uint64 Index)
+		{
+			Memory::Destruct(&Data[Index]);
+		}
+
+		void DestructRange(uint64 Index, uint64 Size)
 		{
 			for (uint64 Offset = 0; Offset < Size; Offset++)
 			{

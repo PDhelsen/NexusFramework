@@ -39,7 +39,9 @@ namespace NxEn
 
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				Construct(Index, Other[Index]);
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index, BucketIndex, DataIndex);
+				Construct(BucketIndex, DataIndex, Other.Data[BucketIndex][DataIndex]);
 			}
 		}
 
@@ -83,7 +85,9 @@ namespace NxEn
 
 			for (uint64 Index = 0; Index < Count; Index++)
 			{
-				Construct(Index, Other[Index]);
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index, BucketIndex, DataIndex);
+				Construct(BucketIndex, DataIndex, Other.Data[BucketIndex][BucketIndex]);
 			}
 
 			return *this;
@@ -154,8 +158,8 @@ namespace NxEn
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
-			Destruct(Index, 1);
-			Construct(Index, args...);
+			Destruct(BucketIndex, DataIndex);
+			Construct(BucketIndex, DataIndex, args...);
 			return Data[BucketIndex][DataIndex];
 		}
 
@@ -181,14 +185,14 @@ namespace NxEn
 		T& AppendBack(const T& Value)
 		{
 			AppendBucket(true);
-			Construct(Count - 1, Value);
+			Construct(Buckets - 1, IndexBack, Value);
 			return Data[Buckets - 1][IndexBack];
 		}
 
 		T& AppendBack(T&& Value)
 		{
 			AppendBucket(true);
-			Construct(Count - 1, Move(Value));
+			Construct(Buckets - 1, IndexBack, Move(Value));
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -196,7 +200,7 @@ namespace NxEn
 		T& AppendBackConstruct(Args&&... args)
 		{
 			AppendBucket(true);
-			Construct(Count - 1, args...);
+			Construct(Buckets - 1, IndexBack, args...);
 			return Data[Buckets - 1][IndexBack];
 		}
 
@@ -216,14 +220,14 @@ namespace NxEn
 		T& AppendFront(const T& Value)
 		{
 			AppendBucket(false);
-			Construct(0, Value);
+			Construct(0, IndexFront, Value);
 			return Data[0][IndexFront];
 		}
 
 		T& AppendFront(T&& Value)
 		{
 			AppendBucket(false);
-			Construct(0, Move(Value));
+			Construct(0, IndexFront, Move(Value));
 			return Data[0][IndexFront];
 		}
 
@@ -231,7 +235,7 @@ namespace NxEn
 		T& AppendFrontConstruct(Args&&... args)
 		{
 			AppendBucket(false);
-			Construct(0, args...);
+			Construct(0, IndexFront, args...);
 			return Data[0][IndexFront];
 		}
 
@@ -250,7 +254,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 
-			Destruct(Count - 1, 1);
+			Destruct(Buckets - 1, IndexBack);
 			RemoveBucket(true);
 		}
 
@@ -258,13 +262,13 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
 			
-			Destruct(0, 1);
+			Destruct(0, IndexFront);
 			RemoveBucket(false);
 		}
 
 		void Clear()
 		{
-			Destruct(0, Count);
+			DestructRange(0, Count);
 			Free(0, Buckets);
 			Free();
 
@@ -403,14 +407,17 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void Construct(uint64 Index, Args&&... args)
+		void Construct(uint64 BucketIndex, uint64 DataIndex, Args&&... args)
 		{
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
 			Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
 		}
 
-		void Destruct(uint64 Index, uint64 Size)
+		void Destruct(uint64 BucketIndex, uint64 DataIndex)
+		{
+			Memory::Destruct(&Data[BucketIndex][DataIndex]);
+		}
+
+		void DestructRange(uint64 Index, uint64 Size)
 		{
 			for (uint64 Offset = 0; Offset < Size; Offset++)
 			{
@@ -442,7 +449,7 @@ namespace NxEn
 				{
 					Reallocate(Buckets);
 				}
-				if (!AppendBack)
+				if (!AppendBack && Buckets > 1)
 				{
 					Shift(true);
 				}
@@ -477,7 +484,7 @@ namespace NxEn
 			if ((RemoveBack && IndexBack == 0) || (!RemoveBack && IndexFront == BucketSize - 1))
 			{
 				Free(RemoveBack ? Buckets - 1 : 0, 1);
-				if (!RemoveBack)
+				if (!RemoveBack && Buckets > 1)
 				{
 					Shift(false);
 				}

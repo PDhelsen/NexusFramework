@@ -46,7 +46,7 @@ namespace NxEn
 
 		~Array()
 		{
-			Destruct(0, Count);
+			DestructRange(0, Count);
 			Free();
 		}
 
@@ -59,7 +59,7 @@ namespace NxEn
 				return *this;
 			}
 
-			Destruct(0, Count);
+			DestructRange(0, Count);
 			Free();
 
 			Alloc = Other.Alloc;
@@ -82,7 +82,7 @@ namespace NxEn
 				return *this;
 			}
 
-			Destruct(0, Count);
+			DestructRange(0, Count);
 			Free();
 
 			Alloc = Other.Alloc;
@@ -131,7 +131,7 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Destruct(Index, 1);
+			Destruct(Index);
 			Construct(Index, args...);
 			return Data[Index];
 		}
@@ -271,7 +271,12 @@ namespace NxEn
 			}
 		}
 
-		void Destruct(uint64 Index, uint64 Size)
+		void Destruct(uint64 Index)
+		{
+			Memory::Destruct(&Data[Index]);
+		}
+
+		void DestructRange(uint64 Index, uint64 Size)
 		{
 			for (uint64 Offset = 0; Offset < Size; Offset++)
 			{
