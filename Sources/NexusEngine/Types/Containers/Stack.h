@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Types/Integer.h"
-#include "Types/Containers/Node.h"
 #include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
@@ -10,38 +9,46 @@
 
 namespace NxEn
 {
-	template<typename T>
+	template<typename T, uint64 BS = 10>
 	class Stack
 	{
 	public:
-		using Node = NodeSimple<T>;
-		using Iterator = IteratorNodeSimple<T, Node>;
+		using Iterator = IteratorBucket<T, BS>;
 
 		Stack(Allocator* Allctr = nullptr)
-			: Alloc(nullptr), Count(0), Data(nullptr)
+			: Alloc(nullptr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
+			ValidateDefaultState();
 		}
 
-		Stack(const Stack<T>& Other)
-			: Alloc(Other.Alloc), Count(0), Data(nullptr)
+		Stack(const Stack<T, BS>& Other)
+			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(nullptr)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Stack - Copy constructor");
 
-			Node* Current = Other.Data;
-			while (Current)
+			if (Buckets)
 			{
-				Append(Current->Value);
-				Current = Current->Next;
+				Allocate(Buckets);
 			}
 
-			Reverse();
+			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
+			{
+				Allocate(Bucket, BucketSize);
+			}
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index, BucketIndex, DataIndex);
+				Construct(BucketIndex, DataIndex, Other.Data[BucketIndex][DataIndex]);
+			}
 		}
 
-		Stack(Stack<T>&& Other) noexcept
-			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
+		Stack(Stack<T, BS>&& Other) noexcept
+			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(Other.Data)
 		{
-			Other.Data = nullptr;
+			Data = nullptr;
 		}
 
 		~Stack()
@@ -49,7 +56,7 @@ namespace NxEn
 			Clear();
 		}
 
-		Stack<T>& operator=(const Stack<T>& Other)
+		Stack<T, BS>& operator=(const Stack<T, BS>& Other)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Stack - Assignement operator");
 
@@ -61,18 +68,31 @@ namespace NxEn
 			Clear();
 
 			Alloc = Other.Alloc;
+			Buckets = Other.Buckets;
+			Count = Other.Count;
+			IndexLast = Other.IndexLast;
 
-			Node* Current = Other.Data;
-			while (Current)
+			if (Buckets)
 			{
-				AppendBack(Current->Value);
-				Current = Current->Next;
+				Allocate(Buckets);
+			}
+
+			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
+			{
+				Allocate(Bucket, BucketSize);
+			}
+
+			for (uint64 Index = 0; Index < Count; Index++)
+			{
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index, BucketIndex, DataIndex);
+				Construct(BucketIndex, DataIndex, Other.Data[BucketIndex][BucketIndex]);
 			}
 
 			return *this;
 		}
 
-		Stack<T>& operator=(Stack<T>&& Other) noexcept
+		Stack<T, BS>& operator=(Stack<T, BS>&& Other) noexcept
 		{
 			if (*this == Other)
 			{
@@ -82,141 +102,117 @@ namespace NxEn
 			Clear();
 
 			Alloc = Other.Alloc;
+			Buckets = Other.Buckets;
 			Count = Other.Count;
+			IndexLast = Other.IndexLast;
 			Data = Other.Data;
 
+			Other.Capacity = 0;
 			Other.Count = 0;
 			Other.Data = nullptr;
 
 			return *this;
 		}
 
-		bool operator==(const Stack<T>& Other) const
+		bool operator==(const Stack<T, BS>& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const Stack<T>& Other) const
+		bool operator!=(const Stack<T, BS>& Other) const
 		{
 			return !(*this == Other);
 		}
 
 		T& Append(const T& Value)
 		{
-			Node* Instance = Allocate();
-			Construct(Instance, Value);
-
-			AppendNode(Instance);
-			return Instance->Value;
+			AppendBucket();
+			Construct(Buckets - 1, IndexLast, Value);
+			return Data[Buckets - 1][IndexLast];
 		}
 
 		T& Append(T&& Value)
 		{
-			Node* Instance = Allocate();
-			Construct(Instance, Move(Value));
-
-			AppendNode(Instance);
-			return Instance->Value;
+			AppendBucket();
+			Construct(Buckets - 1, IndexLast, Move(Value));
+			return Data[Buckets - 1][IndexLast];
 		}
 
 		template<typename... Args>
 		T& AppendConstruct(Args&&... args)
 		{
-			Node* Instance = Allocate();
-			Construct(Instance, args...);
-
-			AppendNode(Instance);
-			return Instance->Value;
+			AppendBucket();
+			Construct(Buckets - 1, IndexLast, args...);
+			return Data[Buckets - 1][IndexLast];
 		}
 
 		template<typename C>
 		T& AppendRange(const C& Value)
 		{
-			typename C::Iterator It = Value.Begin();
-			T& Return = Append(*It);
+			uint64 Index = Count;
 
-			for (++It; It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
 				Append(*It);
 			}
 
-			return Return;
+			return Data[Buckets - 1][IndexLast];
 		}
 
 		void Remove()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
-			
-			Node* Instance = Data;
-			RemoveNode();
-			Destruct(Instance);
-			Free(Instance);
+			NEXUS_ASSERT(!IsEmpty(), "Stack is Empty");
+
+			Destruct(Buckets - 1, IndexLast);
+			RemoveBucket();
 		}
 
 		void Clear()
 		{
-			while (Data)
-			{
-				Remove();
-			}
+			DestructRange(0, Count);
+			Free(0, Buckets);
+			Free();
+
+			ValidateDefaultState();
 		}
 
 		T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
-			
-			return Data->Value;
-		}
+			NEXUS_ASSERT(!IsEmpty(), "Stack is Empty");
 
-		Iterator GetIterator(T* Position)
-		{
-			return Iterator(GetNode(Position));
+			return Data[Buckets - 1][IndexLast];
 		}
 
 		Iterator begin() const { return Begin(); }
 		Iterator Begin() const
 		{
-			return Iterator(Data);
+			return Iterator(Data, 0, 0, 0);
+		}
+
+		Iterator BeginReverse() const
+		{
+			return --End();
 		}
 
 		Iterator end() const { return End(); }
 		Iterator End() const
 		{
-			return Iterator(nullptr);
+			Iterator It = Iterator(Data, 0, Buckets - 1, IndexLast);
+			return ++It;
 		}
 
-		void Swap(T* A, T* B)
+		Iterator EndReverse() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Stack is empty");
-			NEXUS_ASSERT(A != nullptr, "A is null");
-			NEXUS_ASSERT(B != nullptr, "B is null");
-
-			T Temp = GetNode(A)->Value;
-			GetNode(A)->Value = Move(GetNode(B)->Value);
-			GetNode(B)->Value = Move(Temp);
+			return --Begin();
 		}
 
 		void Reverse()
 		{
-			Node* Current = Data;
-			Node* Next = Current->Next;
-			Current->Next = nullptr;
-
-			while (Next)
+			uint64 Half = Count / 2;
+			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
 			{
-				Node* SecondNext = Next->Next;
-				Next->Next = Current;
-
-				Current = Next;
-				Next = SecondNext;
+				Swap(Front, Back);
 			}
-
-			Data = Current;
-		}
-
-		void Sort(Sort::CompareFunction<T> Function = nullptr)
-		{
-			Data = Sort::LinkSort<T>(Data, Function);
 		}
 
 		bool Contains(const T& Other) const
@@ -239,52 +235,115 @@ namespace NxEn
 
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
+		uint64 GetBuckets() const { return Buckets; }
 
 	private:
-		Node* Allocate()
+		void Allocate(uint64 Size)
 		{
-			Count++;
-
-			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
-			Instance->Next = nullptr;
-			return Instance;
+			ValidateBucket(Size);
+			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Alloc);
 		}
 
-		void Free(Node* Instance)
+		void Allocate(uint64 Index, uint64 Size)
 		{
-			Count--;
-
-			Memory::Free(Instance, Alloc);
+			Data[Index] = (T*)Memory::Allocate(sizeof(T) * Size, NEXUS_MEMORY_ALIGN, Alloc);
 		}
 
-		template<typename... Args>
-		void Construct(Node* Instance, Args&&... args)
+		void Reallocate(uint64 Size)
 		{
-			Memory::Construct<T>(&Instance->Value, args...);
+			ValidateBucket(Size);
+			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Alloc);
 		}
 
-		void Destruct(Node* Instance)
+		void Free()
 		{
-			Memory::Destruct(&Instance->Value);
+			Memory::Free(Data, Alloc);
 		}
 
-		void AppendNode(Node* Instance)
+		void Free(uint64 Index, uint64 Size)
 		{
-			Instance->Next = Data;
-			Data = Instance;
-		}
-
-		void RemoveNode()
-		{
-			if (Data)
+			for (uint64 Offset = 0; Offset < Size; Offset++)
 			{
-				Data = Data->Next;
+				Memory::Free(Data[Index + Offset], Alloc);
 			}
 		}
 
-		static Node* GetNode(T* Value)
+		template<typename... Args>
+		void Construct(uint64 BucketIndex, uint64 DataIndex, Args&&... args)
 		{
-			return reinterpret_cast<Node*>(Value);
+			Memory::Construct<T>(&Data[BucketIndex][DataIndex], args...);
+		}
+
+		void Destruct(uint64 BucketIndex, uint64 DataIndex)
+		{
+			Memory::Destruct(&Data[BucketIndex][DataIndex]);
+		}
+
+		void DestructRange(uint64 Index, uint64 Size)
+		{
+			for (uint64 Offset = 0; Offset < Size; Offset++)
+			{
+				uint64 BucketIndex, DataIndex;
+				GetIndex(Index + Offset, BucketIndex, DataIndex);
+				Memory::Destruct(&Data[BucketIndex][DataIndex]);
+			}
+		}
+
+		void AppendBucket()
+		{
+			Count++;
+
+			if (IndexLast == BucketSize - 1)
+			{
+				Buckets++;
+				if (Buckets <= 1)
+				{
+					Allocate(Buckets);
+				}
+				else
+				{
+					Reallocate(Buckets);
+				}
+				Allocate(Buckets - 1, BucketSize);
+
+				IndexLast = 0;
+			}
+			else
+			{
+				IndexLast++;
+
+			}
+		}
+
+		void RemoveBucket()
+		{
+			Count--;
+
+			if (IndexLast == 0)
+			{
+				Free(Buckets - 1, 1);
+				Buckets--;
+				if (Buckets > 0)
+				{
+					Reallocate(Buckets);
+				}
+				else
+				{
+					Free();
+				}
+
+				IndexLast = BucketSize - 1;
+			}
+			else
+			{
+				IndexLast--;
+			}
+		}
+
+		void GetIndex(uint64 Index, uint64& BucketIndex, uint64& DataIndex) const
+		{
+			BucketIndex = Index / BucketSize;
+			DataIndex = Index % BucketSize;
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
@@ -292,8 +351,43 @@ namespace NxEn
 			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
+		void ValidateBucket(uint64 Size)
+		{
+			Buckets = Size > 1 ? Size : 1;
+		}
+
+		void ValidateDefaultState()
+		{
+			Count = 0;
+			IndexLast = BucketSize - 1;
+		}
+
+		bool IsValidIndex(uint64 Index) const
+		{
+			return Index >= 0 && Index < Count;
+		}
+
+		void Swap(uint64 IndexA, uint64 IndexB)
+		{
+			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
+
+			uint64 BucketIndexA, DataIndexA;
+			GetIndex(IndexA, BucketIndexA, DataIndexA);
+			uint64 BucketIndexB, DataIndexB;
+			GetIndex(IndexB, BucketIndexB, DataIndexB);
+
+			T Temp = Data[BucketIndexA][DataIndexA];
+			Data[BucketIndexA][DataIndexA] = Move(Data[BucketIndexB][DataIndexB]);
+			Data[BucketIndexB][DataIndexB] = Move(Temp);
+		}
+
+		inline static const uint64 BucketSize = BS;
+
 		Allocator* Alloc;
+		uint64 Buckets;
 		uint64 Count;
-		Node* Data;
+		uint64 IndexLast;
+		T** Data;
 	};
 }

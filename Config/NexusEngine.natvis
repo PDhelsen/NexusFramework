@@ -60,42 +60,38 @@
     </Expand>
   </Type>
 
-  <Type Name="NxEn::LinkedList&lt;*&gt;">
-    <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <LinkedListItems>
-        <Size>Count</Size>
-        <HeadPointer>DataHead</HeadPointer>
-        <NextPointer>Next</NextPointer>
-        <ValueNode>Value</ValueNode>
-      </LinkedListItems>
-    </Expand>
-  </Type>
-
   <Type Name="NxEn::Stack&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <LinkedListItems>
-        <Size>Count</Size>
-        <HeadPointer>Data</HeadPointer>
-        <NextPointer>Next</NextPointer>
-        <ValueNode>Value</ValueNode>
-      </LinkedListItems>
-    </Expand>
+		<Expand>
+			<IndexListItems>
+				<Size>Count</Size>
+				<ValueNode>Data[($i) / $T2][($i) % $T2]</ValueNode>
+			</IndexListItems>
+		</Expand>
   </Type>
 
   <Type Name="NxEn::Queue&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <LinkedListItems>
-        <Size>Count</Size>
-        <HeadPointer>DataHead</HeadPointer>
-        <NextPointer>Next</NextPointer>
-        <ValueNode>Value</ValueNode>
-      </LinkedListItems>
-    </Expand>
+		<Expand>
+			<IndexListItems>
+				<Size>Count</Size>
+				<ValueNode>Data[($i + IndexFront) / $T2][($i + IndexFront) % $T2]</ValueNode>
+			</IndexListItems>
+		</Expand>
   </Type>
 
+	<Type Name="NxEn::LinkedList&lt;*&gt;">
+		<DisplayString>{{ Count={Count} }}</DisplayString>
+		<Expand>
+			<LinkedListItems>
+				<Size>Count</Size>
+				<HeadPointer>DataHead</HeadPointer>
+				<NextPointer>Next</NextPointer>
+				<ValueNode>Value</ValueNode>
+			</LinkedListItems>
+		</Expand>
+	</Type>
+	
   <Type Name="NxEn::Set&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
