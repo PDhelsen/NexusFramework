@@ -16,7 +16,7 @@ namespace NxEn
 	public:
 		using Iterator = IteratorBlock<T>;
 
-		List(uint64 Size = 2, Allocator* Allctr = nullptr)
+		List(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Alloc(nullptr), Capacity(0), Count(0), Data(nullptr)
 		{
 			ValidateAllocator(Allctr);
@@ -57,7 +57,7 @@ namespace NxEn
 				return *this;
 			}
 
-			DestructRange(0, Count);
+			Clear();
 			Free();
 
 			Alloc = Other.Alloc;
@@ -462,10 +462,12 @@ namespace NxEn
 			Capacity = Size > Lowest ? Size : Lowest;
 		}
 
-		uint64 GrowPolicy()
+		uint64 GrowPolicy() const
 		{
 			return Capacity * 2;
 		}
+
+		inline static const uint64 DefaultSize = 16;
 
 		Allocator* Alloc;
 		uint64 Capacity;
