@@ -284,7 +284,7 @@ namespace NxEn
 			do
 			{
 				Index++;
-			} while (Data[Index].Free && Index < Capacity);
+			} while (Data[Index].IsFree() && Index < Capacity);
 		}
 
 		IteratorHashmap<T, N>& Next()

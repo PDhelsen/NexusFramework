@@ -14,6 +14,7 @@ namespace NxEn
 	//-----------------------------------------------------------------------------------------------------------------------
 
 	// TODO: Architecture - Hash - Strategy Pattern
+	// TODO: Architecture - Hash - Cannot return 0
 	template<typename T = const void*, class H = Fnv1a64>
 	struct Hash
 	{

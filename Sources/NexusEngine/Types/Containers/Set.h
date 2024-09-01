@@ -38,9 +38,9 @@ namespace NxEn
 			for (uint64 Index = 0; Index < Capacity; Index++)
 			{
 				Node& Instance = Other.Data[Index];
-				if (!Instance.Free)
+				if (!Instance.IsFree())
 				{
-					Construct(Index, Other.Data[Index].Value);
+					Construct(Index, Instance.Hash, Instance.Value);
 				}
 			}
 		}
@@ -78,9 +78,9 @@ namespace NxEn
 			for (uint64 Index = 0; Index < Capacity; Index++)
 			{
 				Node& Instance = Other.Data[Index];
-				if (!Instance.Free)
+				if (!Instance.IsFree())
 				{
-					Construct(Index, Other.Data[Index].Value);
+					Construct(Index, Instance.Hash, Instance.Value);
 				}
 			}
 
@@ -121,29 +121,31 @@ namespace NxEn
 
 		const T& Append(const T& Value)
 		{
-			uint64 Index = GetIndexRead(Value);
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
 				return Data[Index].Value;
 			}
 
 			Resize(++Count);
-			Index = GetIndexWrite(Value);
-			Construct(Index, Value);
+			Index = GetIndexWrite(Hash);
+			Construct(Index, Hash, Value);
 			return Data[Index].Value;
 		}
 
 		const T& Append(T&& Value)
 		{
-			uint64 Index = GetIndexRead(Value);
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
 				return Data[Index].Value;
 			}
 
 			Resize(++Count);
-			Index = GetIndexWrite(Value);
-			Construct(Index, Move(Value));
+			Index = GetIndexWrite(Hash);
+			Construct(Index, Hash, Move(Value));
 			return Data[Index].Value;
 		}
 
@@ -154,23 +156,26 @@ namespace NxEn
 
 			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
 			{
-				uint64 Index = GetIndexRead(*It);
+				uint64 Hash = GetHash(*It);
+				uint64 Index = GetIndexRead(Hash);
 				if (Index != Capacity)
 				{
 					continue;
 				}
 
-				Index = GetIndexWrite(*It);
-				Construct(Index, *It);
+				Index = GetIndexWrite(Hash);
+				Construct(Index, Hash, *It);
 			}
 
-			uint64 Index = GetIndexRead(*Value.Begin());
+			uint64 Hash = GetHash(*Value.Begin());
+			uint64 Index = GetIndexRead(Hash);
 			return Data[Index].Value;
 		}
 
 		void Remove(const T& Value)
 		{
-			uint64 Index = GetIndexRead(Value);
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndexRead(Hash);
 			NEXUS_ASSERT(Index != Capacity, "Could not find value");
 			Destruct(Index);
 			Resize(--Count);
@@ -184,7 +189,8 @@ namespace NxEn
 
 		Iterator GetIterator(const T& Value)
 		{
-			uint64 Index = GetIndexRead(Value);
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndexRead(Hash);
 			return Index != Capacity ? Iterator(Data, Index, Capacity) : End();
 		}
 
@@ -227,7 +233,8 @@ namespace NxEn
 
 		Iterator Find(const T& Other) const
 		{
-			uint64 Index = GetIndexRead(Other);
+			uint64 Hash = GetHash(Other);
+			uint64 Index = GetIndexRead(Hash);
 			return Index != Capacity ? Iterator(Data, Index, Capacity) : End();
 		}
 
@@ -243,7 +250,7 @@ namespace NxEn
 
 			for (uint64 Index = 0; Index < Capacity; Index++)
 			{
-				Data[Index].Free = true;
+				Data[Index].Hash = 0;
 			}
 		}
 
@@ -259,16 +266,17 @@ namespace NxEn
 			for (uint64 OldIndex = 0; OldIndex < Length; OldIndex++)
 			{
 				Node& Old = Temp[OldIndex];
-				if (Old.Free)
+				if (Old.IsFree())
 				{
 					continue;
 				}
 
-				uint64 NewIndex = GetIndexWrite(Old.Value);
+				uint64 Hash = GetHash(Old.Value);
+				uint64 NewIndex = GetIndexWrite(Hash);
 				Node& New = Data[NewIndex];
 
 				New.Value = Move(Old.Value);
-				New.Free = false;
+				New.Hash = Hash;
 			}
 
 			Memory::Free(Temp, Alloc);
@@ -280,20 +288,20 @@ namespace NxEn
 		}
 
 		template<typename... Args>
-		void Construct(uint64 Index, Args&&... args)
+		void Construct(uint64 Index, uint64 Hash, Args&&... args)
 		{
 			Node& Instance = Data[Index];
-			NEXUS_ASSERT(Instance.Free, "Construct on an already occupied slot");
+			NEXUS_ASSERT(Instance.IsFree(), "Construct on an already occupied slot");
 			Memory::Construct<T>(&Instance.Value, args...);
-			Instance.Free = false;
+			Instance.Hash = Hash;
 		}
 
 		void Destruct(uint64 Index)
 		{
 			Node& Instance = Data[Index];
-			NEXUS_ASSERT(!Instance.Free, "Destruct on a free slot");
+			NEXUS_ASSERT(!Instance.IsFree(), "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
-			Instance.Free = true;
+			Instance.Hash = 0;
 		}
 
 		void DestructRange(uint64 Index, uint64 Size)
@@ -301,28 +309,34 @@ namespace NxEn
 			for (uint64 Offset = 0; Offset < Size; Offset++)
 			{
 				Node& Instance = Data[Index + Offset];
-				if (!Instance.Free)
+				if (!Instance.IsFree())
 				{
 					Memory::Destruct(&Instance.Value);
-					Instance.Free = true;
+					Instance.Hash = 0;
 				}
 			}
 		}
 
-		uint64 GetIndexHash(const T& Value) const
+		uint64 GetHash(const T& Value) const
 		{
-			uint64 Index = Hash<T, H>::HashObject(Value) % Capacity;
-			return Index;
+			uint64 HashValue = Hash<T, H>::HashObject(Value);
+			HashValue |= HashValue == 0;
+			return HashValue;
 		}
 
-		uint64 GetIndexWrite(const T& Value) const
+		uint64 GetIndexHash(uint64 Hash) const
 		{
-			uint64 IndexHashed = GetIndexHash(Value);
+			return Hash % Capacity;
+		}
+
+		uint64 GetIndexWrite(uint64 Hash) const
+		{
+			uint64 IndexHashed = GetIndexHash(Hash);
 
 			uint64 Iteration = 0;
 			uint64 Index = IndexHashed;
 
-			while (!Data[Index].Free)
+			while (!Data[Index].IsFree())
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
 				NEXUS_ASSERT(Iteration < Capacity, "Failed to find a free spot");
@@ -333,14 +347,14 @@ namespace NxEn
 			return Index;
 		}
 
-		uint64 GetIndexRead(const T& Value) const
+		uint64 GetIndexRead(uint64 Hash) const
 		{
-			uint64 IndexHashed = GetIndexHash(Value);
+			uint64 IndexHashed = GetIndexHash(Hash);
 
 			uint64 Iteration = 0;
 			uint64 Index = IndexHashed;
 
-			while (Data[Index].Free || Data[Index].Value != Value)
+			while (Data[Index].IsFree() || Data[Index].Hash != Hash)
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
 				if (Iteration >= Capacity)

@@ -32,7 +32,9 @@ namespace NxEn
 	struct NodeHashmap
 	{
 		T Value;
-		bool Free;
+		uint64 Hash;
+
+		bool IsFree() { return Hash == 0; }
 	};
 
 	template<typename T>
