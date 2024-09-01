@@ -16,7 +16,7 @@ namespace NxEn
 	Logger::Logger(LoggerVerbosity Verbosity)
 		: VerbosityMask(Verbosity), StringBuilderMessage(1024), StringBuilderFormat(1024)
 	{
-		Channels = new Dictionary<String, bool, Fnv1a64, 1.0f>();
+		Channels = new Dictionary<String, bool, Fnv1a64>();
 
 		AddChannel("Default", true);
 		AddChannel("Assert", true);

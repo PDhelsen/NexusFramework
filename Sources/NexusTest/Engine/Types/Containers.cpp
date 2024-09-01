@@ -745,8 +745,8 @@ namespace NxTs
 
 	TEST(Type_Containers, Set)
 	{
-		NxEn::Set<ContainerTest> Test = NxEn::Set<ContainerTest>(10);
-		ASSERT_EQ(Test.GetBuckets(), 10);
+		NxEn::Set<ContainerTest> Test = NxEn::Set<ContainerTest>();
+		ASSERT_EQ(Test.GetCapacity(), 11);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
@@ -778,8 +778,8 @@ namespace NxTs
 
 		ASSERT_EQ(Test.GetIterator(6)->Integer, 6);
 
-		Test.ReHash(21);
-		ASSERT_EQ(Test.GetBuckets(), 21);
+		Test.Grow(21);
+		ASSERT_EQ(Test.GetCapacity(), 21);
 
 		ContainerTest ToFind1 = ContainerTest(6);
 		ContainerTest ToFind2 = ContainerTest(100);
@@ -791,8 +791,8 @@ namespace NxTs
 
 	TEST(Type_Containers, Dictionary)
 	{
-		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>(10);
-		ASSERT_EQ(Test.GetBuckets(), 10);
+		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>();
+		ASSERT_EQ(Test.GetCapacity(), 11);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
@@ -849,8 +849,8 @@ namespace NxTs
 			Kv.GetValue().Integer = Kv.GetKey().Integer * 10;
 		}
 
-		Test.ReHash(21);
-		ASSERT_EQ(Test.GetBuckets(), 21);
+		Test.Grow(21);
+		ASSERT_EQ(Test.GetCapacity(), 21);
 
 		Test.Swap(6, 7);
 		ASSERT_EQ(Test[6].Integer, 70);
@@ -1296,6 +1296,7 @@ namespace NxTs
 		TestUint.Append(58);
 		TestUint.Append(64);
 		TestUint.Append(72);
+		ASSERT_EQ(TestUint.GetCount(), 7);
 
 		ContainerTest Container;
 		NxEn::List<ContainerTest*> TestPointer;
@@ -1304,17 +1305,32 @@ namespace NxTs
 		TestPointer.Append(&Container);
 		TestPointer.Append(&Container);
 		TestPointer.Append(&Container);
+		ASSERT_EQ(TestPointer.GetCount(), 5);
 
-		ContainerTest Test1(1);
-		ContainerTest Test2(2);
-		ContainerTest Test3(3);
-		ContainerTest Test4(4);
+		ContainerTest TestPointer21(1);
+		ContainerTest TestPointer22(2);
+		ContainerTest TestPointer23(3);
+		ContainerTest TestPointer24(4);
 
 		NxEn::Dictionary<ContainerTest*, ContainerTest> TestPointer2;
-		TestPointer2.Append(&Test1, Test1);
-		TestPointer2.Append(&Test2, Test2);
-		TestPointer2.Append(&Test3, Test3);
-		TestPointer2.Append(&Test4, Test4);
+		TestPointer2.Append(&TestPointer21, TestPointer21);
+		TestPointer2.Append(&TestPointer22, TestPointer22);
+		TestPointer2.Append(&TestPointer23, TestPointer23);
+		TestPointer2.Append(&TestPointer24, TestPointer24);
+		ASSERT_EQ(TestPointer2.GetCount(), 4);
+
+		ContainerTest TestPointer30(10);
+		ContainerTest* TestPointer31 = &TestPointer30;
+		ContainerTest* TestPointer32 = &TestPointer30;
+		ContainerTest* TestPointer33 = &TestPointer30;
+		ContainerTest* TestPointer34 = &TestPointer30;
+
+		NxEn::Dictionary<ContainerTest*, ContainerTest> TestPointer3;
+		TestPointer3.Append(TestPointer31, TestPointer30);
+		TestPointer3.Append(TestPointer32, TestPointer30);
+		TestPointer3.Append(TestPointer33, TestPointer30);
+		TestPointer3.Append(TestPointer34, TestPointer30);
+		ASSERT_EQ(TestPointer3.GetCount(), 1);
 	}
 
 	TEST(Type_Containers, Strings)

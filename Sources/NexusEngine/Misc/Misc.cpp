@@ -60,4 +60,27 @@ namespace NxEn
 	{
 		MODULO(uint64, Number, Mode);
 	}
+
+	bool IsPrime(uint64 Number)
+	{
+		if (Number <= 1) return false;
+
+		for (uint64 N = 2; N <= sqrt(Number); N++)
+		{
+			if (Number % N == 0) return false;
+		}
+
+		return true;
+	}
+
+	uint64 NextPrime(uint64 Number)
+	{
+		uint64 N = Number + 1;
+		while (!IsPrime(N))
+		{
+			N++;
+		}
+
+		return N;
+	}
 }

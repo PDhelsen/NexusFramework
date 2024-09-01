@@ -10,7 +10,7 @@
 namespace NxEn
 {
 	class Fnv1a64;
-	template <typename K, typename T, class H, float LF> class Dictionary;
+	template <typename K, typename T, class H> class Dictionary;
 
 	enum class LoggerVerbosity : uint8
 	{
@@ -72,7 +72,7 @@ namespace NxEn
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 		static Logger* Instance;
 
-		Dictionary<String, bool, Fnv1a64, 1.0f>* Channels;
+		Dictionary<String, bool, Fnv1a64>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;
 		String StringBuilderFormat;

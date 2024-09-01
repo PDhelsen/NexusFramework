@@ -88,13 +88,13 @@ namespace NxEn
 
 		IteratorBlock<T>& Next()
 		{
-			Next();
+			Iterate();
 			return *this;
 		}
 
 		IteratorBlock<T>& Previous()
 		{
-			Previous();
+			Reverse();
 			return *this;
 		}
 
@@ -225,13 +225,10 @@ namespace NxEn
 	class IteratorHashmap
 	{
 	public:
-		IteratorHashmap(N** Data, N* Current, uint64 Buckets, uint64 Index)
-			: Data(Data), Current(Current), Buckets(Buckets), Index(Index)
+		IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
+			: Data(Pointer), Index(Idx), Capacity(Cpct)
 		{
-			if (Current == nullptr && Index != Buckets)
-			{
-				Iterate();
-			}
+
 		}
 
 		IteratorHashmap<T, N>& operator++()
@@ -269,39 +266,25 @@ namespace NxEn
 
 		bool Equals(const IteratorHashmap<T, N>& Other) const
 		{
-			return Current == Other.Current && Index == Other.Index;
+			return Data == Other.Data && Index == Other.Index;
 		}
 
 		T& Get() const
 		{
-			return Current->Value;
+			return Data[Index].Value;
 		}
 
-		T& Id() const
+		uint64 Id() const
 		{
-			return Current->Value;
+			return Index;
 		}
 
 		void Iterate()
 		{
-			if(Current && Current->Next != nullptr)
+			do
 			{
-				Current = Current->Next;
-			}
-			else
-			{
-				do
-				{
-					Index++;
-					if (Index >= Buckets)
-					{
-						Current = nullptr;
-						break;
-					}
-
-					Current = Data[Index];
-				} while (Current == nullptr);
-			}
+				Index++;
+			} while (Data[Index].Free && Index < Capacity);
 		}
 
 		IteratorHashmap<T, N>& Next()
@@ -311,10 +294,9 @@ namespace NxEn
 		}
 
 	private:
-		N** Data;
-		N* Current;
-		uint64 Buckets;
+		N* Data;
 		uint64 Index;
+		uint64 Capacity;
 	};
 
 	template<typename T, typename N>
@@ -580,7 +562,7 @@ namespace NxEn
 
 		IteratorNodeTree<T, N>& Next()
 		{
-			Next();
+			Iterate();
 			return *this;
 		}
 

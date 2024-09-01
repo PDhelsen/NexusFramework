@@ -406,6 +406,8 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
+			NEXUS_LOG(Engine, Warning, "Performance", "List - Reallocate");
+
 			ValidateCapacity(Size);
 			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
 		}

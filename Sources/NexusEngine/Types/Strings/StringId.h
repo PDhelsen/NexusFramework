@@ -8,7 +8,7 @@
 
 namespace NxEn
 {
-	template <typename K, typename T, class H, float LF> class Dictionary;
+	template <typename K, typename T, class H> class Dictionary;
 
 	struct StringId
 	{
@@ -27,7 +27,7 @@ namespace NxEn
 	private:
 		static GUID InternString(StringView Text);
 
-		static Dictionary<GUID, String, Fnv1a64, 1.0f> Tables;
+		static Dictionary<GUID, String, Fnv1a64> Tables;
 
 		const GUID Id;
 	};

@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Core/NexusEngine.h"
+#include "Types/Integer.h"
 
 namespace NxEn
 {
 	// TODO: Implementation - Math - Math API
+	// TODO: Optimization - Math - Constexpr
 
 	NEXUS_ENGINE_API bool IsPowerOfTwo(uint64 Number);
 	NEXUS_ENGINE_API int32 LogTwoPowerOfTwo(uint32 Number);
@@ -17,4 +19,7 @@ namespace NxEn
 	NEXUS_ENGINE_API uint16 Modulo(uint16 Number, uint16 Mod);
 	NEXUS_ENGINE_API uint32 Modulo(uint32 Number, uint32 Mod);
 	NEXUS_ENGINE_API uint64 Modulo(uint64 Number, uint64 Mod);
+
+	NEXUS_ENGINE_API bool IsPrime(uint64 Number);
+	NEXUS_ENGINE_API uint64 NextPrime(uint64 Number);
 }

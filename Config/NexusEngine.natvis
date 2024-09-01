@@ -93,49 +93,39 @@
 	</Type>
 	
   <Type Name="NxEn::Set&lt;*&gt;">
-    <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <CustomListItems>
-        <Variable Name="Index" InitialValue="0" />
-        <Variable Name="Pointer" InitialValue="Data[0]" />
+		<DisplayString>{{ Count={Count} }}</DisplayString>
+		<Expand>
+			<CustomListItems>
+				<Variable Name="Index" InitialValue="0" />
 
-        <Size>Count</Size>
-        <Loop>
-          <If Condition="Pointer == nullptr">
-            <Exec>Index++</Exec>
-            <Break Condition="Index == Buckets" />
-            <Exec>Pointer = Data[Index]</Exec>
-          </If>
-          <Else>
-            <Item>Pointer->Value</Item>
-            <Exec>Pointer = Pointer->Next</Exec>
-          </Else>
-        </Loop>
-      </CustomListItems>
-    </Expand>
+				<Size>Count</Size>
+				<Loop>
+					<If Condition="Data[Index].Free == false">
+						<Item>Data[Index].Value</Item>
+					</If>
+					<Exec>Index++</Exec>
+					<Break Condition="Index == Capacity" />
+				</Loop>
+			</CustomListItems>
+		</Expand>
   </Type>
 
   <Type Name="NxEn::Dictionary&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <CustomListItems>
-        <Variable Name="Index" InitialValue="0" />
-        <Variable Name="Pointer" InitialValue="Data[0]" />
+		<Expand>
+			<CustomListItems>
+				<Variable Name="Index" InitialValue="0" />
 
-        <Size>Count</Size>
-        <Loop>
-          <If Condition="Pointer == nullptr">
-            <Exec>Index++</Exec>
-            <Break Condition="Index == Buckets" />
-            <Exec>Pointer = Data[Index]</Exec>
-          </If>
-          <Else>
-            <Item>Pointer->Value</Item>
-            <Exec>Pointer = Pointer->Next</Exec>
-          </Else>
-        </Loop>
-      </CustomListItems>
-    </Expand>
+				<Size>Count</Size>
+				<Loop>
+					<If Condition="Data[Index].Free == false">
+						<Item>Data[Index].Value</Item>
+					</If>
+					<Exec>Index++</Exec>
+					<Break Condition="Index == Capacity" />
+				</Loop>
+			</CustomListItems>
+		</Expand>
   </Type>
 
   <Type Name="NxEn::Tree&lt;*&gt;">

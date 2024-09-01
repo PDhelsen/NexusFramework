@@ -29,6 +29,13 @@ namespace NxEn
 	};
 
 	template<typename T>
+	struct NodeHashmap
+	{
+		T Value;
+		bool Free;
+	};
+
+	template<typename T>
 	struct NodeTree
 	{
 		T Value;
@@ -140,7 +147,7 @@ namespace NxEn
 		void SetValue(const T& Other) { Value = Other; }
 		void SetValue(T&& Other) { Value = Move(Other); }
 		template<typename... Args>
-		void SetValue(Args&&... args)
+		void SetValueConstruct(Args&&... args)
 		{
 			Memory::Destruct(&Value);
 			Memory::Construct<T>(&Value, args...);
