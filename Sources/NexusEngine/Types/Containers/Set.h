@@ -13,7 +13,7 @@
 namespace NxEn
 {
 	// TODO: Implementation - Containers - Union / Intersect / Exclude
-	// TODO: Implementation - Containers - Open Addressing
+
 	template<typename T, class H = Fnv1a64>
 	class Set
 	{
