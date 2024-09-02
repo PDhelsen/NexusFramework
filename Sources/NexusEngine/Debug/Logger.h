@@ -25,7 +25,8 @@ namespace NxEn
 
 		COUNT
 	};
-	NEXUS_FLAG(LoggerVerbosity, uint8)
+	NEXUS_ENUM_TO_FLAG(LoggerVerbosity)
+	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
 
 	enum class LoggerSource : uint8
 	{
@@ -35,6 +36,7 @@ namespace NxEn
 		Project	= 3,
 		COUNT
 	};
+	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
 	class Logger
 	{
@@ -59,9 +61,6 @@ namespace NxEn
 		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
 		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
-
-		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
-		NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
 	private:
 		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const;

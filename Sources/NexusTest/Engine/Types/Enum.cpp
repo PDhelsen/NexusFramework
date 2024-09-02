@@ -12,7 +12,7 @@ namespace NxTs
 		Third = 1 << 2,
 		Fourth = 1 << 3,
 	};
-	NEXUS_FLAG(TestFlag, uint8)
+	NEXUS_ENUM_TO_FLAG(TestFlag)
 
 	TEST(Type_Enum, Invert)
 	{
@@ -71,13 +71,13 @@ namespace NxTs
 	TEST(Type_Enum, CheckSet)
 	{
 		TestFlag Test1 = TestFlag::First | TestFlag::Third;
-		ASSERT_EQ(CheckFlag(Test1, TestFlag::Third), true);
-		ASSERT_EQ(CheckFlag(Test1, TestFlag::Fourth), false);
+		ASSERT_EQ(Enum::CheckFlag(Test1, TestFlag::Third), true);
+		ASSERT_EQ(Enum::CheckFlag(Test1, TestFlag::Fourth), false);
 
 		TestFlag Test2 = TestFlag::First;
-		Test2 = SetFlag(Test2, TestFlag::Third, true);
+		Test2 = Enum::SetFlag(Test2, TestFlag::Third, true);
 		ASSERT_EQ((uint8)Test2, 0b101);
-		Test2 = SetFlag(Test2, TestFlag::First, false);
+		Test2 = Enum::SetFlag(Test2, TestFlag::First, false);
 		ASSERT_EQ((uint8)Test2, 0b100);
 	}
 }

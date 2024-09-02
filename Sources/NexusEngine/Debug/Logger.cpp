@@ -7,8 +7,8 @@
 namespace NxEn
 {
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
-	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, Logger::, "Engine", "Editor", "App", "Project");
-	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, Logger::, 4, "Fatal", "Error", "Warning", "Info");
+	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, "Engine", "Editor", "App", "Project");
+	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
 	static Platform::TerminalColor Colors[4] = { Platform::TerminalColor::Magenta, Platform::TerminalColor::Red, Platform::TerminalColor::Yellow, Platform::TerminalColor::White };
 
 	Logger* Logger::Instance = new Logger(LoggerVerbosity::All);
@@ -53,12 +53,12 @@ namespace NxEn
 
 	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
 	{
-		return CheckFlag(VerbosityMask, Verbosity);
+		return Enum::CheckFlag(VerbosityMask, Verbosity);
 	}
 
 	void Logger::SetVerbosity(LoggerVerbosity Verbosity, bool State)
 	{
-		VerbosityMask = SetFlag(VerbosityMask, Verbosity, State);
+		VerbosityMask = Enum::SetFlag(VerbosityMask, Verbosity, State);
 	}
 
 	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const
@@ -78,8 +78,8 @@ namespace NxEn
 		Minutes = Stamp.Minutes;
 		Seconds = Stamp.Seconds;
 
-		VerbosityString = LoggerVerbosityToString(VerbosityLevel);
-		SourceString = LoggerSourceToString(Source);
+		VerbosityString = Enum::LoggerVerbosityToString(VerbosityLevel);
+		SourceString = Enum::LoggerSourceToString(Source);
 	}
 
 	void Logger::Print(StringView Message, uint8 Verbosity) const
