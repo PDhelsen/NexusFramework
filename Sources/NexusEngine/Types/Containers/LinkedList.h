@@ -167,7 +167,7 @@ namespace NxEn
 		{
 			Node* Return = DataTail;
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				AppendBack(*It);
 			}
@@ -206,7 +206,7 @@ namespace NxEn
 		template<typename C>
 		T& AppendFrontRange(const C& Value)
 		{
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				AppendFront(*It);
 			}
@@ -263,7 +263,7 @@ namespace NxEn
 			Node* Anchor = GetNode(Position);
 			Node* Return = Anchor;
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				InsertBack(&Anchor->Value, *It);
 				Anchor = Anchor->Next;
@@ -320,7 +320,7 @@ namespace NxEn
 
 			Node* Anchor = GetNode(Position);
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				InsertFront(&Anchor->Value, *It);
 				Anchor = Anchor->Prev;
@@ -597,7 +597,7 @@ namespace NxEn
 
 		Iterator Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); It++)
+			for (Iterator It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{
@@ -614,7 +614,7 @@ namespace NxEn
 	private:
 		Node* Allocate()
 		{
-			Count++;
+			++Count;
 
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			Instance->Next = nullptr;
@@ -624,7 +624,7 @@ namespace NxEn
 
 		void Free(Node* Instance)
 		{
-			Count--;
+			--Count;
 
 			Memory::Free(Instance, Alloc);
 		}

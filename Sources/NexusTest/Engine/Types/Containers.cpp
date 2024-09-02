@@ -1068,6 +1068,37 @@ namespace NxTs
 		ASSERT_EQ((*It).Integer, 1);
 	}
 
+	TEST(Type_Containers, ContainersUtils)
+	{
+		NxEn::Set<ContainerTest> Base = NxEn::Set<ContainerTest>();
+		Base.Append(1);
+		Base.Append(3);
+		Base.Append(5);
+		Base.Append(7);
+		Base.Append(9);
+
+		NxEn::Set<ContainerTest> Other = NxEn::Set<ContainerTest>();
+		Other.Append(2);
+		Other.Append(4);
+		Other.Append(6);
+		Other.Append(8);
+		Other.Append(10);
+
+		NxEn::ContainersUtils::SetUnion(Base, Other);
+		ASSERT_EQ(Base.GetCount(), 10);
+
+		NxEn::ContainersUtils::SetDifference(Base, Other);
+		ASSERT_EQ(Base.GetCount(), 5);
+
+		auto It = Other.Begin();
+		Base.Append(*It++);
+		Base.Append(*It++);
+		Base.Append(*It++);
+
+		NxEn::ContainersUtils::SetIntersection(Base, Other);
+		ASSERT_EQ(Base.GetCount(), 3);
+	}
+
 	TEST(Type_Containers, Pool)
 	{
 		NxEn::Pool<ContainerTest> Test = NxEn::Pool<ContainerTest>();
@@ -1159,164 +1190,6 @@ namespace NxTs
 		Test.Swap();
 		ASSERT_EQ(Test.GetFirst().Integer, 25);
 		ASSERT_EQ(Test.GetSecond().Integer, 20);
-	}
-
-	TEST(Type_Containers, ContainersUtils)
-	{
-		NxEn::Set<ContainerTest> Base = NxEn::Set<ContainerTest>();
-		Base.Append(1);
-		Base.Append(3);
-		Base.Append(5);
-		Base.Append(7);
-		Base.Append(9);
-
-		NxEn::Set<ContainerTest> Other = NxEn::Set<ContainerTest>();
-		Other.Append(2);
-		Other.Append(4);
-		Other.Append(6);
-		Other.Append(8);
-		Other.Append(10);
-
-		NxEn::ContainersUtils::SetUnion(Base, Other);
-		ASSERT_EQ(Base.GetCount(), 10);
-
-		NxEn::ContainersUtils::SetDifference(Base, Other);
-		ASSERT_EQ(Base.GetCount(), 5);
-
-		auto It = Other.Begin();
-		Base.Append(*It++);
-		Base.Append(*It++);
-		Base.Append(*It++);
-
-		NxEn::ContainersUtils::SetIntersection(Base, Other);
-		ASSERT_EQ(Base.GetCount(), 3);
-	}
-
-
-	TEST(Type_Containers, Range)
-	{
-		NxEn::Array<ContainerTest> Container1(10);
-		Container1.Assign(0, 18);
-		Container1.Assign(1, 24);
-		Container1.Assign(2, 36);
-		Container1.Assign(3, 45);
-		Container1.Assign(4, 58);
-
-		NxEn::List<ContainerTest> Container2;
-		Container2.Append(36);
-		Container2.Append(58);
-		Container2.Append(45);
-		Container2.Append(24);
-		Container2.Append(18);
-
-		NxEn::Dequeue<ContainerTest> Container3;
-		Container3.AppendBack(36);
-		Container3.AppendBack(24);
-		Container3.AppendBack(18);
-		Container3.AppendBack(58);
-		Container3.AppendBack(45);
-
-		NxEn::LinkedList<ContainerTest> Container4;
-		ContainerTest& Ref4 = Container4.AppendBack(36);
-		Container4.AppendBack(24);
-		Container4.AppendBack(18);
-		Container4.AppendBack(58);
-		Container4.AppendBack(45);
-
-		NxEn::Stack<ContainerTest> Container5;
-		Container5.Append(36);
-		Container5.Append(24);
-		Container5.Append(18);
-		Container5.Append(58);
-		Container5.Append(45);
-
-		NxEn::Queue<ContainerTest> Container6;
-		Container6.Append(36);
-		Container6.Append(24);
-		Container6.Append(18);
-		Container6.Append(58);
-		Container6.Append(45);
-
-		NxEn::Tree<ContainerTest> Container7;
-		ContainerTest& Root = Container7.Append(nullptr, 36);
-		Container7.Append(&Root, 24);
-		Container7.Append(&Root, 18);
-		Container7.Append(&Root, 58);
-		Container7.Append(&Root, 45);
-
-		NxEn::Graph<ContainerTest> Container8;
-		Container8.Append(36);
-		Container8.Append(24);
-		Container8.Append(18);
-		Container8.Append(58);
-		Container8.Append(45);
-
-		Container1.AssignRange(0, Container8);
-		Container2.AssignRange(0, Container6);
-		Container3.AssignRange(0, Container4);
-		Container4.InsertBackRange(&Ref4, Container3);
-		Container5.AppendRange(Container1);
-		Container6.AppendRange(Container5);
-		Container7.AppendRange(&Root, Container2);
-		Container8.AppendRange(Container6);
-
-		NxEn::Set<ContainerTest> Container9;
-		Container9.AppendRange(Container2);
-		Container2.AppendRange(Container9);
-
-		NxEn::List<NxEn::KeyValuePair<ContainerTest, ContainerTest>> Pair;
-		Pair.Append({ ContainerTest(1), ContainerTest(10) });
-		Pair.Append({ ContainerTest(2), ContainerTest(20) });
-
-		NxEn::Dictionary<ContainerTest, ContainerTest> Container10;
-		Container10.AppendRange(Pair);
-		Pair.AppendRange(Container10);
-	}
-
-	TEST(Type_Containers, Container)
-	{
-		NxEn::List<ContainerTest> Test;
-		Test.Append(1);
-		Test.Append(2);
-		Test.Append(3);
-		Test.Append(4);
-		Test.Append(5);
-
-		NxEn::Array<NxEn::List<ContainerTest>> Array = NxEn::Array<NxEn::List<ContainerTest>>(5);
-		Array.Assign(0, Test);
-
-		NxEn::List<NxEn::List<ContainerTest>> List;
-		List.Append(Test);
-		Test.Append(1);
-		Test.Append(2);
-		Test.Append(3);
-		Test.Append(4);
-		Test.Append(5);
-		List.Assign(0, Test);
-
-		NxEn::LinkedList<NxEn::List<ContainerTest>> LinkedList;
-		LinkedList.AppendBack(Test);
-
-		NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>> Dictionary;
-		Dictionary.Append(ContainerTest(10), Test);
-		Test.Append(1);
-		Test.Append(2);
-		Test.Append(3);
-		Test.Append(4);
-		Test.Append(5);
-		Dictionary.Assign(ContainerTest(10), Test);
-
-		ASSERT_EQ(Test[2].Integer, Array[0][2].Integer);
-		ASSERT_EQ(Test[2].Integer, List[0][2].Integer);
-		ASSERT_EQ(Test[2].Integer, LinkedList.Get()[2].Integer);
-		ASSERT_EQ(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
-
-		Test[2].Integer = 10;
-
-		ASSERT_NE(Test[2].Integer, Array[0][2].Integer);
-		ASSERT_NE(Test[2].Integer, List[0][2].Integer);
-		ASSERT_NE(Test[2].Integer, LinkedList.Get()[2].Integer);
-		ASSERT_NE(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
 	}
 
 	TEST(Type_Containers, NativeType)
@@ -1443,5 +1316,131 @@ namespace NxTs
 
 		NxEn::Tuple<NxEn::String, NxEn::String> Tuple = NxEn::Tuple<NxEn::String, NxEn::String>(Data, Text);
 		Tuple.SetFirst(Tuple.GetSecond());
+	}
+
+	TEST(Type_Containers, Range)
+	{
+		NxEn::Array<ContainerTest> Container1(10);
+		Container1.Assign(0, 18);
+		Container1.Assign(1, 24);
+		Container1.Assign(2, 36);
+		Container1.Assign(3, 45);
+		Container1.Assign(4, 58);
+
+		NxEn::List<ContainerTest> Container2;
+		Container2.Append(36);
+		Container2.Append(58);
+		Container2.Append(45);
+		Container2.Append(24);
+		Container2.Append(18);
+
+		NxEn::Dequeue<ContainerTest> Container3;
+		Container3.AppendBack(36);
+		Container3.AppendBack(24);
+		Container3.AppendBack(18);
+		Container3.AppendBack(58);
+		Container3.AppendBack(45);
+
+		NxEn::LinkedList<ContainerTest> Container4;
+		ContainerTest& Ref4 = Container4.AppendBack(36);
+		Container4.AppendBack(24);
+		Container4.AppendBack(18);
+		Container4.AppendBack(58);
+		Container4.AppendBack(45);
+
+		NxEn::Stack<ContainerTest> Container5;
+		Container5.Append(36);
+		Container5.Append(24);
+		Container5.Append(18);
+		Container5.Append(58);
+		Container5.Append(45);
+
+		NxEn::Queue<ContainerTest> Container6;
+		Container6.Append(36);
+		Container6.Append(24);
+		Container6.Append(18);
+		Container6.Append(58);
+		Container6.Append(45);
+
+		NxEn::Tree<ContainerTest> Container7;
+		ContainerTest& Root = Container7.Append(nullptr, 36);
+		Container7.Append(&Root, 24);
+		Container7.Append(&Root, 18);
+		Container7.Append(&Root, 58);
+		Container7.Append(&Root, 45);
+
+		NxEn::Graph<ContainerTest> Container8;
+		Container8.Append(36);
+		Container8.Append(24);
+		Container8.Append(18);
+		Container8.Append(58);
+		Container8.Append(45);
+
+		Container1.AssignRange(0, Container8);
+		Container2.AssignRange(0, Container6);
+		Container3.AssignRange(0, Container4);
+		Container4.InsertBackRange(&Ref4, Container3);
+		Container5.AppendRange(Container1);
+		Container6.AppendRange(Container5);
+		Container7.AppendRange(&Root, Container2);
+		Container8.AppendRange(Container6);
+
+		NxEn::Set<ContainerTest> Container9;
+		Container9.AppendRange(Container2);
+		Container2.AppendRange(Container9);
+
+		NxEn::List<NxEn::KeyValuePair<ContainerTest, ContainerTest>> Pair;
+		Pair.Append({ ContainerTest(1), ContainerTest(10) });
+		Pair.Append({ ContainerTest(2), ContainerTest(20) });
+
+		NxEn::Dictionary<ContainerTest, ContainerTest> Container10;
+		Container10.AppendRange(Pair);
+		Pair.AppendRange(Container10);
+	}
+
+	TEST(Type_Containers, Container)
+	{
+		NxEn::List<ContainerTest> Test;
+		Test.Append(1);
+		Test.Append(2);
+		Test.Append(3);
+		Test.Append(4);
+		Test.Append(5);
+
+		NxEn::Array<NxEn::List<ContainerTest>> Array = NxEn::Array<NxEn::List<ContainerTest>>(5);
+		Array.Assign(0, Test);
+
+		NxEn::List<NxEn::List<ContainerTest>> List;
+		List.Append(Test);
+		Test.Append(1);
+		Test.Append(2);
+		Test.Append(3);
+		Test.Append(4);
+		Test.Append(5);
+		List.Assign(0, Test);
+
+		NxEn::LinkedList<NxEn::List<ContainerTest>> LinkedList;
+		LinkedList.AppendBack(Test);
+
+		NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>> Dictionary;
+		Dictionary.Append(ContainerTest(10), Test);
+		Test.Append(1);
+		Test.Append(2);
+		Test.Append(3);
+		Test.Append(4);
+		Test.Append(5);
+		Dictionary.Assign(ContainerTest(10), Test);
+
+		ASSERT_EQ(Test[2].Integer, Array[0][2].Integer);
+		ASSERT_EQ(Test[2].Integer, List[0][2].Integer);
+		ASSERT_EQ(Test[2].Integer, LinkedList.Get()[2].Integer);
+		ASSERT_EQ(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
+
+		Test[2].Integer = 10;
+
+		ASSERT_NE(Test[2].Integer, Array[0][2].Integer);
+		ASSERT_NE(Test[2].Integer, List[0][2].Integer);
+		ASSERT_NE(Test[2].Integer, LinkedList.Get()[2].Integer);
+		ASSERT_NE(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
 	}
 }

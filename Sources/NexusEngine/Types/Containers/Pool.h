@@ -70,7 +70,7 @@ namespace NxEn
 				Data = Data->Next;
 				Value = &Instance->Value;
 
-				Count--;
+				--Count;
 			}
 
 			return *Value;
@@ -83,7 +83,7 @@ namespace NxEn
 			Instance->Next = Data;
 			Data = Instance;
 
-			Count++;
+			++Count;
 		}
 
 		void Clear()

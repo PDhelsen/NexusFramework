@@ -12,7 +12,7 @@ namespace NxEn
 		{
 			Base.Resize(Base.GetCount() + Other.GetCount());
 
-			for (typename Set<T, H>::Iterator It = Other.Begin(); It != Other.End(); It++)
+			for (typename Set<T, H>::Iterator It = Other.Begin(); It != Other.End(); ++It)
 			{
 				uint64 Hash = Base.GetHash(*It);
 				uint64 Index = Base.GetIndexRead(Hash);
@@ -30,7 +30,7 @@ namespace NxEn
 		template<typename T, class H = Fnv1a64>
 		static void SetDifference(Set<T, H>& Base, const Set<T, H>& Other)
 		{
-			for (typename Set<T, H>::Iterator It = Other.Begin(); It != Other.End(); It++)
+			for (typename Set<T, H>::Iterator It = Other.Begin(); It != Other.End(); ++It)
 			{
 				uint64 Hash = Base.GetHash(*It);
 				uint64 Index = Base.GetIndexRead(Hash);
@@ -50,7 +50,7 @@ namespace NxEn
 		{
 			Set<T, H> Return = Set<T, H>(NextPrime(Base.GetCount() + Other.GetCount()));
 
-			for (typename Set<T, H>::Iterator It = Base.Begin(); It != Base.End(); It++)
+			for (typename Set<T, H>::Iterator It = Base.Begin(); It != Base.End(); ++It)
 			{
 				uint64 Hash = Other.GetHash(*It);
 				uint64 Index = Other.GetIndexRead(Hash);

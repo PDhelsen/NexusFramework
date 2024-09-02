@@ -32,12 +32,12 @@ namespace NxEn
 				Allocate(Buckets);
 			}
 
-			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
+			for (uint64 Bucket = 0; Bucket < Buckets; ++Bucket)
 			{
 				Allocate(Bucket, BucketSize);
 			}
 
-			for (uint64 Index = 0; Index < Count; Index++)
+			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index, BucketIndex, DataIndex);
@@ -78,12 +78,12 @@ namespace NxEn
 				Allocate(Buckets);
 			}
 
-			for (uint64 Bucket = 0; Bucket < Buckets; Bucket++)
+			for (uint64 Bucket = 0; Bucket < Buckets; ++Bucket)
 			{
 				Allocate(Bucket, BucketSize);
 			}
 
-			for (uint64 Index = 0; Index < Count; Index++)
+			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index, BucketIndex, DataIndex);
@@ -170,7 +170,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Overflow");
 
 			uint64 Offset = 0;
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index + Offset, BucketIndex, DataIndex);
@@ -209,7 +209,7 @@ namespace NxEn
 		{
 			uint64 Index = Count;
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				AppendBack(*It);
 			}
@@ -242,7 +242,7 @@ namespace NxEn
 		template<typename C>
 		T& AppendFrontRange(const C& Value)
 		{
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				AppendFront(*It);
 			}
@@ -342,7 +342,7 @@ namespace NxEn
 		void Reverse()
 		{
 			uint64 Half = Count / 2;
-			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
+			for (uint64 Front = 0, Back = Count - 1; Front < Half; ++Front, --Back)
 			{
 				Swap(Front, Back);
 			}
@@ -360,7 +360,7 @@ namespace NxEn
 
 		Iterator Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); It++)
+			for (Iterator It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{
@@ -400,7 +400,7 @@ namespace NxEn
 
 		void Free(uint64 Index, uint64 Size)
 		{
-			for (uint64 Offset = 0; Offset < Size; Offset++)
+			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
 				Memory::Free(Data[Index + Offset], Alloc);
 			}
@@ -419,7 +419,7 @@ namespace NxEn
 
 		void DestructRange(uint64 Index, uint64 Size)
 		{
-			for (uint64 Offset = 0; Offset < Size; Offset++)
+			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index + Offset, BucketIndex, DataIndex);
@@ -436,11 +436,11 @@ namespace NxEn
 
 		void AppendBucket(bool AppendBack)
 		{
-			Count++;
+			++Count;
 
 			if ((AppendBack && IndexBack == BucketSize - 1) || (!AppendBack && IndexFront == 0))
 			{
-				Buckets++;
+				++Buckets;
 				if (Buckets <= 1)
 				{
 					Allocate(Buckets);
@@ -468,18 +468,18 @@ namespace NxEn
 			{
 				if (AppendBack)
 				{
-					IndexBack++;
+					++IndexBack;
 				}
 				else
 				{
-					IndexFront--;
+					--IndexFront;
 				}
 			}
 		}
 
 		void RemoveBucket(bool RemoveBack)
 		{
-			Count--;
+			--Count;
 
 			if ((RemoveBack && IndexBack == 0) || (!RemoveBack && IndexFront == BucketSize - 1))
 			{
@@ -488,7 +488,7 @@ namespace NxEn
 				{
 					Shift(false);
 				}
-				Buckets--;
+				--Buckets;
 				if (Buckets > 0)
 				{
 					Reallocate(Buckets);
@@ -511,11 +511,11 @@ namespace NxEn
 			{
 				if (RemoveBack)
 				{
-					IndexBack--;
+					--IndexBack;
 				}
 				else
 				{
-					IndexFront++;
+					++IndexFront;
 				}
 			}
 		}

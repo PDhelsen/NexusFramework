@@ -33,7 +33,7 @@ namespace NxEn
 
 			Allocate(Capacity);
 
-			for (uint64 Index = 0; Index < Capacity; Index++)
+			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
 				Node& Instance = Other.Data[Index];
 				if (!Instance.IsFree())
@@ -73,7 +73,7 @@ namespace NxEn
 
 			Allocate(Capacity);
 
-			for (uint64 Index = 0; Index < Capacity; Index++)
+			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
 				Node& Instance = Other.Data[Index];
 				if (!Instance.IsFree())
@@ -162,7 +162,7 @@ namespace NxEn
 		template<typename C>
 		T& AssignRange(const C& Value)
 		{
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->GetKey());
 				uint64 Index = GetIndexRead(Hash);
@@ -226,7 +226,7 @@ namespace NxEn
 		{
 			Resize(GetCount() + Value.GetCount());
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->GetKey());
 				uint64 Index = GetIndexRead(Hash);
@@ -351,7 +351,7 @@ namespace NxEn
 
 		Iterator FindValue(const T& Value) const
 		{
-			for (Iterator It = Begin(); It != End(); It++)
+			for (Iterator It = Begin(); It != End(); ++It)
 			{
 				if (It->GetValue() == Value)
 				{
@@ -372,7 +372,7 @@ namespace NxEn
 			ValidateCapacity(Size);
 			Data = (Node*)Memory::Allocate(sizeof(Node) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
 
-			for (uint64 Index = 0; Index < Capacity; Index++)
+			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
 				Data[Index].Hash = 0;
 			}
@@ -387,7 +387,7 @@ namespace NxEn
 
 			Allocate(Size);
 
-			for (uint64 OldIndex = 0; OldIndex < Length; OldIndex++)
+			for (uint64 OldIndex = 0; OldIndex < Length; ++OldIndex)
 			{
 				Node& Old = Temp[OldIndex];
 				if (Old.IsFree())
@@ -430,7 +430,7 @@ namespace NxEn
 
 		void DestructRange(uint64 Index, uint64 Size)
 		{
-			for (uint64 Offset = 0; Offset < Size; Offset++)
+			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
 				Node& Instance = Data[Index + Offset];
 				if (!Instance.IsFree())

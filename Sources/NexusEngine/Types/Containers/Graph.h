@@ -204,7 +204,7 @@ namespace NxEn
 		template<typename C>
 		T& AppendRange(const C& Value)
 		{
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
 			{
 				Append(*It);
 			}
@@ -288,7 +288,7 @@ namespace NxEn
 						return Connect->Target->Value;
 					}
 
-					Idx++;
+					++Idx;
 				}
 
 				Connect = Connect->Next;
@@ -316,7 +316,7 @@ namespace NxEn
 						return &Connect->Target->Value;
 					}
 					
-					Idx++;
+					++Idx;
 				}
 
 				Connect = Connect->Next;
@@ -350,7 +350,7 @@ namespace NxEn
 				}
 
 				Connect = Connect->Next;
-				Index++;
+				++Index;
 			}
 
 			return false;
@@ -391,7 +391,7 @@ namespace NxEn
 
 		Iterator Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); It++)
+			for (Iterator It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{
@@ -409,7 +409,7 @@ namespace NxEn
 	private:
 		Node* Allocate()
 		{
-			Count++;
+			++Count;
 
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			Instance->Count = 0;
@@ -420,7 +420,7 @@ namespace NxEn
 
 		Connection* Allocate(Node* A, Node* B, ConnectionType Type)
 		{
-			A->Count++;
+			++A->Count;
 
 			Connection* Connect = (Connection*)Memory::Allocate(sizeof(Connection), NEXUS_MEMORY_ALIGN, Alloc);
 			Connect->Target = B;
@@ -431,14 +431,14 @@ namespace NxEn
 
 		void Free(Node* Instance)
 		{
-			Count--;
+			--Count;
 
 			Memory::Free(Instance, Alloc);
 		}
 
 		void Free(Connection* Instance, Node* A, Node* B)
 		{
-			A->Count--;
+			--A->Count;
 
 			Memory::Free(Instance, Alloc);
 		}

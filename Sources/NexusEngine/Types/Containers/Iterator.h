@@ -78,12 +78,12 @@ namespace NxEn
 
 		void Iterate()
 		{
-			Index++;
+			++Index;
 		}
 
 		void Reverse()
 		{
-			Index--;
+			--Index;
 		}
 
 		IteratorBlock<T>& Next()
@@ -178,12 +178,12 @@ namespace NxEn
 		{
 			if (DataIndex == BucketSize - 1)
 			{
-				BucketIndex++;
+				++BucketIndex;
 				DataIndex = 0;
 			}
 			else
 			{
-				DataIndex++;
+				++DataIndex;
 			}
 		}
 
@@ -191,12 +191,12 @@ namespace NxEn
 		{
 			if (DataIndex == 0)
 			{
-				BucketIndex--;
+				--BucketIndex;
 				DataIndex = BucketSize - 1;
 			}
 			else
 			{
-				DataIndex--;
+				--DataIndex;
 			}
 		}
 
@@ -286,7 +286,7 @@ namespace NxEn
 		{
 			do
 			{
-				Index++;
+				++Index;
 			} while (Data[Index].IsFree() && Index < Capacity);
 		}
 
@@ -685,7 +685,7 @@ namespace NxEn
 						break;
 					}
 
-					Idx++;
+					++Idx;
 				}
 
 				Connect = Connect->Next;

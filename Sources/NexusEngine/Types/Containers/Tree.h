@@ -165,7 +165,7 @@ namespace NxEn
 			typename C::Iterator It = Value.Begin();
 			T& Return = Append(Parent, *It);
 
-			for (++It; It != Value.End(); It++)
+			for (++It; It != Value.End(); ++It)
 			{
 				Append(Parent, *It);
 			}
@@ -427,7 +427,7 @@ namespace NxEn
 
 		Iterator Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); It++)
+			for (Iterator It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{
@@ -447,7 +447,7 @@ namespace NxEn
 	private:
 		Node* Allocate()
 		{
-			Count++;
+			++Count;
 
 			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Alloc);
 			Instance->Count = 0;
@@ -459,7 +459,7 @@ namespace NxEn
 
 		void Free(Node* Instance)
 		{
-			Count--;
+			--Count;
 
 			Memory::Free(Instance, Alloc);
 		}
@@ -495,12 +495,12 @@ namespace NxEn
 					Sibling = Sibling->Sibling;
 				}
 				Sibling->Sibling = Child;
-				Parent->Count++;
+				++Parent->Count;
 			}
 			else
 			{
 				Parent->Child = Child;
-				Parent->Count++;
+				++Parent->Count;
 			}
 		}
 
@@ -511,7 +511,7 @@ namespace NxEn
 			Sibling->Sibling = Instance;
 			if (Sibling->Parent)
 			{
-				Sibling->Parent->Count++;
+				++Sibling->Parent->Count;
 			}
 		}
 
@@ -563,7 +563,7 @@ namespace NxEn
 
 					Sibling->Sibling = Instance->Sibling;
 				}
-				Parent->Count--;
+				--Parent->Count;
 			}
 
 			Destruct(Instance);

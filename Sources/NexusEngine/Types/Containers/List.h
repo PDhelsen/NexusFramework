@@ -30,7 +30,7 @@ namespace NxEn
 
 			Allocate(Capacity);
 
-			for (uint64 Index = 0; Index < Count; Index++)
+			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				Construct(Index, Other[Index]);
 			}
@@ -66,7 +66,7 @@ namespace NxEn
 
 			Allocate(Capacity);
 
-			for (uint64 Index = 0; Index < Count; Index++)
+			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				Construct(Index, Other[Index]);
 			}
@@ -144,7 +144,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Invalid Index");
 
 			uint64 Offset = 0;
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
 				Data[Index + Offset] = *It;
 			}
@@ -181,7 +181,7 @@ namespace NxEn
 			Resize(GetCount() + Value.GetCount());
 
 			uint64 Offset = 0;
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
 				Construct(Index + Offset, *It);
 			}
@@ -229,7 +229,7 @@ namespace NxEn
 			Shift(Index, Value.GetCount(), true);
 
 			uint64 Offset = 0;
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); It++, Offset++)
+			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
 				Construct(Index + Offset, *It);
 			}
@@ -364,7 +364,7 @@ namespace NxEn
 		void Reverse()
 		{
 			uint64 Half = Count / 2;
-			for (uint64 Front = 0, Back = Count - 1; Front < Half; Front++, Back--)
+			for (uint64 Front = 0, Back = Count - 1; Front < Half; ++Front, --Back)
 			{
 				Swap(Front, Back);
 			}
@@ -382,7 +382,7 @@ namespace NxEn
 
 		Iterator Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); It++)
+			for (Iterator It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{
@@ -430,7 +430,7 @@ namespace NxEn
 
 		void DestructRange(uint64 Index, uint64 Size)
 		{
-			for (uint64 Offset = 0; Offset < Size; Offset++)
+			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
 				Memory::Destruct(&Data[Index + Offset]);
 			}
