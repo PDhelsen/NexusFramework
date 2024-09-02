@@ -20,7 +20,8 @@ namespace NxEn
 
 		AddChannel("Default", true);
 		AddChannel("Assert", true);
-		AddChannel("Performance", true);
+		AddChannel("Performance", false);
+		AddChannel("Routine", false);
 	}
 
 	Logger::~Logger()
