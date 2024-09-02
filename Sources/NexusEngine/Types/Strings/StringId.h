@@ -22,6 +22,7 @@ namespace NxEn
 		NEXUS_ENGINE_API operator GUID() const;
 
 		NEXUS_ENGINE_API const String& ToString() const;
+		NEXUS_ENGINE_API const char* C() const;
 		NEXUS_ENGINE_API const GUID GetId() const;
 
 	private:
@@ -29,6 +30,9 @@ namespace NxEn
 
 		static Dictionary<GUID, String, Fnv1a64> Tables;
 
-		const GUID Id;
+		GUID Id;
 	};
+
+	NEXUS_ENGINE_API StringId operator""_Sid(const char* Text, uint64 Size);
 }
+using NxEn::operator""_Sid;

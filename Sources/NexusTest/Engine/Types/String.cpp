@@ -117,12 +117,17 @@ namespace NxTs
 
 		NxEn::StringId Test1 = NxEn::StringId("Hello World");
 		NxEn::StringId Test2 = NxEn::StringId("World Hello");
+		NxEn::StringId Test3 = Test1;
 
 		ASSERT_EQ(Id == Test1, true);
 		ASSERT_EQ(Id != Test2, true);
+		ASSERT_EQ(Id == Test3, true);
 
 		ASSERT_EQ(Id.ToString(), "Hello World");
+		ASSERT_EQ(Id.C(), NxEn::StringView("Hello World"));
 		ASSERT_EQ(Id.GetId(), 0x3D58DEE72D4E0C27);
+
+		Test3 = Test2;
 	}
 
 	TEST(Type_String, Utility)

@@ -40,6 +40,11 @@ namespace NxEn
 		return Tables[Id];
 	}
 
+	const char* StringId::C() const
+	{
+		return Tables[Id].C();
+	}
+
 	const GUID StringId::GetId() const
 	{
 		return Id;
@@ -53,5 +58,10 @@ namespace NxEn
 			Tables.Append(Move(Id), Move(Text.ToString()));
 		}
 		return Id;
+	}
+
+	StringId operator""_Sid(const char* Text, uint64 Size)
+	{
+		return StringId(StringView(Text, Size));
 	}
 }

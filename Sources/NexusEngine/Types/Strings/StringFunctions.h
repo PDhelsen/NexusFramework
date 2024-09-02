@@ -4,7 +4,6 @@
 #include "Types/Integer.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
-#include "Types/Strings/StringId.h"
 #include "Types/Strings/StringCApi.h"
 
 namespace NxEn
@@ -67,7 +66,4 @@ namespace NxEn
 	NEXUS_ENGINE_API bool operator>=(StringView TextA, StringView TextB);
 	NEXUS_ENGINE_API bool operator<(StringView TextA, StringView TextB);
 	NEXUS_ENGINE_API bool operator<=(StringView TextA, StringView TextB);
-	NEXUS_ENGINE_API StringId operator""_Sid(const char* Text, uint64 Size);
 }
-
-using NxEn::operator""_Sid;
