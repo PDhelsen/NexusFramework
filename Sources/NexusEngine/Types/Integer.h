@@ -20,6 +20,11 @@ inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1
 
 namespace NxEn
 {
+	typedef uint64 GUID;
+}
+
+namespace NxEn::Integer
+{
 	NEXUS_BIT_CHECK_SET(int8);
 	NEXUS_BIT_CHECK_SET(int16);
 	NEXUS_BIT_CHECK_SET(int32);
