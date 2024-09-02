@@ -344,7 +344,7 @@ namespace NxEn
 
 		HashLength K = 0;
 		const HashLength* Blocks = reinterpret_cast<const HashLength*>(Pointer);
-		for (uint64 Index = 0; Index < NbBlocks; Index++)
+		for (uint64 Index = 0; Index < NbBlocks; ++Index)
 		{
 			K = Blocks[Index];
 

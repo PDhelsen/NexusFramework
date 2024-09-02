@@ -35,8 +35,8 @@ namespace NxEn
 					Result = Current;
 				}
 
-				Target++;
-				Count++;
+				++Target;
+				++Count;
 
 				if (Count == Size)
 				{
@@ -50,7 +50,7 @@ namespace NxEn
 				Finding = false;
 			}
 
-			Current++;
+			++Current;
 		}
 
 		if (Count != Size)

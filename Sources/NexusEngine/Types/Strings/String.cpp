@@ -357,15 +357,15 @@ namespace NxEn
 
 					StringCApi::Copy(NewText, Substring, Capacity, NewSize, true);
 
-					Modified++;
+					++Modified;
 				}
 				else
 				{
-					Substring++;
+					++Substring;
 				}
 			}
 
-			Index++;
+			++Index;
 		} while (Substring && (All || (!All && Modified < Occurrence)));
 	}
 
@@ -402,11 +402,11 @@ namespace NxEn
 
 					StringCApi::Copy(NewText, Substring, Capacity, NewSize, true);
 
-					Modified++;
+					++Modified;
 				}
 			}
 
-			Index++;
+			++Index;
 		} while (Substring && (All || (!All && Modified < Occurrence)));
 	}
 
@@ -436,15 +436,15 @@ namespace NxEn
 					}
 
 					Resize(Count - Size);
-					Removed++;
+					++Removed;
 				}
 				else
 				{
-					Substring++;
+					++Substring;
 				}
 			}
 
-			Index++;
+			++Index;
 		} while (Substring && (All || (!All && Removed < Occurrence)));
 	}
 }

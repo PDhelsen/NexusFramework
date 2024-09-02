@@ -136,8 +136,8 @@ namespace NxEn
 				break;
 			}
 
-			Index++;
-			Pointer++;
+			++Index;
+			++Pointer;
 			Previous = Pointer;
 		} while (true);
 

@@ -65,7 +65,7 @@ namespace NxEn
 	{
 		if (Number <= 1) return false;
 
-		for (uint64 N = 2; N <= sqrt(Number); N++)
+		for (uint64 N = 2; N <= sqrt(Number); ++N)
 		{
 			if (Number % N == 0) return false;
 		}
@@ -78,7 +78,7 @@ namespace NxEn
 		uint64 N = Number + 1;
 		while (!IsPrime(N))
 		{
-			N++;
+			++N;
 		}
 
 		return N;

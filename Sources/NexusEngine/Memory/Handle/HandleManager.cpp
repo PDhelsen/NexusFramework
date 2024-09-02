@@ -41,12 +41,12 @@ namespace NxEn
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
 		uint64* Memory = (uint64*)Pool->GetMemoryBlock();
-		for (int i = 0; i < NEXUS_HANDLE_COUNT; i++)
+		for (uint64 I = 0; I < NEXUS_HANDLE_COUNT; ++I)
 		{
-			uint64 Handle = Memory[i];
+			uint64 Handle = Memory[I];
 			if (Address == Handle)
 			{
-				return &Memory[i];
+				return &Memory[I];
 			}
 		}
 

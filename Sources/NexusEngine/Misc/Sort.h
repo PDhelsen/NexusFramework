@@ -71,17 +71,17 @@ namespace NxEn
 		static void MergeSortMerge(C& Copy, C& Data, uint64 Start, uint64 End, uint64 Middle, CompareFunction<T> Compare = nullptr)
 		{
 			uint64 I = Start, J = Middle;
-			for (uint64 K = Start; K < End; K++)
+			for (uint64 K = Start; K < End; ++K)
 			{
 				if (I < Middle && (J >= End || DoCompare(Data[I], Data[J], Compare)))
 				{
 					Copy[K] = Data[I];
-					I++;
+					++I;
 				}
 				else
 				{
 					Copy[K] = Data[J];
-					J++;
+					++J;
 				}
 			}
 		}
@@ -122,12 +122,12 @@ namespace NxEn
 			{
 				if (DoCompare(Data[Current], Data[Pivot], Compare))
 				{
-					Current++;
+					++Current;
 				}
 				else
 				{
 					Sort::QuickSortSwap<T>(Data, Current, Pivot);
-					Pivot--;
+					--Pivot;
 				}
 			}
 
@@ -165,7 +165,7 @@ namespace NxEn
 
 				if (Index > 0)
 				{
-					Index--;
+					--Index;
 				}
 				else
 				{
@@ -192,7 +192,7 @@ namespace NxEn
 			
 				if (Root > 0)
 				{
-					Root--;
+					--Root;
 				}
 				else
 				{
