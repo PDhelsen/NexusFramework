@@ -13,6 +13,7 @@
 #include "Types/Containers/Collection.h"
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
+#include "Types/Containers/ContainersUtils.h"
 
 namespace NxTs
 {
@@ -1159,6 +1160,38 @@ namespace NxTs
 		ASSERT_EQ(Test.GetFirst().Integer, 25);
 		ASSERT_EQ(Test.GetSecond().Integer, 20);
 	}
+
+	TEST(Type_Containers, ContainersUtils)
+	{
+		NxEn::Set<ContainerTest> Base = NxEn::Set<ContainerTest>();
+		Base.Append(1);
+		Base.Append(3);
+		Base.Append(5);
+		Base.Append(7);
+		Base.Append(9);
+
+		NxEn::Set<ContainerTest> Other = NxEn::Set<ContainerTest>();
+		Other.Append(2);
+		Other.Append(4);
+		Other.Append(6);
+		Other.Append(8);
+		Other.Append(10);
+
+		NxEn::ContainersUtils::SetUnion(Base, Other);
+		ASSERT_EQ(Base.GetCount(), 10);
+
+		NxEn::ContainersUtils::SetDifference(Base, Other);
+		ASSERT_EQ(Base.GetCount(), 5);
+
+		auto It = Other.Begin();
+		Base.Append(*It++);
+		Base.Append(*It++);
+		Base.Append(*It++);
+
+		NxEn::ContainersUtils::SetIntersection(Base, Other);
+		ASSERT_EQ(Base.GetCount(), 3);
+	}
+
 
 	TEST(Type_Containers, Range)
 	{

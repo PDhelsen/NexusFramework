@@ -12,11 +12,11 @@
 
 namespace NxEn
 {
-	// TODO: Implementation - Containers - Union / Intersect / Exclude
-
 	template<typename T, class H = Fnv1a64>
 	class Set
 	{
+		friend class ContainersUtils;
+
 	public:
 		using Node = NodeHashmap<T>;
 		using Iterator = IteratorHashmap<const T, Node>;

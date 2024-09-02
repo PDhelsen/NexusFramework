@@ -228,7 +228,10 @@ namespace NxEn
 		IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
 			: Data(Pointer), Index(Idx), Capacity(Cpct)
 		{
-
+			if (Data[Index].IsFree())
+			{
+				Iterate();
+			}
 		}
 
 		IteratorHashmap<T, N>& operator++()

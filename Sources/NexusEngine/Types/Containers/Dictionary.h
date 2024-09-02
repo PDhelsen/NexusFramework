@@ -12,8 +12,6 @@
 
 namespace NxEn
 {
-	// TODO: Implementation - Containers - Union / Intersect / Exclude
-
 	template<typename K, typename T, class H = Fnv1a64>
 	class Dictionary
 	{
