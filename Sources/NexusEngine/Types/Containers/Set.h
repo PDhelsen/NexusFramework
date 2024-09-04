@@ -8,7 +8,7 @@
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 #include "Misc/Hash.h"
-#include "Misc/Misc.h"
+#include "Misc/Math.h"
 
 namespace NxEn
 {
@@ -388,15 +388,15 @@ namespace NxEn
 
 		uint64 GrowPolicy() const
 		{
-			return NextPrime(Capacity);
+			return Math::NextPrime(Capacity);
 		}
 
 		uint64 ProbingPolicy(uint64 Index, uint64 Iteration) const
 		{
 			bool Flip = Iteration % 2 == 0;
-			uint64 Offset = (uint64)ceil((float)(Iteration) / 2.0f);
+			uint64 Offset = Math::CeilToInt((double)(Iteration) / 2.0);
 			Index = Index + (Flip ? -1 : 1) * (Offset * Offset);
-			Index = Modulo(Index, Capacity);
+			Index = Math::Modulo(Index, Capacity);
 			return Index;
 		}
 

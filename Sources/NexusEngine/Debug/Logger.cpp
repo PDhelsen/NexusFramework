@@ -69,7 +69,7 @@ namespace NxEn
 
 	uint8 Logger::GetLogLevel(LoggerVerbosity Verbosity) const
 	{
-		return LogTwoPowerOfTwo((uint8)Verbosity);
+		return Math::LogTwoPowerOfTwo((uint8)Verbosity);
 	}
 
 	void Logger::GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const

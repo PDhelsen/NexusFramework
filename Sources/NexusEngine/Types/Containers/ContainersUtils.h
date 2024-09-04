@@ -48,7 +48,7 @@ namespace NxEn
 		template<typename T, class H = Fnv1a64>
 		static Set<T, H> SetIntersection(Set<T, H>& Base, const Set<T, H>& Other)
 		{
-			Set<T, H> Return = Set<T, H>(NextPrime(Base.GetCount() + Other.GetCount()));
+			Set<T, H> Return = Set<T, H>(Math::NextPrime(Base.GetCount() + Other.GetCount()));
 
 			for (typename Set<T, H>::Iterator It = Base.Begin(); It != Base.End(); ++It)
 			{
