@@ -13,7 +13,6 @@ namespace NxEn
 
 	// TODO: Architecture - Hash - Strategy Pattern
 	// TODO: Architecture - Hash - Hash object instance not only static
-	// TODO: Architecture - Hash - Cannot return 0
 
 	template<typename T = const void*, class H = Fnv1a64>
 	struct Hash
@@ -144,6 +143,9 @@ namespace NxEn
 
 		NEXUS_ENGINE_API virtual uint64 GetSize() const = 0;
 		NEXUS_ENGINE_API virtual HashLength GetSeed() const = 0;
+
+	protected:
+		inline static HashLength Finalize(HashLength Value);
 	};
 
 	class XxHash32 : public HashFunction<uint32>
@@ -297,5 +299,12 @@ namespace NxEn
 		HashLength Seed;
 		HashLength Accumulator;
 	};
+
+	template<typename T>
+	inline HashFunction<T>::HashLength HashFunction<T>::Finalize(HashFunction<T>::HashLength Value)
+	{
+		Value |= Value == 0;
+		return Value;
+	}
 }
 

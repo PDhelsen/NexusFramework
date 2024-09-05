@@ -76,7 +76,7 @@ namespace NxEn
 		Result = Remains(Result, Pointer, Stop);
 		Result = Avalanche(Result);
 
-		return Result;
+		return Finalize(Result);
 	}
 
 	const uint8* XxHash32::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
@@ -225,7 +225,7 @@ namespace NxEn
 		Result = Remains(Result, Pointer, Stop);
 		Result = Avalanche(Result);
 
-		return Result;
+		return Finalize(Result);
 	}
 	
 	const uint8* XxHash64::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
@@ -382,7 +382,7 @@ namespace NxEn
 		HashLength Result = Accumulator;
 		Result ^= Size;
 		Result = Avalanche(Result);
-		return Result;
+		return Finalize(Result);
 	}
 
 	Murmur32::HashLength Murmur32::RotateLeft(HashLength Value, uint8 Bits)
@@ -442,7 +442,7 @@ namespace NxEn
 	
 	Fnv164::HashLength Fnv164::Hash() const
 	{
-		return Accumulator;
+		return Finalize(Accumulator);
 	}
 
 	Fnv1a64::Fnv1a64(HashLength Seed)
@@ -487,6 +487,6 @@ namespace NxEn
 	
 	Fnv1a64::HashLength Fnv1a64::Hash() const
 	{
-		return Accumulator;
+		return Finalize(Accumulator);
 	}
 }

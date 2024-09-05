@@ -319,9 +319,7 @@ namespace NxEn
 
 		uint64 GetHash(const T& Value) const
 		{
-			uint64 HashValue = Hash<T, H>::HashObject(Value);
-			HashValue |= HashValue == 0;
-			return HashValue;
+			return Hash<T, H>::HashObject(Value);
 		}
 
 		uint64 GetIndexHash(uint64 Hash) const

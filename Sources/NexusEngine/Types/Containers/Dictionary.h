@@ -443,9 +443,7 @@ namespace NxEn
 
 		uint64 GetHash(const K& Value) const
 		{
-			uint64 HashValue = Hash<K, H>::HashObject(Value);
-			HashValue |= HashValue == 0;
-			return HashValue;
+			return Hash<K, H>::HashObject(Value);
 		}
 
 		uint64 GetIndexHash(uint64 Hash) const
