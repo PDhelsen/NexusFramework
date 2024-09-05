@@ -133,7 +133,7 @@ namespace NxEn
 	public:
 		using HashLength = T;
 
-		NEXUS_ENGINE_API HashFunction(T Seed) {};
+		NEXUS_ENGINE_API HashFunction(HashLength Seed) {};
 
 		//NEXUS_ENGINE_API static HashLength Hash(const void* Data, uint64 Length, HashLength Seed = 0) = 0;
 		//NEXUS_ENGINE_API static HashLength Combine(HashLength HashA, HashLength HashB) = 0;

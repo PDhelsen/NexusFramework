@@ -171,19 +171,20 @@ namespace NxTs
 
 	TEST(Hash, NativeType)
 	{
-		ASSERT_NE(NxEn::Hash<int8>::HashObject(int8(8)), 0);
-		ASSERT_NE(NxEn::Hash<int16>::HashObject(int16(16)), 0);
-		ASSERT_NE(NxEn::Hash<int32>::HashObject(int32(32)), 0);
-		ASSERT_NE(NxEn::Hash<int64>::HashObject(int64(64)), 0);
-		ASSERT_NE(NxEn::Hash<uint8>::HashObject(uint8(8)), 0);
-		ASSERT_NE(NxEn::Hash<uint16>::HashObject(uint16(16)), 0);
-		ASSERT_NE(NxEn::Hash<uint32>::HashObject(uint32(32)), 0);
-		ASSERT_NE(NxEn::Hash<uint64>::HashObject(uint64(64)), 0);
+		ASSERT_EQ(NxEn::Hash<int8>::HashObject(int8(8)), 8);
+		ASSERT_EQ(NxEn::Hash<int16>::HashObject(int16(16)), 16);
+		ASSERT_EQ(NxEn::Hash<int32>::HashObject(int32(32)), 32);
+		ASSERT_EQ(NxEn::Hash<int64>::HashObject(int64(64)), 64);
+		ASSERT_EQ(NxEn::Hash<uint8>::HashObject(uint8(8)), 8);
+		ASSERT_EQ(NxEn::Hash<uint16>::HashObject(uint16(16)), 16);
+		ASSERT_EQ(NxEn::Hash<uint32>::HashObject(uint32(32)), 32);
+		ASSERT_EQ(NxEn::Hash<uint64>::HashObject(uint64(64)), 64);
 
 		ASSERT_NE(NxEn::Hash<float>::HashObject(float(1.0f)), 0);
 		ASSERT_NE(NxEn::Hash<double>::HashObject(double(2.0f)), 0);
 
-		ASSERT_NE(NxEn::Hash<bool>::HashObject(bool(1)), 0);
+		ASSERT_EQ(NxEn::Hash<bool>::HashObject(bool(1)), 1);
+		ASSERT_EQ(NxEn::Hash<bool>::HashObject(false), 0);
 
 		HashTest Data = { .A = 10, .B = 15, .C = 20 };
 		ASSERT_NE(NxEn::Hash<void*>::HashObject(&Data), 0);

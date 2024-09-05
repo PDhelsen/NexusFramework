@@ -4,7 +4,7 @@
 
 namespace NxTs
 {
-	TEST(Misc, Modulo)
+	TEST(Math, Modulo)
 	{
 		ASSERT_EQ(NxEn::Math::Modulo(0, 4), 0);
 		ASSERT_EQ(NxEn::Math::Modulo(1, 4), 1);
@@ -23,7 +23,7 @@ namespace NxTs
 		ASSERT_EQ(NxEn::Math::Modulo(-6, 4), 2);
 	}
 
-	TEST(Misc, PowerOfTwo)
+	TEST(Math, PowerOfTwo)
 	{
 		ASSERT_EQ(NxEn::Math::IsPowerOfTwo((uint32)16), true);
 		ASSERT_EQ(NxEn::Math::IsPowerOfTwo((uint32)15), false);
@@ -38,7 +38,7 @@ namespace NxTs
 		ASSERT_EQ(NxEn::Math::LogTwoPowerOfTwo((uint32)0), -1);
 	}
 
-	TEST(Misc, Prime)
+	TEST(Math, Prime)
 	{
 		ASSERT_EQ(NxEn::Math::IsPrime((uint32)99), false);
 		ASSERT_EQ(NxEn::Math::IsPrime((uint32)97), true);
