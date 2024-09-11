@@ -12,7 +12,7 @@
 
 namespace NxEn
 {
-	template<typename T, class H = Fnv1a64>
+	template<typename T, class H = Hashing::HashAlgorithmDefault>
 	class Set
 	{
 		friend class ContainersUtils;
@@ -319,7 +319,7 @@ namespace NxEn
 
 		uint64 GetHash(const T& Value) const
 		{
-			return Hash<T, H>::HashObject(Value);
+			return Hash<H>::HashObject(Value);
 		}
 
 		uint64 GetIndexHash(uint64 Hash) const

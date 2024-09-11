@@ -52,7 +52,7 @@ namespace NxEn
 
 	GUID StringId::InternString(StringView Text)
 	{
-		GUID Id = Hash<StringView>::HashObject(Text);
+		GUID Id = Hash<>::HashObject(Text);
 		if (!Tables.ContainsKey(Id))
 		{
 			Tables.Append(Move(Id), Move(Text.ToString()));

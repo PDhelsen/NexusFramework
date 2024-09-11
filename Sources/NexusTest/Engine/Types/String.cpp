@@ -214,8 +214,11 @@ namespace NxTs
 		uint64 Hash2 = 0x77F122B9F752AACB;
 		NxEn::String String1 = NxEn::String("Test");
 		NxEn::String String2 = NxEn::String("This is a test text for testing the Hash function");
-		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String1), Hash1);
-		ASSERT_EQ(NxEn::Hash<NxEn::String>::HashObject(String2), Hash2);
+		ASSERT_EQ(NxEn::Hash<>::HashObject(String1), Hash1);
+		ASSERT_EQ(NxEn::Hash<>::HashObject(String2), Hash2);
+
+		NxEn::StringId StringId = NxEn::StringId(String2);
+		ASSERT_EQ(NxEn::Hash<>::HashObject(StringId), StringId.GetId());
 
 		NxEn::Array<NxEn::String> Array = NxEn::Array<NxEn::String>(10);
 		Array.AssignConstruct(0, NxEn::String("ABEG"));

@@ -68,41 +68,64 @@ namespace NxEn
 		return StringCApi::Scan(Text.C(), Format.C(), args...);
 	}
 
-	template<class H>
-	struct Hash<const char*, H>
+	template<typename H>
+	class HashProcess<const char*, H>
 	{
-		static H::HashLength HashObject(const char* Data, H::HashLength Seed = 0)
+	public:
+		static void Accumulate(HashStrategy<H>& State, const char* Data)
 		{
-			return H::Hash(Data, StringCApi::Length(Data), Seed);
+			State.Accumulate(Data, StringCApi::Length(Data));
+		}
+
+		static typename H::HashLength Hash(HashStrategy<H>& State, const char* Data)
+		{
+			HashProcess<const char*, H>::Accumulate(State, Data);
+			return State.Hash();
 		}
 	};
 
-	template<class H>
-	struct Hash<String, H>
+	template<typename H>
+	class HashProcess<String, H>
 	{
-		static H::HashLength HashObject(const String& Data, H::HashLength Seed = 0)
+	public:
+		static void Accumulate(HashStrategy<H>& State, const String& Data)
 		{
-			H Hashing = H(Seed);
-			Hashing.Accumulate(Data.C(), Data.GetCount());
-			return Hashing.Hash();
+			State.Accumulate(Data.C(), Data.GetCount());
+		}
+
+		static typename H::HashLength Hash(HashStrategy<H>& State, const String& Data)
+		{
+			HashProcess<String, H>::Accumulate(State, Data);
+			return State.Hash();
 		}
 	};
 
-	template<class H>
-	struct Hash<StringView, H>
+	template<typename H>
+	class HashProcess<StringView, H>
 	{
-		static H::HashLength HashObject(StringView Data, H::HashLength Seed = 0)
+	public:
+		static void Accumulate(HashStrategy<H>& State, const StringView& Data)
 		{
-			H Hashing = H(Seed);
-			Hashing.Accumulate(Data.C(), Data.GetCount());
-			return Hashing.Hash();
+			State.Accumulate(Data.C(), Data.GetCount());
+		}
+
+		static typename H::HashLength Hash(HashStrategy<H>& State, const StringView& Data)
+		{
+			HashProcess<StringView, H>::Accumulate(State, Data);
+			return State.Hash();
 		}
 	};
 
-	template<class H>
-	struct Hash<StringId, H>
+	template<typename H>
+	class HashProcess<StringId, H>
 	{
-		static H::HashLength HashObject(const StringId& Data, H::HashLength Seed = 0)
+	public:
+		static void Accumulate(HashStrategy<H>& State, const StringId& Data)
+		{
+			State.Accumulate(Data.C(), StringCApi::Length(Data.C()));
+		}
+
+		static typename H::HashLength Hash(HashStrategy<H>& State, const StringId& Data)
 		{
 			return Data.GetId();
 		}

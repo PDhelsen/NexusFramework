@@ -7,7 +7,7 @@ namespace NxEn
 	class ContainersUtils
 	{
 	public:
-		template<typename T, class H = Fnv1a64>
+		template<typename T, class H = Hashing::HashAlgorithmDefault>
 		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)
 		{
 			Base.Resize(Base.GetCount() + Other.GetCount());
@@ -27,7 +27,7 @@ namespace NxEn
 			}
 		}
 
-		template<typename T, class H = Fnv1a64>
+		template<typename T, class H = Hashing::HashAlgorithmDefault>
 		static void SetDifference(Set<T, H>& Base, const Set<T, H>& Other)
 		{
 			for (typename Set<T, H>::Iterator It = Other.Begin(); It != Other.End(); ++It)
@@ -45,7 +45,7 @@ namespace NxEn
 			}
 		}
 
-		template<typename T, class H = Fnv1a64>
+		template<typename T, class H = Hashing::HashAlgorithmDefault>
 		static Set<T, H> SetIntersection(Set<T, H>& Base, const Set<T, H>& Other)
 		{
 			Set<T, H> Return = Set<T, H>(Math::NextPrime(Base.GetCount() + Other.GetCount()));

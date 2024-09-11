@@ -12,7 +12,7 @@
 
 namespace NxEn
 {
-	template<typename K, typename T, class H = Fnv1a64>
+	template<typename K, typename T, class H = Hashing::HashAlgorithmDefault>
 	class Dictionary
 	{
 	public:
@@ -443,7 +443,7 @@ namespace NxEn
 
 		uint64 GetHash(const K& Value) const
 		{
-			return Hash<K, H>::HashObject(Value);
+			return Hash<H>::HashObject(Value);
 		}
 
 		uint64 GetIndexHash(uint64 Hash) const

@@ -28,7 +28,7 @@ namespace NxEn
 	private:
 		static GUID InternString(StringView Text);
 
-		static Dictionary<GUID, String, Fnv1a64> Tables;
+		static Dictionary<GUID, String, Hashing::HashAlgorithmDefault> Tables;
 
 		GUID Id;
 	};

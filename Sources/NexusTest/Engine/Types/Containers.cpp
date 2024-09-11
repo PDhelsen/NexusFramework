@@ -119,16 +119,21 @@ namespace NxTs
 
 namespace NxEn
 {
-	template<class H>
-	struct Hash<NxTs::ContainerTest, H>
+	template<typename H>
+	class HashProcess<NxTs::ContainerTest, H>
 	{
-		static H::HashLength HashObject(const NxTs::ContainerTest& Data, H::HashLength Seed = 0)
+	public:
+		static void Accumulate(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
 		{
-			H Hashing = H(Seed);
-			Hashing.Accumulate(&Data.Integer, sizeof(uint64))
+			State.Accumulate(&Data.Integer, sizeof(uint64))
 				.Accumulate(&Data.Float, sizeof(float))
 				.Accumulate(&Data.Boolean, sizeof(bool));
-			return Hashing.Hash();
+		}
+
+		static typename H::HashLength Hash(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
+		{
+			HashProcess<NxTs::ContainerTest, H>::Accumulate(State, Data);
+			return State.Hash();
 		}
 	};
 }
