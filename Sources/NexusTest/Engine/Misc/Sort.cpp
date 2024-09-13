@@ -104,13 +104,13 @@ namespace NxTs
 		NxEn::Array<uint64>& Data = CreateNexusArray();
 		NxEn::NodeSimple<uint64>* Data2 = CreateNodes();
 
-		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, 10);
+		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, 10, &CompareFunction);
+		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
