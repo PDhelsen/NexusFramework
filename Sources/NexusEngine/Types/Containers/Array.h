@@ -5,8 +5,8 @@
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Debug/Assert.h"
-#include "Misc/Sort.h"
 #include "Misc/References.h"
+#include "Misc/Sort.h"
 
 namespace NxEn
 {
@@ -219,9 +219,9 @@ namespace NxEn
 			}
 		}
 
-		void Sort(Sort::CompareFunction<T> Function = nullptr)
+		void Sort(Sorting::CompareFunction<T> Function = nullptr)
 		{
-			Sort::HeapSort<T>(*this, Function);
+			Sorting::HeapSort::SortIndexBased<T>(*this, Count, Function);
 		}
 
 		bool Contains(const T& Other) const

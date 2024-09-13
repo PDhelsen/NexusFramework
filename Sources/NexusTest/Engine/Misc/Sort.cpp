@@ -29,25 +29,25 @@ namespace NxTs
 		NxEn::Dequeue<uint64> Data3 = NxEn::Dequeue<uint64>();
 		Data3.AppendBackRange(Data);
 
-		NxEn::Sort::MergeSort<uint64>(Data);
+		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sort::MergeSort<uint64>(Data, &CompareFunction);
+		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		NxEn::Sort::MergeSort<uint64>(Data2);
+		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data2, Data2.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data2[Index - 1] <= Data2[Index], true);
 		}
 
-		NxEn::Sort::MergeSort<uint64>(Data3);
+		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data3, Data3.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data3[Index - 1] <= Data3[Index], true);
@@ -74,25 +74,25 @@ namespace NxTs
 		NxEn::Dequeue<uint64> Data3 = NxEn::Dequeue<uint64>();
 		Data3.AppendBackRange(Data);
 
-		NxEn::Sort::QuickSort<uint64>(Data);
+		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sort::QuickSort<uint64>(Data, &CompareFunction);
+		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		NxEn::Sort::QuickSort<uint64>(Data2);
+		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data2, Data2.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data2[Index - 1] <= Data2[Index], true);
 		}
 
-		NxEn::Sort::QuickSort<uint64>(Data3);
+		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data3, Data3.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data3[Index - 1] <= Data3[Index], true);
@@ -119,25 +119,25 @@ namespace NxTs
 		NxEn::Dequeue<uint64> Data3 = NxEn::Dequeue<uint64>();
 		Data3.AppendBackRange(Data);
 
-		NxEn::Sort::HeapSort<uint64>(Data);
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sort::HeapSort<uint64>(Data, &CompareFunction);
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		NxEn::Sort::HeapSort<uint64>(Data2);
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data2, Data2.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data2[Index - 1] <= Data2[Index], true);
 		}
 
-		NxEn::Sort::HeapSort<uint64>(Data3);
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data3, Data3.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			ASSERT_EQ(Data3[Index - 1] <= Data3[Index], true);
@@ -164,7 +164,7 @@ namespace NxTs
 		NxEn::Dequeue<uint64> Data3 = NxEn::Dequeue<uint64>();
 		Data3.AppendBackRange(Data);
 
-		NxEn::Sort::Heapify<uint64>(Data);
+		NxEn::Sorting::HeapSort::Heapify<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			uint64 Left = 2 * Index + 1;
@@ -180,7 +180,7 @@ namespace NxTs
 			}
 		}
 
-		NxEn::Sort::Heapify<uint64>(Data2);
+		NxEn::Sorting::HeapSort::Heapify<uint64>(Data2, Data2.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			uint64 Left = 2 * Index + 1;
@@ -196,7 +196,7 @@ namespace NxTs
 			}
 		}
 
-		NxEn::Sort::Heapify<uint64>(Data3);
+		NxEn::Sorting::HeapSort::Heapify<uint64>(Data3, Data3.GetCount());
 		for (uint64 Index = 1; Index < 10; Index++)
 		{
 			uint64 Left = 2 * Index + 1;
@@ -211,6 +211,35 @@ namespace NxTs
 				ASSERT_EQ(Data3[Index] >= Data3[Right], true);
 			}
 		}
+	}
+
+	TEST(Sort, Raw)
+	{
+		uint64* Data = new uint64[10];
+		Data[0] = 5;
+		Data[1] = 4;
+		Data[2] = 7;
+		Data[3] = 1;
+		Data[4] = 0;
+		Data[5] = 5;
+		Data[6] = 6;
+		Data[7] = 2;
+		Data[8] = 5;
+		Data[9] = 3;
+
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, 10);
+		for (uint64 Index = 1; Index < 10; Index++)
+		{
+			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
+		}
+
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, 10, &CompareFunction);
+		for (uint64 Index = 1; Index < 10; Index++)
+		{
+			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
+		}
+
+		delete[] Data;
 	}
 
 	TEST(Sort, Container)
