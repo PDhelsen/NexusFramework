@@ -731,6 +731,17 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
+		Test.Swap(&Test.First(), &Test.Last());
+		Test.Sort();
+		auto ItFirst = Test.Begin();
+		auto& ItSecond = ++Test.Begin();
+		while (ItSecond != Test.End())
+		{
+			ASSERT_EQ(ItFirst->Integer < ItSecond->Integer, true);
+			ItFirst++;
+			ItSecond++;
+		}
+
 		ContainerTest ToFind1 = ContainerTest(5);
 		ContainerTest ToFind2 = ContainerTest(100);
 		ASSERT_EQ(Test.Contains(ToFind1), true);

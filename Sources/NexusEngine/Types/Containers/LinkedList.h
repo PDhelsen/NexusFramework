@@ -567,6 +567,29 @@ namespace NxEn
 			DataHead = Current;
 		}
 
+		void Sort(Sorting::CompareFunction<T> Function = nullptr)
+		{
+			DataHead = Sorting::MergeSort::SortLinkBased<T, Node>(DataHead, Function);
+
+			Node* Current = DataHead;
+			Current->Prev = nullptr;
+			while (Current != nullptr)
+			{
+				Node* Prev = Current;
+				Current = Current->Next;
+
+				if (Current)
+				{
+					Current->Prev = Prev;
+				}
+				else
+				{
+					Prev->Next = nullptr;
+					DataTail = Prev;
+				}
+			}
+		}
+
 		bool Contains(const T& Other) const
 		{
 			return Find(Other) != End();

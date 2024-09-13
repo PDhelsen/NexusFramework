@@ -6,7 +6,6 @@
 namespace NxEn
 {
 	// TODO: Architecture - Sort - Strategy Pattern
-	// TODO: Implementation - Sort - Linked List
 
 	namespace Sorting
 	{
@@ -32,12 +31,34 @@ namespace NxEn
 				Sort(Data, Count, Comparison);
 			}
 
+			template<typename T, typename N>
+			static N* SortLinkBased(N* Data, CompareFunction<T> Comparison = nullptr)
+			{
+				return Sort(Data, Comparison);
+			}
+
 		private:
 			template<typename T, typename C>
 			static void Sort(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
 			{
 				C Copy = Data;
 				Split(Data, Copy, 0, Count, Comparison);
+			}
+
+			template<typename T, typename N>
+			static N* Sort(N* Head, CompareFunction<T> Comparison = nullptr)
+			{
+				if (!Head || !Head->Next)
+				{
+					return Head;
+				}
+
+				N* Next = Split(Head, Comparison);
+
+				Head = Sort(Head, Comparison);
+				Next = Sort(Next, Comparison);
+
+				return Merge(Head, Next, Comparison);
 			}
 
 			template<typename T, typename C>
@@ -56,6 +77,26 @@ namespace NxEn
 				Merge(Copy, Data, Start, End, Middle, Comparison);
 			}
 
+			template<typename T, typename N>
+			static N* Split(N* Head, CompareFunction<T> Comparison = nullptr)
+			{
+				N* Fast = Head;
+				N* Slow = Head;
+
+				while (!Fast && !Fast->Next)
+				{
+					Fast = Fast->Next->Next;
+					if (Fast != nullptr)
+					{
+						Slow = Slow->Next;
+					}
+				}
+
+				N* Temp = Slow->Next;
+				Slow->Next = nullptr;
+				return Temp;
+			}
+
 			template<typename T, typename C>
 			static void Merge(C& Copy, C& Data, uint64 Start, uint64 End, uint64 Middle, CompareFunction<T> Comparison = nullptr)
 			{
@@ -72,6 +113,31 @@ namespace NxEn
 						Copy[K] = Data[J];
 						++J;
 					}
+				}
+			}
+
+			template<typename T, typename N>
+			static N* Merge(N* Head, N* Next, CompareFunction<T> Comparison = nullptr)
+			{
+				if (!Head)
+				{
+					return Next;
+				}
+
+				if (!Next)
+				{
+					return Head;
+				}
+
+				if (Compare(Head->Value, Next->Value, Comparison))
+				{
+					Head->Next = Merge(Head->Next, Next, Comparison);
+					return Head;
+				}
+				else
+				{
+					Next->Next = Merge(Head, Next->Next, Comparison);
+					return Next;
 				}
 			}
 		};
