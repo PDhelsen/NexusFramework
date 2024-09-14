@@ -324,9 +324,9 @@ namespace NxEn
 		}
 
 		template<typename T, typename S = Sorting::DefaultLinkBased, typename N>
-		static N* SortLinkBased(N* Data, Sorting::CompareFunction<T> Comparison = nullptr)
+		static void SortLinkBased(N** Data, Sorting::CompareFunction<T> Comparison = nullptr)
 		{
-			return S::SortLinkBased(Data, Comparison);
+			*Data = S::SortLinkBased(*Data, Comparison);
 		}
 	};
 }

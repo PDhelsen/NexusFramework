@@ -570,7 +570,7 @@ namespace NxEn
 		template<typename S = Sorting::DefaultLinkBased>
 		void Sort(Sorting::CompareFunction<T> Function = nullptr)
 		{
-			DataHead = Sort::SortLinkBased<T, S, Node>(DataHead, Function);
+			Sort::SortLinkBased<T, S, Node>(&DataHead, Function);
 
 			Node* Current = DataHead;
 			Current->Prev = nullptr;

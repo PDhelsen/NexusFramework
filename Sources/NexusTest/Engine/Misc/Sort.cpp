@@ -199,7 +199,7 @@ namespace NxTs
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		Data2 = NxEn::Sort::SortLinkBased<uint64>(Data2);
+		NxEn::Sort::SortLinkBased<uint64>(&Data2);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data2->Value <= Data2->Next->Value, true);
