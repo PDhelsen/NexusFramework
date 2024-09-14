@@ -4,6 +4,8 @@
 
 namespace NxTs
 {
+	const uint64 ArrayLength = 10;
+
 	bool CompareFunction(const uint64& A, const uint64& B)
 	{
 		return A >= B;
@@ -11,7 +13,7 @@ namespace NxTs
 
 	uint64* CreateRawArray()
 	{
-		uint64* Data = new uint64[10];
+		uint64* Data = new uint64[ArrayLength];
 
 		Data[0] = 5;
 		Data[1] = 4;
@@ -78,7 +80,7 @@ namespace NxTs
 
 	NxEn::Array<uint64>& CreateNexusArray()
 	{
-		NxEn::Array<uint64>* Data = new NxEn::Array<uint64>(10);
+		NxEn::Array<uint64>* Data = new NxEn::Array<uint64>(ArrayLength);
 
 		(*Data)[0] = 5;
 		(*Data)[1] = 4;
@@ -105,19 +107,19 @@ namespace NxTs
 		NxEn::NodeSimple<uint64>* Data2 = CreateNodes();
 
 		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount());
-		for (uint64 Index = 1; Index < 10; Index++)
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
 		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
-		for (uint64 Index = 1; Index < 10; Index++)
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
 		Data2 = NxEn::Sorting::MergeSort::SortLinkBased<uint64>(Data2);
-		for (uint64 Index = 1; Index < 10; Index++)
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data2->Value <= Data2->Next->Value, true);
 		}
@@ -130,14 +132,14 @@ namespace NxTs
 	{
 		uint64* Data = CreateRawArray();
 
-		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, 10);
-		for (uint64 Index = 1; Index < 10; Index++)
+		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, ArrayLength);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, 10, &CompareFunction);
-		for (uint64 Index = 1; Index < 10; Index++)
+		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
@@ -149,34 +151,61 @@ namespace NxTs
 	{
 		uint64* Data = CreateRawArray();
 
-		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, 10);
-		for (uint64 Index = 1; Index < 10; Index++)
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, ArrayLength);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, 10, &CompareFunction);
-		for (uint64 Index = 1; Index < 10; Index++)
+		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		NxEn::Sorting::HeapSort::Heapify<uint64>(Data, 10);
-		for (uint64 Index = 1; Index < 10; Index++)
+		NxEn::Sorting::HeapSort::Heapify<uint64>(Data, ArrayLength);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			uint64 Left = 2 * Index + 1;
-			if (Left < 10)
+			if (Left < ArrayLength)
 			{
 				ASSERT_EQ(Data[Index] >= Data[Left], true);
 			}
 
 			uint64 Right = 2 * Index + 2;
-			if (Right < 10)
+			if (Right < ArrayLength)
 			{
 				ASSERT_EQ(Data[Index] >= Data[Right], true);
 			}
 		}
 
 		DestroyRawArray(Data);
+	}
+
+	TEST(Sort, Sort)
+	{
+		uint64* Data = CreateRawArray();
+		NxEn::NodeSimple<uint64>* Data2 = CreateNodes();
+
+		NxEn::Sort::SortIndexBased<uint64>(Data, ArrayLength);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
+		{
+			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
+		}
+
+		NxEn::Sort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
+		{
+			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
+		}
+
+		Data2 = NxEn::Sort::SortLinkBased<uint64>(Data2);
+		for (uint64 Index = 1; Index < ArrayLength; Index++)
+		{
+			ASSERT_EQ(Data2->Value <= Data2->Next->Value, true);
+		}
+
+		DestroyRawArray(Data);
+		DestroyNodes(Data2);
 	}
 }

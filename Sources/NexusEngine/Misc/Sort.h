@@ -5,8 +5,6 @@
 
 namespace NxEn
 {
-	// TODO: Architecture - Sort - Strategy Pattern
-
 	namespace Sorting
 	{
 		template<typename T>
@@ -311,6 +309,25 @@ namespace NxEn
 				Data[Index] = Move(Temp);
 			}
 		};
+
+		using DefaultIndexBased = HeapSort;
+		using DefaultLinkBased = MergeSort;
 	}
+
+	class Sort
+	{
+	public:
+		template<typename T, typename S = Sorting::DefaultIndexBased, typename C>
+		static void SortIndexBased(C& Data, uint64 Count, Sorting::CompareFunction<T> Comparison = nullptr)
+		{
+			S::SortIndexBased(Data, Count, Comparison);
+		}
+
+		template<typename T, typename S = Sorting::DefaultLinkBased, typename N>
+		static N* SortLinkBased(N* Data, Sorting::CompareFunction<T> Comparison = nullptr)
+		{
+			return S::SortLinkBased(Data, Comparison);
+		}
+	};
 }
 

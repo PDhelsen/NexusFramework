@@ -349,9 +349,10 @@ namespace NxEn
 			}
 		}
 
+		template<typename S = Sorting::DefaultIndexBased>
 		void Sort(Sorting::CompareFunction<T> Function = nullptr)
 		{
-			Sorting::HeapSort::SortIndexBased<T>(*this, Count, Function);
+			Sort::SortIndexBased<T, S, Dequeue<T>>(*this, Count, Function);
 		}
 
 		bool Contains(const T& Other) const
