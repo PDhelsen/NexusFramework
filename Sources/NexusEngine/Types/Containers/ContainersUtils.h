@@ -46,10 +46,8 @@ namespace NxEn
 		}
 
 		template<typename T, class H = Hashing::Default>
-		static Set<T, H> SetIntersection(Set<T, H>& Base, const Set<T, H>& Other)
+		static void SetIntersection(Set<T, H>& Base, const Set<T, H>& Other)
 		{
-			Set<T, H> Return = Set<T, H>(Math::NextPrime(Base.GetCount() + Other.GetCount()));
-
 			for (typename Set<T, H>::I It = Base.Begin(); It != Base.End(); ++It)
 			{
 				uint64 Hash = Other.GetHash(*It);
@@ -65,8 +63,6 @@ namespace NxEn
 				Base.Destruct(Index);
 				Base.Resize(--Base.Count);
 			}
-
-			return Return;
 		}
 	};
 }

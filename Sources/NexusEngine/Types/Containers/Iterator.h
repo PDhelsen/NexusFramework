@@ -230,7 +230,7 @@ namespace NxEn
 			IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
 				: Data(Pointer), Index(Idx), Capacity(Cpct)
 			{
-				if (Data[Index].IsFree())
+				if (Data[Index].IsFree() && Index < Capacity)
 				{
 					Iterate();
 				}
