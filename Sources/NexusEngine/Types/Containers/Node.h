@@ -6,72 +6,107 @@
 
 namespace NxEn
 {
-	template<typename T>
-	struct NodeGraphConnection;
-
-	// -------------------------------
-	// Nodes
-	// -------------------------------
-
-	template<typename T>
-	struct NodeSimple
+	namespace Node
 	{
-		T Value;
-		NodeSimple<T>* Next;
-	};
+		template<typename T>
+		struct NodeGraphConnection;
 
-	template<typename T>
-	struct NodeDouble
-	{
-		T Value;
-		NodeDouble<T>* Next;
-		NodeDouble<T>* Prev;
-	};
+		// -------------------------------
+		// Nodes
+		// -------------------------------
 
-	template<typename T>
-	struct NodeHashmap
-	{
-		T Value;
-		uint64 Hash;
+		template<typename T>
+		struct NodeSimple
+		{
+			T Value;
+			NodeSimple<T>* Next;
+		};
 
-		bool IsFree() { return Hash == 0; }
-	};
+		template<typename T>
+		struct NodeDouble
+		{
+			T Value;
+			NodeDouble<T>* Next;
+			NodeDouble<T>* Prev;
+		};
 
-	template<typename T>
-	struct NodeTree
-	{
-		T Value;
-		uint64 Count;
-		NodeTree<T>* Parent;
-		NodeTree<T>* Sibling;
-		NodeTree<T>* Child;
-	};
+		template<typename T>
+		struct NodeHashmap
+		{
+			T Value;
+			uint64 Hash;
 
-	template<typename T>
-	struct NodeGraph
-	{
-		T Value;
-		uint64 Count;
-		NodeGraph<T>* Next;
-		NodeGraphConnection<T>* Connection;
-	};
+			bool IsFree() { return Hash == 0; }
+		};
 
-	// -------------------------------
-	// Connections
-	// -------------------------------
+		template<typename T>
+		struct NodeTree
+		{
+			T Value;
+			uint64 Count;
+			NodeTree<T>* Parent;
+			NodeTree<T>* Sibling;
+			NodeTree<T>* Child;
+		};
 
-	enum class NodeGraphConnectionType : uint8
-	{
-		From, To
-	};
+		template<typename T>
+		struct NodeGraph
+		{
+			T Value;
+			uint64 Count;
+			NodeGraph<T>* Next;
+			NodeGraphConnection<T>* Connection;
+		};
 
-	template<typename T>
-	struct NodeGraphConnection
-	{
-		NodeGraph<T>* Target;
-		NodeGraphConnection<T>* Next;
-		NodeGraphConnectionType Type;
-	};
+		// -------------------------------
+		// Connections
+		// -------------------------------
+
+		enum class NodeGraphConnectionType : uint8
+		{
+			From, To
+		};
+
+		template<typename T>
+		struct NodeGraphConnection
+		{
+			NodeGraph<T>* Target;
+			NodeGraphConnection<T>* Next;
+			NodeGraphConnectionType Type;
+		};
+
+		// -------------------------------
+		// Utils
+		// -------------------------------
+
+		template<typename T, typename N>
+		static N* GetNode(T* Value)
+		{
+			return reinterpret_cast<N*>(Value);
+		}
+
+		template<typename N>
+		static void FixupNode(N* Head, N** Tail)
+		{
+			N* Current = Head;
+			Current->Prev = nullptr;
+			while (Current != nullptr)
+			{
+				N* Prev = Current;
+				Current = Current->Next;
+
+				if (Current)
+				{
+					Current->Prev = Prev;
+				}
+				else
+				{
+					Prev->Next = nullptr;
+					*Tail = Prev;
+				}
+			}
+		}
+	}
 
 	// -------------------------------
 	// Key - Value

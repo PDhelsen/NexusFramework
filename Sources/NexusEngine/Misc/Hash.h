@@ -182,66 +182,69 @@ namespace NxEn
 			HashLength Accumulator;
 		};
 
-		using HashAlgorithmDefault = Fnv1a64;
+		using Default = Fnv1a64;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------------
 	// Hash Back-end
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	template<typename H = Hashing::HashAlgorithmDefault>
-	struct HashStrategy
+	namespace Hashing
 	{
-	public:
-		HashStrategy(typename H::HashLength Seed = 0)
-			: State(Seed)
+		template<typename H = Hashing::Default>
+		struct HashStrategy
 		{
-		}
+		public:
+			HashStrategy(typename H::HashLength Seed = 0)
+				: State(Seed)
+			{
+			}
 
-		HashStrategy<H>& Accumulate(const void* Data, uint64 Length)
+			HashStrategy<H>& Accumulate(const void* Data, uint64 Length)
+			{
+				State.Accumulate(Data, Length);
+				return *this;
+			}
+
+			typename H::HashLength Hash() const
+			{
+				return State.Hash();
+			}
+
+			typename H::HashLength Combine(typename H::HashLength A, typename H::HashLength B) const
+			{
+				return State.Combine(A, B);
+			}
+
+			uint64 GetSize() const { return State.GetSize(); };
+			uint64 GetSeed() const { return State.GetSeed(); };
+
+		private:
+			H State;
+		};
+
+		template<typename T = void*, typename H = Hashing::Default>
+		class HashProcess
 		{
-			State.Accumulate(Data, Length);
-			return *this;
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, const T& Data)
+			{
+				State.Accumulate(&Data, sizeof(T));
+			}
 
-		typename H::HashLength Hash() const
-		{
-			return State.Hash();
-		}
-
-		typename H::HashLength Combine(typename H::HashLength A, typename H::HashLength B) const
-		{
-			return State.Combine(A, B);
-		}
-
-		uint64 GetSize() const { return State.GetSize(); };
-		uint64 GetSeed() const { return State.GetSeed(); };
-
-	private:
-		H State;
-	};
-
-	template<typename T = void*, typename H = Hashing::HashAlgorithmDefault>
-	class HashProcess
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, const T& Data)
-		{
-			State.Accumulate(&Data, sizeof(T));
-		}
-
-		static typename H::HashLength Hash(HashStrategy<H>& State, const T& Data)
-		{
-			HashProcess<T, H>::Accumulate(State, Data);
-			return State.Hash();
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, const T& Data)
+			{
+				HashProcess<T, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
+	}
 
 	//-----------------------------------------------------------------------------------------------------------------------
 	// Hash Front-end
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	template<typename H = Hashing::HashAlgorithmDefault>
+	template<typename H = Hashing::Default>
 	struct Hasher
 	{
 	public:
@@ -253,7 +256,7 @@ namespace NxEn
 		template<typename T>
 		Hasher<H>& Accumulate(const T& Data)
 		{
-			HashProcess<T, H>::Accumulate(State, Data);
+			Hashing::HashProcess<T, H>::Accumulate(State, Data);
 			return *this;
 		}
 
@@ -277,30 +280,30 @@ namespace NxEn
 		uint64 GetSeed() const { return State.GetSeed(); };
 
 	private:
-		HashStrategy<H> State;
+		Hashing::HashStrategy<H> State;
 	};
 
-	template<typename H = Hashing::HashAlgorithmDefault>
+	template<typename H = Hashing::Default>
 	class Hash
 	{
 	public:
 		template<typename T>
 		static typename H::HashLength HashObject(const T& Data, typename H::HashLength Seed = 0)
 		{
-			HashStrategy<H> State(Seed);
-			return HashProcess<T, H>::Hash(State, Data);
+			Hashing::HashStrategy<H> State(Seed);
+			return Hashing::HashProcess<T, H>::Hash(State, Data);
 		}
 
 		static typename H::HashLength HashData(const void* Data, uint64 Length, typename H::HashLength Seed = 0)
 		{
-			HashStrategy<H> State(Seed);
+			Hashing::HashStrategy<H> State(Seed);
 			State.Accumulate(Data, Length);
 			return State.Hash();
 		}
 
 		static typename H::HashLength Combine(typename H::HashLength HashA, typename H::HashLength HashB, typename H::HashLength Seed = 0)
 		{
-			HashStrategy<H> State(Seed);
+			Hashing::HashStrategy<H> State(Seed);
 			return State.Combine(HashA, HashB);
 		}
 	};
@@ -309,153 +312,156 @@ namespace NxEn
 	// Hash Template Specialization
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	template<typename H>
-	class HashProcess<bool, H>
+	namespace Hashing
 	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, bool Data)
+		template<typename H>
+		class HashProcess<bool, H>
 		{
-			State.Accumulate(&Data, sizeof(bool));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, bool Data)
+			{
+				State.Accumulate(&Data, sizeof(bool));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, bool Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, bool Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<char, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, char Data)
+		template<typename H>
+		class HashProcess<char, H>
 		{
-			State.Accumulate(&Data, sizeof(char));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, char Data)
+			{
+				State.Accumulate(&Data, sizeof(char));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, char Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, char Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<int8, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, int8 Data)
+		template<typename H>
+		class HashProcess<int8, H>
 		{
-			State.Accumulate(&Data, sizeof(int8));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, int8 Data)
+			{
+				State.Accumulate(&Data, sizeof(int8));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, int8 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, int8 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<int16, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, int16 Data)
+		template<typename H>
+		class HashProcess<int16, H>
 		{
-			State.Accumulate(&Data, sizeof(int16));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, int16 Data)
+			{
+				State.Accumulate(&Data, sizeof(int16));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, int16 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, int16 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<int32, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, int32 Data)
+		template<typename H>
+		class HashProcess<int32, H>
 		{
-			State.Accumulate(&Data, sizeof(int32));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, int32 Data)
+			{
+				State.Accumulate(&Data, sizeof(int32));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, int32 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, int32 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<int64, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, int64 Data)
+		template<typename H>
+		class HashProcess<int64, H>
 		{
-			State.Accumulate(&Data, sizeof(int64));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, int64 Data)
+			{
+				State.Accumulate(&Data, sizeof(int64));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, int64 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, int64 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<uint8, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, uint8 Data)
+		template<typename H>
+		class HashProcess<uint8, H>
 		{
-			State.Accumulate(&Data, sizeof(uint8));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, uint8 Data)
+			{
+				State.Accumulate(&Data, sizeof(uint8));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, uint8 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, uint8 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<uint16, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, uint16 Data)
+		template<typename H>
+		class HashProcess<uint16, H>
 		{
-			State.Accumulate(&Data, sizeof(uint16));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, uint16 Data)
+			{
+				State.Accumulate(&Data, sizeof(uint16));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, uint16 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, uint16 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<uint32, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, uint32 Data)
+		template<typename H>
+		class HashProcess<uint32, H>
 		{
-			State.Accumulate(&Data, sizeof(uint32));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, uint32 Data)
+			{
+				State.Accumulate(&Data, sizeof(uint32));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, uint32 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, uint32 Data)
+			{
+				return Data;
+			}
+		};
 
-	template<typename H>
-	class HashProcess<uint64, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, uint64 Data)
+		template<typename H>
+		class HashProcess<uint64, H>
 		{
-			State.Accumulate(&Data, sizeof(uint64));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, uint64 Data)
+			{
+				State.Accumulate(&Data, sizeof(uint64));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, uint64 Data)
-		{
-			return Data;
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, uint64 Data)
+			{
+				return Data;
+			}
+		};
+	}
 }

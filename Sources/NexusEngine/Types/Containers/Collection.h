@@ -89,9 +89,9 @@ namespace NxEn
 		Collection(const C& Container)
 		{
 			Alloc = Memory::GetActiveAllocator();
-			IteratorCurrent = new Wrapper<T, typename C::Iterator>(Container.Begin());
-			IteratorBegin = new Wrapper<T, typename C::Iterator>(Container.Begin());
-			IteratorEnd = new Wrapper<T, typename C::Iterator>(Container.End());
+			IteratorCurrent = new Wrapper<T, typename C::I>(Container.Begin());
+			IteratorBegin = new Wrapper<T, typename C::I>(Container.Begin());
+			IteratorEnd = new Wrapper<T, typename C::I>(Container.End());
 		}
 
 		Collection(const Collection<T>& Other) = delete;

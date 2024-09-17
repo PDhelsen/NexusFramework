@@ -68,66 +68,69 @@ namespace NxEn
 		return StringCApi::Scan(Text.C(), Format.C(), args...);
 	}
 
-	template<typename H>
-	class HashProcess<const char*, H>
+	namespace Hashing
 	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, const char* Data)
+		template<typename H>
+		class HashProcess<const char*, H>
 		{
-			State.Accumulate(Data, StringCApi::Length(Data));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, const char* Data)
+			{
+				State.Accumulate(Data, StringCApi::Length(Data));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, const char* Data)
-		{
-			HashProcess<const char*, H>::Accumulate(State, Data);
-			return State.Hash();
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, const char* Data)
+			{
+				HashProcess<const char*, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
 
-	template<typename H>
-	class HashProcess<String, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, const String& Data)
+		template<typename H>
+		class HashProcess<String, H>
 		{
-			State.Accumulate(Data.C(), Data.GetCount());
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, const String& Data)
+			{
+				State.Accumulate(Data.C(), Data.GetCount());
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, const String& Data)
-		{
-			HashProcess<String, H>::Accumulate(State, Data);
-			return State.Hash();
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, const String& Data)
+			{
+				HashProcess<String, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
 
-	template<typename H>
-	class HashProcess<StringView, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, const StringView& Data)
+		template<typename H>
+		class HashProcess<StringView, H>
 		{
-			State.Accumulate(Data.C(), Data.GetCount());
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, const StringView& Data)
+			{
+				State.Accumulate(Data.C(), Data.GetCount());
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, const StringView& Data)
-		{
-			HashProcess<StringView, H>::Accumulate(State, Data);
-			return State.Hash();
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, const StringView& Data)
+			{
+				HashProcess<StringView, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
 
-	template<typename H>
-	class HashProcess<StringId, H>
-	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, const StringId& Data)
+		template<typename H>
+		class HashProcess<StringId, H>
 		{
-			State.Accumulate(Data.C(), StringCApi::Length(Data.C()));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, const StringId& Data)
+			{
+				State.Accumulate(Data.C(), StringCApi::Length(Data.C()));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, const StringId& Data)
-		{
-			return Data.GetId();
-		}
-	};
+			static typename H::HashLength Hash(HashStrategy<H>& State, const StringId& Data)
+			{
+				return Data.GetId();
+			}
+		};
+	}
 }

@@ -13,7 +13,7 @@ namespace NxEn
 	template<typename T>
 	class Pool
 	{
-		using Node = NodeSimple<T>;
+		using N = Node::NodeSimple<T>;
 
 	public:
 		Pool(Allocator* Allctr = nullptr)
@@ -60,13 +60,13 @@ namespace NxEn
 
 			if (IsEmpty())
 			{
-				Node* Instance = Allocate();
+				N* Instance = Allocate();
 				Construct(Instance);
 				Value = &Instance->Value;
 			}
 			else
 			{
-				Node* Instance = Data;
+				N* Instance = Data;
 				Data = Data->Next;
 				Value = &Instance->Value;
 
@@ -78,7 +78,7 @@ namespace NxEn
 
 		void Recycle(T& Value)
 		{
-			Node* Instance = reinterpret_cast<Node*>(&Value);
+			N* Instance = reinterpret_cast<N*>(&Value);
 			
 			Instance->Next = Data;
 			Data = Instance;
@@ -90,7 +90,7 @@ namespace NxEn
 		{
 			while (Data)
 			{
-				Node* Next = Data->Next;
+				N* Next = Data->Next;
 				Destruct(Data);
 				Free(Data);
 				Data = Next;
@@ -107,12 +107,12 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			AllocatorActive RawAllocator(nullptr);
-			Allocator = new PoolAllocator(Size, sizeof(Node));
+			Allocator = new PoolAllocator(Size, sizeof(N));
 		}
 
-		Node* Allocate()
+		N* Allocate()
 		{
-			Node* Instance = (Node*)Memory::Allocate(sizeof(Node), NEXUS_MEMORY_ALIGN, Allocator);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), NEXUS_MEMORY_ALIGN, Allocator);
 			Instance->Next = nullptr;
 			return Instance;
 		}
@@ -126,17 +126,17 @@ namespace NxEn
 			}
 		}
 
-		void Free(Node* Instance)
+		void Free(N* Instance)
 		{
 			Memory::Free(Instance, Allocator);
 		}
 
-		void Construct(Node* Instance)
+		void Construct(N* Instance)
 		{
 			Memory::Construct<T>(&Instance->Value);
 		}
 
-		void Destruct(Node* Instance)
+		void Destruct(N* Instance)
 		{
 			Memory::Destruct(&Instance->Value);
 		}
@@ -148,7 +148,7 @@ namespace NxEn
 
 		Allocator* Allocator;
 		uint64 Count;
-		Node* Data;
+		N* Data;
 		bool Own;
 	};
 }

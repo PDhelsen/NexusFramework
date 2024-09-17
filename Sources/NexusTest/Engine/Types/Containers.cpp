@@ -117,7 +117,7 @@ namespace NxTs
 	};
 }
 
-namespace NxEn
+namespace NxEn::Hashing
 {
 	template<typename H>
 	class HashProcess<NxTs::ContainerTest, H>
@@ -1013,17 +1013,17 @@ namespace NxTs
 		Test.Connect(&Index1, &Index2);
 		Test.Connect(&Index1, &Index3);
 		Test.Connect(&Index2, &Index3);
-		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::ConnectionType::To, 0).Integer, 2);
-		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::ConnectionType::To, 1).Integer, 3);
-		ASSERT_EQ(Test.GetConnection(&Index2, NxEn::Graph<ContainerTest>::ConnectionType::To, 0).Integer, 3);
-		ASSERT_EQ(Test.IsConnected(&Index1, &Index2, NxEn::Graph<ContainerTest>::ConnectionType::To), true);
-		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::ConnectionType::From), true);
+		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::CT::To, 0).Integer, 2);
+		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::CT::To, 1).Integer, 3);
+		ASSERT_EQ(Test.GetConnection(&Index2, NxEn::Graph<ContainerTest>::CT::To, 0).Integer, 3);
+		ASSERT_EQ(Test.IsConnected(&Index1, &Index2, NxEn::Graph<ContainerTest>::CT::To), true);
+		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::CT::From), true);
 
 		Test.Disconnect(&Index1, &Index3);
-		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::ConnectionType::From), false);
+		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::CT::From), false);
 
 		ASSERT_EQ(Test.GetIterator(&Index1)->Integer, Index1.Integer);
-		ASSERT_EQ(Test.GetIterator(&Index1).Connections(NxEn::Graph<ContainerTest>::ConnectionType::To, 0)->Integer, Index2.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index1).Connections(NxEn::Graph<ContainerTest>::CT::To, 0)->Integer, Index2.Integer);
 		ASSERT_EQ(Test.Begin()->Integer, Test.Get().Integer);
 		ASSERT_EQ(Test.End(), nullptr);
 

@@ -14,7 +14,7 @@ namespace NxEn
 	class Dequeue
 	{
 	public:
-		using Iterator = IteratorBucket<T, BS>;
+		using I = Iterator::IteratorBucket<T, BS>;
 
 		Dequeue(Allocator* Allctr = nullptr)
 			: Alloc(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
@@ -171,7 +171,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Overflow");
 
 			uint64 Offset = 0;
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It, ++Offset)
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index + Offset, BucketIndex, DataIndex);
@@ -210,7 +210,7 @@ namespace NxEn
 		{
 			uint64 Index = Count;
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				AppendBack(*It);
 			}
@@ -243,7 +243,7 @@ namespace NxEn
 		template<typename C>
 		T& AppendFrontRange(const C& Value)
 		{
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				AppendFront(*It);
 			}
@@ -295,32 +295,32 @@ namespace NxEn
 			return Get(Count - 1);
 		}
 
-		Iterator GetIterator(uint64 Index) const
+		I GetIterator(uint64 Index) const
 		{
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
-			return Iterator(Data, IndexFront, BucketIndex, DataIndex);
+			return I(Data, IndexFront, BucketIndex, DataIndex);
 		}
 
-		Iterator begin() const { return Begin(); }
-		Iterator Begin() const
+		I begin() const { return Begin(); }
+		I Begin() const
 		{
-			return Iterator(Data, IndexFront, 0, IndexFront);
+			return I(Data, IndexFront, 0, IndexFront);
 		}
 
-		Iterator BeginReverse() const
+		I BeginReverse() const
 		{
 			return --End();
 		}
 
-		Iterator end() const { return End(); }
-		Iterator End() const
+		I end() const { return End(); }
+		I End() const
 		{
-			Iterator It = Iterator(Data, IndexFront, Buckets - 1, IndexBack);
+			I It = I(Data, IndexFront, Buckets - 1, IndexBack);
 			return ++It;
 		}
 
-		Iterator EndReverse() const
+		I EndReverse() const
 		{
 			return --Begin();
 		}
@@ -360,9 +360,9 @@ namespace NxEn
 			return Find(Other) != End();
 		}
 
-		Iterator Find(const T& Other) const
+		I Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); ++It)
+			for (I It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{

@@ -13,7 +13,7 @@ namespace NxEn
 	class Queue
 	{
 	public:
-		using Iterator = IteratorBucket<T, BS>;
+		using I = Iterator::IteratorBucket<T, BS>;
 
 		Queue(Allocator* Allctr = nullptr)
 			: Alloc(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
@@ -153,7 +153,7 @@ namespace NxEn
 		{
 			uint64 Index = Count;
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				Append(*It);
 			}
@@ -185,25 +185,25 @@ namespace NxEn
 			return Data[0][IndexFront];
 		}
 
-		Iterator begin() const { return Begin(); }
-		Iterator Begin() const
+		I begin() const { return Begin(); }
+		I Begin() const
 		{
-			return Iterator(Data, IndexFront, 0, IndexFront);
+			return I(Data, IndexFront, 0, IndexFront);
 		}
 
-		Iterator BeginReverse() const
+		I BeginReverse() const
 		{
 			return --End();
 		}
 
-		Iterator end() const { return End(); }
-		Iterator End() const
+		I end() const { return End(); }
+		I End() const
 		{
-			Iterator It = Iterator(Data, IndexFront, Buckets - 1, IndexBack);
+			I It = I(Data, IndexFront, Buckets - 1, IndexBack);
 			return ++It;
 		}
 
-		Iterator EndReverse() const
+		I EndReverse() const
 		{
 			return --Begin();
 		}
@@ -222,9 +222,9 @@ namespace NxEn
 			return Find(Other) != End();
 		}
 
-		Iterator Find(const T& Other) const
+		I Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); ++It)
+			for (I It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{

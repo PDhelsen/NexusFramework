@@ -14,7 +14,7 @@ namespace NxEn
 	class Array
 	{
 	public:
-		using Iterator = IteratorBlock<T>;
+		using I = Iterator::IteratorBlock<T>;
 
 		template<typename... Args>
 		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)
@@ -143,7 +143,7 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount()  - 1), "Invalid Index");
 
 			uint64 Offset = 0;
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It, ++Offset)
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
 				Data[Index + Offset] = *It;
 			}
@@ -168,29 +168,29 @@ namespace NxEn
 			return Get(Count - 1);
 		}
 
-		Iterator GetIterator(uint64 Index) const
+		I GetIterator(uint64 Index) const
 		{
-			return Iterator(Data, Index);
+			return I(Data, Index);
 		}
 
-		Iterator begin() const { return Begin(); }
-		Iterator Begin() const 
+		I begin() const { return Begin(); }
+		I Begin() const 
 		{
-			return Iterator(Data, 0);
+			return I(Data, 0);
 		}
 
-		Iterator BeginReverse() const
+		I BeginReverse() const
 		{
 			return --End();
 		}
 
-		Iterator end() const { return End(); }
-		Iterator End() const
+		I end() const { return End(); }
+		I End() const
 		{
-			return Iterator(Data, Count);
+			return I(Data, Count);
 		}
 
-		Iterator EndReverse() const
+		I EndReverse() const
 		{
 			return --Begin();
 		}
@@ -230,9 +230,9 @@ namespace NxEn
 			return Find(Other) != End();
 		}
 
-		Iterator Find(const T& Other) const
+		I Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); ++It)
+			for (I It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{

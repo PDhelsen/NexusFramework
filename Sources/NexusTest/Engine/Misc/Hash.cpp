@@ -12,7 +12,7 @@ namespace NxTs
 	};
 }
 
-namespace NxEn
+namespace NxEn::Hashing
 {
 	template<typename H>
 	class HashProcess<NxTs::HashTest, H>

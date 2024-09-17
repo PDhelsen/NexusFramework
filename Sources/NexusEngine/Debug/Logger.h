@@ -12,7 +12,7 @@ namespace NxEn
 	namespace Hashing
 	{
 		class Fnv1a64;
-		using HashAlgorithmDefault = Fnv1a64;
+		using Default = Fnv1a64;
 	}
 	template <typename K, typename T, class H> class Dictionary;
 
@@ -75,7 +75,7 @@ namespace NxEn
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 		static Logger* Instance;
 
-		Dictionary<String, bool, Hashing::HashAlgorithmDefault>* Channels;
+		Dictionary<String, bool, Hashing::Default>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;
 		String StringBuilderFormat;

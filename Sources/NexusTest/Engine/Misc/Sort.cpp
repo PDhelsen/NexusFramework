@@ -34,27 +34,27 @@ namespace NxTs
 		delete[] Data;
 	}
 
-	NxEn::NodeSimple<uint64>* CreateNodes()
+	NxEn::Node::NodeSimple<uint64>* CreateNodes()
 	{
-		NxEn::NodeSimple<uint64>* Node50 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node50 = new NxEn::Node::NodeSimple<uint64>();
 		Node50->Value = 5;
-		NxEn::NodeSimple<uint64>* Node4 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node4 = new NxEn::Node::NodeSimple<uint64>();
 		Node4->Value = 4;
-		NxEn::NodeSimple<uint64>* Node7 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node7 = new NxEn::Node::NodeSimple<uint64>();
 		Node7->Value = 7;
-		NxEn::NodeSimple<uint64>* Node1 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node1 = new NxEn::Node::NodeSimple<uint64>();
 		Node1->Value = 1;
-		NxEn::NodeSimple<uint64>* Node0 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node0 = new NxEn::Node::NodeSimple<uint64>();
 		Node0->Value = 0;
-		NxEn::NodeSimple<uint64>* Node51 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node51 = new NxEn::Node::NodeSimple<uint64>();
 		Node51->Value = 5;
-		NxEn::NodeSimple<uint64>* Node6 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node6 = new NxEn::Node::NodeSimple<uint64>();
 		Node6->Value = 6;
-		NxEn::NodeSimple<uint64>* Node2 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node2 = new NxEn::Node::NodeSimple<uint64>();
 		Node2->Value = 2;
-		NxEn::NodeSimple<uint64>* Node52 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node52 = new NxEn::Node::NodeSimple<uint64>();
 		Node52->Value = 5;
-		NxEn::NodeSimple<uint64>* Node3 = new NxEn::NodeSimple<uint64>();
+		NxEn::Node::NodeSimple<uint64>* Node3 = new NxEn::Node::NodeSimple<uint64>();
 		Node3->Value = 3;
 
 		Node50->Next = Node4;
@@ -70,7 +70,7 @@ namespace NxTs
 		return Node50;
 	}
 
-	void DestroyNodes(NxEn::NodeSimple<uint64>* Data)
+	void DestroyNodes(NxEn::Node::NodeSimple<uint64>* Data)
 	{
 		if (Data->Next)
 			DestroyNodes(Data->Next);
@@ -104,7 +104,7 @@ namespace NxTs
 	TEST(Sort, MergeSort)
 	{
 		NxEn::Array<uint64>& Data = CreateNexusArray();
-		NxEn::NodeSimple<uint64>* Data2 = CreateNodes();
+		NxEn::Node::NodeSimple<uint64>* Data2 = CreateNodes();
 
 		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
@@ -185,7 +185,7 @@ namespace NxTs
 	TEST(Sort, Sort)
 	{
 		uint64* Data = CreateRawArray();
-		NxEn::NodeSimple<uint64>* Data2 = CreateNodes();
+		NxEn::Node::NodeSimple<uint64>* Data2 = CreateNodes();
 
 		NxEn::Sort::SortIndexBased<uint64>(Data, ArrayLength);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)

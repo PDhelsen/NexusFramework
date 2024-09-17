@@ -13,7 +13,7 @@ namespace NxEn
 	class Stack
 	{
 	public:
-		using Iterator = IteratorBucket<T, BS>;
+		using I = Iterator::IteratorBucket<T, BS>;
 
 		Stack(Allocator* Allctr = nullptr)
 			: Alloc(nullptr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
@@ -151,7 +151,7 @@ namespace NxEn
 		{
 			uint64 Index = Count;
 
-			for (typename C::Iterator It = Value.Begin(); It != Value.End(); ++It)
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				Append(*It);
 			}
@@ -183,25 +183,25 @@ namespace NxEn
 			return Data[Buckets - 1][IndexLast];
 		}
 
-		Iterator begin() const { return Begin(); }
-		Iterator Begin() const
+		I begin() const { return Begin(); }
+		I Begin() const
 		{
-			return Iterator(Data, 0, 0, 0);
+			return I(Data, 0, 0, 0);
 		}
 
-		Iterator BeginReverse() const
+		I BeginReverse() const
 		{
 			return --End();
 		}
 
-		Iterator end() const { return End(); }
-		Iterator End() const
+		I end() const { return End(); }
+		I End() const
 		{
-			Iterator It = Iterator(Data, 0, Buckets - 1, IndexLast);
+			I It = I(Data, 0, Buckets - 1, IndexLast);
 			return ++It;
 		}
 
-		Iterator EndReverse() const
+		I EndReverse() const
 		{
 			return --Begin();
 		}
@@ -220,9 +220,9 @@ namespace NxEn
 			return Find(Other) != End();
 		}
 
-		Iterator Find(const T& Other) const
+		I Find(const T& Other) const
 		{
-			for (Iterator It = Begin(); It != End(); ++It)
+			for (I It = Begin(); It != End(); ++It)
 			{
 				if (*It == Other)
 				{
