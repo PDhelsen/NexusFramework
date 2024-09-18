@@ -295,7 +295,7 @@ namespace NxEn
 		{
 			T** Start = &Data[1];
 			T** End = &Data[0];
-			Memory::MemCopy(Start, End, sizeof(T*) * (Buckets - 1));
+			Memory::MemMove(Start, End, sizeof(T*) * (Buckets - 1));
 		}
 
 		void AppendBucket()

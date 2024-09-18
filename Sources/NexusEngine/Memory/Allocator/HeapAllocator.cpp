@@ -70,7 +70,7 @@ namespace NxEn
 		else
 		{
 			NewPointer = Allocate(Size, Alignement);
-			Memory::MemCopy(Pointer, NewPointer, Size);
+			Memory::MemMove(Pointer, NewPointer, Size);
 			Free(Pointer);
 		}
 
@@ -182,7 +182,7 @@ namespace NxEn
 				HeapSlot* NextNext = Slot->Next->Next;
 
 				// Move data 
-				Memory::MemCopy(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
+				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = GetHeapSlotData(Slot);
 				HandleManager::GetInstance()->UpdateHandle(Handle, Data);
 				NEXUS_LOG(Engine, Info, "Routine", "Moved from %p to %p", Slot->Next, Slot);

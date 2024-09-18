@@ -82,7 +82,7 @@ namespace NxTs
 		delete Test;
 	}
 
-	TEST(Memory, SetCopy)
+	TEST(Memory, SetCopyMove)
 	{
 		uint8* Test = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
 		NxEn::Memory::MemSet(Test, 5, 10);
@@ -98,8 +98,16 @@ namespace NxTs
 			ASSERT_EQ(Copy[Index], 5);
 		}
 
+		uint8* Move = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
+		NxEn::Memory::MemMove(Test, Move, 10);
+		for (int32 Index = 0; Index < 10; Index++)
+		{
+			ASSERT_EQ(Move[Index], 5);
+		}
+
 		NxEn::Memory::Free(Test);
 		NxEn::Memory::Free(Copy);
+		NxEn::Memory::Free(Move);
 	}
 
 	TEST(Memory, Alignement)

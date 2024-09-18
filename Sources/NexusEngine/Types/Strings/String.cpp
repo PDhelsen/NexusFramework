@@ -341,7 +341,7 @@ namespace NxEn
 						uint64 Remaining = StringCApi::Length(Substring + OldSize);
 						if (Remaining > 0)
 						{
-							Memory::MemCopy(Substring + OldSize, Substring + NewSize, Remaining);
+							Memory::MemMove(Substring + OldSize, Substring + NewSize, Remaining);
 						}
 					}
 					else if (SizeDiff < 0)
@@ -349,7 +349,7 @@ namespace NxEn
 						uint64 Remaining = StringCApi::Length(Substring + OldSize);
 						if (Remaining > 0)
 						{
-							Memory::MemCopy(Substring + OldSize, Substring + NewSize, Remaining);
+							Memory::MemMove(Substring + OldSize, Substring + NewSize, Remaining);
 						}
 
 						Resize(Count + SizeDiff);
@@ -397,7 +397,7 @@ namespace NxEn
 					uint64 Remaining = StringCApi::Length(Substring);
 					if (Remaining > 0)
 					{
-						Memory::MemCopy(Substring, Substring + NewSize, StringCApi::Length(Substring));
+						Memory::MemMove(Substring, Substring + NewSize, StringCApi::Length(Substring));
 					}
 
 					StringCApi::Copy(NewText, Substring, Capacity, NewSize, true);
@@ -432,7 +432,7 @@ namespace NxEn
 					uint64 Remaining = StringCApi::Length(Substring) - Size;
 					if (Remaining > 0)
 					{
-						Memory::MemCopy(Substring + Size, Substring, Remaining);
+						Memory::MemMove(Substring + Size, Substring, Remaining);
 					}
 
 					Resize(Count - Size);

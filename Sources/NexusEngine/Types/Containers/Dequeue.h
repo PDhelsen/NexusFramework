@@ -433,7 +433,7 @@ namespace NxEn
 		{
 			T** Start = Forward ? &Data[0] : &Data[1];
 			T** End = Forward ? &Data[1] : &Data[0];
-			Memory::MemCopy(Start, End, sizeof(T*) * (Buckets - 1));
+			Memory::MemMove(Start, End, sizeof(T*) * (Buckets - 1));
 		}
 
 		void AppendBucket(bool AppendBack)

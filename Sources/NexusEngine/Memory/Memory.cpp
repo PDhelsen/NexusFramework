@@ -137,4 +137,13 @@ namespace NxEn
 
 		memcpy(Destination, Source, Size);
 	}
+
+	void Memory::MemMove(const void* Source, void* Destination, uint64 Size)
+	{
+		NEXUS_ASSERT(Source != nullptr, "Trying to move memory from null address")
+		NEXUS_ASSERT(Destination != nullptr, "Trying to move memory to null address")
+		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size)
+
+		memmove(Destination, Source, Size);
+	}
 }

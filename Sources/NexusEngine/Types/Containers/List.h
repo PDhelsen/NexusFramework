@@ -441,7 +441,7 @@ namespace NxEn
 		{
 			T* Start = Forward ? &Data[Index] : &Data[Index + Size];
 			T* End = Forward ? &Data[Index + Size] : &Data[Index];
-			Memory::MemCopy(Start, End, sizeof(T) * (Count - Index - Size));
+			Memory::MemMove(Start, End, sizeof(T) * (Count - Index - Size));
 		}
 
 		void Resize(uint64 Size)
