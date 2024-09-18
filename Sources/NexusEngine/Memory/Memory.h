@@ -22,12 +22,19 @@ namespace NxEn
 	class Memory
 	{
 	public:
+		// TODO: Implementation - Allocators - Parameters order + default value
+		template<typename T, typename... Args>
+		static T* Create(uint64 Size, uint64 Alignement, Allocator* Allocator, Args&&... args);
+		template<typename T>
+		static T* Move(T* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator);
+		template<typename T>
+		static void Destroy(T* Pointer, Allocator* Allocator);
+
 		template<typename T, typename... Args>
 		static T* Construct(void* Pointer, Args&&... args);
 		template<typename T>
 		static void Destruct(T* Object);
 
-		// TODO: Implementation - Allocators - Parameters order
 		NEXUS_ENGINE_API static void* Allocate(uint64 Size, uint64 Alignement, Allocator* Allocator);
 		NEXUS_ENGINE_API static void* Realloc(void* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator);
 		NEXUS_ENGINE_API static void Free(void* Pointer, Allocator* Allocator);
@@ -59,7 +66,26 @@ namespace NxEn
 		static Allocator* Active;
 	};
 
-	//TODO: Implementation - Memory - Evalute construct function
+	template<typename T, typename ...Args>
+	inline T* Memory::Create(uint64 Size, uint64 Alignement, Allocator* Allocator, Args&& ...args)
+	{
+		void* Ptr = Allocate(Size, Alignement, Allocator);
+		return Construct<T>(Ptr, args...);
+	}
+
+	template<typename T>
+	inline T* Memory::Move(T* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator)
+	{
+		return (T*)Realloc(Pointer, Size, Alignement, Allocator);
+	}
+
+	template<typename T>
+	inline void Memory::Destroy(T* Pointer, Allocator* Allocator)
+	{
+		Destruct(Pointer);
+		Free(Pointer, Allocator);
+	}
+
 	template<typename T, typename... Args>
 	T* Memory::Construct(void* Pointer, Args&&... args)
 	{

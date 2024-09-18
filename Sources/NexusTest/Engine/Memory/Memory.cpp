@@ -66,6 +66,15 @@ namespace NxTs
 		NxEn::Memory::Free(Test);
 	}
 
+	TEST(Memory, MallocReallocFreeConstructDestruct)
+	{
+		MemoryTest* Test = NxEn::Memory::Create<MemoryTest>(sizeof(MemoryTest), NEXUS_MEMORY_ALIGN, nullptr);
+
+		ASSERT_EQ(Test->Value, 120);
+
+		NxEn::Memory::Destroy<MemoryTest>(Test, nullptr);
+	}
+
 	TEST(Memory, Operator)
 	{
 		MemoryTest* Test = new MemoryTest();
