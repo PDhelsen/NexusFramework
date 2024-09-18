@@ -14,25 +14,16 @@ namespace NxEn
 
 	Timestamp Time::Now() const
 	{
-		int64 Time = GetTimeSinceEpoch();
-		
-		// TODO: Implementation - Time - Convert time since epoch to Timestamp
-		tm TimeInfo;
-		localtime_s(&TimeInfo, &Time);
+		// Make sure Timestamp follow the same structure as tm from C library
+		union
+		{
+			tm TM;
+			Timestamp Stamp;
+		} TimeInfo;
 
-		Timestamp Stamp = 
-		{ 
-			.Seconds = TimeInfo.tm_sec,
-			.Minutes = TimeInfo.tm_min,
-			.Hours = TimeInfo.tm_hour,
-			.Days = TimeInfo.tm_mday,
-			.Months = TimeInfo.tm_mon,
-			.Year = TimeInfo.tm_year,
-			.WeekDay = TimeInfo.tm_wday,
-			.YearDay = TimeInfo.tm_yday,
-			.SummerTime = TimeInfo.tm_isdst,
-		};
-		return Stamp;
+		int64 Time = GetTimeSinceEpoch();
+		localtime_s(&TimeInfo.TM, &Time);
+		return TimeInfo.Stamp;
 	}
 
 	Time::Time()

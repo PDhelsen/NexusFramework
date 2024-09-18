@@ -72,7 +72,7 @@ namespace NxEn
 		return Math::LogTwoPowerOfTwo((uint8)Verbosity);
 	}
 
-	void Logger::GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const
+	void Logger::GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const
 	{
 		Timestamp Stamp = Time::GetInstance()->Now();
 		Hours = Stamp.Hours;

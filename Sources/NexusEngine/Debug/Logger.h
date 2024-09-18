@@ -69,7 +69,7 @@ namespace NxEn
 	private:
 		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const;
 		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
-		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8 Seconds, StringView& SourceString, StringView& VerbosityString) const;
+		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const;
 		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
 
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
