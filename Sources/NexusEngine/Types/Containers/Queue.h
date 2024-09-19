@@ -260,6 +260,7 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Alloc);
+			Data = nullptr;
 		}
 
 		void Free(uint64 Index, uint64 Size)
@@ -370,6 +371,7 @@ namespace NxEn
 		void ValidateDefaultState()
 		{
 			Count = 0;
+			Buckets = 0;
 			IndexFront = 0;
 			IndexBack = BucketSize - 1;
 		}

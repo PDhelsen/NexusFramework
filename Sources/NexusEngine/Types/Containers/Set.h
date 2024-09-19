@@ -285,6 +285,7 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Alloc);
+			Data = nullptr;
 		}
 
 		template<typename... Args>
