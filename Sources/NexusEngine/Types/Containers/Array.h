@@ -249,7 +249,7 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Count, NEXUS_MEMORY_ALIGN, Alloc);
+			Data = (T*)Memory::Allocate(sizeof(T) * Count, Alloc);
 		}
 
 		void Free()

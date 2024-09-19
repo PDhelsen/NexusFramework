@@ -402,7 +402,7 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
+			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, Alloc);
 		}
 
 		void Reallocate(uint64 Size)
@@ -410,7 +410,7 @@ namespace NxEn
 			NEXUS_LOG(Engine, Warning, "Performance", "List - Reallocate");
 
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Realloc(Data, sizeof(T) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
+			Data = (T*)Memory::Reallocate(Data, sizeof(T) * Capacity, Alloc);
 		}
 
 		void Free()

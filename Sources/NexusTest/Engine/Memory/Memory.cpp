@@ -36,7 +36,7 @@ namespace NxTs
 
 	TEST(Memory, MallocReallocFree)
 	{
-		MemoryTest* Test = (MemoryTest*)NxEn::Memory::Malloc(sizeof(MemoryTest) * 5);
+		MemoryTest* Test = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest) * 5);
 		ASSERT_NE(Test, nullptr);
 
 		for (int32 Index = 0; Index < 5; Index++)
@@ -44,7 +44,7 @@ namespace NxTs
 			Test[Index].Value = Index;
 		}
 
-		Test = (MemoryTest*)NxEn::Memory::Realloc(Test, sizeof(MemoryTest) * 10);
+		Test = (MemoryTest*)NxEn::Memory::Reallocate(Test, sizeof(MemoryTest) * 10);
 		ASSERT_NE(Test, nullptr);
 
 		for (int32 Index = 0; Index < 5; Index++)
@@ -57,7 +57,7 @@ namespace NxTs
 
 	TEST(Memory, ConstructDestruct)
 	{
-		void* Pointer = NxEn::Memory::Malloc(sizeof(MemoryTest));
+		void* Pointer = NxEn::Memory::Allocate(sizeof(MemoryTest));
 		MemoryTest* Test = NxEn::Memory::Construct<MemoryTest>(Pointer);
 
 		ASSERT_EQ(Test->Value, 120);
@@ -68,11 +68,11 @@ namespace NxTs
 
 	TEST(Memory, MallocReallocFreeConstructDestruct)
 	{
-		MemoryTest* Test = NxEn::Memory::Create<MemoryTest>(sizeof(MemoryTest), NEXUS_MEMORY_ALIGN, nullptr);
+		MemoryTest* Test = NxEn::Memory::Create<MemoryTest>(sizeof(MemoryTest));
 
 		ASSERT_EQ(Test->Value, 120);
 
-		NxEn::Memory::Destroy<MemoryTest>(Test, nullptr);
+		NxEn::Memory::Destroy<MemoryTest>(Test);
 	}
 
 	TEST(Memory, Operator)
@@ -84,21 +84,21 @@ namespace NxTs
 
 	TEST(Memory, SetCopyMove)
 	{
-		uint8* Test = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
+		uint8* Test = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
 		NxEn::Memory::MemSet(Test, 5, 10);
 		for (int32 Index = 0; Index < 10; Index++)
 		{
 			ASSERT_EQ(Test[Index], 5);
 		}
 
-		uint8* Copy = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
+		uint8* Copy = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
 		NxEn::Memory::MemCopy(Test, Copy, 10);
 		for (int32 Index = 0; Index < 10; Index++)
 		{
 			ASSERT_EQ(Copy[Index], 5);
 		}
 
-		uint8* Move = (uint8*)NxEn::Memory::Malloc(sizeof(uint8) * 10);
+		uint8* Move = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
 		NxEn::Memory::MemMove(Test, Move, 10);
 		for (int32 Index = 0; Index < 10; Index++)
 		{

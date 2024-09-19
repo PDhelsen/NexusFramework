@@ -16,7 +16,7 @@ namespace NxEn
 	Allocator::Allocator(uint64 Size)
 		: Capacity(Size), Amount(0)
 	{
-		Memory = Memory::Malloc(Capacity);
+		Memory = Memory::Allocate(Capacity);
 	}
 	
 	Allocator::~Allocator()

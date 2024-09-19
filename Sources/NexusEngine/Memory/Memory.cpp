@@ -8,7 +8,7 @@ namespace NxEn
 
 	Allocator* Memory::Active = NEXUS_ALLOCATOR_DEFAULT;
 
-	void* Memory::Allocate(uint64 Size, uint64 Alignement, Allocator* Allocator)
+	void* Memory::Allocate(uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
 		if (Allocator != nullptr)
 		{
@@ -20,7 +20,7 @@ namespace NxEn
 		}
 	}
 
-	void* Memory::Realloc(void* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator)
+	void* Memory::Reallocate(void* Pointer, uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
 		if (Allocator != nullptr)
 		{
@@ -40,7 +40,7 @@ namespace NxEn
 		}
 		else
 		{
-			Free(Pointer);
+			FreeMemory(Pointer);
 		}
 	}
 	
@@ -60,7 +60,7 @@ namespace NxEn
 		return Pointer;
 	}
 
-	void Memory::Free(void* Memory)
+	void Memory::FreeMemory(void* Memory)
 	{
 		if (Memory == nullptr)
 		{

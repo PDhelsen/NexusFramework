@@ -22,26 +22,21 @@ namespace NxEn
 	class Memory
 	{
 	public:
-		// TODO: Implementation - Allocators - Parameters order + default value
 		template<typename T, typename... Args>
-		static T* Create(uint64 Size, uint64 Alignement, Allocator* Allocator, Args&&... args);
+		static T* Create(uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN, Args&&... args);
 		template<typename T>
-		static T* Move(T* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator);
+		static T* Move(T* Pointer, uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN);
 		template<typename T>
-		static void Destroy(T* Pointer, Allocator* Allocator);
+		static void Destroy(T* Pointer, Allocator* Allocator = nullptr);
 
 		template<typename T, typename... Args>
 		static T* Construct(void* Pointer, Args&&... args);
 		template<typename T>
 		static void Destruct(T* Object);
 
-		NEXUS_ENGINE_API static void* Allocate(uint64 Size, uint64 Alignement, Allocator* Allocator);
-		NEXUS_ENGINE_API static void* Realloc(void* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator);
-		NEXUS_ENGINE_API static void Free(void* Pointer, Allocator* Allocator);
-
-		NEXUS_ENGINE_API static void* Malloc(uint64 Size);
-		NEXUS_ENGINE_API static void* Realloc(void* Memory, uint64 Size);
-		NEXUS_ENGINE_API static void Free(void* Memory);
+		NEXUS_ENGINE_API static void* Allocate(uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN);
+		NEXUS_ENGINE_API static void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN);
+		NEXUS_ENGINE_API static void Free(void* Pointer, Allocator* Allocator = nullptr);
 
 		NEXUS_ENGINE_API static uint64 AlignAddress(uint64 Address, uint64 Alignement);
 		NEXUS_ENGINE_API static void* AlignPointer(void* Pointer, uint64 Alignement);
@@ -59,6 +54,10 @@ namespace NxEn
 		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return Heap; }
 
 	private:
+		static void* Malloc(uint64 Size);
+		static void* Realloc(void* Memory, uint64 Size);
+		static void FreeMemory(void* Memory);
+
 		static StackAllocator* Stack;
 		static HeapAllocator* Heap;
 
@@ -67,16 +66,16 @@ namespace NxEn
 	};
 
 	template<typename T, typename ...Args>
-	inline T* Memory::Create(uint64 Size, uint64 Alignement, Allocator* Allocator, Args&& ...args)
+	inline T* Memory::Create(uint64 Size, Allocator* Allocator, uint64 Alignement, Args&& ...args)
 	{
-		void* Ptr = Allocate(Size, Alignement, Allocator);
+		void* Ptr = Allocate(Size, Allocator, Alignement);
 		return Construct<T>(Ptr, args...);
 	}
 
 	template<typename T>
-	inline T* Memory::Move(T* Pointer, uint64 Size, uint64 Alignement, Allocator* Allocator)
+	inline T* Memory::Move(T* Pointer, uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
-		return (T*)Realloc(Pointer, Size, Alignement, Allocator);
+		return (T*)Reallocate(Pointer, Size, Allocator, Alignement);
 	}
 
 	template<typename T>

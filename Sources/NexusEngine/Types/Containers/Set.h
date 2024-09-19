@@ -246,7 +246,7 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (N*)Memory::Allocate(sizeof(N) * Capacity, NEXUS_MEMORY_ALIGN, Alloc);
+			Data = (N*)Memory::Allocate(sizeof(N) * Capacity, Alloc);
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{

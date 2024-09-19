@@ -229,7 +229,7 @@ namespace NxEn
 		Allctr = Al;
 		if (!Sso())
 		{
-			Data.Large = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+			Data.Large = (char*)Memory::Allocate(Capacity, Allctr);
 		}
 
 		if (Text)
@@ -248,14 +248,14 @@ namespace NxEn
 
 		if (!Sso() && !WasSso)
 		{
-			Data.Large = (char*)Memory::Realloc(Data.Large, Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+			Data.Large = (char*)Memory::Reallocate(Data.Large, Capacity, Allctr);
 		}
 		else if (!Sso() && WasSso)
 		{
 			char Temp[SmallStringCapacity];
 			StringCApi::Copy(Data.Small, Temp, SmallStringCapacity);
 
-			Data.Large = (char*)Memory::Allocate(Capacity, NEXUS_MEMORY_ALIGN, Allctr);
+			Data.Large = (char*)Memory::Allocate(Capacity, Allctr);
 			StringCApi::Copy(Temp, Data.Large, Capacity);
 		}
 		else

@@ -11,12 +11,12 @@
 
 void* operator new(std::size_t Size)
 {
-	return NxEn::Memory::Allocate(Size, NEXUS_MEMORY_ALIGN, NxEn::Memory::GetActiveAllocator());
+	return NxEn::Memory::Allocate(Size, NxEn::Memory::GetActiveAllocator());
 }
 
 void* operator new[](std::size_t Size)
 {
-	return NxEn::Memory::Allocate(Size, NEXUS_MEMORY_ALIGN, NxEn::Memory::GetActiveAllocator());
+	return NxEn::Memory::Allocate(Size, NxEn::Memory::GetActiveAllocator());
 }
 
 void* operator new(std::size_t Size, std::align_val_t Align)

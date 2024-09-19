@@ -600,7 +600,7 @@ namespace NxEn
 		{
 			++Count;
 
-			N* Instance = (N*)Memory::Allocate(sizeof(N), NEXUS_MEMORY_ALIGN, Alloc);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), Alloc);
 			Instance->Next = nullptr;
 			Instance->Prev = nullptr;
 			return Instance;

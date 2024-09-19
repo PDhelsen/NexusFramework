@@ -381,18 +381,18 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateBucket(Size);
-			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Alloc);
+			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, Alloc);
 		}
 
 		void Allocate(uint64 Index, uint64 Size)
 		{
-			Data[Index] = (T*)Memory::Allocate(sizeof(T) * Size, NEXUS_MEMORY_ALIGN, Alloc);
+			Data[Index] = (T*)Memory::Allocate(sizeof(T) * Size, Alloc);
 		}
 
 		void Reallocate(uint64 Size)
 		{
 			ValidateBucket(Size);
-			Data = (T**)Memory::Realloc(Data, sizeof(T*) * Buckets, NEXUS_MEMORY_ALIGN, Alloc);
+			Data = (T**)Memory::Reallocate(Data, sizeof(T*) * Buckets, Alloc);
 		}
 
 		void Free()

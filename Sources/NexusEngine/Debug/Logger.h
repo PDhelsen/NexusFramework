@@ -75,6 +75,7 @@ namespace NxEn
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 		static Logger* Instance;
 
+		// TODO: Implementation - Logger - String vs StringView vs StringId
 		Dictionary<String, bool, Hashing::Default>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;

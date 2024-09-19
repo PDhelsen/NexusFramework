@@ -449,7 +449,7 @@ namespace NxEn
 		{
 			++Count;
 
-			N* Instance = (N*)Memory::Allocate(sizeof(N), NEXUS_MEMORY_ALIGN, Alloc);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), Alloc);
 			Instance->Count = 0;
 			Instance->Parent = nullptr;
 			Instance->Sibling = nullptr;

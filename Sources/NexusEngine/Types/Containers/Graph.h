@@ -411,7 +411,7 @@ namespace NxEn
 		{
 			++Count;
 
-			N* Instance = (N*)Memory::Allocate(sizeof(N), NEXUS_MEMORY_ALIGN, Alloc);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), Alloc);
 			Instance->Count = 0;
 			Instance->Next = nullptr;
 			Instance->Connection = nullptr;
@@ -422,7 +422,7 @@ namespace NxEn
 		{
 			++A->Count;
 
-			C* Connect = (C*)Memory::Allocate(sizeof(C), NEXUS_MEMORY_ALIGN, Alloc);
+			C* Connect = (C*)Memory::Allocate(sizeof(C), Alloc);
 			Connect->Target = B;
 			Connect->Type = Type;
 			Connect->Next = nullptr;

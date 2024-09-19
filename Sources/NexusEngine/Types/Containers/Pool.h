@@ -17,7 +17,7 @@ namespace NxEn
 
 	public:
 		Pool(Allocator* Allctr = nullptr)
-			: Allocator(nullptr), Count(0), Data(nullptr), Own(false)
+			: Alloc(nullptr), Count(0), Data(nullptr), Own(false)
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
@@ -25,7 +25,7 @@ namespace NxEn
 		}
 
 		Pool(uint64 Size)
-			: Allocator(nullptr), Count(0), Data(nullptr), Own(true)
+			: Alloc(nullptr), Count(0), Data(nullptr), Own(true)
 		{
 			NEXUS_ASSERT(!IsPointer<T>::Check(), "Pool of pointer type is not allowed !");
 
@@ -107,12 +107,12 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			AllocatorActive RawAllocator(nullptr);
-			Allocator = new PoolAllocator(Size, sizeof(N));
+			Alloc = new PoolAllocator(Size, sizeof(N));
 		}
 
 		N* Allocate()
 		{
-			N* Instance = (N*)Memory::Allocate(sizeof(N), NEXUS_MEMORY_ALIGN, Allocator);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), Alloc);
 			Instance->Next = nullptr;
 			return Instance;
 		}
@@ -122,13 +122,13 @@ namespace NxEn
 			if (Own)
 			{
 				AllocatorActive RawAllocator(nullptr);
-				delete (PoolAllocator*)Allocator;
+				delete (PoolAllocator*)Alloc;
 			}
 		}
 
 		void Free(N* Instance)
 		{
-			Memory::Free(Instance, Allocator);
+			Memory::Free(Instance, Alloc);
 		}
 
 		void Construct(N* Instance)
@@ -143,10 +143,10 @@ namespace NxEn
 
 		void ValidateAllocator(Allocator* Allctr)
 		{
-			Allocator = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
-		Allocator* Allocator;
+		Allocator* Alloc;
 		uint64 Count;
 		N* Data;
 		bool Own;
