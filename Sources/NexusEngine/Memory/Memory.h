@@ -18,6 +18,7 @@ namespace NxEn
 	class StackAllocator;
 	class HeapAllocator;
 	class PoolAllocator;
+	template<typename T, uint64> class Stack;
 
 	class Memory
 	{
@@ -47,22 +48,21 @@ namespace NxEn
 		NEXUS_ENGINE_API static void MemCopy(const void* Source, void* Destination, uint64 Size);
 		NEXUS_ENGINE_API static void MemMove(const void* Source, void* Destination, uint64 Size);
 
-		NEXUS_ENGINE_API static void SetActiveAllocator(Allocator* Allocator) { Active = Allocator; }
-		NEXUS_ENGINE_API static Allocator* GetActiveAllocator() { return Active; }
+		NEXUS_ENGINE_API static void PushActiveAllocator(Allocator* Alloc);
+		NEXUS_ENGINE_API static void PopActiveAllocator();
+		NEXUS_ENGINE_API static Allocator* GetActiveAllocator();
 
-		NEXUS_ENGINE_API static StackAllocator* GetStack() { return Stack; }
-		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return Heap; }
+		NEXUS_ENGINE_API static StackAllocator* GetStack() { return DefaultStack; }
+		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return DefaultHeap; }
 
 	private:
 		static void* Malloc(uint64 Size);
 		static void* Realloc(void* Memory, uint64 Size);
 		static void FreeMemory(void* Memory);
 
-		static StackAllocator* Stack;
-		static HeapAllocator* Heap;
-
-		// TODO: Implementation - Allocators - Store in stack
-		static Allocator* Active;
+		static StackAllocator* DefaultStack;
+		static HeapAllocator* DefaultHeap;
+		static Stack<Allocator*, 10>* Allocators;
 	};
 
 	template<typename T, typename ...Args>

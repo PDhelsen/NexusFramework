@@ -5,12 +5,12 @@ namespace NxEn
 {
 	AllocatorActive::AllocatorActive(Allocator* Allocator)
 	{
-		Memory::SetActiveAllocator(Allocator);
+		Memory::PushActiveAllocator(Allocator);
 	}
 
 	AllocatorActive::~AllocatorActive()
 	{
-		Memory::SetActiveAllocator(NEXUS_ALLOCATOR_DEFAULT);
+		Memory::PopActiveAllocator();
 	}
 
 	Allocator::Allocator(uint64 Size)

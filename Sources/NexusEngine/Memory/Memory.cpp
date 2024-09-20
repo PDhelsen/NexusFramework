@@ -3,10 +3,9 @@
 
 namespace NxEn
 {
-	StackAllocator* Memory::Stack = new StackAllocator(NEXUS_STACK_SIZE);
-	HeapAllocator* Memory::Heap = new HeapAllocator(NEXUS_HEAP_SIZE);
-
-	Allocator* Memory::Active = NEXUS_ALLOCATOR_DEFAULT;
+	StackAllocator* Memory::DefaultStack = new StackAllocator(NEXUS_STACK_SIZE);
+	HeapAllocator* Memory::DefaultHeap = new HeapAllocator(NEXUS_HEAP_SIZE);
+	Stack<Allocator*, 10>* Memory::Allocators = new Stack<Allocator*, 10>();
 
 	void* Memory::Allocate(uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
@@ -43,7 +42,7 @@ namespace NxEn
 			FreeMemory(Pointer);
 		}
 	}
-	
+
 	void* Memory::Malloc(uint64 Size)
 	{
 		NEXUS_ASSERT(Size > 0, "Allocation Size is 0")
@@ -145,5 +144,30 @@ namespace NxEn
 		NEXUS_ASSERT(Size > 0, "Invalid size (%d)", Size)
 
 		memmove(Destination, Source, Size);
+	}
+
+	void Memory::PushActiveAllocator(Allocator* Alloc)
+	{
+		Allocators->Append(Alloc);
+	}
+
+	void Memory::PopActiveAllocator()
+	{
+		Allocators->Remove();
+	}
+
+	Allocator* Memory::GetActiveAllocator()
+	{
+		if (!Allocators)
+		{
+			return nullptr;
+		}
+
+		if (Allocators->GetCount() == 0)
+		{
+			Allocators->Append(NEXUS_ALLOCATOR_DEFAULT);
+		}
+
+		return Allocators->Get();
 	}
 }
