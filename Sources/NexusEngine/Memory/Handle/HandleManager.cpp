@@ -3,8 +3,6 @@
 
 namespace NxEn
 {
-	HandleManager* HandleManager::Instance = new HandleManager();
-
 	HandleManager::HandleManager()
 	{
 		AllocatorActive Active(nullptr);

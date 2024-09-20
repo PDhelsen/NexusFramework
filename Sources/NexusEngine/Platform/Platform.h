@@ -32,7 +32,7 @@ namespace NxEn
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 
-		NEXUS_ENGINE_API inline static Platform* GetInstance() { return Instance; }
+		NEXUS_ENGINE_API static Platform* GetInstance() { static Platform* Instance = Platform::Create(); return Instance; }
 
 	protected:
 		Platform() = default;
@@ -40,7 +40,5 @@ namespace NxEn
 
 	private:
 		static Platform* Create();
-
-		static Platform* Instance;
 	};
 }

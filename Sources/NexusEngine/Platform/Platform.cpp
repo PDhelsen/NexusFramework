@@ -6,8 +6,6 @@
 
 namespace NxEn
 {
-	Platform* Platform::Instance = Platform::Create();
-
 	Platform* Platform::Create()
 	{
 #if NEXUS_WINDOWS

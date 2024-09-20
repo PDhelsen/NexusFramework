@@ -19,7 +19,7 @@ namespace NxEn
 		template<typename T>
 		Handle<T> FindHandle(T* Pointer);
 
-		NEXUS_ENGINE_API static HandleManager* GetInstance() { return Instance; }
+		NEXUS_ENGINE_API static HandleManager* GetInstance() { static HandleManager* Instance = new HandleManager(); return Instance; }
 
 	private:
 		NEXUS_ENGINE_API HandleManager();
@@ -32,8 +32,6 @@ namespace NxEn
 
 		// TODO: Implementation - Handle - Replace by container
 		PoolAllocator* Pool;
-
-		static HandleManager* Instance;
 	};
 	
 	template<typename T>

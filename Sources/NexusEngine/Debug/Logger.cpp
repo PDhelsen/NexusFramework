@@ -11,8 +11,6 @@ namespace NxEn
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
 	static Platform::TerminalColor Colors[4] = { Platform::TerminalColor::Magenta, Platform::TerminalColor::Red, Platform::TerminalColor::Yellow, Platform::TerminalColor::White };
 
-	Logger* Logger::Instance = new Logger(LoggerVerbosity::All);
-
 	Logger::Logger(LoggerVerbosity Verbosity)
 		: VerbosityMask(Verbosity), StringBuilderMessage(1024), StringBuilderFormat(1024)
 	{

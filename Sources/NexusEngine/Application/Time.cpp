@@ -3,8 +3,6 @@
 
 namespace NxEn
 {
-	Time* Time::Instance = new Time();
-
 	int64 Time::GetTimeSinceEpoch() const
 	{
 		int64 Time;

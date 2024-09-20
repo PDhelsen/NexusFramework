@@ -64,7 +64,7 @@ namespace NxEn
 		NEXUS_ENGINE_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
-		NEXUS_ENGINE_API inline static Logger* GetInstance() { return Instance; }
+		NEXUS_ENGINE_API static Logger* GetInstance() { static Logger* Instance = new Logger(LoggerVerbosity::All); return Instance; }
 
 	private:
 		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const;
@@ -73,7 +73,6 @@ namespace NxEn
 		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
 
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
-		static Logger* Instance;
 
 		// TODO: Implementation - Logger - String vs StringView vs StringId
 		Dictionary<String, bool, Hashing::Default>* Channels;
