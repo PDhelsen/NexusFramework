@@ -15,13 +15,16 @@ namespace NxEn
 	
 	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Not enough space")
+		void* Pointer = Memory::AlignPointer(Marker, Alignement);
+		void* Next = Memory::OffsetPointer(Pointer, Size);
+
+		if (!IsPointerInside(Next))
+		{
+			return nullptr;
+		}
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
-
-		void* Pointer = Memory::AlignPointer(Marker, Alignement);
-		Marker = Memory::OffsetPointer(Pointer, Size);
-		
+		Marker = Next;
 		uint64 After = reinterpret_cast<uint64>(Marker);
 
 		UpdateAmount(After - Before, true);
@@ -37,17 +40,13 @@ namespace NxEn
 
 	void StackAllocator::Free(void* Pointer)
 	{
-		if (!Pointer)
+		if (!IsAllocatedAddress(Pointer))
 		{
 			return;
 		}
 
-		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside of the stack")
-
 		uint64 Before = reinterpret_cast<uint64>(Marker);
-
 		Marker = Memory::UnalignPointer(Pointer);
-
 		uint64 After = reinterpret_cast<uint64>(Marker);
 
 		UpdateAmount(Before - After, false);
@@ -64,35 +63,25 @@ namespace NxEn
 
 	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
-		if (FreeAmount() < Size)
-		{
-			return false;
-		}
-
-		uint64 Current = reinterpret_cast<uint64>(Marker);
-		uint64 Aligned = Memory::AlignAddress(Current, Alignement);
-		if (Current == Aligned)
-		{
-			Aligned += Alignement;
-		}
-		uint64 Address = Aligned + Size;
-
-		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
-		uint64 End = Start + TotalAmount();
-
-		return Address < End;
+		void* Pointer = NextPointer(Marker, Size, Alignement);
+		return IsPointerInside(Pointer);
 	}
 
-	bool StackAllocator::IsValidAddress(void* Pointer) const
+	bool StackAllocator::IsAllocatedAddress(void* Pointer) const
 	{
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
+		return Pointer != nullptr && IsPointerInside(Pointer) && !IsPointerFree(Pointer);
+	}
 
+	void* StackAllocator::NextPointer(void* Pointer, uint64 Size, uint64 Alignement) const
+	{
+		Pointer = Memory::AlignPointer(Pointer, Alignement);
+		return Memory::OffsetPointer(Pointer, Size);
+	}
+
+	bool StackAllocator::IsPointerFree(void* Pointer) const
+	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		uint64 Current = reinterpret_cast<uint64>(Marker);
-
-		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
-		uint64 End = Start + TotalAmount();
-
-		return Address < Current && Address >= Start && Address < End;
+		return Address >= Current;
 	}
 }

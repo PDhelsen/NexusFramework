@@ -15,28 +15,27 @@ namespace NxEn
 
 	void* HeapAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		// NEXUS_ASSERT(CanAllocate(Size, Alignement), "Not enough space");
-
 		Size = GetAlignedSize(Size);
 		HeapSlot* Slot = GetHeapSlot(Size);
 
-		NEXUS_ASSERT(Slot != nullptr, "Failed to find a big enough heap slot")
-
-		UpdateHeapSlot(Slot, Size);
-		UpdateAmount(Size, true);
-
-		uint8* Data = GetHeapSlotData(Slot);
-		return reinterpret_cast<void*>(Data);
-	}
-
-	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
-	{
-		if (!Pointer)
+		if (Slot == nullptr)
 		{
 			return nullptr;
 		}
 
-		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside ouf the heap")
+		UpdateHeapSlot(Slot, Size);
+
+		UpdateAmount(Size, true);
+
+		return GetHeapSlotMemory(Slot);
+	}
+
+	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	{
+		if (!IsAllocatedAddress(Pointer))
+		{
+			return nullptr;
+		}
 
 		void* NewPointer = nullptr;
 		Size = GetAlignedSize(Size);
@@ -66,8 +65,7 @@ namespace NxEn
 				UpdateAmount(CurrentSize - Size, false);
 			}
 
-			uint8* Data = GetHeapSlotData(Slot);
-			NewPointer = reinterpret_cast<void*>(Data);
+			NewPointer = GetHeapSlotMemory(Slot);
 		}
 		else
 		{
@@ -81,12 +79,10 @@ namespace NxEn
 
 	void HeapAllocator::Free(void* Pointer)
 	{
-		if (!Pointer)
+		if (!IsAllocatedAddress(Pointer))
 		{
 			return;
 		}
-
-		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside ouf the heap")
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		Address -= sizeof(HeapSlot);
@@ -118,26 +114,13 @@ namespace NxEn
 
 	bool HeapAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
-		if (FreeAmount() < Size)
-		{
-			return false;
-		}
-
 		Size = GetAlignedSize(Size);
 		return GetHeapSlot(Size) != nullptr;
 	}
 	
-	bool HeapAllocator::IsValidAddress(void* Pointer) const
+	bool HeapAllocator::IsAllocatedAddress(void* Pointer) const
 	{
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
-		NEXUS_ASSERT(reinterpret_cast<uint64>(Pointer) % NEXUS_MEMORY_ALIGN == 0, "Pointer is not aligned")
-
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-
-		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
-		uint64 End = Start + TotalAmount();
-
-		return Address >= Start && Address < End;
+		return Pointer != nullptr && IsPointerInside(Pointer);
 	}
 
 	// TODO: Implementation - Memory Defragmentation - Defragment heap over multiple frame
@@ -175,7 +158,7 @@ namespace NxEn
 			else
 			{
 				// Check if next data is stored in an Handle and so can be moved in memory
-				uint8* Data = GetHeapSlotData(Slot->Next);
+				uint8* Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot->Next));
 				Handle<uint8> Handle = HandleManager::GetInstance()->FindHandle<uint8>(Data);
 				if (!Handle.IsValid())
 				{
@@ -190,7 +173,7 @@ namespace NxEn
 
 				// Move data 
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
-				Data = GetHeapSlotData(Slot);
+				Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot));
 				HandleManager::GetInstance()->UpdateHandle(Handle, Data);
 				NEXUS_LOG(Engine, Info, "Routine", "Moved from %p to %p", Slot->Next, Slot);
 
@@ -209,37 +192,14 @@ namespace NxEn
 		NEXUS_LOG(Engine, Info, "Routine", "End defragmentation (Current amount : %d)", UsedAmount());
 	}
 
-	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
-	{
-		uint64 UnalignedBytes = Size % NEXUS_MEMORY_ALIGN;
-		Size += UnalignedBytes == 0 ? 0 : NEXUS_MEMORY_ALIGN - UnalignedBytes;
-		return Size;
-	}
-
-	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
-	{
-		HeapSlot* Slot = Root;
-		while (!Slot->Free || GetHeapSlotSize(Slot) < Size)
-		{
-			Slot = Slot->Next;
-
-			if (Slot == nullptr)
-			{
-				return nullptr;
-			}
-		}
-
-		return Slot;
-	}
-
 	void HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
 	{
 		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
 		uint64 MemoryAddress = HeapSlotAddress + sizeof(HeapSlot);
 		uint64 NextAddress = MemoryAddress + Size;
-		bool NextIsInsideHeap = IsValidAddress(reinterpret_cast<void*>(NextAddress));
+		bool NextIsInsideHeap = IsAllocatedAddress(reinterpret_cast<void*>(NextAddress));
 
-		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, "Overflow");
+		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, "Overlap");
 
 		bool AddHeapSlot = NextIsInsideHeap && Slot->Next == nullptr;
 		bool InsertHeapSlot = NextIsInsideHeap && !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
@@ -270,6 +230,29 @@ namespace NxEn
 		UpdateAmount(sizeof(HeapSlot), false);
 	}
 
+	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
+	{
+		HeapSlot* Slot = Root;
+		while (!Slot->Free || GetHeapSlotSize(Slot) < Size)
+		{
+			Slot = Slot->Next;
+
+			if (Slot == nullptr)
+			{
+				return nullptr;
+			}
+		}
+
+		return Slot;
+	}
+
+	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
+	{
+		uint64 UnalignedBytes = Size % NEXUS_MEMORY_ALIGN;
+		Size += UnalignedBytes == 0 ? 0 : NEXUS_MEMORY_ALIGN - UnalignedBytes;
+		return Size;
+	}
+
 	uint64 HeapAllocator::GetHeapSlotSize(HeapSlot* Slot) const
 	{
 		uint64 Size = 0;
@@ -285,9 +268,9 @@ namespace NxEn
 		return Size - sizeof(HeapSlot);
 	}
 
-	uint8* HeapAllocator::GetHeapSlotData(HeapSlot* Slot) const
+	void* HeapAllocator::GetHeapSlotMemory(HeapSlot* Slot) const
 	{
 		uint64 Address = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot);
-		return reinterpret_cast<uint8*>(Address);
+		return reinterpret_cast<void*>(Address);
 	}
 }

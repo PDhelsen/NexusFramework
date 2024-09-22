@@ -17,19 +17,15 @@ namespace NxEn
 
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(Stride == Size || Size == 0, "Requested size is different from pool stride (it may be because the request is an array but it is not supported).")
-		NEXUS_ASSERT(Head != nullptr, "Head is null")
-		NEXUS_ASSERT(*Head != 0, "Next head is null")
-		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Not enough space")
+		if (!CanAllocate())
+		{
+			return nullptr;
+		}
 
 		void* Pointer = Head;
 		
-		Head = reinterpret_cast<uint64*>(*Head);
-		if (Head != nullptr && IsValidAddress(Head) && *Head == 0)
-		{
-			*Head = reinterpret_cast<uint64>(Head) + Stride;
-		}
-		
+		Next();
+
 		UpdateAmount(Stride, true);
 
 		return Pointer;
@@ -43,21 +39,15 @@ namespace NxEn
 
 	void PoolAllocator::Free(void* Pointer)
 	{
-		if (!Pointer)
+		if (!IsAllocatedAddress(Pointer))
 		{
 			return;
 		}
 
-		NEXUS_ASSERT(Head != nullptr, "Head is null")
-		NEXUS_ASSERT(*Head != 0, "Next head is null")
-		NEXUS_ASSERT(IsValidAddress(Pointer), "Address is outside of the pool")
-
 		EraseMemory(Pointer, Stride);
 		UpdateAmount(Stride, false);
 
-		uint64 Address = reinterpret_cast<uint64>(Head);
-		Head = (uint64*)Pointer;
-		*Head = Address;
+		Previous(Pointer);
 	}
 
 	void PoolAllocator::Clear()
@@ -65,8 +55,7 @@ namespace NxEn
 		WipeoutMemory();
 		ResetAmount();
 
-		Head = (uint64*)GetMemoryBlock();;
-		*Head = reinterpret_cast<uint64>(Head) + Stride;
+		Reset();
 	}
 	
 	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
@@ -74,20 +63,35 @@ namespace NxEn
 		return FreeAmount() >= Stride;
 	}
 
-	bool PoolAllocator::IsValidAddress(void* Pointer) const
+	bool PoolAllocator::IsAllocatedAddress(void* Pointer) const
 	{
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
-
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-
-		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
-		uint64 End = Start + TotalAmount();
-
-		return Address >= Start && Address < End;
+		return Pointer != nullptr && IsPointerInside(Pointer);
 	}
 
 	uint64 PoolAllocator::SlotAvailable() const
 	{
 		return FreeAmount() / Stride;
+	}
+
+	void PoolAllocator::Next()
+	{
+		Head = reinterpret_cast<uint64*>(*Head);
+		if (Head != nullptr && IsAllocatedAddress(Head) && *Head == 0)
+		{
+			*Head = reinterpret_cast<uint64>(Head) + Stride;
+		}
+	}
+
+	void PoolAllocator::Previous(void* Pointer)
+	{
+		uint64 Address = reinterpret_cast<uint64>(Head);
+		Head = (uint64*)Pointer;
+		*Head = Address;
+	}
+
+	void PoolAllocator::Reset()
+	{
+		Head = (uint64*)GetMemoryBlock();;
+		*Head = reinterpret_cast<uint64>(Head) + Stride;
 	}
 }

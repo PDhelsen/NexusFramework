@@ -30,7 +30,7 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual void Clear() = 0;
 
 		NEXUS_ENGINE_API virtual bool CanAllocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) const = 0;
-		NEXUS_ENGINE_API virtual bool IsValidAddress(void* Pointer) const = 0;
+		NEXUS_ENGINE_API virtual bool IsAllocatedAddress(void* Pointer) const = 0;
 
 		NEXUS_ENGINE_API bool IsFull() const { return Usage() > 0.95f; };
 		NEXUS_ENGINE_API float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }
@@ -53,6 +53,8 @@ namespace NxEn
 
 		void UpdateAmount(uint64 Delta, bool Increase) { Increase ? Amount += Delta : Amount -= Delta; }
 		void ResetAmount() { Amount = 0; }
+
+		bool IsPointerInside(void* Pointer) const;
 
 		void* GetMemoryBlock() const { return Memory; }
 
