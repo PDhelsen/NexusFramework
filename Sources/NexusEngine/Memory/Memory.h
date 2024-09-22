@@ -2,7 +2,6 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
-#include "Debug/Assert.h"
 
 namespace NxEn
 {
@@ -88,10 +87,7 @@ namespace NxEn
 	template<typename T, typename... Args>
 	T* Memory::Construct(void* Pointer, Args&&... args)
 	{
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
-		T* Object = new (Pointer) T(args...);
-		NEXUS_ASSERT(Object != nullptr, "Object is null");
-		return Object;
+		return new (Pointer) T(args...);
 	}
 
 	template<typename T>

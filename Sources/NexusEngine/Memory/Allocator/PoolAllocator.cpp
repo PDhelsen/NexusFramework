@@ -15,18 +15,17 @@ namespace NxEn
 	{
 	}
 
-	//TODO: Implementation - PoolAllocator - Check behaviour when allocating last element
-	void* PoolAllocator::Allocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */)
+	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		NEXUS_ASSERT(Stride == Size || Size == 0, "Requested size is different from pool stride (it may be because the request is an array but it is not supported).")
 		NEXUS_ASSERT(Head != nullptr, "Head is null")
 		NEXUS_ASSERT(*Head != 0, "Next head is null")
-		NEXUS_ASSERT(CanAllocate(), "Pool is Full")
+		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Not enough space")
 
 		void* Pointer = Head;
 		
 		Head = reinterpret_cast<uint64*>(*Head);
-		if (Head != nullptr && *Head == 0)
+		if (Head != nullptr && IsValidAddress(Head) && *Head == 0)
 		{
 			*Head = reinterpret_cast<uint64>(Head) + Stride;
 		}
@@ -70,9 +69,9 @@ namespace NxEn
 		*Head = reinterpret_cast<uint64>(Head) + Stride;
 	}
 	
-	bool PoolAllocator::CanAllocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */) const
+	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
-		return SlotAvailable() > 0;
+		return FreeAmount() >= Stride;
 	}
 
 	bool PoolAllocator::IsValidAddress(void* Pointer) const

@@ -177,6 +177,32 @@ namespace NxTs
 		ASSERT_EQ(Allocator->CanAllocate(512, 16), false);
 
 		delete Allocator;
+
+		Allocator = new NxEn::StackAllocator(32);
+
+		MemoryTest* Test10 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test10->Value = 1;
+		Test10->Test = 0xffffffff;
+
+		MemoryTest* Test11 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test11->Value = 1;
+		Test11->Test = 0xffffffff;
+
+		Allocator->Free(Test11);
+
+		MemoryTest* Test12 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test12->Value = 1;
+		Test12->Test = 0xffffffff;
+
+		//MemoryTest* Test13 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		//Test13->Value = 1;
+		//Test13->Test = 0xffffffff;
+
+		//MemoryTest* Test14 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		//Test14->Value = 1;
+		//Test14->Test = 0xffffffff;
+
+		delete Allocator;
 	}
 
 	TEST(Memory, PoolAllocator)
@@ -241,6 +267,39 @@ namespace NxTs
 		MemoryTest* Test10 = (MemoryTest*)Allocator->Allocate();
 		Test10->Value = 10;
 		Test10->Test = 0xffffffff;
+
+		delete Allocator;
+
+		Allocator = new NxEn::PoolAllocator(4, sizeof(MemoryTest));
+
+		MemoryTest* Test15 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test15->Value = 1;
+		Test15->Test = 0xffffffff;
+
+		MemoryTest* Test11 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test11->Value = 1;
+		Test11->Test = 0xffffffff;
+
+		MemoryTest* Test12 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test12->Value = 1;
+		Test12->Test = 0xffffffff;
+
+		MemoryTest* Test13 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test13->Value = 1;
+		Test13->Test = 0xffffffff;
+
+		Allocator->Free(Test13);
+
+		MemoryTest* Test14 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test14->Value = 1;
+		Test14->Test = 0xffffffff;
+
+		Allocator->Free(Test11);
+		Allocator->Free(Test12);
+
+		MemoryTest* Test16 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test16->Value = 1;
+		Test16->Test = 0xffffffff;
 
 		delete Allocator;
 	}
@@ -332,6 +391,39 @@ namespace NxTs
 		ASSERT_EQ(Test10, Test9);
 		ASSERT_EQ(Test10[0].Value, 6);
 		ASSERT_EQ(Allocator->UsedAmount(), 112);
+
+		delete Allocator;
+
+		Allocator = new NxEn::HeapAllocator(32 * 4);
+
+		MemoryTest* Test15 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test15->Value = 1;
+		Test15->Test = 0xffffffff;
+
+		MemoryTest* Test11 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test11->Value = 1;
+		Test11->Test = 0xffffffff;
+
+		MemoryTest* Test12 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test12->Value = 1;
+		Test12->Test = 0xffffffff;
+
+		MemoryTest* Test13 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test13->Value = 1;
+		Test13->Test = 0xffffffff;
+
+		Allocator->Free(Test13);
+
+		MemoryTest* Test14 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test14->Value = 1;
+		Test14->Test = 0xffffffff;
+
+		Allocator->Free(Test11);
+		Allocator->Free(Test12);
+
+		MemoryTest* Test16 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
+		Test16->Value = 1;
+		Test16->Test = 0xffffffff;
 
 		delete Allocator;
 	}

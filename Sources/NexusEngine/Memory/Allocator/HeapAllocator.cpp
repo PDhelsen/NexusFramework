@@ -13,8 +13,10 @@ namespace NxEn
 	{
 	}
 
-	void* HeapAllocator::Allocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */)
+	void* HeapAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
+		// NEXUS_ASSERT(CanAllocate(Size, Alignement), "Not enough space");
+
 		Size = GetAlignedSize(Size);
 		HeapSlot* Slot = GetHeapSlot(Size);
 
@@ -27,7 +29,7 @@ namespace NxEn
 		return reinterpret_cast<void*>(Data);
 	}
 
-	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size /* 0 */, uint64 Alignement /* 0 */)
+	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
 		if (!Pointer)
 		{
@@ -114,8 +116,13 @@ namespace NxEn
 		UpdateAmount(sizeof(HeapSlot), true);
 	}
 
-	bool HeapAllocator::CanAllocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */) const
+	bool HeapAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
+		if (FreeAmount() < Size)
+		{
+			return false;
+		}
+
 		Size = GetAlignedSize(Size);
 		return GetHeapSlot(Size) != nullptr;
 	}
@@ -230,11 +237,12 @@ namespace NxEn
 		uint64 HeapSlotAddress = reinterpret_cast<uint64>(Slot);
 		uint64 MemoryAddress = HeapSlotAddress + sizeof(HeapSlot);
 		uint64 NextAddress = MemoryAddress + Size;
+		bool NextIsInsideHeap = IsValidAddress(reinterpret_cast<void*>(NextAddress));
 
 		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, "Overflow");
 
-		bool AddHeapSlot = Slot->Next == nullptr;
-		bool InsertHeapSlot = !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
+		bool AddHeapSlot = NextIsInsideHeap && Slot->Next == nullptr;
+		bool InsertHeapSlot = NextIsInsideHeap && !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
 
 		HeapSlot* NewHeapSlot = nullptr;
 		if (AddHeapSlot || InsertHeapSlot)
@@ -244,7 +252,7 @@ namespace NxEn
 			NewHeapSlot->Free = true;
 		}
 
-		Slot->Next = AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
+		Slot->Next = !NextIsInsideHeap ? nullptr : AddHeapSlot || InsertHeapSlot ? NewHeapSlot : Slot->Next;
 		Slot->Free = false;
 
 		if (AddHeapSlot || InsertHeapSlot)

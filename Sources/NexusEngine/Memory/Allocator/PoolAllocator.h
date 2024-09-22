@@ -19,12 +19,12 @@ namespace NxEn
 		NEXUS_ENGINE_API PoolAllocator& operator=(const PoolAllocator& Other) = delete;
 		NEXUS_ENGINE_API PoolAllocator& operator=(PoolAllocator&& Other) noexcept = delete;
 
-        NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = 0) override;
-        NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) override;
+        NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) override;
+        NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) override;
         NEXUS_ENGINE_API void Free(void* Pointer) override;
         NEXUS_ENGINE_API void Clear() override;
 
-        NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = 0) const override;
+        NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) const override;
         NEXUS_ENGINE_API bool IsValidAddress(void* Pointer) const override;
 
         NEXUS_ENGINE_API uint64 SlotAvailable() const;

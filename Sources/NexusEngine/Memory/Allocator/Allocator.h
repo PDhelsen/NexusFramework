@@ -2,6 +2,7 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Memory/Memory.h"
 
 namespace NxEn
 {
@@ -23,19 +24,19 @@ namespace NxEn
 		friend HandleManager;
 
 	public:
-		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size = 0, uint64 Alignement = 0) = 0;
-		NEXUS_ENGINE_API virtual void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = 0) = 0;
+		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) = 0;
+		NEXUS_ENGINE_API virtual void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) = 0;
 		NEXUS_ENGINE_API virtual void Free(void* Pointer) = 0;
 		NEXUS_ENGINE_API virtual void Clear() = 0;
 
-		NEXUS_ENGINE_API virtual bool CanAllocate(uint64 Size = 0, uint64 Alignement = 0) const = 0;
+		NEXUS_ENGINE_API virtual bool CanAllocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) const = 0;
 		NEXUS_ENGINE_API virtual bool IsValidAddress(void* Pointer) const = 0;
 
 		NEXUS_ENGINE_API bool IsFull() const { return Usage() > 0.95f; };
 		NEXUS_ENGINE_API float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }
 
 		NEXUS_ENGINE_API uint64 UsedAmount() const { return Amount; };
-		NEXUS_ENGINE_API uint64 FreeAmount() const { return Capacity - Amount; };
+		NEXUS_ENGINE_API uint64 FreeAmount() const { return Amount < Capacity ? Capacity - Amount : 0; };
 		NEXUS_ENGINE_API uint64 TotalAmount() const { return Capacity; };
 
 	protected:

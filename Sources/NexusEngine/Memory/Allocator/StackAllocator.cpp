@@ -13,9 +13,9 @@ namespace NxEn
 	{
 	}
 	
-	void* StackAllocator::Allocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */)
+	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Stack Allocator Overflow")
+		NEXUS_ASSERT(CanAllocate(Size, Alignement), "Not enough space")
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
 
@@ -62,8 +62,13 @@ namespace NxEn
 		Marker = GetMemoryBlock();
 	}
 
-	bool StackAllocator::CanAllocate(uint64 Size /* 0 */, uint64 Alignement /* 0 */) const
+	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
+		if (FreeAmount() < Size)
+		{
+			return false;
+		}
+
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 		uint64 Aligned = Memory::AlignAddress(Current, Alignement);
 		if (Current == Aligned)
