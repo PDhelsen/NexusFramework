@@ -4,7 +4,7 @@
 namespace NxEn
 {
 	HeapAllocator::HeapAllocator(uint64 Size)
-		: Allocator(Size)
+		: NexusAllocator(Size)
 	{
 		Clear();
 	}

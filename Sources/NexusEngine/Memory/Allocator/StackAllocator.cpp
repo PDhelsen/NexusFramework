@@ -4,7 +4,7 @@
 namespace NxEn
 {
 	StackAllocator::StackAllocator(uint64 Size)
-		: Allocator(Size)
+		: NexusAllocator(Size)
 	{
 		Clear();
 	}

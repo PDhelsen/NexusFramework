@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Allocator.h"
+#include "NexusAllocator.h"
 
 namespace NxEn
 {
@@ -8,7 +8,7 @@ namespace NxEn
     // Allow to store object from same size into a pool (doesn't need to be the same object type)
     // Implicit alignement since everything has the same size
 
-    class PoolAllocator : public Allocator
+    class PoolAllocator : public NexusAllocator
     {
     public:
         NEXUS_ENGINE_API PoolAllocator(uint64 Count, uint64 Stride);

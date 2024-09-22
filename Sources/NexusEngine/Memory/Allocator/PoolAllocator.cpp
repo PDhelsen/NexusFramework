@@ -4,7 +4,7 @@
 namespace NxEn
 {
 	PoolAllocator::PoolAllocator(uint64 Count, uint64 Stride)
-		: Allocator(Count * Stride), Stride(Stride)
+		: NexusAllocator(Count * Stride), Stride(Stride)
 	{
 		NEXUS_ASSERT(Stride >= sizeof(void*), "Element size should be at least : %d bytes", sizeof(void*))
 

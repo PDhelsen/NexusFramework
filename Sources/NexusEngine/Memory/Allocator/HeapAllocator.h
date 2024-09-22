@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Allocator.h"
+#include "NexusAllocator.h"
 
 namespace NxEn
 {
@@ -13,7 +13,7 @@ namespace NxEn
     // It should look like :
     // Root (16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + ... 
 
-    class HeapAllocator : public Allocator
+    class HeapAllocator : public NexusAllocator
     {
 	private:
 		struct HeapSlot

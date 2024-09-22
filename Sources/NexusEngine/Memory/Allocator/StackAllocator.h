@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Allocator.h"
+#include "NexusAllocator.h"
 
 namespace NxEn
 {
@@ -8,7 +8,7 @@ namespace NxEn
     // Return aligned pointer from pre-allocated memory
     // Last object allocated need to be the first de-allocated
 
-    class StackAllocator : public Allocator
+    class StackAllocator : public NexusAllocator
     {
     public:
         NEXUS_ENGINE_API StackAllocator(uint64 Size);
