@@ -5,13 +5,13 @@ namespace NxEn
 {
 	HandleManager::HandleManager()
 	{
-		AllocatorActive Active(nullptr);
+		AllocatorActive Active(Memory::GetGlobal());
 		Pool = new PoolAllocator(NEXUS_HANDLE_COUNT, sizeof(void*));
 	}
 
 	HandleManager::~HandleManager()
 	{
-		AllocatorActive Active(nullptr);
+		AllocatorActive Active(Memory::GetGlobal());
 		delete Pool;
 	}
 

@@ -4,6 +4,7 @@
 #include "Types/Containers/Node.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/GlobalAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
@@ -106,7 +107,7 @@ namespace NxEn
 	private:
 		void Allocate(uint64 Size)
 		{
-			AllocatorActive RawAllocator(nullptr);
+			AllocatorActive Active(Memory::GetGlobal());
 			Alloc = new PoolAllocator(Size, sizeof(N));
 		}
 
@@ -121,7 +122,7 @@ namespace NxEn
 		{
 			if (Own)
 			{
-				AllocatorActive RawAllocator(nullptr);
+				AllocatorActive Active(Memory::GetGlobal());
 				delete (PoolAllocator*)Alloc;
 			}
 		}
