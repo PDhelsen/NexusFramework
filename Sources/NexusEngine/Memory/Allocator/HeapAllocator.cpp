@@ -20,6 +20,7 @@ namespace NxEn
 
 		if (Slot == nullptr)
 		{
+			NEXUS_ASSERT(false, "Allocator is full");
 			return nullptr;
 		}
 
@@ -233,14 +234,9 @@ namespace NxEn
 	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
 		HeapSlot* Slot = Root;
-		while (!Slot->Free || GetHeapSlotSize(Slot) < Size)
+		while (Slot && (!Slot->Free || GetHeapSlotSize(Slot) < Size))
 		{
 			Slot = Slot->Next;
-
-			if (Slot == nullptr)
-			{
-				return nullptr;
-			}
 		}
 
 		return Slot;

@@ -20,6 +20,7 @@ namespace NxEn
 
 		if (!IsPointerInside(Next))
 		{
+			NEXUS_ASSERT(false, "Allocator is full");
 			return nullptr;
 		}
 

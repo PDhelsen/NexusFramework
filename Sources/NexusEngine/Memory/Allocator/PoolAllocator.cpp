@@ -19,6 +19,7 @@ namespace NxEn
 	{
 		if (!CanAllocate())
 		{
+			NEXUS_ASSERT(false, "Allocator is full");
 			return nullptr;
 		}
 

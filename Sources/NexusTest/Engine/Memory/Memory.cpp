@@ -194,8 +194,6 @@ namespace NxTs
 		Test12->Value = 1;
 		Test12->Test = 0xffffffff;
 
-		MemoryTest* Test13 = (MemoryTest*)Allocator->Allocate(sizeof(MemoryTest), alignof(MemoryTest));
-
 		delete Allocator;
 	}
 
