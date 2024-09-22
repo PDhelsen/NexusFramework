@@ -11,8 +11,6 @@ namespace NxEn
 #define NEXUS_STACK_SIZE 1024
 #define NEXUS_HEAP_SIZE 1024 * 1024
 
-#define NEXUS_HANDLE_COUNT 1024
-
 	class Allocator;
 	class GlobalAllocator;
 	class NexusAllocator;

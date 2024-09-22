@@ -449,6 +449,7 @@ namespace NxTs
 		NxEn::Handle<MemoryTest> Handle = NxEn::HandleManager::GetInstance()->AcquireHandle<MemoryTest>(Test1);
 		ASSERT_EQ(Handle.IsValid(), true);
 		ASSERT_EQ(&Handle->Value, &Test1->Value);
+		ASSERT_EQ(Handle->Value, Test1->Value);
 
 		Handle->Value = 1;
 		Handle->Test = 0xffffffff;
@@ -456,6 +457,7 @@ namespace NxTs
 		NxEn::HandleManager::GetInstance()->UpdateHandle<MemoryTest>(Handle, Test2);
 		ASSERT_EQ(Handle.IsValid(), true);
 		ASSERT_EQ(&Handle->Value, &Test2->Value);
+		ASSERT_EQ(Handle->Value, Test2->Value);
 
 		Handle->Value = 2;
 		Handle->Test = 0xffffffff;

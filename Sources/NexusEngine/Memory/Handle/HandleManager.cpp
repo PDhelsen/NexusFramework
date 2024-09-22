@@ -5,32 +5,33 @@ namespace NxEn
 {
 	HandleManager::HandleManager()
 	{
-		AllocatorActive Active(Memory::GetGlobal());
-		Pool = new PoolAllocator(NEXUS_HANDLE_COUNT, sizeof(void*));
+		Buffer = new LinkedList<uint64>(Memory::GetGlobal());
 	}
 
 	HandleManager::~HandleManager()
 	{
-		AllocatorActive Active(Memory::GetGlobal());
-		delete Pool;
+		delete Buffer;
 	}
 
 	void* HandleManager::AllocateHandle(void* Pointer)
 	{
-		uint64* Handle = (uint64*)Pool->Allocate();
-		*Handle = reinterpret_cast<uint64>(Pointer);
-		return Handle;
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		uint64& H = Buffer->AppendFront(Address);
+		return &H;
 	}
 
 	void HandleManager::ModifyHandle(void* Handle, void* Pointer)
 	{
-		uint64* Address = reinterpret_cast<uint64*>(Handle);
-		*Address = reinterpret_cast<uint64>(Pointer);
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+
+		uint64* H = reinterpret_cast<uint64*>(Handle);
+		*H = Address;
 	}
 	
 	void HandleManager::FreeHandle(void* Handle)
 	{
-		Pool->Free(Handle);
+		uint64* H = reinterpret_cast<uint64*>(Handle);
+		Buffer->Remove(H);
 	}
 
 	// TODO: Optimization - Algo - Retreive handle
@@ -38,13 +39,12 @@ namespace NxEn
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		uint64* Memory = (uint64*)Pool->GetMemoryBlock();
-		for (uint64 I = 0; I < NEXUS_HANDLE_COUNT; ++I)
+		for (auto It = Buffer->Begin(); It != Buffer->End(); ++It)
 		{
-			uint64 Handle = Memory[I];
-			if (Address == Handle)
+			uint64& H = It.Get();
+			if (Address == H)
 			{
-				return &Memory[I];
+				return &H;
 			}
 		}
 

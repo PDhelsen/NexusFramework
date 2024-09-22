@@ -5,7 +5,7 @@
 
 namespace NxEn
 {
-	class PoolAllocator;
+	template<typename T> class LinkedList;
 
 	class HandleManager
 	{
@@ -30,8 +30,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
-		// TODO: Implementation - Handle - Replace by container
-		PoolAllocator* Pool;
+		LinkedList<uint64>* Buffer;
 	};
 	
 	template<typename T>

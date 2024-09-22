@@ -221,4 +221,11 @@
 		</Expand>
 	</Type>
 
+	<Type Name="NxEn::Handle&lt;*&gt;">
+		<DisplayString>{ *(($T1*)(*(uint64*)(Pointer))) }</DisplayString>
+		<Expand>
+			<Item Name="Value">*(($T1*)(*(uint64*)(Pointer)))</Item>
+		</Expand>
+	</Type>
+
 </AutoVisualizer>

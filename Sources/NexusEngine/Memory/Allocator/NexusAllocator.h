@@ -8,9 +8,6 @@ namespace NxEn
 
 	class NexusAllocator : public Allocator
 	{
-		// TODO: Implementation - Handle - Remove once HandleManager replace PoolAllocator by pool container
-		friend HandleManager;
-
 	public:
 		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) = 0;
 		NEXUS_ENGINE_API virtual void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) = 0;
