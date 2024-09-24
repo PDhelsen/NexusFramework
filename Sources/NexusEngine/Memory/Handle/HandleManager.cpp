@@ -5,49 +5,54 @@ namespace NxEn
 {
 	HandleManager::HandleManager()
 	{
-		Buffer = new LinkedList<uint64>(Memory::GetGlobal());
+		Buffer = new Array<uint64>(NEXUS_HANDLES_COUNT, Memory::GetGlobal());
+		Free = new Stack<uint64*, NEXUS_HANDLES_COUNT>(Memory::GetGlobal());
+
+		for (uint64 I = Buffer->GetCount(); I > 0; I--)
+		{
+			uint64& Slot = Buffer->Get(I - 1);
+			Free->Append(&Slot);
+		}
 	}
 
 	HandleManager::~HandleManager()
 	{
 		delete Buffer;
+		delete Free;
 	}
 
 	void* HandleManager::AllocateHandle(void* Pointer)
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
-		uint64& H = Buffer->AppendFront(Address);
-		return &H;
+
+		uint64* Redirection = Free->Get();
+		Free->Remove();
+
+		*Redirection = Address;
+		return Redirection;
 	}
 
 	void HandleManager::ModifyHandle(void* Handle, void* Pointer)
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		uint64* H = reinterpret_cast<uint64*>(Handle);
-		*H = Address;
+		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
+		*Redirection = Address;
 	}
 	
 	void HandleManager::FreeHandle(void* Handle)
 	{
-		uint64* H = reinterpret_cast<uint64*>(Handle);
-		Buffer->Remove(H);
+		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
+		*Redirection = 0;
+
+		Free->Append(Redirection);
 	}
 
-	// TODO: Optimization - Algo - Retreive handle
 	void* HandleManager::GetHandle(void* Pointer)
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		for (auto It = Buffer->Begin(); It != Buffer->End(); ++It)
-		{
-			uint64& H = It.Get();
-			if (Address == H)
-			{
-				return &H;
-			}
-		}
-
-		return nullptr;
+		auto It = Buffer->Find(Address);
+		return It == Buffer->End() ? nullptr : &It.Get();
 	}
 }

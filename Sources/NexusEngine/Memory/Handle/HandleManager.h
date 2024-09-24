@@ -3,9 +3,12 @@
 #include "Core/NexusEngine.h"
 #include "Memory/Handle/Handle.h"
 
+#define NEXUS_HANDLES_COUNT 1024
+
 namespace NxEn
 {
-	template<typename T> class LinkedList;
+	template<typename T> class Array;
+	template<typename T, uint64> class Stack;
 
 	class HandleManager
 	{
@@ -30,7 +33,8 @@ namespace NxEn
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
-		LinkedList<uint64>* Buffer;
+		Array<uint64>* Buffer;
+		Stack<uint64*, NEXUS_HANDLES_COUNT>* Free;
 	};
 	
 	template<typename T>
