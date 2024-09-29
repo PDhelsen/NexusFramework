@@ -7,8 +7,12 @@
 
 namespace NxEn
 {
-	template<typename T> class Array;
-	template<typename T, uint64> class Stack;
+	namespace Pooling
+	{
+		template<typename T>
+		class PreAllocated;
+	}
+	template<typename T, typename P> class Pool;
 
 	class HandleManager
 	{
@@ -33,8 +37,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
 		NEXUS_ENGINE_API void* GetHandle(void* Pointer);
 
-		Array<uint64>* Buffer;
-		Stack<uint64*, NEXUS_HANDLES_COUNT>* Free;
+		Pool<uint64, Pooling::PreAllocated<uint64>>* Buffer;
 	};
 	
 	template<typename T>

@@ -182,7 +182,7 @@ namespace NxEn
 		class OnDemand
 		{
 		public:
-			using N = Node::NodeSimple<T>;
+			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
 			OnDemand(Allocator* Allctr = nullptr)
@@ -226,12 +226,20 @@ namespace NxEn
 				{
 					Instance = Head;
 					Head = Head->Next;
+					if (Head)
+					{
+						Head->Prev = nullptr;
+					}
 					Unsused--;
 				}
+
+				Instance->Prev = nullptr;
+				Instance->Next = nullptr;
 
 				if (Data)
 				{
 					Instance->Next = Data;
+					Data->Prev = Instance;
 				}
 				Data = Instance;
 
@@ -252,19 +260,31 @@ namespace NxEn
 				if (Data == Instance)
 				{
 					Data = Instance->Next;
+					if (Data)
+					{
+						Data->Prev = nullptr;
+					}
 				}
 				else
 				{
-					N* Current = Data;
-					while (Current->Next != Instance)
+					if (Instance->Prev)
 					{
-						Current = Current->Next;
+						Instance->Prev->Next = Instance->Next;
 					}
-					Current->Next = Instance->Next;
+					if (Instance->Next)
+					{
+						Instance->Next->Prev = Instance->Prev;
+					}
 				}
 
 				Instance->Next = Head;
+				Instance->Prev = nullptr;
+				if (Head)
+				{
+					Head->Prev = Instance;
+				}
 				Head = Instance;
+
 				Count--;
 				Unsused++;
 			}
@@ -282,7 +302,10 @@ namespace NxEn
 					{
 						N* Instance = Current;
 						Current = Current->Next;
+
 						Instance->Next = Head;
+						Instance->Prev = nullptr;
+						Head->Prev = Instance;
 						Head = Instance;
 					}
 				}
@@ -333,7 +356,6 @@ namespace NxEn
 			void Construct(N* Instance)
 			{
 				Memory::Construct<T>(&Instance->Value);
-				Instance->Next = nullptr;
 			}
 
 			void Destruct(N* Instance)

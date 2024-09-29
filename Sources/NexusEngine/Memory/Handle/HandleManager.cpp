@@ -5,31 +5,22 @@ namespace NxEn
 {
 	HandleManager::HandleManager()
 	{
-		Buffer = new Array<uint64>(NEXUS_HANDLES_COUNT, Memory::GetGlobal());
-		Free = new Stack<uint64*, NEXUS_HANDLES_COUNT>(Memory::GetGlobal());
-
-		for (uint64 I = Buffer->GetCount(); I > 0; I--)
-		{
-			uint64& Slot = Buffer->Get(I - 1);
-			Free->Append(&Slot);
-		}
+		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(NEXUS_HANDLES_COUNT, Memory::GetGlobal());
 	}
 
 	HandleManager::~HandleManager()
 	{
 		delete Buffer;
-		delete Free;
 	}
 
 	void* HandleManager::AllocateHandle(void* Pointer)
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		uint64* Redirection = Free->Get();
-		Free->Remove();
+		uint64& Redirection = Buffer->Acquire();
+		Redirection = Address;
 
-		*Redirection = Address;
-		return Redirection;
+		return &Redirection;
 	}
 
 	void HandleManager::ModifyHandle(void* Handle, void* Pointer)
@@ -45,7 +36,7 @@ namespace NxEn
 		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
 		*Redirection = 0;
 
-		Free->Append(Redirection);
+		Buffer->Recycle(*Redirection);
 	}
 
 	void* HandleManager::GetHandle(void* Pointer)

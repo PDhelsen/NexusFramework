@@ -1130,6 +1130,10 @@ namespace NxTs
 		ContainerTest& Test4 = TestPreAllocated.Acquire();
 		ContainerTest& Test5 = TestPreAllocated.Acquire();
 
+		Test4.Integer = 5;
+		auto ItPreAllocated = TestPreAllocated.Find(5);
+		ASSERT_EQ(ItPreAllocated->Integer, 5);
+
 		TestPreAllocated.Recycle(Test4);
 		TestPreAllocated.Recycle(Test3);
 		TestPreAllocated.Recycle(Test5);
@@ -1138,8 +1142,7 @@ namespace NxTs
 		ContainerTest& Test7 = TestPreAllocated.Acquire();
 		ContainerTest& Test8 = TestPreAllocated.Acquire();
 
-		auto ItPreAllocated = TestPreAllocated.Find(10);
-		ASSERT_EQ(ItPreAllocated->Integer, 10);
+		TestPreAllocated.Recycle(Test8);
 
 		TestPreAllocated.Clear();
 		ASSERT_EQ(TestPreAllocated.GetCount(), 0);
@@ -1168,6 +1171,10 @@ namespace NxTs
 		ContainerTest& Test12 = TestOnDemand.Acquire();
 		ContainerTest& Test13 = TestOnDemand.Acquire();
 
+		Test12.Integer = 5;
+		auto ItOnDemand = TestOnDemand.Find(5);
+		ASSERT_EQ(ItOnDemand->Integer, 5);
+
 		TestOnDemand.Recycle(Test11);
 		TestOnDemand.Recycle(Test12);
 		TestOnDemand.Recycle(Test13);
@@ -1176,8 +1183,7 @@ namespace NxTs
 		ContainerTest& Test15 = TestOnDemand.Acquire();
 		ContainerTest& Test16 = TestOnDemand.Acquire();
 
-		auto ItOnDemand = TestOnDemand.Find(10);
-		ASSERT_EQ(ItOnDemand->Integer, 10);
+		TestOnDemand.Recycle(Test16);
 
 		TestOnDemand.Clear();
 		ASSERT_EQ(TestOnDemand.GetCount(), 0);
