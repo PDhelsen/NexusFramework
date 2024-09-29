@@ -28,9 +28,6 @@ namespace NxEn
 
 	bool NexusAllocator::IsPointerInside(void* Pointer) const
 	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-		uint64 Start = reinterpret_cast<uint64>(GetMemoryBlock());
-		uint64 End = Start + TotalAmount();
-		return Address >= Start && Address < End;
+		return Memory::IsPointerInRange(Pointer, GetMemoryBlock(), TotalAmount());
 	}
 }

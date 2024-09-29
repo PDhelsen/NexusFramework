@@ -121,6 +121,15 @@ namespace NxEn
 		return reinterpret_cast<void*>(Address);
 	}
 
+	bool Memory::IsPointerInRange(void* Pointer, void* Position, uint64 Offset)
+	{
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+
+		uint64 Start = reinterpret_cast<uint64>(Position);
+		uint64 End = Start + Offset;
+		return Address >= Start && Address < End;
+	}
+
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{
 		NEXUS_ASSERT(Memory != nullptr, "Trying to set value (%d) to null address", Value)

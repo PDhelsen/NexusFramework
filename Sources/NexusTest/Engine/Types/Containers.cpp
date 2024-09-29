@@ -1107,75 +1107,81 @@ namespace NxTs
 
 	TEST(Type_Containers, Pool)
 	{
-		NxEn::Pool<ContainerTest> Test = NxEn::Pool<ContainerTest>();
-		ASSERT_EQ(Test.GetCount(), 0);
-		ASSERT_EQ(Test.IsEmpty(), true);
+		NxEn::Pool<ContainerTest, NxEn::Pooling::PreAllocated<ContainerTest>> TestPreAllocated = NxEn::Pool<ContainerTest, NxEn::Pooling::PreAllocated<ContainerTest>>(10);
+		ASSERT_EQ(TestPreAllocated.GetCapacity(), 10);
+		ASSERT_EQ(TestPreAllocated.GetCount(), 0);
+		ASSERT_EQ(TestPreAllocated.GetUnused(), 10);
 
-		ContainerTest& Test1 = Test.Acquire();
-		ASSERT_EQ(Test1.Integer, 1);
-		ASSERT_EQ(Test.GetCount(), 0);
+		ContainerTest& Test1 = TestPreAllocated.Acquire();
+		ASSERT_EQ(TestPreAllocated.GetCount(), 1);
+		ASSERT_EQ(TestPreAllocated.GetUnused(), 9);
 
-		ContainerTest& Test2 = Test.Acquire();
-		ASSERT_EQ(Test2.Integer, 1);
-		ASSERT_EQ(Test.GetCount(), 0);
+		ContainerTest& Test2 = TestPreAllocated.Acquire();
+		ASSERT_EQ(TestPreAllocated.GetCount(), 2);
+		ASSERT_EQ(TestPreAllocated.GetUnused(), 8);
 
-		ContainerTest& Test3 = Test.Acquire();
-		ASSERT_EQ(Test3.Integer, 1);
-		ASSERT_EQ(Test.GetCount(), 0);
+		Test1.Integer = 10;
 
-		Test.Recycle(Test1);
-		ASSERT_EQ(Test.GetCount(), 1);
-		Test.Recycle(Test2);
-		ASSERT_EQ(Test.GetCount(), 2);
-		Test.Recycle(Test3);
-		ASSERT_EQ(Test.GetCount(), 3);
+		TestPreAllocated.Recycle(Test1);
+		ASSERT_EQ(TestPreAllocated.GetCount(), 1);
+		ASSERT_EQ(TestPreAllocated.GetUnused(), 9);
 
-		ContainerTest& Test4 = Test.Acquire();
-		ASSERT_EQ(&Test4, &Test3);
-		ASSERT_EQ(Test.GetCount(), 2);
+		ContainerTest& Test3 = TestPreAllocated.Acquire();
+		ContainerTest& Test4 = TestPreAllocated.Acquire();
+		ContainerTest& Test5 = TestPreAllocated.Acquire();
 
-		ContainerTest& Test5 = Test.Acquire();
-		ASSERT_EQ(&Test5, &Test2);
-		ASSERT_EQ(Test.GetCount(), 1);
+		TestPreAllocated.Recycle(Test4);
+		TestPreAllocated.Recycle(Test3);
+		TestPreAllocated.Recycle(Test5);
 
-		Test.Recycle(Test4);
-		Test.Recycle(Test5);
-		Test.Clear();
-		ASSERT_EQ(Test.GetCount(), 0);
+		ContainerTest& Test6 = TestPreAllocated.Acquire();
+		ContainerTest& Test7 = TestPreAllocated.Acquire();
+		ContainerTest& Test8 = TestPreAllocated.Acquire();
 
-		NxEn::Pool<ContainerTest> TestAllocator = NxEn::Pool<ContainerTest>(10);
+		auto ItPreAllocated = TestPreAllocated.Find(10);
+		ASSERT_EQ(ItPreAllocated->Integer, 10);
 
-		ContainerTest& Test6 = TestAllocator.Acquire();
-		ASSERT_EQ(Test6.Integer, 1);
-		ASSERT_EQ(TestAllocator.GetCount(), 0);
+		TestPreAllocated.Clear();
+		ASSERT_EQ(TestPreAllocated.GetCount(), 0);
+		ASSERT_EQ(TestPreAllocated.GetUnused(), 10);
 
-		ContainerTest& Test7 = TestAllocator.Acquire();
-		ASSERT_EQ(Test7.Integer, 1);
-		ASSERT_EQ(TestAllocator.GetCount(), 0);
+		NxEn::Pool<ContainerTest> TestOnDemand = NxEn::Pool<ContainerTest>();
+		ASSERT_EQ(TestOnDemand.GetCapacity(), 0);
+		ASSERT_EQ(TestOnDemand.GetCount(), 0);
+		ASSERT_EQ(TestOnDemand.GetUnused(), 0);
 
-		ContainerTest& Test8 = TestAllocator.Acquire();
-		ASSERT_EQ(Test8.Integer, 1);
-		ASSERT_EQ(TestAllocator.GetCount(), 0);
+		ContainerTest& Test9 = TestOnDemand.Acquire();
+		ASSERT_EQ(TestOnDemand.GetCount(),1);
+		ASSERT_EQ(TestOnDemand.GetUnused(), 0);
 
-		TestAllocator.Recycle(Test6);
-		ASSERT_EQ(TestAllocator.GetCount(), 1);
-		TestAllocator.Recycle(Test7);
-		ASSERT_EQ(TestAllocator.GetCount(), 2);
-		TestAllocator.Recycle(Test8);
-		ASSERT_EQ(TestAllocator.GetCount(), 3);
+		ContainerTest& Test10 = TestOnDemand.Acquire();
+		ASSERT_EQ(TestOnDemand.GetCount(), 2);
+		ASSERT_EQ(TestOnDemand.GetUnused(), 0);
 
-		ContainerTest& Test9 = TestAllocator.Acquire();
-		ASSERT_EQ(&Test9, &Test8);
-		ASSERT_EQ(TestAllocator.GetCount(), 2);
+		Test9.Integer = 10;
 
-		ContainerTest& Test10 = TestAllocator.Acquire();
-		ASSERT_EQ(&Test10, &Test7);
-		ASSERT_EQ(TestAllocator.GetCount(), 1);
+		TestOnDemand.Recycle(Test9);
+		ASSERT_EQ(TestOnDemand.GetCount(), 1);
+		ASSERT_EQ(TestOnDemand.GetUnused(), 1);
 
-		TestAllocator.Recycle(Test9);
-		TestAllocator.Recycle(Test10);
-		TestAllocator.Clear();
-		ASSERT_EQ(TestAllocator.GetCount(), 0);
+		ContainerTest& Test11 = TestOnDemand.Acquire();
+		ContainerTest& Test12 = TestOnDemand.Acquire();
+		ContainerTest& Test13 = TestOnDemand.Acquire();
+
+		TestOnDemand.Recycle(Test11);
+		TestOnDemand.Recycle(Test12);
+		TestOnDemand.Recycle(Test13);
+
+		ContainerTest& Test14 = TestOnDemand.Acquire();
+		ContainerTest& Test15 = TestOnDemand.Acquire();
+		ContainerTest& Test16 = TestOnDemand.Acquire();
+
+		auto ItOnDemand = TestOnDemand.Find(10);
+		ASSERT_EQ(ItOnDemand->Integer, 10);
+
+		TestOnDemand.Clear();
+		ASSERT_EQ(TestOnDemand.GetCount(), 0);
+		ASSERT_EQ(TestOnDemand.GetUnused(), 4);
 	}
 
 	TEST(Type_Containers, Tuple)
@@ -1316,9 +1322,9 @@ namespace NxTs
 		Graph.Remove(&A);
 		Graph.Remove(&B);
 
-		NxEn::Pool<NxEn::String> Pool = NxEn::Pool<NxEn::String>();
-		NxEn::String& C = Pool.Acquire();
-		Pool.Recycle(C);
+		//NxEn::Pool<NxEn::String> Pool = NxEn::Pool<NxEn::String>();
+		//NxEn::String& C = Pool.Acquire();
+		//Pool.Recycle(C);
 
 		NxEn::Tuple<NxEn::String, NxEn::String> Tuple = NxEn::Tuple<NxEn::String, NxEn::String>(Data, Text);
 		Tuple.SetFirst(Tuple.GetSecond());

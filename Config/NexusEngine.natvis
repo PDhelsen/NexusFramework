@@ -153,22 +153,47 @@
     </Expand>
   </Type>
 
-  <Type Name="NxEn::Pool&lt;*&gt;">
-    <DisplayString>{{ Count={Count} }}</DisplayString>
-    <Expand>
-      <LinkedListItems>
-        <Size>Count</Size>
-        <HeadPointer>Data</HeadPointer>
-        <NextPointer>Next</NextPointer>
-        <ValueNode>Value</ValueNode>
-      </LinkedListItems>
-    </Expand>
-  </Type>
-
 	<Type Name="NxEn::Collection&lt;*&gt;::Wrapper&lt;*&gt;">
 		<DisplayString>{ Iterator }</DisplayString>
 		<Expand>
 			<Item Name="Value">Iterator</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::Pool&lt;*&gt;">
+		<DisplayString>{{ Count={Data.Count} }}</DisplayString>
+		<Expand>
+			<Item Name="Data">Data</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::Pooling::PreAllocated&lt;*&gt;">
+		<DisplayString>{{ Count={Count} }}</DisplayString>
+		<Expand>
+			<CustomListItems>
+				<Variable Name="Index" InitialValue="0" />
+
+				<Size>Count</Size>
+				<Loop>
+					<If Condition="Data[Index].Next == 0">
+						<Item>Data[Index].Value</Item>
+					</If>
+					<Exec>Index++</Exec>
+					<Break Condition="Index == Capacity" />
+				</Loop>
+			</CustomListItems>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::Pooling::OnDemand&lt;*&gt;">
+		<DisplayString>{{ Count={Count} }}</DisplayString>
+		<Expand>
+			<LinkedListItems>
+				<Size>Count</Size>
+				<HeadPointer>Data</HeadPointer>
+				<NextPointer>Next</NextPointer>
+				<ValueNode>Value</ValueNode>
+			</LinkedListItems>
 		</Expand>
 	</Type>
 
@@ -187,9 +212,16 @@
 	</Type>
 
 	<Type Name="NxEn::Iterator::IteratorHashmap&lt;*&gt;">
-		<DisplayString>{ Data[Index] }</DisplayString>
+		<DisplayString>{ Data[Index].Value }</DisplayString>
 		<Expand>
-			<Item Name="Value">Data[Index]</Item>
+			<Item Name="Value">Data[Index].Value</Item>
+		</Expand>
+	</Type>
+
+	<Type Name="NxEn::Iterator::IteratorPreAllocated&lt;*&gt;">
+		<DisplayString>{ Data[Index].Value }</DisplayString>
+		<Expand>
+			<Item Name="Value">Data[Index].Value</Item>
 		</Expand>
 	</Type>
 

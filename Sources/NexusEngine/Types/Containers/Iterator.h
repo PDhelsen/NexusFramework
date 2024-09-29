@@ -305,6 +305,88 @@ namespace NxEn
 		};
 
 		template<typename T, typename N>
+		class IteratorPreAllocated
+		{
+		public:
+			IteratorPreAllocated(N* Pointer, uint64 Idx, uint64 Cpct)
+				: Data(Pointer), Index(Idx), Capacity(Cpct)
+			{
+				if (Data[Index].Next != nullptr && Index < Capacity)
+				{
+					Iterate();
+				}
+			}
+
+			IteratorPreAllocated<T, N>& operator++()
+			{
+				Iterate();
+				return *this;
+			}
+
+			IteratorPreAllocated<T, N> operator++(int32)
+			{
+				IteratorPreAllocated<T, N> Temp = *this;
+				++(*this);
+				return Temp;
+			}
+
+			T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*() const
+			{
+				return Get();
+			}
+
+			bool operator==(const IteratorPreAllocated<T, N>& Other) const
+			{
+				return Equals(Other);
+			}
+
+			bool operator!=(const IteratorPreAllocated<T, N>& Other) const
+			{
+				return !Equals(Other);
+			}
+
+			bool Equals(const IteratorPreAllocated<T, N>& Other) const
+			{
+				return Data == Other.Data && Index == Other.Index;
+			}
+
+			T& Get() const
+			{
+				return Data[Index].Value;
+			}
+
+			uint64 Id() const
+			{
+				return Index;
+			}
+
+			void Iterate()
+			{
+				do
+				{
+					++Index;
+				} while (Data[Index].Next != nullptr && Index < Capacity);
+			}
+
+			IteratorPreAllocated<T, N>& Next()
+			{
+				Iterate();
+				return *this;
+			}
+
+
+		private:
+			N* Data;
+			uint64 Index;
+			uint64 Capacity;
+		};
+
+		template<typename T, typename N>
 		class IteratorNodeSimple
 		{
 		public:

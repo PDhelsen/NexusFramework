@@ -42,6 +42,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static void* AlignPointer(void* Pointer, uint64 Alignement);
 		NEXUS_ENGINE_API static void* UnalignPointer(void* Pointer);
 		NEXUS_ENGINE_API static void* OffsetPointer(void* Pointer, uint64 Offset);
+		NEXUS_ENGINE_API static bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
 		NEXUS_ENGINE_API static void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_ENGINE_API static void MemCopy(const void* Source, void* Destination, uint64 Size);
