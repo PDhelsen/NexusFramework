@@ -231,6 +231,7 @@ namespace NxEn
 		UpdateAmount(sizeof(HeapSlot), false);
 	}
 
+	// TODO: Optimization - Algo - Try to find a way get heap slot with faster
 	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
 		HeapSlot* Slot = Root;

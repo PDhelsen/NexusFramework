@@ -5,6 +5,106 @@ namespace NxEn
 {
 	namespace Math
 	{
+		float Min(float X, float Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		double Min(double X, double Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		int8 Min(int8 X, int8 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		int16 Min(int16 X, int16 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		int32 Min(int32 X, int32 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		int64 Min(int64 X, int64 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		uint8 Min(uint8 X, uint8 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		uint16 Min(uint16 X, uint16 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		uint32 Min(uint32 X, uint32 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		uint64 Min(uint64 X, uint64 Y)
+		{
+			return X < Y ? X : Y;
+		}
+
+		float Max(float X, float Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		double Max(double X, double Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		int8 Max(int8 X, int8 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		int16 Max(int16 X, int16 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		int32 Max(int32 X, int32 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		int64 Max(int64 X, int64 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		uint8 Max(uint8 X, uint8 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		uint16 Max(uint16 X, uint16 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		uint32 Max(uint32 X, uint32 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
+		uint64 Max(uint64 X, uint64 Y)
+		{
+			return X > Y ? X : Y;
+		}
+
 		float Acos(float X)
 		{
 			return acos(X);
@@ -613,6 +713,95 @@ namespace NxEn
 				++N;
 			}
 			return N;
+		}
+
+		constexpr float InfinityF()
+		{
+			return INFINITY;
+		}
+		constexpr double InfinityD()
+		{
+			return INFINITY;
+		}
+		constexpr float MinF()
+		{
+			return FLT_MIN;
+		}
+		constexpr double MinD()
+		{
+			return DBL_MIN;
+		}
+		constexpr int8 MinI8()
+		{
+			return CHAR_MIN;
+		}
+		constexpr int16 MinI16()
+		{
+			return SHRT_MIN;
+		}
+		constexpr int32 MinI32()
+		{
+			return INT_MIN;
+		}
+		constexpr int64 MinI64()
+		{
+			return LONG_MIN;
+		}
+		constexpr uint8 MinUI8()
+		{
+			return 0;
+		}
+		constexpr uint16 MinUI16()
+		{
+			return 0;
+		}
+		constexpr uint32 MinUI32()
+		{
+			return 0;
+		}
+		constexpr uint64 MinUI64()
+		{
+			return 0;
+		}
+		constexpr float MaxF()
+		{
+			return FLT_MAX;
+		}
+		constexpr double MaxD()
+		{
+			return DBL_MAX;
+		}
+		constexpr int8 MaxI8()
+		{
+			return CHAR_MAX;
+		}
+		constexpr int16 MaxI16()
+		{
+			return SHRT_MAX;
+		}
+		constexpr int32 MaxI32()
+		{
+			return INT_MAX;
+		}
+		constexpr int64 MaxI64()
+		{
+			return LONG_MAX;
+		}
+		constexpr uint8 MaxUI8()
+		{
+			return UCHAR_MAX;
+		}
+		constexpr uint16 MaxUI16()
+		{
+			return USHRT_MAX;
+		}
+		constexpr uint32 MaxUI32()
+		{
+			return UINT_MAX;
+		}
+		constexpr uint64 MaxUI64()
+		{
+			return ULONG_MAX;
 		}
 	}
 }

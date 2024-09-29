@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include <climits>
 #include <cmath>
 #include <ctime>
 
