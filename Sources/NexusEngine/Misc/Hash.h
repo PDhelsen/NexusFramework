@@ -463,5 +463,20 @@ namespace NxEn
 				return Data;
 			}
 		};
+
+		template<typename H>
+		class HashProcess<void*, H>
+		{
+		public:
+			static void Accumulate(HashStrategy<H>& State, void* Data)
+			{
+				State.Accumulate(&Data, sizeof(void*));
+			}
+
+			static typename H::HashLength Hash(HashStrategy<H>& State, void* Data)
+			{
+				return reinterpret_cast<typename H::HashLength>(Data);
+			}
+		};
 	}
 }

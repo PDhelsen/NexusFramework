@@ -10,6 +10,7 @@
 
 namespace NxEn
 {
+	//TODO: Implementation - Array - Data stored in stack
 	template<typename T>
 	class Array
 	{

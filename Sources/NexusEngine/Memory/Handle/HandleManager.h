@@ -13,6 +13,12 @@ namespace NxEn
 		class PreAllocated;
 	}
 	template<typename T, typename P> class Pool;
+	namespace Hashing
+	{
+		class Fnv1a64;
+		using Default = Fnv1a64;
+	}
+	template <typename K, typename T, class H> class Dictionary;
 
 	class HandleManager
 	{
@@ -25,6 +31,8 @@ namespace NxEn
 		void* ReleaseHandle(Handle<T>& Handle);
 		template<typename T>
 		Handle<T> FindHandle(T* Pointer);
+
+		NEXUS_ENGINE_API Dictionary<void*, Handle<uint8>, Hashing::Default> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
 		NEXUS_ENGINE_API static HandleManager* GetInstance() { static HandleManager* Instance = new HandleManager(); return Instance; }
 

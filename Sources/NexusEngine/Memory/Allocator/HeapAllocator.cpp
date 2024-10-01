@@ -125,10 +125,11 @@ namespace NxEn
 	}
 
 	// TODO: Implementation - Memory Defragmentation - Defragment heap over multiple frame
-	// TODO: Optimization - Algo - Defragment memory
 	void HeapAllocator::Defragment()
 	{
 		NEXUS_LOG(Engine, Info, "Routine", "Starting defragmentation (Current amount : %d)", UsedAmount());
+
+		Dictionary<void*, Handle<uint8>> Handles = HandleManager::GetInstance()->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
 		HeapSlot* Slot = Root;
 		while (true)
@@ -160,19 +161,20 @@ namespace NxEn
 			{
 				// Check if next data is stored in an Handle and so can be moved in memory
 				uint8* Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot->Next));
-				Handle<uint8> Handle = HandleManager::GetInstance()->FindHandle<uint8>(Data);
-				if (!Handle.IsValid())
+				auto It = Handles.FindKey(Data);
+				if (It == Handles.End())
 				{
 					Slot = Slot->Next;
 					continue;
 				}
 
 				// Get slot info
+				Handle<uint8>& Handle = It->GetValue();
 				uint64 SlotSize = GetHeapSlotSize(Slot);
 				uint64 NextSize = GetHeapSlotSize(Slot->Next);
 				HeapSlot* NextNext = Slot->Next->Next;
 
-				// Move data 
+				// Move data
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot));
 				HandleManager::GetInstance()->UpdateHandle(Handle, Data);

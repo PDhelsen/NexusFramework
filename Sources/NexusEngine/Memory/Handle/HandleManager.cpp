@@ -46,4 +46,23 @@ namespace NxEn
 		auto It = Buffer->Find(Address);
 		return It == Buffer->End() ? nullptr : &It.Get();
 	}
+
+	Dictionary<void*, Handle<uint8>, Hashing::Default> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
+	{
+		Dictionary<void*, Handle<uint8>, Hashing::Default> Handles;
+
+		for (auto It = Buffer->Begin(); It != Buffer->End(); ++It)
+		{
+			void* Data = reinterpret_cast<void*>(*It);
+			if (Memory::IsPointerInRange(Data, Pointer, Offset))
+			{
+				Handle<uint8> Handle;
+				Handle.Pointer = &It.Get();
+
+				Handles.Append(Data, Handle);
+			}
+		}
+
+		return Handles;
+	}
 }

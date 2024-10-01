@@ -17,8 +17,8 @@ namespace NxEn
 		}
 
 		inline T* operator->() { return GetRedirectedPointer(); }
-		inline bool operator==(const Handle<T>& Other) { return Pointer == Other.Pointer; }
-		inline bool operator!=(const Handle<T>& Other) { return Pointer != Other.Pointer; }
+		inline bool operator==(const Handle<T>& Other) const { return Pointer == Other.Pointer; }
+		inline bool operator!=(const Handle<T>& Other) const { return Pointer != Other.Pointer; }
 
 	private:
 		Handle() = default;
