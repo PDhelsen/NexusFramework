@@ -124,15 +124,15 @@ namespace NxEn
 		return Pointer != nullptr && IsPointerInside(Pointer);
 	}
 
-	// TODO: Implementation - Memory Defragmentation - Defragment heap over multiple frame
-	void HeapAllocator::Defragment()
+	void HeapAllocator::Defragment(uint64 Count)
 	{
 		NEXUS_LOG(Engine, Info, "Routine", "Starting defragmentation (Current amount : %d)", UsedAmount());
 
 		Dictionary<void*, Handle<uint8>> Handles = HandleManager::GetInstance()->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
+		bool All = Count == 0;
 		HeapSlot* Slot = Root;
-		while (true)
+		while (All || (!All && Count > 0))
 		{
 			// Last slot
 			if (Slot->Next == nullptr)
@@ -190,6 +190,8 @@ namespace NxEn
 
 				Slot = NewSlot;
 			}
+
+			Count--;
 		}
 
 		NEXUS_LOG(Engine, Info, "Routine", "End defragmentation (Current amount : %d)", UsedAmount());
@@ -233,7 +235,6 @@ namespace NxEn
 		UpdateAmount(sizeof(HeapSlot), false);
 	}
 
-	// TODO: Optimization - Algo - Try to find a way get heap slot with faster
 	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
 		HeapSlot* Slot = Root;

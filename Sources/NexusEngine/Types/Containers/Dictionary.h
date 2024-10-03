@@ -12,6 +12,7 @@
 
 namespace NxEn
 {
+	//TODO: Implementation - Dictionary - Support for Structure bindings - for(const auto& [key, value] : dictionary)
 	template<typename K, typename T, class H = Hashing::Default>
 	class Dictionary
 	{

@@ -515,6 +515,7 @@ namespace NxTs
 		Heap->Free(NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle5));
 
 		uint64 StartAmount = Heap->UsedAmount();
+		Heap->Defragment(1);
 		Heap->Defragment();
 		Heap->Defragment();
 		uint64 EndAmount = Heap->UsedAmount();

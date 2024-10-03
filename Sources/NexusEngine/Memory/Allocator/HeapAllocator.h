@@ -39,7 +39,7 @@ namespace NxEn
         NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) const override;
         NEXUS_ENGINE_API bool IsAllocatedAddress(void* Pointer) const override;
 
-        NEXUS_ENGINE_API void Defragment();
+        NEXUS_ENGINE_API void Defragment(uint64 Count = 0);
 
     private:
         void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
