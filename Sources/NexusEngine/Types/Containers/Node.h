@@ -181,19 +181,6 @@ namespace NxEn
 			return !(*this == Other);
 		}
 
-		void SetValue(const T& Other) { Value = Other; }
-		void SetValue(T&& Other) { Value = Move(Other); }
-		template<typename... Args>
-		void SetValueConstruct(Args&&... args)
-		{
-			Memory::Destruct(&Value);
-			Memory::Construct<T>(&Value, args...);
-		}
-
-		const K& GetKey() const { return Key; }
-		T& GetValue() { return Value; }
-
-	private:
 		K Key;
 		T Value;
 	};

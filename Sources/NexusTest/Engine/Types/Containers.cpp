@@ -849,11 +849,11 @@ namespace NxTs
 		ASSERT_EQ(Copy.GetCount(), 0);
 
 		ASSERT_EQ(Test.Get(9).Integer, 90);
-		ASSERT_EQ(Test.GetIterator(6)->GetKey().Integer, 6);
+		ASSERT_EQ(Test.GetIterator(6)->Key.Integer, 6);
 
-		for (auto& Kv : Test)
+		for (auto& [Key, Value] : Test)
 		{
-			Kv.GetValue().Integer = Kv.GetKey().Integer * 10;
+			Value.Integer = Key.Integer * 10;
 		}
 
 		Test.Grow(21);
@@ -867,8 +867,8 @@ namespace NxTs
 		ContainerTest ToFind2 = ContainerTest(100);
 		ASSERT_EQ(Test.ContainsKey(ToFind1), true);
 		ASSERT_EQ(Test.ContainsValue(ToFind2), true);
-		ASSERT_EQ(Test.FindKey(ToFind1)->GetKey().Integer, ToFind1.Integer);
-		ASSERT_EQ(Test.FindValue(ToFind2)->GetValue().Integer, ToFind2.Integer);
+		ASSERT_EQ(Test.FindKey(ToFind1)->Key.Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.FindValue(ToFind2)->Value.Integer, ToFind2.Integer);
 	}
 
 	TEST(Type_Containers, Tree)
@@ -1407,7 +1407,7 @@ namespace NxTs
 		Container9.AppendRange(Container2);
 		Container2.AppendRange(Container9);
 
-		NxEn::List<NxEn::KeyValuePair<ContainerTest, ContainerTest>> Pair;
+		NxEn::List<NxEn::KeyValuePair<const ContainerTest, ContainerTest>> Pair;
 		Pair.Append({ ContainerTest(1), ContainerTest(10) });
 		Pair.Append({ ContainerTest(2), ContainerTest(20) });
 

@@ -169,7 +169,7 @@ namespace NxEn
 				}
 
 				// Get slot info
-				Handle<uint8>& Handle = It->GetValue();
+				Handle<uint8>& Handle = It->Value;
 				uint64 SlotSize = GetHeapSlotSize(Slot);
 				uint64 NextSize = GetHeapSlotSize(Slot->Next);
 				HeapSlot* NextNext = Slot->Next->Next;

@@ -12,13 +12,13 @@
 
 namespace NxEn
 {
-	//TODO: Implementation - Dictionary - Support for Structure bindings - for(const auto& [key, value] : dictionary)
 	template<typename K, typename T, class H = Hashing::Default>
 	class Dictionary
 	{
 	public:
-		using N = Node::NodeHashmap<KeyValuePair<K, T>>;
-		using I = Iterator::IteratorHashmap<KeyValuePair<K, T>, N>;
+		using KV = KeyValuePair<const K, T>;
+		using N = Node::NodeHashmap<KV>;
+		using I = Iterator::IteratorHashmap<KV, N>;
 
 		Dictionary(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
 			: Alloc(nullptr), Capacity(0), Count(0), Data(nullptr)
@@ -131,8 +131,8 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
 			N& Instance = Data[Index];
-			Instance.Value.SetValue(Value);
-			return Instance.Value.GetValue();
+			Instance.Value.Value = Value;
+			return Instance.Value.Value;
 		}
 
 		T& Assign(const K& Key, T&& Value)
@@ -143,8 +143,8 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
 			N& Instance = Data[Index];
-			Instance.Value.SetValue(Move(Value));
-			return Instance.Value.GetValue();
+			Instance.Value.Value = Move(Value);
+			return Instance.Value.Value;
 		}
 
 		template<typename... Args>
@@ -156,8 +156,8 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
 			N& Instance = Data[Index];
-			Instance.Value.SetValueConstruct(args...);
-			return Instance.Value.GetValue();
+			Memory::Construct<T>(&Instance.Value.Value, args...);
+			return Instance.Value.Value;
 		}
 
 		template<typename C>
@@ -165,15 +165,15 @@ namespace NxEn
 		{
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
-				uint64 Hash = GetHash(It->GetKey());
+				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndexRead(Hash);
 				NEXUS_ASSERT(Index < Capacity, "Failed to find key");
-				Data[Index].Value->SetValue(It->GetValue());
+				Data[Index].Value.Value = It->Value;
 			}
 
-			uint64 Hash = GetHash(Value.Begin()->GetKey());
+			uint64 Hash = GetHash(Value.Begin()->Key);
 			uint64 Index = GetIndexRead(Hash);
-			return Data[Index].Value.GetValue();
+			return Data[Index].Value.Value;
 		}
 
 		T& Append(const K& Key, const T& Value)
@@ -182,13 +182,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value.GetValue();
+				return Data[Index].Value.Value;
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Key, Value);
-			return Data[Index].Value.GetValue();
+			return Data[Index].Value.Value;
 		}
 
 		T& Append(K&& Key, T&& Value)
@@ -197,13 +197,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value.GetValue();
+				return Data[Index].Value.Value;
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Key), Move(Value));
-			return Data[Index].Value.GetValue();
+			return Data[Index].Value.Value;
 		}
 
 		template<typename... Args>
@@ -213,13 +213,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value.GetValue();
+				return Data[Index].Value.Value;
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Key), args...);
-			return Data[Index].Value.GetValue();
+			return Data[Index].Value.Value;
 		}
 
 		template<typename C>
@@ -229,7 +229,7 @@ namespace NxEn
 
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
-				uint64 Hash = GetHash(It->GetKey());
+				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndexRead(Hash);
 				if (Index != Capacity)
 				{
@@ -237,12 +237,12 @@ namespace NxEn
 				}
 
 				Index = GetIndexWrite(Hash);
-				Construct(Index, Hash, It->GetKey(), It->GetValue());
+				Construct(Index, Hash, It->Key, It->Value);
 			}
 
-			uint64 Hash = GetHash(Value.Begin()->GetKey());
+			uint64 Hash = GetHash(Value.Begin()->Key);
 			uint64 Index = GetIndexRead(Hash);
-			return Data[Index].Value.GetValue();
+			return Data[Index].Value.Value;
 		}
 
 		void Remove(const K& Key)
@@ -269,7 +269,7 @@ namespace NxEn
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
 			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
-			return Data[Index].Value.GetValue();
+			return Data[Index].Value.Value;
 		}
 
 		T* TryGet(const K& Key) const
@@ -282,7 +282,7 @@ namespace NxEn
 			{
 				return nullptr;
 			}
-			return &Data[Index].Value.GetValue();
+			return &Data[Index].Value.Value;
 		}
 
 		I GetIterator(const K& Key)
@@ -354,7 +354,7 @@ namespace NxEn
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{
-				if (It->GetValue() == Value)
+				if (It->Value == Value)
 				{
 					return It;
 				}
@@ -396,12 +396,9 @@ namespace NxEn
 					continue;
 				}
 
-				uint64 Hash = GetHash(Old.Value.GetKey());
+				uint64 Hash = GetHash(Old.Value.Key);
 				uint64 NewIndex = GetIndexWrite(Hash);
-				N& New = Data[NewIndex];
-
-				New.Value = Move(Old.Value);
-				New.Hash = Hash;
+				Construct(NewIndex, Hash, Move(Old.Value.Key), Move(Old.Value.Value));
 			}
 
 			Memory::Free(Temp, Alloc);
@@ -418,7 +415,7 @@ namespace NxEn
 		{
 			N& Instance = Data[Index];
 			NEXUS_ASSERT(Instance.IsFree(), "Construct on an already occupied slot");
-			Memory::Construct<KeyValuePair<K, T>>(&Instance.Value, args...);
+			Memory::Construct<KV>(&Instance.Value, args...);
 			Instance.Hash = Hash;
 		}
 
