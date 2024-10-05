@@ -107,9 +107,10 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
-			Instance->Value = Value;
-			return Instance->Value;
+			N* Instance = GetNode(Position);
+			T& Item = GetItem(Instance);
+			Item = Value;
+			return Item;
 		}
 
 		T& Assign(T* Position, T&& Value)
@@ -117,9 +118,10 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
-			Instance->Value = Move(Value);
-			return Instance->Value;
+			N* Instance = GetNode(Position);
+			T& Item = GetItem(Instance);
+			Item = Move(Value);
+			return Item;
 		}
 
 		template<typename... Args>
@@ -128,10 +130,11 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
+			T& Item = GetItem(Instance);
 			Destruct(Instance);
 			Construct(Instance, args...);
-			return Instance->Value;
+			return Item;
 		}
 
 		T& AppendBack(const T& Value)
@@ -140,7 +143,7 @@ namespace NxEn
 			Construct(Instance, Value);
 
 			AppendNodeTail(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		T& AppendBack(T&& Value)
@@ -149,7 +152,7 @@ namespace NxEn
 			Construct(Instance, Move(Value));
 
 			AppendNodeTail(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename... Args>
@@ -159,7 +162,7 @@ namespace NxEn
 			Construct(Instance, args...);
 
 			AppendNodeTail(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename C>
@@ -172,7 +175,7 @@ namespace NxEn
 				AppendBack(*It);
 			}
 
-			return Return->Next->Value;
+			return GetItem(Return->Next);
 		}
 
 		T& AppendFront(const T& Value)
@@ -181,7 +184,7 @@ namespace NxEn
 			Construct(Instance, Value);
 
 			AppendNodeHead(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		T& AppendFront(T&& Value)
@@ -190,7 +193,7 @@ namespace NxEn
 			Construct(Instance, Move(Value));
 
 			AppendNodeHead(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename... Args>
@@ -200,7 +203,7 @@ namespace NxEn
 			Construct(Instance, args...);
 
 			AppendNodeHead(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename C>
@@ -211,7 +214,7 @@ namespace NxEn
 				AppendFront(*It);
 			}
 
-			return DataHead->Value;
+			return GetItem(DataHead);
 		}
 
 		T& InsertBack(T* Position, const T& Value)
@@ -222,9 +225,9 @@ namespace NxEn
 			N* Instance = Allocate();
 			Construct(Instance, Value);
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		T& InsertBack(T* Position, T&& Value)
@@ -235,9 +238,9 @@ namespace NxEn
 			N* Instance = Allocate();
 			Construct(Instance, Move(Value));
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename... Args>
@@ -249,9 +252,9 @@ namespace NxEn
 			N* Instance = Allocate();
 			Construct(Instance, args...);
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			InsertNodeBack(Anchor, Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename C>
@@ -260,7 +263,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			N* Return = Anchor;
 
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
@@ -269,7 +272,7 @@ namespace NxEn
 				Anchor = Anchor->Next;
 			}
 
-			return Return->Next->Value;
+			return GetItem(Return->Next);
 		}
 
 		T& InsertFront(T* Position, const T& Value)
@@ -280,9 +283,9 @@ namespace NxEn
 			N* Instance = Allocate();
 			Construct(Instance, Value);
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		T& InsertFront(T* Position, T&& Value)
@@ -293,9 +296,9 @@ namespace NxEn
 			N* Instance = Allocate();
 			Construct(Instance, Move(Value));
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename... Args>
@@ -307,9 +310,9 @@ namespace NxEn
 			N* Instance = Allocate();
 			Construct(Instance, args...);
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 			InsertNodeFront(Anchor, Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename C>
@@ -318,7 +321,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Anchor = Node::GetNode<T, N>(Position);
+			N* Anchor = GetNode(Position);
 
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
@@ -326,7 +329,7 @@ namespace NxEn
 				Anchor = Anchor->Prev;
 			}
 
-			return Anchor->Value;
+			return GetItem(Anchor);
 		}
 
 		void RemoveBack()
@@ -344,7 +347,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position)->Prev;
+			N* Instance = GetNode(Position)->Prev;
 			while (DataTail != Instance)
 			{
 				RemoveBack();
@@ -366,7 +369,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position)->Next;
+			N* Instance = GetNode(Position)->Next;
 			while (DataHead != Instance)
 			{
 				RemoveFront();
@@ -378,7 +381,7 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
 			RemoveNode(Instance);
 			Destruct(Instance);
 			Free(Instance);
@@ -390,8 +393,8 @@ namespace NxEn
 			NEXUS_ASSERT(To != nullptr, "To is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Start = Node::GetNode<T, N>(From);
-			N* End = Node::GetNode<T, N>(To)->Next;
+			N* Start = GetNode(From);
+			N* End = GetNode(To)->Next;
 		
 			while (Start != End)
 			{
@@ -411,94 +414,157 @@ namespace NxEn
 			}
 		}
 
-		T& Get() const
+		T& Get() 
 		{
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			return DataHead->Value;
+			return GetItem(DataHead);
 		}
 
-		T& GetNext(T* Position) const
+		const T& Get() const
+		{
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+
+			return GetItem(DataHead);
+		}
+
+		T& GetNext(T* Position)
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+			NEXUS_ASSERT(GetNode(Position) != DataTail, "Cannot get next on Tail");
+
+			N* Instance = GetNode(Position);
+			return GetItem(Instance->Next);
+		}
+
+		const T& GetNext(const T* Position) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+			NEXUS_ASSERT(GetNode(Position) != DataTail, "Cannot get next on Tail");
+
+			N* Instance = GetNode(Position);
+			return GetItem(Instance->Next);
+		}
+
+		T* TryGetNext(T* Position) 
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
-			NEXUS_ASSERT(Instance != DataTail, "Cannot get next on Tail");
-
-			return Instance->Next->Value;
-		}
-
-		T* TryGetNext(T* Position) const
-		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
-
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
 			if (Instance == DataTail)
 			{
 				return nullptr;
 			}
-
-			return &Instance->Next->Value;
+			return &GetItem(Instance->Next);;
 		}
 
-		T& GetPrev(T* Position) const
+		const T* TryGetNext(const T* Position) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
-			NEXUS_ASSERT(Instance != DataHead, "Cannot get prev on Head");
-
-			return Instance->Prev->Value;
+			N* Instance = GetNode(Position);
+			if (Instance == DataTail)
+			{
+				return nullptr;
+			}
+			return &GetItem(Instance->Next);
 		}
 
-		T* TryGetPrev(T* Position) const
+		T& GetPrev(T* Position) 
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+			NEXUS_ASSERT(GetNode(Position) != DataHead, "Cannot get prev on Head");
+
+			N* Instance = GetNode(Position);
+			return GetItem(Instance->Prev);
+		}
+
+		const T& GetPrev(const T* Position) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+			NEXUS_ASSERT(GetNode(Position) != DataHead, "Cannot get prev on Head");
+
+			N* Instance = GetNode(Position);
+			return GetItem(Instance->Prev);
+		}
+
+		T* TryGetPrev(T* Position) 
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
 			if (Instance == DataHead)
 			{
 				return nullptr;
 			}
-
-			return &Instance->Prev->Value;
+			return &GetItem(Instance->Prev);
 		}
 
-		T& First() const
+		const T* TryGetPrev(const T* Position) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+
+			N* Instance = GetNode(Position);
+			if (Instance == DataHead)
+			{
+				return nullptr;
+			}
+			return &GetItem(Instance->Prev);
+		}
+
+		T& First() 
 		{
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			return DataHead->Value;
+			return GetItem(DataHead);
 		}
 
-		T& Last() const
+		const T& First() const
 		{
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 
-			return DataTail->Value;
+			return GetItem(DataHead);
 		}
 
-		bool IsNext(T* Position, T* Next) const
+		T& Last() 
+		{
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+
+			return GetItem(DataTail);
+		}
+
+		const T& Last() const
+		{
+			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
+
+			return GetItem(DataTail);
+		}
+
+		bool IsNext(const T* Position, const T* Next) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
-			return Node::GetNode<T, N>(Position)->Next == Node::GetNode<T, N>(Next);
+			return GetNode(Position)->Next == GetNode(Next);
 		}
 
-		bool IsPrevious(T* Position, T* Prev) const
+		bool IsPrevious(const T* Position, const T* Prev) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "LinkedList is empty");
 			
-			return Node::GetNode<T, N>(Position)->Prev == Node::GetNode<T, N>(Prev);
+			return GetNode(Position)->Prev == GetNode(Prev);
 		}
 
-		bool IsConnected(T* A, T* B) const
+		bool IsConnected(const T* A, const T* B) const
 		{
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
@@ -509,27 +575,54 @@ namespace NxEn
 
 		I GetIterator(T* Position)
 		{
-			return I(Node::GetNode<T, N>(Position));
+			return GetIteratorNode(GetNode(Position));
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const
+		const I GetIterator(const T* Position) const
 		{
-			return I(DataHead);
+			return GetIteratorNode(GetNode(Position));
 		}
 
-		I BeginReverse() const
+		I begin() { return Begin(); }
+		I Begin() 
 		{
-			return I(DataTail);
+			return GetIteratorNode(DataHead);
 		}
 
-		I end() const { return End(); }
-		I End() const
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return GetIteratorNode(DataHead);
+		}
+
+		I BeginReverse() 
+		{
+			return GetIteratorNode(DataTail);
+		}
+
+		const I BeginReverse() const
+		{
+			return GetIteratorNode(DataTail);
+		}
+
+		I end() { return End(); }
+		I End()
 		{
 			return I(nullptr);
 		}
 
-		I EndReverse() const
+		const I end() const { return End(); }
+		const I End() const
+		{
+			return I(nullptr);
+		}
+
+		I EndReverse() 
+		{
+			return I(nullptr);
+		}
+
+		const I EndReverse() const
 		{
 			return I(nullptr);
 		}
@@ -540,9 +633,9 @@ namespace NxEn
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			T Temp = Node::GetNode<T, N>(A)->Value;
-			Node::GetNode<T, N>(A)->Value = Move(Node::GetNode<T, N>(B)->Value);
-			Node::GetNode<T, N>(B)->Value = Move(Temp);
+			T Temp = GetItem(GetNode(A));
+			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));
+			GetItem(GetNode(B)) = Move(Temp);
 		}
 
 		void Reverse()
@@ -576,20 +669,17 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != End();
+			return GetIteratorValue(Other) != End();
 		}
 
-		I Find(const T& Other) const
+		I Find(const T& Other) 
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (*It == Other)
-				{
-					return It;
-				}
-			}
+			return GetIteratorValue(Other);
+		}
 
-			return End();
+		const I Find(const T& Other) const
+		{
+			return GetIteratorValue(Other);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -720,6 +810,49 @@ namespace NxEn
 				Next->Prev = Prev;
 				Prev->Next = Next;
 			}
+		}
+
+		N* GetNode(T* Position)
+		{
+			return Node::GetNode<T, N>(Position);
+		}
+
+		const N* GetNode(const T* Position) const
+		{
+			return Node::GetNode<T, N>(Position);
+		}
+
+		T& GetItem(N* Instance)
+		{
+			return Instance->Value;
+		}
+
+		const T& GetItem(const N* Instance) const
+		{
+			return Instance->Value;
+		}
+
+		I GetIteratorNode(N* Instance)
+		{
+			return I(Instance);
+		}
+
+		const I GetIteratorNode(const N* Instance) const
+		{
+			return I(const_cast<N*>(Instance));
+		}
+
+		I GetIteratorValue(const T& Value) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (*It == Value)
+				{
+					return It;
+				}
+			}
+
+			return End();
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

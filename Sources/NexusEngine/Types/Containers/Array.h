@@ -96,7 +96,12 @@ namespace NxEn
 			return *this;
 		}
 
-		T& operator[](uint64 Index) const
+		T& operator[](uint64 Index)
+		{
+			return Get(Index);
+		}
+
+		const T& operator[](uint64 Index) const
 		{
 			return Get(Index);
 		}
@@ -115,16 +120,18 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Data[Index] = Value;
-			return Data[Index];
+			T& Item = GetItem(Index);
+			Item = Value;
+			return Item;
 		}
 
 		T& Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			Data[Index] = Move(Value);
-			return Data[Index];
+			T& Item = GetItem(Index);
+			Item = Move(Value);
+			return Item;
 		}
 
 		template<typename... Args>
@@ -132,9 +139,10 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
+			T& Item = GetItem(Index);
 			Destruct(Index);
 			Construct(Index, args...);
-			return Data[Index];
+			return Item;
 		}
 
 		template<typename C>
@@ -146,52 +154,101 @@ namespace NxEn
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
-				Data[Index + Offset] = *It;
+				T& Item = GetItem(Index + Offset);
+				Item = *It;
 			}
 
-			return Data[Index];
+			return GetItem(Index);
 		}
 
-		T& Get(uint64 Index) const
+		T& Get(uint64 Index) 
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			return Data[Index];
+			return GetItem(Index);
 		}
 
-		T& First() const
+		const T& Get(uint64 Index) const
 		{
-			return Get(0);
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
+			return GetItem(Index);
 		}
 
-		T& Last() const
+		T& First() 
 		{
-			return Get(Count - 1);
+			return GetItem(0);
 		}
 
-		I GetIterator(uint64 Index) const
+		const T& First() const
 		{
-			return I(Data, Index);
+			return GetItem(0);
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const 
+		T& Last() 
 		{
-			return I(Data, 0);
+			return GetItem(Count - 1);
 		}
 
-		I BeginReverse() const
+		const T& Last() const
+		{
+			return GetItem(Count - 1);
+		}
+
+		I GetIterator(uint64 Index)
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
+			return GetIteratorIndex(Index);
+		}
+
+		const I GetIterator(uint64 Index) const
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
+			return GetIteratorIndex(Index);
+		}
+
+		I begin() { return Begin(); }
+		I Begin() 
+		{
+			return GetIteratorIndex(0);
+		}
+
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return GetIteratorIndex(0);
+		}
+
+		I BeginReverse() 
 		{
 			return --End();
 		}
 
-		I end() const { return End(); }
-		I End() const
+		const I BeginReverse() const
 		{
-			return I(Data, Count);
+			return --End();
 		}
 
-		I EndReverse() const
+		I end() { return End(); }
+		I End() 
+		{
+			return GetIteratorIndex(Count);
+		}
+
+		const I end() const { return End(); }
+		const I End() const
+		{
+			return GetIteratorIndex(Count);
+		}
+
+		I EndReverse()
+		{
+			return --Begin();
+		}
+
+		const I EndReverse() const
 		{
 			return --Begin();
 		}
@@ -206,9 +263,9 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
 
-			T Temp = Get(IndexA);
-			Get(IndexA) = Move(Get(IndexB));
-			Get(IndexB) = Move(Temp);
+			T Temp = GetItem(IndexA);
+			GetItem(IndexA) = Move(GetItem(IndexB));
+			GetItem(IndexB) = Move(Temp);
 		}
 
 		void Reverse()
@@ -228,20 +285,17 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != End();
+			return GetIteratorValue(Other) != End();
 		}
 
-		I Find(const T& Other) const
+		I Find(const T& Other)
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (*It == Other)
-				{
-					return It;
-				}
-			}
+			return GetIteratorValue(Other);
+		}
 
-			return End();
+		const I Find(const T& Other) const
+		{
+			return GetIteratorValue(Other);
 		}
 
 		uint64 GetCount() const { return Count; }
@@ -285,6 +339,29 @@ namespace NxEn
 			{
 				Memory::Destruct(&Data[Index + Offset]);
 			}
+		}
+
+		T& GetItem(uint64 Index) const
+		{
+			return Data[Index];
+		}
+
+		I GetIteratorIndex(uint64 Index) const
+		{
+			return I(Data, Index);
+		}
+
+		I GetIteratorValue(const T& Value) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (*It == Value)
+				{
+					return It;
+				}
+			}
+
+			return End();
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

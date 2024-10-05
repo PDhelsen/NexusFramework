@@ -108,7 +108,12 @@ namespace NxEn
 			return *this;
 		}
 
-		T& operator[](const K& Key) const
+		T& operator[](const K& Key)
+		{
+			return Get(Key);
+		}
+
+		const T& operator[](const K& Key) const
 		{
 			return Get(Key);
 		}
@@ -168,12 +173,12 @@ namespace NxEn
 				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndexRead(Hash);
 				NEXUS_ASSERT(Index < Capacity, "Failed to find key");
-				Data[Index].Value.Value = It->Value;
+				GetItem(Index).Value = It->Value;
 			}
 
 			uint64 Hash = GetHash(Value.Begin()->Key);
 			uint64 Index = GetIndexRead(Hash);
-			return Data[Index].Value.Value;
+			return GetItem(Index).Value;
 		}
 
 		T& Append(const K& Key, const T& Value)
@@ -182,13 +187,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value.Value;
+				return GetItem(Index).Value;
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Key, Value);
-			return Data[Index].Value.Value;
+			return GetItem(Index).Value;
 		}
 
 		T& Append(K&& Key, T&& Value)
@@ -197,13 +202,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value.Value;
+				return GetItem(Index).Value;
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Key), Move(Value));
-			return Data[Index].Value.Value;
+			return GetItem(Index).Value;
 		}
 
 		template<typename... Args>
@@ -213,13 +218,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value.Value;
+				return GetItem(Index).Value;
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Key), args...);
-			return Data[Index].Value.Value;
+			return GetItem(Index).Value;
 		}
 
 		template<typename C>
@@ -242,7 +247,7 @@ namespace NxEn
 
 			uint64 Hash = GetHash(Value.Begin()->Key);
 			uint64 Index = GetIndexRead(Hash);
-			return Data[Index].Value.Value;
+			return GetItem(Index).Value;
 		}
 
 		void Remove(const K& Key)
@@ -262,17 +267,27 @@ namespace NxEn
 			Resize(0);
 		}
 
-		T& Get(const K& Key) const
+		T& Get(const K& Key)
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
 			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
-			return Data[Index].Value.Value;
+			return GetItem(Index).Value;
 		}
 
-		T* TryGet(const K& Key) const
+		const T& Get(const K& Key) const
+		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+
+			uint64 Hash = GetHash(Key);
+			uint64 Index = GetIndexRead(Hash);
+			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+			return GetItem(Index).Value;
+		}
+
+		T* TryGet(const K& Key) 
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
 
@@ -282,26 +297,54 @@ namespace NxEn
 			{
 				return nullptr;
 			}
-			return &Data[Index].Value.Value;
+			return &GetItem(Index).Value;
+		}
+
+		const T* TryGet(const K& Key) const
+		{
+			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+
+			uint64 Hash = GetHash(Key);
+			uint64 Index = GetIndexRead(Hash);
+			if (Index >= Capacity)
+			{
+				return nullptr;
+			}
+			return &GetItem(Index).Value;
 		}
 
 		I GetIterator(const K& Key)
 		{
-			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			return Index != Capacity ? I(Data, Index, Capacity) : End();
+			return GetIteratorKey(Key);
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const
+		const I GetIterator(const K& Key) const
 		{
-			return I(Data, 0, Capacity);
+			return GetIteratorKey(Key);
 		}
 
-		I end() const { return End(); }
-		I End() const
+		I begin() { return Begin(); }
+		I Begin()
 		{
-			return I(Data, Capacity, Capacity);
+			return GetIteratorIndex(0);
+		}
+
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return GetIteratorIndex(0);
+		}
+
+		I end() { return End(); }
+		I End()
+		{
+			return GetIteratorIndex(Capacity);
+		}
+
+		const I end() const { return End(); }
+		const I End() const
+		{
+			return GetIteratorIndex(Capacity);
 		}
 
 		void Grow(uint64 Size)
@@ -335,32 +378,32 @@ namespace NxEn
 
 		bool ContainsKey(const K& Key) const
 		{
-			return FindKey(Key) != End();
+			return GetIteratorKey(Key) != End();
 		}
 
 		bool ContainsValue(const T& Value) const
 		{
-			return FindValue(Value) != End();
+			return GetIteratorValue(Value) != End();
 		}
 
-		I FindKey(const K& Key) const
+		I FindKey(const K& Key) 
 		{
-			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			return Index != Capacity ? I(Data, Index, Capacity) : End();
+			return GetIteratorKey(Key);
 		}
 
-		I FindValue(const T& Value) const
+		const I FindKey(const K& Key) const
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (It->Value == Value)
-				{
-					return It;
-				}
-			}
+			return GetIteratorKey(Key);
+		}
 
-			return End();
+		I FindValue(const T& Value) 
+		{
+			return GetIteratorValue(Value);
+		}
+
+		const I FindValue(const T& Value) const
+		{
+			return GetIteratorValue(Value);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -485,6 +528,36 @@ namespace NxEn
 			}
 
 			return Index;
+		}
+
+		KV& GetItem(uint64 Index) const
+		{
+			return Data[Index].Value;
+		}
+
+		I GetIteratorIndex(uint64 Index) const
+		{
+			return I(Data, Index, Capacity);
+		}
+
+		I GetIteratorKey(const K& Key) const
+		{
+			uint64 Hash = GetHash(Key);
+			uint64 Index = GetIndexRead(Hash);
+			return Index != Capacity ? I(Data, Index, Capacity) : End();
+		}
+
+		I GetIteratorValue(const T& Value) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (It->Value == Value)
+				{
+					return It;
+				}
+			}
+
+			return End();
 		}
 
 		void Resize(uint64 Size)

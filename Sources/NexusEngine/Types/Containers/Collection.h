@@ -19,12 +19,22 @@ namespace NxEn
 				return *this;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*()
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -40,7 +50,8 @@ namespace NxEn
 			}
 
 			virtual bool Equals(const Interface<T>& Other) const = 0;
-			virtual T& Get() const = 0;
+			virtual T& Get() = 0;
+			virtual const T& Get() const = 0;
 			virtual void Iterate() = 0;
 			virtual void Copy(const Interface<T>& Other) = 0;
 		};
@@ -61,7 +72,12 @@ namespace NxEn
 				return Iterator.Equals(Cast->Iterator);
 			}
 
-			T& Get() const override
+			T& Get() override
+			{
+				return Iterator.Get();
+			}
+
+			const T& Get() const override
 			{
 				return Iterator.Get();
 			}
@@ -109,7 +125,7 @@ namespace NxEn
 		Collection<T>& operator=(Collection<T>&& Other) noexcept = delete;
 
 		Iterator& Reset() { IteratorCurrent->Copy(*IteratorBegin); return *IteratorCurrent; }
-		Iterator& Current() const { return *IteratorCurrent; }
+		Iterator& Current() { return *IteratorCurrent; }
 		const Iterator& Begin() const { return *IteratorBegin; }
 		const Iterator& End() const { return *IteratorEnd; }
 

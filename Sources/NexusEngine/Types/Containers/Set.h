@@ -125,13 +125,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value;
+				return GetItem(Index);
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Value);
-			return Data[Index].Value;
+			return GetItem(Index);
 		}
 
 		const T& Append(T&& Value)
@@ -140,13 +140,13 @@ namespace NxEn
 			uint64 Index = GetIndexRead(Hash);
 			if (Index != Capacity)
 			{
-				return Data[Index].Value;
+				return GetItem(Index);
 			}
 
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Value));
-			return Data[Index].Value;
+			return GetItem(Index);
 		}
 
 		template<typename C>
@@ -169,7 +169,7 @@ namespace NxEn
 
 			uint64 Hash = GetHash(*Value.Begin());
 			uint64 Index = GetIndexRead(Hash);
-			return Data[Index].Value;
+			return GetItem(Index);
 		}
 
 		void Remove(const T& Value)
@@ -189,21 +189,36 @@ namespace NxEn
 
 		I GetIterator(const T& Value)
 		{
-			uint64 Hash = GetHash(Value);
-			uint64 Index = GetIndexRead(Hash);
-			return Index != Capacity ? I(Data, Index, Capacity) : End();
+			return GetIteratorValue(Value);
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const
+		const I GetIterator(const T& Value) const
 		{
-			return I(Data, 0, Capacity);
+			return GetIteratorValue(Value);
 		}
 
-		I end() const { return End(); }
-		I End() const
+		I begin() { return Begin(); }
+		I Begin() 
 		{
-			return I(Data, Capacity, Capacity);
+			return GetIteratorIndex(0);
+		}
+
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return GetIteratorIndex(0);
+		}
+
+		I end() { return End(); }
+		I End() 
+		{
+			return GetIteratorIndex(Capacity);
+		}
+
+		const I end() const { return End(); }
+		const I End() const
+		{
+			return GetIteratorIndex(Capacity);
 		}
 
 		void Grow(uint64 Size)
@@ -228,14 +243,12 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != End();
+			return GetIteratorValue(Other) != End();
 		}
 
-		I Find(const T& Other) const
+		const I Find(const T& Other) const
 		{
-			uint64 Hash = GetHash(Other);
-			uint64 Index = GetIndexRead(Hash);
-			return Index != Capacity ? I(Data, Index, Capacity) : End();
+			return GetIteratorValue(Other);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -363,6 +376,23 @@ namespace NxEn
 			}
 
 			return Index;
+		}
+
+		T& GetItem(uint64 Index) const
+		{
+			return Data[Index].Value;
+		}
+
+		I GetIteratorIndex(uint64 Index) const
+		{
+			return I(Data, Index, Capacity);
+		}
+
+		I GetIteratorValue(const T& Value) const
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndexRead(Hash);
+			return Index != Capacity ? GetIteratorIndex(Index) : End();
 		}
 
 		void Resize(uint64 Size)

@@ -85,6 +85,12 @@ namespace NxEn
 			return reinterpret_cast<N*>(Value);
 		}
 
+		template<typename T, typename N>
+		static const N* GetNode(const T* Value)
+		{
+			return reinterpret_cast<const N*>(Value);
+		}
+
 		template<typename N>
 		static void FixupNode(N* Head, N** Tail)
 		{

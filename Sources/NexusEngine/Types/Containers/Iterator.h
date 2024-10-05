@@ -43,12 +43,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*() 
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -68,7 +78,12 @@ namespace NxEn
 				return Data == Other.Data && Index == Other.Index;
 			}
 
-			T& Get() const
+			T& Get()
+			{
+				return Data[Index];
+			}
+
+			const T& Get() const
 			{
 				return Data[Index];
 			}
@@ -141,12 +156,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*()
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -166,7 +191,12 @@ namespace NxEn
 				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
 
-			T& Get() const
+			T& Get() 
+			{
+				return Data[BucketIndex][DataIndex];
+			}
+
+			const T& Get() const
 			{
 				return Data[BucketIndex][DataIndex];
 			}
@@ -249,12 +279,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*() 
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -274,7 +314,12 @@ namespace NxEn
 				return Data == Other.Data && Index == Other.Index;
 			}
 
-			T& Get() const
+			T& Get() 
+			{
+				return Data[Index].Value;
+			}
+
+			const T& Get() const
 			{
 				return Data[Index].Value;
 			}
@@ -330,12 +375,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*()
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -355,7 +410,12 @@ namespace NxEn
 				return Data == Other.Data && Index == Other.Index;
 			}
 
-			T& Get() const
+			T& Get()
+			{
+				return Data[Index].Value;
+			}
+
+			const T& Get() const
 			{
 				return Data[Index].Value;
 			}
@@ -409,12 +469,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*()
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -434,12 +504,22 @@ namespace NxEn
 				return Current == Other.Current;
 			}
 
-			T& Get() const
+			T& Get()
 			{
 				return Current->Value;
 			}
 
-			T* Id() const
+			const T& Get() const
+			{
+				return Current->Value;
+			}
+
+			T* Id()
+			{
+				return &Current->Value;
+			}
+
+			const T* Id() const
 			{
 				return &Current->Value;
 			}
@@ -498,12 +578,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->() 
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*() 
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -523,12 +613,22 @@ namespace NxEn
 				return Current == Other.Current;
 			}
 
-			T& Get() const
+			T& Get() 
 			{
 				return Current->Value;
 			}
 
-			T* Id() const
+			const T& Get() const
+			{
+				return Current->Value;
+			}
+
+			T* Id() 
+			{
+				return &Current->Value;
+			}
+
+			const T* Id() const
 			{
 				return &Current->Value;
 			}
@@ -587,12 +687,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*()
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -612,12 +722,22 @@ namespace NxEn
 				return Current == Other.Current;
 			}
 
-			T& Get() const
+			T& Get()
 			{
 				return Current->Value;
 			}
 
-			T* Id() const
+			const T& Get() const
+			{
+				return Current->Value;
+			}
+
+			T* Id()
+			{
+				return &Current->Value;
+			}
+
+			const T* Id() const
 			{
 				return &Current->Value;
 			}
@@ -707,12 +827,22 @@ namespace NxEn
 				return Temp;
 			}
 
-			T* operator->() const
+			T* operator->()
 			{
 				return &Get();
 			}
 
-			T& operator*() const
+			const T* operator->() const
+			{
+				return &Get();
+			}
+
+			T& operator*()
+			{
+				return Get();
+			}
+
+			const T& operator*() const
 			{
 				return Get();
 			}
@@ -732,12 +862,22 @@ namespace NxEn
 				return Current == Other.Current;
 			}
 
-			T& Get() const
+			T& Get()
 			{
 				return Current->Value;
 			}
 
-			T* Id() const
+			const T& Get() const
+			{
+				return Current->Value;
+			}
+
+			T* Id()
+			{
+				return &Current->Value;
+			}
+
+			const T* Id() const
 			{
 				return &Current->Value;
 			}

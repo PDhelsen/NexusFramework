@@ -101,16 +101,28 @@ namespace NxEn
 				ValidateDefaultState();
 			}
 
-			I begin() const { return Begin(); }
-			I Begin() const
+			I begin() { return Begin(); }
+			I Begin() 
 			{
-				return I(Data, 0, Capacity);
+				return GetIteratorIndex(0);
 			}
 
-			I end() const { return End(); }
-			I End() const
+			const I begin() const { return Begin(); }
+			const I Begin() const
 			{
-				return I(Data, Capacity, Capacity);
+				return GetIteratorIndex(0);
+			}
+
+			I end() { return End(); }
+			I End() 
+			{
+				return GetIteratorIndex(Capacity);
+			}
+
+			const I end() const { return End(); }
+			const I End() const
+			{
+				return GetIteratorIndex(Capacity);
 			}
 
 			uint64 GetCapacity() const { return Capacity; }
@@ -148,6 +160,11 @@ namespace NxEn
 					Memory::Destruct<T>(&Instance.Value);
 					Instance.Next = nullptr;
 				}
+			}
+
+			I GetIteratorIndex(uint64 Index) const
+			{
+				return I(Data, Index, Capacity);
 			}
 
 			void ValidateAllocator(Allocator* Allctr)
@@ -249,7 +266,7 @@ namespace NxEn
 
 			void Recycle(T* Value)
 			{
-				N* Instance = Node::GetNode<T, N>(Value);
+				N* Instance = GetNode(Value);
 
 				if (Instance == nullptr)
 				{
@@ -316,16 +333,28 @@ namespace NxEn
 				Count = 0;
 			}
 
-			I begin() const { return Begin(); }
-			I Begin() const
+			I begin() { return Begin(); }
+			I Begin()
 			{
-				return I(Data);
+				return GetIteratorNode(Data);
 			}
 
-			I end() const { return End(); }
-			I End() const
+			const I begin() const { return Begin(); }
+			const I Begin() const
 			{
-				return I(nullptr);
+				return GetIteratorNode(Data);
+			}
+
+			I end() { return End(); }
+			I End()
+			{
+				return GetIteratorNode(nullptr);
+			}
+
+			const I end() const { return End(); }
+			const I End() const
+			{
+				return GetIteratorNode(nullptr);
 			}
 
 			uint64 GetCapacity() const { return Count + Unsused; }
@@ -361,6 +390,26 @@ namespace NxEn
 			void Destruct(N* Instance)
 			{
 				Memory::Destruct<T>(&Instance->Value);
+			}
+
+			N* GetNode(T* Position)
+			{
+				return Node::GetNode<T, N>(Position);
+			}
+
+			const N* GetNode(const T* Position) const
+			{
+				return Node::GetNode<T, N>(Position);
+			}
+
+			I GetIteratorNode(N* Instance)
+			{
+				return I(Instance);
+			}
+
+			const I GetIteratorNode(const N* Instance) const
+			{
+				return I(const_cast<N*>(Instance));
 			}
 
 			void ValidateAllocator(Allocator* Allctr)
@@ -427,14 +476,26 @@ namespace NxEn
 			Data.Clear();
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const
+		I begin() { return Begin(); }
+		I Begin() 
 		{
 			return Data.Begin();
 		}
 
-		I end() const { return End(); }
-		I End() const
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return Data.Begin();
+		}
+
+		I end() { return End(); }
+		I End() 
+		{
+			return Data.End();
+		}
+
+		const I end() const { return End(); }
+		const I End() const
 		{
 			return Data.End();
 		}
@@ -444,7 +505,20 @@ namespace NxEn
 			return Find(Other) != End();
 		}
 
-		I Find(const T& Other) const
+		I Find(const T& Other)
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (*It == Other)
+				{
+					return It;
+				}
+			}
+
+			return End();
+		}
+
+		const I Find(const T& Other) const
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{

@@ -42,7 +42,7 @@ namespace NxEn
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index, BucketIndex, DataIndex);
-				Construct(BucketIndex, DataIndex, Other.Data[BucketIndex][DataIndex]);
+				Construct(BucketIndex, DataIndex, Other.GetItem(Index));
 			}
 		}
 
@@ -88,7 +88,7 @@ namespace NxEn
 			{
 				uint64 BucketIndex, DataIndex;
 				GetIndex(Index, BucketIndex, DataIndex);
-				Construct(BucketIndex, DataIndex, Other.Data[BucketIndex][BucketIndex]);
+				Construct(BucketIndex, DataIndex, Other.GetItem(Index));
 			}
 
 			return *this;
@@ -117,7 +117,12 @@ namespace NxEn
 			return *this;
 		}
 
-		T& operator[](uint64 Index) const
+		T& operator[](uint64 Index)
+		{
+			return Get(Index);
+		}
+
+		const T& operator[](uint64 Index) const
 		{
 			return Get(Index);
 		}
@@ -136,20 +141,18 @@ namespace NxEn
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
-			Data[BucketIndex][DataIndex] = Value;
-			return Data[BucketIndex][DataIndex];
+			T& Item = GetItem(Index);
+			Item = Value;
+			return Item;
 		}
 
 		T& Assign(uint64 Index, T&& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 			
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
-			Data[BucketIndex][DataIndex] = Move(Value);
-			return Data[BucketIndex][DataIndex];
+			T& Item = GetItem(Index);
+			Item = Move(Value);
+			return Item;
 		}
 
 		template<typename... Args>
@@ -161,7 +164,7 @@ namespace NxEn
 			GetIndex(Index, BucketIndex, DataIndex);
 			Destruct(BucketIndex, DataIndex);
 			Construct(BucketIndex, DataIndex, args...);
-			return Data[BucketIndex][DataIndex];
+			return GetItem(BucketIndex, DataIndex);
 		}
 
 		template<typename C>
@@ -173,28 +176,25 @@ namespace NxEn
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
 			{
-				uint64 BucketIndex, DataIndex;
-				GetIndex(Index + Offset, BucketIndex, DataIndex);
-				Data[BucketIndex][DataIndex] = *It;
+				T& Item = GetItem(Index);
+				Item = *It;
 			}
 		
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
+			return GetItem(Index);
 		}
 
 		T& AppendBack(const T& Value)
 		{
 			AppendBucket(true);
 			Construct(Buckets - 1, IndexBack, Value);
-			return Data[Buckets - 1][IndexBack];
+			return GetItem(Buckets - 1, IndexBack);
 		}
 
 		T& AppendBack(T&& Value)
 		{
 			AppendBucket(true);
 			Construct(Buckets - 1, IndexBack, Move(Value));
-			return Data[Buckets - 1][IndexBack];
+			return GetItem(Buckets - 1, IndexBack);
 		}
 
 		template<typename... Args>
@@ -202,7 +202,7 @@ namespace NxEn
 		{
 			AppendBucket(true);
 			Construct(Buckets - 1, IndexBack, args...);
-			return Data[Buckets - 1][IndexBack];
+			return GetItem(Buckets - 1, IndexBack);
 		}
 
 		template<typename C>
@@ -215,21 +215,21 @@ namespace NxEn
 				AppendBack(*It);
 			}
 
-			return Get(Index);
+			return GetItem(Index);
 		}
 
 		T& AppendFront(const T& Value)
 		{
 			AppendBucket(false);
 			Construct(0, IndexFront, Value);
-			return Data[0][IndexFront];
+			return GetItem(0, IndexFront);
 		}
 
 		T& AppendFront(T&& Value)
 		{
 			AppendBucket(false);
 			Construct(0, IndexFront, Move(Value));
-			return Data[0][IndexFront];
+			return GetItem(0, IndexFront);
 		}
 
 		template<typename... Args>
@@ -237,7 +237,7 @@ namespace NxEn
 		{
 			AppendBucket(false);
 			Construct(0, IndexFront, args...);
-			return Data[0][IndexFront];
+			return GetItem(0, IndexFront);
 		}
 
 		template<typename C>
@@ -248,7 +248,7 @@ namespace NxEn
 				AppendFront(*It);
 			}
 
-			return Get(Value.Count - 1);
+			return GetItem(Value.Count - 1);
 		}
 
 		void RemoveBack()
@@ -276,51 +276,96 @@ namespace NxEn
 			ValidateDefaultState();
 		}
 
-		T& Get(uint64 Index) const
+		T& Get(uint64 Index) 
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
 
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
-			return Data[BucketIndex][DataIndex];
+			return GetItem(Index);
 		}
 
-		T& First() const
+		const T& Get(uint64 Index) const
 		{
-			return Get(0);
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
+			return GetItem(Index);
 		}
 
-		T& Last() const
+		T& First() 
 		{
-			return Get(Count - 1);
+			return GetItem(0);
 		}
 
-		I GetIterator(uint64 Index) const
+		const T& First() const
 		{
-			uint64 BucketIndex, DataIndex;
-			GetIndex(Index, BucketIndex, DataIndex);
-			return I(Data, IndexFront, BucketIndex, DataIndex);
+			return GetItem(0);
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const
+		T& Last() 
 		{
-			return I(Data, IndexFront, 0, IndexFront);
+			return GetItem(Count - 1);
 		}
 
-		I BeginReverse() const
+		const T& Last() const
+		{
+			return GetItem(Count - 1);
+		}
+
+		I GetIterator(uint64 Index) 
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
+			return GetIteratorIndex(Index);
+		}
+
+		const I GetIterator(uint64 Index) const
+		{
+			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+
+			return GetIteratorIndex(Index);
+		}
+
+		I begin() { return Begin(); }
+		I Begin()
+		{
+			return GetIteratorIndex(0, IndexFront);
+		}
+
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return GetIteratorIndex(0, IndexFront);
+		}
+
+		I BeginReverse() 
 		{
 			return --End();
 		}
 
-		I end() const { return End(); }
-		I End() const
+		const I BeginReverse() const
 		{
-			I It = I(Data, IndexFront, Buckets - 1, IndexBack);
+			return --End();
+		}
+
+		I end() { return End(); }
+		I End()
+		{
+			I It = GetIteratorIndex(Buckets - 1, IndexBack);
 			return ++It;
 		}
 
-		I EndReverse() const
+		const I end() const { return End(); }
+		const I End() const
+		{
+			I It = GetIteratorIndex(Buckets - 1, IndexBack);
+			return ++It;
+		}
+
+		I EndReverse() 
+		{
+			return --Begin();
+		}
+
+		const I EndReverse() const
 		{
 			return --Begin();
 		}
@@ -335,9 +380,9 @@ namespace NxEn
 			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
 			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
 			
-			T Temp = Get(IndexA);
-			Get(IndexA) = Move(Get(IndexB));
-			Get(IndexB) = Move(Temp);
+			T Temp = GetItem(IndexA);
+			GetItem(IndexA) = Move(GetItem(IndexB));
+			GetItem(IndexB) = Move(Temp);
 		}
 
 		void Reverse()
@@ -357,20 +402,17 @@ namespace NxEn
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != End();
+			return GetIteratorValue(Other) != End();
 		}
 
-		I Find(const T& Other) const
+		I Find(const T& Other)
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (*It == Other)
-				{
-					return It;
-				}
-			}
+			return GetIteratorValue(Other);
+		}
 
-			return End();
+		const I Find(const T& Other) const
+		{
+			return GetIteratorValue(Other);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -528,6 +570,43 @@ namespace NxEn
 			Index += IndexFront;
 			BucketIndex = Index / BucketSize;
 			DataIndex = Index % BucketSize;
+		}
+
+		T& GetItem(uint64 Index) const
+		{
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
+		}
+
+		T& GetItem(uint64 BucketIndex, uint64 DataIndex) const
+		{
+			return Data[BucketIndex][DataIndex];
+		}
+
+		I GetIteratorIndex(uint64 Index) const
+		{
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			return I(Data, IndexFront, BucketIndex, DataIndex);
+		}
+
+		I GetIteratorIndex(uint64 BucketIndex, uint64 DataIndex) const
+		{
+			return I(Data, IndexFront, BucketIndex, DataIndex);
+		}
+
+		I GetIteratorValue(const T& Value) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (*It == Value)
+				{
+					return It;
+				}
+			}
+
+			return End();
 		}
 
 		void ValidateAllocator(Allocator* Allctr)

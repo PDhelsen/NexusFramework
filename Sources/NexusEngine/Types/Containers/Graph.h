@@ -146,9 +146,10 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
-			Instance->Value = Value;
-			return Instance->Value;
+			N* Instance = GetNode(Position);
+			T& Item = GetItem(Instance);
+			Item = Value;
+			return Item;
 		}
 
 		T& Assign(T* Position, T&& Value)
@@ -156,9 +157,10 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
-			Instance->Value = Move(Value);
-			return Instance->Value;
+			N* Instance = GetNode(Position);
+			T& Item = GetItem(Instance);
+			Item = Move(Value);
+			return Item;
 		}
 
 		template<typename... Args>
@@ -167,10 +169,11 @@ namespace NxEn
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
+			T& Item = GetItem(Instance);
 			Destruct(Instance);
 			Construct(Instance, args...);
-			return Instance->Value;
+			return Item;
 		}
 
 		T& Append(const T& Value)
@@ -179,7 +182,7 @@ namespace NxEn
 			Construct(Instance, Value);
 
 			AppendNode(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		T& Append(T&& Value)
@@ -188,7 +191,7 @@ namespace NxEn
 			Construct(Instance, Move(Value));
 
 			AppendNode(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename... Args>
@@ -198,7 +201,7 @@ namespace NxEn
 			Construct(Instance, args...);
 
 			AppendNode(Instance);
-			return Instance->Value;
+			return GetItem(Instance);
 		}
 
 		template<typename C>
@@ -209,7 +212,7 @@ namespace NxEn
 				Append(*It);
 			}
 
-			return Data->Value;
+			return GetItem(Data);
 		}
 
 		void Remove(T* Value)
@@ -217,7 +220,7 @@ namespace NxEn
 			NEXUS_ASSERT(Value != nullptr, "Value is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			N* Instance = Node::GetNode<T, N>(Value);
+			N* Instance = GetNode(Value);
 			RemoveNode(Instance);
 			Destruct(Instance);
 			Free(Instance);
@@ -243,8 +246,8 @@ namespace NxEn
 			NEXUS_ASSERT(To != nullptr, "To is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			N* Start = Node::GetNode<T, N>(From);
-			N* Target = Node::GetNode<T, N>(To);
+			N* Start = GetNode(From);
+			N* Target = GetNode(To);
 			
 			AppendConnection(Start, Target, CT::To);
 			AppendConnection(Target, Start, CT::From);
@@ -256,27 +259,34 @@ namespace NxEn
 			NEXUS_ASSERT(To != nullptr, "To is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 
-			N* Start = Node::GetNode<T, N>(From);
-			N* Target = Node::GetNode<T, N>(To);
+			N* Start = GetNode(From);
+			N* Target = GetNode(To);
 
 			RemoveConnection(Start, Target, CT::To);
 			RemoveConnection(Target, Start, CT::From);
 		}
 
-		T& Get() const
+		T& Get()
 		{
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
-			return Data->Value;
+			return GetItem(Data);
 		}
 
-		T& GetConnection(T* Position, CT Type, uint64 Index = 0) const
+		const T& Get() const
+		{
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+
+			return GetItem(Data);
+		}
+
+		T& GetConnection(T* Position, CT Type, uint64 Index = 0) 
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			uint64 Idx = 0;
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
 
 			C* Connect = Instance->Connection;
 			while (Connect)
@@ -294,17 +304,45 @@ namespace NxEn
 				Connect = Connect->Next;
 			}
 
-			NEXUS_ASSERT(Connect, "Failed to find connection")
+			NEXUS_ASSERT(Connect, "Failed to find connection");
 			return *Position;
 		}
 
-		T* TryGetConnection(T* Position, CT Type, uint64 Index = 0) const
+		const T& GetConnection(const T* Position, CT Type, uint64 Index = 0) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+
+			uint64 Idx = 0;
+			N* Instance = GetNode(Position);
+
+			C* Connect = Instance->Connection;
+			while (Connect)
+			{
+				if (Connect->Type == Type)
+				{
+					if (Idx == Index)
+					{
+						return Connect->Target->Value;
+					}
+
+					++Idx;
+				}
+
+				Connect = Connect->Next;
+			}
+
+			NEXUS_ASSERT(Connect, "Failed to find connection");
+			return *Position;
+		}
+
+		T* TryGetConnection(T* Position, CT Type, uint64 Index = 0) 
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			uint64 Idx = 0;
-			N* Instance = Node::GetNode<T, N>(Position);
+			N* Instance = GetNode(Position);
 			
 			C* Connect = Instance->Connection;
 			while (Connect)
@@ -325,21 +363,48 @@ namespace NxEn
 			return nullptr;
 		}
 
-		bool IsConnected(T* Position, T* To, CT Type) const
+		const T* TryGetConnection(const T* Position, CT Type, uint64 Index = 0) const
+		{
+			NEXUS_ASSERT(Position != nullptr, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+
+			uint64 Idx = 0;
+			N* Instance = GetNode(Position);
+
+			C* Connect = Instance->Connection;
+			while (Connect)
+			{
+				if (Connect->Type == Type)
+				{
+					if (Idx == Index)
+					{
+						return &Connect->Target->Value;
+					}
+
+					++Idx;
+				}
+
+				Connect = Connect->Next;
+			}
+
+			return nullptr;
+		}
+
+		bool IsConnected(const T* Position, const T* To, CT Type) const
 		{
 			uint64 Index = 0;
 			return IsConnected(Position, To, Type, Index);
 		}
 		
-		bool IsConnected(T* Position, T* To, CT Type, uint64& Index) const
+		bool IsConnected(const T* Position, const T* To, CT Type, uint64& Index) const
 		{
 			NEXUS_ASSERT(Position != nullptr, "Position is null");
 			NEXUS_ASSERT(To != nullptr, "To is null");
 			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
 			
 			Index = 0;
-			N* Instance = Node::GetNode<T, N>(Position);
-			N* Target = Node::GetNode<T, N>(To);
+			const N* Instance = GetNode(Position);
+			const N* Target = GetNode(To);
 
 			C* Connect = Instance->Connection;
 			while (Connect)
@@ -358,19 +423,36 @@ namespace NxEn
 
 		I GetIterator(T* Position)
 		{
-			return I(Node::GetNode<T, N>(Position));
+			return GetIteratorNode(GetNode(Position));
 		}
 
-		I begin() const { return Begin(); }
-		I Begin() const
+		const I GetIterator(T* Position) const
 		{
-			return I(Data);
+			return GetIteratorNode(GetNode(Position));
 		}
 
-		I end() const { return End(); }
-		I End() const
+		I begin() { return Begin(); }
+		I Begin() 
 		{
-			return I(nullptr);
+			return GetIteratorNode(Data);
+		}
+
+		const I begin() const { return Begin(); }
+		const I Begin() const
+		{
+			return GetIteratorNode(Data);
+		}
+
+		I end() { return End(); }
+		I End()
+		{
+			return GetIteratorNode(nullptr);
+		}
+
+		const I end() const { return End(); }
+		const I End() const
+		{
+			return GetIteratorNode(nullptr);
 		}
 
 		void Swap(T* A, T* B)
@@ -379,32 +461,29 @@ namespace NxEn
 			NEXUS_ASSERT(A != nullptr, "A is null");
 			NEXUS_ASSERT(B != nullptr, "B is null");
 
-			T Temp = Node::GetNode<T, N>(A)->Value;
-			Node::GetNode<T, N>(A)->Value = Move(Node::GetNode<T, N>(B)->Value);
-			Node::GetNode<T, N>(B)->Value = Move(Temp);
+			T Temp = GetItem(GetNode(A));
+			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));
+			GetItem(GetNode(B)) = Move(Temp);
 		}
 
 		bool Contains(const T& Other) const
 		{
-			return Find(Other) != End();
+			return GetIteratorValue(Other) != End();
 		}
 
-		I Find(const T& Other) const
+		I Find(const T& Other)
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (*It == Other)
-				{
-					return It;
-				}
-			}
+			return GetIteratorValue(Other);
+		}
 
-			return End();
+		const I Find(const T& Other) const
+		{
+			return GetIteratorValue(Other);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
-		uint64 GetConnectionCount(T* Instance) const { return Node::GetNode<T, N>(Instance)->Count; }
+		uint64 GetConnectionCount(T* Instance) const { return GetNode(Instance)->Count; }
 
 	private:
 		N* Allocate()
@@ -539,6 +618,49 @@ namespace NxEn
 			}
 
 			Free(Current, A, B);
+		}
+
+		N* GetNode(T* Position)
+		{
+			return Node::GetNode<T, N>(Position);
+		}
+
+		const N* GetNode(const T* Position) const
+		{
+			return Node::GetNode<T, N>(Position);
+		}
+
+		T& GetItem(N* Instance)
+		{
+			return Instance->Value;
+		}
+
+		const T& GetItem(const N* Instance) const
+		{
+			return Instance->Value;
+		}
+
+		I GetIteratorNode(N* Instance)
+		{
+			return I(Instance);
+		}
+
+		const I GetIteratorNode(const N* Instance) const
+		{
+			return I(const_cast<N*>(Instance));
+		}
+
+		I GetIteratorValue(const T& Value) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (*It == Value)
+				{
+					return It;
+				}
+			}
+
+			return End();
 		}
 
 		void ValidateAllocator(Allocator* Allctr)
