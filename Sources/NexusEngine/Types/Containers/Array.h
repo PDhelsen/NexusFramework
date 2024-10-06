@@ -10,24 +10,36 @@
 
 namespace NxEn
 {
-	//TODO: Implementation - Array - Data stored in stack
-	template<typename T>
+	template<typename T, uint64 L = 1>
 	class Array
 	{
 	public:
 		using I = Iterator::IteratorBlock<T>;
 
 		template<typename... Args>
-		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)
-			: Alloc(nullptr), Count(0), Data(nullptr)
+		Array(Allocator* Allctr = nullptr, Args&&... args)
+			: Alloc(nullptr), Count(0)
 		{
-			ValidateAllocator(Allctr);
+			NEXUS_ASSERT(L >= 1, "The provided size is invalid");
+
+			ValidateAllocator(Allctr, true);
+			Allocate(L);
+			ConstructRange(0, Count, args...);
+		}
+
+		template<typename... Args>
+		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)
+			: Alloc(nullptr), Count(0)
+		{
+			NEXUS_ASSERT(L == 1 && Size > 1, "The provided size is invalid");
+
+			ValidateAllocator(Allctr, false);
 			Allocate(Size);
 			ConstructRange(0, Count, args...);
 		}
 
-		Array(const Array<T>& Other)
-			: Alloc(Other.Alloc), Count(Other.Count), Data(nullptr)
+		Array(const Array<T, L>& Other)
+			: Alloc(Other.Alloc), Count(Other.Count)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Array - Copy constructor");
 
@@ -39,10 +51,21 @@ namespace NxEn
 			}
 		}
 
-		Array(Array<T>&& Other) noexcept
-			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
+		Array(Array<T, L>&& Other) noexcept
+			: Alloc(Other.Alloc), Count(Other.Count)
 		{
-			Other.Data = nullptr;
+			if (!Other.IsStackArray())
+			{
+				Data.Heap = Other.Data.Heap;
+				Other.Data.Heap = nullptr;
+			}
+			else
+			{
+				for (uint64 Index = 0; Index < Count; ++Index)
+				{
+					Construct(Index, Other[Index]);
+				}
+			}
 		}
 
 		~Array()
@@ -51,7 +74,7 @@ namespace NxEn
 			Free();
 		}
 
-		Array<T>& operator=(const Array<T>& Other)
+		Array<T, L>& operator=(const Array<T, L>& Other)
 		{
 			NEXUS_LOG(Engine, Warning, "Performance", "Array - Assignement operator");
 
@@ -76,7 +99,7 @@ namespace NxEn
 			return *this;
 		}
 
-		Array<T>& operator=(Array<T>&& Other) noexcept
+		Array<T, L>& operator=(Array<T, L>&& Other) noexcept
 		{
 			if (*this == Other)
 			{
@@ -88,10 +111,19 @@ namespace NxEn
 
 			Alloc = Other.Alloc;
 			Count = Other.Count;
-			Data = Other.Data;
 
-			Other.Count = 0;
-			Other.Data = nullptr;
+			if (!Other.IsStackArray())
+			{
+				Data.Heap = Other.Data.Heap;
+				Other.Data.Heap = nullptr;
+			}
+			else
+			{
+				for (uint64 Index = 0; Index < Count; ++Index)
+				{
+					Construct(Index, Other[Index]);
+				}
+			}
 
 			return *this;
 		}
@@ -106,12 +138,12 @@ namespace NxEn
 			return Get(Index);
 		}
 
-		bool operator==(const Array<T>& Other) const
+		bool operator==(const Array<T, L>& Other) const
 		{
-			return Count == Other.Count && Data == Other.Data;
+			return Count == Other.Count && GetData() == Other.GetData();
 		}
 
-		bool operator!=(const Array<T>& Other) const
+		bool operator!=(const Array<T, L>& Other) const
 		{
 			return !(*this == Other);
 		}
@@ -280,7 +312,7 @@ namespace NxEn
 		template<typename S = Sorting::DefaultIndexBased>
 		void Sort(Sorting::CompareFunction<T> Function = nullptr)
 		{
-			Sort::SortIndexBased<T, S, Array<T>>(*this, Count, Function);
+			Sort::SortIndexBased<T, S, Array<T, L>>(*this, Count, Function);
 		}
 
 		bool Contains(const T& Other) const
@@ -304,19 +336,25 @@ namespace NxEn
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Count, Alloc);
+			if (!IsStackArray())
+			{
+				Data.Heap = (T*)Memory::Allocate(sizeof(T) * Count, Alloc);
+			}
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Alloc);
-			Data = nullptr;
+			if (!IsStackArray())
+			{
+				Memory::Free(Data.Heap, Alloc);
+				Data.Heap = nullptr;
+			}
 		}
 
 		template<typename... Args>
 		void Construct(uint64 Index, Args&&... args)
 		{
-			Memory::Construct<T>(&Data[Index], args...);
+			Memory::Construct<T>(&GetData()[Index], args...);
 		}
 
 		template<typename... Args>
@@ -324,31 +362,56 @@ namespace NxEn
 		{
 			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
-				Memory::Construct<T>(&Data[Index + Offset], args...);
+				Memory::Construct<T>(&GetData()[Index + Offset], args...);
 			}
 		}
 
 		void Destruct(uint64 Index)
 		{
-			Memory::Destruct(&Data[Index]);
+			Memory::Destruct(&GetData()[Index]);
 		}
 
 		void DestructRange(uint64 Index, uint64 Size)
 		{
 			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
-				Memory::Destruct(&Data[Index + Offset]);
+				Memory::Destruct(&GetData()[Index + Offset]);
 			}
 		}
 
-		T& GetItem(uint64 Index) const
+		bool IsStackArray() const
 		{
-			return Data[Index];
+			return L == Count;
 		}
 
-		I GetIteratorIndex(uint64 Index) const
+		T* GetData()
 		{
-			return I(Data, Index);
+			return IsStackArray() ? Data.Stack : Data.Heap;
+		}
+
+		const T* GetData() const
+		{
+			return IsStackArray() ? Data.Stack : Data.Heap;
+		}
+
+		T& GetItem(uint64 Index)
+		{
+			return GetData()[Index];
+		}
+
+		const T& GetItem(uint64 Index) const
+		{
+			return GetData()[Index];
+		}
+
+		I GetIteratorIndex(uint64 Index)
+		{
+			return I(GetData(), Index);
+		}
+
+		const I GetIteratorIndex(uint64 Index) const
+		{
+			return I(const_cast<T*>(GetData()), Index);
 		}
 
 		I GetIteratorValue(const T& Value) const
@@ -364,9 +427,9 @@ namespace NxEn
 			return End();
 		}
 
-		void ValidateAllocator(Allocator* Allctr)
+		void ValidateAllocator(Allocator* Allctr, bool Stack)
 		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+			Alloc = Stack ? nullptr : Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateCapacity(uint64 Size)
@@ -374,8 +437,17 @@ namespace NxEn
 			Count = Size > 1 ? Size : 1;
 		}
 
+		union Buffer
+		{
+			T* Heap;
+			T Stack[L];
+
+			Buffer() {};
+			~Buffer() {};
+		};
+
 		Allocator* Alloc;
 		uint64 Count;
-		T* Data;
+		Buffer Data;
 	};
 }

@@ -142,7 +142,7 @@ namespace NxTs
 {
 	TEST(Type_Containers, Array)
 	{
-		NxEn::Array<ContainerTest> Test = NxEn::Array<ContainerTest>(10, nullptr, 5);
+		NxEn::Array<ContainerTest, 10> Test = NxEn::Array<ContainerTest, 10>(nullptr, 5);
 		ASSERT_EQ(Test.GetCount(), 10);
 		ASSERT_EQ(Test[0].Integer, 5);
 	
@@ -167,7 +167,7 @@ namespace NxTs
 		AccesRef.Integer = 10;
 		ASSERT_EQ(Test[5].Integer, 10);
 
-		NxEn::Array<ContainerTest> Copy = Test;
+		NxEn::Array<ContainerTest, 10> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
