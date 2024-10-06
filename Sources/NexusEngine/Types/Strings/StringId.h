@@ -13,6 +13,7 @@ namespace NxEn
 	struct StringId
 	{
 	public:
+		NEXUS_ENGINE_API explicit StringId();
 		NEXUS_ENGINE_API explicit StringId(StringView Text);
 
 		NEXUS_ENGINE_API bool operator==(const StringId& Other) const;

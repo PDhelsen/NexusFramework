@@ -41,7 +41,7 @@ namespace NxEn
 		Array(const Array<T, L>& Other)
 			: Alloc(Other.Alloc), Count(Other.Count)
 		{
-			NEXUS_LOG(Engine, Warning, "Performance", "Array - Copy constructor");
+			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Array - Copy constructor");
 
 			Allocate(Count);
 
@@ -76,7 +76,7 @@ namespace NxEn
 
 		Array<T, L>& operator=(const Array<T, L>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, "Performance", "Array - Assignement operator");
+			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Array - Assignement operator");
 
 			if (*this == Other)
 			{

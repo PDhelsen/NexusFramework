@@ -6,6 +6,7 @@
 #include "Types/Timestamp.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
+#include "Types/Strings/StringId.h"
 
 namespace NxEn
 {
@@ -15,6 +16,14 @@ namespace NxEn
 		using Default = Fnv1a64;
 	}
 	template <typename K, typename T, class H> class Dictionary;
+
+	namespace LoggerChannel
+	{
+		NEXUS_ENGINE_API extern StringId Default;
+		NEXUS_ENGINE_API extern StringId Assert;
+		NEXUS_ENGINE_API extern StringId Performance;
+		NEXUS_ENGINE_API extern StringId Routine;
+	}
 
 	enum class LoggerVerbosity : uint8
 	{
@@ -54,12 +63,12 @@ namespace NxEn
 		NEXUS_ENGINE_API Logger& operator=(Logger&& Other) noexcept = delete;
 
 		template<typename... Args>
-		void Log(LoggerSource Source, LoggerVerbosity Verbosity, const String& Channel, StringView Message, Args&&... args);
+		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 
-		NEXUS_ENGINE_API void AddChannel(const String& Channel, bool State = true);
-		NEXUS_ENGINE_API void SetChannel(const String& Channel, bool State);
-		NEXUS_ENGINE_API bool HasChannel(const String& Channel) const;
-		NEXUS_ENGINE_API bool CheckChannel(const String& Channel) const;
+		NEXUS_ENGINE_API void AddChannel(StringId Channel, bool State = true);
+		NEXUS_ENGINE_API void SetChannel(StringId Channel, bool State);
+		NEXUS_ENGINE_API bool HasChannel(StringId Channel) const;
+		NEXUS_ENGINE_API bool CheckChannel(StringId Channel) const;
 
 		NEXUS_ENGINE_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
@@ -67,22 +76,21 @@ namespace NxEn
 		NEXUS_ENGINE_API static Logger* GetInstance() { static Logger* Instance = new Logger(LoggerVerbosity::All); return Instance; }
 
 	private:
-		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const;
+		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, StringId Channel) const;
 		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const;
 		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
 
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 
-		// TODO: Implementation - Logger - String vs StringView vs StringId
-		Dictionary<String, bool, Hashing::Default>* Channels;
+		Dictionary<StringId, bool, Hashing::Default>* Channels;
 		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;
 		String StringBuilderFormat;
 	};
 
 	template<typename... Args>
-	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, const String& Channel, StringView Message, Args&&... args)
+	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
 		if (!ShouldPrint(Verbosity, Channel))
 		{

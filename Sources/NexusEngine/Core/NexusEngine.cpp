@@ -6,6 +6,6 @@ namespace NxEn
 {
 	void HelloWorld()
 	{ 
-		NEXUS_LOG(Engine, Info, "Default", "Hello World")
+		NEXUS_LOG(Engine, Info, NxEn::LoggerChannel::Default, "Hello World")
 	}
 }

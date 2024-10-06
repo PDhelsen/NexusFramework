@@ -25,7 +25,7 @@ namespace NxEn
 		Queue(const Queue<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, "Performance", "Queue - Copy constructor");
+			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Queue - Copy constructor");
 
 			if (Buckets)
 			{
@@ -58,7 +58,7 @@ namespace NxEn
 
 		Queue<T, BS>& operator=(const Queue<T, BS>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, "Performance", "Queue - Assignement operator");
+			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Queue - Assignement operator");
 
 			if (*this == Other)
 			{

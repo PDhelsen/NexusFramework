@@ -26,7 +26,7 @@ namespace NxEn
 		LinkedList(const LinkedList<T>& Other)
 			: Alloc(Other.Alloc), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, "Performance", "LinkedList - Copy constructor");
+			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "LinkedList - Copy constructor");
 
 			N* Current = Other.DataHead;
 			while (Current)
@@ -50,7 +50,7 @@ namespace NxEn
 
 		LinkedList<T>& operator=(const LinkedList<T>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, "Performance", "LinkedList - Assignement operator");
+			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "LinkedList - Assignement operator");
 
 			if (*this == Other)
 			{

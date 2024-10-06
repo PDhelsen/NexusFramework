@@ -4,16 +4,18 @@
 
 namespace NxTs
 {
+	NxEn::StringId ChannelTest = "Test"_Sid;
+
 	TEST(Logger, Channel)
 	{
 		NxEn::Logger* Logger = NxEn::Logger::GetInstance();
 
-		Logger->AddChannel("Test", false);
-		ASSERT_EQ(Logger->HasChannel("Test"), true);
-		ASSERT_EQ(Logger->CheckChannel("Test"), false);
+		Logger->AddChannel(ChannelTest, false);
+		ASSERT_EQ(Logger->HasChannel(ChannelTest), true);
+		ASSERT_EQ(Logger->CheckChannel(ChannelTest), false);
 
-		Logger->SetChannel("Test", true);
-		ASSERT_EQ(Logger->CheckChannel("Test"), true);
+		Logger->SetChannel(ChannelTest, true);
+		ASSERT_EQ(Logger->CheckChannel(ChannelTest), true);
 	}
 
 	TEST(Logger, Verbosity)

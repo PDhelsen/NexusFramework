@@ -6,6 +6,11 @@
 
 namespace NxEn
 {
+	StringId LoggerChannel::Default;
+	StringId LoggerChannel::Assert;
+	StringId LoggerChannel::Performance;
+	StringId LoggerChannel::Routine;
+
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, "Engine", "Editor", "App", "Project");
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
@@ -14,12 +19,17 @@ namespace NxEn
 	Logger::Logger(LoggerVerbosity Verbosity)
 		: VerbosityMask(Verbosity), StringBuilderMessage(1024), StringBuilderFormat(1024)
 	{
-		Channels = new Dictionary<String, bool, Hashing::Default>();
+		Channels = new Dictionary<StringId, bool, Hashing::Default>();
 
-		AddChannel("Default", true);
-		AddChannel("Assert", true);
-		AddChannel("Performance", false);
-		AddChannel("Routine", false);
+		LoggerChannel::Default = "Default"_Sid;
+		LoggerChannel::Assert = "Assert"_Sid;
+		LoggerChannel::Performance = "Performance"_Sid;
+		LoggerChannel::Routine = "Routine"_Sid;
+
+		AddChannel(LoggerChannel::Default, true);
+		AddChannel(LoggerChannel::Assert, true);
+		AddChannel(LoggerChannel::Performance, false);
+		AddChannel(LoggerChannel::Routine, false);
 	}
 
 	Logger::~Logger()
@@ -27,24 +37,24 @@ namespace NxEn
 		delete Channels;
 	}
 
-	void Logger::AddChannel(const String& Channel, bool State /*true*/)
+	void Logger::AddChannel(StringId Channel, bool State /*true*/)
 	{
 		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %s", Channel.C())
 		Channels->Append(Channel, State);
 	}
 
-	void Logger::SetChannel(const String& Channel, bool State)
+	void Logger::SetChannel(StringId Channel, bool State)
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
 		Channels->Get(Channel) = State;
 	}
 
-	bool Logger::HasChannel(const String& Channel) const
+	bool Logger::HasChannel(StringId Channel) const
 	{
 		return Channels->ContainsKey(Channel);
 	}
 
-	bool Logger::CheckChannel(const String& Channel) const
+	bool Logger::CheckChannel(StringId Channel) const
 	{
 		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
 		return Channels->Get(Channel);
@@ -60,7 +70,7 @@ namespace NxEn
 		VerbosityMask = Enum::SetFlag(VerbosityMask, Verbosity, State);
 	}
 
-	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, const String& Channel) const
+	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, StringId Channel) const
 	{
 		return Platform::GetInstance() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
 	}

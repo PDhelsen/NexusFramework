@@ -5,6 +5,11 @@ namespace NxEn
 {
 	Dictionary<GUID, String> StringId::Tables = Dictionary<GUID, String>();
 
+	StringId::StringId()
+		: Id(0)
+	{
+	}
+
 	StringId::StringId(StringView Text)
 		: Id(InternString(Text))
 	{
