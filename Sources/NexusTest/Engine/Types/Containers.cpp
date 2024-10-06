@@ -147,7 +147,8 @@ namespace NxTs
 		ASSERT_EQ(Test[0].Integer, 5);
 	
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5, nullptr, 4);
+		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5);
+		NxEn::ContainersUtils::Fill<ContainerTest>(Range, 4);
 
 		Test.Assign(0, Container1);
 		Test.Assign(1, ContainerTest(2));
@@ -869,6 +870,8 @@ namespace NxTs
 		ASSERT_EQ(Test.ContainsValue(ToFind2), true);
 		ASSERT_EQ(Test.FindKey(ToFind1)->Key.Integer, ToFind1.Integer);
 		ASSERT_EQ(Test.FindValue(ToFind2)->Value.Integer, ToFind2.Integer);
+
+		NxEn::ContainersUtils::Fill<ContainerTest, ContainerTest>(Range, 4);
 	}
 
 	TEST(Type_Containers, Tree)

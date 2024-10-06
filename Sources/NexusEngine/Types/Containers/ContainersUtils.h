@@ -7,6 +7,24 @@ namespace NxEn
 	class ContainersUtils
 	{
 	public:
+		template<typename T, typename C>
+		static void Fill(C& Container, const T& Value)
+		{
+			for (auto& It : Container)
+			{
+				It = Value;
+			}
+		}
+
+		template<typename K, typename T>
+		static void Fill(Dictionary<K, T>& Container, const T& Value)
+		{
+			for (auto& It : Container)
+			{
+				It.Value = Value;
+			}
+		}
+
 		template<typename T, class H = Hashing::Default>
 		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)
 		{
