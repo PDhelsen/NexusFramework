@@ -5,25 +5,25 @@ namespace NxEn
 	template <typename T> 
 	struct RemoveReference 
 	{ 
-		typedef T Type; 
+		using Type = T;
 	};
 
 	template <typename T> 
 	struct RemoveReference<T&> 
 	{ 
-		typedef T Type; 
+		using Type = T;
 	};
 
 	template <typename T> 
 	struct RemoveReference<T&&> 
 	{ 
-		typedef T Type; 
+		using Type = T;
 	};
 
 	template <typename T>
 	typename RemoveReference<T>::Type&& Move(T&& Obj)
 	{
-		typedef typename RemoveReference<T>::Type RawType;
+		using RawType = typename RemoveReference<T>::Type;
 		return (RawType&&)Obj;
 	}
 

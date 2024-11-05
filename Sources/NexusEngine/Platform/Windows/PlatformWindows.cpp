@@ -5,6 +5,8 @@
 
 namespace NxEn
 {
+	using DllFunction = void(CALLBACK*)();
+
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 	// Keep synced with the enum in the Platform.h
 	static const String TerminalColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
@@ -34,8 +36,7 @@ namespace NxEn
 			return;
 		}
 
-		typedef void(CALLBACK* ProjectFunction)();
-		ProjectFunction Function = (ProjectFunction)GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal));
+		DllFunction Function = (DllFunction)GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal));
 		if (Function == nullptr)
 		{
 			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load function")
