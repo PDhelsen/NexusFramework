@@ -1,13 +1,10 @@
 #pragma once
 
+#include "External/Intrinsics.h"
 #include "Debug/Logger.h"
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#if NEXUS_WINDOWS
-		#define NEXUS_BREAK __debugbreak();
-	#else
-		#define NEXUS_BREAK
-	#endif
+	#define NEXUS_BREAK NEXUS_DEBUGBREAK
 #elif NEXUS_DISTRIB
 	#define NEXUS_BREAK
 #endif
