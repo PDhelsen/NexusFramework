@@ -21,6 +21,7 @@ inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1
 namespace NxEn
 {
 	using GUID = uint64;
+	using Byte = uint8;
 }
 
 namespace NxEn::Integer

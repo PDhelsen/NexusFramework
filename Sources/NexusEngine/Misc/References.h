@@ -21,10 +21,21 @@ namespace NxEn
 	};
 
 	template <typename T>
-	typename RemoveReference<T>::Type&& Move(T&& Obj)
+	constexpr typename RemoveReference<T>::Type&& Move(T&& Arg)
 	{
-		using RawType = typename RemoveReference<T>::Type;
-		return (RawType&&)Obj;
+		return static_cast<typename RemoveReference<T>::Type&&>(Arg);
+	}
+
+	template <typename T>
+	constexpr T&& Forward(typename RemoveReference<T>::Type& Arg)
+	{
+		return static_cast<T&&>(Arg);
+	}
+
+	template <typename T>
+	constexpr T&& Forward(typename RemoveReference<T>::Type&& Arg)
+	{
+		return static_cast<T&&>(Arg);
 	}
 
 	template<typename T>
@@ -45,8 +56,26 @@ namespace NxEn
 		}
 	};
 
-	template <class, class>
-	constexpr bool IsSameType = false;
-	template <class T>
-	constexpr bool IsSameType<T, T> = true;
+	template <typename T, typename U>
+	struct IsSameType
+	{
+		static const bool Value = false;
+	};
+
+	template <typename T>
+	struct IsSameType<T, T>
+	{
+		static const bool Value = true;
+	};
+
+	template <bool B, typename T = void>
+	struct EnableIf
+	{
+	};
+
+	template<typename T>
+	struct EnableIf<true, T>
+	{
+		using Type = T;
+	};
 }

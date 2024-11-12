@@ -35,6 +35,7 @@
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
 #include "Types/Containers/ContainersUtils.h"
+#include "Types/Delegate.h"
 
 #include "Debug/Logger.h"
 #include "Debug/Assert.h"
