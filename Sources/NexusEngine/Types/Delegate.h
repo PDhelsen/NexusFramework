@@ -63,22 +63,22 @@ namespace NxEn
 			Function.Large = nullptr;
 		}
 
-		template<typename F>
-		explicit Delegate(F&& Func)
+		template<typename F, typename EnableIf<!IsSameType<typename RemoveReference<F>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
+		Delegate(F&& Func)
 			: Allctr(nullptr)
 		{
 			Bind(Forward<F>(Func));
 		}
 
-		template<typename T, typename F>
-		explicit Delegate(T* Object, F&& Func)
+		template<typename T, typename F, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
+		Delegate(T* Object, F&& Func)
 			: Allctr(nullptr)
 		{
 			Bind(Object, Forward<F>(Func));
 		}
 
-		template<typename T>
-		explicit Delegate(T& Object)
+		template<typename T, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
+		Delegate(T& Object)
 			: Allctr(nullptr)
 		{
 			Bind(Object);

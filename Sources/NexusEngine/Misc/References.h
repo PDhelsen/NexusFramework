@@ -2,37 +2,37 @@
 
 namespace NxEn
 {
-	template <typename T> 
+	template<typename T> 
 	struct RemoveReference 
 	{ 
 		using Type = T;
 	};
 
-	template <typename T> 
+	template<typename T> 
 	struct RemoveReference<T&> 
 	{ 
 		using Type = T;
 	};
 
-	template <typename T> 
+	template<typename T> 
 	struct RemoveReference<T&&> 
 	{ 
 		using Type = T;
 	};
 
-	template <typename T>
+	template<typename T>
 	constexpr typename RemoveReference<T>::Type&& Move(T&& Arg)
 	{
 		return static_cast<typename RemoveReference<T>::Type&&>(Arg);
 	}
 
-	template <typename T>
+	template<typename T>
 	constexpr T&& Forward(typename RemoveReference<T>::Type& Arg)
 	{
 		return static_cast<T&&>(Arg);
 	}
 
-	template <typename T>
+	template<typename T>
 	constexpr T&& Forward(typename RemoveReference<T>::Type&& Arg)
 	{
 		return static_cast<T&&>(Arg);
@@ -56,19 +56,19 @@ namespace NxEn
 		}
 	};
 
-	template <typename T, typename U>
+	template<typename T, typename U>
 	struct IsSameType
 	{
 		static const bool Value = false;
 	};
 
-	template <typename T>
+	template<typename T>
 	struct IsSameType<T, T>
 	{
 		static const bool Value = true;
 	};
 
-	template <bool B, typename T = void>
+	template<bool B, typename T = void>
 	struct EnableIf
 	{
 	};
