@@ -47,6 +47,8 @@ namespace NxEn
 		NEXUS_ENGINE_API static void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_ENGINE_API static void MemCopy(const void* Source, void* Destination, uint64 Size);
 		NEXUS_ENGINE_API static void MemMove(const void* Source, void* Destination, uint64 Size);
+		NEXUS_ENGINE_API static bool MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination);
+		NEXUS_ENGINE_API static bool MemCompare(const void* Source, const void* Destination, uint64 Size);
 
 		NEXUS_ENGINE_API static void PushActiveAllocator(Allocator* Alloc);
 		NEXUS_ENGINE_API static void PopActiveAllocator();

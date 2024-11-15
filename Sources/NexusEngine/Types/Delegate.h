@@ -13,10 +13,23 @@ namespace NxEn
 	class Delegate<R(Args...)>
 	{
 	private:
+		template <typename T, typename = void>
+		struct IsLambda
+		{
+			static const bool Value = false;
+		};
+
+		template <typename T>
+		struct IsLambda<T, HasTrait<decltype(&T::operator())>>
+		{
+			static const bool Value = true;
+		};
+
 		class Interface
 		{
 		public:
 			virtual ~Interface() = default;
+
 			virtual R Invoke(Args... args) = 0;
 			virtual Interface* Clone(void* Pointer = nullptr) const = 0;
 		};
@@ -58,45 +71,44 @@ namespace NxEn
 
 	public:
 		Delegate()
-			: Allctr(nullptr)
+			: Sbo(true), Comparable(false)
 		{
-			Function.Large = nullptr;
+			Clear();
 		}
 
 		template<typename F, typename EnableIf<!IsSameType<typename RemoveReference<F>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
 		Delegate(F&& Func)
-			: Allctr(nullptr)
+			: Sbo(true), Comparable(false)
 		{
 			Bind(Forward<F>(Func));
 		}
 
 		template<typename T, typename F, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
 		Delegate(T* Object, F&& Func)
-			: Allctr(nullptr)
+			: Sbo(true), Comparable(false)
 		{
 			Bind(Object, Forward<F>(Func));
 		}
 
 		template<typename T, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
 		Delegate(T& Object)
-			: Allctr(nullptr)
+			: Sbo(true), Comparable(false)
 		{
 			Bind(Object);
 		}
 
 		Delegate(const Delegate<R(Args...)>& Other)
-			: Allctr(Other.Allctr)
+			: Sbo(Other.Sbo), Comparable(Other.Comparable)
 		{
 			Clone(Other, true);
 		}
 
 		Delegate(Delegate<R(Args...)>&& Other) noexcept
-			: Allctr(Other.Allctr)
+			: Sbo(Other.Sbo), Comparable(Other.Comparable)
 		{
 			Clone(Other, false);
 
-			Other.Allctr = nullptr;
-			Other.Function.Large = nullptr;
+			Other.Clear();
 		}
 
 		~Delegate()
@@ -113,7 +125,6 @@ namespace NxEn
 
 			Free();
 			Clone(Other, true);
-			Allctr = Other.Allctr;
 
 			return *this;
 		}
@@ -127,12 +138,30 @@ namespace NxEn
 
 			Free();
 			Clone(Other, false);
-			Allctr = Other.Allctr;
 
-			Other.Allctr = nullptr;
-			Other.Function.Large = nullptr;
+			Other.Clear();
 
 			return *this;
+		}
+
+		bool operator==(const Delegate<R(Args...)>& Other) const
+		{
+			if (Sbo != Other.Sbo)
+			{
+				return false;
+			}
+
+			if (!Comparable || !Other.Comparable)
+			{
+				return false;
+			}
+
+			return Memory::MemCompare(GetFunction(), Other.GetFunction(), GetSize(), GetSize());
+		}
+
+		bool operator!=(const Delegate<R(Args...)>& Other) const
+		{
+			return !(*this == Other);
 		}
 
 		R operator()(Args... args) const
@@ -140,23 +169,27 @@ namespace NxEn
 			return Invoke(args...);
 		}
 
-		template<typename T, typename F>
-		void Bind(T* Object, F&& Func)
+		explicit operator bool() const
 		{
-			Bind([Object, Func](Args... args) { return (Object->*Func)(args...); });
-		}
-
-		template<typename T>
-		void Bind(T& Object)
-		{
-			Bind([&](Args... args) { return Object(args...); });
+			return !IsNull();
 		}
 
 		template<typename F>
 		void Bind(F&& Func)
 		{
-			Free();
-			Allocate(Forward<F>(Func));
+			Store(Forward<F>(Func), !IsLambda<RemoveReference<F>::Type>::Value);
+		}
+
+		template<typename T>
+		void Bind(T& Object)
+		{
+			Store([&](Args... args) { return Object(args...); }, true);
+		}
+
+		template<typename T, typename F>
+		void Bind(T* Object, F&& Func)
+		{
+			Store([Object, Func](Args... args) { return (Object->*Func)(args...); }, true);
 		}
 
 		R Invoke(Args... args) const
@@ -169,67 +202,97 @@ namespace NxEn
 			Free();
 		}
 
-		bool IsNull() const { return Function.Large == nullptr; }
+		bool IsNull() const { return HasFunction(); }
 
 	private:
 		template<typename F>
-		void Allocate(F&& Func)
+		void Allocate(F&& Func, bool CanCompare)
 		{
 			uint64 Size = sizeof(RemoveReference<F>::Type);
 			if (Size > SmallFunctionSize)
 			{
-				Allctr = Memory::GetActiveAllocator();
-				Function.Large = new Wrapper<F>(Forward<F>(Func));
+				Data.Large.Allctr = Memory::GetActiveAllocator();
+				Data.Large.Function = new Wrapper<F>(Forward<F>(Func));
+				Sbo = false;
 			}
 			else
 			{
-				new (Function.Small) Wrapper<F>(Forward<F>(Func));
+				Data.Small.Size = Size + 8;
+				new (Data.Small.Function) Wrapper<F>(Forward<F>(Func));
+				Sbo = true;
 			}
+			Comparable = CanCompare;
 		}
 
 		void Clone(const Delegate<R(Args...)>& Other, bool Allocate)
 		{
-			if (Other.Allctr)
+			if (!Other.Sbo)
 			{
 				if (Allocate)
 				{
-					AllocatorActive Active(Allctr);
-					Function.Large = Other.GetFunction()->Clone();
+					Data.Large.Allctr = Memory::GetActiveAllocator();
+					Data.Large.Function = Other.GetFunction()->Clone();
 				}
 				else
 				{
-					Function.Large = Other.GetFunction();
+					Data.Large.Allctr = Other.GetAllocator();
+					Data.Large.Function = Other.GetFunction();
 				}
 			}
 			else
 			{
-				Other.GetFunction()->Clone(Function.Small);
+				Other.GetFunction()->Clone(Data.Small.Function);
+				Data.Small.Size = Other.Data.Small.Size;
 			}
+
+			Sbo = Other.Sbo;
+			Comparable = Other.Comparable;
 		}
 
 		void Free()
 		{
-			if (Allctr)
+			if (!Sbo)
 			{
-				AllocatorActive Active(Allctr);
-				delete Function.Large;
+				AllocatorActive Active(Data.Large.Allctr);
+				delete Data.Large.Function;
 			}
 
-			Function.Large = nullptr;
-			Allctr = nullptr;
+			Memory::MemSet(&Data, 0, sizeof(Data));
+			Sbo = true;
+			Comparable = true;
 		}
 
-		Interface* GetFunction() const { return (Interface*)(Allctr ? Function.Large : Function.Small); }
+		template<typename F>
+		void Store(F&& Func, bool IsLambda)
+		{
+			Free();
+			Allocate(Forward<F>(Func), IsLambda);
+		}
 
-		static const uint8 SmallFunctionSize = 24;
+		Interface* GetFunction() const { return (Interface*)(Sbo ? Data.Small.Function : Data.Large.Function); }
+		Allocator* GetAllocator() const { return Sbo ? nullptr : Data.Large.Allctr; }
+		uint64 GetSize() const { return Sbo ? Data.Small.Size : 0; }
+		bool HasFunction() const { return Sbo ? Data.Small.Function[0] == 0 : Data.Large.Function == nullptr; }
+
+		static const uint8 SmallFunctionSize = 16;
+		static const uint8 BufferSize = SmallFunctionSize + 8;
 
 		union Storage
 		{
-			void* Large;
-			Byte Small[SmallFunctionSize];
+			struct
+			{
+				void* Function;
+				Allocator* Allctr;
+			} Large;
+			struct
+			{
+				Byte Function[BufferSize];
+				uint64 Size;
+			} Small;
 		};
 
-		Allocator* Allctr;
-		Storage Function;
+		Storage Data;
+		bool Sbo;
+		bool Comparable;
 	};
 }

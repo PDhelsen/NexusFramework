@@ -156,6 +156,16 @@ namespace NxEn
 		memmove(Destination, Source, Size);
 	}
 
+	bool Memory::MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination)
+	{
+		return SizeSource == SizeDestination && MemCompare(Source, Destination, SizeSource);
+	}
+
+	bool Memory::MemCompare(const void* Source, const void* Destination, uint64 Size)
+	{
+		return memcmp(Source, Destination, Size) == 0;
+	}
+
 	void Memory::PushActiveAllocator(Allocator* Alloc)
 	{
 		Allocators->Append(Alloc);

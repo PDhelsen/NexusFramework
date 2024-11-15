@@ -78,4 +78,7 @@ namespace NxEn
 	{
 		using Type = T;
 	};
+
+	template <typename...>
+	using HasTrait = void;
 }
