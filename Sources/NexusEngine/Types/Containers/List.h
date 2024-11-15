@@ -494,6 +494,11 @@ namespace NxEn
 
 		void Shift(uint64 Index, uint64 Size, bool Forward)
 		{
+			if (!Forward && (Index + Size) >= Count)
+			{
+				return;
+			}
+
 			T* Start = Forward ? &Data[Index] : &Data[Index + Size];
 			T* End = Forward ? &Data[Index + Size] : &Data[Index];
 			Memory::MemMove(Start, End, sizeof(T) * (Count - Index - Size));

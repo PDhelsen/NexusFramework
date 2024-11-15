@@ -23,6 +23,7 @@ namespace NxEn
 		NEXUS_ENGINE_API extern StringId Assert;
 		NEXUS_ENGINE_API extern StringId Performance;
 		NEXUS_ENGINE_API extern StringId Routine;
+		NEXUS_ENGINE_API extern StringId UnitTest;
 	}
 
 	enum class LoggerVerbosity : uint8

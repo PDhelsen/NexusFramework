@@ -10,6 +10,7 @@ namespace NxEn
 	StringId LoggerChannel::Assert;
 	StringId LoggerChannel::Performance;
 	StringId LoggerChannel::Routine;
+	StringId LoggerChannel::UnitTest;
 
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, "Engine", "Editor", "App", "Project");
@@ -25,11 +26,13 @@ namespace NxEn
 		LoggerChannel::Assert = "Assert"_Sid;
 		LoggerChannel::Performance = "Performance"_Sid;
 		LoggerChannel::Routine = "Routine"_Sid;
+		LoggerChannel::UnitTest = "UnitTest"_Sid;
 
 		AddChannel(LoggerChannel::Default, true);
 		AddChannel(LoggerChannel::Assert, true);
 		AddChannel(LoggerChannel::Performance, false);
 		AddChannel(LoggerChannel::Routine, false);
+		AddChannel(LoggerChannel::UnitTest, false);
 	}
 
 	Logger::~Logger()

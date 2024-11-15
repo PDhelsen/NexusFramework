@@ -1,9 +1,15 @@
 #include "Core/NexusTestPch.h"
 
 #include "Types/Delegate.h"
+#include "Types/Event.h"
 
 namespace NxTs
 {
+	void LogMessage(const NxEn::String& Message)
+	{
+		NEXUS_LOG(App, Info, NxEn::LoggerChannel::UnitTest, Message.C());
+	}
+
 	int8 Add(int8 A, int8 B)
 	{
 		return A + B;
@@ -20,9 +26,19 @@ namespace NxTs
 			return A + B + C;
 		}
 
+		void Log(const NxEn::String& Message)
+		{
+			LogMessage(Message);
+		}
+
 		int8 operator()(int8 B, int8 C)
 		{
 			return Add(B, C);
+		}
+
+		void operator()(const NxEn::String& Message)
+		{
+			Log(Message);
 		}
 	};
 
@@ -94,5 +110,40 @@ namespace NxTs
 			IsNull = false;
 		}
 		ASSERT_EQ(IsNull, false);
+	}
+
+	TEST(Types_FunctionPointer, Event)
+	{
+		NxEn::String Message = "Call from Event";
+		DelegateTest Data{ .A = 5 };
+
+		NxEn::Delegate<void(const NxEn::String&)> Function(&LogMessage);
+		NxEn::Delegate<void(const NxEn::String&)> Object(&Data, &DelegateTest::Log);
+		NxEn::Delegate<void(const NxEn::String&)> Lambda([&](const NxEn::String& Message) { LogMessage(Message); });
+		NxEn::Delegate<void(const NxEn::String&)> Functor(Data);
+
+		NxEn::Event<const NxEn::String&> Event;
+		Event += Function;
+		Event += Object;
+		Event += Lambda;
+		Event += Functor;
+
+		Event.Invoke(Message);
+
+		Event -= Function;
+		Event -= Object;
+		Event -= Functor;
+
+		NxEn::Event<const NxEn::String&> Copy = Event;
+
+		Event.Invoke(Message);
+
+		Event.Clear();
+
+		Event.Invoke(Message);
+
+		Event = Copy;
+
+		Event.Invoke(Message);
 	}
 }
