@@ -1,19 +1,43 @@
 #pragma once
 
+#include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
 
 namespace NxEn
 {
     struct Timestamp
     {
+	public:
+		NEXUS_ENGINE_API Timestamp();
+		NEXUS_ENGINE_API Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd = -1, int32 Yd = -1, bool St = false);
+
+		NEXUS_ENGINE_API bool operator==(const Timestamp& Other) const;
+		NEXUS_ENGINE_API bool operator!=(const Timestamp& Other) const;
+		NEXUS_ENGINE_API bool operator<(const Timestamp& Other) const;
+		NEXUS_ENGINE_API bool operator>(const Timestamp& Other) const;
+		NEXUS_ENGINE_API bool operator<=(const Timestamp& Other) const;
+		NEXUS_ENGINE_API bool operator>=(const Timestamp& Other) const;
+		NEXUS_ENGINE_API explicit operator bool() const;
+
+		NEXUS_ENGINE_API StringView GetWeekDay() const;
+		NEXUS_ENGINE_API StringView GetMonth() const;
+		NEXUS_ENGINE_API String ToString(StringView Format = Format) const;
+
+		NEXUS_ENGINE_API bool IsValid() const;
+		NEXUS_ENGINE_API bool IsFull() const;
+
+		inline static const StringView Format = "%A - %B %d %Y - %H:%M:%S";
+
         int32 Seconds;
         int32 Minutes;
         int32 Hours;
         int32 Days;
         int32 Months;
-        int32 Year;
+        int32 Years;
         int32 WeekDay;
         int32 YearDay;
-        int32 SummerTime;
+        bool SummerTime;
     };
 }

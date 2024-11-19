@@ -17,7 +17,7 @@ namespace NxEn
 	template<typename... Args>
 	void String::Format(uint64 Size, StringView Format, Args&&... args)
 	{
-		StringUtility::Format(*this, Format, args...);
+		StringUtility::Format(*this, Size, Format, args...);
 	}
 
 	template<typename... Args>
