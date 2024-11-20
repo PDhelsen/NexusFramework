@@ -3,10 +3,19 @@
 
 namespace NxEn
 {
-	const static uint64 TimeToStringCapacity = 40;
-	static char TimeToStringBuffer[TimeToStringCapacity];
+	//-----------------------------------------------------------------------------------------------------------------------
+	// Constant
+	//-----------------------------------------------------------------------------------------------------------------------
+
 	static String WeekDaysNames[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"};
 	static String MonthsNames[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+
+	//-----------------------------------------------------------------------------------------------------------------------
+	// C Lib Convertion
+	//-----------------------------------------------------------------------------------------------------------------------
+
+	const static uint64 TimeToStringCapacity = 40;
+	static char TimeToStringBuffer[TimeToStringCapacity];
 
 	// Make sure Timestamp follow the same structure as tm from C library
 	static union TimeInfo
@@ -22,7 +31,7 @@ namespace NxEn
 		TimeInfo.TM.tm_mon -= 1;
 		TimeInfo.TM.tm_year -= 1900;
 		TimeInfo.TM.tm_wday = TimeInfo.Stamp.WeekDay == 7 ? 0 : TimeInfo.Stamp.WeekDay;
-		TimeInfo.TM.tm_isdst = TimeInfo.Stamp.SummerTime ? 1 : 0;
+		TimeInfo.TM.tm_isdst = TimeInfo.Stamp.DayLightSaving ? 1 : 0;
 	}
 
 	static void ConvertFromTmToStamp()
@@ -30,8 +39,12 @@ namespace NxEn
 		TimeInfo.Stamp.Months += 1;
 		TimeInfo.Stamp.Years += 1900;
 		TimeInfo.Stamp.WeekDay = TimeInfo.Stamp.WeekDay == 0 ? 7 : TimeInfo.Stamp.WeekDay;
-		TimeInfo.Stamp.SummerTime = TimeInfo.TM.tm_isdst != 0 ? true : false;
+		TimeInfo.Stamp.DayLightSaving = TimeInfo.TM.tm_isdst != 0 ? true : false;
 	}
+
+	//-----------------------------------------------------------------------------------------------------------------------
+	// Time
+	//-----------------------------------------------------------------------------------------------------------------------
 
 	int64 Time::GetTimeSinceEpoch() const
 	{
@@ -48,6 +61,14 @@ namespace NxEn
 		return TimeInfo.Stamp;
 	}
 
+	String Time::ToString(const Timestamp& Stamp, StringView Format)
+	{
+		TimeInfo.Stamp = Stamp;
+		ConvertFromStampToTm();
+		uint64 Size = strftime(TimeToStringBuffer, TimeToStringCapacity, Format.C(), &TimeInfo.TM);
+		return String(TimeToStringBuffer, Size);
+	}
+
 	StringView Time::GetWeekDay(int32 Day)
 	{
 		return WeekDaysNames[Day - 1];
@@ -56,14 +77,6 @@ namespace NxEn
 	StringView Time::GetMonth(int32 Month)
 	{
 		return MonthsNames[Month - 1];
-	}
-
-	String Time::ToString(const Timestamp& Stamp, StringView Format)
-	{
-		TimeInfo.Stamp = Stamp;
-		ConvertFromStampToTm();
-		uint64 Size = strftime(TimeToStringBuffer, TimeToStringCapacity, Format.C(), &TimeInfo.TM);
-		return String(TimeToStringBuffer, Size);
 	}
 
 	Time::Time()

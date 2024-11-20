@@ -6,12 +6,12 @@
 namespace NxEn
 {
 	Timestamp::Timestamp()
-		: Seconds(-1), Minutes(-1), Hours(-1), Days(-1), Months(-1), Years(-1), WeekDay(-1), YearDay(-1), SummerTime(false)
+		: Seconds(-1), Minutes(-1), Hours(-1), Days(-1), Months(-1), Years(-1), WeekDay(-1), YearDay(-1), DayLightSaving(false)
 	{
 	}
 
 	Timestamp::Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd, int32 Yd, bool St)
-		: Seconds(S), Minutes(Mn), Hours(H), Days(D), Months(M), Years(Y), WeekDay(Wd), YearDay(Yd), SummerTime(St)
+		: Seconds(S), Minutes(Mn), Hours(H), Days(D), Months(M), Years(Y), WeekDay(Wd), YearDay(Yd), DayLightSaving(St)
 	{
 	}
 
@@ -25,7 +25,7 @@ namespace NxEn
 			Years == Other.Years &&
 			WeekDay == Other.WeekDay &&
 			YearDay == Other.YearDay &&
-			SummerTime == Other.SummerTime;
+			DayLightSaving == Other.DayLightSaving;
 	}
 
 	bool Timestamp::operator!=(const Timestamp& Other) const

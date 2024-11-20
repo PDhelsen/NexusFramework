@@ -38,6 +38,6 @@ namespace NxEn
         int32 Years;
         int32 WeekDay;
         int32 YearDay;
-        bool SummerTime;
+        bool DayLightSaving;
     };
 }
