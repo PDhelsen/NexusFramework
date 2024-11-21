@@ -13,6 +13,7 @@
 #include "Types/Integer.h"
 #include "Types/Enum.h"
 #include "Types/Timestamp.h"
+#include "Types/Timespan.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringId.h"
 #include "Types/Strings/StringView.h"
