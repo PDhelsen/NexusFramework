@@ -49,9 +49,17 @@ namespace NxEn
 		FreeLibrary(Dll);
 	}
 
+	double PlatformWindows::GetProcessorTimer(double Unit) const
+	{
+		LARGE_INTEGER Counter;
+		QueryPerformanceCounter(&Counter);
+		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
+	}
+
 	PlatformWindows::PlatformWindows()
 	{
 		InitializeTerminal();
+		InitializePerformanceTimer();
 	}
 
 	PlatformWindows::~PlatformWindows()
@@ -69,5 +77,12 @@ namespace NxEn
 		SetConsoleMode(TerminalOut, TerminalOutMode);
 
 		SetConsoleOutputCP(CP_UTF8);
+	}
+
+	void PlatformWindows::InitializePerformanceTimer()
+	{
+		LARGE_INTEGER Frequency;
+		QueryPerformanceFrequency(&Frequency);
+		PerformanceFrequency = 1.0 / (double)Frequency.QuadPart;
 	}
 }

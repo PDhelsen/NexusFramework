@@ -29,6 +29,7 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
 		NEXUS_ENGINE_API virtual void WriteToDebugger(StringView Message) const = 0;
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
+		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

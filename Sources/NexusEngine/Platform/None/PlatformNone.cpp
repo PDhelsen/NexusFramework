@@ -19,6 +19,11 @@ namespace NxEn
     {
     }
 
+	double PlatformNone::GetProcessorTimer(double Unit) const
+    {
+		return 0.0;
+    }
+
     PlatformNone::PlatformNone()
     {
     }
