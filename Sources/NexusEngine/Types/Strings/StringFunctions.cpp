@@ -5,14 +5,23 @@ namespace NxEn
 {
 	bool StringUtility::Start(StringView Text, StringView Substring)
 	{
-		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C(), Substring.GetCount());
-		return Result && Text.C() == Result;
+		if (Text.GetCount() < Substring.GetCount())
+		{
+			return false;
+		}
+
+		return StringCApi::Compare(Text.C(), Substring.C(), Substring.GetCount()) == 0;
 	}
 
 	bool StringUtility::End(StringView Text, StringView Substring)
 	{
-		const char* Result = StringCApi::SearchStr(Text.C(), Substring.C(), Substring.GetCount());
-		return Result && Substring.GetCount() == StringCApi::Length(Result);
+		if (Text.GetCount() < Substring.GetCount())
+		{
+			return false;
+		}
+
+		StringView View = Text.ToView(Text.GetCount() - Substring.GetCount(), Substring.GetCount());
+		return StringCApi::Compare(View.C(), Substring.C(), Substring.GetCount()) == 0;
 	}
 
 	bool StringUtility::Contains(StringView Text, StringView Substring, SearchMode Mode)
