@@ -108,6 +108,7 @@ namespace NxEn
 			IteratorCurrent = new Wrapper<T, typename C::I>(Container.Begin());
 			IteratorBegin = new Wrapper<T, typename C::I>(Container.Begin());
 			IteratorEnd = new Wrapper<T, typename C::I>(Container.End());
+			Count = Container.GetCount();
 		}
 
 		Collection(const Collection<T>& Other) = delete;
@@ -124,15 +125,17 @@ namespace NxEn
 		Collection<T>& operator=(const Collection<T>& Other) = delete;
 		Collection<T>& operator=(Collection<T>&& Other) noexcept = delete;
 
-		Iterator& Reset() { IteratorCurrent->Copy(*IteratorBegin); return *IteratorCurrent; }
-		Iterator& Current() { return *IteratorCurrent; }
+		Iterator& Reset() const { IteratorCurrent->Copy(*IteratorBegin); return *IteratorCurrent; }
+		Iterator& Current() const { return *IteratorCurrent; }
 		const Iterator& Begin() const { return *IteratorBegin; }
 		const Iterator& End() const { return *IteratorEnd; }
+		uint64 GetCount() const { return Count; }
 
 	private:
 		Allocator* Alloc;
 		Iterator* IteratorCurrent;
 		const Iterator* IteratorBegin;
 		const Iterator* IteratorEnd;
+		uint64 Count;
 	};
 }

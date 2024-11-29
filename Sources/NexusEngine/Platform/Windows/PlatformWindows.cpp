@@ -11,6 +11,8 @@ namespace NxEn
 	// Keep synced with the enum in the Platform.h
 	static const String TerminalColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
 	static const String TerminalFormatReset = "\033[m";
+	static const uint64 BufferSize = 512;
+	static char Buffer[BufferSize];
 
 	void PlatformWindows::WaitForUserToCloseTerminal() const
 	{
@@ -54,6 +56,36 @@ namespace NxEn
 		LARGE_INTEGER Counter;
 		QueryPerformanceCounter(&Counter);
 		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
+	}
+
+	PlatformPathInfo PlatformWindows::GetPathInfo(StringView Path) const
+	{
+		struct _stati64 Buffer;
+
+		if (_stati64(Path.C(), &Buffer) == 0)
+		{
+			if (Buffer.st_mode & _S_IFREG)
+			{
+				return PlatformPathInfo::File;
+			}
+			else if (Buffer.st_mode & _S_IFDIR)
+			{
+				return PlatformPathInfo::Directory;
+			}
+			else
+			{
+				return PlatformPathInfo::Other;
+			}
+		}
+
+		return PlatformPathInfo::None;
+	}
+
+	String PlatformWindows::GetWorkingDirectory() const
+	{
+		DWORD Length = GetCurrentDirectoryA(BufferSize, Buffer);
+		NEXUS_ASSERT(Length != 0 && Length < BufferSize, "Buffer overflowed when getting the current working directory");
+		return String(Buffer, Length);
 	}
 
 	PlatformWindows::PlatformWindows()

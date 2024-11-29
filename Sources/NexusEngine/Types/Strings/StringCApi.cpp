@@ -61,6 +61,18 @@ namespace NxEn
 		return Result;
 	}
 
+	uint64 StringCApi::Common(const char* Text1, const char* Text2)
+	{
+		uint64 Count = 0;
+		while (*Text1 == *Text2 && *Text1 != NullChar && *Text2 != NullChar)
+		{
+			Text1++;
+			Text2++;
+			Count++;
+		}
+		return Count;
+	}
+
 	uint64 StringCApi::Length(const char* Text)
 	{
 		return strlen(Text);

@@ -10,6 +10,11 @@ namespace NxEn
 		Windows
 	};
 
+	enum class PlatformPathInfo : uint32
+	{
+		None, File, Directory, Other
+	};
+
 	class Platform
 	{
 	public:
@@ -30,6 +35,8 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual void WriteToDebugger(StringView Message) const = 0;
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
+		NEXUS_ENGINE_API virtual PlatformPathInfo GetPathInfo(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual String GetWorkingDirectory() const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

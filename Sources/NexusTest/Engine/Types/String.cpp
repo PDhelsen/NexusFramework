@@ -187,6 +187,12 @@ namespace NxTs
 		ASSERT_EQ(Test < Reverse, true);
 		ASSERT_EQ(Test >= Reverse, false);
 
+		NxEn::StringView View = Test.ToView(0, 5);
+		ASSERT_EQ(Test > View, true);
+		ASSERT_EQ(Test >= View, true);
+		ASSERT_EQ(Test < View, false);
+		ASSERT_EQ(Test == View, false);
+
 		NxEn::String Test2 = Test + Reverse;
 		ASSERT_EQ(Test, "Hello World");
 		ASSERT_EQ(Reverse, "World Hello");

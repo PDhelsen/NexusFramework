@@ -30,6 +30,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static bool Start(StringView Text, StringView Substring);
 		NEXUS_ENGINE_API static bool End(StringView Text, StringView Substring);
 		NEXUS_ENGINE_API static bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_ENGINE_API static StringView Common(StringView Text1, StringView Text2);
 		NEXUS_ENGINE_API static StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
 		NEXUS_ENGINE_API static List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
 		NEXUS_ENGINE_API static StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);

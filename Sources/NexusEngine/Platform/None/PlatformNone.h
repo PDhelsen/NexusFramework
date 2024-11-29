@@ -14,7 +14,9 @@ namespace NxEn
 		NEXUS_ENGINE_API void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const override;
 		NEXUS_ENGINE_API void WriteToDebugger(StringView Message) const override;
 		NEXUS_ENGINE_API void ExecuteFromDll(StringView DllName, uint8 Ordinal) const override;
-		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const override;
+		NEXUS_ENGINE_API double GetProcessorTimer(double Unit = 1.0) const override;
+		NEXUS_ENGINE_API PlatformPathInfo GetPathInfo(StringView Path) const override;
+		NEXUS_ENGINE_API String GetWorkingDirectory() const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::None; }
 
