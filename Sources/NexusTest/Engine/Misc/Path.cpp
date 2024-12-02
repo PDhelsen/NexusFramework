@@ -4,10 +4,10 @@
 
 namespace NxTs
 {
-	TEST(IO, Path)
+	TEST(IO, Path_Static)
 	{
-		NxEn::String Working = NxEn::Path::GetWorkingDirectory();
-		NxEn::StringView WorkingName = Working.SplitAll("/").Last();
+		NxEn::String Working = NxEn::Path::GetWorkingDirectory().ToString();
+		NxEn::String WorkingName = Working.SplitAll("/").Last().ToString();
 		NxEn::String File = Working + "NexusTest.exe";
 		NxEn::String Directory = Working + "Test/Subfolder/Deep/";
 		NxEn::String Root = Working + "Test/Other/Deep/";
@@ -19,6 +19,15 @@ namespace NxTs
 		Items[3] = "Test.txt";
 
 		NEXUS_LOG(App, Info, NxEn::LoggerChannel::Default, "Working Directory %s", Working.C());
+
+		ASSERT_EQ(NxEn::Path::ChangeFileName(File.ToView(), "Modified.exe"), Working + "Modified.exe");
+		ASSERT_EQ(NxEn::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTest.exe");
+		ASSERT_EQ(NxEn::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTest.txt");
+		ASSERT_EQ(NxEn::Path::ConvertAbsoluteToRelative(Directory.ToView(), Root), "../../Subfolder/Deep/");
+		ASSERT_EQ(NxEn::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
+		ASSERT_EQ(NxEn::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
+		ASSERT_EQ(NxEn::Path::Resolve(Working + "Test/Subfolder/Deep/"), Directory);
+		ASSERT_EQ(NxEn::Path::Normalize("Test//Subfolder\\Deep", true), "Test/Subfolder/Deep/");
 
 		ASSERT_EQ(NxEn::Path::Exist(Working), true);
 		ASSERT_EQ(NxEn::Path::Exist(File), true);
@@ -40,13 +49,43 @@ namespace NxTs
 		ASSERT_EQ(NxEn::Path::Combine("D:/Nexus/Test", "Test", true), "D:/Nexus/Test/Test/");
 		ASSERT_EQ(NxEn::Path::Combine<NxEn::StringView>(Items), "D:/Nexus/Test/Test.txt");
 		ASSERT_EQ(NxEn::Path::Combine<NxEn::StringView>(Items, true), "D:/Nexus/Test/Test.txt/");
-		ASSERT_EQ(NxEn::Path::ChangeFileName(File, "Modified.exe"), Working + "Modified.exe");
-		ASSERT_EQ(NxEn::Path::ChangeDirectoryPath(File, "D:/Test/"), "D:/Test/NexusTest.exe");
-		ASSERT_EQ(NxEn::Path::ChangeExtension(File, "txt"), Working + "NexusTest.txt");
-		ASSERT_EQ(NxEn::Path::ConvertAbsoluteToRelative(Directory, Root), "../../Subfolder/Deep/");
-		ASSERT_EQ(NxEn::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
-		ASSERT_EQ(NxEn::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
-		ASSERT_EQ(NxEn::Path::Resolve(Working + "Test/Subfolder/Deep/"), Directory);
-		ASSERT_EQ(NxEn::Path::Normalize("Test//Subfolder\\Deep", true), "Test/Subfolder/Deep/");
+	}
+
+	TEST(IO, Path_Instance)
+	{
+		NxEn::Path Working = NxEn::Path::GetWorkingDirectory();
+		NxEn::Path WorkingName = Working.GetData().SplitAll("/").Last();
+		NxEn::Path File = Working + "NexusTest.exe";
+		NxEn::Path Directory = Working + "Test/Subfolder/Deep/";
+		NxEn::Path Root = Working + "Test/Other/Deep/";
+		NxEn::Path Relative = NxEn::Path("../../Subfolder/Deep/");
+		NxEn::Path ToResolve1 = NxEn::Path("D:/Nexus/Test/../../Test/Subfolder/Deep/");
+		NxEn::Path ToResolve2 = Working + "Test/Subfolder/Deep/";
+		NxEn::Path ToNormalize = NxEn::Path("Test//Subfolder\\Deep");
+
+		ASSERT_EQ(Working.Exist(), true);
+		ASSERT_EQ(File.Exist(), true);
+		ASSERT_EQ(File.IsFile(), true);
+		ASSERT_EQ(Directory.IsFile(), false);
+		ASSERT_EQ(Directory.IsDirectory(), true);
+		ASSERT_EQ(File.IsDirectory(), false);
+		ASSERT_EQ(File.IsAbsolute(), true);
+		ASSERT_EQ(File.IsRelative(), false);
+		ASSERT_EQ(File.HasExtension(".exe"), true);
+		ASSERT_EQ(File.GetFileName(), "NexusTest");
+		ASSERT_EQ(File.GetFileName(true), "NexusTest.exe");
+		ASSERT_EQ(File.GetDirectoryPath(), Working);
+		ASSERT_EQ(File.GetDirectoryName(), WorkingName);
+		ASSERT_EQ(File.GetExtension(), "exe");
+		ASSERT_EQ(File.GetDrive(), "D");
+
+		ASSERT_EQ(File.ChangeDirectoryPath("D:/Test/"), "D:/Test/NexusTest.exe");
+		ASSERT_EQ(File.ChangeFileName("Modified.exe"), "D:/Test/Modified.exe");
+		ASSERT_EQ(File.ChangeExtension("txt"), "D:/Test/Modified.txt");
+		ASSERT_EQ(Directory.ConvertAbsoluteToRelative(Root), "../../Subfolder/Deep/");
+		ASSERT_EQ(Relative.ConvertRelativeToAbsolute(Root), Working + "Test/Subfolder/Deep/");
+		ASSERT_EQ(ToResolve1.Resolve(), "D:/Test/Subfolder/Deep/");
+		ASSERT_EQ(ToResolve2.Resolve(), Working + "Test/Subfolder/Deep/");
+		ASSERT_EQ(ToNormalize.Normalize(true), "Test/Subfolder/Deep/");
 	}
 }

@@ -5,6 +5,301 @@
 
 namespace NxEn
 {
+	Path::Path()
+	{
+	}
+
+	Path::Path(StringView Path)
+		: Data(Path.C(), Path.GetCount())
+	{
+	}
+
+	Path::~Path()
+	{
+	}
+
+	Path::operator StringView() const
+	{
+		return ToView();
+	}
+
+	bool Path::operator==(const Path& Other) const
+	{
+		return Data == Other.Data;
+	}
+
+	bool Path::operator!=(const Path& Other) const
+	{
+		return Data != Other.Data;
+	}
+
+	Path& Path::operator+=(const Path& Other)
+	{
+		Data += Other.Data;
+		return *this;
+	}
+
+	Path& Path::operator+=(StringView Other)
+	{
+		Data += Other;
+		return *this;
+	}
+
+	Path& Path::operator-=(const Path& Other)
+	{
+		Data -= Other.Data;
+		return *this;
+	}
+
+	Path& Path::operator-=(StringView Other)
+	{
+		Data -= Other;
+		return *this;
+	}
+
+	Path& Path::ChangeFileName(StringView File)
+	{
+		Path::ChangeFileName(Data, File);
+		return *this;
+	}
+
+	Path& Path::ChangeDirectoryPath(StringView Directory)
+	{
+		Path::ChangeDirectoryPath(Data, Directory);
+		return *this;
+	}
+
+	Path& Path::ChangeExtension(StringView Extension)
+	{
+		Path::ChangeExtension(Data, Extension);
+		return *this;
+	}
+
+	Path& Path::ConvertAbsoluteToRelative(StringView Root)
+	{
+		Path::ConvertAbsoluteToRelative(Data, Root);
+		return *this;
+	}
+
+	Path& Path::ConvertRelativeToAbsolute(StringView Root)
+	{
+		Path::ConvertRelativeToAbsolute(Data, Root);
+		return *this;
+	}
+
+	Path& Path::Resolve()
+	{
+		Path::Resolve(Data);
+		return *this;
+	}
+
+	Path& Path::Normalize(bool Directory)
+	{
+		Path::Normalize(Data, Directory);
+		return *this;
+	}
+
+	bool Path::Exist() const
+	{
+		return Path::Exist(Data);
+	}
+
+	bool Path::IsFile() const
+	{
+		return Path::IsFile(Data);
+	}
+
+	bool Path::IsDirectory() const
+	{
+		return Path::IsDirectory(Data);
+	}
+
+	bool Path::IsAbsolute() const
+	{
+		return Path::IsAbsolute(Data);
+	}
+
+	bool Path::IsRelative() const
+	{
+		return Path::IsRelative(Data);
+	}
+
+	bool Path::HasExtension(StringView Extension) const
+	{
+		return Path::HasExtension(Data, Extension);
+	}
+
+	StringView Path::GetFileName(bool Extension) const
+	{
+		return Path::GetFileName(Data, Extension);
+	}
+
+	StringView Path::GetDirectoryPath() const
+	{
+		return Path::GetDirectoryPath(Data);
+	}
+
+	StringView Path::GetDirectoryName() const
+	{
+		return Path::GetDirectoryName(Data);
+	}
+
+	StringView Path::GetExtension() const
+	{
+		return Path::GetExtension(Data);
+	}
+
+	StringView Path::GetDrive() const
+	{
+		return Path::GetDrive(Data);
+	}
+
+	String Path::ChangeFileName(StringView Path, StringView File)
+	{
+		String Result = Path.ToString();
+		Path::ChangeFileName(Result, File);
+		return Result;
+	}
+
+	void Path::ChangeFileName(String& Path, StringView File)
+	{
+		StringView Substring = Path::GetFileName(Path, true);
+		Path.Replace(Substring, File);
+	}
+
+	String Path::ChangeDirectoryPath(StringView Path, StringView Directory)
+	{
+		String Result = Path.ToString();
+		Path::ChangeDirectoryPath(Result, Directory);
+		return Result;
+	}
+
+	void Path::ChangeDirectoryPath(String& Path, StringView Directory)
+	{
+		StringView Substring = Path::GetDirectoryPath(Path);
+		Path.Replace(Substring, Directory);
+	}
+
+	String Path::ChangeExtension(StringView Path, StringView Extension)
+	{
+		String Result = Path.ToString();
+		Path::ChangeExtension(Result, Extension);
+		return Result;
+	}
+
+	void Path::ChangeExtension(String& Path, StringView Extension)
+	{
+		StringView Substring = Path::GetExtension(Path);
+		Path.Replace(Substring, Extension);
+	}
+
+	String Path::ConvertAbsoluteToRelative(StringView Path, StringView Root)
+	{
+		if (!Path::IsDirectory(Root))
+		{
+			return String::Empty;
+		}
+		
+		String Result = Path.ToString();
+		Path::ConvertAbsoluteToRelative(Result, Root);
+		return Result;
+	}
+
+	void Path::ConvertAbsoluteToRelative(String& Path, StringView Root)
+	{
+		if (!Path::IsDirectory(Root))
+		{
+			return;
+		}
+
+		StringView Common = StringUtility::Common(Path, Root);
+		StringView Remaining = Root.ToView(Common.GetCount(), Root.GetCount() - Common.GetCount());
+		List<StringView> Directories = StringUtility::SplitAll(Remaining, "/");
+		String ToReplaceWith = String(Directories.GetCount() * 3);
+		for (auto It : Directories)
+		{
+			ToReplaceWith += "../";
+		}
+
+		Path.Replace(Common, ToReplaceWith);
+	}
+
+	String Path::ConvertRelativeToAbsolute(StringView Path, StringView Root)
+	{
+		if (!Path::IsDirectory(Root))
+		{
+			return String::Empty;
+		}
+
+		String Result = Root + Path;
+		Path::Resolve(Result);
+		return Result;
+	}
+
+	void Path::ConvertRelativeToAbsolute(String& Path, StringView Root)
+	{
+		if (!Path::IsDirectory(Root))
+		{
+			return;
+		}
+
+		Path = Root + Path;
+		Path::Resolve(Path);
+	}
+
+	String Path::Resolve(StringView Path)
+	{
+		String Result = Path.ToString();
+		Path::Resolve(Result);
+		return Result;
+	}
+
+	void Path::Resolve(String& Path)
+	{
+		List<StringView> Directories = StringUtility::SplitAll(Path, "/");
+		int64 Index = -1;
+		uint64 Count = 0;
+
+		uint64 Iter = 0;
+		for (auto& It : Directories)
+		{
+			if (It == "..")
+			{
+				if (Index == -1)
+				{
+					Index = Iter;
+				}
+				Count++;
+			}
+			Iter++;
+		}
+
+		if (Index != -1)
+		{
+			StringView First = Directories[Index - Count];
+			StringView Last = Directories[Index + Count - 1];
+			StringView ToRemove = StringView(First.C(), (Last.C() + Last.GetCount() - First.C() + 1));
+			Path.Remove(ToRemove);
+		}
+	}
+
+	String Path::Normalize(StringView Path, bool Directory)
+	{
+		String Result = Path.ToString();
+		Path::Normalize(Result, Directory);
+		return Result;
+	}
+
+	void Path::Normalize(String& Path, bool Directory)
+	{
+		if (Directory && !Path.End("/"))
+		{
+			Path += "/";
+		}
+		Path.Replace("\\", "/");
+		Path.Replace("//", "/");
+	}
+
 	bool Path::Exist(StringView Path)
 	{
 		return Platform::GetInstance()->GetPathInfo(Path) != PlatformPathInfo::None;
@@ -101,126 +396,58 @@ namespace NxEn
 		return Result;
 	}
 
-	String Path::ChangeFileName(StringView Path, StringView FileName)
+	Path Path::GetWorkingDirectory()
 	{
-		StringView Substring = Path::GetFileName(Path, true);
-
-		String Result = String(Path.C(), Path.GetCount());
-		Result.Replace(Substring, FileName);
-		return Result;
+		return Path(Platform::GetInstance()->GetWorkingDirectory()).Normalize(true);
 	}
 
-	String Path::ChangeDirectoryPath(StringView Path, StringView DirectoryPath)
+	bool operator==(const Path& A, StringView B)
 	{
-		StringView Substring = Path::GetDirectoryPath(Path);
-
-		String Result = String(Path.C(), Path.GetCount());
-		Result.Replace(Substring, DirectoryPath);
-		return Result;
+		return A.ToView() == B;
 	}
 
-	String Path::ChangeExtension(StringView Path, StringView Extension)
+	bool operator==(StringView A, const Path& B)
 	{
-		StringView Substring = Path::GetExtension(Path);
-
-		String Result = String(Path.C(), Path.GetCount());
-		Result.Replace(Substring, Extension);
-		return Result;
+		return A == B.ToView();
 	}
 
-	String Path::ConvertAbsoluteToRelative(StringView Path, StringView Root)
+	bool operator!=(const Path& A, StringView B)
 	{
-		if (!Path::IsDirectory(Root))
-		{
-			return String::Empty;
-		}
-
-		StringView Common = StringUtility::Common(Path, Root);
-		StringView Remaining = Root.ToView(Common.GetCount(), Root.GetCount() - Common.GetCount());
-		List<StringView> Directories = StringUtility::SplitAll(Remaining, "/");
-		String ToReplaceWith = String(Directories.GetCount() * 3);
-		for (auto It : Directories)
-		{
-			ToReplaceWith += "../";
-		}
-
-		String Result = Path.ToString();
-		Result.Replace(Common, ToReplaceWith);
-		return Result;
+		return A.ToView() == B;
 	}
 
-	String Path::ConvertRelativeToAbsolute(StringView Path, StringView Root)
+	bool operator!=(StringView A, const Path& B)
 	{
-		if (!Path::IsDirectory(Root))
-		{
-			return String::Empty;
-		}
-
-		List<StringView> Up = StringUtility::SplitAll(Path, "/");
-		List<StringView> Down = StringUtility::SplitAll(Root, "/");
-
-		uint64 ToGoUp = 0;
-		for (auto& It : Up)
-		{
-			if (It != "..")
-			{
-				break;
-			}
-
-			ToGoUp++;
-		}
-
-		Up.RemoveRange(0, ToGoUp);
-		Down.RemoveRange(Down.GetCount() - ToGoUp, ToGoUp);
-
-		Down.AppendRange(Up);
-		return Path::Combine<StringView>(Down, true);
+		return A == B.ToView();
 	}
 
-	String Path::Resolve(StringView Path)
+	Path operator+(const Path& A, const Path& B)
 	{
-		List<StringView> Directories = StringUtility::SplitAll(Path, "/");
-		int64 Index = -1;
-		uint64 Count = 0;
-
-		uint64 Iter = 0;
-		for (auto& It : Directories)
-		{
-			if (It == "..")
-			{
-				if (Index == -1)
-				{
-					Index = Iter;
-				}
-				Count++;
-			}
-			Iter++;
-		}
-
-		if (Index != -1)
-		{
-			Index -= Count;
-			Count *= 2;
-			Directories.RemoveRange(Index, Count);
-		}
-
-		return Path::Combine<StringView>(Directories, true);
+		return Path(A.ToView() + B.ToView());
 	}
 
-	String Path::Normalize(StringView Path, bool Directory)
+	Path operator+(const Path& A, StringView B)
 	{
-		String Result = Path.ToString();
-		if (Directory && !Result.End("/"))
-		{
-			Result += "/";
-		}
-		Result.Replace("\\", "/");
-		Result.Replace("//", "/");
-		return Result;
+		return Path(A.ToView() + B);
 	}
 
-	String Path::GetWorkingDirectory()
+	Path operator+(StringView A, const Path& B)
 	{
-		return Path::Normalize(Platform::GetInstance()->GetWorkingDirectory(), true);
+		return Path(A + B.ToView());
+	}
+
+	Path operator-(const Path& A, const Path& B)
+	{
+		return Path(A.ToView() - B.ToView());
+	}
+
+	Path operator-(const Path& A, StringView B)
+	{
+		return Path(A.ToView() - B);
+	}
+
+	Path operator-(StringView A, const Path& B)
+	{
+		return Path(A - B.ToView());
 	}
 }

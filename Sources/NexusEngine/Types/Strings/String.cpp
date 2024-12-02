@@ -359,10 +359,8 @@ namespace NxEn
 
 					++Modified;
 				}
-				else
-				{
-					++Substring;
-				}
+				
+				++Substring;
 			}
 
 			++Index;
