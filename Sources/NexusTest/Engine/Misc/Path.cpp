@@ -18,17 +18,6 @@ namespace NxTs
 		Items[2] = "Test";
 		Items[3] = "Test.txt";
 
-		NEXUS_LOG(App, Info, NxEn::LoggerChannel::Default, "Working Directory %s", Working.C());
-
-		ASSERT_EQ(NxEn::Path::ChangeFileName(File.ToView(), "Modified.exe"), Working + "Modified.exe");
-		ASSERT_EQ(NxEn::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTest.exe");
-		ASSERT_EQ(NxEn::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTest.txt");
-		ASSERT_EQ(NxEn::Path::ConvertAbsoluteToRelative(Directory.ToView(), Root), "../../Subfolder/Deep/");
-		ASSERT_EQ(NxEn::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
-		ASSERT_EQ(NxEn::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
-		ASSERT_EQ(NxEn::Path::Resolve(Working + "Test/Subfolder/Deep/"), Directory);
-		ASSERT_EQ(NxEn::Path::Normalize("Test//Subfolder\\Deep", true), "Test/Subfolder/Deep/");
-
 		ASSERT_EQ(NxEn::Path::Exist(Working), true);
 		ASSERT_EQ(NxEn::Path::Exist(File), true);
 		ASSERT_EQ(NxEn::Path::IsFile(File), true);
@@ -44,6 +33,15 @@ namespace NxTs
 		ASSERT_EQ(NxEn::Path::GetDirectoryName(File), WorkingName);
 		ASSERT_EQ(NxEn::Path::GetExtension(File), "exe");
 		ASSERT_EQ(NxEn::Path::GetDrive(File), "D");
+
+		ASSERT_EQ(NxEn::Path::ChangeFileName(File.ToView(), "Modified.exe"), Working + "Modified.exe");
+		ASSERT_EQ(NxEn::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTest.exe");
+		ASSERT_EQ(NxEn::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTest.txt");
+		ASSERT_EQ(NxEn::Path::ConvertAbsoluteToRelative(Directory.ToView(), Root), "../../Subfolder/Deep/");
+		ASSERT_EQ(NxEn::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
+		ASSERT_EQ(NxEn::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
+		ASSERT_EQ(NxEn::Path::Resolve(Working + "Test/Subfolder/Deep/"), Directory);
+		ASSERT_EQ(NxEn::Path::Normalize("Test//Subfolder\\Deep", true), "Test/Subfolder/Deep/");
 
 		ASSERT_EQ(NxEn::Path::Combine("D:/Nexus/Test", "Test.txt"), "D:/Nexus/Test/Test.txt");
 		ASSERT_EQ(NxEn::Path::Combine("D:/Nexus/Test", "Test", true), "D:/Nexus/Test/Test/");
