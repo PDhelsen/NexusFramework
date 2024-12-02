@@ -104,6 +104,11 @@ namespace NxEn
 		return Path::Exist(Data);
 	}
 
+	Path::Type Path::GetType() const
+	{
+		return Path::GetType(Data);
+	}
+
 	bool Path::IsFile() const
 	{
 		return Path::IsFile(Data);
@@ -302,17 +307,27 @@ namespace NxEn
 
 	bool Path::Exist(StringView Path)
 	{
-		return Platform::GetInstance()->GetPathInfo(Path) != PlatformPathInfo::None;
+		return Platform::GetInstance()->GetPathType(Path) != Platform::PathType::None;
+	}
+
+	Path::Type Path::GetType(StringView Path)
+	{
+		if (StringUtility::End(Path, "/"))
+		{
+			return Type::Directory;
+		}
+
+		return Type::File;
 	}
 
 	bool Path::IsFile(StringView Path)
 	{
-		return !Path::IsDirectory(Path);
+		return Path::GetType(Path) == Type::File;
 	}
 
 	bool Path::IsDirectory(StringView Path)
 	{
-		return StringUtility::End(Path, "/");
+		return Path::GetType(Path) == Type::Directory;
 	}
 
 	bool Path::IsAbsolute(StringView Path)

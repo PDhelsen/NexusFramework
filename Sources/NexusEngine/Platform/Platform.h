@@ -10,11 +10,6 @@ namespace NxEn
 		Windows
 	};
 
-	enum class PlatformPathInfo : uint32
-	{
-		None, File, Directory, Other
-	};
-
 	class Platform
 	{
 	public:
@@ -30,12 +25,17 @@ namespace NxEn
 			Magenta
 		};
 
+		enum class PathType : uint32
+		{
+			None, File, Directory, Other
+		};
+
 		NEXUS_ENGINE_API virtual void WaitForUserToCloseTerminal() const = 0;
 		NEXUS_ENGINE_API virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
 		NEXUS_ENGINE_API virtual void WriteToDebugger(StringView Message) const = 0;
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
-		NEXUS_ENGINE_API virtual PlatformPathInfo GetPathInfo(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual PathType GetPathType(StringView Path) const = 0;
 		NEXUS_ENGINE_API virtual String GetWorkingDirectory() const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }

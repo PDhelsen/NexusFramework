@@ -10,6 +10,11 @@ namespace NxEn
 	class Path
 	{
 	public:
+		enum class Type : uint32
+		{
+			File, Directory
+		};
+
 		NEXUS_ENGINE_API Path();
 		NEXUS_ENGINE_API Path(StringView Path);
 		NEXUS_ENGINE_API ~Path();
@@ -31,6 +36,7 @@ namespace NxEn
 		NEXUS_ENGINE_API Path& Normalize(bool Directory);
 
 		NEXUS_ENGINE_API bool Exist() const;
+		NEXUS_ENGINE_API Type GetType() const;
 		NEXUS_ENGINE_API bool IsFile() const;
 		NEXUS_ENGINE_API bool IsDirectory() const;
 		NEXUS_ENGINE_API bool IsAbsolute() const;
@@ -63,6 +69,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static void Normalize(String& Path, bool Directory);
 
 		NEXUS_ENGINE_API static bool Exist(StringView Path);
+		NEXUS_ENGINE_API static Type GetType(StringView Path);
 		NEXUS_ENGINE_API static bool IsFile(StringView Path);
 		NEXUS_ENGINE_API static bool IsDirectory(StringView Path);
 		NEXUS_ENGINE_API static bool IsAbsolute(StringView Path);

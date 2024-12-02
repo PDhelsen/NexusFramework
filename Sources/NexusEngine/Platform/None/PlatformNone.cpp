@@ -24,9 +24,9 @@ namespace NxEn
 		return 0.0;
     }
 
-	PlatformPathInfo PlatformNone::GetPathInfo(StringView Path) const
+	Platform::PathType PlatformNone::GetPathType(StringView Path) const
 	{
-		return PlatformPathInfo::None;
+		return PathType::None;
 	}
 
 	String PlatformNone::GetWorkingDirectory() const

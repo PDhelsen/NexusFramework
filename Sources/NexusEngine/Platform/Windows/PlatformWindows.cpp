@@ -58,7 +58,7 @@ namespace NxEn
 		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
 	}
 
-	PlatformPathInfo PlatformWindows::GetPathInfo(StringView Path) const
+	Platform::PathType PlatformWindows::GetPathType(StringView Path) const
 	{
 		struct _stati64 Buffer;
 
@@ -66,19 +66,19 @@ namespace NxEn
 		{
 			if (Buffer.st_mode & _S_IFREG)
 			{
-				return PlatformPathInfo::File;
+				return PathType::File;
 			}
 			else if (Buffer.st_mode & _S_IFDIR)
 			{
-				return PlatformPathInfo::Directory;
+				return PathType::Directory;
 			}
 			else
 			{
-				return PlatformPathInfo::Other;
+				return PathType::Other;
 			}
 		}
 
-		return PlatformPathInfo::None;
+		return PathType::None;
 	}
 
 	String PlatformWindows::GetWorkingDirectory() const
