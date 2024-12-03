@@ -32,6 +32,7 @@ namespace NxEn
 		NEXUS_ENGINE_API String& Assign(StringView OldText, StringView NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Insert(StringView ReferenceText, StringView NewText, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
 		NEXUS_ENGINE_API String& Remove(StringView Text, uint64 Offset = 0, uint64 Occurrence = 1, bool All = false);
+		NEXUS_ENGINE_API String& Terminate(uint64 Size);
 		NEXUS_ENGINE_API String& Clear();
 
 		template<typename... Args>

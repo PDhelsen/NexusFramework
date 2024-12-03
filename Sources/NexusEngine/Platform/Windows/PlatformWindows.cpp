@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "PlatformWindows.h"
 
+#include "Misc/IO/Path.h"
+
 #include <windows.h>
 
 namespace NxEn
@@ -85,7 +87,7 @@ namespace NxEn
 	{
 		DWORD Length = GetCurrentDirectoryA(BufferSize, Buffer);
 		NEXUS_ASSERT(Length != 0 && Length < BufferSize, "Buffer overflowed when getting the current working directory");
-		return String(Buffer, Length);
+		return Path::Normalize(StringView(Buffer, Length));
 	}
 
 	PlatformWindows::PlatformWindows()

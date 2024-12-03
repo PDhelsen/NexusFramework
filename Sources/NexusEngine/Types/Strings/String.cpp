@@ -144,6 +144,12 @@ namespace NxEn
 		return *this;
 	}
 
+	String& String::Terminate(uint64 Size)
+	{
+		Resize(Size);
+		return *this;
+	}
+
 	String& String::Clear()
 	{
 		Resize(0);
