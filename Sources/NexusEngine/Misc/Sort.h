@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Types/Integer.h"
+#include "Types/Delegate.h"
 #include "Misc/References.h"
 
 namespace NxEn
@@ -8,7 +9,7 @@ namespace NxEn
 	namespace Sorting
 	{
 		template<typename T>
-		using CompareFunction = bool(*)(const T&, const T&);
+		using CompareFunction = const Delegate<bool(const T&, const T&)>&;
 
 		class SortingAlgorithm
 		{

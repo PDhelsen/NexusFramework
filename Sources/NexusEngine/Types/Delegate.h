@@ -13,18 +13,6 @@ namespace NxEn
 	class Delegate<R(Args...)>
 	{
 	private:
-		template <typename T, typename = void>
-		struct IsLambda
-		{
-			static const bool Value = false;
-		};
-
-		template <typename T>
-		struct IsLambda<T, HasTrait<decltype(&T::operator())>>
-		{
-			static const bool Value = true;
-		};
-
 		class Interface
 		{
 		public:
@@ -80,7 +68,14 @@ namespace NxEn
 		Delegate(F&& Func)
 			: Sbo(true), Comparable(false)
 		{
-			Bind(Forward<F>(Func));
+			if constexpr (IsSameType<typename RemoveReference<F>::Type, NullPtr>::Value)
+			{
+				Clear();
+			}
+			else
+			{
+				Bind(Forward<F>(Func));
+			}
 		}
 
 		template<typename T, typename F, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>

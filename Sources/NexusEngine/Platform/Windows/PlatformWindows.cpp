@@ -7,7 +7,7 @@
 
 namespace NxEn
 {
-	using DllFunction = void(CALLBACK*)();
+	using DllFunction = Delegate<int64()>;
 
 	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
 	// Keep synced with the enum in the Platform.h
@@ -40,15 +40,15 @@ namespace NxEn
 			return;
 		}
 
-		DllFunction Function = (DllFunction)GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal));
-		if (Function == nullptr)
+		DllFunction Function = DllFunction(GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal)));
+		if (!Function)
 		{
 			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load function")
 			FreeLibrary(Dll);
 			return;
 		}
 
-		Function();
+		Function.Invoke();
 
 		FreeLibrary(Dll);
 	}

@@ -79,6 +79,20 @@ namespace NxEn
 		using Type = T;
 	};
 
+	using NullPtr = decltype(nullptr);
+
 	template <typename...>
 	using HasTrait = void;
+
+	template <typename T, typename = void>
+	struct IsLambda
+	{
+		static const bool Value = false;
+	};
+
+	template <typename T>
+	struct IsLambda<T, HasTrait<decltype(&T::operator())>>
+	{
+		static const bool Value = true;
+	};
 }
