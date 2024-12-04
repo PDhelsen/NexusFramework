@@ -21,9 +21,13 @@ namespace NxEn
 		NEXUS_ENGINE_API bool operator !=(const Directory& Other) const;
 
 		NEXUS_ENGINE_API void Refresh();
+
 		NEXUS_ENGINE_API List<String> GetContent(bool Recursive = false) const;
+		NEXUS_ENGINE_API void GetContent(List<String>& Result, bool Recursive = false) const;
 		NEXUS_ENGINE_API List<String> GetFiles(bool Recursive = false) const;
+		NEXUS_ENGINE_API void GetFiles(List<String>& Result, bool Recursive = false) const;
 		NEXUS_ENGINE_API List<String> GetDirectories(bool Recursive = false) const;
+		NEXUS_ENGINE_API void GetDirectories(List<String>& Result, bool Recursive = false) const;
 
 		NEXUS_ENGINE_API bool Create();
 		NEXUS_ENGINE_API bool Move(StringView Target);
@@ -39,7 +43,7 @@ namespace NxEn
 		const I End() const { return Content.End(); }
 
 		StringView GetPath() const { return Path.ToView(); }
-		bool DoesExist() const { return Exist; }
+		bool Exists() const { return Exist; }
 		uint64 GetCount() const { return Content.GetCount(); }
 
 	private:

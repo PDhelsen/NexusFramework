@@ -108,17 +108,24 @@ namespace NxTs
 		NxEn::Directory Directory = NxEn::Directory(Working);
 
 		ASSERT_EQ(Directory.GetPath(), Working);
-		ASSERT_EQ(Directory.DoesExist(), true);
+		ASSERT_EQ(Directory.Exists(), true);
 		ASSERT_EQ(Directory.GetCount() > 0, true);
+
+		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
+		ASSERT_EQ(Directory.GetFiles(true).GetCount() > 0, true);
+		ASSERT_EQ(Directory.GetDirectories(true).GetCount() > 0, true);
 
 		NxEn::Directory SubDirectory = NxEn::Directory(Working + "Test");
 		ASSERT_EQ(SubDirectory.Create(), true);
+		ASSERT_EQ(SubDirectory.Exists(), true);
 
 		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test1").Create(), true);
 		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test2").Create(), true);
 		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test3").Create(), true);
 
 		ASSERT_EQ(SubDirectory.Move(Working + "UnitTest"), true);
+		ASSERT_EQ(SubDirectory.Exists(), true);
 		ASSERT_EQ(SubDirectory.Delete(), true);
+		ASSERT_EQ(SubDirectory.Exists(), false);
 	}
 }

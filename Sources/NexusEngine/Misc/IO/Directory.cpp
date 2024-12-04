@@ -43,98 +43,100 @@ namespace NxEn
 
 	List<String> Directory::GetContent(bool Recursive) const
 	{
-		List<String> Contents = List<String>(GetCount());
+		List<String> Result = List<String>(GetCount());
+		GetContent(Result, Recursive);
+		return Result;
+	}
+
+	void Directory::GetContent(List<String>& Result, bool Recursive) const
+	{
 		for (auto& It : Content)
 		{
-			Contents.Append(It);
+			Result.Append(It);
 
 			if (Recursive && Path::IsDirectory(It))
 			{
 				Directory SubDirectory = Directory(It);
-				Contents.AppendRange(SubDirectory.GetContent(Recursive));
+				SubDirectory.GetContent(Result, Recursive);
 			}
 		}
-		return Contents;
 	}
 
 	List<String> Directory::GetFiles(bool Recursive) const
 	{
-		List<String> Files = List<String>(GetCount());
+		List<String> Result = List<String>(GetCount());
+		GetFiles(Result, Recursive);
+		return Result;
+	}
+
+	void Directory::GetFiles(List<String>& Result, bool Recursive) const
+	{
 		for (auto& It : Content)
 		{
 			if (Path::IsFile(It))
 			{
-				Files.Append(It);
+				Result.Append(It);
 			}
 
 			if (Recursive && Path::IsDirectory(It))
 			{
 				Directory SubDirectory = Directory(It);
-				Files.AppendRange(SubDirectory.GetFiles(Recursive));
+				SubDirectory.GetFiles(Result, Recursive);
 			}
 		}
-		return Files;
 	}
 
 	List<String> Directory::GetDirectories(bool Recursive) const
 	{
-		List<String> Directories = List<String>(GetCount());
+		List<String> Result = List<String>(GetCount());
+		GetDirectories(Result, Recursive);
+		return Result;
+	}
+
+	void Directory::GetDirectories(List<String>& Result, bool Recursive) const
+	{
 		for (auto& It : Content)
 		{
 			if (Path::IsDirectory(It))
 			{
-				Directories.Append(It);
+				Result.Append(It);
 			}
 
 			if (Recursive && Path::IsDirectory(It))
 			{
 				Directory SubDirectory = Directory(It);
-				Directories.AppendRange(SubDirectory.GetDirectories(Recursive));
+				SubDirectory.GetDirectories(Result, Recursive);
 			}
 		}
-		return Directories;
 	}
 
 	bool Directory::Create()
 	{
-		Refresh();
 		if (Exist)
 		{
 			return true;
 		}
 
 		bool Result = Platform::GetInstance()->DirectoryCreate(Path);
-
-		if (Result)
-		{
-			Refresh();
-		}
-
+		Refresh();
 		return Result;
 	}
 
 	bool Directory::Move(StringView Target)
 	{
-		Refresh();
 		if (!Exist)
 		{
 			return false;
 		}
 
 		bool Result = Platform::GetInstance()->DirectoryMove(Path, Target);
-
 		Path = Target.ToString();
-		if (Result)
-		{
-			Refresh();
-		}
-
+		Refresh();
 		return Result;
 	}
 
 	bool Directory::Delete()
 	{
-		Refresh();
 		if (!Exist)
 		{
 			return false;
@@ -150,12 +152,7 @@ namespace NxEn
 		}
 
 		bool Result = Platform::GetInstance()->DirectoryDelete(Path);
-
-		if (Result)
-		{
-			Refresh();
-		}
-
+		Refresh();
 		return Result;
 	}
 }
