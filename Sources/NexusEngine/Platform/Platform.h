@@ -37,6 +37,10 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 		NEXUS_ENGINE_API virtual PathType GetPathType(StringView Path) const = 0;
 		NEXUS_ENGINE_API virtual String GetWorkingDirectory() const = 0;
+		NEXUS_ENGINE_API virtual List<String> DirectoryContent(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual bool DirectoryCreate(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual bool DirectoryMove(StringView Path, StringView Target) const = 0;
+		NEXUS_ENGINE_API virtual bool DirectoryDelete(StringView Path) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

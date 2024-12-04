@@ -34,6 +34,26 @@ namespace NxEn
 		return String::Empty;
 	}
 
+	List<String> PlatformNone::DirectoryContent(StringView Path) const
+    {
+        return List<String>();
+    }
+
+	bool PlatformNone::DirectoryCreate(StringView Path) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::DirectoryMove(StringView Path, StringView Target) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::DirectoryDelete(StringView Path) const
+	{
+		return false;
+	}
+
     PlatformNone::PlatformNone()
     {
     }

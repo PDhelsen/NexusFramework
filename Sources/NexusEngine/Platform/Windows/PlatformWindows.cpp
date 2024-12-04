@@ -90,6 +90,56 @@ namespace NxEn
 		return Path::Normalize(StringView(Buffer, Length));
 	}
 
+	List<String> PlatformWindows::DirectoryContent(StringView Path) const
+	{
+		List<String> Content;
+		String Temp = Path + "*";
+
+		WIN32_FIND_DATAA Data;
+		HANDLE Handle = FindFirstFileA(Temp.C(), &Data);
+
+		if (Handle == INVALID_HANDLE_VALUE) {
+			NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to open directory %s", Path.C());
+			return List<String>();
+		}
+
+		do
+		{
+			StringView Name = Data.cFileName;
+			if (Name == "." || Name == "..")
+			{
+				continue;
+			}
+
+			Temp.Clear();
+			Temp += Path;
+			Temp += Name;
+			Path::Normalize(Temp);
+
+			Content.Append(Temp);
+
+		} while (FindNextFileA(Handle, &Data) != 0);
+
+		FindClose(Handle);
+
+		return Content;
+	}
+
+	bool PlatformWindows::DirectoryCreate(StringView Path) const
+	{
+		return CreateDirectoryA(Path.C(), nullptr);
+	}
+
+	bool PlatformWindows::DirectoryMove(StringView Path, StringView Target) const
+	{
+		return MoveFileA(Path.C(), Target.C());
+	}
+
+	bool PlatformWindows::DirectoryDelete(StringView Path) const
+	{
+		return RemoveDirectoryA(Path.C());
+	}
+
 	PlatformWindows::PlatformWindows()
 	{
 		InitializeTerminal();

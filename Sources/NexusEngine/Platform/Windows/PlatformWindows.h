@@ -17,6 +17,10 @@ namespace NxEn
 		NEXUS_ENGINE_API double GetProcessorTimer(double Unit = 1.0) const override;
 		NEXUS_ENGINE_API PathType GetPathType(StringView Path) const override;
 		NEXUS_ENGINE_API String GetWorkingDirectory() const override;
+		NEXUS_ENGINE_API List<String> DirectoryContent(StringView Path) const override;
+		NEXUS_ENGINE_API bool DirectoryCreate(StringView Path) const override;
+		NEXUS_ENGINE_API bool DirectoryMove(StringView Path, StringView Target) const override;
+		NEXUS_ENGINE_API bool DirectoryDelete(StringView Path) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 

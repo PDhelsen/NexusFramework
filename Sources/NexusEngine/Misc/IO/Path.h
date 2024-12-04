@@ -103,6 +103,8 @@ namespace NxEn
 
 		NEXUS_ENGINE_API static String SeparatorDirectory;
 		NEXUS_ENGINE_API static String SeparatorExtension;
+		NEXUS_ENGINE_API static String SeparatorPrevious;
+		NEXUS_ENGINE_API static String SeparatorDrive;
 
 		String Data;
 	};

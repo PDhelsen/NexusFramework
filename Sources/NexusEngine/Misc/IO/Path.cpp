@@ -7,6 +7,8 @@ namespace NxEn
 {
 	String Path::SeparatorDirectory = String("/");
 	String Path::SeparatorExtension = String(".");
+	String Path::SeparatorPrevious = String("..");
+	String Path::SeparatorDrive = String(":/");
 
 	Path::Path()
 	{
@@ -283,7 +285,8 @@ namespace NxEn
 		String ToReplaceWith = String(Directories.GetCount() * 3);
 		for (auto It : Directories)
 		{
-			ToReplaceWith += "../";
+			ToReplaceWith += SeparatorPrevious;
+			ToReplaceWith += SeparatorDirectory;
 		}
 
 		Path.Replace(Common, ToReplaceWith);
@@ -328,7 +331,7 @@ namespace NxEn
 		uint64 Iter = 0;
 		for (auto& It : Directories)
 		{
-			if (It == "..")
+			if (It == SeparatorPrevious)
 			{
 				if (Index == -1)
 				{
@@ -372,7 +375,7 @@ namespace NxEn
 			return Type::Directory;
 		}
 
-		if (StringUtility::Contains(Path, SeparatorExtension))
+		if (StringUtility::Contains(Path, SeparatorExtension) && !StringUtility::Contains(Path, SeparatorPrevious))
 		{
 			return Type::File;
 		}
@@ -397,7 +400,7 @@ namespace NxEn
 
 	bool Path::IsAbsolute(StringView Path)
 	{
-		return StringUtility::Contains(Path, ":/");
+		return StringUtility::Contains(Path, SeparatorDrive);
 	}
 
 	bool Path::IsRelative(StringView Path)
@@ -412,12 +415,7 @@ namespace NxEn
 
 	StringView Path::GetDrive(StringView Path)
 	{
-		if (!Path::IsAbsolute(Path))
-		{
-			String::Empty;
-		}
-
-		return StringView(Path.C(), 1);
+		return StringUtility::Split(Path, SeparatorDrive);
 	}
 
 	StringView Path::GetDirectoryPath(StringView Path)

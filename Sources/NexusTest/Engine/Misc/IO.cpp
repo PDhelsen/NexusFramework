@@ -1,6 +1,7 @@
 #include "Core/NexusTestPch.h"
 
 #include "Misc/IO/Path.h"
+#include "Misc/IO/Directory.h"
 
 namespace NxTs
 {
@@ -99,5 +100,25 @@ namespace NxTs
 		ASSERT_EQ(Directory.Join("Test.txt"), "../../Subfolder/Deep/Test/Test.txt");
 		ASSERT_EQ(Root.Join<NxEn::StringView>(Items), Working + "Test/Other/Deep/" + "Nexus/Test/Test.txt");
 		ASSERT_EQ(Directory.Previous(2), "../../Subfolder/Deep/");
+	}
+
+	TEST(IO, Directory)
+	{
+		NxEn::Path Working = NxEn::Path::GetWorkingDirectory();
+		NxEn::Directory Directory = NxEn::Directory(Working);
+
+		ASSERT_EQ(Directory.GetPath(), Working);
+		ASSERT_EQ(Directory.DoesExist(), true);
+		ASSERT_EQ(Directory.GetCount() > 0, true);
+
+		NxEn::Directory SubDirectory = NxEn::Directory(Working + "Test");
+		ASSERT_EQ(SubDirectory.Create(), true);
+
+		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test1").Create(), true);
+		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test2").Create(), true);
+		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test3").Create(), true);
+
+		ASSERT_EQ(SubDirectory.Move(Working + "UnitTest"), true);
+		ASSERT_EQ(SubDirectory.Delete(), true);
 	}
 }
