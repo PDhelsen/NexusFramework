@@ -4,7 +4,6 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 #include "Types/Containers/List.h"
-#include "Misc/IO/Path.h"
 
 namespace NxEn
 {

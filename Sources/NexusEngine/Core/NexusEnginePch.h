@@ -45,6 +45,9 @@
 #include "Misc/Hash.h"
 #include "Misc/Sort.h"
 #include "Misc/Math.h"
+#include "Misc/IO/Path.h"
+#include "Misc/IO/File.h"
+#include "Misc/IO/Directory.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"

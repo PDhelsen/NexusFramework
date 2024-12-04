@@ -21,6 +21,9 @@ namespace NxEn
 		NEXUS_ENGINE_API bool DirectoryCreate(StringView Path) const override;
 		NEXUS_ENGINE_API bool DirectoryMove(StringView Path, StringView Target) const override;
 		NEXUS_ENGINE_API bool DirectoryDelete(StringView Path) const override;
+		NEXUS_ENGINE_API bool FileCreate(StringView Path) const override;
+		NEXUS_ENGINE_API bool FileMove(StringView Path, StringView Target) const override;
+		NEXUS_ENGINE_API bool FileDelete(StringView Path) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::None; }
 

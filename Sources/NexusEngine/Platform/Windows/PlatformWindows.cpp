@@ -1,8 +1,6 @@
 #include "Core/NexusEnginePch.h"
 #include "PlatformWindows.h"
 
-#include "Misc/IO/Path.h"
-
 #include <windows.h>
 
 namespace NxEn
@@ -138,6 +136,37 @@ namespace NxEn
 	bool PlatformWindows::DirectoryDelete(StringView Path) const
 	{
 		return RemoveDirectoryA(Path.C());
+	}
+
+	bool PlatformWindows::FileCreate(StringView Path) const
+	{
+		HANDLE fileHandle = CreateFileA(
+			Path.C(),
+			GENERIC_WRITE,
+			0,
+			NULL,
+			CREATE_ALWAYS,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL
+		);
+
+		if (fileHandle == INVALID_HANDLE_VALUE) {
+			NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to create file %s", Path.C());
+			return false;
+		}
+
+		CloseHandle(fileHandle);
+		return true;
+	}
+
+	bool PlatformWindows::FileMove(StringView Path, StringView Target) const
+	{
+		return MoveFileA(Path.C(), Target.C());
+	}
+
+	bool PlatformWindows::FileDelete(StringView Path) const
+	{
+		return DeleteFileA(Path.C());
 	}
 
 	PlatformWindows::PlatformWindows()

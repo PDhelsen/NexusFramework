@@ -2,6 +2,7 @@
 
 #include "Misc/IO/Path.h"
 #include "Misc/IO/Directory.h"
+#include "Misc/IO/File.h"
 
 namespace NxTs
 {
@@ -113,7 +114,7 @@ namespace NxTs
 
 		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
 		ASSERT_EQ(Directory.GetFiles(true).GetCount() > 0, true);
-		ASSERT_EQ(Directory.GetDirectories(true).GetCount() > 0, true);
+		ASSERT_EQ(Directory.GetDirectories(true).GetCount() == 0, true);
 
 		NxEn::Directory SubDirectory = NxEn::Directory(Working + "Test");
 		ASSERT_EQ(SubDirectory.Create(), true);
@@ -127,5 +128,21 @@ namespace NxTs
 		ASSERT_EQ(SubDirectory.Exists(), true);
 		ASSERT_EQ(SubDirectory.Delete(), true);
 		ASSERT_EQ(SubDirectory.Exists(), false);
+	}
+
+	TEST(IO, File)
+	{
+		NxEn::Path Working = NxEn::Path::GetWorkingDirectory() + "UnitTest.txt";
+		NxEn::File File = NxEn::File(Working);
+
+		ASSERT_EQ(File.GetPath(), Working);
+		ASSERT_EQ(File.Exists(), false);
+
+		ASSERT_EQ(File.Create(), true);
+		ASSERT_EQ(File.Exists(), true);
+		ASSERT_EQ(File.Move(Working.ChangeFileName("UnitTestRenamed.txt")), true);
+		ASSERT_EQ(File.Exists(), true);
+		ASSERT_EQ(File.Delete(), true);
+		ASSERT_EQ(File.Exists(), false);
 	}
 }

@@ -54,6 +54,21 @@ namespace NxEn
 		return false;
 	}
 
+	bool PlatformNone::FileCreate(StringView Path) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileMove(StringView Path, StringView Target) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileDelete(StringView Path) const
+	{
+		return false;
+	}
+
     PlatformNone::PlatformNone()
     {
     }

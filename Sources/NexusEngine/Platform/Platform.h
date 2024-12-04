@@ -41,6 +41,9 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual bool DirectoryCreate(StringView Path) const = 0;
 		NEXUS_ENGINE_API virtual bool DirectoryMove(StringView Path, StringView Target) const = 0;
 		NEXUS_ENGINE_API virtual bool DirectoryDelete(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual bool FileCreate(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual bool FileMove(StringView Path, StringView Target) const = 0;
+		NEXUS_ENGINE_API virtual bool FileDelete(StringView Path) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

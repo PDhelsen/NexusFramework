@@ -149,6 +149,12 @@ namespace NxEn
 				Directory SubDirectory = Directory(It);
 				SubDirectory.Delete();
 			}
+
+			if (Path::IsFile(It))
+			{
+				File F = File(It);
+				F.Delete();
+			}
 		}
 
 		bool Result = Platform::GetInstance()->DirectoryDelete(Path);
