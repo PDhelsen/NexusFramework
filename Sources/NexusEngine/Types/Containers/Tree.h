@@ -34,7 +34,8 @@ namespace NxEn
 		Tree(Tree<T>&& Other) noexcept
 			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
 		{
-			Data = nullptr;
+			Other.Count = 0;
+			Other.Data = nullptr;
 		}
 
 		~Tree()

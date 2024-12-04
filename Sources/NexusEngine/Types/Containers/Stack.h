@@ -48,7 +48,9 @@ namespace NxEn
 		Stack(Stack<T, BS>&& Other) noexcept
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(Other.Data)
 		{
-			Data = nullptr;
+			Other.Capacity = 0;
+			Other.Count = 0;
+			Other.Data = nullptr;
 		}
 
 		~Stack()

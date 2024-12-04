@@ -39,6 +39,7 @@ namespace NxEn
 		LinkedList(LinkedList<T>&& Other) noexcept
 			: Alloc(Other.Alloc), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
+			Other.Count = 0;
 			Other.DataHead = nullptr;
 			Other.DataTail = nullptr;
 		}

@@ -48,7 +48,9 @@ namespace NxEn
 		Queue(Queue<T, BS>&& Other) noexcept
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(Other.Data)
 		{
-			Data = nullptr;
+			Other.Capacity = 0;
+			Other.Count = 0;
+			Other.Data = nullptr;
 		}
 
 		~Queue()

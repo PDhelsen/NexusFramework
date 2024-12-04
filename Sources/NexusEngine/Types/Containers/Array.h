@@ -58,6 +58,7 @@ namespace NxEn
 			{
 				Data.Heap = Other.Data.Heap;
 				Other.Data.Heap = nullptr;
+				Other.Count = 0;
 			}
 			else
 			{
@@ -116,6 +117,7 @@ namespace NxEn
 			{
 				Data.Heap = Other.Data.Heap;
 				Other.Data.Heap = nullptr;
+				Other.Count = 0;
 			}
 			else
 			{

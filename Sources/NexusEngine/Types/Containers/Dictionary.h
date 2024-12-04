@@ -47,6 +47,8 @@ namespace NxEn
 		Dictionary(Dictionary<K, T, H>&& Other) noexcept
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 		{
+			Other.Capacity = 0;
+			Other.Count = 0;
 			Other.Data = nullptr;
 		}
 

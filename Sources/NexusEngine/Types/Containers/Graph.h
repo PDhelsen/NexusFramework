@@ -61,6 +61,7 @@ namespace NxEn
 		Graph(Graph<T>&& Other) noexcept
 			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
 		{
+			Other.Count = 0;
 			Other.Data = nullptr;
 		}
 
