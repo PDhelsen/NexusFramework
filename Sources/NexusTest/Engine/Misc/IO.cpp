@@ -118,16 +118,13 @@ namespace NxTs
 
 		NxEn::Directory SubDirectory = NxEn::Directory(Working + "Test");
 		ASSERT_EQ(SubDirectory.Create(), true);
-		ASSERT_EQ(SubDirectory.Exists(), true);
 
 		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test1").Create(), true);
 		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test2").Create(), true);
 		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test3").Create(), true);
 
 		ASSERT_EQ(SubDirectory.Move(Working + "UnitTest"), true);
-		ASSERT_EQ(SubDirectory.Exists(), true);
 		ASSERT_EQ(SubDirectory.Delete(), true);
-		ASSERT_EQ(SubDirectory.Exists(), false);
 	}
 
 	TEST(IO, File)
@@ -139,10 +136,12 @@ namespace NxTs
 		ASSERT_EQ(File.Exists(), false);
 
 		ASSERT_EQ(File.Create(), true);
-		ASSERT_EQ(File.Exists(), true);
+		ASSERT_EQ(File.Close(), true);
+
 		ASSERT_EQ(File.Move(Working.ChangeFileName("UnitTestRenamed.txt")), true);
-		ASSERT_EQ(File.Exists(), true);
+		ASSERT_EQ(File.Open(), true);
+		ASSERT_EQ(File.Close(), true);
+
 		ASSERT_EQ(File.Delete(), true);
-		ASSERT_EQ(File.Exists(), false);
 	}
 }

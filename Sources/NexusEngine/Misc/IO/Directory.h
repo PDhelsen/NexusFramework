@@ -21,16 +21,16 @@ namespace NxEn
 
 		NEXUS_ENGINE_API void Refresh();
 
+		NEXUS_ENGINE_API bool Create();
+		NEXUS_ENGINE_API bool Move(StringView Target);
+		NEXUS_ENGINE_API bool Delete();
+
 		NEXUS_ENGINE_API List<String> GetContent(bool Recursive = false) const;
 		NEXUS_ENGINE_API void GetContent(List<String>& Result, bool Recursive = false) const;
 		NEXUS_ENGINE_API List<String> GetFiles(bool Recursive = false) const;
 		NEXUS_ENGINE_API void GetFiles(List<String>& Result, bool Recursive = false) const;
 		NEXUS_ENGINE_API List<String> GetDirectories(bool Recursive = false) const;
 		NEXUS_ENGINE_API void GetDirectories(List<String>& Result, bool Recursive = false) const;
-
-		NEXUS_ENGINE_API bool Create();
-		NEXUS_ENGINE_API bool Move(StringView Target);
-		NEXUS_ENGINE_API bool Delete();
 
 		I begin() { return Begin(); }
 		I Begin() { return Content.Begin(); }

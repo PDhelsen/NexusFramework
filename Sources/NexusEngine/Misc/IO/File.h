@@ -23,11 +23,15 @@ namespace NxEn
 		NEXUS_ENGINE_API bool Move(StringView Target);
 		NEXUS_ENGINE_API bool Delete();
 
+		NEXUS_ENGINE_API bool Open();
+		NEXUS_ENGINE_API bool Close();
+
 		StringView GetPath() const { return Path.ToView(); }
 		bool Exists() const { return Exist; }
 
 	private:
 		String Path;
 		bool Exist;
+		void* Handle;
 	};
 }

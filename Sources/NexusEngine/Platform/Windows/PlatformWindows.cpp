@@ -14,21 +14,6 @@ namespace NxEn
 	static const uint64 BufferSize = 512;
 	static char Buffer[BufferSize];
 
-	void PlatformWindows::WaitForUserToCloseTerminal() const
-	{
-		std::cin.get();
-	}
-
-	void PlatformWindows::WriteToTerminal(StringView Message, TerminalColor Color /*TerminalColor::White*/) const
-	{
-		std::cout << TerminalColors[(uint8)Color].C() << Message.C() << TerminalFormatReset.C();
-	}
-
-	void PlatformWindows::WriteToDebugger(StringView Message) const
-	{
-		OutputDebugStringA(Message.C());
-	}
-
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
 		auto Dll = LoadLibraryA(DllName.C());
@@ -56,6 +41,21 @@ namespace NxEn
 		LARGE_INTEGER Counter;
 		QueryPerformanceCounter(&Counter);
 		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
+	}
+
+	void PlatformWindows::WaitForUserToCloseTerminal() const
+	{
+		std::cin.get();
+	}
+
+	void PlatformWindows::WriteToTerminal(StringView Message, TerminalColor Color /*TerminalColor::White*/) const
+	{
+		std::cout << TerminalColors[(uint8)Color].C() << Message.C() << TerminalFormatReset.C();
+	}
+
+	void PlatformWindows::WriteToDebugger(StringView Message) const
+	{
+		OutputDebugStringA(Message.C());
 	}
 
 	Platform::PathType PlatformWindows::GetPathType(StringView Path) const
@@ -88,41 +88,6 @@ namespace NxEn
 		return Path::Normalize(StringView(Buffer, Length));
 	}
 
-	List<String> PlatformWindows::DirectoryContent(StringView Path) const
-	{
-		List<String> Content;
-		String Temp = Path + "*";
-
-		WIN32_FIND_DATAA Data;
-		HANDLE Handle = FindFirstFileA(Temp.C(), &Data);
-
-		if (Handle == INVALID_HANDLE_VALUE) {
-			NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to open directory %s", Path.C());
-			return List<String>();
-		}
-
-		do
-		{
-			StringView Name = Data.cFileName;
-			if (Name == "." || Name == "..")
-			{
-				continue;
-			}
-
-			Temp.Clear();
-			Temp += Path;
-			Temp += Name;
-			Path::Normalize(Temp);
-
-			Content.Append(Temp);
-
-		} while (FindNextFileA(Handle, &Data) != 0);
-
-		FindClose(Handle);
-
-		return Content;
-	}
-
 	bool PlatformWindows::DirectoryCreate(StringView Path) const
 	{
 		return CreateDirectoryA(Path.C(), nullptr);
@@ -138,25 +103,75 @@ namespace NxEn
 		return RemoveDirectoryA(Path.C());
 	}
 
-	bool PlatformWindows::FileCreate(StringView Path) const
+	List<String> PlatformWindows::DirectoryContent(StringView Path) const
 	{
-		HANDLE fileHandle = CreateFileA(
+		List<String> Content;
+		String Temp = Path + "*";
+
+		WIN32_FIND_DATAA Data;
+		HANDLE File = FindFirstFileA(Temp.C(), &Data);
+
+		do
+		{
+			if (File == INVALID_HANDLE_VALUE)
+			{
+				NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to open file %s", Temp.C());
+				return List<String>();
+			}
+
+			StringView Name = Data.cFileName;
+			if (Name == "." || Name == "..")
+			{
+				continue;
+			}
+
+			Temp.Clear();
+			Temp += Path;
+			Temp += Name;
+			Path::Normalize(Temp);
+
+			Content.Append(Temp);
+
+		} while (FindNextFileA(File, &Data) != 0);
+
+		FindClose(File);
+
+		return Content;
+	}
+
+	void* PlatformWindows::FileOpen(StringView Path) const
+	{
+		HANDLE File = CreateFileA(
 			Path.C(),
-			GENERIC_WRITE,
+			GENERIC_READ | GENERIC_WRITE,
 			0,
 			NULL,
-			CREATE_ALWAYS,
+			OPEN_EXISTING,
 			FILE_ATTRIBUTE_NORMAL,
 			NULL
 		);
 
-		if (fileHandle == INVALID_HANDLE_VALUE) {
-			NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to create file %s", Path.C());
-			return false;
-		}
+		return File != INVALID_HANDLE_VALUE ? File : nullptr;
+	}
 
-		CloseHandle(fileHandle);
-		return true;
+	bool PlatformWindows::FileClose(void* File) const
+	{
+		return CloseHandle(File);
+	}
+
+	void* PlatformWindows::FileCreate(StringView Path) const
+	{
+		HANDLE File = CreateFileA(
+			Path.C(),
+			GENERIC_WRITE,
+			0,
+			NULL,
+			CREATE_NEW,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL
+		);
+
+		return File != INVALID_HANDLE_VALUE ? File : nullptr;
 	}
 
 	bool PlatformWindows::FileMove(StringView Path, StringView Target) const

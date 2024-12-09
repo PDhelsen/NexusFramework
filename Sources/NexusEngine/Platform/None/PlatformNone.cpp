@@ -3,7 +3,16 @@
 
 namespace NxEn
 {
-    void PlatformNone::WaitForUserToCloseTerminal() const
+    void PlatformNone::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
+    {
+    }
+
+	double PlatformNone::GetProcessorTimer(double Unit) const
+    {
+		return 0.0;
+    }
+
+	void PlatformNone::WaitForUserToCloseTerminal() const
     {
     }
 
@@ -15,15 +24,6 @@ namespace NxEn
     {
     }
 
-    void PlatformNone::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
-    {
-    }
-
-	double PlatformNone::GetProcessorTimer(double Unit) const
-    {
-		return 0.0;
-    }
-
 	Platform::PathType PlatformNone::GetPathType(StringView Path) const
 	{
 		return PathType::None;
@@ -33,11 +33,6 @@ namespace NxEn
 	{
 		return String::Empty;
 	}
-
-	List<String> PlatformNone::DirectoryContent(StringView Path) const
-    {
-        return List<String>();
-    }
 
 	bool PlatformNone::DirectoryCreate(StringView Path) const
 	{
@@ -54,9 +49,24 @@ namespace NxEn
 		return false;
 	}
 
-	bool PlatformNone::FileCreate(StringView Path) const
+	List<String> PlatformNone::DirectoryContent(StringView Path) const
+    {
+        return List<String>();
+    }
+
+	void* PlatformNone::FileOpen(StringView Path) const
+	{
+		return nullptr;
+	}
+
+	bool PlatformNone::FileClose(void* File) const
 	{
 		return false;
+	}
+
+	void* PlatformNone::FileCreate(StringView Path) const
+	{
+		return nullptr;
 	}
 
 	bool PlatformNone::FileMove(StringView Path, StringView Target) const
