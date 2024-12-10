@@ -17,6 +17,10 @@ namespace NxEn
 		Refresh();
 	}
 
+	Directory::~Directory()
+	{
+	}
+
 	Directory::operator bool() const
 	{
 		return Exist;
@@ -32,13 +36,15 @@ namespace NxEn
 		return !(*this == Other);
 	}
 
-	void Directory::Refresh()
+	Directory& Directory::Refresh()
 	{
 		Exist = Path::Exist(Path);
 		if (Exist)
 		{
-			Content = Platform::GetInstance()->DirectoryContent(Path);
+			Platform::GetInstance()->DirectoryContent(Path, Content);
 		}
+
+		return *this;
 	}
 
 	bool Directory::Create()
@@ -48,6 +54,8 @@ namespace NxEn
 			return true;
 		}
 
+		NEXUS_ASSERT(!Exist, "Failed to create directory: %s", Path.C());
+
 		bool Result = Platform::GetInstance()->DirectoryCreate(Path);
 		Refresh();
 
@@ -56,20 +64,53 @@ namespace NxEn
 		return Result;
 	}
 
-	bool Directory::Move(StringView Target)
+	bool Directory::Move(StringView Target, bool Override)
 	{
 		if (Path == Target)
 		{
 			return true;
 		}
 
-		NEXUS_ASSERT(Exist && !Path::Exist(Target), "Failed to move directory: from %s to %s", Path.C(), Target.C());
+		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), "Failed to move directory: %s", Path.C());
 
-		bool Result = Platform::GetInstance()->DirectoryMove(Path, Target);
+		bool Result = Platform::GetInstance()->DirectoryMove(Path, Target, Override);
 		Path = Target.ToString();
 		Refresh();
 
 		NEXUS_ASSERT(Result && Exist, "Failed to move directory: %s", Path.C());
+
+		return Result;
+	}
+
+	bool Directory::Copy(StringView Target, bool Override)
+	{
+		if (Path == Target)
+		{
+			return true;
+		}
+
+		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), "Failed to copy directory: %s", Path.C());
+
+		bool Result = Platform::GetInstance()->DirectoryCreate(Target);
+
+		for (auto& It : Content)
+		{
+			if (Path::IsDirectory(It))
+			{
+				Directory SubDirectory = Directory(It);
+				SubDirectory.Copy(String(It).Replace(Path, Target), Override);
+			}
+
+			if (Path::IsFile(It))
+			{
+				File FileInDirectory = File(It);
+				FileInDirectory.Copy(String(It).Replace(Path, Target), Override);
+			}
+		}
+
+		Refresh();
+
+		NEXUS_ASSERT(Result && Exist, "Failed to copy directory: %s", Path.C());
 
 		return Result;
 	}
@@ -81,6 +122,8 @@ namespace NxEn
 			return true;
 		}
 
+		NEXUS_ASSERT(Exist, "Failed to delete directory: %s", Path.C());
+
 		for (auto& It : Content)
 		{
 			if (Path::IsDirectory(It))
@@ -91,8 +134,8 @@ namespace NxEn
 
 			if (Path::IsFile(It))
 			{
-				File F = File(It);
-				F.Delete();
+				File FileInDirectory = File(It);
+				FileInDirectory.Delete();
 			}
 		}
 
@@ -106,7 +149,7 @@ namespace NxEn
 
 	List<String> Directory::GetContent(bool Recursive) const
 	{
-		NEXUS_ASSERT(Exist, "Directory doesn't exist: %s", Path.C());
+		NEXUS_ASSERT(Exist, "Failed to get content of directory: %s", Path.C());
 
 		List<String> Result = List<String>(GetCount());
 		GetContent(Result, Recursive);
@@ -115,7 +158,7 @@ namespace NxEn
 
 	void Directory::GetContent(List<String>& Result, bool Recursive) const
 	{
-		NEXUS_ASSERT(Exist, "Directory doesn't exist: %s", Path.C());
+		NEXUS_ASSERT(Exist, "Failed to get content of directory: %s", Path.C());
 
 		for (auto& It : Content)
 		{
@@ -131,7 +174,7 @@ namespace NxEn
 
 	List<String> Directory::GetFiles(bool Recursive) const
 	{
-		NEXUS_ASSERT(Exist, "Directory doesn't exist: %s", Path.C());
+		NEXUS_ASSERT(Exist, "Failed to get content of directory: %s", Path.C());
 
 		List<String> Result = List<String>(GetCount());
 		GetFiles(Result, Recursive);
@@ -140,7 +183,7 @@ namespace NxEn
 
 	void Directory::GetFiles(List<String>& Result, bool Recursive) const
 	{
-		NEXUS_ASSERT(Exist, "Directory doesn't exist: %s", Path.C());
+		NEXUS_ASSERT(Exist, "Failed to get content of directory: %s", Path.C());
 
 		for (auto& It : Content)
 		{
@@ -159,7 +202,7 @@ namespace NxEn
 
 	List<String> Directory::GetDirectories(bool Recursive) const
 	{
-		NEXUS_ASSERT(Exist, "Directory doesn't exist: %s", Path.C());
+		NEXUS_ASSERT(Exist, "Failed to get content of directory: %s", Path.C());
 
 		List<String> Result = List<String>(GetCount());
 		GetDirectories(Result, Recursive);
@@ -168,7 +211,7 @@ namespace NxEn
 
 	void Directory::GetDirectories(List<String>& Result, bool Recursive) const
 	{
-		NEXUS_ASSERT(Exist, "Directory doesn't exist: %s", Path.C());
+		NEXUS_ASSERT(Exist, "Failed to get content of directory: %s", Path.C());
 
 		for (auto& It : Content)
 		{

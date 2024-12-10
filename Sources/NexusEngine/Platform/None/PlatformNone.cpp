@@ -39,7 +39,12 @@ namespace NxEn
 		return false;
 	}
 
-	bool PlatformNone::DirectoryMove(StringView Path, StringView Target) const
+	bool PlatformNone::DirectoryMove(StringView Path, StringView Target, bool Override) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::DirectoryCopy(StringView Path, StringView Target, bool Override) const
 	{
 		return false;
 	}
@@ -49,32 +54,37 @@ namespace NxEn
 		return false;
 	}
 
-	List<String> PlatformNone::DirectoryContent(StringView Path) const
+	bool PlatformNone::DirectoryContent(StringView Path, List<String>& Result) const
     {
-        return List<String>();
+        return false;
     }
 
-	void* PlatformNone::FileOpen(StringView Path) const
-	{
-		return nullptr;
-	}
-
-	bool PlatformNone::FileClose(void* File) const
+	bool PlatformNone::FileCreate(StringView Path, void** Handle) const
 	{
 		return false;
 	}
 
-	void* PlatformNone::FileCreate(StringView Path) const
+	bool PlatformNone::FileMove(StringView Path, StringView Target, bool Override) const
 	{
-		return nullptr;
+		return false;
 	}
 
-	bool PlatformNone::FileMove(StringView Path, StringView Target) const
+	bool PlatformNone::FileCopy(StringView Path, StringView Target, bool Override) const
 	{
 		return false;
 	}
 
 	bool PlatformNone::FileDelete(StringView Path) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileOpen(StringView Path, void** Handle) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileClose(void* File) const
 	{
 		return false;
 	}

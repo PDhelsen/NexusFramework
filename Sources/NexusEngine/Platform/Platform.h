@@ -41,15 +41,17 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual String GetWorkingDirectory() const = 0;
 
 		NEXUS_ENGINE_API virtual bool DirectoryCreate(StringView Path) const = 0;
-		NEXUS_ENGINE_API virtual bool DirectoryMove(StringView Path, StringView Target) const = 0;
+		NEXUS_ENGINE_API virtual bool DirectoryMove(StringView Path, StringView Target, bool Override = false) const = 0;
+		NEXUS_ENGINE_API virtual bool DirectoryCopy(StringView Path, StringView Target, bool Override = false) const = 0;
 		NEXUS_ENGINE_API virtual bool DirectoryDelete(StringView Path) const = 0;
-		NEXUS_ENGINE_API virtual List<String> DirectoryContent(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual bool DirectoryContent(StringView Path, List<String>& Result) const = 0;
 
-		NEXUS_ENGINE_API virtual void* FileOpen(StringView Path) const = 0;
-		NEXUS_ENGINE_API virtual bool FileClose(void* File) const = 0;
-		NEXUS_ENGINE_API virtual void* FileCreate(StringView Path) const = 0;
-		NEXUS_ENGINE_API virtual bool FileMove(StringView Path, StringView Target) const = 0;
+		NEXUS_ENGINE_API virtual bool FileCreate(StringView Path, void** Handle = nullptr) const = 0;
+		NEXUS_ENGINE_API virtual bool FileMove(StringView Path, StringView Target, bool Override = false) const = 0;
+		NEXUS_ENGINE_API virtual bool FileCopy(StringView Path, StringView Target, bool Override = false) const = 0;
 		NEXUS_ENGINE_API virtual bool FileDelete(StringView Path) const = 0;
+		NEXUS_ENGINE_API virtual bool FileOpen(StringView Path, void** Handle = nullptr) const = 0;
+		NEXUS_ENGINE_API virtual bool FileClose(void* File) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

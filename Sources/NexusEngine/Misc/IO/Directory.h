@@ -14,15 +14,17 @@ namespace NxEn
 
 		NEXUS_ENGINE_API Directory(StringView Path);
 		NEXUS_ENGINE_API Directory(String&& Path);
+		NEXUS_ENGINE_API ~Directory();
 
 		NEXUS_ENGINE_API explicit operator bool() const;
 		NEXUS_ENGINE_API bool operator ==(const Directory& Other) const;
 		NEXUS_ENGINE_API bool operator !=(const Directory& Other) const;
 
-		NEXUS_ENGINE_API void Refresh();
+		NEXUS_ENGINE_API Directory& Refresh();
 
 		NEXUS_ENGINE_API bool Create();
-		NEXUS_ENGINE_API bool Move(StringView Target);
+		NEXUS_ENGINE_API bool Move(StringView Target, bool Override = false);
+		NEXUS_ENGINE_API bool Copy(StringView Target, bool Override = false);
 		NEXUS_ENGINE_API bool Delete();
 
 		NEXUS_ENGINE_API List<String> GetContent(bool Recursive = false) const;

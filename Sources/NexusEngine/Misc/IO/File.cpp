@@ -17,6 +17,11 @@ namespace NxEn
 		Refresh();
 	}
 
+	File::~File()
+	{
+		NEXUS_ASSERT(!Handle, "Delete file while it is still open: %s", Path.C());
+	}
+
 	File::operator bool() const
 	{
 		return Exist;
@@ -32,80 +37,115 @@ namespace NxEn
 		return !(*this == Other);
 	}
 
-	void File::Refresh()
+	File& File::Refresh()
 	{
 		Exist = Path::Exist(Path);
+		return *this;
 	}
 
-	bool File::Create()
+	bool File::Create(bool KeepOpen)
 	{
 		if (Exist)
 		{
-			return Open();
+			return true;
 		}
 
-		NEXUS_ASSERT(!Handle, "Failed to create file: %s", Path.C());
+		NEXUS_ASSERT(!Exist && !Handle, "Failed to create file: %s", Path.C());
 
-		Handle = Platform::GetInstance()->FileCreate(Path);
+		bool Result = Platform::GetInstance()->FileCreate(Path, KeepOpen ? &Handle : nullptr);
 		Refresh();
 
-		NEXUS_ASSERT(Handle && Exist, "Failed to create file: %s", Path.C());
+		NEXUS_ASSERT(Result && Exist && !Handle, "Failed to create file: %s", Path.C());
 
-		return Handle != nullptr;
+		return Result;
 	}
 
-	bool File::Move(StringView Target)
+	bool File::Move(StringView Target, bool Override, bool CloseIfOpen)
 	{
 		if (Path == Target)
 		{
 			return true;
 		}
 
-		NEXUS_ASSERT(!Handle && Exist && !Path::Exist(Target), "Failed to move file: from %s to %s", Path.C(), Target.C());
+		if (CloseIfOpen && Handle)
+		{
+			Close();
+		}
 
-		bool Result = Platform::GetInstance()->FileMove(Path, Target);
+		NEXUS_ASSERT(Exist && !Handle && Path != Target && !Path::Exist(Target), "Failed to move file: %s", Path.C());
+
+		bool Result = Platform::GetInstance()->FileMove(Path, Target, Override);
 		Path = Target.ToString();
 		Refresh();
 
-		NEXUS_ASSERT(Result && Exist, "Failed to move file: %s", Path.C());
+		NEXUS_ASSERT(Result && Exist && !Handle, "Failed to move file: %s", Path.C());
 
 		return Result;
 	}
 
-	bool File::Delete()
+	bool File::Copy(StringView Target, bool Override, bool CloseIfOpen)
+	{
+		if (Path == Target)
+		{
+			return true;
+		}
+
+		if (CloseIfOpen && Handle)
+		{
+			Close();
+		}
+
+		NEXUS_ASSERT(Exist && !Handle && Path != Target && !Path::Exist(Target), "Failed to copy file: %s", Path.C());
+
+		bool Result = Platform::GetInstance()->FileCopy(Path, Target, Override);
+		Refresh();
+
+		NEXUS_ASSERT(Result && Exist && !Handle, "Failed to copy file: %s", Path.C());
+
+		return Result;
+	}
+
+	bool File::Delete(bool CloseIfOpen)
 	{
 		if (!Exist)
 		{
 			return true;
 		}
 
-		NEXUS_ASSERT(!Handle, "Failed to delete file: %s", Path.C());
+		if (CloseIfOpen && Handle)
+		{
+			Close();
+		}
+
+		NEXUS_ASSERT(Exist && !Handle, "Failed to delete file: %s", Path.C());
 
 		bool Result = Platform::GetInstance()->FileDelete(Path);
 		Refresh();
 
-		NEXUS_ASSERT(Result && !Exist, "Failed to delete file: %s", Path.C());
+		NEXUS_ASSERT(Result && !Exist && !Handle, "Failed to delete file: %s", Path.C());
 
 		return Result;
 	}
 
-	bool File::Open()
+	bool File::Open(bool CreateIfDontExist)
 	{
-		if (!Exist)
-		{
-			return Create();
-		}
-
 		if (Handle)
 		{
 			return true;
 		}
 
-		Handle = Platform::GetInstance()->FileOpen(Path);
+		if (CreateIfDontExist && !Exist)
+		{
+			return Create(true);
+		}
 
-		NEXUS_ASSERT(Handle, "Failed to open file: %s", Path.C());
+		NEXUS_ASSERT(Exist && !Handle, "Failed to open file: %s", Path.C());
 
-		return Handle != nullptr;
+		bool Result = Platform::GetInstance()->FileOpen(Path, &Handle);
+
+		NEXUS_ASSERT(Exist && Handle, "Failed to open file: %s", Path.C());
+
+		return Result;
 	}
 
 	bool File::Close()
@@ -115,10 +155,12 @@ namespace NxEn
 			return true;
 		}
 
+		NEXUS_ASSERT(Exist && Handle, "Failed to close file: %s", Path.C());
+
 		bool Result = Platform::GetInstance()->FileClose(Handle);
 		Handle = nullptr;
 
-		NEXUS_ASSERT(Result, "Failed to close file: %s", Path.C());
+		NEXUS_ASSERT(Result && Exist && !Handle, "Failed to close file: %s", Path.C());
 
 		return Result;
 	}

@@ -12,22 +12,25 @@ namespace NxEn
 	public:
 		NEXUS_ENGINE_API File(StringView Path);
 		NEXUS_ENGINE_API File(String&& Path);
+		NEXUS_ENGINE_API ~File();
 
 		NEXUS_ENGINE_API explicit operator bool() const;
 		NEXUS_ENGINE_API bool operator ==(const File& Other) const;
 		NEXUS_ENGINE_API bool operator !=(const File& Other) const;
 
-		NEXUS_ENGINE_API void Refresh();
+		NEXUS_ENGINE_API File& Refresh();
 
-		NEXUS_ENGINE_API bool Create();
-		NEXUS_ENGINE_API bool Move(StringView Target);
-		NEXUS_ENGINE_API bool Delete();
+		NEXUS_ENGINE_API bool Create(bool KeepOpen = false);
+		NEXUS_ENGINE_API bool Move(StringView Target, bool Override = false, bool CloseIfOpen = false);
+		NEXUS_ENGINE_API bool Copy(StringView Target, bool Override = false, bool CloseIfOpen = false);
+		NEXUS_ENGINE_API bool Delete(bool CloseIfOpen = false);
 
-		NEXUS_ENGINE_API bool Open();
+		NEXUS_ENGINE_API bool Open(bool CreateIfDontExist = false);
 		NEXUS_ENGINE_API bool Close();
 
 		StringView GetPath() const { return Path.ToView(); }
 		bool Exists() const { return Exist; }
+		bool IsOpened() const { return Handle != nullptr; }
 
 	private:
 		String Path;

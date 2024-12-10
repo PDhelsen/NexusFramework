@@ -21,15 +21,17 @@ namespace NxEn
 		NEXUS_ENGINE_API String GetWorkingDirectory() const override;
 
 		NEXUS_ENGINE_API bool DirectoryCreate(StringView Path) const override;
-		NEXUS_ENGINE_API bool DirectoryMove(StringView Path, StringView Target) const override;
+		NEXUS_ENGINE_API bool DirectoryMove(StringView Path, StringView Target, bool Override = false) const override;
+		NEXUS_ENGINE_API bool DirectoryCopy(StringView Path, StringView Target, bool Override = false) const override;
 		NEXUS_ENGINE_API bool DirectoryDelete(StringView Path) const override;
-		NEXUS_ENGINE_API List<String> DirectoryContent(StringView Path) const override;
+		NEXUS_ENGINE_API bool DirectoryContent(StringView Path, List<String>& Result) const override;
 
-		NEXUS_ENGINE_API void* FileOpen(StringView Path) const override;
-		NEXUS_ENGINE_API bool FileClose(void* File) const override;
-		NEXUS_ENGINE_API void* FileCreate(StringView Path) const override;
-		NEXUS_ENGINE_API bool FileMove(StringView Path, StringView Target) const override;
+		NEXUS_ENGINE_API bool FileCreate(StringView Path, void** Handle = nullptr) const override;
+		NEXUS_ENGINE_API bool FileMove(StringView Path, StringView Target, bool Override = false) const override;
+		NEXUS_ENGINE_API bool FileCopy(StringView Path, StringView Target, bool Override = false) const override;
 		NEXUS_ENGINE_API bool FileDelete(StringView Path) const override;
+		NEXUS_ENGINE_API bool FileOpen(StringView Path, void** Handle = nullptr) const override;
+		NEXUS_ENGINE_API bool FileClose(void* File) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 

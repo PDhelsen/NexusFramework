@@ -136,12 +136,12 @@ namespace NxTs
 		ASSERT_EQ(File.Exists(), false);
 
 		ASSERT_EQ(File.Create(), true);
-		ASSERT_EQ(File.Close(), true);
-
+		ASSERT_EQ(File.Exists(), true);
 		ASSERT_EQ(File.Move(Working.ChangeFileName("UnitTestRenamed.txt")), true);
 		ASSERT_EQ(File.Open(), true);
+		ASSERT_EQ(File.IsOpened(), true);
 		ASSERT_EQ(File.Close(), true);
-
+		ASSERT_EQ(File.IsOpened(), false);
 		ASSERT_EQ(File.Delete(), true);
 	}
 }

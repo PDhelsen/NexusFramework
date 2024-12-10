@@ -93,9 +93,15 @@ namespace NxEn
 		return CreateDirectoryA(Path.C(), nullptr);
 	}
 
-	bool PlatformWindows::DirectoryMove(StringView Path, StringView Target) const
+	bool PlatformWindows::DirectoryMove(StringView Path, StringView Target, bool Override) const
 	{
-		return MoveFileA(Path.C(), Target.C());
+		return MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
+	}
+
+	bool PlatformWindows::DirectoryCopy(StringView Path, StringView Target, bool Override) const
+	{
+		NEXUS_ASSERT(false, "Not supported at platform level");
+		return false;
 	}
 
 	bool PlatformWindows::DirectoryDelete(StringView Path) const
@@ -103,9 +109,9 @@ namespace NxEn
 		return RemoveDirectoryA(Path.C());
 	}
 
-	List<String> PlatformWindows::DirectoryContent(StringView Path) const
+	bool PlatformWindows::DirectoryContent(StringView Path, List<String>& Result) const
 	{
-		List<String> Content;
+		Result.Clear();
 		String Temp = Path + "*";
 
 		WIN32_FIND_DATAA Data;
@@ -116,7 +122,8 @@ namespace NxEn
 			if (File == INVALID_HANDLE_VALUE)
 			{
 				NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to open file %s", Temp.C());
-				return List<String>();
+				Result.Clear();
+				return false;
 			}
 
 			StringView Name = Data.cFileName;
@@ -130,36 +137,16 @@ namespace NxEn
 			Temp += Name;
 			Path::Normalize(Temp);
 
-			Content.Append(Temp);
+			Result.Append(Temp);
 
 		} while (FindNextFileA(File, &Data) != 0);
 
 		FindClose(File);
 
-		return Content;
+		return true;
 	}
 
-	void* PlatformWindows::FileOpen(StringView Path) const
-	{
-		HANDLE File = CreateFileA(
-			Path.C(),
-			GENERIC_READ | GENERIC_WRITE,
-			0,
-			NULL,
-			OPEN_EXISTING,
-			FILE_ATTRIBUTE_NORMAL,
-			NULL
-		);
-
-		return File != INVALID_HANDLE_VALUE ? File : nullptr;
-	}
-
-	bool PlatformWindows::FileClose(void* File) const
-	{
-		return CloseHandle(File);
-	}
-
-	void* PlatformWindows::FileCreate(StringView Path) const
+	bool PlatformWindows::FileCreate(StringView Path, void** Handle) const
 	{
 		HANDLE File = CreateFileA(
 			Path.C(),
@@ -171,17 +158,70 @@ namespace NxEn
 			NULL
 		);
 
-		return File != INVALID_HANDLE_VALUE ? File : nullptr;
+		bool Result = File != INVALID_HANDLE_VALUE;
+
+		if (Result)
+		{
+			if (Handle == nullptr)
+			{
+				FileClose(File);
+			}
+			else
+			{
+				*Handle = File;
+			}
+		}
+
+		return Result;
 	}
 
-	bool PlatformWindows::FileMove(StringView Path, StringView Target) const
+	bool PlatformWindows::FileMove(StringView Path, StringView Target, bool Override) const
 	{
-		return MoveFileA(Path.C(), Target.C());
+		return MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
+	}
+
+	bool PlatformWindows::FileCopy(StringView Path, StringView Target, bool Override) const
+	{
+		return CopyFileA(Path.C(), Target.C(), !Override);
 	}
 
 	bool PlatformWindows::FileDelete(StringView Path) const
 	{
 		return DeleteFileA(Path.C());
+	}
+
+	bool PlatformWindows::FileOpen(StringView Path, void** Handle) const
+	{
+		HANDLE File = CreateFileA(
+			Path.C(),
+			GENERIC_READ | GENERIC_WRITE,
+			0,
+			NULL,
+			OPEN_EXISTING,
+			FILE_ATTRIBUTE_NORMAL,
+			NULL
+		);
+
+		bool Result = File != INVALID_HANDLE_VALUE;
+
+		if (Result)
+		{
+			if (Handle == nullptr)
+			{
+				FileClose(File);
+			}
+			else
+			{
+				*Handle = File;
+			}
+		}
+
+		return Result;
+	}
+
+	bool PlatformWindows::FileClose(void* File) const
+	{
+		return CloseHandle(File);
 	}
 
 	PlatformWindows::PlatformWindows()
