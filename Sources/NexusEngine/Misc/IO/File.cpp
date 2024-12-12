@@ -5,6 +5,18 @@
 
 namespace NxEn
 {
+	Platform::FileMode ConvertFileToPlatformMode(File::Mode Mode)
+	{
+		switch (Mode)
+		{
+		case NxEn::File::Mode::Read: return Platform::FileMode::Read;
+		case NxEn::File::Mode::Write: return Platform::FileMode::Write;
+		case NxEn::File::Mode::Append: return Platform::FileMode::Append;
+		}
+
+		return Platform::FileMode::Read;
+	}
+
 	File::File(StringView Path)
 		: Path(Path.ToString()), Exist(false), Handle(nullptr)
 	{
@@ -47,7 +59,14 @@ namespace NxEn
 	{
 		if (Exist)
 		{
-			return true;
+			if (KeepOpen)
+			{
+				return Open(Mode::Write);
+			}
+			else
+			{
+				return true;
+			}
 		}
 
 		NEXUS_ASSERT(!Exist && !Handle, "Failed to create file: %s", Path.C());
@@ -127,7 +146,7 @@ namespace NxEn
 		return Result;
 	}
 
-	bool File::Open(bool CreateIfDontExist)
+	bool File::Open(Mode OpenMode, bool CreateIfDontExist)
 	{
 		if (Handle)
 		{
@@ -141,7 +160,7 @@ namespace NxEn
 
 		NEXUS_ASSERT(Exist && !Handle, "Failed to open file: %s", Path.C());
 
-		bool Result = Platform::GetInstance()->FileOpen(Path, &Handle);
+		bool Result = Platform::GetInstance()->FileOpen(Path, &Handle, ConvertFileToPlatformMode(OpenMode));
 
 		NEXUS_ASSERT(Exist && Handle, "Failed to open file: %s", Path.C());
 
@@ -161,6 +180,17 @@ namespace NxEn
 		Handle = nullptr;
 
 		NEXUS_ASSERT(Result && Exist && !Handle, "Failed to close file: %s", Path.C());
+
+		return Result;
+	}
+
+	bool File::Write(void* Data, uint64 Size)
+	{
+		NEXUS_ASSERT(Exist && Handle && Data && Size > 0, "Failed to write file: %s", Path.C());
+
+		bool Result = Platform::GetInstance()->FileWrite(Handle, Data, Size);
+
+		NEXUS_ASSERT(Result, "Failed to write file: %s", Path.C());
 
 		return Result;
 	}

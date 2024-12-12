@@ -79,12 +79,17 @@ namespace NxEn
 		return false;
 	}
 
-	bool PlatformNone::FileOpen(StringView Path, void** Handle) const
+	bool PlatformNone::FileOpen(StringView Path, void** Handle, FileMode Mode) const
 	{
 		return false;
 	}
 
 	bool PlatformNone::FileClose(void* File) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileWrite(void* File, void* Data, uint64 Size) const
 	{
 		return false;
 	}

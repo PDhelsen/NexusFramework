@@ -6,6 +6,8 @@
 
 namespace NxTs
 {
+	uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
+
 	TEST(IO, Path_Static)
 	{
 		NxEn::String Working = NxEn::Path::GetWorkingDirectory().ToString();
@@ -137,10 +139,18 @@ namespace NxTs
 
 		ASSERT_EQ(File.Create(), true);
 		ASSERT_EQ(File.Exists(), true);
+
 		ASSERT_EQ(File.Move(Working.ChangeFileName("UnitTestRenamed.txt")), true);
-		ASSERT_EQ(File.Open(), true);
+
+		ASSERT_EQ(File.Open(NxEn::File::Mode::Write), true);
 		ASSERT_EQ(File.IsOpened(), true);
+		ASSERT_EQ(File.Write(Data, 8 * 10), true);
 		ASSERT_EQ(File.Close(), true);
+
+		ASSERT_EQ(File.Open(NxEn::File::Mode::Append), true);
+		ASSERT_EQ(File.Write(Data, 8 * 10), true);
+		ASSERT_EQ(File.Close(), true);
+
 		ASSERT_EQ(File.IsOpened(), false);
 		ASSERT_EQ(File.Delete(), true);
 	}

@@ -30,6 +30,11 @@ namespace NxEn
 			None, File, Directory, Other
 		};
 
+		enum class FileMode
+		{
+			Read, Write, Append
+		};
+
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 
@@ -50,8 +55,9 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual bool FileMove(StringView Path, StringView Target, bool Override = false) const = 0;
 		NEXUS_ENGINE_API virtual bool FileCopy(StringView Path, StringView Target, bool Override = false) const = 0;
 		NEXUS_ENGINE_API virtual bool FileDelete(StringView Path) const = 0;
-		NEXUS_ENGINE_API virtual bool FileOpen(StringView Path, void** Handle = nullptr) const = 0;
+		NEXUS_ENGINE_API virtual bool FileOpen(StringView Path, void** Handle, FileMode Mode) const = 0;
 		NEXUS_ENGINE_API virtual bool FileClose(void* File) const = 0;
+		NEXUS_ENGINE_API virtual bool FileWrite(void* File, void* Data, uint64 Size) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

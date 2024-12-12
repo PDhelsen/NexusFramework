@@ -190,14 +190,22 @@ namespace NxEn
 		return DeleteFileA(Path.C());
 	}
 
-	bool PlatformWindows::FileOpen(StringView Path, void** Handle) const
+	bool PlatformWindows::FileOpen(StringView Path, void** Handle, FileMode Mode) const
 	{
+		DWORD Attributes = 0;
+		switch (Mode)
+		{
+		case NxEn::Platform::FileMode::Read: Attributes = GENERIC_READ; break;
+		case NxEn::Platform::FileMode::Write: Attributes = GENERIC_WRITE; break;
+		case NxEn::Platform::FileMode::Append: Attributes = FILE_APPEND_DATA; break;
+		}
+
 		HANDLE File = CreateFileA(
 			Path.C(),
-			GENERIC_READ | GENERIC_WRITE,
+			Attributes,
 			0,
 			NULL,
-			OPEN_EXISTING,
+			Mode == FileMode::Write ? TRUNCATE_EXISTING : OPEN_EXISTING,
 			FILE_ATTRIBUTE_NORMAL,
 			NULL
 		);
@@ -206,13 +214,10 @@ namespace NxEn
 
 		if (Result)
 		{
-			if (Handle == nullptr)
+			*Handle = File;
+			if (Mode == FileMode::Append)
 			{
-				FileClose(File);
-			}
-			else
-			{
-				*Handle = File;
+				SetFilePointer(File, 0, nullptr, FILE_END);
 			}
 		}
 
@@ -222,6 +227,13 @@ namespace NxEn
 	bool PlatformWindows::FileClose(void* File) const
 	{
 		return CloseHandle(File);
+	}
+
+	bool PlatformWindows::FileWrite(void* File, void* Data, uint64 Size) const
+	{
+		DWORD Written = 0;
+		bool Result = WriteFile(File, Data, Size, &Written, nullptr);
+		return Result && Written == Size;
 	}
 
 	PlatformWindows::PlatformWindows()

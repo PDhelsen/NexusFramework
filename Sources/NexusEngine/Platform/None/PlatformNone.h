@@ -30,8 +30,9 @@ namespace NxEn
 		NEXUS_ENGINE_API bool FileMove(StringView Path, StringView Target, bool Override = false) const override;
 		NEXUS_ENGINE_API bool FileCopy(StringView Path, StringView Target, bool Override = false) const override;
 		NEXUS_ENGINE_API bool FileDelete(StringView Path) const override;
-		NEXUS_ENGINE_API bool FileOpen(StringView Path, void** Handle = nullptr) const override;
+		NEXUS_ENGINE_API bool FileOpen(StringView Path, void** Handle, FileMode Mode) const override;
 		NEXUS_ENGINE_API bool FileClose(void* File) const override;
+		NEXUS_ENGINE_API bool FileWrite(void* File, void* Data, uint64 Size) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::None; }
 

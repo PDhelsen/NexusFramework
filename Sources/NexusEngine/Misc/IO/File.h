@@ -10,6 +10,11 @@ namespace NxEn
 	class File
 	{
 	public:
+		enum class Mode
+		{
+			Read, Write, Append
+		};
+
 		NEXUS_ENGINE_API File(StringView Path);
 		NEXUS_ENGINE_API File(String&& Path);
 		NEXUS_ENGINE_API ~File();
@@ -25,8 +30,10 @@ namespace NxEn
 		NEXUS_ENGINE_API bool Copy(StringView Target, bool Override = false, bool CloseIfOpen = false);
 		NEXUS_ENGINE_API bool Delete(bool CloseIfOpen = false);
 
-		NEXUS_ENGINE_API bool Open(bool CreateIfDontExist = false);
+		NEXUS_ENGINE_API bool Open(Mode OpenMode, bool CreateIfDontExist = false);
 		NEXUS_ENGINE_API bool Close();
+
+		NEXUS_ENGINE_API bool Write(void* Data, uint64 Size);
 
 		StringView GetPath() const { return Path.ToView(); }
 		bool Exists() const { return Exist; }
