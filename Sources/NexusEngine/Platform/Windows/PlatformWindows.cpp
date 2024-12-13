@@ -229,11 +229,30 @@ namespace NxEn
 		return CloseHandle(File);
 	}
 
-	bool PlatformWindows::FileWrite(void* File, void* Data, uint64 Size) const
+	bool PlatformWindows::FileWrite(void* File, Byte* Data, uint64 Size) const
 	{
+		NEXUS_ASSERT(Size <= Math::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+
 		DWORD Written = 0;
-		bool Result = WriteFile(File, Data, Size, &Written, nullptr);
+		bool Result = WriteFile(File, Data, (DWORD)Size, &Written, nullptr);
 		return Result && Written == Size;
+	}
+
+	bool PlatformWindows::FileRead(void* File, Byte* Data, uint64 Size) const
+	{
+		NEXUS_ASSERT(Size <= Math::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+
+		DWORD Written = 0;
+		bool Result = ReadFile(File, Data, (DWORD)Size, &Written, nullptr);
+		return Result && Written == Size;
+	}
+
+	bool PlatformWindows::FileSize(void* File, uint64* Size) const
+	{
+		LARGE_INTEGER FileSize;
+		bool Result = GetFileSizeEx(File, &FileSize);
+		*Size = Result ? FileSize.QuadPart : 0;
+		return Result;
 	}
 
 	PlatformWindows::PlatformWindows()

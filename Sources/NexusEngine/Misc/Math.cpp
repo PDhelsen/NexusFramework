@@ -745,7 +745,7 @@ namespace NxEn
 		}
 		constexpr int64 MinI64()
 		{
-			return LONG_MIN;
+			return LLONG_MIN;
 		}
 		constexpr uint8 MinUI8()
 		{
@@ -785,7 +785,7 @@ namespace NxEn
 		}
 		constexpr int64 MaxI64()
 		{
-			return LONG_MAX;
+			return LLONG_MAX;
 		}
 		constexpr uint8 MaxUI8()
 		{
@@ -801,7 +801,7 @@ namespace NxEn
 		}
 		constexpr uint64 MaxUI64()
 		{
-			return ULONG_MAX;
+			return ULLONG_MAX;
 		}
 	}
 }

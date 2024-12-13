@@ -184,14 +184,39 @@ namespace NxEn
 		return Result;
 	}
 
-	bool File::Write(void* Data, uint64 Size)
+	void File::Write(Byte* Data, uint64 Size)
 	{
 		NEXUS_ASSERT(Exist && Handle && Data && Size > 0, "Failed to write file: %s", Path.C());
 
 		bool Result = Platform::GetInstance()->FileWrite(Handle, Data, Size);
 
 		NEXUS_ASSERT(Result, "Failed to write file: %s", Path.C());
+	}
 
-		return Result;
+	Byte* File::Read(Allocator* Allctr)
+	{
+		NEXUS_ASSERT(Exist && Handle, "Failed to read file: %s", Path.C());
+
+		Allctr = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
+		uint64 Size = GetSize();
+		Byte* Data = (Byte*)Memory::Allocate(sizeof(Byte) * Size, Allctr);
+
+		bool Result = Platform::GetInstance()->FileRead(Handle, Data, Size);
+
+		NEXUS_ASSERT(Result, "Failed to read file: %s", Path.C());
+
+		return Data;
+	}
+
+	uint64 File::GetSize()
+	{
+		NEXUS_ASSERT(Exist && Handle, "Failed to query file size: %s", Path.C());
+
+		uint64 Size = 0;
+		bool Result = Platform::GetInstance()->FileSize(Handle, &Size);
+
+		NEXUS_ASSERT(Result, "Failed to query file size: %s", Path.C());
+
+		return Size;
 	}
 }

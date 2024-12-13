@@ -4,6 +4,8 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 #include "Types/Containers/List.h"
+#include "Memory/Memory.h"
+#include "Memory/Allocator/Allocator.h"
 
 namespace NxEn
 {
@@ -33,7 +35,9 @@ namespace NxEn
 		NEXUS_ENGINE_API bool Open(Mode OpenMode, bool CreateIfDontExist = false);
 		NEXUS_ENGINE_API bool Close();
 
-		NEXUS_ENGINE_API bool Write(void* Data, uint64 Size);
+		NEXUS_ENGINE_API void Write(Byte* Data, uint64 Size);
+		NEXUS_ENGINE_API Byte* Read(Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API uint64 GetSize();
 
 		StringView GetPath() const { return Path.ToView(); }
 		bool Exists() const { return Exist; }

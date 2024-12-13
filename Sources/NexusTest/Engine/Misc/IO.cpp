@@ -144,11 +144,19 @@ namespace NxTs
 
 		ASSERT_EQ(File.Open(NxEn::File::Mode::Write), true);
 		ASSERT_EQ(File.IsOpened(), true);
-		ASSERT_EQ(File.Write(Data, 8 * 10), true);
+		File.Write((NxEn::Byte*)Data, 8 * 10);
+		ASSERT_EQ(File.GetSize(), 8 * 10);
+		ASSERT_EQ(File.Close(), true);
+
+		ASSERT_EQ(File.Open(NxEn::File::Mode::Read), true);
+		uint64* Content = (uint64*)File.Read();
+		ASSERT_EQ(Content[5], 15);
+		delete[] Content;
 		ASSERT_EQ(File.Close(), true);
 
 		ASSERT_EQ(File.Open(NxEn::File::Mode::Append), true);
-		ASSERT_EQ(File.Write(Data, 8 * 10), true);
+		File.Write((NxEn::Byte*)Data, 8 * 10);
+		ASSERT_EQ(File.GetSize(), 8 * 10 * 2);
 		ASSERT_EQ(File.Close(), true);
 
 		ASSERT_EQ(File.IsOpened(), false);

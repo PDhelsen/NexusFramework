@@ -32,7 +32,9 @@ namespace NxEn
 		NEXUS_ENGINE_API bool FileDelete(StringView Path) const override;
 		NEXUS_ENGINE_API bool FileOpen(StringView Path, void** Handle, FileMode Mode) const override;
 		NEXUS_ENGINE_API bool FileClose(void* File) const override;
-		NEXUS_ENGINE_API bool FileWrite(void* File, void* Data, uint64 Size) const override;
+		NEXUS_ENGINE_API bool FileWrite(void* File, Byte* Data, uint64 Size) const override;
+		NEXUS_ENGINE_API bool FileRead(void* File, Byte* Data, uint64 Size) const override;
+		NEXUS_ENGINE_API bool FileSize(void* File, uint64* Size) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 

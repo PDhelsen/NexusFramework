@@ -89,7 +89,17 @@ namespace NxEn
 		return false;
 	}
 
-	bool PlatformNone::FileWrite(void* File, void* Data, uint64 Size) const
+	bool PlatformNone::FileWrite(void* File, Byte* Data, uint64 Size) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileRead(void* File, Byte* Data, uint64 Size) const
+	{
+		return false;
+	}
+
+	bool PlatformNone::FileSize(void* File, uint64* Size) const
 	{
 		return false;
 	}
