@@ -57,9 +57,9 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual bool FileDelete(StringView Path) const = 0;
 		NEXUS_ENGINE_API virtual bool FileOpen(StringView Path, void** Handle, FileMode Mode) const = 0;
 		NEXUS_ENGINE_API virtual bool FileClose(void* File) const = 0;
-		NEXUS_ENGINE_API virtual bool FileWrite(void* File, Byte* Data, uint64 Size) const = 0;
-		NEXUS_ENGINE_API virtual bool FileRead(void* File, Byte* Data, uint64 Size) const = 0;
 		NEXUS_ENGINE_API virtual bool FileSize(void* File, uint64* Size) const = 0;
+		NEXUS_ENGINE_API virtual bool FileWriteByte(void* File, BufferView<Byte> Data) const = 0;
+		NEXUS_ENGINE_API virtual bool FileReadByte(void* File, Buffer<Byte>& Data) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

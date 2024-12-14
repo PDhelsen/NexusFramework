@@ -33,6 +33,7 @@
 #include "Types/Containers/Tree.h"
 #include "Types/Containers/Graph.h"
 #include "Types/Containers/Collection.h"
+#include "Types/Containers/Buffer.h"
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
 // #include "Types/Containers/ContainersUtils.h"

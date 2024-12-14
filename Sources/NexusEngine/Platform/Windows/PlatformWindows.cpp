@@ -11,8 +11,7 @@ namespace NxEn
 	// Keep synced with the enum in the Platform.h
 	static const String TerminalColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
 	static const String TerminalFormatReset = "\033[m";
-	static const uint64 BufferSize = 512;
-	static char Buffer[BufferSize];
+	static Buffer<char> TempBuffer = Buffer<char>(512, nullptr);
 
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
@@ -83,9 +82,9 @@ namespace NxEn
 
 	String PlatformWindows::GetWorkingDirectory() const
 	{
-		DWORD Length = GetCurrentDirectoryA(BufferSize, Buffer);
-		NEXUS_ASSERT(Length != 0 && Length < BufferSize, "Buffer overflowed when getting the current working directory");
-		return Path::Normalize(StringView(Buffer, Length));
+		DWORD Length = GetCurrentDirectoryA((DWORD)TempBuffer.GetByteSize(), TempBuffer.GetPtr());
+		NEXUS_ASSERT(Length != 0 && Length < TempBuffer.GetByteSize(), "Buffer overflowed when getting the current working directory");
+		return Path::Normalize(StringView(TempBuffer.GetPtr(), Length));
 	}
 
 	bool PlatformWindows::DirectoryCreate(StringView Path) const
@@ -229,30 +228,30 @@ namespace NxEn
 		return CloseHandle(File);
 	}
 
-	bool PlatformWindows::FileWrite(void* File, Byte* Data, uint64 Size) const
-	{
-		NEXUS_ASSERT(Size <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
-
-		DWORD Written = 0;
-		bool Result = WriteFile(File, Data, (DWORD)Size, &Written, nullptr);
-		return Result && Written == Size;
-	}
-
-	bool PlatformWindows::FileRead(void* File, Byte* Data, uint64 Size) const
-	{
-		NEXUS_ASSERT(Size <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
-
-		DWORD Written = 0;
-		bool Result = ReadFile(File, Data, (DWORD)Size, &Written, nullptr);
-		return Result && Written == Size;
-	}
-
 	bool PlatformWindows::FileSize(void* File, uint64* Size) const
 	{
 		LARGE_INTEGER FileSize;
 		bool Result = GetFileSizeEx(File, &FileSize);
 		*Size = Result ? FileSize.QuadPart : 0;
 		return Result;
+	}
+
+	bool PlatformWindows::FileWriteByte(void* File, BufferView<Byte> Data) const
+	{
+		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+
+		DWORD Written = 0;
+		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
+		return Result && Written == Data.GetByteSize();
+	}
+
+	bool PlatformWindows::FileReadByte(void* File, Buffer<Byte>& Data) const
+	{
+		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+
+		DWORD Written = 0;
+		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
+		return Result && Written == Data.GetByteSize();
 	}
 
 	PlatformWindows::PlatformWindows()
