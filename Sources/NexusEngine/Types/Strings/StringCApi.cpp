@@ -144,29 +144,4 @@ namespace NxEn
 	{
 		char* Ptr; return strtod(Text, &Ptr);
 	}
-
-	uint64 StringCApi::ToStringI(int64 Number, uint64 Capacity, char* Text, const char* Frmt)
-	{
-		return StringCApi::Format(Capacity, Text, Frmt, Number);
-	}
-
-	uint64 StringCApi::ToStringU(uint64 Number, uint64 Capacity, char* Text, const char* Frmt)
-	{
-		return StringCApi::Format(Capacity, Text, Frmt, Number);
-	}
-
-	uint64 StringCApi::ToStringF(float Number, uint64 Capacity, char* Text, const char* Frmt)
-	{
-		return StringCApi::Format(Capacity, Text, Frmt, Number);
-	}
-
-	uint64 StringCApi::ToStringD(double Number, uint64 Capacity, char* Text, const char* Frmt)
-	{
-		return StringCApi::Format(Capacity, Text, Frmt, Number);
-	}
-
-	uint64 StringCApi::ToStringB(bool State, uint64 Capacity, char* Text, const char* Frmt)
-	{
-		return StringCApi::Format(Capacity, Text, Frmt, State ? "True" : "False");
-	}
 }

@@ -17,13 +17,13 @@ namespace NxEn
 		};
 
 		template<typename... Args>
-		static void Format(String& Text, StringView Format, Args&&... args);
-		template<typename... Args>
-		static void Format(String& Text, uint64 Size, StringView Format, Args&&... args);
-		template<typename... Args>
 		static String Format(StringView Format, Args&&... args);
 		template<typename... Args>
 		static String Format(uint64 Size, StringView Format, Args&&... args);
+		template<typename... Args>
+		static void Format(String& Text, StringView Format, Args&&... args);
+		template<typename... Args>
+		static void Format(String& Text, uint64 Size, StringView Format, Args&&... args);
 		template<typename... Args>
 		static uint64 Scan(StringView Text, StringView Format, Args&&... args);
 

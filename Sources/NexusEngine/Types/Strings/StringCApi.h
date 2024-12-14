@@ -28,12 +28,6 @@ namespace NxEn
 		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10);
 		NEXUS_ENGINE_API static double ToDouble(const char* Text);
 
-		NEXUS_ENGINE_API static uint64 ToStringI(int64 Number, uint64 Capacity, char* Text, const char* Frmt = "%d");
-		NEXUS_ENGINE_API static uint64 ToStringU(uint64 Number, uint64 Capacity, char* Text, const char* Frmt = "%d");
-		NEXUS_ENGINE_API static uint64 ToStringF(float Number, uint64 Capacity, char* Text, const char* Frmt = "%.2f");
-		NEXUS_ENGINE_API static uint64 ToStringD(double Number, uint64 Capacity, char* Text, const char* Frmt = "%.2f");
-		NEXUS_ENGINE_API static uint64 ToStringB(bool State, uint64 Capacity, char* Text, const char* Frmt = "%s");
-
 		NEXUS_ENGINE_API static const char NullChar = '\0';
 	};
 }

@@ -6,38 +6,38 @@ namespace NxEn
 	String String::Empty = String();
 
 	String::String()
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Memory::GetActiveAllocator(), SmallStringCapacity, 0, nullptr);
 	}
 
 	String::String(uint64 Bytes)
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Memory::GetActiveAllocator(), Bytes, 0, nullptr);
 	}
 
 	String::String(const char* Text)
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = StringCApi::Length(Text);
 		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
 	}
 
 	String::String(const char* Text, uint64 Size)
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
 	}
 
 	String::String(const String& Other)
-		: Allctr(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Other.Allctr, Other.Capacity, Other.Count, Other.GetBuffer());
+		Allocate(Other.Alloc, Other.Capacity, Other.Count, Other.GetBuffer());
 	}
 
 	String::String(String&& Other) noexcept
-		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count)
+		: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count)
 	{
 		if (Other.Sso())
 		{
@@ -58,6 +58,16 @@ namespace NxEn
 	String::~String()
 	{
 		Free();
+	}
+
+	String String::Create(char* Text, uint64 Size, Allocator* Allctr)
+	{
+		String Result;
+		Result.Alloc = Allctr;
+		Result.Capacity = Size;
+		Result.Count = StringCApi::Length(Text);
+		Result.Data.Large = Text;
+		return Result;
 	}
 
 	String& String::operator=(const String& Other)
@@ -81,7 +91,7 @@ namespace NxEn
 
 		Free();
 
-		Allctr = Other.Allctr;
+		Alloc = Other.Alloc;
 		Capacity = Other.Capacity;
 		Count = Other.Count;
 
@@ -228,14 +238,14 @@ namespace NxEn
 		return StringView(C() + Offset, Size);
 	}
 
-	void String::Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text)
+	void String::Allocate(Allocator* Allctr, uint64 Bytes, uint64 Size, const char* Text)
 	{
 		ValidateCapacityCount(Bytes, Size);
 
-		Allctr = Al;
+		Alloc = Allctr;
 		if (!Sso())
 		{
-			Data.Large = (char*)Memory::Allocate(Capacity, Allctr);
+			Data.Large = (char*)Memory::Allocate(Capacity, Alloc);
 		}
 
 		if (Text)
@@ -254,14 +264,14 @@ namespace NxEn
 
 		if (!Sso() && !WasSso)
 		{
-			Data.Large = (char*)Memory::Reallocate(Data.Large, Capacity, Allctr);
+			Data.Large = (char*)Memory::Reallocate(Data.Large, Capacity, Alloc);
 		}
 		else if (!Sso() && WasSso)
 		{
 			char Temp[SmallStringCapacity];
 			StringCApi::Copy(Data.Small, Temp, SmallStringCapacity);
 
-			Data.Large = (char*)Memory::Allocate(Capacity, Allctr);
+			Data.Large = (char*)Memory::Allocate(Capacity, Alloc);
 			StringCApi::Copy(Temp, Data.Large, Capacity);
 		}
 		else
@@ -279,7 +289,7 @@ namespace NxEn
 	{
 		if (!Sso())
 		{
-			Memory::Free(Data.Large, Allctr);
+			Memory::Free(Data.Large, Alloc);
 		}
 	}
 

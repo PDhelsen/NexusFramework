@@ -77,42 +77,27 @@ namespace NxEn
 
 	String StringUtility::ToStringI(int64 Number, StringView Format)
 	{
-		String Result = String();
-		StringCApi::ToStringI(Number, Result.GetCapacity(), Result.GetData(), Format.C());
-		Result.Validate();
-		return Result;
+		return StringUtility::Format(Format, Number);
 	}
 
 	String StringUtility::ToStringU(uint64 Number, StringView Format)
 	{
-		String Result = String();
-		StringCApi::ToStringU(Number, Result.GetCapacity(), Result.GetData(), Format.C());
-		Result.Validate();
-		return Result;
+		return StringUtility::Format(Format, Number);
 	}
 
 	String StringUtility::ToStringF(float Number, StringView Format)
 	{
-		String Result = String();
-		StringCApi::ToStringF(Number, Result.GetCapacity(), Result.GetData(), Format.C());
-		Result.Validate();
-		return Result;
+		return StringUtility::Format(Format, Number);
 	}
 
 	String StringUtility::ToStringD(double Number, StringView Format)
 	{
-		String Result = String();
-		StringCApi::ToStringD(Number, Result.GetCapacity(), Result.GetData(), Format.C());
-		Result.Validate();
-		return Result;
+		return StringUtility::Format(Format, Number);
 	}
 
 	String StringUtility::ToStringB(bool State, StringView Format)
 	{
-		String Result = String();
-		StringCApi::ToStringB(State, Result.GetCapacity(), Result.GetData(), Format.C());
-		Result.Validate();
-		return Result;
+		return StringUtility::Format(Format, State ? "True" : "False");
 	}
 
 	StringView StringUtility::Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results)

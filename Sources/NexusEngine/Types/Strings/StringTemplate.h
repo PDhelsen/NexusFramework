@@ -26,6 +26,22 @@ namespace NxEn
 		return StringUtility::Scan(*this, Format, args...);
 	}
 
+	template<typename... Args>
+	static String StringUtility::Format(StringView Format, Args&&... args)
+	{
+		String Result = String(Format.GetCount() + sizeof...(args) * GuessFormatingSize);
+		StringUtility::Format(Result, Format, args...);
+		return Result;
+	}
+
+	template<typename... Args>
+	static String StringUtility::Format(uint64 Size, StringView Format, Args&&... args)
+	{
+		String Result = String(Size);
+		StringUtility::Format(Result, Size, Format, args...);
+		return Result;
+	}
+
 	template<typename ...Args>
 	void StringUtility::Format(String& Text, StringView Format, Args && ...args)
 	{
@@ -44,22 +60,6 @@ namespace NxEn
 		Text.Resize(Size);
 		StringCApi::Format(Text.GetCapacity(), Text.GetData(), Format.C(), args...);
 		Text.Validate();
-	}
-
-	template<typename... Args>
-	static String StringUtility::Format(StringView Format, Args&&... args)
-	{
-		String Result = String(Format.GetCount() + sizeof...(args) * GuessFormatingSize);
-		Result.Format(Format, args...);
-		return Result;
-	}
-
-	template<typename... Args>
-	static String StringUtility::Format(uint64 Size, StringView Format, Args&&... args)
-	{
-		String Result = String(Size);
-		Result.Format(Size, Format, args...);
-		return Result;
 	}
 
 	template<typename... Args>

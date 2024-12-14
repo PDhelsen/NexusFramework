@@ -22,6 +22,8 @@ namespace NxEn
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
 
+		NEXUS_ENGINE_API static String Create(char* Text, uint64 Size, Allocator* Allctr);
+
 		NEXUS_ENGINE_API String& operator=(const String& Other);
 		NEXUS_ENGINE_API String& operator=(String&& Other) noexcept;
 		NEXUS_ENGINE_API String& operator+=(StringView Other);
@@ -66,7 +68,7 @@ namespace NxEn
 		NEXUS_ENGINE_API static const uint8 SmallStringCapacity = 16;
 
 	private:
-		NEXUS_ENGINE_API void Allocate(Allocator* Al, uint64 Bytes, uint64 Size, const char* Text);
+		NEXUS_ENGINE_API void Allocate(Allocator* Allctr, uint64 Bytes, uint64 Size, const char* Text);
 		NEXUS_ENGINE_API void Reallocate(uint64 Bytes);
 		NEXUS_ENGINE_API void Free();
 		NEXUS_ENGINE_API void Resize(uint64 Size);
@@ -87,7 +89,7 @@ namespace NxEn
 			char Small[SmallStringCapacity];
 		};
 
-		Allocator* Allctr;
+		Allocator* Alloc;
 		uint64 Capacity;
 		uint64 Count;
 		Buffer Data;
