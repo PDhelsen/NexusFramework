@@ -20,21 +20,21 @@ namespace NxEn
 		NEXUS_ENGINE_API PathType GetPathType(StringView Path) const override;
 		NEXUS_ENGINE_API String GetWorkingDirectory() const override;
 
-		NEXUS_ENGINE_API bool DirectoryCreate(StringView Path) const override;
-		NEXUS_ENGINE_API bool DirectoryMove(StringView Path, StringView Target, bool Override = false) const override;
-		NEXUS_ENGINE_API bool DirectoryCopy(StringView Path, StringView Target, bool Override = false) const override;
-		NEXUS_ENGINE_API bool DirectoryDelete(StringView Path) const override;
-		NEXUS_ENGINE_API bool DirectoryContent(StringView Path, List<String>& Result) const override;
+		NEXUS_ENGINE_API void DirectoryCreate(StringView Path) const override;
+		NEXUS_ENGINE_API void DirectoryMove(StringView Path, StringView Target, bool Override = false) const override;
+		NEXUS_ENGINE_API void DirectoryCopy(StringView Path, StringView Target, bool Override = false) const override;
+		NEXUS_ENGINE_API void DirectoryDelete(StringView Path) const override;
+		NEXUS_ENGINE_API List<String> DirectoryContent(StringView Path) const override;
 
-		NEXUS_ENGINE_API bool FileCreate(StringView Path, void** Handle = nullptr) const override;
-		NEXUS_ENGINE_API bool FileMove(StringView Path, StringView Target, bool Override = false) const override;
-		NEXUS_ENGINE_API bool FileCopy(StringView Path, StringView Target, bool Override = false) const override;
-		NEXUS_ENGINE_API bool FileDelete(StringView Path) const override;
-		NEXUS_ENGINE_API bool FileOpen(StringView Path, void** Handle, FileMode Mode) const override;
-		NEXUS_ENGINE_API bool FileClose(void* File) const override;
-		NEXUS_ENGINE_API bool FileSize(void* File, uint64* Size) const override;
-		NEXUS_ENGINE_API bool FileWriteByte(void* File, BufferView<Byte> Data) const override;
-		NEXUS_ENGINE_API bool FileReadByte(void* File, Buffer<Byte>& Data) const override;
+		NEXUS_ENGINE_API void* FileCreate(StringView Path, bool KeepOpen) const override;
+		NEXUS_ENGINE_API void FileMove(StringView Path, StringView Target, bool Override = false) const override;
+		NEXUS_ENGINE_API void FileCopy(StringView Path, StringView Target, bool Override = false) const override;
+		NEXUS_ENGINE_API void FileDelete(StringView Path) const override;
+		NEXUS_ENGINE_API void* FileOpen(StringView Path, FileMode Mode) const override;
+		NEXUS_ENGINE_API void FileClose(void* File) const override;
+		NEXUS_ENGINE_API uint64 FileSize(void* File) const override;
+		NEXUS_ENGINE_API void FileWriteByte(void* File, BufferView<Byte> Data) const override;
+		NEXUS_ENGINE_API Buffer<Byte> FileReadByte(void* File, Allocator* Allctr = nullptr) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::None; }
 

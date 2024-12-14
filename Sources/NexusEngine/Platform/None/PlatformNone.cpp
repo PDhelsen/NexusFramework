@@ -34,74 +34,65 @@ namespace NxEn
 		return String::Empty;
 	}
 
-	bool PlatformNone::DirectoryCreate(StringView Path) const
+	void PlatformNone::DirectoryCreate(StringView Path) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::DirectoryMove(StringView Path, StringView Target, bool Override) const
+	void PlatformNone::DirectoryMove(StringView Path, StringView Target, bool Override) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::DirectoryCopy(StringView Path, StringView Target, bool Override) const
+	void PlatformNone::DirectoryCopy(StringView Path, StringView Target, bool Override) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::DirectoryDelete(StringView Path) const
+	void PlatformNone::DirectoryDelete(StringView Path) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::DirectoryContent(StringView Path, List<String>& Result) const
+	List<String> PlatformNone::DirectoryContent(StringView Path) const
     {
-        return false;
+        return List<String>();
     }
 
-	bool PlatformNone::FileCreate(StringView Path, void** Handle) const
+	void* PlatformNone::FileCreate(StringView Path, bool KeepOpen) const
 	{
-		return false;
+		return nullptr;
 	}
 
-	bool PlatformNone::FileMove(StringView Path, StringView Target, bool Override) const
+	void PlatformNone::FileMove(StringView Path, StringView Target, bool Override) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::FileCopy(StringView Path, StringView Target, bool Override) const
+	void PlatformNone::FileCopy(StringView Path, StringView Target, bool Override) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::FileDelete(StringView Path) const
+	void PlatformNone::FileDelete(StringView Path) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::FileOpen(StringView Path, void** Handle, FileMode Mode) const
+	void* PlatformNone::FileOpen(StringView Path, FileMode Mode) const
 	{
-		return false;
+		return nullptr;
 	}
 
-	bool PlatformNone::FileClose(void* File) const
+	void PlatformNone::FileClose(void* File) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::FileSize(void* File, uint64* Size) const
+	uint64 PlatformNone::FileSize(void* File) const
 	{
-		return false;
+		return 0;
 	}
 
-	bool PlatformNone::FileWriteByte(void* File, BufferView<Byte> Data) const
+	void PlatformNone::FileWriteByte(void* File, BufferView<Byte> Data) const
 	{
-		return false;
 	}
 
-	bool PlatformNone::FileReadByte(void* File, Buffer<Byte>& Data) const
+	Buffer<Byte> PlatformNone::FileReadByte(void* File, Allocator* Allctr) const
 	{
-		return false;
+		return Buffer<Byte>(1, nullptr);
 	}
 
     PlatformNone::PlatformNone()

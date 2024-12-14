@@ -12,7 +12,7 @@ namespace NxEn
 	}
 
 	Directory::Directory(String&& Path)
-		: Path(Move(Path)), Exist(false), Content()
+		: Path(Path), Exist(false), Content()
 	{
 		Refresh();
 	}
@@ -41,57 +41,53 @@ namespace NxEn
 		Exist = Path::Exist(Path);
 		if (Exist)
 		{
-			Platform::GetInstance()->DirectoryContent(Path, Content);
+			Content = Platform::GetInstance()->DirectoryContent(Path);
 		}
 
 		return *this;
 	}
 
-	bool Directory::Create()
+	void Directory::Create()
 	{
 		if (Exist)
 		{
-			return true;
+			return;
 		}
 
 		NEXUS_ASSERT(!Exist, "Failed to create directory: %s", Path.C());
 
-		bool Result = Platform::GetInstance()->DirectoryCreate(Path);
+		Platform::GetInstance()->DirectoryCreate(Path);
 		Refresh();
 
-		NEXUS_ASSERT(Result && Exist, "Failed to create directory: %s", Path.C());
-
-		return Result;
+		NEXUS_ASSERT(Exist, "Failed to create directory: %s", Path.C());
 	}
 
-	bool Directory::Move(StringView Target, bool Override)
+	void Directory::Move(StringView Target, bool Override)
 	{
 		if (Path == Target)
 		{
-			return true;
+			return;
 		}
 
 		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), "Failed to move directory: %s", Path.C());
 
-		bool Result = Platform::GetInstance()->DirectoryMove(Path, Target, Override);
+		Platform::GetInstance()->DirectoryMove(Path, Target, Override);
 		Path = Target.ToString();
 		Refresh();
 
-		NEXUS_ASSERT(Result && Exist, "Failed to move directory: %s", Path.C());
-
-		return Result;
+		NEXUS_ASSERT(Exist, "Failed to move directory: %s", Path.C());
 	}
 
-	bool Directory::Copy(StringView Target, bool Override)
+	void Directory::Copy(StringView Target, bool Override)
 	{
 		if (Path == Target)
 		{
-			return true;
+			return;
 		}
 
 		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), "Failed to copy directory: %s", Path.C());
 
-		bool Result = Platform::GetInstance()->DirectoryCreate(Target);
+		Platform::GetInstance()->DirectoryCreate(Target);
 
 		for (auto& It : Content)
 		{
@@ -110,16 +106,14 @@ namespace NxEn
 
 		Refresh();
 
-		NEXUS_ASSERT(Result && Exist, "Failed to copy directory: %s", Path.C());
-
-		return Result;
+		NEXUS_ASSERT(Exist, "Failed to copy directory: %s", Path.C());
 	}
 
-	bool Directory::Delete()
+	void Directory::Delete()
 	{
 		if (!Exist)
 		{
-			return true;
+			return;
 		}
 
 		NEXUS_ASSERT(Exist, "Failed to delete directory: %s", Path.C());
@@ -139,12 +133,10 @@ namespace NxEn
 			}
 		}
 
-		bool Result = Platform::GetInstance()->DirectoryDelete(Path);
+		Platform::GetInstance()->DirectoryDelete(Path);
 		Refresh();
 
-		NEXUS_ASSERT(Result && !Exist, "Failed to delete directory: %s", Path.C());
-
-		return Result;
+		NEXUS_ASSERT(!Exist, "Failed to delete directory: %s", Path.C());
 	}
 
 	List<String> Directory::GetContent(bool Recursive) const

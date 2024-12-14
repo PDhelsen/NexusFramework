@@ -119,14 +119,19 @@ namespace NxTs
 		ASSERT_EQ(Directory.GetDirectories(true).GetCount() == 0, true);
 
 		NxEn::Directory SubDirectory = NxEn::Directory(Working + "Test");
-		ASSERT_EQ(SubDirectory.Create(), true);
 
-		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test1").Create(), true);
-		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test2").Create(), true);
-		ASSERT_EQ(NxEn::Directory(Working + "Test" + "Test3").Create(), true);
+		SubDirectory.Create();
+		ASSERT_EQ(SubDirectory.Exists(), true);
 
-		ASSERT_EQ(SubDirectory.Move(Working + "UnitTest"), true);
-		ASSERT_EQ(SubDirectory.Delete(), true);
+		NxEn::Directory(Working + "Test" + "Test1").Create();
+		NxEn::Directory(Working + "Test" + "Test2").Create();
+		NxEn::Directory(Working + "Test" + "Test3").Create();
+
+		SubDirectory.Move(Working + "UnitTest");
+		ASSERT_EQ(SubDirectory.Exists(), true);
+
+		SubDirectory.Delete();
+		ASSERT_EQ(SubDirectory.Exists(), false);
 	}
 
 	TEST(IO, File)
@@ -137,28 +142,34 @@ namespace NxTs
 		ASSERT_EQ(File.GetPath(), Working);
 		ASSERT_EQ(File.Exists(), false);
 
-		ASSERT_EQ(File.Create(), true);
+		File.Create();
 		ASSERT_EQ(File.Exists(), true);
 
-		ASSERT_EQ(File.Move(Working.ChangeFileName("UnitTestRenamed.txt")), true);
+		File.Move(Working.ChangeFileName("UnitTestRenamed.txt"));
+		ASSERT_EQ(File.Exists(), true);
 
-		ASSERT_EQ(File.Open(NxEn::File::Mode::Write), true);
+		File.Open(NxEn::File::Mode::Write);
 		ASSERT_EQ(File.IsOpened(), true);
 		File.WriteByte(NxEn::BufferView((NxEn::Byte*)Data, 8 * 10));
 		ASSERT_EQ(File.GetSize(), 8 * 10);
-		ASSERT_EQ(File.Close(), true);
+		File.Close();
+		ASSERT_EQ(File.IsOpened(), false);
 
-		ASSERT_EQ(File.Open(NxEn::File::Mode::Read), true);
+		File.Open(NxEn::File::Mode::Read);
+		ASSERT_EQ(File.IsOpened(), true);
 		NxEn::Buffer Content = File.ReadByte();
 		ASSERT_EQ(((uint64*)Content.GetPtr())[5], 15);
-		ASSERT_EQ(File.Close(), true);
+		File.Close();
+		ASSERT_EQ(File.IsOpened(), false);
 
-		ASSERT_EQ(File.Open(NxEn::File::Mode::Append), true);
+		File.Open(NxEn::File::Mode::Append);
+		ASSERT_EQ(File.IsOpened(), true);
 		File.WriteByte(NxEn::BufferView((NxEn::Byte*)Data, 8 * 10));
 		ASSERT_EQ(File.GetSize(), 8 * 10 * 2);
-		ASSERT_EQ(File.Close(), true);
-
+		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
-		ASSERT_EQ(File.Delete(), true);
+
+		File.Delete();
+		ASSERT_EQ(File.Exists(), false);
 	}
 }

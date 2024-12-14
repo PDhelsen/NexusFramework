@@ -22,10 +22,10 @@ namespace NxEn
 
 		NEXUS_ENGINE_API Directory& Refresh();
 
-		NEXUS_ENGINE_API bool Create();
-		NEXUS_ENGINE_API bool Move(StringView Target, bool Override = false);
-		NEXUS_ENGINE_API bool Copy(StringView Target, bool Override = false);
-		NEXUS_ENGINE_API bool Delete();
+		NEXUS_ENGINE_API void Create();
+		NEXUS_ENGINE_API void Move(StringView Target, bool Override = false);
+		NEXUS_ENGINE_API void Copy(StringView Target, bool Override = false);
+		NEXUS_ENGINE_API void Delete();
 
 		NEXUS_ENGINE_API List<String> GetContent(bool Recursive = false) const;
 		NEXUS_ENGINE_API void GetContent(List<String>& Result, bool Recursive = false) const;

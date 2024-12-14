@@ -87,30 +87,32 @@ namespace NxEn
 		return Path::Normalize(StringView(TempBuffer.GetPtr(), Length));
 	}
 
-	bool PlatformWindows::DirectoryCreate(StringView Path) const
+	void PlatformWindows::DirectoryCreate(StringView Path) const
 	{
-		return CreateDirectoryA(Path.C(), nullptr);
+		bool Result = CreateDirectoryA(Path.C(), nullptr);
+		NEXUS_ASSERT(Result, "Failed to create directory: %s", Path.C());
 	}
 
-	bool PlatformWindows::DirectoryMove(StringView Path, StringView Target, bool Override) const
+	void PlatformWindows::DirectoryMove(StringView Path, StringView Target, bool Override) const
 	{
-		return MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
+		bool Result = MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
+		NEXUS_ASSERT(Result, "Failed to move directory: %s", Path.C());
 	}
 
-	bool PlatformWindows::DirectoryCopy(StringView Path, StringView Target, bool Override) const
+	void PlatformWindows::DirectoryCopy(StringView Path, StringView Target, bool Override) const
 	{
 		NEXUS_ASSERT(false, "Not supported at platform level");
-		return false;
 	}
 
-	bool PlatformWindows::DirectoryDelete(StringView Path) const
+	void PlatformWindows::DirectoryDelete(StringView Path) const
 	{
-		return RemoveDirectoryA(Path.C());
+		bool Result = RemoveDirectoryA(Path.C());
+		NEXUS_ASSERT(Result, "Failed to delete directory: %s", Path.C());
 	}
 
-	bool PlatformWindows::DirectoryContent(StringView Path, List<String>& Result) const
+	List<String> PlatformWindows::DirectoryContent(StringView Path) const
 	{
-		Result.Clear();
+		List<String> Result;
 		String Temp = Path + "*";
 
 		WIN32_FIND_DATAA Data;
@@ -122,7 +124,7 @@ namespace NxEn
 			{
 				NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to open file %s", Temp.C());
 				Result.Clear();
-				return false;
+				return Result;
 			}
 
 			StringView Name = Data.cFileName;
@@ -142,10 +144,10 @@ namespace NxEn
 
 		FindClose(File);
 
-		return true;
+		return Result;
 	}
 
-	bool PlatformWindows::FileCreate(StringView Path, void** Handle) const
+	void* PlatformWindows::FileCreate(StringView Path, bool KeepOpen) const
 	{
 		HANDLE File = CreateFileA(
 			Path.C(),
@@ -158,38 +160,35 @@ namespace NxEn
 		);
 
 		bool Result = File != INVALID_HANDLE_VALUE;
+		NEXUS_ASSERT(Result, "Failed to create file: %s", Path.C());
 
-		if (Result)
+		if (!KeepOpen)
 		{
-			if (Handle == nullptr)
-			{
-				FileClose(File);
-			}
-			else
-			{
-				*Handle = File;
-			}
+			FileClose(File);
 		}
 
-		return Result;
+		return Result && KeepOpen ? File : nullptr;
 	}
 
-	bool PlatformWindows::FileMove(StringView Path, StringView Target, bool Override) const
+	void PlatformWindows::FileMove(StringView Path, StringView Target, bool Override) const
 	{
-		return MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
+		bool Result = MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
+		NEXUS_ASSERT(Result, "Failed to move file: %s", Path.C());
 	}
 
-	bool PlatformWindows::FileCopy(StringView Path, StringView Target, bool Override) const
+	void PlatformWindows::FileCopy(StringView Path, StringView Target, bool Override) const
 	{
-		return CopyFileA(Path.C(), Target.C(), !Override);
+		bool Result = CopyFileA(Path.C(), Target.C(), !Override);
+		NEXUS_ASSERT(Result, "Failed to copy file: %s", Path.C());
 	}
 
-	bool PlatformWindows::FileDelete(StringView Path) const
+	void PlatformWindows::FileDelete(StringView Path) const
 	{
-		return DeleteFileA(Path.C());
+		bool Result = DeleteFileA(Path.C());
+		NEXUS_ASSERT(Result, "Failed to delete file: %s", Path.C());
 	}
 
-	bool PlatformWindows::FileOpen(StringView Path, void** Handle, FileMode Mode) const
+	void* PlatformWindows::FileOpen(StringView Path, FileMode Mode) const
 	{
 		DWORD Attributes = 0;
 		switch (Mode)
@@ -210,48 +209,49 @@ namespace NxEn
 		);
 
 		bool Result = File != INVALID_HANDLE_VALUE;
+		NEXUS_ASSERT(Result, "Failed to open file: %s", Path.C());
 
-		if (Result)
+		if (Result && Mode == FileMode::Append)
 		{
-			*Handle = File;
-			if (Mode == FileMode::Append)
-			{
-				SetFilePointer(File, 0, nullptr, FILE_END);
-			}
+			SetFilePointer(File, 0, nullptr, FILE_END);
 		}
 
-		return Result;
+		return Result ? File : nullptr;
 	}
 
-	bool PlatformWindows::FileClose(void* File) const
+	void PlatformWindows::FileClose(void* File) const
 	{
-		return CloseHandle(File);
+		bool Result = CloseHandle(File);
+		NEXUS_ASSERT(Result, "Failed to close file");
 	}
 
-	bool PlatformWindows::FileSize(void* File, uint64* Size) const
+	uint64 PlatformWindows::FileSize(void* File) const
 	{
 		LARGE_INTEGER FileSize;
 		bool Result = GetFileSizeEx(File, &FileSize);
-		*Size = Result ? FileSize.QuadPart : 0;
-		return Result;
+		return FileSize.QuadPart;
 	}
 
-	bool PlatformWindows::FileWriteByte(void* File, BufferView<Byte> Data) const
+	void PlatformWindows::FileWriteByte(void* File, BufferView<Byte> Data) const
 	{
 		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
-		return Result && Written == Data.GetByteSize();
+
+		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), "Failed to write to file");
 	}
 
-	bool PlatformWindows::FileReadByte(void* File, Buffer<Byte>& Data) const
+	Buffer<Byte> PlatformWindows::FileReadByte(void* File, Allocator* Allctr) const
 	{
-		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+		Buffer<Byte> Data = Buffer<Byte>(FileSize(File), Allctr);
 
 		DWORD Written = 0;
 		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
-		return Result && Written == Data.GetByteSize();
+
+		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), "Failed to write to file");
+
+		return Data;
 	}
 
 	PlatformWindows::PlatformWindows()
