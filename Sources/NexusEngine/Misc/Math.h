@@ -133,28 +133,5 @@ namespace NxEn
 		NEXUS_ENGINE_API constexpr	uint16	NextPrime			(uint16		X);
 		NEXUS_ENGINE_API constexpr	uint32	NextPrime			(uint32		X);
 		NEXUS_ENGINE_API constexpr	uint64	NextPrime			(uint64		X);
-
-		NEXUS_ENGINE_API constexpr	float	InfinityF			();
-		NEXUS_ENGINE_API constexpr	double	InfinityD			();
-		NEXUS_ENGINE_API constexpr	float	MinF				();
-		NEXUS_ENGINE_API constexpr	double	MinD				();
-		NEXUS_ENGINE_API constexpr	int8	MinI8				();
-		NEXUS_ENGINE_API constexpr	int16	MinI16				();
-		NEXUS_ENGINE_API constexpr	int32	MinI32				();
-		NEXUS_ENGINE_API constexpr	int64	MinI64				();
-		NEXUS_ENGINE_API constexpr	uint8	MinUI8				();
-		NEXUS_ENGINE_API constexpr	uint16	MinUI16				();
-		NEXUS_ENGINE_API constexpr	uint32	MinUI32				();
-		NEXUS_ENGINE_API constexpr	uint64	MinUI64				();
-		NEXUS_ENGINE_API constexpr	float	MaxF				();
-		NEXUS_ENGINE_API constexpr	double	MaxD				();
-		NEXUS_ENGINE_API constexpr	int8	MaxI8				();
-		NEXUS_ENGINE_API constexpr	int16	MaxI16				();
-		NEXUS_ENGINE_API constexpr	int32	MaxI32				();
-		NEXUS_ENGINE_API constexpr	int64	MaxI64				();
-		NEXUS_ENGINE_API constexpr	uint8	MaxUI8				();
-		NEXUS_ENGINE_API constexpr	uint16	MaxUI16				();
-		NEXUS_ENGINE_API constexpr	uint32	MaxUI32				();
-		NEXUS_ENGINE_API constexpr	uint64	MaxUI64				();
 	}
 }

@@ -231,7 +231,7 @@ namespace NxEn
 
 	bool PlatformWindows::FileWrite(void* File, Byte* Data, uint64 Size) const
 	{
-		NEXUS_ASSERT(Size <= Math::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Size <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Data, (DWORD)Size, &Written, nullptr);
@@ -240,7 +240,7 @@ namespace NxEn
 
 	bool PlatformWindows::FileRead(void* File, Byte* Data, uint64 Size) const
 	{
-		NEXUS_ASSERT(Size <= Math::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Size <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = ReadFile(File, Data, (DWORD)Size, &Written, nullptr);
