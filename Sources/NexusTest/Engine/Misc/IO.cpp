@@ -7,6 +7,7 @@
 namespace NxTs
 {
 	uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
+	NxEn::String Text = "This was written by code.\n";
 
 	TEST(IO, Path_Static)
 	{
@@ -171,5 +172,35 @@ namespace NxTs
 
 		File.Delete();
 		ASSERT_EQ(File.Exists(), false);
+	}
+
+	TEST(IO, Text)
+	{
+		NxEn::Path Working = NxEn::Path::GetWorkingDirectory() + "UnitTestText.txt";
+		NxEn::File File = NxEn::File(Working);
+
+		File.Create();
+
+		File.Open(NxEn::File::Mode::Write);
+		File.WriteText(Text);
+		ASSERT_EQ(File.GetSize() > 0, true);
+		File.Close();
+
+		File.Open(NxEn::File::Mode::Read);
+		NxEn::String Content1 = File.ReadText();
+		ASSERT_EQ(Content1, Text);
+		File.Close();
+
+		File.Open(NxEn::File::Mode::Append);
+		File.WriteText(Text);
+		ASSERT_EQ(File.GetSize() > 0, true);
+		File.Close();
+
+		File.Open(NxEn::File::Mode::Read);
+		NxEn::String Content2 = File.ReadText();
+		ASSERT_EQ(Content2, Text + Text);
+		File.Close();
+
+		File.Delete();
 	}
 }

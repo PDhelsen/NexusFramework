@@ -60,13 +60,14 @@ namespace NxEn
 		Free();
 	}
 
-	String String::Create(char* Text, uint64 Size, Allocator* Allctr)
+	String String::Create(char* Text, uint64 Capacity, uint64 Size, Allocator* Allctr)
 	{
 		String Result;
 		Result.Alloc = Allctr;
-		Result.Capacity = Size;
-		Result.Count = StringCApi::Length(Text);
+		Result.Capacity = Math::Max(Capacity, (uint64)(SmallStringCapacity + 1));
+		Result.Count = Size;
 		Result.Data.Large = Text;
+		Result.ValidateNullTermination();
 		return Result;
 	}
 

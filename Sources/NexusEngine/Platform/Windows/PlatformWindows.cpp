@@ -246,12 +246,36 @@ namespace NxEn
 	{
 		Buffer<Byte> Data = Buffer<Byte>(FileSize(File), Allctr);
 
-		DWORD Written = 0;
-		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
+		DWORD Read = 0;
+		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Read, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), "Failed to write to file");
+		NEXUS_ASSERT(Result && Read == Data.GetByteSize(), "Failed to read to file");
 
 		return Data;
+	}
+
+	void PlatformWindows::FileWriteText(void* File, StringView Text) const
+	{
+		NEXUS_ASSERT(Text.GetCount() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+
+		DWORD Written = 0;
+		bool Result = WriteFile(File, Text.C(), (DWORD)Text.GetCount(), &Written, nullptr);
+
+		NEXUS_ASSERT(Result && Written == Text.GetCount(), "Failed to write to file");
+	}
+
+	String PlatformWindows::FileReadText(void* File, Allocator* Allctr) const
+	{
+		uint64 Size = FileSize(File);
+		Allocator* Alloc = Allctr ? Allctr : Memory::GetActiveAllocator();
+		char* Text = (char*)Memory::Allocate(Size, Alloc);
+
+		DWORD Read = 0;
+		bool Result = ReadFile(File, Text, (DWORD)Size, &Read, nullptr);
+
+		NEXUS_ASSERT(Result && Read == Size, "Failed to read to file");
+
+		return String::Create(Text, Size + 1, Size, Alloc);
 	}
 
 	PlatformWindows::PlatformWindows()

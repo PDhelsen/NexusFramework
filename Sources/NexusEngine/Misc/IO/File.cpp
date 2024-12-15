@@ -197,4 +197,20 @@ namespace NxEn
 
 		return Data;
 	}
+
+	void File::WriteText(StringView Text)
+	{
+		NEXUS_ASSERT(Exist && Handle && Text.C(), "Failed to write file: %s", Path.C());
+
+		Platform::GetInstance()->FileWriteText(Handle, Text);
+	}
+
+	String File::ReadText(Allocator* Allctr)
+	{
+		NEXUS_ASSERT(Exist && Handle, "Failed to read file: %s", Path.C());
+
+		String Text = Platform::GetInstance()->FileReadText(Handle, Allctr);
+
+		return Text;
+	}
 }

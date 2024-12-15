@@ -60,6 +60,8 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual uint64 FileSize(void* File) const = 0;
 		NEXUS_ENGINE_API virtual void FileWriteByte(void* File, BufferView<Byte> Data) const = 0;
 		NEXUS_ENGINE_API virtual Buffer<Byte> FileReadByte(void* File, Allocator* Allctr = nullptr) const = 0;
+		NEXUS_ENGINE_API virtual void FileWriteText(void* File, StringView Text) const = 0;
+		NEXUS_ENGINE_API virtual String FileReadText(void* File, Allocator* Allctr = nullptr) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 

@@ -35,6 +35,8 @@ namespace NxEn
 		NEXUS_ENGINE_API uint64 FileSize(void* File) const override;
 		NEXUS_ENGINE_API void FileWriteByte(void* File, BufferView<Byte> Data) const override;
 		NEXUS_ENGINE_API Buffer<Byte> FileReadByte(void* File, Allocator* Allctr = nullptr) const override;
+		NEXUS_ENGINE_API void FileWriteText(void* File, StringView Text) const override;
+		NEXUS_ENGINE_API String FileReadText(void* File, Allocator* Allctr = nullptr) const override;
 
 		NEXUS_ENGINE_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 

@@ -39,6 +39,8 @@ namespace NxEn
 		NEXUS_ENGINE_API uint64 GetSize();
 		NEXUS_ENGINE_API void WriteByte(BufferView<Byte> Data);
 		NEXUS_ENGINE_API Buffer<Byte> ReadByte(Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API void WriteText(StringView Text);
+		NEXUS_ENGINE_API String ReadText(Allocator* Allctr = nullptr);
 
 		StringView GetPath() const { return Path.ToView(); }
 		bool Exists() const { return Exist; }

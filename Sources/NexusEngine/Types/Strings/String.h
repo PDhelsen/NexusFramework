@@ -22,7 +22,7 @@ namespace NxEn
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
 
-		NEXUS_ENGINE_API static String Create(char* Text, uint64 Size, Allocator* Allctr);
+		NEXUS_ENGINE_API static String Create(char* Text, uint64 Capacity, uint64 Size, Allocator* Allctr = nullptr);
 
 		NEXUS_ENGINE_API String& operator=(const String& Other);
 		NEXUS_ENGINE_API String& operator=(String&& Other) noexcept;
