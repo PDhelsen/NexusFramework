@@ -256,12 +256,15 @@ namespace NxEn
 
 	void PlatformWindows::FileWriteText(void* File, StringView Text) const
 	{
-		NEXUS_ASSERT(Text.GetCount() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+		String Content = Text.ToString();
+		Content.Replace("\n", "\r\n");
+
+		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
-		bool Result = WriteFile(File, Text.C(), (DWORD)Text.GetCount(), &Written, nullptr);
+		bool Result = WriteFile(File, Content.C(), (DWORD)Content.GetCount(), &Written, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Text.GetCount(), "Failed to write to file");
+		NEXUS_ASSERT(Result && Written == Content.GetCount(), "Failed to write to file");
 	}
 
 	String PlatformWindows::FileReadText(void* File, Allocator* Allctr) const
@@ -275,7 +278,9 @@ namespace NxEn
 
 		NEXUS_ASSERT(Result && Read == Size, "Failed to read to file");
 
-		return String::Create(Text, Size + 1, Size, Alloc);
+		String Content = String::Create(Text, Size + 1, Size, Alloc);
+		Content.Replace("\r\n", "\n");
+		return Content;
 	}
 
 	PlatformWindows::PlatformWindows()

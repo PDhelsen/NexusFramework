@@ -377,7 +377,7 @@ namespace NxEn
 					++Modified;
 				}
 				
-				++Substring;
+				Substring += NewSize;
 			}
 
 			++Index;
