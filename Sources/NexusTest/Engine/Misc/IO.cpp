@@ -193,12 +193,14 @@ namespace NxTs
 
 		File.Open(NxEn::File::Mode::Append);
 		File.WriteText(Text);
+		File.WriteText(Text);
+		File.WriteText(Text);
 		ASSERT_EQ(File.GetSize() > 0, true);
 		File.Close();
 
 		File.Open(NxEn::File::Mode::Read);
 		NxEn::String Content2 = File.ReadText();
-		ASSERT_EQ(Content2, Text + Text);
+		ASSERT_EQ(Content2, Text + Text + Text + Text);
 		File.Close();
 
 		File.Delete();
