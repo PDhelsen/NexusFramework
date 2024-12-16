@@ -1,7 +1,6 @@
 #include "Core/NexusTestPch.h"
 
 #include "Debug/Stopwatch.h"
-#include <windows.h>
 
 namespace NxTs
 {

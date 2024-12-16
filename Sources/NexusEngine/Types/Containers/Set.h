@@ -353,7 +353,7 @@ namespace NxEn
 			while (!Data[Index].IsFree())
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				NEXUS_ASSERT(Iteration < Capacity, "Failed to find a free spot");
+				NEXUS_ASSERT(Iteration < MaxProbingIteration(), "Failed to find a free spot");
 
 				NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Set - Collision");
 			}
@@ -371,7 +371,7 @@ namespace NxEn
 			while (Data[Index].IsFree() || Data[Index].Hash != Hash)
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				if (Iteration >= Capacity)
+				if (Iteration >= MaxProbingIteration())
 				{
 					return Capacity;
 				}
@@ -424,11 +424,23 @@ namespace NxEn
 
 		uint64 ProbingPolicy(uint64 Index, uint64 Iteration) const
 		{
-			bool Flip = Iteration % 2 == 0;
-			uint64 Offset = Math::CeilToInt((double)(Iteration) / 2.0);
-			Index = Index + (Flip ? -1 : 1) * (Offset * Offset);
-			Index = Math::Modulo(Index, Capacity);
-			return Index;
+			if (Iteration < Capacity)
+			{
+				bool Flip = Iteration % 2 == 0;
+				uint64 Offset = Math::CeilToInt((double)(Iteration) / 2.0);
+				Index = Index + (Flip ? -1 : 1) * (Offset * Offset);
+				Index = Math::Modulo(Index, Capacity);
+				return Index;
+			}
+			else
+			{
+				return Iteration - Capacity;
+			}
+		}
+
+		uint64 MaxProbingIteration() const
+		{
+			return Capacity * 2;
 		}
 
 		inline static const uint64 DefaultSize = 11;
