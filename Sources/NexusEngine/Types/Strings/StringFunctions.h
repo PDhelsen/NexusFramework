@@ -46,7 +46,9 @@ namespace NxEn
 		NEXUS_ENGINE_API static String ToStringD(double Number, StringView Format = "%.2f");
 		NEXUS_ENGINE_API static String ToStringB(bool State, StringView Format = "%s");
 
-		NEXUS_ENGINE_API static const char NullChar = StringCApi::NullChar;
+		NEXUS_ENGINE_API inline static const char NullChar = StringCApi::NullChar;
+		NEXUS_ENGINE_API inline static const char NewLineChar = StringCApi::NewLineChar;
+		NEXUS_ENGINE_API inline static const String NewLine = StringCApi::NewLine;
 
 	private:
 		enum class SearchBehaviour

@@ -28,6 +28,8 @@ namespace NxEn
 		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10);
 		NEXUS_ENGINE_API static double ToDouble(const char* Text);
 
-		NEXUS_ENGINE_API static const char NullChar = '\0';
+		NEXUS_ENGINE_API inline static const char NullChar = '\0';
+		NEXUS_ENGINE_API inline static const char NewLineChar = '\n';
+		NEXUS_ENGINE_API inline static const char* NewLine = "\n";
 	};
 }
