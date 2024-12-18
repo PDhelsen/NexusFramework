@@ -11,6 +11,7 @@
 #include "Core/NexusEngine.h"
 
 #include "Types/Integer.h"
+#include "Types/Decimal.h"
 #include "Types/Enum.h"
 #include "Types/Timestamp.h"
 #include "Types/Timespan.h"
