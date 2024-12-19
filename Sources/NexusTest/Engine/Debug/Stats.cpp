@@ -30,11 +30,13 @@ namespace NxTs
 		ASSERT_EQ(Stats.IsInitialized(), true);
 		ASSERT_EQ(Stats.GetCount(), 9);
 
+		Stats.StartRecording();
+		ASSERT_EQ(Stats.IsRecording(), true);
+
 		for (uint64 Iteration = 1; Iteration <= 5; Iteration++)
 		{
 			Stats.Lock();
-			Stats.StartRecording();
-			ASSERT_EQ(Stats.IsLocked() && Stats.IsRecording(), true);
+			ASSERT_EQ(Stats.IsLocked(), true);
 
 			Stats.RecordStatLabel(LabelId, NxEn::StringView("Test"));
 			Stats.RecordStatCheck(CheckId, Iteration % 2);
@@ -47,9 +49,8 @@ namespace NxTs
 			Stats.RecordComment(NxEn::StringUtility::Format("Iteration: %d", Iteration));
 			Stats.RecordComment(NxEn::StringUtility::Format("Iteration (Again): %d", Iteration));
 
-			Stats.StopRecording();
 			Stats.Unlock();
-			ASSERT_EQ(!Stats.IsLocked() && !Stats.IsRecording(), true);
+			ASSERT_EQ(!Stats.IsLocked(), true);
 
 			ASSERT_EQ(Stats.GetCurrentTick(), Iteration);
 			ASSERT_EQ(Stats.GetCurrentComment(), NxEn::StringUtility::Format("Iteration: %d", Iteration) + ";" + NxEn::StringUtility::Format("Iteration (Again): %d", Iteration) + ";");
@@ -62,6 +63,9 @@ namespace NxTs
 				ASSERT_EQ(Stats.GetSpan(), 1.0);
 			}
 		}
+
+		Stats.StopRecording();
+		ASSERT_EQ(!Stats.IsRecording(), true);
 
 		auto All = Stats.GetAllCurrentStats();
 		ASSERT_EQ(All.GetCount(), Stats.GetCount());

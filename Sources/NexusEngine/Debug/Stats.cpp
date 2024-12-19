@@ -218,7 +218,12 @@ namespace NxEn
 
 	void Stats::Initialize()
 	{
-		NEXUS_ASSERT(!Initialized, "Stats are already initialized");
+		NEXUS_ASSERT(!Initialized, "Stats is already initialized");
+
+		if (Initialized)
+		{
+			return;
+		}
 
 		RecordHeader(CommentId, StatType::Label, StatMode::Set);
 
@@ -233,31 +238,45 @@ namespace NxEn
 
 	void Stats::Lock()
 	{
-		NEXUS_ASSERT(Initialized && !Locked, "Stats is not initialized or is already locked");
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(!Locked, "Stats is already locked");
+
 		Locked = true;
 	}
 
 	void Stats::Unlock()
 	{
-		NEXUS_ASSERT(Initialized && Locked, "Stats is not initialized or is not locked");
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(Locked, "Stats is already unlocked");
+
 		Locked = false;
 	}
 
 	void Stats::StartRecording()
 	{
-		NEXUS_ASSERT(Initialized && !Recording, "Stats is not initialized or is already recording");
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(!Recording, "Stats is already recording");
+
 		Recording = true;
 	}
 
 	void Stats::StopRecording()
 	{
-		NEXUS_ASSERT(Initialized && Recording, "Stats is not initialized or is not recording");
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(Recording, "Stats is not recording");
+
 		Recording = false;
 	}
 
 	void Stats::Flush()
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(!Locked, "Stats is locked");
+
+		if (!Initialized || Locked || !Recording)
+		{
+			return;
+		}
 
 		for (auto& Statistique : Data)
 		{
@@ -279,6 +298,12 @@ namespace NxEn
 	void Stats::Reset()
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(!Locked, "Stats is locked");
+
+		if (!Initialized || Locked)
+		{
+			return;
+		}
 
 		// Skip Tick and Comments
 		for (uint64 Index = 1; Index < Data.GetCount() - 1; ++Index)
@@ -292,6 +317,11 @@ namespace NxEn
 	void Stats::RecordHeader(StringId Name, StatType Type, StatMode Mode)
 	{
 		NEXUS_ASSERT(!Initialized, "Stats is already initialized");
+
+		if (Initialized)
+		{
+			return;
+		}
 
 		NEXUS_ASSERT(!(Type == StatType::Label && Mode != StatMode::Set), "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Check && Mode != StatMode::Set), "Combination not supported");
@@ -308,6 +338,11 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Label, "Invalid record call");
@@ -317,6 +352,11 @@ namespace NxEn
 	void Stats::RecordStatCheck(StringId Id, bool Value)
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
@@ -328,6 +368,11 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Integer && Statistique.Mode != StatMode::Cnt, "Invalid record call");
@@ -337,6 +382,11 @@ namespace NxEn
 	void Stats::RecordStatUnsignedInteger(StringId Id, uint64 Value)
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
@@ -348,6 +398,11 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Decimal, "Invalid record call");
@@ -357,6 +412,11 @@ namespace NxEn
 	void Stats::RecordStatDecimalPrecision(StringId Id, double Value)
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
@@ -368,6 +428,11 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT((Statistique.Type == StatType::Integer || Statistique.Type == StatType::UnsignedInteger) && Statistique.Mode == StatMode::Cnt, "Invalid record call");
@@ -378,6 +443,11 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 
+		if (!Initialized || !Recording)
+		{
+			return;
+		}
+
 		String& Comments = GetStat(CommentId).Value.Label;
 		Comments += Comment;
 		Comments += Separator;
@@ -385,6 +455,14 @@ namespace NxEn
 
 	Dictionary<StringId, Stats::Stat> Stats::GetAllCurrentStats() const
 	{
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+		NEXUS_ASSERT(!Locked, "Stats is locked");
+
+		if (!Initialized || Locked)
+		{
+			return Dictionary<StringId, Stats::Stat>();
+		}
+
 		Dictionary<StringId, Stats::Stat> Result(Data.GetCount());
 		for (auto& [Header, Index] : Headers)
 		{
@@ -395,16 +473,37 @@ namespace NxEn
 
 	Stats::Stat Stats::GetCurrentStat(StringId Id) const
 	{
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+
+		if (!Initialized)
+		{
+			return Stat(StatType::Integer, StatMode::Set);
+		}
+
 		return GetStat(Id);
 	}
 
 	uint64 Stats::GetCurrentTick() const
 	{
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+
+		if (!Initialized)
+		{
+			return 0;
+		}
+
 		return GetStat(TickId).Value.UnsignedInteger;
 	}
 
 	StringView Stats::GetCurrentComment() const
 	{
+		NEXUS_ASSERT(Initialized, "Stats is not initialized");
+
+		if (!Initialized)
+		{
+			return String::Empty;
+		}
+
 		return GetStat(CommentId).Value.Label;
 	}
 
