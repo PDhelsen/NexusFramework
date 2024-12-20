@@ -8,13 +8,13 @@ namespace NxTs
 	{
 		NxEn::Stopwatch Stopwatch(true);
 
-		uint64 Count = 0;
-		for (uint64 Iter = 0; Iter < 10000; ++Iter)
+		for (uint64 Iter = 0; Iter < 1000; ++Iter)
 		{
-			Count++;
+			void* Dum = NxEn::Memory::Allocate(1024);
+			NxEn::Memory::Free(Dum);
 		}
 
-		double ElapsedTime = Stopwatch.Stop(1000);
+		double ElapsedTime = Stopwatch.Stop(1000000);
 		ASSERT_EQ(ElapsedTime > 0.0, true);
 	}
 }

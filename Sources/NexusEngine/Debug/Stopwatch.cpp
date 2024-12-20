@@ -81,7 +81,12 @@ namespace NxEn
 		Paused = false;
 	}
 
-	double Stopwatch::GetElapsedTime(double Unit)
+	double Stopwatch::GetStartTime(double Unit) const
+	{
+		return StartTimer * Unit;
+	}
+
+	double Stopwatch::GetElapsedTime(double Unit) const
 	{
 		return ElapsedTime * Unit;
 	}
