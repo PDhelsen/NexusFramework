@@ -1,6 +1,6 @@
 #include "Core/NexusTestPch.h"
 
-#include "Debug/Stats.h"
+#include "Debug/Profiler/Stats.h"
 #include "Misc/IO/Path.h"
 
 namespace NxTs
