@@ -19,6 +19,18 @@ namespace NxEn
 
 		NEXUS_ENGINE_API static Time* GetInstance() { static Time* Instance = new Time(); return Instance; }
 
+		inline static const double SecondToMicro = 1000000.0;
+		inline static const double SecondToMilli = 1000.0;
+		inline static const double SecondToMin = 1.0 / 60.0;
+		inline static const double SecondToHrs = (1.0 / 60.0) * (1.0 / 60.0);
+		inline static const double SecondToDay = (1.0 / 60.0) * (1.0 / 60.0) * (1.0 / 24);
+
+		inline static const double MicroToSecond = 0.000001;
+		inline static const double MilliToSecond = 0.001;
+		inline static const double MinToSecond = 60.0;
+		inline static const double HrsToSecond = 60.0 * 60;
+		inline static const double DayToSecond = 60.0 * 60 * 24;
+
 	private:
 		Time();
 		~Time();

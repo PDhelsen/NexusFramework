@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "ChromeTracing.h"
 
+#include "Application/Time.h"
+
 namespace NxEn
 {
 	ChromeTracing::ChromeTracing(StringView Path, bool Start)
@@ -25,9 +27,9 @@ namespace NxEn
 		StringUtility::Format(
 			Buffer,
 			StringView(",{\"cat\":\"function\",\"dur\":%.3f,\"name\":\"%s\",\"ph\":\"X\",\"pid\":0,\"tid\":0,\"ts\":%.3f}"),
-			Data.GetWatch().GetElapsedTime(1000000),
+			Data.GetWatch().GetElapsedTime(Time::SecondToMicro),
 			Data.GetText().C(),
-			Data.GetWatch().GetStartTime(1000000)
+			Data.GetWatch().GetStartTime(Time::SecondToMicro)
 		);
 
 		Write();

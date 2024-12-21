@@ -8,8 +8,8 @@ namespace NxEn
 #define NEXUS_MEMORY_ALIGN 16
 
 #define NEXUS_ALLOCATOR_DEFAULT NxEn::Memory::GetHeap()
-#define NEXUS_STACK_SIZE 1024
-#define NEXUS_HEAP_SIZE 1024 * 1024
+#define NEXUS_STACK_SIZE (uint64)(1 * Memory::ByteToKilo)
+#define NEXUS_HEAP_SIZE (uint64)(1 * Memory::ByteToMega)
 
 	class Allocator;
 	class GlobalAllocator;
@@ -57,6 +57,14 @@ namespace NxEn
 		NEXUS_ENGINE_API static GlobalAllocator* GetGlobal() { return Global; }
 		NEXUS_ENGINE_API static StackAllocator* GetStack() { return DefaultStack; }
 		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return DefaultHeap; }
+
+		inline static const double ByteToKilo = 1024.0;
+		inline static const double ByteToMega = 1024.0 * 1024.0;
+		inline static const double ByteToGiga = 1024.0 * 1024.0 * 1024.0;
+
+		inline static const double KiloToByte = 1.0 / (1024.0);
+		inline static const double MegaToByte = 1.0 / (1024.0 * 1024.0);
+		inline static const double GigaToByte = 1.0 / (1024.0 * 1024.0 * 1024.0);
 
 	private:
 		static void* Malloc(uint64 Size);

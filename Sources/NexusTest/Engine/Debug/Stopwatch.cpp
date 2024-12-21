@@ -1,6 +1,7 @@
 #include "Core/NexusTestPch.h"
 
 #include "Debug/Stopwatch.h"
+#include "Application/Time.h"
 
 namespace NxTs
 {
@@ -14,7 +15,7 @@ namespace NxTs
 			NxEn::Memory::Free(Dum);
 		}
 
-		double ElapsedTime = Stopwatch.Stop(1000000);
+		double ElapsedTime = Stopwatch.Stop(NxEn::Time::SecondToMicro);
 		ASSERT_EQ(ElapsedTime > 0.0, true);
 	}
 }
