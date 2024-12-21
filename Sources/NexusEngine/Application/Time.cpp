@@ -21,7 +21,10 @@ namespace NxEn
 	// Make sure Timestamp follow the same structure as tm from C library
 	static union TimeInfo
 	{
-		TimeInfo() {};
+		TimeInfo()
+			: Stamp()
+		{
+		};
 
 		tm TM;
 		Timestamp Stamp;

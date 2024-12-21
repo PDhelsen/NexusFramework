@@ -18,14 +18,14 @@ namespace NxEn
 		auto Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
 		{
-			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load library")
+			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load library");
 			return;
 		}
 
 		DllFunction Function = DllFunction(GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal)));
 		if (!Function)
 		{
-			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load function")
+			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load function");
 			FreeLibrary(Dll);
 			return;
 		}

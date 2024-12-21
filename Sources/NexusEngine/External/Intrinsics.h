@@ -4,7 +4,7 @@
 	#include <intrin.h>
 	
 	#define NEXUS_FORCE_INLINE __forceinline
-	#define NEXUS_DEBUGBREAK __debugbreak();
+	#define NEXUS_DEBUGBREAK __debugbreak()
 
 	#define NEXUS_FILE_NAME __FILE__
 	#define NEXUS_LINE_NUMBER __LINE__
