@@ -14,7 +14,7 @@ namespace NxEn
         NEXUS_ENGINE_API StackAllocator(uint64 Size);
 		NEXUS_ENGINE_API StackAllocator(const StackAllocator& Other) = delete;
 		NEXUS_ENGINE_API StackAllocator(StackAllocator&& Other) noexcept = delete;
-        NEXUS_ENGINE_API ~StackAllocator();
+        NEXUS_ENGINE_API virtual ~StackAllocator();
 
 		NEXUS_ENGINE_API StackAllocator& operator=(const StackAllocator& Other) = delete;
 		NEXUS_ENGINE_API StackAllocator& operator=(StackAllocator&& Other) noexcept = delete;

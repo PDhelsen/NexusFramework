@@ -69,7 +69,7 @@ namespace NxEn
 
 	protected:
 		Platform() = default;
-		~Platform() = default;
+		virtual ~Platform() = default;
 
 	private:
 		static Platform* Create();

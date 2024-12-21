@@ -28,7 +28,7 @@ namespace NxEn
 		Allocator() = default;
 		Allocator(const Allocator& Other) = delete;
 		Allocator(Allocator&& Other) noexcept = delete;
-		~Allocator() = default;
+		virtual ~Allocator() = default;
 
 		Allocator& operator=(const Allocator& Other) = delete;
 		Allocator& operator=(Allocator&& Other) noexcept = delete;

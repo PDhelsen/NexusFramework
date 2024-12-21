@@ -10,7 +10,7 @@ namespace NxEn
 		NEXUS_ENGINE_API GlobalAllocator() = default;
 		NEXUS_ENGINE_API GlobalAllocator(const GlobalAllocator& Other) = delete;
 		NEXUS_ENGINE_API GlobalAllocator(GlobalAllocator&& Other) noexcept = delete;
-		NEXUS_ENGINE_API ~GlobalAllocator() = default;
+		NEXUS_ENGINE_API virtual ~GlobalAllocator() = default;
 
 		NEXUS_ENGINE_API GlobalAllocator& operator=(const GlobalAllocator& Other) = delete;
 		NEXUS_ENGINE_API GlobalAllocator& operator=(GlobalAllocator&& Other) noexcept = delete;

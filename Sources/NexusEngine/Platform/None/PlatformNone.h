@@ -42,6 +42,6 @@ namespace NxEn
 
 	protected:
 		PlatformNone();
-		~PlatformNone();
+		virtual ~PlatformNone();
 	};
 }

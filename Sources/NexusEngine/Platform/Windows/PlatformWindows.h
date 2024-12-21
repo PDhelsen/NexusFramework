@@ -42,7 +42,7 @@ namespace NxEn
 
 	protected:
 		PlatformWindows();
-		~PlatformWindows();
+		virtual ~PlatformWindows();
 
 	private:
 		void InitializeTerminal();

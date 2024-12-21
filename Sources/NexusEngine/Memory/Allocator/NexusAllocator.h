@@ -28,7 +28,7 @@ namespace NxEn
 		NexusAllocator(uint64 Size);
 		NexusAllocator(const NexusAllocator& Other) = delete;
 		NexusAllocator(NexusAllocator&& Other) noexcept = delete;
-		~NexusAllocator();
+		virtual ~NexusAllocator();
 
 		NexusAllocator& operator=(const NexusAllocator& Other) = delete;
 		NexusAllocator& operator=(NexusAllocator&& Other) noexcept = delete;

@@ -11,7 +11,7 @@ namespace NxEn
 
 	protected:
 		NEXUS_ENGINE_API ChromeTracing(StringView Path, bool Start = false);
-		NEXUS_ENGINE_API ~ChromeTracing();
+		NEXUS_ENGINE_API virtual ~ChromeTracing();
 
 		NEXUS_ENGINE_API void RecordMarker(const InstrumentMarker& Data) override;
 
