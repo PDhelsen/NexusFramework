@@ -3,7 +3,7 @@
 
 namespace NxEn
 {
-	String String::Empty = String();
+	const String String::Empty = String();
 
 	String::String()
 		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)

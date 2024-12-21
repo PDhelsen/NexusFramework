@@ -15,7 +15,7 @@ namespace NxEn
 	// C Lib Convertion
 	//-----------------------------------------------------------------------------------------------------------------------
 
-	const static uint64 TimeToStringCapacity = 40;
+	static const uint64 TimeToStringCapacity = 40;
 	static char TimeToStringBuffer[TimeToStringCapacity];
 
 	// Make sure Timestamp follow the same structure as tm from C library

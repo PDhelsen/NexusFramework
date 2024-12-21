@@ -114,10 +114,6 @@ namespace NxEn
 		NEXUS_ENGINE_API Stat& GetStat(StringId Id);
 		NEXUS_ENGINE_API const Stat& GetStat(StringId Id) const;
 
-		NEXUS_ENGINE_API static String Separator;
-		NEXUS_ENGINE_API static StringId TickId;
-		NEXUS_ENGINE_API static StringId CommentId;
-
 		Dictionary<StringId, uint64> Headers;
 		List<Stat> Data;
 

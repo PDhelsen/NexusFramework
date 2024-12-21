@@ -3,8 +3,6 @@
 #include "Core/NexusEngine.h"
 #include "Memory/Handle/Handle.h"
 
-#define NEXUS_HANDLES_COUNT 1024
-
 namespace NxEn
 {
 	namespace Pooling

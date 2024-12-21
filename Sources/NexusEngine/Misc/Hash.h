@@ -3,6 +3,8 @@
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 
+#define NEXUS_HASHING_DEFAULT ::NxEn::Hashing::Fnv1a64
+
 namespace NxEn
 {
 	//-----------------------------------------------------------------------------------------------------------------------
@@ -182,7 +184,7 @@ namespace NxEn
 			HashLength Accumulator;
 		};
 
-		using Default = Fnv1a64;
+		using Default = NEXUS_HASHING_DEFAULT;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------------

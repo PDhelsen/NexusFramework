@@ -5,10 +5,10 @@
 #include "Misc/IO/File.h"
 #include "Debug/Stopwatch.h"
 
+#define NEXUS_DEFAULT_INSTRUMENTOR ::NxEn::InstrumentTool::ChromeTracing
+
 namespace NxEn
 {
-#define NEXUS_DEFAULT_INSTRUMENTOR InstrumentTool::ChromeTracing
-
 	enum class InstrumentTool
 	{
 		ChromeTracing

@@ -64,8 +64,8 @@ namespace NxEn
 		NEXUS_ENGINE_API uint64 GetCount() const { return Count; }
 		NEXUS_ENGINE_API uint64 GetCapacity() const { return Capacity; }
 
-		NEXUS_ENGINE_API static String Empty;
-		NEXUS_ENGINE_API static const uint8 SmallStringCapacity = 16;
+		NEXUS_ENGINE_API static const String Empty;
+		inline static const uint8 SmallStringCapacity = 16;
 
 	private:
 		NEXUS_ENGINE_API void Allocate(Allocator* Allctr, uint64 Bytes, uint64 Size, const char* Text);

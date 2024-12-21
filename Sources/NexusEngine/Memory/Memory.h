@@ -6,10 +6,7 @@
 namespace NxEn
 {
 #define NEXUS_MEMORY_ALIGN 16
-
 #define NEXUS_ALLOCATOR_DEFAULT NxEn::Memory::GetHeap()
-#define NEXUS_STACK_SIZE (uint64)(1 * Memory::ByteToKilo)
-#define NEXUS_HEAP_SIZE (uint64)(1 * Memory::ByteToMega)
 
 	class Allocator;
 	class GlobalAllocator;

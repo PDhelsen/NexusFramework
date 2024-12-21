@@ -6,6 +6,8 @@
 #include "Types/Strings/StringView.h"
 #include "Types/Timespan.h"
 
+#define NEXUS_TIMESTAMP_FORMAT "%A - %B %d %Y - %H:%M:%S"
+
 namespace NxEn
 {
     struct Timestamp
@@ -26,7 +28,7 @@ namespace NxEn
 		NEXUS_ENGINE_API bool IsValid() const;
 		NEXUS_ENGINE_API bool IsFull() const;
 
-		inline static const StringView Format = "%A - %B %d %Y - %H:%M:%S";
+		inline static const StringView Format = NEXUS_TIMESTAMP_FORMAT;
 
         int32 Seconds;
         int32 Minutes;

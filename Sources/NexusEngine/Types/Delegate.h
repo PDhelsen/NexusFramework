@@ -269,8 +269,8 @@ namespace NxEn
 		uint64 GetSize() const { return Sbo ? Data.Small.Size : 0; }
 		bool HasFunction() const { return Sbo ? Data.Small.Function[0] == 0 : Data.Large.Function == nullptr; }
 
-		static const uint8 SmallFunctionSize = 16;
-		static const uint8 BufferSize = SmallFunctionSize + 8;
+		inline static const uint8 SmallFunctionSize = 16;
+		inline static const uint8 BufferSize = SmallFunctionSize + 8;
 
 		union Storage
 		{

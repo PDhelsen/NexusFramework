@@ -3,9 +3,9 @@
 
 namespace NxEn
 {
-	String Stats::Separator = ";";
-	StringId Stats::TickId;
-	StringId Stats::CommentId;
+	static const String Separator = ";";
+	static StringId TickId;
+	static StringId CommentId;
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// StatValue
