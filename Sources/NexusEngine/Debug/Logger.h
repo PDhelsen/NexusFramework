@@ -109,10 +109,14 @@ namespace NxEn
 
 		Print(StringBuilderFormat, VerbosityLevel);
 	}
+}
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...) NxEn::Logger::GetInstance()->Log(NxEn::LoggerSource::Src, NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__)
+	#define NEXUS_LOG_INSTANCE(Instance, Src, Vbs, Chn, Msg, ...) Instance->Log(::NxEn::LoggerSource::Src, ::NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__)
+
+	#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Logger::GetInstance(), Src, Vbs, Chn, Msg, __VA_ARGS__)
 #elif NEXUS_DISTRIB
+	#define NEXUS_LOG_INSTANCE(Instance, Src, Vbs, Chn, Msg, ...)
+
 	#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...)
 #endif
-}

@@ -3,11 +3,11 @@
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 
+#define NEXUS_MEMORY_ALIGN 16
+#define NEXUS_ALLOCATOR_DEFAULT ::NxEn::Memory::GetHeap()
+
 namespace NxEn
 {
-#define NEXUS_MEMORY_ALIGN 16
-#define NEXUS_ALLOCATOR_DEFAULT NxEn::Memory::GetHeap()
-
 	class Allocator;
 	class GlobalAllocator;
 	class NexusAllocator;

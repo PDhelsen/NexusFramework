@@ -1,11 +1,11 @@
 #include "Core/NexusEnginePch.h"
 #include "Memory.h"
 
-namespace NxEn
-{
 #define NEXUS_STACK_SIZE (uint64)(1 * Memory::ByteToKilo)
 #define NEXUS_HEAP_SIZE (uint64)(1 * Memory::ByteToMega)
 
+namespace NxEn
+{
 	GlobalAllocator* Memory::Global = new GlobalAllocator();
 	StackAllocator* Memory::DefaultStack = new StackAllocator(NEXUS_STACK_SIZE);
 	HeapAllocator* Memory::DefaultHeap = new HeapAllocator(NEXUS_HEAP_SIZE);

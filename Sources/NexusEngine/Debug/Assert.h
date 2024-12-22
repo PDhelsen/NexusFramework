@@ -10,9 +10,13 @@
 #endif
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_ASSERT(condition, Msg, ...) if (!(condition)) { NEXUS_LOG(Engine, Fatal, NxEn::LoggerChannel::Assert, Msg, __VA_ARGS__); NEXUS_BREAK; }
+	#define NEXUS_ASSERT_INSTANCE(Instance, Condition, Msg, ...) if (!(Condition)) { NEXUS_LOG_INSTANCE(Instance, Engine, Fatal, NxEn::LoggerChannel::Assert, Msg, __VA_ARGS__); NEXUS_BREAK; }
+
+	#define NEXUS_ASSERT(Condition, Msg, ...) if (!(Condition)) { NEXUS_LOG(Engine, Fatal, NxEn::LoggerChannel::Assert, Msg, __VA_ARGS__); NEXUS_BREAK; }
 #elif NEXUS_DISTRIB
-	#define NEXUS_ASSERT(condition, Msg, ...)
+	#define NEXUS_ASSERT_INSTANCE(Instance, Condition, Msg, ...)
+
+	#define NEXUS_ASSERT(Condition, Msg, ...)
 #endif
 
 #define NEXUS_ASSERT_STATIC(condition, Msg) static_assert(condition, Msg)

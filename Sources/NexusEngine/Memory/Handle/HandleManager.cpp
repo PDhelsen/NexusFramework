@@ -1,10 +1,10 @@
 #include "Core/NexusEnginePch.h"
 #include "HandleManager.h"
 
-namespace NxEn
-{
 #define NEXUS_HANDLES_COUNT 1024
 
+namespace NxEn
+{
 	HandleManager::HandleManager()
 	{
 		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(NEXUS_HANDLES_COUNT, Memory::GetGlobal());
