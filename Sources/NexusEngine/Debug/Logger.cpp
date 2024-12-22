@@ -7,6 +7,7 @@
 #include "Misc/IO/File.h"
 
 #define NEXUS_LOG_LINE 256
+#define NEXUS_LOG_BUFFER 4096
 
 namespace NxEn
 {
@@ -19,17 +20,19 @@ namespace NxEn
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, "Engine", "Editor", "App", "Project");
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
-	static Platform::TerminalColor Colors[4] = { Platform::TerminalColor::Magenta, Platform::TerminalColor::Red, Platform::TerminalColor::Yellow, Platform::TerminalColor::White };
 
 	Logger* Logger::GetInstance()
 	{
-		static Logger* Instance = new Logger(LoggerVerbosity::All, LoggerOutput::Console, Path::GetWorkingDirectory() + "Logs.txt");
+		static Logger* Instance = new Logger(true, LoggerVerbosity::All, LoggerOutput::Console, Path::GetWorkingDirectory() + "Logs.txt");
 		return Instance;
 	}
 
-	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: StringBuilderMessage(NEXUS_LOG_LINE), StringBuilderFormat(NEXUS_LOG_LINE), VerbosityMask(Verbosity), Outputs(Output), Target(nullptr), Handle(nullptr)
+	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
+		: StringBuilderMessage(NEXUS_LOG_LINE), StringBuilderFormat(NEXUS_LOG_LINE), StringBuffer(NEXUS_LOG_BUFFER), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(nullptr), Handle(nullptr)
 	{
+		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != String::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
+
+
 		LoggerChannel::Default = "Default"_Sid;
 		LoggerChannel::Assert = "Assert"_Sid;
 		LoggerChannel::Performance = "Performance"_Sid;
@@ -56,6 +59,8 @@ namespace NxEn
 
 	Logger::~Logger()
 	{
+		Flush();
+
 		if (CheckOutput(LoggerOutput::File))
 		{
 			Handle->Close();
@@ -103,7 +108,17 @@ namespace NxEn
 		return Enum::CheckFlag(Outputs, Output);
 	}
 
-	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, StringId Channel) const
+	void Logger::Flush()
+	{
+		if (FlushOnLog)
+		{
+			return;
+		}
+
+		Print(StringBuffer);
+	}
+
+	bool Logger::ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const
 	{
 		return Platform::GetInstance() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
 	}
@@ -124,19 +139,31 @@ namespace NxEn
 		SourceString = Enum::LoggerSourceToString(Source);
 	}
 
-	void Logger::Print(StringView Message, uint8 Verbosity) const
+	void Logger::CopyIntoBuffer(String& Text)
+	{
+		if (StringBuffer.GetCapacity() - StringBuffer.GetCount() < Text.GetCount())
+		{
+			Print(Text);
+		}
+
+		StringBuffer += Text;
+	}
+
+	void Logger::Print(String& Text)
 	{
 		if (CheckOutput(LoggerOutput::Console))
 		{
-			Target->WriteToTerminal(Message, Colors[Verbosity]);
+			Target->WriteToTerminal(Text);
 		}
 		if (CheckOutput(LoggerOutput::IDE))
 		{
-			Target->WriteToDebugger(Message);
+			Target->WriteToDebugger(Text);
 		}
 		if (CheckOutput(LoggerOutput::File))
 		{
-			Handle->WriteText(Message);
+			Handle->WriteText(Text);
 		}
+
+		Text.Clear();
 	}
 }

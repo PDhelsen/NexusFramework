@@ -13,18 +13,6 @@ namespace NxEn
 	class Platform
 	{
 	public:
-		enum class TerminalColor : uint8
-		{
-			White,
-			Black,
-			Red,
-			Green,
-			Blue,
-			Yellow,
-			Cyan,
-			Magenta
-		};
-
 		enum class PathType : uint32
 		{
 			None, File, Directory, Other
@@ -40,7 +28,7 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 
 		NEXUS_ENGINE_API virtual void WaitForUserToCloseTerminal() const = 0;
-		NEXUS_ENGINE_API virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
+		NEXUS_ENGINE_API virtual void WriteToTerminal(StringView Message) const = 0;
 		NEXUS_ENGINE_API virtual void WriteToDebugger(StringView Message) const = 0;
 
 		NEXUS_ENGINE_API virtual PathType GetPathType(StringView Path) const = 0;

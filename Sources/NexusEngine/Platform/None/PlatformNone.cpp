@@ -20,7 +20,7 @@ namespace NxEn
     {
     }
 
-    void PlatformNone::WriteToTerminal(StringView Message, TerminalColor Color) const
+    void PlatformNone::WriteToTerminal(StringView Message) const
     {
     }
 

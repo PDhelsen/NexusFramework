@@ -7,10 +7,6 @@ namespace NxEn
 {
 	using DllFunction = Delegate<int64()>;
 
-	// https://learn.microsoft.com/en-us/windows/console/console-virtual-terminal-sequences
-	// Keep synced with the enum in the Platform.h
-	static const String TerminalColors[8] = { "\033[37m", "\033[30m", "\033[31m", "\033[32m", "\033[34m", "\033[33m", "\033[36m", "\033[35m" };
-	static const String TerminalFormatReset = "\033[m";
 	static Buffer<char> TempBuffer = Buffer<char>(512, nullptr);
 
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
@@ -52,9 +48,9 @@ namespace NxEn
 		std::cin.get();
 	}
 
-	void PlatformWindows::WriteToTerminal(StringView Message, TerminalColor Color /*TerminalColor::White*/) const
+	void PlatformWindows::WriteToTerminal(StringView Message) const
 	{
-		std::cout << TerminalColors[(uint8)Color].C() << Message.C() << TerminalFormatReset.C();
+		std::cout << Message.C();
 	}
 
 	void PlatformWindows::WriteToDebugger(StringView Message) const

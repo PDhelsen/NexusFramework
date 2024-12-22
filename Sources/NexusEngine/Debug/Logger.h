@@ -71,7 +71,7 @@ namespace NxEn
 	class Logger
 	{
 	public:
-		NEXUS_ENGINE_API Logger(LoggerVerbosity Verbosity = LoggerVerbosity::All, LoggerOutput Output = LoggerOutput::All, StringView Path = "");
+		NEXUS_ENGINE_API Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "");
 		NEXUS_ENGINE_API Logger(const Logger& Other) = delete;
 		NEXUS_ENGINE_API Logger(Logger&& Other) noexcept = delete;
 		NEXUS_ENGINE_API ~Logger();
@@ -91,23 +91,27 @@ namespace NxEn
 
 		template<typename... Args>
 		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
+		NEXUS_ENGINE_API void Flush();
 
 		NEXUS_ENGINE_API static Logger* GetInstance();
 
 	private:
-		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, StringId Channel) const;
+		NEXUS_ENGINE_API inline bool ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const;
 		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const;
-		NEXUS_ENGINE_API inline void Print(StringView Message, uint8 Verbosity) const;
+		NEXUS_ENGINE_API inline void CopyIntoBuffer(String& Text);
+		NEXUS_ENGINE_API inline void Print(String& Text);
 
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 
 		Dictionary<StringId, bool, Hashing::Default>* Channels;
 		String StringBuilderMessage;
 		String StringBuilderFormat;
+		String StringBuffer;
 
 		LoggerVerbosity VerbosityMask;
 		LoggerOutput Outputs;
+		bool FlushOnLog;
 
 		Platform* Target;
 		File* Handle;
@@ -116,7 +120,7 @@ namespace NxEn
 	template<typename... Args>
 	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
-		if (!ShouldPrint(Verbosity, Channel))
+		if (!ShouldLog(Verbosity, Channel))
 		{
 			return;
 		}
@@ -130,7 +134,14 @@ namespace NxEn
 		StringBuilderMessage.Format(Message, args...);
 		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, SourceString.C(), VerbosityString.C(), Channel.C(), StringBuilderMessage.C());
 
-		Print(StringBuilderFormat, VerbosityLevel);
+		if (FlushOnLog)
+		{
+			Print(StringBuilderFormat);
+		}
+		else
+		{
+			CopyIntoBuffer(StringBuilderFormat);
+		}
 	}
 }
 
