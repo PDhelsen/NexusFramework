@@ -85,7 +85,7 @@ namespace NxEn
 
 	void Logger::GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const
 	{
-		Timestamp Stamp = Time::GetInstance()->Now();
+		Timestamp Stamp = Time::Now();
 		Hours = Stamp.Hours;
 		Minutes = Stamp.Minutes;
 		Seconds = Stamp.Seconds;

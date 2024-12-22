@@ -30,7 +30,7 @@ namespace NxTs
 
 	TEST(Type_Time, Timestamp)
 	{
-		NxEn::Timestamp Now = NxEn::Time::GetInstance()->Now();
+		NxEn::Timestamp Now = NxEn::Time::Now();
 		ASSERT_EQ(Now.IsValid(), true);
 		ASSERT_EQ(Now.IsFull(), true);
 
