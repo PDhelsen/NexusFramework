@@ -2,6 +2,7 @@
 
 #include "Debug/Profiler/Instruments/Instumentor.h"
 #include "Misc/IO/Path.h"
+#include "Platform/Platform.h"
 
 namespace NxTs
 {
@@ -9,11 +10,7 @@ namespace NxTs
 	{
 		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
 
-		for (uint64 Iteration = 0; Iteration < Count; Iteration++)
-		{
-			void* Dum = NxEn::Memory::Allocate(1024);
-			NxEn::Memory::Free(Dum);
-		}
+		NxEn::Platform::GetInstance()->Sleep(Count);
 	}
 
 	void Function1(uint64 Count, NxEn::Instrumentor* Instrumentor)
@@ -28,7 +25,7 @@ namespace NxTs
 		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
 
 		Dummy(Count, Instrumentor);
-		Function1(Count, Instrumentor);
+		Function1(Count * 2, Instrumentor);
 	}
 
 	TEST(Instrumentor, Instrumentor)
@@ -39,8 +36,8 @@ namespace NxTs
 		{
 			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
 
-			Function1(1000, Instrumentor);
-			Function2(1000, Instrumentor);
+			Function1(5, Instrumentor);
+			Function2(10, Instrumentor);
 		}
 
 		Instrumentor->StopRecording();

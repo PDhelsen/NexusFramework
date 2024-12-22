@@ -7,6 +7,10 @@ namespace NxEn
     {
     }
 
+	void PlatformNone::Sleep(uint64 Milliseconds) const
+	{
+	}
+
 	double PlatformNone::GetProcessorTimer(double Unit) const
     {
 		return 0.0;

@@ -11,6 +11,7 @@ namespace NxEn
 
 	public:
 		NEXUS_ENGINE_API void ExecuteFromDll(StringView DllName, uint8 Ordinal) const override;
+		NEXUS_ENGINE_API void Sleep(uint64 Milliseconds) const override;
 		NEXUS_ENGINE_API double GetProcessorTimer(double Unit = 1.0) const override;
 
 		NEXUS_ENGINE_API void WaitForUserToCloseTerminal() const override;

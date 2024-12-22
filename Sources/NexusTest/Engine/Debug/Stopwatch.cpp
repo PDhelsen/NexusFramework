@@ -2,6 +2,7 @@
 
 #include "Debug/Stopwatch.h"
 #include "Application/Time.h"
+#include "Platform/Platform.h"
 
 namespace NxTs
 {
@@ -9,13 +10,9 @@ namespace NxTs
 	{
 		NxEn::Stopwatch Stopwatch(true);
 
-		for (uint64 Iter = 0; Iter < 1000; ++Iter)
-		{
-			void* Dum = NxEn::Memory::Allocate(1024);
-			NxEn::Memory::Free(Dum);
-		}
+		NxEn::Platform::GetInstance()->Sleep(5);
 
-		double ElapsedTime = Stopwatch.Stop(NxEn::Time::SecondToMicro);
-		ASSERT_EQ(ElapsedTime > 0.0, true);
+		double ElapsedTime = Stopwatch.Stop(NxEn::Time::SecondToMilli);
+		ASSERT_EQ(ElapsedTime >= 5, true);
 	}
 }

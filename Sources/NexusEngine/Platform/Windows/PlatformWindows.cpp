@@ -35,6 +35,11 @@ namespace NxEn
 		FreeLibrary(Dll);
 	}
 
+	void PlatformWindows::Sleep(uint64 Milliseconds) const
+	{
+		::Sleep((DWORD)Milliseconds);
+	}
+
 	double PlatformWindows::GetProcessorTimer(double Unit) const
 	{
 		LARGE_INTEGER Counter;

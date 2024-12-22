@@ -36,6 +36,7 @@ namespace NxEn
 		};
 
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
+		NEXUS_ENGINE_API virtual void Sleep(uint64 Milliseconds) const = 0;
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 
 		NEXUS_ENGINE_API virtual void WaitForUserToCloseTerminal() const = 0;
