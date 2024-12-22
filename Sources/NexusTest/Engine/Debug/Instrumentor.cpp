@@ -6,41 +6,41 @@
 
 namespace NxTs
 {
-	void Dummy(uint64 Count, NxEn::Instrumentor* Instrumentor)
+	void Dummy(uint64 Count, NxEn::Instruments* Instruments)
 	{
-		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
+		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
 		NxEn::Platform::GetInstance()->Sleep(Count);
 	}
 
-	void Function1(uint64 Count, NxEn::Instrumentor* Instrumentor)
+	void Function1(uint64 Count, NxEn::Instruments* Instruments)
 	{
-		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
+		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
-		Dummy(Count, Instrumentor);
+		Dummy(Count, Instruments);
 	}
 
-	void Function2(uint64 Count, NxEn::Instrumentor* Instrumentor)
+	void Function2(uint64 Count, NxEn::Instruments* Instruments)
 	{
-		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
+		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
-		Dummy(Count, Instrumentor);
-		Function1(Count * 2, Instrumentor);
+		Dummy(Count, Instruments);
+		Function1(Count * 2, Instruments);
 	}
 
-	TEST(Instrumentor, Instrumentor)
+	TEST(Instruments, Instruments)
 	{
-		NxEn::Instrumentor* Instrumentor = NxEn::Instrumentor::Create(NxEn::Path::GetWorkingDirectory() + "Instruments.json");
-		Instrumentor->StartRecording();
+		NxEn::Instruments* Instruments = NxEn::Instruments::Create(NxEn::Path::GetWorkingDirectory() + "Instruments.json");
+		Instruments->StartRecording();
 
 		{
-			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instrumentor);
+			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
-			Function1(5, Instrumentor);
-			Function2(10, Instrumentor);
+			Function1(5, Instruments);
+			Function2(10, Instruments);
 		}
 
-		Instrumentor->StopRecording();
-		delete Instrumentor;
+		Instruments->StopRecording();
+		delete Instruments;
 	}
 }

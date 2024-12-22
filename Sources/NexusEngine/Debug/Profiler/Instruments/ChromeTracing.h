@@ -5,18 +5,18 @@
 
 namespace NxEn
 {
-	class ChromeTracing : public Instrumentor
+	class ChromeTracing : public Instruments
 	{
-		friend class Instrumentor;
+		friend class Instruments;
 
 	protected:
 		NEXUS_ENGINE_API ChromeTracing(StringView Path, bool Start = false);
 		NEXUS_ENGINE_API virtual ~ChromeTracing();
 
-		NEXUS_ENGINE_API void RecordMarker(const InstrumentMarker& Data) override;
+		NEXUS_ENGINE_API void RecordMarker(const Marker& Data) override;
 
 	private:
-		void WriteMarker(const InstrumentMarker& Data);
+		void WriteMarker(const Marker& Data);
 		void WriteHeader();
 		void WriteFooter();
 		void Write();

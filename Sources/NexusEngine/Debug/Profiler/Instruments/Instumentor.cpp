@@ -5,7 +5,7 @@
 
 namespace NxEn
 {
-	InstrumentMarker::InstrumentMarker(StringView Text, Instrumentor* Target)
+	Instruments::Marker::Marker(StringView Text, Instruments* Target)
 		: Text(Text), Target(Target)
 	{
 		NEXUS_ASSERT(Target, "Target cannot be null");
@@ -13,24 +13,24 @@ namespace NxEn
 		Watch.Start();
 	}
 
-	InstrumentMarker::~InstrumentMarker()
+	Instruments::Marker::~Marker()
 	{
 		Watch.Stop();
 
 		Target->Record(*this);
 	}
 
-	Instrumentor* Instrumentor::Create(StringView Path, bool Start, InstrumentTool Tool)
+	Instruments* Instruments::Create(StringView Path, bool Start, Instruments::Tools Tool)
 	{
 		switch (Tool)
 		{
-		case NxEn::InstrumentTool::ChromeTracing: return new ChromeTracing(Path, Start);
+		case NxEn::Instruments::Tools::ChromeTracing: return new ChromeTracing(Path, Start);
 		}
 
 		return nullptr;
 	}
 
-	Instrumentor::Instrumentor(StringView Path, bool Start)
+	Instruments::Instruments(StringView Path, bool Start)
 		: Handle(Path), Buffer(256), Recording(Start)
 	{
 		Handle.Delete();
@@ -38,24 +38,24 @@ namespace NxEn
 		Handle.Open(File::Mode::Append);
 	}
 
-	Instrumentor::~Instrumentor()
+	Instruments::~Instruments()
 	{
 		Handle.Close();
 	}
 
-	void Instrumentor::StartRecording()
+	void Instruments::StartRecording()
 	{
-		NEXUS_ASSERT(!Recording, "Instrumentor is already recording");
+		NEXUS_ASSERT(!Recording, "Instruments is already recording");
 		Recording = true;
 	}
 
-	void Instrumentor::StopRecording()
+	void Instruments::StopRecording()
 	{
-		NEXUS_ASSERT(Recording, "Instrumentor is not recording");
+		NEXUS_ASSERT(Recording, "Instruments is not recording");
 		Recording = false;
 	}
 
-	void Instrumentor::Record(const InstrumentMarker& Data)
+	void Instruments::Record(const Marker& Data)
 	{
 		if (!Recording)
 		{

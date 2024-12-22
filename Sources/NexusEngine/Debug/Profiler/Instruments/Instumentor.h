@@ -5,51 +5,52 @@
 #include "Misc/IO/File.h"
 #include "Debug/Stopwatch.h"
 
-#define NEXUS_DEFAULT_INSTRUMENTOR ::NxEn::InstrumentTool::ChromeTracing
+#define NEXUS_DEFAULT_INSTRUMENTOR ::NxEn::Instruments::Tools::ChromeTracing
 
 namespace NxEn
 {
-	enum class InstrumentTool
-	{
-		ChromeTracing
-	};
-
-	class InstrumentMarker
-	{
-		friend class Instrumentor;
-
-	public:
-		NEXUS_ENGINE_API InstrumentMarker(StringView Text, Instrumentor* Target);
-		NEXUS_ENGINE_API ~InstrumentMarker();
-
-		const Stopwatch& GetWatch() const { return Watch; }
-		StringView GetText() const { return Text; }
-
-	private:
-		Stopwatch Watch;
-		StringView Text;
-		Instrumentor* Target;
-	};
-
-	class Instrumentor
+	class Instruments
 	{
 	public:
-		NEXUS_ENGINE_API static Instrumentor* Create(StringView Path, bool Start = false, InstrumentTool Tool = NEXUS_DEFAULT_INSTRUMENTOR);
+		enum class Tools
+		{
+			ChromeTracing
+		};
 
-		NEXUS_ENGINE_API Instrumentor(StringView Path, bool Start = false);
-		NEXUS_ENGINE_API virtual ~Instrumentor();
+		class Marker
+		{
+			friend class Instruments;
+
+		public:
+			NEXUS_ENGINE_API Marker(StringView Text, Instruments* Target);
+			NEXUS_ENGINE_API ~Marker();
+
+			const Stopwatch& GetWatch() const { return Watch; }
+			StringView GetText() const { return Text; }
+
+		private:
+			Stopwatch Watch;
+			StringView Text;
+			Instruments* Target;
+		};
+
+	public:
+		NEXUS_ENGINE_API static Instruments* Create(StringView Path, bool Start = false, Tools Tool = NEXUS_DEFAULT_INSTRUMENTOR);
+
+		NEXUS_ENGINE_API Instruments(StringView Path, bool Start = false);
+		NEXUS_ENGINE_API virtual ~Instruments();
 
 		NEXUS_ENGINE_API void StartRecording();
 		NEXUS_ENGINE_API void StopRecording();
 
-		NEXUS_ENGINE_API void Record(const InstrumentMarker& Data);
+		NEXUS_ENGINE_API void Record(const Marker& Data);
 
 		bool IsRecording() const { return Recording; }
 
-		static Instrumentor* GetInstance() { static Instrumentor* Instance = Create(Path::GetWorkingDirectory() + "InstrumentSession.json"); return Instance; }
+		static Instruments* GetInstance() { static Instruments* Instance = Create(Path::GetWorkingDirectory() + "InstrumentSession.json"); return Instance; }
 
 	protected:
-		NEXUS_ENGINE_API virtual void RecordMarker(const InstrumentMarker& Data) = 0;
+		NEXUS_ENGINE_API virtual void RecordMarker(const Marker& Data) = 0;
 
 		File Handle;
 		String Buffer;
@@ -58,13 +59,13 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-#define NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, Instance) NxEn::InstrumentMarker Marker##Line(Name, Instance)
+#define NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, Instance) NxEn::Instruments::Marker Marker##Line(Name, Instance)
 #define NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, Instance) NEXUS_INSTUMENT_LINE_INSTANCE(Name, NEXUS_LINE_NUMBER, Instance)
 #define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance) NEXUS_INSTUMENT_SCOPE_INSTANCE(NEXUS_FUNCTION_SIGNATURE, Instance)
 
-#define NEXUS_INSTUMENT_LINE(Name, Line) NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, NxEn::Instrumentor::GetInstance())
-#define NEXUS_INSTUMENT_SCOPE(Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, NxEn::Instrumentor::GetInstance())
-#define NEXUS_INSTUMENT_FUNCTION() NEXUS_INSTUMENT_FUNCTION_INSTANCE(NxEn::Instrumentor::GetInstance())
+#define NEXUS_INSTUMENT_LINE(Name, Line) NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, NxEn::Instruments::GetInstance())
+#define NEXUS_INSTUMENT_SCOPE(Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, NxEn::Instruments::GetInstance())
+#define NEXUS_INSTUMENT_FUNCTION() NEXUS_INSTUMENT_FUNCTION_INSTANCE(NxEn::Instruments::GetInstance())
 #elif NEXUS_DISTRIB
 #define NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, Instance)
 #define NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, Instance)

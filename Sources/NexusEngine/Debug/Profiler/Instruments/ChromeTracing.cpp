@@ -6,7 +6,7 @@
 namespace NxEn
 {
 	ChromeTracing::ChromeTracing(StringView Path, bool Start)
-		: Instrumentor(Path, Start)
+		: Instruments(Path, Start)
 	{
 		WriteHeader();
 	}
@@ -16,12 +16,12 @@ namespace NxEn
 		WriteFooter();
 	}
 
-	void ChromeTracing::RecordMarker(const InstrumentMarker& Data)
+	void ChromeTracing::RecordMarker(const Marker& Data)
 	{
 		WriteMarker(Data);
 	}
 
-	void ChromeTracing::WriteMarker(const InstrumentMarker& Data)
+	void ChromeTracing::WriteMarker(const Marker& Data)
 	{
 		// Expect timing in micro second
 		StringUtility::Format(
