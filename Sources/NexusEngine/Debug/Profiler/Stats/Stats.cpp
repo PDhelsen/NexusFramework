@@ -454,34 +454,34 @@ namespace NxEn
 		Comments += Separator;
 	}
 
-	Dictionary<StringId, Stats::Stat> Stats::GetAllCurrentStats() const
+	Dictionary<StringId, const Stats::Stat*> Stats::GetAllCurrentStats() const
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 		NEXUS_ASSERT(!Locked, "Stats is locked");
 
 		if (!Initialized || Locked)
 		{
-			return Dictionary<StringId, Stats::Stat>();
+			return Dictionary<StringId, const Stats::Stat*>();
 		}
 
-		Dictionary<StringId, Stats::Stat> Result(Data.GetCount());
+		Dictionary<StringId, const Stats::Stat*> Result(Data.GetCount());
 		for (auto& [Header, Index] : Headers)
 		{
-			Result.Append(Header, Data[Index]);
+			Result.Append(Header, &Data[Index]);
 		}
 		return Result;
 	}
 
-	Stats::Stat Stats::GetCurrentStat(StringId Id) const
+	const Stats::Stat* Stats::GetCurrentStat(StringId Id) const
 	{
 		NEXUS_ASSERT(Initialized, "Stats is not initialized");
 
 		if (!Initialized)
 		{
-			return Stat(StatType::Integer, StatMode::Set);
+			return nullptr;
 		}
 
-		return GetStat(Id);
+		return &GetStat(Id);
 	}
 
 	uint64 Stats::GetCurrentTick() const

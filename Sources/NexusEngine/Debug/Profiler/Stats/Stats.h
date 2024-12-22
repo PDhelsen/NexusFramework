@@ -95,8 +95,8 @@ namespace NxEn
 		NEXUS_ENGINE_API void RecordStatCount(StringId Id);
 		NEXUS_ENGINE_API void RecordComment(StringView Comment);
 
-		NEXUS_ENGINE_API Dictionary<StringId, Stat> GetAllCurrentStats() const;
-		NEXUS_ENGINE_API Stat GetCurrentStat(StringId Id) const;
+		NEXUS_ENGINE_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
+		NEXUS_ENGINE_API const Stat* GetCurrentStat(StringId Id) const;
 		NEXUS_ENGINE_API uint64 GetCurrentTick() const;
 		NEXUS_ENGINE_API StringView GetCurrentComment() const;
 

@@ -54,7 +54,7 @@ namespace NxTs
 
 			ASSERT_EQ(Stats.GetCurrentTick(), Iteration);
 			ASSERT_EQ(Stats.GetCurrentComment(), NxEn::StringUtility::Format("Iteration: %d", Iteration) + ";" + NxEn::StringUtility::Format("Iteration (Again): %d", Iteration) + ";");
-			ASSERT_EQ(Stats.GetCurrentStat(SetId).GetValue().Integer, Iteration);
+			ASSERT_EQ(Stats.GetCurrentStat(SetId)->GetValue().Integer, Iteration);
 
 			Stats.Flush();
 			if (Iteration == 3)
