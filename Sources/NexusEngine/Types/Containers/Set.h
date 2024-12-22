@@ -31,7 +31,7 @@ namespace NxEn
 		Set(const Set<T, H>& Other)
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Set - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Copy constructor");
 
 			Allocate(Capacity);
 
@@ -61,7 +61,7 @@ namespace NxEn
 
 		Set<T, H>& operator=(const Set<T, H>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Set - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Assignement operator");
 
 			if (*this == Other)
 			{
@@ -271,7 +271,7 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Set - Reallocate");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Reallocate");
 
 			N* Temp = Data;
 			uint64 Length = Capacity;
@@ -355,7 +355,7 @@ namespace NxEn
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
 				NEXUS_ASSERT(Iteration < MaxProbingIteration(), "Failed to find a free spot");
 
-				NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Set - Collision");
+				NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Collision");
 			}
 
 			return Index;

@@ -25,7 +25,7 @@ namespace NxEn
 		Stack(const Stack<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Stack - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Stack - Copy constructor");
 
 			if (Buckets)
 			{
@@ -60,7 +60,7 @@ namespace NxEn
 
 		Stack<T, BS>& operator=(const Stack<T, BS>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Stack - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Stack - Assignement operator");
 
 			if (*this == Other)
 			{

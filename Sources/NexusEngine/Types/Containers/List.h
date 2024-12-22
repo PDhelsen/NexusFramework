@@ -26,7 +26,7 @@ namespace NxEn
 		List(const List<T>& Other)
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "List - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "List - Copy constructor");
 
 			Allocate(Capacity);
 
@@ -52,7 +52,7 @@ namespace NxEn
 
 		List<T>& operator=(const List<T>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "List - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "List - Assignement operator");
 
 			if (*this == Other)
 			{
@@ -463,7 +463,7 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "List - Reallocate");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "List - Reallocate");
 
 			ValidateCapacity(Size);
 			Data = (T*)Memory::Reallocate(Data, sizeof(T) * Capacity, Alloc);

@@ -10,7 +10,7 @@ namespace NxAp
 {
 	void HelloWorld()
 	{
-		NEXUS_LOG(App, Info, NxEn::LoggerChannel::Default, "Hello World");
+		NEXUS_LOG(Info, NxEn::LoggerChannel::Default, "Hello World");
 	}
 }
 

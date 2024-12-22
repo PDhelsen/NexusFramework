@@ -7,7 +7,7 @@ namespace NxTs
 {
 	void LogMessage(const NxEn::String& Message)
 	{
-		NEXUS_LOG(App, Info, NxEn::LoggerChannel::UnitTest, Message.C());
+		NEXUS_LOG(Info, NxEn::LoggerChannel::UnitTest, Message.C());
 	}
 
 	int8 Add(int8 A, int8 B)

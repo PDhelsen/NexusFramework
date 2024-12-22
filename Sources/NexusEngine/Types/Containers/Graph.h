@@ -28,7 +28,7 @@ namespace NxEn
 		Graph(const Graph<T>& Other)
 			: Alloc(Other.Alloc), Count(0), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Graph - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Graph - Copy constructor");
 
 			N* Current = Other.Data;
 			while (Current)
@@ -72,7 +72,7 @@ namespace NxEn
 
 		Graph<T>& operator=(const Graph<T>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Graph - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Graph - Assignement operator");
 
 			if (*this == Other)
 			{

@@ -18,7 +18,6 @@ namespace NxEn
 	StringId LoggerChannel::UnitTest;
 
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
-	NEXUS_ENUM_TO_STRING_IMPLEMENTATION(LoggerSource, "Engine", "Editor", "App", "Project");
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
 
 	Logger* Logger::GetInstance()
@@ -31,7 +30,6 @@ namespace NxEn
 		: StringBuilderMessage(NEXUS_LOG_LINE), StringBuilderFormat(NEXUS_LOG_LINE), StringBuffer(NEXUS_LOG_BUFFER), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(nullptr), Handle(nullptr)
 	{
 		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != String::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
-
 
 		LoggerChannel::Default = "Default"_Sid;
 		LoggerChannel::Assert = "Assert"_Sid;
@@ -128,15 +126,14 @@ namespace NxEn
 		return Math::LogTwoPowerOfTwo((uint8)Verbosity);
 	}
 
-	void Logger::GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const
+	void Logger::GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const
 	{
+		VerbosityString = Enum::LoggerVerbosityToString(VerbosityLevel);
+
 		Timestamp Stamp = Time::Now();
 		Hours = Stamp.Hours;
 		Minutes = Stamp.Minutes;
 		Seconds = Stamp.Seconds;
-
-		VerbosityString = Enum::LoggerVerbosityToString(VerbosityLevel);
-		SourceString = Enum::LoggerSourceToString(Source);
 	}
 
 	void Logger::CopyIntoBuffer(String& Text)

@@ -26,7 +26,7 @@ namespace NxEn
 		Tree(const Tree<T>& Other)
 			: Alloc(Other.Alloc), Count(0), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Tree - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Tree - Copy constructor");
 
 			AppendRange(nullptr, Other);
 		}
@@ -45,7 +45,7 @@ namespace NxEn
 
 		Tree<T>& operator=(const Tree<T>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Tree - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Tree - Assignement operator");
 
 			if (*this == Other)
 			{

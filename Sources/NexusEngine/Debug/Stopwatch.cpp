@@ -22,7 +22,7 @@ namespace NxEn
 	{
 		if (Started)
 		{
-			NEXUS_LOG(Engine, Warning, NxEn::LoggerChannel::Default, "Stopwatch was already started");
+			NEXUS_LOG(Warning, NxEn::LoggerChannel::Default, "Stopwatch was already started");
 			return;
 		}
 
@@ -36,7 +36,7 @@ namespace NxEn
 	{
 		if (Paused || !Started)
 		{
-			NEXUS_LOG(Engine, Warning, NxEn::LoggerChannel::Default, "Stopwatch was already paused");
+			NEXUS_LOG(Warning, NxEn::LoggerChannel::Default, "Stopwatch was already paused");
 			return 0.0;
 		}
 
@@ -50,7 +50,7 @@ namespace NxEn
 	{
 		if (!Paused || !Started)
 		{
-			NEXUS_LOG(Engine, Warning, NxEn::LoggerChannel::Default, "Stopwatch was not paused");
+			NEXUS_LOG(Warning, NxEn::LoggerChannel::Default, "Stopwatch was not paused");
 			return;
 		}
 
@@ -62,7 +62,7 @@ namespace NxEn
 	{
 		if (!Started || Paused)
 		{
-			NEXUS_LOG(Engine, Warning, NxEn::LoggerChannel::Default, "Stopwatch was not started");
+			NEXUS_LOG(Warning, NxEn::LoggerChannel::Default, "Stopwatch was not started");
 			return 0.0;
 		}
 

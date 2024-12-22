@@ -7,7 +7,6 @@ namespace NxEd
 {
 	void HelloWorld()
 	{
-		NEXUS_LOG(Editor, Info, NxEn::LoggerChannel::Default, "Hello World")
-			;
+		NEXUS_LOG(Info, NxEn::LoggerChannel::Default, "Hello World");
 	}
 }

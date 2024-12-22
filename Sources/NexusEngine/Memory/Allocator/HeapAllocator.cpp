@@ -126,7 +126,7 @@ namespace NxEn
 
 	void HeapAllocator::Defragment(uint64 Count)
 	{
-		NEXUS_LOG(Engine, Info, LoggerChannel::Routine, "Starting defragmentation (Current amount : %d)", UsedAmount());
+		NEXUS_LOG(Info, LoggerChannel::Routine, "Starting defragmentation (Current amount : %d)", UsedAmount());
 
 		Dictionary<void*, Handle<uint8>> Handles = HandleManager::GetInstance()->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
@@ -178,7 +178,7 @@ namespace NxEn
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot));
 				HandleManager::GetInstance()->UpdateHandle(Handle, Data);
-				NEXUS_LOG(Engine, Info, LoggerChannel::Routine, "Moved from %p to %p", Slot->Next, Slot);
+				NEXUS_LOG(Info, LoggerChannel::Routine, "Moved from %p to %p", Slot->Next, Slot);
 
 				// Update HeapSlot
 				uint64 NewAddress = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot) + NextSize;
@@ -194,7 +194,7 @@ namespace NxEn
 			Count--;
 		}
 
-		NEXUS_LOG(Engine, Info, LoggerChannel::Routine, "End defragmentation (Current amount : %d)", UsedAmount());
+		NEXUS_LOG(Info, LoggerChannel::Routine, "End defragmentation (Current amount : %d)", UsedAmount());
 	}
 
 	void HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)

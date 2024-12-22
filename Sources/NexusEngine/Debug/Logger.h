@@ -44,16 +44,6 @@ namespace NxEn
 	NEXUS_ENUM_TO_FLAG(LoggerVerbosity)
 	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
 
-	enum class LoggerSource : uint8
-	{
-		Engine	= 0,
-		Editor	= 1,
-		App		= 2,
-		Project	= 3,
-		COUNT
-	};
-	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
-
 	enum class LoggerOutput : uint8
 	{
 		None	= 0,
@@ -90,7 +80,7 @@ namespace NxEn
 		NEXUS_ENGINE_API bool CheckOutput(LoggerOutput Output) const;
 
 		template<typename... Args>
-		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
+		void Log(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 		NEXUS_ENGINE_API void Flush();
 
 		NEXUS_ENGINE_API static Logger* GetInstance();
@@ -98,11 +88,11 @@ namespace NxEn
 	private:
 		NEXUS_ENGINE_API inline bool ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const;
 		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
-		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, LoggerSource Source, int8& Hours, int8& Minutes, int8& Seconds, StringView& SourceString, StringView& VerbosityString) const;
+		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const;
 		NEXUS_ENGINE_API inline void CopyIntoBuffer(String& Text);
 		NEXUS_ENGINE_API inline void Print(String& Text);
 
-		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
+		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s\n";
 
 		Dictionary<StringId, bool, Hashing::Default>* Channels;
 		String StringBuilderMessage;
@@ -118,7 +108,7 @@ namespace NxEn
 	};
 
 	template<typename... Args>
-	void Logger::Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
+	void Logger::Log(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
 		if (!ShouldLog(Verbosity, Channel))
 		{
@@ -127,12 +117,12 @@ namespace NxEn
 
 		uint8 VerbosityLevel = GetLogLevel(Verbosity);
 
-		StringView SourceString = "", VerbosityString = "";
+		StringView VerbosityString = "";
 		int8 Hours = 0, Minutes = 0, Seconds = 0;
-		GatherInfo(VerbosityLevel, Source, Hours, Minutes, Seconds, SourceString, VerbosityString);
+		GatherInfo(VerbosityLevel, VerbosityString, Hours, Minutes, Seconds);
 
 		StringBuilderMessage.Format(Message, args...);
-		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, SourceString.C(), VerbosityString.C(), Channel.C(), StringBuilderMessage.C());
+		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, VerbosityString.C(), Channel.C(), StringBuilderMessage.C());
 
 		if (FlushOnLog)
 		{
@@ -146,11 +136,11 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_LOG_INSTANCE(Instance, Src, Vbs, Chn, Msg, ...) Instance->Log(::NxEn::LoggerSource::Src, ::NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__)
+	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) Instance->Log(::NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__)
 
-	#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Logger::GetInstance(), Src, Vbs, Chn, Msg, __VA_ARGS__)
+	#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Logger::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
 #elif NEXUS_DISTRIB
-	#define NEXUS_LOG_INSTANCE(Instance, Src, Vbs, Chn, Msg, ...)
+	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...)
 
-	#define NEXUS_LOG(Src, Vbs, Chn, Msg, ...)
+	#define NEXUS_LOG(Vbs, Chn, Msg, ...)
 #endif

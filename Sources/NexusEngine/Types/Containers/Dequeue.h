@@ -26,7 +26,7 @@ namespace NxEn
 		Dequeue(const Dequeue<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Dequeue - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dequeue - Copy constructor");
 
 			if (Buckets)
 			{
@@ -61,7 +61,7 @@ namespace NxEn
 
 		Dequeue<T, BS>& operator=(const Dequeue<T, BS>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Dequeue - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dequeue - Assignement operator");
 
 			if (*this == Other)
 			{

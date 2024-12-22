@@ -14,14 +14,14 @@ namespace NxEn
 		auto Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
 		{
-			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load library");
+			NEXUS_LOG(Error, LoggerChannel::Default, "Failed to load library");
 			return;
 		}
 
 		DllFunction Function = DllFunction(GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal)));
 		if (!Function)
 		{
-			NEXUS_LOG(Engine, Error, LoggerChannel::Default, "Failed to load function");
+			NEXUS_LOG(Error, LoggerChannel::Default, "Failed to load function");
 			FreeLibrary(Dll);
 			return;
 		}
@@ -123,7 +123,7 @@ namespace NxEn
 		{
 			if (File == INVALID_HANDLE_VALUE)
 			{
-				NEXUS_LOG(Engine, Error, NxEn::LoggerChannel::Default, "Failed to open file %s", Temp.C());
+				NEXUS_LOG(Error, NxEn::LoggerChannel::Default, "Failed to open file %s", Temp.C());
 				Result.Clear();
 				return Result;
 			}

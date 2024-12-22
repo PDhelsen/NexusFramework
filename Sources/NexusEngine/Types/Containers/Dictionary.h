@@ -30,7 +30,7 @@ namespace NxEn
 		Dictionary(const Dictionary<K, T, H>& Other)
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Dictionary - Copy constructor");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Copy constructor");
 
 			Allocate(Capacity);
 
@@ -60,7 +60,7 @@ namespace NxEn
 
 		Dictionary<K, T, H>& operator=(const Dictionary<K, T, H>& Other)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Dictionary - Assignement operator");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Assignement operator");
 
 			if (*this == Other)
 			{
@@ -426,7 +426,7 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
-			NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Dictionary - Reallocate");
+			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Reallocate");
 
 			N* Temp = Data;
 			uint64 Length = Capacity;
@@ -507,7 +507,7 @@ namespace NxEn
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
 				NEXUS_ASSERT(Iteration < MaxProbingIteration(), "Failed to find a free spot");
 
-				NEXUS_LOG(Engine, Warning, LoggerChannel::Performance, "Dictionary - Collision");
+				NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Collision");
 			}
 
 			return Index;
