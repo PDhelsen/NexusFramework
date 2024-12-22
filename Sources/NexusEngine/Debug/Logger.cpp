@@ -3,6 +3,10 @@
 
 #include "Application/Time.h"
 #include "Platform/Platform.h"
+#include "Misc/IO/Path.h"
+#include "Misc/IO/File.h"
+
+#define NEXUS_LOG_LINE 256
 
 namespace NxEn
 {
@@ -17,26 +21,47 @@ namespace NxEn
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
 	static Platform::TerminalColor Colors[4] = { Platform::TerminalColor::Magenta, Platform::TerminalColor::Red, Platform::TerminalColor::Yellow, Platform::TerminalColor::White };
 
-	Logger::Logger(LoggerVerbosity Verbosity)
-		: VerbosityMask(Verbosity), StringBuilderMessage(1024), StringBuilderFormat(1024)
+	Logger* Logger::GetInstance()
 	{
-		Channels = new Dictionary<StringId, bool, Hashing::Default>();
+		static Logger* Instance = new Logger(LoggerVerbosity::All, LoggerOutput::Console, Path::GetWorkingDirectory() + "Logs.txt");
+		return Instance;
+	}
 
+	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
+		: StringBuilderMessage(NEXUS_LOG_LINE), StringBuilderFormat(NEXUS_LOG_LINE), VerbosityMask(Verbosity), Outputs(Output), Target(nullptr), Handle(nullptr)
+	{
 		LoggerChannel::Default = "Default"_Sid;
 		LoggerChannel::Assert = "Assert"_Sid;
 		LoggerChannel::Performance = "Performance"_Sid;
 		LoggerChannel::Routine = "Routine"_Sid;
 		LoggerChannel::UnitTest = "UnitTest"_Sid;
 
+		Channels = new Dictionary<StringId, bool, Hashing::Default>();
 		AddChannel(LoggerChannel::Default, true);
 		AddChannel(LoggerChannel::Assert, true);
 		AddChannel(LoggerChannel::Performance, false);
 		AddChannel(LoggerChannel::Routine, false);
 		AddChannel(LoggerChannel::UnitTest, false);
+
+		Target = Platform::GetInstance();
+
+		if (CheckOutput(LoggerOutput::File))
+		{
+			Handle = new File(Path);
+			Handle->Delete();
+			Handle->Create();
+			Handle->Open(File::Mode::Append);
+		}
 	}
 
 	Logger::~Logger()
 	{
+		if (CheckOutput(LoggerOutput::File))
+		{
+			Handle->Close();
+			delete Handle;
+		}
+
 		delete Channels;
 	}
 
@@ -73,6 +98,11 @@ namespace NxEn
 		VerbosityMask = Enum::SetFlag(VerbosityMask, Verbosity, State);
 	}
 
+	bool Logger::CheckOutput(LoggerOutput Output) const
+	{
+		return Enum::CheckFlag(Outputs, Output);
+	}
+
 	bool Logger::ShouldPrint(LoggerVerbosity Verbosity, StringId Channel) const
 	{
 		return Platform::GetInstance() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
@@ -96,8 +126,17 @@ namespace NxEn
 
 	void Logger::Print(StringView Message, uint8 Verbosity) const
 	{
-		Platform* Platform = Platform::GetInstance();
-		Platform->WriteToTerminal(Message, Colors[Verbosity]);
-		Platform->WriteToDebugger(Message);
+		if (CheckOutput(LoggerOutput::Console))
+		{
+			Target->WriteToTerminal(Message, Colors[Verbosity]);
+		}
+		if (CheckOutput(LoggerOutput::IDE))
+		{
+			Target->WriteToDebugger(Message);
+		}
+		if (CheckOutput(LoggerOutput::File))
+		{
+			Handle->WriteText(Message);
+		}
 	}
 }

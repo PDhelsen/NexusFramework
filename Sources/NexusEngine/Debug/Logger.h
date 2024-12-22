@@ -10,6 +10,8 @@
 
 namespace NxEn
 {
+	class Platform;
+	class File;
 	namespace Hashing
 	{
 		class Fnv1a64;
@@ -52,19 +54,30 @@ namespace NxEn
 	};
 	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerSource)
 
+	enum class LoggerOutput : uint8
+	{
+		None	= 0,
+
+		Console = 1 << 0,
+		IDE		= 1 << 1,
+		File	= 1 << 2,
+
+		All = Console | IDE | File,
+
+		COUNT
+	};
+	NEXUS_ENUM_TO_FLAG(LoggerOutput)
+
 	class Logger
 	{
 	public:
-		NEXUS_ENGINE_API Logger(LoggerVerbosity Verbosity);
+		NEXUS_ENGINE_API Logger(LoggerVerbosity Verbosity = LoggerVerbosity::All, LoggerOutput Output = LoggerOutput::All, StringView Path = "");
 		NEXUS_ENGINE_API Logger(const Logger& Other) = delete;
 		NEXUS_ENGINE_API Logger(Logger&& Other) noexcept = delete;
 		NEXUS_ENGINE_API ~Logger();
 
 		NEXUS_ENGINE_API Logger& operator=(const Logger& Other) = delete;
 		NEXUS_ENGINE_API Logger& operator=(Logger&& Other) noexcept = delete;
-
-		template<typename... Args>
-		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 
 		NEXUS_ENGINE_API void AddChannel(StringId Channel, bool State = true);
 		NEXUS_ENGINE_API void SetChannel(StringId Channel, bool State);
@@ -74,7 +87,12 @@ namespace NxEn
 		NEXUS_ENGINE_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
 		NEXUS_ENGINE_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
-		NEXUS_ENGINE_API static Logger* GetInstance() { static Logger* Instance = new Logger(LoggerVerbosity::All); return Instance; }
+		NEXUS_ENGINE_API bool CheckOutput(LoggerOutput Output) const;
+
+		template<typename... Args>
+		void Log(LoggerSource Source, LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
+
+		NEXUS_ENGINE_API static Logger* GetInstance();
 
 	private:
 		NEXUS_ENGINE_API inline bool ShouldPrint(LoggerVerbosity Verbosity, StringId Channel) const;
@@ -85,9 +103,14 @@ namespace NxEn
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%7s][%s] %s\n";
 
 		Dictionary<StringId, bool, Hashing::Default>* Channels;
-		LoggerVerbosity VerbosityMask;
 		String StringBuilderMessage;
 		String StringBuilderFormat;
+
+		LoggerVerbosity VerbosityMask;
+		LoggerOutput Outputs;
+
+		Platform* Target;
+		File* Handle;
 	};
 
 	template<typename... Args>
