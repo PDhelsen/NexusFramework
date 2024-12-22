@@ -18,13 +18,13 @@ namespace NxTs
 		NxEn::Stats Stats(NxEn::Path::GetWorkingDirectory() + "Stats.csv");
 		ASSERT_EQ(NxEn::Path::Exist(Stats.GetPath()), true);
 
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), LabelId, NxEn::Stats::StatType::Label, NxEn::Stats::StatMode::Set);
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), CheckId, NxEn::Stats::StatType::Check, NxEn::Stats::StatMode::Set);
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), SetId, NxEn::Stats::StatType::Integer, NxEn::Stats::StatMode::Set);
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), MinId, NxEn::Stats::StatType::UnsignedInteger, NxEn::Stats::StatMode::Min);
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), MaxId, NxEn::Stats::StatType::Decimal, NxEn::Stats::StatMode::Max);
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), AvgId, NxEn::Stats::StatType::DecimalPrecision, NxEn::Stats::StatMode::Avg);
-		NEXUS_STAT_HEADER_INSTANCE((&Stats), CntId, NxEn::Stats::StatType::UnsignedInteger, NxEn::Stats::StatMode::Cnt);
+		Stats.RecordHeader(LabelId, NxEn::Stats::StatType::Label, NxEn::Stats::StatMode::Set);
+		Stats.RecordHeader(CheckId, NxEn::Stats::StatType::Check, NxEn::Stats::StatMode::Set);
+		Stats.RecordHeader(SetId, NxEn::Stats::StatType::Integer, NxEn::Stats::StatMode::Set);
+		Stats.RecordHeader(MinId, NxEn::Stats::StatType::UnsignedInteger, NxEn::Stats::StatMode::Min);
+		Stats.RecordHeader(MaxId, NxEn::Stats::StatType::Decimal, NxEn::Stats::StatMode::Max);
+		Stats.RecordHeader(AvgId, NxEn::Stats::StatType::DecimalPrecision, NxEn::Stats::StatMode::Avg);
+		Stats.RecordHeader(CntId, NxEn::Stats::StatType::UnsignedInteger, NxEn::Stats::StatMode::Cnt);
 
 		Stats.Initialize();
 		ASSERT_EQ(Stats.IsInitialized(), true);

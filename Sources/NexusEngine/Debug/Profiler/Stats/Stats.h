@@ -180,7 +180,7 @@ namespace NxEn
 #define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value)
 #define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value)
 #define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value)
-#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value
+#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value)
 #define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value)
 #define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value)
 #define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value)
