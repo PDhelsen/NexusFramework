@@ -2,7 +2,7 @@
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
 	<Type Name="NxEn::String">
-		<Intrinsic Name="buffer" Expression="Capacity == SmallStringCapacity ? Data.Small : Data.Large" />
+		<Intrinsic Name="buffer" Expression="Capacity == 16 ? Data.Small : Data.Large" />
 		<DisplayString>{ buffer(), s8 }</DisplayString>
 		<StringView>buffer(), s8</StringView>
 		<Expand>
