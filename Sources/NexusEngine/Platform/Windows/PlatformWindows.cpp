@@ -2,12 +2,13 @@
 #include "PlatformWindows.h"
 
 #include <windows.h>
+#include <sys/stat.h>
 
 namespace NxEn
 {
 	using DllFunction = Delegate<int64()>;
 
-	static Buffer<char> TempBuffer = Buffer<char>(512, nullptr);
+	static Buffer<char> StaticBuffer = Buffer<char>(512, nullptr);
 
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
@@ -45,12 +46,12 @@ namespace NxEn
 
 	void PlatformWindows::WaitForUserToCloseTerminal() const
 	{
-		std::cin.get();
+		uint32 c = getchar();
 	}
 
 	void PlatformWindows::WriteToTerminal(StringView Message) const
 	{
-		std::cout << Message.C();
+		printf(Message.C());
 	}
 
 	void PlatformWindows::WriteToDebugger(StringView Message) const
@@ -83,9 +84,9 @@ namespace NxEn
 
 	String PlatformWindows::GetWorkingDirectory() const
 	{
-		DWORD Length = GetCurrentDirectoryA((DWORD)TempBuffer.GetByteSize(), TempBuffer.GetPtr());
-		NEXUS_ASSERT(Length != 0 && Length < TempBuffer.GetByteSize(), "Buffer overflowed when getting the current working directory");
-		return Path::Normalize(StringView(TempBuffer.GetPtr(), Length));
+		DWORD Length = GetCurrentDirectoryA((DWORD)StaticBuffer.GetByteSize(), StaticBuffer.GetPtr());
+		NEXUS_ASSERT(Length != 0 && Length < StaticBuffer.GetByteSize(), "Buffer overflowed when getting the current working directory");
+		return Path::Normalize(StringView(StaticBuffer.GetPtr(), Length));
 	}
 
 	void PlatformWindows::DirectoryCreate(StringView Path) const
@@ -285,6 +286,7 @@ namespace NxEn
 	}
 
 	PlatformWindows::PlatformWindows()
+		: Console(nullptr), PerformanceFrequency(1.0)
 	{
 		InitializeTerminal();
 		InitializePerformanceTimer();
@@ -296,13 +298,13 @@ namespace NxEn
 
 	void PlatformWindows::InitializeTerminal()
 	{
-		HANDLE TerminalOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		Console = GetStdHandle(STD_OUTPUT_HANDLE);
 
 		DWORD TerminalOutDefaultMode = 0;
-		GetConsoleMode(TerminalOut, &TerminalOutDefaultMode);
+		GetConsoleMode(Console, &TerminalOutDefaultMode);
 		DWORD TerminalOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
 		DWORD TerminalOutMode = TerminalOutDefaultMode | TerminalOutRequestMode;
-		SetConsoleMode(TerminalOut, TerminalOutMode);
+		SetConsoleMode(Console, TerminalOutMode);
 
 		SetConsoleOutputCP(CP_UTF8);
 	}

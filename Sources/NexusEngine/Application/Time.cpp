@@ -12,13 +12,11 @@ namespace NxEn
 		static String WeekDaysNames[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 		static String MonthsNames[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 		static int32 DayPerMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		static Buffer<char> StaticBuffer = Buffer<char>(64, nullptr);
 
 		//-----------------------------------------------------------------------------------------------------------------------
 		// C Lib Convertion
 		//-----------------------------------------------------------------------------------------------------------------------
-
-		static const uint64 TimeToStringCapacity = 40;
-		static char TimeToStringBuffer[TimeToStringCapacity];
 
 		// Make sure Timestamp follow the same structure as tm from C library
 		static union TimeInfo
@@ -81,16 +79,16 @@ namespace NxEn
 		{
 			TimeInfo.Stamp = Stamp;
 			ConvertFromNexusToCLib(true);
-			uint64 Size = strftime(TimeToStringBuffer, TimeToStringCapacity, Format.C(), &TimeInfo.TM);
-			return String(TimeToStringBuffer, Size);
+			uint64 Size = strftime(StaticBuffer.GetPtr(), StaticBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			return String(StaticBuffer.GetPtr(), Size);
 		}
 
 		String ToString(const Timespan& Span, StringView Format)
 		{
 			TimeInfo.Span = Span;
 			ConvertFromNexusToCLib(false);
-			uint64 Size = strftime(TimeToStringBuffer, TimeToStringCapacity, Format.C(), &TimeInfo.TM);
-			return String(TimeToStringBuffer, Size);
+			uint64 Size = strftime(StaticBuffer.GetPtr(), StaticBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			return String(StaticBuffer.GetPtr(), Size);
 		}
 
 		StringView GetWeekDay(int32 Day)

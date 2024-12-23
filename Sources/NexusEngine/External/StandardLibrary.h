@@ -18,7 +18,6 @@
 #include <ctime>
 
 #include <new>
-#include <iostream>
 
 #define NEXUS_VA(Format, Function)	va_list ArgList;\
 									va_start(ArgList, Format);\

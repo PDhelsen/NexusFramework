@@ -49,6 +49,7 @@ namespace NxEn
 		void InitializeTerminal();
 		void InitializePerformanceTimer();
 
+		void* Console;
 		double PerformanceFrequency;
 	};
 }
