@@ -103,8 +103,8 @@ namespace NxEn
 
 		int32 GetDaysPerMonth(int32 Month, bool Leap)
 		{
-			NEXUS_ASSERT(Month >= 1 && Month <= 12, "Month has to be between 1-12, value was %d")
-				int32 Days = DayPerMonths[Month - 1];
+			NEXUS_ASSERT(Month >= 1 && Month <= 12, "Month has to be between 1-12, value was %d");
+			int32 Days = DayPerMonths[Month - 1];
 			Days += Leap && Month == 2 ? 1 : 0;
 			return Days;
 		}
