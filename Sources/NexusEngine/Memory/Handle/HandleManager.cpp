@@ -7,7 +7,7 @@ namespace NxEn
 {
 	HandleManager::HandleManager()
 	{
-		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(NEXUS_HANDLES_COUNT, Memory::GetGlobal());
+		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(NEXUS_HANDLES_COUNT, nullptr);
 	}
 
 	HandleManager::~HandleManager()

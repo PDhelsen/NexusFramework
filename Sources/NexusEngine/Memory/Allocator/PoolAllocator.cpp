@@ -4,9 +4,9 @@
 namespace NxEn
 {
 	PoolAllocator::PoolAllocator(uint64 Count, uint64 Stride)
-		: NexusAllocator(Count * Stride), Stride(Stride)
+		: Allocator(Count * Stride), Head(nullptr), Stride(Stride)
 	{
-		NEXUS_ASSERT(Stride >= sizeof(void*), "Element size should be at least : %d bytes", sizeof(void*))
+		NEXUS_ASSERT(Stride >= sizeof(void*), "Element size should be at least : %d bytes", sizeof(void*));
 
 		Clear();
 	}
@@ -15,9 +15,17 @@ namespace NxEn
 	{
 	}
 
+	void PoolAllocator::Clear()
+	{
+		WipeoutMemory();
+		ResetAmount();
+
+		Reset();
+	}
+
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		if (!CanAllocate())
+		if (FreeAmount() < Stride)
 		{
 			NEXUS_ASSERT(false, "Allocator is full");
 			return nullptr;
@@ -27,8 +35,7 @@ namespace NxEn
 		
 		Next();
 
-		UpdateAmount(Stride, true);
-
+		IncreaseAmount(Stride);
 		return Pointer;
 	}
 
@@ -40,49 +47,27 @@ namespace NxEn
 
 	void PoolAllocator::Free(void* Pointer)
 	{
-		if (!IsAllocatedAddress(Pointer))
+		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
 		{
 			return;
 		}
 
 		EraseMemory(Pointer, Stride);
-		UpdateAmount(Stride, false);
 
 		Previous(Pointer);
-	}
 
-	void PoolAllocator::Clear()
-	{
-		WipeoutMemory();
-		ResetAmount();
-
-		Reset();
-	}
-	
-	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
-	{
-		return FreeAmount() >= Stride;
-	}
-
-	bool PoolAllocator::IsAllocatedAddress(void* Pointer) const
-	{
-		return Pointer != nullptr && IsPointerInside(Pointer);
-	}
-
-	uint64 PoolAllocator::SlotAvailable() const
-	{
-		return FreeAmount() / Stride;
+		DecreaseAmount(Stride);
 	}
 
 	void PoolAllocator::Next()
 	{
 		Head = reinterpret_cast<uint64*>(*Head);
-		if (Head != nullptr && IsAllocatedAddress(Head) && *Head == 0)
+		if (Head != nullptr && IsPointerInMemoryBlock(Head) && *Head == 0)
 		{
 			*Head = reinterpret_cast<uint64>(Head) + Stride;
 		}
 	}
-
+	
 	void PoolAllocator::Previous(void* Pointer)
 	{
 		uint64 Address = reinterpret_cast<uint64>(Head);

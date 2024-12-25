@@ -4,7 +4,6 @@
 #include "Types/Containers/Node.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/GlobalAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
@@ -169,7 +168,7 @@ namespace NxEn
 
 			void ValidateAllocator(Allocator* Allctr)
 			{
-				Alloc = Allctr != nullptr ? Allctr : Memory::GetGlobal();
+				Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 			}
 
 			void ValidateCapacity(uint64 Size)
@@ -414,7 +413,7 @@ namespace NxEn
 
 			void ValidateAllocator(Allocator* Allctr)
 			{
-				Alloc = Allctr != nullptr ? Allctr : Memory::GetGlobal();
+				Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 			}
 
 			Allocator* Alloc;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NexusAllocator.h"
+#include "Allocator.h"
 
 namespace NxEn
 {
@@ -13,7 +13,7 @@ namespace NxEn
     // It should look like :
     // Root (16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + ... 
 
-    class HeapAllocator : public NexusAllocator
+    class HeapAllocator : public Allocator
     {
 	private:
 		struct HeapSlot
@@ -31,23 +31,23 @@ namespace NxEn
 		NEXUS_ENGINE_API HeapAllocator& operator=(const HeapAllocator& Other) = delete;
 		NEXUS_ENGINE_API HeapAllocator& operator=(HeapAllocator&& Other) noexcept = delete;
 
-        NEXUS_ENGINE_API void* Allocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) override;
-        NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) override;
-        NEXUS_ENGINE_API void Free(void* Pointer) override;
-        NEXUS_ENGINE_API void Clear() override;
+		NEXUS_ENGINE_API void Clear() override;
+		NEXUS_ENGINE_API void Defragment(uint64 Count = 0);
 
-        NEXUS_ENGINE_API bool CanAllocate(uint64 Size = 0, uint64 Alignement = NEXUS_MEMORY_ALIGN) const override;
-        NEXUS_ENGINE_API bool IsAllocatedAddress(void* Pointer) const override;
-
-        NEXUS_ENGINE_API void Defragment(uint64 Count = 0);
+	protected:
+		void* Allocate(uint64 Size, uint64 Alignement) override;
+		void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
+		void Free(void* Pointer) override;
 
     private:
         void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
         void RemoveNextHeapSlot(HeapSlot* Slot);
+		HeapSlot* GetHeapSlot(void* Pointer) const;
 		HeapSlot* GetHeapSlot(uint64 Size) const;
-		uint64 GetAlignedSize(uint64 Size) const;
-		uint64 GetHeapSlotSize(HeapSlot* Slot) const;
         void* GetHeapSlotMemory(HeapSlot* Slot) const;
+		uint64 GetHeapSlotSize(HeapSlot* Slot) const;
+		uint64 GetAlignedSize(uint64 Size) const;
+		void Reset();
 
         HeapSlot* Root;
     };

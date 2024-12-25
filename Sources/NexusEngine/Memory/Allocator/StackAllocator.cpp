@@ -4,7 +4,7 @@
 namespace NxEn
 {
 	StackAllocator::StackAllocator(uint64 Size)
-		: NexusAllocator(Size)
+		: Allocator(Size), Marker(nullptr)
 	{
 		Clear();
 	}
@@ -12,23 +12,31 @@ namespace NxEn
 	StackAllocator::~StackAllocator()
 	{
 	}
+
+	void StackAllocator::Clear()
+	{
+		WipeoutMemory();
+		ResetAmount();
+
+		Reset();
+	}
 	
 	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		void* Pointer = Memory::AlignPointer(Marker, Alignement);
-		void* Next = Memory::OffsetPointer(Pointer, Size);
+		void* NextPointer = Memory::OffsetPointer(Pointer, Size);
 
-		if (!IsPointerInside(Next))
+		if (!IsPointerInMemoryBlock(NextPointer))
 		{
 			NEXUS_ASSERT(false, "Allocator is full");
 			return nullptr;
 		}
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
-		Marker = Next;
+		Next(NextPointer);
 		uint64 After = reinterpret_cast<uint64>(Marker);
 
-		UpdateAmount(After - Before, true);
+		IncreaseAmount(After - Before);
 		
 		return Pointer;
 	}
@@ -41,48 +49,35 @@ namespace NxEn
 
 	void StackAllocator::Free(void* Pointer)
 	{
-		if (!IsAllocatedAddress(Pointer))
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		uint64 Current = reinterpret_cast<uint64>(Marker);
+
+		if (!Pointer || !IsPointerInMemoryBlock(Pointer) || Address >= Current)
 		{
 			return;
 		}
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
-		Marker = Memory::UnalignPointer(Pointer);
+		Previous(Pointer);
 		uint64 After = reinterpret_cast<uint64>(Marker);
 
-		UpdateAmount(Before - After, false);
 		EraseMemory(Marker, FreeAmount());
+
+		DecreaseAmount(Before - After);
 	}
 
-	void StackAllocator::Clear()
+	void StackAllocator::Next(void* Pointer)
 	{
-		WipeoutMemory();
-		ResetAmount();
+		Marker = Pointer;
+	}
 
+	void StackAllocator::Previous(void* Pointer)
+	{
+		Marker = Memory::UnalignPointer(Pointer);
+	}
+
+	void StackAllocator::Reset()
+	{
 		Marker = GetMemoryBlock();
-	}
-
-	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
-	{
-		void* Pointer = NextPointer(Marker, Size, Alignement);
-		return IsPointerInside(Pointer);
-	}
-
-	bool StackAllocator::IsAllocatedAddress(void* Pointer) const
-	{
-		return Pointer != nullptr && IsPointerInside(Pointer) && !IsPointerFree(Pointer);
-	}
-
-	void* StackAllocator::NextPointer(void* Pointer, uint64 Size, uint64 Alignement) const
-	{
-		Pointer = Memory::AlignPointer(Pointer, Alignement);
-		return Memory::OffsetPointer(Pointer, Size);
-	}
-
-	bool StackAllocator::IsPointerFree(void* Pointer) const
-	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-		uint64 Current = reinterpret_cast<uint64>(Marker);
-		return Address >= Current;
 	}
 }

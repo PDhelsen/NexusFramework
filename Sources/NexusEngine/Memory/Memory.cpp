@@ -6,7 +6,6 @@
 
 namespace NxEn
 {
-	GlobalAllocator* Memory::Global = new GlobalAllocator();
 	StackAllocator* Memory::DefaultStack = new StackAllocator(NEXUS_STACK_SIZE);
 	HeapAllocator* Memory::DefaultHeap = new HeapAllocator(NEXUS_HEAP_SIZE);
 	Stack<Allocator*, 10>* Memory::Allocators = new Stack<Allocator*, 10>();

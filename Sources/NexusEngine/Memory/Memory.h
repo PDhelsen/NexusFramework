@@ -9,8 +9,6 @@
 namespace NxEn
 {
 	class Allocator;
-	class GlobalAllocator;
-	class NexusAllocator;
 	class StackAllocator;
 	class HeapAllocator;
 	class PoolAllocator;
@@ -51,7 +49,6 @@ namespace NxEn
 		NEXUS_ENGINE_API static void PopActiveAllocator();
 		NEXUS_ENGINE_API static Allocator* GetActiveAllocator();
 
-		NEXUS_ENGINE_API static GlobalAllocator* GetGlobal() { return Global; }
 		NEXUS_ENGINE_API static StackAllocator* GetStack() { return DefaultStack; }
 		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return DefaultHeap; }
 
@@ -68,7 +65,6 @@ namespace NxEn
 		static void* Realloc(void* Memory, uint64 Size);
 		static void FreeMemory(void* Memory);
 
-		static GlobalAllocator* Global;
 		static StackAllocator* DefaultStack;
 		static HeapAllocator* DefaultHeap;
 		static Stack<Allocator*, 10>* Allocators;
