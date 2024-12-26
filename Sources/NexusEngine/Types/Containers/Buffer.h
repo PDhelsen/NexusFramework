@@ -10,11 +10,10 @@ namespace NxEn
 	{
 	public:
 		Buffer(uint64 Size, Allocator* Allctr = nullptr)
-			: Alloc(nullptr), Count(0), Data(nullptr)
+			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 			NEXUS_ASSERT(Size > 0, "Buffer has to have size greater than 0");
 
-			ValidateAllocator(Allctr);
 			Allocate(Size);
 		}
 
@@ -100,11 +99,6 @@ namespace NxEn
 		void Free()
 		{
 			Memory::Free(Data, Alloc);
-		}
-
-		void ValidateAllocator(Allocator* Allctr)
-		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateCapacity(uint64 Size)

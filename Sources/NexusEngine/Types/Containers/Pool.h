@@ -20,9 +20,8 @@ namespace NxEn
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
 			PreAllocated(uint64 Size, Allocator* Allctr = nullptr)
-				: Alloc(nullptr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
+				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
-				ValidateAllocator(Allctr);
 				Allocate(Size);
 				ConstructRange(0, Capacity);
 				ValidateDefaultState();
@@ -166,11 +165,6 @@ namespace NxEn
 				return I(Data, Index, Capacity);
 			}
 
-			void ValidateAllocator(Allocator* Allctr)
-			{
-				Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-			}
-
 			void ValidateCapacity(uint64 Size)
 			{
 				Capacity = Size > 1 ? Size : 1;
@@ -202,9 +196,8 @@ namespace NxEn
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
 			OnDemand(Allocator* Allctr = nullptr)
-				: Alloc(nullptr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
+				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
-				ValidateAllocator(Allctr);
 			}
 
 			OnDemand(const OnDemand<T>& Other) = delete;
@@ -409,11 +402,6 @@ namespace NxEn
 			const I GetIteratorNode(const N* Instance) const
 			{
 				return I(const_cast<N*>(Instance));
-			}
-
-			void ValidateAllocator(Allocator* Allctr)
-			{
-				Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 			}
 
 			Allocator* Alloc;

@@ -14,10 +14,10 @@ namespace NxEn
 		friend class StringUtility;
 
 	public:
-		NEXUS_ENGINE_API String();
-		NEXUS_ENGINE_API String(uint64 Bytes);
-		NEXUS_ENGINE_API String(const char* Text);
-		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API String(Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API String(uint64 Bytes, Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API String(const char* Text, Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API String(const char* Text, uint64 Size, Allocator* Allctr = nullptr);
 		NEXUS_ENGINE_API String(const String& Other);
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
@@ -68,7 +68,7 @@ namespace NxEn
 		inline static const uint8 SmallStringCapacity = 16;
 
 	private:
-		NEXUS_ENGINE_API void Allocate(Allocator* Allctr, uint64 Bytes, uint64 Size, const char* Text);
+		NEXUS_ENGINE_API void Allocate(uint64 Bytes, uint64 Size, const char* Text);
 		NEXUS_ENGINE_API void Reallocate(uint64 Bytes);
 		NEXUS_ENGINE_API void Free();
 		NEXUS_ENGINE_API void Resize(uint64 Size);

@@ -16,9 +16,8 @@ namespace NxEn
 		using I = Iterator::IteratorBucket<T, BS>;
 
 		Queue(Allocator* Allctr = nullptr)
-			: Alloc(nullptr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
+			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
-			ValidateAllocator(Allctr);
 			ValidateDefaultState();
 		}
 
@@ -422,11 +421,6 @@ namespace NxEn
 			}
 
 			return End();
-		}
-
-		void ValidateAllocator(Allocator* Allctr)
-		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateBucket(uint64 Size)

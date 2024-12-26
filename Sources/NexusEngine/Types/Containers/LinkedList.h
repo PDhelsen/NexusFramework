@@ -20,7 +20,6 @@ namespace NxEn
 		LinkedList(Allocator* Allctr = nullptr)
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
-			ValidateAllocator(Allctr);
 		}
 
 		LinkedList(const LinkedList<T>& Other)
@@ -854,11 +853,6 @@ namespace NxEn
 			}
 
 			return End();
-		}
-
-		void ValidateAllocator(Allocator* Allctr)
-		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Allocator* Alloc;

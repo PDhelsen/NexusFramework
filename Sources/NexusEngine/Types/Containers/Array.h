@@ -16,26 +16,22 @@ namespace NxEn
 	public:
 		using I = Iterator::IteratorBlock<T>;
 
-		template<typename... Args>
-		Array(Allocator* Allctr = nullptr, Args&&... args)
+		Array()
 			: Alloc(nullptr), Count(0)
 		{
 			NEXUS_ASSERT(L >= 1, "The provided size is invalid");
 
-			ValidateAllocator(Allctr, true);
 			Allocate(L);
-			ConstructRange(0, Count, args...);
+			ConstructRange(0, Count);
 		}
 
-		template<typename... Args>
-		Array(uint64 Size, Allocator* Allctr = nullptr, Args&&... args)
-			: Alloc(nullptr), Count(0)
+		Array(uint64 Size, Allocator* Allctr = nullptr)
+			: Alloc(Allctr), Count(0)
 		{
 			NEXUS_ASSERT(L == 1 && Size > 1, "The provided size is invalid");
 
-			ValidateAllocator(Allctr, false);
 			Allocate(Size);
-			ConstructRange(0, Count, args...);
+			ConstructRange(0, Count);
 		}
 
 		Array(const Array<T, L>& Other)
@@ -359,12 +355,11 @@ namespace NxEn
 			Memory::Construct<T>(&GetData()[Index], args...);
 		}
 
-		template<typename... Args>
-		void ConstructRange(uint64 Index, uint64 Size, Args&&... args)
+		void ConstructRange(uint64 Index, uint64 Size)
 		{
 			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
-				Memory::Construct<T>(&GetData()[Index + Offset], args...);
+				Memory::Construct<T>(&GetData()[Index + Offset]);
 			}
 		}
 
@@ -429,11 +424,6 @@ namespace NxEn
 			return End();
 		}
 
-		void ValidateAllocator(Allocator* Allctr, bool Stack)
-		{
-			Alloc = Stack ? nullptr : Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
-		}
-
 		void ValidateCapacity(uint64 Size)
 		{
 			Count = Size > 1 ? Size : 1;
@@ -444,7 +434,7 @@ namespace NxEn
 			T* Heap;
 			T Stack[L];
 
-			Buffer() {};
+			Buffer(): Heap(nullptr) {};
 			~Buffer() {};
 		};
 

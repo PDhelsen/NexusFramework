@@ -17,9 +17,8 @@ namespace NxEn
 		using I = Iterator::IteratorBlock<T>;
 
 		List(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
-			: Alloc(nullptr), Capacity(0), Count(0), Data(nullptr)
+			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
-			ValidateAllocator(Allctr);
 			Allocate(Size);
 		}
 
@@ -537,11 +536,6 @@ namespace NxEn
 			{
 				Reallocate(GrowPolicy());
 			}
-		}
-
-		void ValidateAllocator(Allocator* Allctr)
-		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		void ValidateCapacity(uint64 Size)

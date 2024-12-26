@@ -272,15 +272,14 @@ namespace NxEn
 	String PlatformWindows::FileReadText(void* File, Allocator* Allctr) const
 	{
 		uint64 Size = FileSize(File);
-		Allocator* Alloc = Allctr ? Allctr : Memory::GetActiveAllocator();
-		char* Text = (char*)Memory::Allocate(Size, Alloc);
+		char* Text = (char*)Memory::Allocate(Size + 1, Allctr);
 
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Text, (DWORD)Size, &Read, nullptr);
 
 		NEXUS_ASSERT(Result && Read == Size, "Failed to read to file");
 
-		String Content = String::Create(Text, Size + 1, Size, Alloc);
+		String Content = String::Create(Text, Size + 1, Size, Allctr);
 		Content.Replace("\r\n", "\n");
 		return Content;
 	}

@@ -5,35 +5,35 @@ namespace NxEn
 {
 	const String String::Empty = String();
 
-	String::String()
-		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
+	String::String(Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Memory::GetActiveAllocator(), SmallStringCapacity, 0, nullptr);
+		Allocate(SmallStringCapacity, 0, nullptr);
 	}
 
-	String::String(uint64 Bytes)
-		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
+	String::String(uint64 Bytes, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Memory::GetActiveAllocator(), Bytes, 0, nullptr);
+		Allocate(Bytes, 0, nullptr);
 	}
 
-	String::String(const char* Text)
-		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
+	String::String(const char* Text, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = StringCApi::Length(Text);
-		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
+		Allocate(Size, Size, Text);
 	}
 
-	String::String(const char* Text, uint64 Size)
-		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
+	String::String(const char* Text, uint64 Size, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Memory::GetActiveAllocator(), Size, Size, Text);
+		Allocate(Size, Size, Text);
 	}
 
 	String::String(const String& Other)
-		: Alloc(nullptr), Capacity(SmallStringCapacity), Count(0)
+		: Alloc(Other.Alloc), Capacity(SmallStringCapacity), Count(0)
 	{
-		Allocate(Other.Alloc, Other.Capacity, Other.Count, Other.GetBuffer());
+		Allocate(Other.Capacity, Other.Count, Other.GetBuffer());
 	}
 
 	String::String(String&& Other) noexcept
@@ -239,11 +239,10 @@ namespace NxEn
 		return StringView(C() + Offset, Size);
 	}
 
-	void String::Allocate(Allocator* Allctr, uint64 Bytes, uint64 Size, const char* Text)
+	void String::Allocate(uint64 Bytes, uint64 Size, const char* Text)
 	{
 		ValidateCapacityCount(Bytes, Size);
 
-		Alloc = Allctr;
 		if (!Sso())
 		{
 			Data.Large = (char*)Memory::Allocate(Capacity, Alloc);

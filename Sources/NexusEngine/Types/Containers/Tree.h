@@ -18,9 +18,8 @@ namespace NxEn
 		using I = Iterator::IteratorNodeTree<T, N>;
 
 		Tree(Allocator* Allctr = nullptr)
-			: Alloc(nullptr), Count(0), Data(nullptr)
+			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
-			ValidateAllocator(Allctr);
 		}
 
 		Tree(const Tree<T>& Other)
@@ -714,11 +713,6 @@ namespace NxEn
 			}
 
 			return End();
-		}
-
-		void ValidateAllocator(Allocator* Allctr)
-		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Allocator* Alloc;

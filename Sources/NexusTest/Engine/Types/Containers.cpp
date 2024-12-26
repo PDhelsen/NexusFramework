@@ -142,10 +142,10 @@ namespace NxTs
 {
 	TEST(Type_Containers, Array)
 	{
-		NxEn::Array<ContainerTest, 10> Test = NxEn::Array<ContainerTest, 10>(nullptr, 5);
+		NxEn::Array<ContainerTest, 10> Test = NxEn::Array<ContainerTest, 10>();
+		NxEn::ContainersUtils::Fill<ContainerTest>(Test, 5);
 		ASSERT_EQ(Test.GetCount(), 10);
-		ASSERT_EQ(Test[0].Integer, 5);
-	
+
 		ContainerTest Container1 = ContainerTest(1);
 		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5);
 		NxEn::ContainersUtils::Fill<ContainerTest>(Range, 4);

@@ -193,7 +193,7 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(Exist && Handle, "Failed to read file: %s", Path.C());
 
-		Buffer<Byte> Data = Platform::GetInstance()->FileReadByte(Handle);
+		Buffer<Byte> Data = Platform::GetInstance()->FileReadByte(Handle, Allctr);
 
 		return Data;
 	}

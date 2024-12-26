@@ -20,9 +20,8 @@ namespace NxEn
 		using I = Iterator::IteratorNodeGraph<T, N>;
 
 		Graph(Allocator* Allctr = nullptr)
-			: Alloc(nullptr), Count(0), Data(nullptr)
+			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
-			ValidateAllocator(Allctr);
 		}
 
 		Graph(const Graph<T>& Other)
@@ -662,11 +661,6 @@ namespace NxEn
 			}
 
 			return End();
-		}
-
-		void ValidateAllocator(Allocator* Allctr)
-		{
-			Alloc = Allctr != nullptr ? Allctr : Memory::GetActiveAllocator();
 		}
 
 		Allocator* Alloc;
