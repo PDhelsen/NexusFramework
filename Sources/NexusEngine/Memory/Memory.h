@@ -18,13 +18,6 @@ namespace NxEn
 	{
 	public:
 		template<typename T, typename... Args>
-		static T* Create(uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN, Args&&... args);
-		template<typename T>
-		static T* Move(T* Pointer, uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN);
-		template<typename T>
-		static void Destroy(T* Pointer, Allocator* Allocator = nullptr);
-
-		template<typename T, typename... Args>
 		static T* Construct(void* Pointer, Args&&... args);
 		template<typename T>
 		static void Destruct(T* Object);
@@ -69,26 +62,6 @@ namespace NxEn
 		static HeapAllocator* DefaultHeap;
 		static Stack<Allocator*, 10>* Allocators;
 	};
-
-	template<typename T, typename ...Args>
-	inline T* Memory::Create(uint64 Size, Allocator* Allocator, uint64 Alignement, Args&& ...args)
-	{
-		void* Ptr = Allocate(Size, Allocator, Alignement);
-		return Construct<T>(Ptr, args...);
-	}
-
-	template<typename T>
-	inline T* Memory::Move(T* Pointer, uint64 Size, Allocator* Allocator, uint64 Alignement)
-	{
-		return (T*)Reallocate(Pointer, Size, Allocator, Alignement);
-	}
-
-	template<typename T>
-	inline void Memory::Destroy(T* Pointer, Allocator* Allocator)
-	{
-		Destruct(Pointer);
-		Free(Pointer, Allocator);
-	}
 
 	template<typename T, typename... Args>
 	T* Memory::Construct(void* Pointer, Args&&... args)

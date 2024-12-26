@@ -46,32 +46,6 @@ namespace NxEn
 		}
 	}
 
-	void* Memory::Malloc(uint64 Size)
-	{
-		NEXUS_ASSERT(Size > 0, "Allocation Size is 0")
-		void* Pointer = malloc(Size);
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
-		return Pointer;
-	}
-
-	void* Memory::Realloc(void* Memory, uint64 Size)
-	{
-		NEXUS_ASSERT(Size > 0, "Allocation Size is 0")
-		void* Pointer = realloc(Memory, Size);
-		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null")
-		return Pointer;
-	}
-
-	void Memory::FreeMemory(void* Memory)
-	{
-		if (Memory == nullptr)
-		{
-			return;
-		}
-
-		free(Memory);
-	}
-
 	uint64 Memory::AlignAddress(uint64 Address, uint64 Alignement)
 	{
 		uint64 Mask = Alignement - 1;
@@ -191,5 +165,31 @@ namespace NxEn
 		}
 
 		return Allocators->Get();
+	}
+
+	void* Memory::Malloc(uint64 Size)
+	{
+		NEXUS_ASSERT(Size > 0, "Allocation Size is 0");
+		void* Pointer = malloc(Size);
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		return Pointer;
+	}
+
+	void* Memory::Realloc(void* Memory, uint64 Size)
+	{
+		NEXUS_ASSERT(Size > 0, "Allocation Size is 0");
+		void* Pointer = realloc(Memory, Size);
+		NEXUS_ASSERT(Pointer != nullptr, "Pointer is null");
+		return Pointer;
+	}
+
+	void Memory::FreeMemory(void* Memory)
+	{
+		if (Memory == nullptr)
+		{
+			return;
+		}
+
+		free(Memory);
 	}
 }

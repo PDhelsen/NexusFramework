@@ -21,7 +21,7 @@ namespace NxEn
 
 		NEXUS_ENGINE_API void Clear() override;
 
-		NEXUS_ENGINE_API uint64 SlotAvailable() { return FreeAmount() / Stride; }
+		NEXUS_ENGINE_API uint64 SlotAvailable() const { return FreeAmount() / Stride; }
 
 	protected:
 		void* Allocate(uint64 Size, uint64 Alignement) override;
