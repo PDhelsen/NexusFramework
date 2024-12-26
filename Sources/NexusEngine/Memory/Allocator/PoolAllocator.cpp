@@ -23,6 +23,16 @@ namespace NxEn
 		Reset();
 	}
 
+	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	{
+		return FreeAmount() >= Stride;
+	}
+
+	bool PoolAllocator::BelongToAllocator(void* Pointer) const
+	{
+		return Pointer && IsPointerInMemoryBlock(Pointer);
+	}
+
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		if (FreeAmount() < Stride)

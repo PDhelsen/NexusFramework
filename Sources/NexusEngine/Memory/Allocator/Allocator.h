@@ -30,6 +30,8 @@ namespace NxEn
 		Allocator& operator=(Allocator&& Other) noexcept = delete;
 
 		NEXUS_ENGINE_API virtual void Clear() = 0;
+		NEXUS_ENGINE_API virtual bool CanAllocate(uint64 Size, uint64 Alignement) const = 0;
+		NEXUS_ENGINE_API virtual bool BelongToAllocator(void* Pointer) const = 0;
 
 		NEXUS_ENGINE_API bool IsFull() const { return Usage() > 0.95f; };
 		NEXUS_ENGINE_API float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }

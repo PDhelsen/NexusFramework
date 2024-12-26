@@ -20,6 +20,20 @@ namespace NxEn
 
 		Reset();
 	}
+
+	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	{
+		void* Pointer = Memory::AlignPointer(Marker, Alignement);
+		Pointer = Memory::OffsetPointer(Pointer, Size);
+		return IsPointerInMemoryBlock(Pointer);
+	}
+
+	bool StackAllocator::BelongToAllocator(void* Pointer) const
+	{
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		uint64 Current = reinterpret_cast<uint64>(Marker);
+		return Pointer && IsPointerInMemoryBlock(Pointer) && Address < Current;
+	}
 	
 	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{

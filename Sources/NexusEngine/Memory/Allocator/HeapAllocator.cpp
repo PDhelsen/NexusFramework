@@ -20,6 +20,17 @@ namespace NxEn
 
 		Reset();
 	}
+	
+	bool HeapAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	{
+		Size = GetAlignedSize(Size);
+		return GetHeapSlot(Size) != nullptr;
+	}
+
+	bool HeapAllocator::BelongToAllocator(void* Pointer) const
+	{
+		return Pointer && IsPointerInMemoryBlock(Pointer);
+	}
 
 	void HeapAllocator::Defragment(uint64 Count)
 	{

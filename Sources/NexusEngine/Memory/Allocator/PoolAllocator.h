@@ -20,6 +20,8 @@ namespace NxEn
 		NEXUS_ENGINE_API PoolAllocator& operator=(PoolAllocator&& Other) noexcept = delete;
 
 		NEXUS_ENGINE_API void Clear() override;
+		NEXUS_ENGINE_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
+		NEXUS_ENGINE_API bool BelongToAllocator(void* Pointer) const override;
 
 		NEXUS_ENGINE_API uint64 SlotAvailable() const { return FreeAmount() / Stride; }
 
