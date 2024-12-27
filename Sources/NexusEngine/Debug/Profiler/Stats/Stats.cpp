@@ -230,8 +230,8 @@ namespace NxEn
 
 		WriteLine();
 
-		GetStat(CommentId).Value.Label.Clear();
-		GetStat(TickId).Value.UnsignedInteger = 1;
+		GetStat(CommentId).Reset();
+		GetStat(TickId).RecordCount();
 		Span = 1.0;
 
 		Initialized = true;
@@ -291,8 +291,8 @@ namespace NxEn
 
 		WriteLine();
 
-		GetStat(CommentId).Value.Label.Clear();
-		GetStat(TickId).Value.UnsignedInteger++;
+		GetStat(CommentId).Reset();
+		GetStat(TickId).RecordCount();
 		Span++;
 	}
 

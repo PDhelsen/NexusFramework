@@ -14,6 +14,7 @@ namespace NxTs
 		NxEn::StringId MaxId = "Max"_Sid;
 		NxEn::StringId AvgId = "Avg"_Sid;
 		NxEn::StringId CntId = "Cnt"_Sid;
+		NxEn::StringId AddId = "Add"_Sid;
 
 		NxEn::Stats Stats(NxEn::Path::GetWorkingDirectory() + "Stats.csv");
 		ASSERT_EQ(NxEn::Path::Exist(Stats.GetPath()), true);
@@ -25,10 +26,11 @@ namespace NxTs
 		Stats.RecordHeader(MaxId, NxEn::Stats::StatType::Decimal, NxEn::Stats::StatMode::Max);
 		Stats.RecordHeader(AvgId, NxEn::Stats::StatType::DecimalPrecision, NxEn::Stats::StatMode::Avg);
 		Stats.RecordHeader(CntId, NxEn::Stats::StatType::UnsignedInteger, NxEn::Stats::StatMode::Cnt);
+		Stats.RecordHeader(AddId, NxEn::Stats::StatType::Integer, NxEn::Stats::StatMode::Add);
 
 		Stats.Initialize();
 		ASSERT_EQ(Stats.IsInitialized(), true);
-		ASSERT_EQ(Stats.GetCount(), 9);
+		ASSERT_EQ(Stats.GetCount(), 10);
 
 		Stats.StartRecording();
 		ASSERT_EQ(Stats.IsRecording(), true);
@@ -45,6 +47,7 @@ namespace NxTs
 			Stats.RecordStatDecimal(MaxId, (float)Iteration);
 			Stats.RecordStatDecimalPrecision(AvgId, (double)Iteration);
 			Stats.RecordStatCount(CntId);
+			Stats.RecordStatInteger(AddId, 2);
 
 			Stats.RecordComment(NxEn::StringUtility::Format("Iteration: %d", Iteration));
 			Stats.RecordComment(NxEn::StringUtility::Format("Iteration (Again): %d", Iteration));

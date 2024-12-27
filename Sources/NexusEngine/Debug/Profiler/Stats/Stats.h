@@ -16,7 +16,7 @@ namespace NxEn
 
 		enum class StatMode
 		{
-			Set, Avg, Min, Max, Cnt
+			Set, Avg, Min, Max, Cnt, Add
 		};
 
 		union StatValue
@@ -137,6 +137,7 @@ namespace NxEn
 		case NxEn::Stats::StatMode::Min: return Math::Min(Current, New);
 		case NxEn::Stats::StatMode::Max: return Math::Max(Current, New);
 		case NxEn::Stats::StatMode::Cnt: return ++Current;
+		case NxEn::Stats::StatMode::Add: return Current + New;
 		}
 
 		return New;
