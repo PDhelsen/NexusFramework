@@ -2,6 +2,7 @@
 
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 
 namespace NxEn
 {
@@ -104,7 +105,7 @@ namespace NxEn
 		template<typename C>
 		Collection(const C& Container)
 		{
-			Alloc = Memory::GetActiveAllocator();
+			Alloc = AllocatorContext::Get();
 			IteratorCurrent = new Wrapper<T, typename C::I>(Container.Begin());
 			IteratorBegin = new Wrapper<T, typename C::I>(Container.Begin());
 			IteratorEnd = new Wrapper<T, typename C::I>(Container.End());
@@ -116,7 +117,7 @@ namespace NxEn
 		
 		~Collection()
 		{
-			AllocatorActive Active(Alloc);
+			AllocatorContext Context(Alloc);
 			delete IteratorCurrent;
 			delete IteratorBegin;
 			delete IteratorEnd;

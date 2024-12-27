@@ -8,7 +8,6 @@ namespace NxEn
 {
 	StackAllocator* Memory::DefaultStack = new StackAllocator(NEXUS_STACK_SIZE);
 	HeapAllocator* Memory::DefaultHeap = new HeapAllocator(NEXUS_HEAP_SIZE);
-	Stack<Allocator*, 10>* Memory::Allocators = new Stack<Allocator*, 10>();
 
 	void* Memory::Allocate(uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
@@ -140,31 +139,6 @@ namespace NxEn
 	bool Memory::MemCompare(const void* Source, const void* Destination, uint64 Size)
 	{
 		return memcmp(Source, Destination, Size) == 0;
-	}
-
-	void Memory::PushActiveAllocator(Allocator* Alloc)
-	{
-		Allocators->Append(Alloc);
-	}
-
-	void Memory::PopActiveAllocator()
-	{
-		Allocators->Remove();
-	}
-
-	Allocator* Memory::GetActiveAllocator()
-	{
-		if (!Allocators)
-		{
-			return nullptr;
-		}
-
-		if (Allocators->GetCount() == 0)
-		{
-			Allocators->Append(NEXUS_ALLOCATOR_DEFAULT);
-		}
-
-		return Allocators->Get();
 	}
 
 	void* Memory::Malloc(uint64 Size)

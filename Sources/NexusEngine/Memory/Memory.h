@@ -4,7 +4,6 @@
 #include "Types/Integer.h"
 
 #define NEXUS_MEMORY_ALIGN 16
-#define NEXUS_ALLOCATOR_DEFAULT nullptr
 
 namespace NxEn
 {
@@ -12,7 +11,6 @@ namespace NxEn
 	class StackAllocator;
 	class HeapAllocator;
 	class PoolAllocator;
-	template<typename T, uint64> class Stack;
 
 	class Memory
 	{
@@ -43,10 +41,6 @@ namespace NxEn
 		NEXUS_ENGINE_API static bool MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination);
 		NEXUS_ENGINE_API static bool MemCompare(const void* Source, const void* Destination, uint64 Size);
 
-		NEXUS_ENGINE_API static void PushActiveAllocator(Allocator* Alloc);
-		NEXUS_ENGINE_API static void PopActiveAllocator();
-		NEXUS_ENGINE_API static Allocator* GetActiveAllocator();
-
 		NEXUS_ENGINE_API static StackAllocator* GetStack() { return DefaultStack; }
 		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return DefaultHeap; }
 
@@ -65,7 +59,6 @@ namespace NxEn
 
 		static StackAllocator* DefaultStack;
 		static HeapAllocator* DefaultHeap;
-		static Stack<Allocator*, 10>* Allocators;
 	};
 
 	template<typename T, typename ...Args>

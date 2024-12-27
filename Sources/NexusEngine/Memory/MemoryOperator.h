@@ -1,6 +1,7 @@
 #pragma once
 
 #include "External/StandardLibrary.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Memory/Memory.h"
 #include "Debug/Assert.h"
 
@@ -11,12 +12,12 @@
 
 void* operator new(std::size_t Size)
 {
-	return NxEn::Memory::Allocate(Size, NxEn::Memory::GetActiveAllocator());
+	return NxEn::Memory::Allocate(Size, NxEn::AllocatorContext::Get());
 }
 
 void* operator new[](std::size_t Size)
 {
-	return NxEn::Memory::Allocate(Size, NxEn::Memory::GetActiveAllocator());
+	return NxEn::Memory::Allocate(Size, NxEn::AllocatorContext::Get());
 }
 
 void* operator new(std::size_t Size, std::align_val_t Align)
@@ -57,12 +58,12 @@ void* operator new[](std::size_t Size, std::align_val_t Alignement, const std::n
 
 void operator delete(void* Pointer)
 {
-	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
+	NxEn::Memory::Free(Pointer, NxEn::AllocatorContext::Get());
 }
 
 void operator delete[](void* Pointer)
 {
-	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
+	NxEn::Memory::Free(Pointer, NxEn::AllocatorContext::Get());
 }
 
 void operator delete(void* Pointer, std::align_val_t Align)
@@ -77,12 +78,12 @@ void operator delete[](void* Pointer, std::align_val_t Align)
 
 void operator delete(void* Pointer, std::size_t Size)
 {
-	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
+	NxEn::Memory::Free(Pointer, NxEn::AllocatorContext::Get());
 }
 
 void operator delete[](void* Pointer, std::size_t Size)
 {
-	NxEn::Memory::Free(Pointer, NxEn::Memory::GetActiveAllocator());
+	NxEn::Memory::Free(Pointer, NxEn::AllocatorContext::Get());
 }
 
 void operator delete(void* Pointer, std::size_t Size, std::align_val_t Alignement)

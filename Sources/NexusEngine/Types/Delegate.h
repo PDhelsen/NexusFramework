@@ -2,6 +2,7 @@
 
 #include "Misc/References.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Memory/Memory.h"
 
 namespace NxEn
@@ -206,7 +207,7 @@ namespace NxEn
 			uint64 Size = sizeof(RemoveReference<F>::Type);
 			if (Size > SmallFunctionSize)
 			{
-				Data.Large.Allctr = Memory::GetActiveAllocator();
+				Data.Large.Allctr = AllocatorContext::Get();
 				Data.Large.Function = new Wrapper<F>(Forward<F>(Func));
 				Sbo = false;
 			}
@@ -225,7 +226,7 @@ namespace NxEn
 			{
 				if (Allocate)
 				{
-					Data.Large.Allctr = Memory::GetActiveAllocator();
+					Data.Large.Allctr = AllocatorContext::Get();
 					Data.Large.Function = Other.GetFunction()->Clone();
 				}
 				else
@@ -248,7 +249,7 @@ namespace NxEn
 		{
 			if (!Sbo)
 			{
-				AllocatorActive Active(Data.Large.Allctr);
+				AllocatorContext Context(Data.Large.Allctr);
 				delete Data.Large.Function;
 			}
 

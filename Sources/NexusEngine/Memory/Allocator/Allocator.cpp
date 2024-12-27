@@ -3,16 +3,6 @@
 
 namespace NxEn
 {
-	AllocatorActive::AllocatorActive(Allocator* Allocator)
-	{
-		Memory::PushActiveAllocator(Allocator);
-	}
-
-	AllocatorActive::~AllocatorActive()
-	{
-		Memory::PopActiveAllocator();
-	}
-
 	Allocator::Allocator(uint64 Size)
 		: Capacity(Size), Amount(0), Memory(nullptr)
 	{

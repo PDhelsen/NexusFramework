@@ -3,6 +3,7 @@
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
 #include "Memory/Handle/HandleManager.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Memory/Allocator/StackAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 #include "Memory/Allocator/HeapAllocator.h"
@@ -416,12 +417,12 @@ namespace NxTs
 		delete Allocator;
 	}
 
-	TEST(Memory, ActiveAllocator)
+	TEST(Memory, AllocatorContext)
 	{
 		NxEn::HeapAllocator* Allocator = new NxEn::HeapAllocator(512);
 
 		{
-			NxEn::AllocatorActive Active(Allocator);
+			NxEn::AllocatorContext Context(Allocator);
 
 			MemoryTest* Test1 = new MemoryTest();
 			Test1->Value = 1;

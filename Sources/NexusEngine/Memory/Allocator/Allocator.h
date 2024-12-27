@@ -7,15 +7,6 @@ namespace NxEn
 {
 	// Base class for custom allocator
 
-	class Allocator;
-
-	struct AllocatorActive
-	{
-	public:
-		NEXUS_ENGINE_API AllocatorActive(Allocator* Allocator);
-		NEXUS_ENGINE_API ~AllocatorActive();
-	};
-
 	class Allocator
 	{
 		friend class Memory;

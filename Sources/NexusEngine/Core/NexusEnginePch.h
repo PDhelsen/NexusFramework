@@ -55,6 +55,7 @@
 #include "Memory/Handle/Handle.h"
 #include "Memory/Handle/HandleManager.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Memory/Allocator/StackAllocator.h"
 #include "Memory/Allocator/HeapAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
