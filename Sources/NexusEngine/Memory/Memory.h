@@ -2,13 +2,13 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 
 #define NEXUS_MEMORY_ALIGN 16
 
 namespace NxEn
 {
-	class Allocator;
-
 	namespace Memory
 	{
 		constexpr double ByteToKilo = 1024.0;

@@ -19,14 +19,13 @@ namespace NxEn
 		NEXUS_ENGINE_API StackAllocator& operator=(const StackAllocator& Other) = delete;
 		NEXUS_ENGINE_API StackAllocator& operator=(StackAllocator&& Other) noexcept = delete;
 
+		NEXUS_ENGINE_API void* Allocate(uint64 Size, uint64 Alignement) override;
+		NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
+		NEXUS_ENGINE_API void Free(void* Pointer) override;
+
 		NEXUS_ENGINE_API void Clear() override;
 		NEXUS_ENGINE_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
 		NEXUS_ENGINE_API bool BelongToAllocator(void* Pointer) const override;
-
-	protected:
-        void* Allocate(uint64 Size, uint64 Alignement) override;
-        void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
-        void Free(void* Pointer) override;
 
     private:
 		inline void Next(void* Pointer);

@@ -15,6 +15,42 @@ namespace NxEn
 	{
 	}
 
+	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
+	{
+		if (FreeAmount() < Stride)
+		{
+			NEXUS_ASSERT(false, "Allocator is full");
+			return nullptr;
+		}
+
+		void* Pointer = Head;
+
+		Next();
+
+		IncreaseAmount(Stride);
+		return Pointer;
+	}
+
+	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	{
+		NEXUS_ASSERT(false, "Reallocate from Pool Allocator is not supported")
+			return nullptr;
+	}
+
+	void PoolAllocator::Free(void* Pointer)
+	{
+		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
+		{
+			return;
+		}
+
+		EraseMemory(Pointer, Stride);
+
+		Previous(Pointer);
+
+		DecreaseAmount(Stride);
+	}
+
 	void PoolAllocator::Clear()
 	{
 		WipeoutMemory();
@@ -31,42 +67,6 @@ namespace NxEn
 	bool PoolAllocator::BelongToAllocator(void* Pointer) const
 	{
 		return Pointer && IsPointerInMemoryBlock(Pointer);
-	}
-
-	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
-	{
-		if (FreeAmount() < Stride)
-		{
-			NEXUS_ASSERT(false, "Allocator is full");
-			return nullptr;
-		}
-
-		void* Pointer = Head;
-		
-		Next();
-
-		IncreaseAmount(Stride);
-		return Pointer;
-	}
-
-	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
-	{
-		NEXUS_ASSERT(false, "Reallocate from Pool Allocator is not supported")
-		return nullptr;
-	}
-
-	void PoolAllocator::Free(void* Pointer)
-	{
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
-		{
-			return;
-		}
-
-		EraseMemory(Pointer, Stride);
-
-		Previous(Pointer);
-
-		DecreaseAmount(Stride);
 	}
 
 	void PoolAllocator::Next()

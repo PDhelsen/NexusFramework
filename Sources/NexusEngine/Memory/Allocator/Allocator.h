@@ -2,7 +2,6 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
-#include "Memory/Memory.h"
 
 namespace NxEn
 {
@@ -10,10 +9,6 @@ namespace NxEn
 
 	class Allocator
 	{
-		friend void* Memory::Allocate(uint64, Allocator*, uint64);
-		friend void* Memory::Reallocate(void*, uint64, Allocator*, uint64);
-		friend void Memory::Free(void*, Allocator*);
-
 	public:
 		Allocator(uint64 Size);
 		Allocator(const Allocator& Other) = delete;
@@ -22,6 +17,10 @@ namespace NxEn
 
 		Allocator& operator=(const Allocator& Other) = delete;
 		Allocator& operator=(Allocator&& Other) noexcept = delete;
+
+		NEXUS_ENGINE_API virtual void* Allocate(uint64 Size, uint64 Alignement) = 0;
+		NEXUS_ENGINE_API virtual void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) = 0;
+		NEXUS_ENGINE_API virtual void Free(void* Pointer) = 0;
 
 		NEXUS_ENGINE_API virtual void Clear() = 0;
 		NEXUS_ENGINE_API virtual bool CanAllocate(uint64 Size, uint64 Alignement) const = 0;
@@ -34,16 +33,12 @@ namespace NxEn
 		NEXUS_ENGINE_API uint64 TotalAmount() const { return Capacity; };
 
 	protected:
-		virtual void* Allocate(uint64 Size, uint64 Alignement) = 0;
-		virtual void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) = 0;
-		virtual void Free(void* Pointer) = 0;
-
 		void IncreaseAmount(uint64 Delta);
 		void DecreaseAmount(uint64 Delta);
 		void ResetAmount();
 
 		void WipeoutMemory();
-		void EraseMemory(void* Memory, uint64 Size);
+		void EraseMemory(void* Pointer, uint64 Size);
 
 		bool IsPointerInMemoryBlock(void* Pointer) const;
 		void* GetMemoryBlock() const;
@@ -51,7 +46,7 @@ namespace NxEn
 	private:
 		uint64 Capacity;
 		uint64 Amount;
-		void* Memory;
+		void* Data;
 	};
 }
 

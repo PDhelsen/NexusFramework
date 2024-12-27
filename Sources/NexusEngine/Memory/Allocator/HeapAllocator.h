@@ -31,16 +31,15 @@ namespace NxEn
 		NEXUS_ENGINE_API HeapAllocator& operator=(const HeapAllocator& Other) = delete;
 		NEXUS_ENGINE_API HeapAllocator& operator=(HeapAllocator&& Other) noexcept = delete;
 
+		NEXUS_ENGINE_API void* Allocate(uint64 Size, uint64 Alignement) override;
+		NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
+		NEXUS_ENGINE_API void Free(void* Pointer) override;
+
 		NEXUS_ENGINE_API void Clear() override;
 		NEXUS_ENGINE_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
 		NEXUS_ENGINE_API bool BelongToAllocator(void* Pointer) const override;
 
 		NEXUS_ENGINE_API void Defragment(uint64 Count = 0);
-
-	protected:
-		void* Allocate(uint64 Size, uint64 Alignement) override;
-		void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
-		void Free(void* Pointer) override;
 
     private:
         void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);

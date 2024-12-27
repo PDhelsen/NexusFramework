@@ -13,6 +13,51 @@ namespace NxEn
 	{
 	}
 
+	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
+	{
+		void* Pointer = Memory::AlignPointer(Marker, Alignement);
+		void* NextPointer = Memory::OffsetPointer(Pointer, Size);
+
+		if (!IsPointerInMemoryBlock(NextPointer))
+		{
+			NEXUS_ASSERT(false, "Allocator is full");
+			return nullptr;
+		}
+
+		uint64 Before = reinterpret_cast<uint64>(Marker);
+		Next(NextPointer);
+		uint64 After = reinterpret_cast<uint64>(Marker);
+
+		IncreaseAmount(After - Before);
+
+		return Pointer;
+	}
+
+	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	{
+		NEXUS_ASSERT(false, "Reallocate from Stack Allocator is not supported")
+			return nullptr;
+	}
+
+	void StackAllocator::Free(void* Pointer)
+	{
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		uint64 Current = reinterpret_cast<uint64>(Marker);
+
+		if (!Pointer || !IsPointerInMemoryBlock(Pointer) || Address >= Current)
+		{
+			return;
+		}
+
+		uint64 Before = reinterpret_cast<uint64>(Marker);
+		Previous(Pointer);
+		uint64 After = reinterpret_cast<uint64>(Marker);
+
+		EraseMemory(Marker, FreeAmount());
+
+		DecreaseAmount(Before - After);
+	}
+
 	void StackAllocator::Clear()
 	{
 		WipeoutMemory();
@@ -33,51 +78,6 @@ namespace NxEn
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 		return Pointer && IsPointerInMemoryBlock(Pointer) && Address < Current;
-	}
-	
-	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
-	{
-		void* Pointer = Memory::AlignPointer(Marker, Alignement);
-		void* NextPointer = Memory::OffsetPointer(Pointer, Size);
-
-		if (!IsPointerInMemoryBlock(NextPointer))
-		{
-			NEXUS_ASSERT(false, "Allocator is full");
-			return nullptr;
-		}
-
-		uint64 Before = reinterpret_cast<uint64>(Marker);
-		Next(NextPointer);
-		uint64 After = reinterpret_cast<uint64>(Marker);
-
-		IncreaseAmount(After - Before);
-		
-		return Pointer;
-	}
-
-	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
-	{
-		NEXUS_ASSERT(false, "Reallocate from Stack Allocator is not supported")
-		return nullptr;
-	}
-
-	void StackAllocator::Free(void* Pointer)
-	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-		uint64 Current = reinterpret_cast<uint64>(Marker);
-
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer) || Address >= Current)
-		{
-			return;
-		}
-
-		uint64 Before = reinterpret_cast<uint64>(Marker);
-		Previous(Pointer);
-		uint64 After = reinterpret_cast<uint64>(Marker);
-
-		EraseMemory(Marker, FreeAmount());
-
-		DecreaseAmount(Before - After);
 	}
 
 	void StackAllocator::Next(void* Pointer)

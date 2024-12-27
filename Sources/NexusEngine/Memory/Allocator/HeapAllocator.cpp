@@ -13,6 +13,90 @@ namespace NxEn
 	{
 	}
 
+	void* HeapAllocator::Allocate(uint64 Size, uint64 Alignement)
+	{
+		Size = GetAlignedSize(Size);
+		HeapSlot* Slot = GetHeapSlot(Size);
+
+		if (Slot == nullptr)
+		{
+			NEXUS_ASSERT(false, "Allocator is full");
+			return nullptr;
+		}
+
+		void* Pointer = GetHeapSlotMemory(Slot);
+
+		UpdateHeapSlot(Slot, Size);
+
+		IncreaseAmount(Size);
+		return Pointer;
+	}
+
+	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	{
+		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
+		{
+			return nullptr;
+		}
+
+		void* NewPointer = nullptr;
+		Size = GetAlignedSize(Size);
+
+		HeapSlot* Slot = GetHeapSlot(Pointer);
+		uint64 CurrentSize = GetHeapSlotSize(Slot);
+		bool Shrink = CurrentSize >= Size;
+
+		if ((CurrentSize + GetHeapSlotSize(Slot->Next) >= Size && Slot->Next->Free) || Shrink)
+		{
+			if (!Shrink)
+			{
+				RemoveNextHeapSlot(Slot);
+			}
+
+			UpdateHeapSlot(Slot, Size);
+
+			if (!Shrink)
+			{
+				IncreaseAmount(Size - CurrentSize);
+			}
+			else
+			{
+				DecreaseAmount(CurrentSize - Size);
+			}
+
+			NewPointer = GetHeapSlotMemory(Slot);
+		}
+		else
+		{
+			NewPointer = Allocate(Size, Alignement);
+			Memory::MemMove(Pointer, NewPointer, Size);
+			Free(Pointer);
+		}
+
+		return NewPointer;
+	}
+
+	void HeapAllocator::Free(void* Pointer)
+	{
+		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
+		{
+			return;
+		}
+
+		HeapSlot* Slot = GetHeapSlot(Pointer);
+		uint64 Size = GetHeapSlotSize(Slot);
+		Slot->Free = true;
+
+		EraseMemory(Pointer, Size);
+
+		if (Slot->Next != nullptr && Slot->Next->Free)
+		{
+			RemoveNextHeapSlot(Slot);
+		}
+
+		DecreaseAmount(Size);
+	}
+
 	void HeapAllocator::Clear()
 	{
 		WipeoutMemory();
@@ -103,90 +187,6 @@ namespace NxEn
 		}
 
 		NEXUS_LOG(Info, LoggerChannel::Routine, "End defragmentation (Current amount : %d)", UsedAmount());
-	}
-
-	void* HeapAllocator::Allocate(uint64 Size, uint64 Alignement)
-	{
-		Size = GetAlignedSize(Size);
-		HeapSlot* Slot = GetHeapSlot(Size);
-
-		if (Slot == nullptr)
-		{
-			NEXUS_ASSERT(false, "Allocator is full");
-			return nullptr;
-		}
-
-		void* Pointer = GetHeapSlotMemory(Slot);
-
-		UpdateHeapSlot(Slot, Size);
-
-		IncreaseAmount(Size);
-		return Pointer;
-	}
-
-	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
-	{
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
-		{
-			return nullptr;
-		}
-
-		void* NewPointer = nullptr;
-		Size = GetAlignedSize(Size);
-
-		HeapSlot* Slot = GetHeapSlot(Pointer);
-		uint64 CurrentSize = GetHeapSlotSize(Slot);
-		bool Shrink = CurrentSize >= Size;
-
-		if ((CurrentSize + GetHeapSlotSize(Slot->Next) >= Size && Slot->Next->Free) || Shrink)
-		{
-			if (!Shrink)
-			{
-				RemoveNextHeapSlot(Slot);
-			}
-
-			UpdateHeapSlot(Slot, Size);
-
-			if (!Shrink)
-			{
-				IncreaseAmount(Size - CurrentSize);
-			}
-			else
-			{
-				DecreaseAmount(CurrentSize - Size);
-			}
-
-			NewPointer = GetHeapSlotMemory(Slot);
-		}
-		else
-		{
-			NewPointer = Allocate(Size, Alignement);
-			Memory::MemMove(Pointer, NewPointer, Size);
-			Free(Pointer);
-		}
-
-		return NewPointer;
-	}
-
-	void HeapAllocator::Free(void* Pointer)
-	{
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
-		{
-			return;
-		}
-
-		HeapSlot* Slot = GetHeapSlot(Pointer);
-		uint64 Size = GetHeapSlotSize(Slot);
-		Slot->Free = true;
-
-		EraseMemory(Pointer, Size);
-
-		if (Slot->Next != nullptr && Slot->Next->Free)
-		{
-			RemoveNextHeapSlot(Slot);
-		}
-
-		DecreaseAmount(Size);
 	}
 
 	void HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
