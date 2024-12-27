@@ -2,6 +2,7 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Memory/Memory.h"
 
 namespace NxEn
 {
@@ -9,7 +10,9 @@ namespace NxEn
 
 	class Allocator
 	{
-		friend class Memory;
+		friend void* Memory::Allocate(uint64, Allocator*, uint64);
+		friend void* Memory::Reallocate(void*, uint64, Allocator*, uint64);
+		friend void Memory::Free(void*, Allocator*);
 
 	public:
 		Allocator(uint64 Size);
