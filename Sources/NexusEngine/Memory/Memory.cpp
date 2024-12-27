@@ -1,14 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Memory.h"
 
-#define NEXUS_STACK_SIZE (uint64)(1 * Memory::ByteToKilo)
-#define NEXUS_HEAP_SIZE (uint64)(1 * Memory::ByteToMega)
-
 namespace NxEn
 {
-	StackAllocator* Memory::DefaultStack = new StackAllocator(NEXUS_STACK_SIZE);
-	HeapAllocator* Memory::DefaultHeap = new HeapAllocator(NEXUS_HEAP_SIZE);
-
 	void* Memory::Allocate(uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
 		if (Allocator != nullptr)

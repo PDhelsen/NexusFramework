@@ -2,16 +2,12 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Memory/Allocator/Allocator.h"
 
 #define NEXUS_MEMORY_ALIGN 16
 
 namespace NxEn
 {
-	class Allocator;
-	class StackAllocator;
-	class HeapAllocator;
-	class PoolAllocator;
-
 	class Memory
 	{
 	public:
@@ -41,9 +37,6 @@ namespace NxEn
 		NEXUS_ENGINE_API static bool MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination);
 		NEXUS_ENGINE_API static bool MemCompare(const void* Source, const void* Destination, uint64 Size);
 
-		NEXUS_ENGINE_API static StackAllocator* GetStack() { return DefaultStack; }
-		NEXUS_ENGINE_API static HeapAllocator* GetHeap() { return DefaultHeap; }
-
 		inline static const double ByteToKilo = 1024.0;
 		inline static const double ByteToMega = 1024.0 * 1024.0;
 		inline static const double ByteToGiga = 1024.0 * 1024.0 * 1024.0;
@@ -56,9 +49,6 @@ namespace NxEn
 		static void* Malloc(uint64 Size);
 		static void* Realloc(void* Memory, uint64 Size);
 		static void FreeMemory(void* Memory);
-
-		static StackAllocator* DefaultStack;
-		static HeapAllocator* DefaultHeap;
 	};
 
 	template<typename T, typename ...Args>
