@@ -4,6 +4,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 #include "Misc/Sort.h"
@@ -25,8 +26,8 @@ namespace NxEn
 			ConstructRange(0, Count);
 		}
 
-		Array(uint64 Size, Allocator* Allctr = nullptr)
-			: Alloc(Allctr), Count(0)
+		Array(uint64 Size)
+			: Alloc(AllocatorContext::Get()), Count(0)
 		{
 			NEXUS_ASSERT(L == 1 && Size > 1, "The provided size is invalid");
 

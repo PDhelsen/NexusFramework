@@ -12,7 +12,7 @@ namespace NxEn
 		static String WeekDaysNames[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 		static String MonthsNames[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 		static int32 DayPerMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		static Buffer<char> StaticBuffer = Buffer<char>(64, nullptr);
+		static Buffer<char> StaticBuffer = Buffer<char>(64);
 
 		//-----------------------------------------------------------------------------------------------------------------------
 		// C Lib Convertion

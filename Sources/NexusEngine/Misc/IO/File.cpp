@@ -189,11 +189,11 @@ namespace NxEn
 		Platform::GetInstance()->FileWriteByte(Handle, Data);
 	}
 
-	Buffer<Byte> File::ReadByte(Allocator* Allctr)
+	Buffer<Byte> File::ReadByte()
 	{
 		NEXUS_ASSERT(Exist && Handle, "Failed to read file: %s", Path.C());
 
-		Buffer<Byte> Data = Platform::GetInstance()->FileReadByte(Handle, Allctr);
+		Buffer<Byte> Data = Platform::GetInstance()->FileReadByte(Handle);
 
 		return Data;
 	}
@@ -205,11 +205,11 @@ namespace NxEn
 		Platform::GetInstance()->FileWriteText(Handle, Text);
 	}
 
-	String File::ReadText(Allocator* Allctr)
+	String File::ReadText()
 	{
 		NEXUS_ASSERT(Exist && Handle, "Failed to read file: %s", Path.C());
 
-		String Text = Platform::GetInstance()->FileReadText(Handle, Allctr);
+		String Text = Platform::GetInstance()->FileReadText(Handle);
 
 		return Text;
 	}

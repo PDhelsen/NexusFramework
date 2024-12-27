@@ -2,10 +2,10 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Memory/Allocator/Allocator.h"
 
 namespace NxEn
 {
-	class Allocator;
 	struct StringView;
 	template <typename T> class List;
 
@@ -14,15 +14,15 @@ namespace NxEn
 		friend class StringUtility;
 
 	public:
-		NEXUS_ENGINE_API String(Allocator* Allctr = nullptr);
-		NEXUS_ENGINE_API String(uint64 Bytes, Allocator* Allctr = nullptr);
-		NEXUS_ENGINE_API String(const char* Text, Allocator* Allctr = nullptr);
-		NEXUS_ENGINE_API String(const char* Text, uint64 Size, Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API String();
+		NEXUS_ENGINE_API String(uint64 Bytes);
+		NEXUS_ENGINE_API String(const char* Text);
+		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
 		NEXUS_ENGINE_API String(const String& Other);
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
 
-		NEXUS_ENGINE_API static String Create(char* Text, uint64 Capacity, uint64 Size, Allocator* Allctr = nullptr);
+		NEXUS_ENGINE_API static String Create(char* Text, uint64 Capacity, uint64 Size);
 
 		NEXUS_ENGINE_API String& operator=(const String& Other);
 		NEXUS_ENGINE_API String& operator=(String&& Other) noexcept;

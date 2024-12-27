@@ -2,6 +2,7 @@
 
 #include "Types/Integer.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 
 namespace NxEn
 {
@@ -9,8 +10,8 @@ namespace NxEn
 	class Buffer
 	{
 	public:
-		Buffer(uint64 Size, Allocator* Allctr = nullptr)
-			: Alloc(Allctr), Count(0), Data(nullptr)
+		Buffer(uint64 Size)
+			: Alloc(AllocatorContext::Get()), Count(0), Data(nullptr)
 		{
 			NEXUS_ASSERT(Size > 0, "Buffer has to have size greater than 0");
 

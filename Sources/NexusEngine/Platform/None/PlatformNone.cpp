@@ -94,16 +94,16 @@ namespace NxEn
 	{
 	}
 
-	Buffer<Byte> PlatformNone::FileReadByte(void* File, Allocator* Allctr) const
+	Buffer<Byte> PlatformNone::FileReadByte(void* File) const
 	{
-		return Buffer<Byte>(1, Allctr);
+		return Buffer<Byte>(1);
 	}
 
 	void PlatformNone::FileWriteText(void* File, StringView Text) const
 	{
 	}
 
-	String PlatformNone::FileReadText(void* File, Allocator* Allctr) const
+	String PlatformNone::FileReadText(void* File) const
 	{
 		return String::Empty;
 	}

@@ -31,9 +31,9 @@ namespace NxEn
 		NEXUS_ENGINE_API void* OffsetPointer(void* Pointer, uint64 Offset);
 		NEXUS_ENGINE_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
-		NEXUS_ENGINE_API void* Allocate(uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN);
-		NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = nullptr, uint64 Alignement = NEXUS_MEMORY_ALIGN);
-		NEXUS_ENGINE_API void Free(void* Pointer, Allocator* Allocator = nullptr);
+		NEXUS_ENGINE_API void* Allocate(uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = NEXUS_MEMORY_ALIGN);
+		NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = NEXUS_MEMORY_ALIGN);
+		NEXUS_ENGINE_API void Free(void* Pointer, Allocator* Allocator = AllocatorContext::Get());
 
 		template<typename T, typename... Args>
 		T* Construct(void* Pointer, Args&&... args)
@@ -48,14 +48,14 @@ namespace NxEn
 		}
 
 		template<typename T, typename ...Args>
-		T* Create(uint64 Size, Allocator* Allocator = nullptr, Args&& ...args)
+		T* Create(uint64 Size, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
 		{
 			void* Ptr = Allocate(Size, Allocator, alignof(T));
 			return Construct<T>(Ptr, args...);
 		}
 
 		template<typename T>
-		void Destroy(T* Pointer, Allocator* Allocator = nullptr)
+		void Destroy(T* Pointer, Allocator* Allocator = AllocatorContext::Get())
 		{
 			Destruct(Pointer);
 			Free(Pointer, Allocator);

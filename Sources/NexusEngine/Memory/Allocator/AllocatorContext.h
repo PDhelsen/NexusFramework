@@ -2,10 +2,10 @@
 
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
+#include "Memory/Allocator/Allocator.h"
 
 namespace NxEn
 {
-	class Allocator;
 	template<typename T, uint64> class Stack;
 
 	struct AllocatorContext

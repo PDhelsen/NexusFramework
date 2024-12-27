@@ -8,7 +8,7 @@ namespace NxEn
 {
 	using DllFunction = Delegate<int64()>;
 
-	static Buffer<char> StaticBuffer = Buffer<char>(512, nullptr);
+	static Buffer<char> StaticBuffer = Buffer<char>(512);
 
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
@@ -244,9 +244,9 @@ namespace NxEn
 		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), "Failed to write to file");
 	}
 
-	Buffer<Byte> PlatformWindows::FileReadByte(void* File, Allocator* Allctr) const
+	Buffer<Byte> PlatformWindows::FileReadByte(void* File) const
 	{
-		Buffer<Byte> Data = Buffer<Byte>(FileSize(File), Allctr);
+		Buffer<Byte> Data = Buffer<Byte>(FileSize(File));
 
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Read, nullptr);
@@ -269,17 +269,17 @@ namespace NxEn
 		NEXUS_ASSERT(Result && Written == Content.GetCount(), "Failed to write to file");
 	}
 
-	String PlatformWindows::FileReadText(void* File, Allocator* Allctr) const
+	String PlatformWindows::FileReadText(void* File) const
 	{
 		uint64 Size = FileSize(File);
-		char* Text = (char*)Memory::Allocate(Size + 1, Allctr);
+		char* Text = (char*)Memory::Allocate(Size + 1);
 
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Text, (DWORD)Size, &Read, nullptr);
 
 		NEXUS_ASSERT(Result && Read == Size, "Failed to read to file");
 
-		String Content = String::Create(Text, Size + 1, Size, Allctr);
+		String Content = String::Create(Text, Size + 1, Size);
 		Content.Replace("\r\n", "\n");
 		return Content;
 	}

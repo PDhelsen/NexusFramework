@@ -5,6 +5,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 #include "Misc/Hash.h"
@@ -21,8 +22,8 @@ namespace NxEn
 		using N = Node::NodeHashmap<T>;
 		using I = Iterator::IteratorHashmap<const T, N>;
 
-		Set(uint64 Size = DefaultSize, Allocator* Allctr = nullptr)
-			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+		Set(uint64 Size = DefaultSize)
+			: Alloc(AllocatorContext::Get()), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}

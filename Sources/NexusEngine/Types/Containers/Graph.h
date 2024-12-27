@@ -5,6 +5,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 
@@ -19,8 +20,8 @@ namespace NxEn
 		using CT = NxEn::Node::NodeGraphConnectionType;
 		using I = Iterator::IteratorNodeGraph<T, N>;
 
-		Graph(Allocator* Allctr = nullptr)
-			: Alloc(Allctr), Count(0), Data(nullptr)
+		Graph()
+			: Alloc(AllocatorContext::Get()), Count(0), Data(nullptr)
 		{
 		}
 

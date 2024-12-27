@@ -5,27 +5,27 @@ namespace NxEn
 {
 	const String String::Empty = String();
 
-	String::String(Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+	String::String()
+		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(SmallStringCapacity, 0, nullptr);
 	}
 
-	String::String(uint64 Bytes, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+	String::String(uint64 Bytes)
+		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Bytes, 0, nullptr);
 	}
 
-	String::String(const char* Text, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+	String::String(const char* Text)
+		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = StringCApi::Length(Text);
 		Allocate(Size, Size, Text);
 	}
 
-	String::String(const char* Text, uint64 Size, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+	String::String(const char* Text, uint64 Size)
+		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Size, Size, Text);
 	}
@@ -60,10 +60,10 @@ namespace NxEn
 		Free();
 	}
 
-	String String::Create(char* Text, uint64 Capacity, uint64 Size, Allocator* Allctr)
+	String String::Create(char* Text, uint64 Capacity, uint64 Size)
 	{
 		String Result;
-		Result.Alloc = Allctr;
+		Result.Alloc = AllocatorContext::Get();
 		Result.Capacity = Math::Max(Capacity, (uint64)(SmallStringCapacity + 1));
 		Result.Count = Size;
 		Result.Data.Large = Text;

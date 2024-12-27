@@ -5,6 +5,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 
@@ -17,8 +18,8 @@ namespace NxEn
 		using N = Node::NodeTree<T>;
 		using I = Iterator::IteratorNodeTree<T, N>;
 
-		Tree(Allocator* Allctr = nullptr)
-			: Alloc(Allctr), Count(0), Data(nullptr)
+		Tree()
+			: Alloc(AllocatorContext::Get()), Count(0), Data(nullptr)
 		{
 		}
 

@@ -4,7 +4,7 @@
 #include "Types/Containers/Node.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/PoolAllocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 
@@ -19,8 +19,8 @@ namespace NxEn
 			using N = Node::NodeSimple<T>;
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
-			PreAllocated(uint64 Size, Allocator* Allctr = nullptr)
-				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
+			PreAllocated(uint64 Size)
+				: Alloc(AllocatorContext::Get()), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
 				Allocate(Size);
 				ConstructRange(0, Capacity);
@@ -195,8 +195,8 @@ namespace NxEn
 			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
-			OnDemand(Allocator* Allctr = nullptr)
-				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
+			OnDemand()
+				: Alloc(AllocatorContext::Get()), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
 			}
 
@@ -418,13 +418,13 @@ namespace NxEn
 	public:
 		using I = typename P::I;
 
-		Pool(Allocator* Alloc = nullptr)
-			: Data(Alloc)
+		Pool()
+			: Data()
 		{
 		}
 
-		Pool(uint64 Size, Allocator* Alloc = nullptr)
-			: Data(Size, Alloc)
+		Pool(uint64 Size)
+			: Data(Size)
 		{
 		}
 

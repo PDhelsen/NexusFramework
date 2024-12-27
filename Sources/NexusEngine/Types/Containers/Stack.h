@@ -4,6 +4,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Assert.h"
 #include "Misc/References.h"
 
@@ -15,8 +16,8 @@ namespace NxEn
 	public:
 		using I = Iterator::IteratorBucket<T, BS>;
 
-		Stack(Allocator* Allctr = nullptr)
-			: Alloc(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
+		Stack()
+			: Alloc(AllocatorContext::Get()), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 		}
