@@ -198,7 +198,7 @@ namespace NxEn
 			Free();
 		}
 
-		bool IsNull() const { return HasFunction(); }
+		bool IsNull() const { return !HasFunction(); }
 
 	private:
 		template<typename F>
@@ -268,7 +268,7 @@ namespace NxEn
 		Interface* GetFunction() const { return (Interface*)(Sbo ? Data.Small.Function : Data.Large.Function); }
 		Allocator* GetAllocator() const { return Sbo ? nullptr : Data.Large.Allctr; }
 		uint64 GetSize() const { return Sbo ? Data.Small.Size : 0; }
-		bool HasFunction() const { return Sbo ? Data.Small.Function[0] == 0 : Data.Large.Function == nullptr; }
+		bool HasFunction() const { return Sbo ? Data.Small.Function[0] != 0 : Data.Large.Function != nullptr; }
 
 		inline static const uint8 SmallFunctionSize = 16;
 		inline static const uint8 BufferSize = SmallFunctionSize + 8;
