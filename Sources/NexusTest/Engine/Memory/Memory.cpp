@@ -73,6 +73,15 @@ namespace NxTs
 		delete Test;
 	}
 
+	TEST(Memory, MallocReallocFreeConstructDestruct)
+	{
+		MemoryTest * Test = NxEn::Memory::Create<MemoryTest>(sizeof(MemoryTest));
+	
+		ASSERT_EQ(Test->Value, 120);
+	
+		NxEn::Memory::Destroy<MemoryTest>(Test);
+	}
+
 	TEST(Memory, SetCopyMove)
 	{
 		uint8* Test = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
