@@ -59,15 +59,15 @@ namespace NxEn
 		};
 
 	public:
-		Delegate()
-			: Allctr(AllocatorContext::Get()), Sbo(true), Comparable(false)
+		Delegate(Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
 			Clear();
 		}
 
 		template<typename F, typename EnableIf<!IsSameType<typename RemoveReference<F>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
-		Delegate(F&& Func)
-			: Allctr(AllocatorContext::Get()), Sbo(true), Comparable(false)
+		Delegate(F&& Func, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
 			if constexpr (IsSameType<typename RemoveReference<F>::Type, NullPtr>::Value)
 			{
@@ -80,27 +80,27 @@ namespace NxEn
 		}
 
 		template<typename T, typename F, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
-		Delegate(T* Object, F&& Func)
-			: Allctr(AllocatorContext::Get()), Sbo(true), Comparable(false)
+		Delegate(T* Object, F&& Func, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
 			Bind(Object, Forward<F>(Func));
 		}
 
 		template<typename T, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
-		Delegate(T& Object)
-			: Allctr(AllocatorContext::Get()), Sbo(true), Comparable(false)
+		Delegate(T& Object, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
 			Bind(Object);
 		}
 
 		Delegate(const Delegate<R(Args...)>& Other)
-			: Allctr(Other.Allctr), Sbo(Other.Sbo), Comparable(Other.Comparable)
+			: Alloc(Other.Alloc), Sbo(Other.Sbo), Comparable(Other.Comparable)
 		{
 			Clone(Other, true);
 		}
 
 		Delegate(Delegate<R(Args...)>&& Other) noexcept
-			: Allctr(Other.Allctr), Sbo(Other.Sbo), Comparable(Other.Comparable)
+			: Alloc(Other.Alloc), Sbo(Other.Sbo), Comparable(Other.Comparable)
 		{
 			Clone(Other, false);
 			Other.Clear();
@@ -205,7 +205,7 @@ namespace NxEn
 			uint64 Size = sizeof(RemoveReference<F>::Type);
 			if (Size > SmallFunctionSize)
 			{
-				AllocatorContext Context(Allctr);
+				AllocatorContext Context(Alloc);
 				Data.Large.Function = new Wrapper<F>(Forward<F>(Func));
 				Sbo = false;
 			}
@@ -224,7 +224,7 @@ namespace NxEn
 			{
 				if (Allocate)
 				{
-					AllocatorContext Context(Allctr);
+					AllocatorContext Context(Alloc);
 					Data.Large.Function = Other.GetFunction()->Clone();
 				}
 				else
@@ -246,7 +246,7 @@ namespace NxEn
 		{
 			if (!Sbo)
 			{
-				AllocatorContext Context(Allctr);
+				AllocatorContext Context(Alloc);
 				delete Data.Large.Function;
 			}
 
@@ -264,7 +264,7 @@ namespace NxEn
 
 		Interface* GetFunction() const { return (Interface*)(Sbo ? Data.Small.Function : Data.Large.Function); }
 		uint64 GetSize() const { return Sbo ? Data.Small.Size : 0; }
-		bool HasFunction() const { return Sbo ? Data.Small.Function[0] != 0 : Data.Large.Function != nullptr; }
+		bool HasFunction() const { return Sbo ? Data.Small.Size != 0 : Data.Large.Function != nullptr; }
 
 		inline static const uint8 SmallFunctionSize = 16;
 		inline static const uint8 BufferSize = SmallFunctionSize + 8;
@@ -283,7 +283,7 @@ namespace NxEn
 		};
 
 		Storage Data;
-		Allocator* Allctr;
+		Allocator* Alloc;
 		bool Sbo;
 		bool Comparable;
 	};

@@ -20,8 +20,8 @@ namespace NxEn
 		using CT = NxEn::Node::NodeGraphConnectionType;
 		using I = Iterator::IteratorNodeGraph<T, N>;
 
-		Graph()
-			: Alloc(AllocatorContext::Get()), Count(0), Data(nullptr)
+		Graph(Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 		}
 

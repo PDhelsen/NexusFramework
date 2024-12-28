@@ -5,27 +5,27 @@ namespace NxEn
 {
 	const String String::Empty = String();
 
-	String::String()
-		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
+	String::String(Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(SmallStringCapacity, 0, nullptr);
 	}
 
-	String::String(uint64 Bytes)
-		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
+	String::String(uint64 Bytes, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Bytes, 0, nullptr);
 	}
 
-	String::String(const char* Text)
-		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
+	String::String(const char* Text, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = StringCApi::Length(Text);
 		Allocate(Size, Size, Text);
 	}
 
-	String::String(const char* Text, uint64 Size)
-		: Alloc(AllocatorContext::Get()), Capacity(SmallStringCapacity), Count(0)
+	String::String(const char* Text, uint64 Size, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Size, Size, Text);
 	}

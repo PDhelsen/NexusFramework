@@ -22,8 +22,8 @@ namespace NxEn
 		using N = Node::NodeHashmap<T>;
 		using I = Iterator::IteratorHashmap<const T, N>;
 
-		Set(uint64 Size = DefaultSize)
-			: Alloc(AllocatorContext::Get()), Capacity(0), Count(0), Data(nullptr)
+		Set(uint64 Size = DefaultSize, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}

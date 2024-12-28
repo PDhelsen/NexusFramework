@@ -16,8 +16,8 @@ namespace NxEn
 	public:
 		using I = Iterator::IteratorBucket<T, BS>;
 
-		Stack()
-			: Alloc(AllocatorContext::Get()), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
+		Stack(Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 		}

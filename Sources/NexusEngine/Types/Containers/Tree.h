@@ -18,8 +18,8 @@ namespace NxEn
 		using N = Node::NodeTree<T>;
 		using I = Iterator::IteratorNodeTree<T, N>;
 
-		Tree()
-			: Alloc(AllocatorContext::Get()), Count(0), Data(nullptr)
+		Tree(Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 		}
 

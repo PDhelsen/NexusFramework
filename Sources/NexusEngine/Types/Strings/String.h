@@ -3,6 +3,7 @@
 #include "Core/NexusEngine.h"
 #include "Types/Integer.h"
 #include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
 
 namespace NxEn
 {
@@ -14,10 +15,10 @@ namespace NxEn
 		friend class StringUtility;
 
 	public:
-		NEXUS_ENGINE_API String();
-		NEXUS_ENGINE_API String(uint64 Bytes);
-		NEXUS_ENGINE_API String(const char* Text);
-		NEXUS_ENGINE_API String(const char* Text, uint64 Size);
+		NEXUS_ENGINE_API String(Allocator* Allctr = AllocatorContext::Get());
+		NEXUS_ENGINE_API String(uint64 Bytes, Allocator* Allctr = AllocatorContext::Get());
+		NEXUS_ENGINE_API String(const char* Text, Allocator* Allctr = AllocatorContext::Get());
+		NEXUS_ENGINE_API String(const char* Text, uint64 Size, Allocator* Allctr = AllocatorContext::Get());
 		NEXUS_ENGINE_API String(const String& Other);
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();

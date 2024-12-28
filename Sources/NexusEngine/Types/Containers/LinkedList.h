@@ -18,8 +18,8 @@ namespace NxEn
 		using N = Node::NodeDouble<T>;
 		using I = Iterator::IteratorNodeDouble<T, N>;
 
-		LinkedList()
-			: Alloc(AllocatorContext::Get()), Count(0), DataHead(nullptr), DataTail(nullptr)
+		LinkedList(Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 		}
 

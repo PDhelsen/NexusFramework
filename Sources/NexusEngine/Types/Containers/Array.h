@@ -26,8 +26,8 @@ namespace NxEn
 			ConstructRange(0, Count);
 		}
 
-		Array(uint64 Size)
-			: Alloc(AllocatorContext::Get()), Count(0)
+		Array(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0)
 		{
 			NEXUS_ASSERT(L == 1 && Size > 1, "The provided size is invalid");
 

@@ -10,8 +10,8 @@ namespace NxEn
 	class Buffer
 	{
 	public:
-		Buffer(uint64 Size)
-			: Alloc(AllocatorContext::Get()), Count(0), Data(nullptr)
+		Buffer(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 			NEXUS_ASSERT(Size > 0, "Buffer has to have size greater than 0");
 

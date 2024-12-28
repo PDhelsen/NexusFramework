@@ -103,13 +103,12 @@ namespace NxEn
 		using Iterator = Interface<T>;
 
 		template<typename C>
-		Collection(const C& Container)
+		Collection(const C& Container, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(Container.GetCount())
 		{
-			Alloc = AllocatorContext::Get();
 			IteratorCurrent = new Wrapper<T, typename C::I>(Container.Begin());
 			IteratorBegin = new Wrapper<T, typename C::I>(Container.Begin());
 			IteratorEnd = new Wrapper<T, typename C::I>(Container.End());
-			Count = Container.GetCount();
 		}
 
 		Collection(const Collection<T>& Other) = delete;

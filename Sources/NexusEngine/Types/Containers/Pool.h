@@ -19,8 +19,8 @@ namespace NxEn
 			using N = Node::NodeSimple<T>;
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
-			PreAllocated(uint64 Size)
-				: Alloc(AllocatorContext::Get()), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
+			PreAllocated(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
 				Allocate(Size);
 				ConstructRange(0, Capacity);
@@ -195,8 +195,8 @@ namespace NxEn
 			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
-			OnDemand()
-				: Alloc(AllocatorContext::Get()), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
+			OnDemand(Allocator* Allctr = AllocatorContext::Get())
+				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
 			}
 
@@ -418,13 +418,13 @@ namespace NxEn
 	public:
 		using I = typename P::I;
 
-		Pool()
-			: Data()
+		Pool(Allocator* Allctr = AllocatorContext::Get())
+			: Data(Allctr)
 		{
 		}
 
-		Pool(uint64 Size)
-			: Data(Size)
+		Pool(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+			: Data(Size, Allctr)
 		{
 		}
 
