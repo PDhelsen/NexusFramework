@@ -13,11 +13,11 @@ namespace NxEn
 {
 	namespace LoggerChannel
 	{
-		StringId Default = "Default"_Sid;
-		StringId Assert = "Assert"_Sid;
-		StringId Performance = "Performance"_Sid;
-		StringId Routine = "Routine"_Sid;
-		StringId UnitTest = "UnitTest"_Sid;
+		const StringId Default = "Default"_Sid;
+		const StringId Assert = "Assert"_Sid;
+		const StringId Performance = "Performance"_Sid;
+		const StringId Routine = "Routine"_Sid;
+		const StringId UnitTest = "UnitTest"_Sid;
 	}
 
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
@@ -32,7 +32,7 @@ namespace NxEn
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
 		: StringBuilderMessage(NEXUS_LOG_LINE), StringBuilderFormat(NEXUS_LOG_LINE), StringBuffer(NEXUS_LOG_BUFFER), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(nullptr), Handle(nullptr)
 	{
-		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != String::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
+		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
 
 		Channels = new Dictionary<StringId, bool, Hashing::Default>();
 		AddChannel(LoggerChannel::Default, true);

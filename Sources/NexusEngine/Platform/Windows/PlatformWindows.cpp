@@ -10,7 +10,6 @@ namespace NxEn
 
 	static Buffer<char>& GetLocalBuffer() { static Buffer<char> LocalBuffer(512, nullptr); return LocalBuffer; }
 
-
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
 		auto Dll = LoadLibraryA(DllName.C());

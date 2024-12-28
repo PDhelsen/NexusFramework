@@ -3,8 +3,6 @@
 
 namespace NxEn
 {
-	const String String::Empty = String("", nullptr);
-
 	String::String(Allocator* Allctr)
 		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{

@@ -14,7 +14,7 @@ namespace NxTs
 		NxEn::String Test = NxEn::String("Hello World");
 
 		NxEn::String Empty = NxEn::String();
-		ASSERT_EQ(Empty, NxEn::String::Empty);
+		ASSERT_EQ(Empty, NxEn::StringUtility::Empty);
 		ASSERT_EQ(Empty.IsEmpty(), true);
 
 		NxEn::String Test2 = "World Hello";

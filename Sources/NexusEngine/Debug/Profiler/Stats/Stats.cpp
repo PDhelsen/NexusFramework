@@ -4,8 +4,8 @@
 namespace NxEn
 {
 	static const String Separator = ";";
-	static StringId TickId = "Tick"_Sid;
-	static StringId CommentId = "Comments"_Sid;
+	static const StringId TickId = "Tick"_Sid;
+	static const StringId CommentId = "Comments"_Sid;
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// StatValue
@@ -499,7 +499,7 @@ namespace NxEn
 
 		if (!Initialized)
 		{
-			return String::Empty;
+			return StringUtility::Empty;
 		}
 
 		return GetStat(CommentId).Value.Label;

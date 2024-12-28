@@ -35,7 +35,7 @@ namespace NxEn
 
 	String PlatformNone::GetWorkingDirectory() const
 	{
-		return String::Empty;
+		return StringUtility::Empty;
 	}
 
 	void PlatformNone::DirectoryCreate(StringView Path) const
@@ -105,7 +105,7 @@ namespace NxEn
 
 	String PlatformNone::FileReadText(void* File) const
 	{
-		return String::Empty;
+		return StringUtility::Empty;
 	}
 
     PlatformNone::PlatformNone()

@@ -122,7 +122,7 @@ namespace NxEn
 			case SearchBehaviour::Split: Result = Pointer != nullptr ? StringView(Previous, StringCApi::Length(Previous) - StringCApi::Length(Pointer)) : StringView(Previous); break;
 			}
 
-			if (Results && Result != String::Empty)
+			if (Results && Result != StringUtility::Empty)
 			{
 				Results->Append(Result);
 			}

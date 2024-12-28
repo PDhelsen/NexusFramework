@@ -4,6 +4,7 @@
 #include "Types/Integer.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
+#include "Types/Strings/StringFunctions.h"
 #include "Types/Containers/Collection.h"
 
 namespace NxEn
@@ -58,7 +59,7 @@ namespace NxEn
 		String ToString() const { return Data; };
 		StringView ToView() const { return Data.ToView(); };
 		const char* C() const { return Data.C(); };
-		bool IsValid() const { return Data != String::Empty; }
+		bool IsValid() const { return Data != StringUtility::Empty; }
 
 		template<typename T>
 		static String Combine(const Collection<T>& Elements);
@@ -101,10 +102,10 @@ namespace NxEn
 
 		NEXUS_ENGINE_API static Path GetWorkingDirectory();
 
-		NEXUS_ENGINE_API static String SeparatorDirectory;
-		NEXUS_ENGINE_API static String SeparatorExtension;
-		NEXUS_ENGINE_API static String SeparatorPrevious;
-		NEXUS_ENGINE_API static String SeparatorDrive;
+		inline static const String SeparatorDirectory = "/";
+		inline static const String SeparatorExtension = ".";
+		inline static const String SeparatorPrevious = "..";
+		inline static const String SeparatorDrive = ":/";
 
 		String Data;
 	};

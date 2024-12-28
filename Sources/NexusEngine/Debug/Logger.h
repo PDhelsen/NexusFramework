@@ -21,11 +21,11 @@ namespace NxEn
 
 	namespace LoggerChannel
 	{
-		NEXUS_ENGINE_API extern StringId Default;
-		NEXUS_ENGINE_API extern StringId Assert;
-		NEXUS_ENGINE_API extern StringId Performance;
-		NEXUS_ENGINE_API extern StringId Routine;
-		NEXUS_ENGINE_API extern StringId UnitTest;
+		NEXUS_ENGINE_API extern const StringId Default;
+		NEXUS_ENGINE_API extern const StringId Assert;
+		NEXUS_ENGINE_API extern const StringId Performance;
+		NEXUS_ENGINE_API extern const StringId Routine;
+		NEXUS_ENGINE_API extern const StringId UnitTest;
 	}
 
 	enum class LoggerVerbosity : uint8

@@ -49,6 +49,7 @@ namespace NxEn
 		inline static const char NullChar = StringCApi::NullChar;
 		inline static const char NewLineChar = StringCApi::NewLineChar;
 		inline static const String NewLine = StringCApi::NewLine;
+		inline static const String Empty = "";
 
 	private:
 		enum class SearchBehaviour

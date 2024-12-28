@@ -5,11 +5,6 @@
 
 namespace NxEn
 {
-	String Path::SeparatorDirectory = String("/", nullptr);
-	String Path::SeparatorExtension = String(".", nullptr);
-	String Path::SeparatorPrevious = String("..", nullptr);
-	String Path::SeparatorDrive = String(":/", nullptr);
-
 	Path::Path()
 	{
 	}
@@ -264,7 +259,7 @@ namespace NxEn
 	{
 		if (!Path::IsDirectory(Root))
 		{
-			return String::Empty;
+			return StringUtility::Empty;
 		}
 		
 		String Result = Path.ToString();
@@ -296,7 +291,7 @@ namespace NxEn
 	{
 		if (!Path::IsDirectory(Root))
 		{
-			return String::Empty;
+			return StringUtility::Empty;
 		}
 
 		String Result = Root + Path;
