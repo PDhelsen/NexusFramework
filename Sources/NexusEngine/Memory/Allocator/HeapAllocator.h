@@ -13,6 +13,8 @@ namespace NxEn
     // It should look like :
     // Root (16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + Heap slot (16 aligned) + Memory (Forced 16 aligned) + ... 
 
+	class HandleManager;
+
     class HeapAllocator : public Allocator
     {
 	private:
@@ -39,7 +41,7 @@ namespace NxEn
 		NEXUS_ENGINE_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
 		NEXUS_ENGINE_API bool BelongToAllocator(void* Pointer) const override;
 
-		NEXUS_ENGINE_API void Defragment(uint64 Count = 0);
+		NEXUS_ENGINE_API void Defragment(HandleManager* Manager, uint64 Count = 0);
 
     private:
         void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);

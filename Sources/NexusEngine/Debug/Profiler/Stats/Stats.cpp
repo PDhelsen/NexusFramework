@@ -7,6 +7,13 @@ namespace NxEn
 	static const StringId TickId = "Tick"_Sid;
 	static const StringId CommentId = "Comments"_Sid;
 
+	Stats* Stats::GetInstance()
+	{
+		AllocatorContext Context(nullptr);
+		static Stats* Instance = new Stats(Path::GetWorkingDirectory() + "Stats.csv");
+		return Instance;
+	}
+
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// StatValue
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------

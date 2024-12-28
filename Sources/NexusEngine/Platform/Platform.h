@@ -54,14 +54,10 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual String FileReadText(void* File) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
-
-		NEXUS_ENGINE_API static Platform* GetInstance() { static Platform* Instance = Platform::Create(); return Instance; }
+		NEXUS_ENGINE_API static Platform* GetInstance();
 
 	protected:
 		Platform() = default;
 		virtual ~Platform() = default;
-
-	private:
-		static Platform* Create();
 	};
 }

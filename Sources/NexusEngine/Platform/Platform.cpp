@@ -6,12 +6,14 @@
 
 namespace NxEn
 {
-	Platform* Platform::Create()
+	Platform* Platform::GetInstance()
 	{
+		AllocatorContext Context(nullptr);
 #if NEXUS_WINDOWS
-		return new PlatformWindows();
+		static Platform* Instance = new PlatformWindows();
 #else
-		return new PlatformNone();
+		static Platform* Instance = new PlatformNone();
 #endif
+		return Instance;
 	}
 }

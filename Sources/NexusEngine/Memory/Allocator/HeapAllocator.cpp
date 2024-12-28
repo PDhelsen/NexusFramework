@@ -116,11 +116,11 @@ namespace NxEn
 		return Pointer && IsPointerInMemoryBlock(Pointer);
 	}
 
-	void HeapAllocator::Defragment(uint64 Count)
+	void HeapAllocator::Defragment(HandleManager* Manager, uint64 Count)
 	{
 		NEXUS_LOG(Info, LoggerChannel::Routine, "Starting defragmentation (Current amount : %d)", UsedAmount());
 
-		Dictionary<void*, Handle<uint8>> Handles = HandleManager::GetInstance()->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
+		Dictionary<void*, Handle<uint8>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
 		bool All = Count == 0;
 		HeapSlot* Slot = Root;
@@ -169,7 +169,7 @@ namespace NxEn
 				// Move data
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot));
-				HandleManager::GetInstance()->UpdateHandle(Handle, Data);
+				Manager->UpdateHandle(Handle, Data);
 				NEXUS_LOG(Info, LoggerChannel::Routine, "Moved from %p to %p", Slot->Next, Slot);
 
 				// Update HeapSlot

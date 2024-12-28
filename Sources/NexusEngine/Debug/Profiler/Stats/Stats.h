@@ -107,7 +107,7 @@ namespace NxEn
 		bool IsRecording() const { return Recording; }
 		bool IsLocked() const { return Locked; }
 
-		static Stats* GetInstance() { static Stats* Instance = new Stats(Path::GetWorkingDirectory() + "Stats.csv"); return Instance; }
+		NEXUS_ENGINE_API static Stats* GetInstance();
 
 	private:
 		NEXUS_ENGINE_API void WriteLine();

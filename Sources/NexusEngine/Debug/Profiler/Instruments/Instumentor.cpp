@@ -5,6 +5,13 @@
 
 namespace NxEn
 {
+	Instruments* Instruments::GetInstance()
+	{
+		AllocatorContext Context(nullptr);
+		static Instruments* Instance = Create(Path::GetWorkingDirectory() + "InstrumentSession.json");
+		return Instance;
+	}
+
 	Instruments::Marker::Marker(StringView Text, Instruments* Target)
 		: Text(Text), Target(Target)
 	{

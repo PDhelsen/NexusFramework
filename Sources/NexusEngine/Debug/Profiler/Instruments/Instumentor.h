@@ -47,7 +47,7 @@ namespace NxEn
 
 		bool IsRecording() const { return Recording; }
 
-		static Instruments* GetInstance() { static Instruments* Instance = Create(Path::GetWorkingDirectory() + "InstrumentSession.json"); return Instance; }
+		NEXUS_ENGINE_API static Instruments* GetInstance();
 
 	protected:
 		NEXUS_ENGINE_API virtual void RecordMarker(const Marker& Data) = 0;

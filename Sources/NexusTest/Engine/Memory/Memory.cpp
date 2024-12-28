@@ -470,7 +470,7 @@ namespace NxTs
 	{
 		NxEn::HeapAllocator* Heap = new NxEn::HeapAllocator(512);
 		
-		Heap->Defragment();
+		Heap->Defragment(NxEn::HandleManager::GetInstance());
 
 		MemoryTest* Test1 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test1->Value = 1;
@@ -512,9 +512,9 @@ namespace NxTs
 		NxEn::Memory::Free(NxEn::HandleManager::GetInstance()->ReleaseHandle(Handle5), Heap);
 
 		uint64 StartAmount = Heap->UsedAmount();
-		Heap->Defragment(1);
-		Heap->Defragment();
-		Heap->Defragment();
+		Heap->Defragment(NxEn::HandleManager::GetInstance(), 1);
+		Heap->Defragment(NxEn::HandleManager::GetInstance());
+		Heap->Defragment(NxEn::HandleManager::GetInstance());
 		uint64 EndAmount = Heap->UsedAmount();
 
 		ASSERT_EQ(Handle3->Value, 3);

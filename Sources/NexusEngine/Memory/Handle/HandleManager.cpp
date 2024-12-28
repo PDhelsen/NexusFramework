@@ -5,13 +5,21 @@
 
 namespace NxEn
 {
-	HandleManager::HandleManager()
+	HandleManager* HandleManager::GetInstance()
 	{
-		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(NEXUS_HANDLES_COUNT, nullptr);
+		AllocatorContext Context(nullptr);
+		static HandleManager* Instance = new HandleManager(NEXUS_HANDLES_COUNT);
+		return Instance;
+	}
+
+	HandleManager::HandleManager(uint64 Size)
+	{
+		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(Size, nullptr);
 	}
 
 	HandleManager::~HandleManager()
 	{
+		AllocatorContext Context(nullptr);
 		delete Buffer;
 	}
 

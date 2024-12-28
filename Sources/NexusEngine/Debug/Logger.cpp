@@ -25,6 +25,7 @@ namespace NxEn
 
 	Logger* Logger::GetInstance()
 	{
+		AllocatorContext Context(nullptr);
 		static Logger* Instance = new Logger(true, LoggerVerbosity::All, LoggerOutput::Console, Path::GetWorkingDirectory() + "Logs.txt");
 		return Instance;
 	}

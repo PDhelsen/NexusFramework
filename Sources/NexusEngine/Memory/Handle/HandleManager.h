@@ -21,6 +21,9 @@ namespace NxEn
 	class HandleManager
 	{
 	public:
+		NEXUS_ENGINE_API HandleManager(uint64 Size);
+		NEXUS_ENGINE_API ~HandleManager();
+
 		template<typename T>
 		Handle<T> AcquireHandle(T* Pointer);
 		template<typename T>
@@ -32,12 +35,9 @@ namespace NxEn
 
 		NEXUS_ENGINE_API Dictionary<void*, Handle<uint8>, Hashing::Default> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
-		NEXUS_ENGINE_API static HandleManager* GetInstance() { static HandleManager* Instance = new HandleManager(); return Instance; }
+		NEXUS_ENGINE_API static HandleManager* GetInstance();
 
 	private:
-		NEXUS_ENGINE_API HandleManager();
-		NEXUS_ENGINE_API ~HandleManager();
-
 		NEXUS_ENGINE_API void* AllocateHandle(void* Pointer);
 		NEXUS_ENGINE_API void ModifyHandle(void* Handle, void* Pointer);
 		NEXUS_ENGINE_API void FreeHandle(void* Handle);
