@@ -4,8 +4,8 @@
 namespace NxEn
 {
 	static const String Separator = ";";
-	static StringId TickId;
-	static StringId CommentId;
+	static StringId TickId = "Tick"_Sid;
+	static StringId CommentId = "Comments"_Sid;
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// StatValue
@@ -202,9 +202,6 @@ namespace NxEn
 	Stats::Stats(StringView Path)
 		: Headers(), Data(), Handle(Path), Line(1024), Cell(), Span(0.0), Initialized(false), Recording(false), Locked(false)
 	{
-		TickId = "Tick"_Sid;
-		CommentId = "Comments"_Sid;
-
 		Handle.Delete();
 		Handle.Create();
 		Handle.Open(File::Mode::Append);
