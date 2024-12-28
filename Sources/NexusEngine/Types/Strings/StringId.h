@@ -8,8 +8,6 @@
 
 namespace NxEn
 {
-	template <typename K, typename T, class H> class Dictionary;
-
 	struct StringId
 	{
 	public:
@@ -27,10 +25,6 @@ namespace NxEn
 		NEXUS_ENGINE_API const GUID GetId() const;
 
 	private:
-		static GUID InternString(StringView Text);
-
-		static Dictionary<GUID, String, Hashing::Default> Tables;
-
 		GUID Id;
 	};
 

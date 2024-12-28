@@ -6,8 +6,6 @@
 
 namespace NxEn
 {
-	template<typename T, uint64> class Stack;
-
 	struct AllocatorContext
 	{
 	public:
@@ -17,9 +15,6 @@ namespace NxEn
 		NEXUS_ENGINE_API static void Push(Allocator* Alloc);
 		NEXUS_ENGINE_API static void Pop();
 		NEXUS_ENGINE_API static Allocator* Get();
-
-	private:
-		static Stack<Allocator*, 10>* Allocators;
 	};
 }
 

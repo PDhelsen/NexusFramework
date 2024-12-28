@@ -5,10 +5,10 @@
 
 namespace NxEn
 {
-	String Path::SeparatorDirectory = String("/");
-	String Path::SeparatorExtension = String(".");
-	String Path::SeparatorPrevious = String("..");
-	String Path::SeparatorDrive = String(":/");
+	String Path::SeparatorDirectory = String("/", nullptr);
+	String Path::SeparatorExtension = String(".", nullptr);
+	String Path::SeparatorPrevious = String("..", nullptr);
+	String Path::SeparatorDrive = String(":/", nullptr);
 
 	Path::Path()
 	{

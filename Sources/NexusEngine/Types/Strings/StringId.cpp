@@ -3,7 +3,19 @@
 
 namespace NxEn
 {
-	Dictionary<GUID, String> StringId::Tables = Dictionary<GUID, String>();
+	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(11, nullptr); return StringsTable; }
+
+	static GUID InternString(StringView Text)
+	{
+		Dictionary<GUID, String>& StringsTable = GetStringsTable();
+
+		GUID Id = Hash<>::HashObject(Text);
+		if (!StringsTable.ContainsKey(Id))
+		{
+			StringsTable.Append(Move(Id), Move(Text.ToString()));
+		}
+		return Id;
+	}
 
 	StringId::StringId()
 		: Id(0)
@@ -42,26 +54,18 @@ namespace NxEn
 
 	const String& StringId::ToString() const
 	{
-		return Tables[Id];
+		Dictionary<GUID, String>& StringsTable = GetStringsTable();
+		return StringsTable[Id];
 	}
 
 	const char* StringId::C() const
 	{
-		return Tables[Id].C();
+		Dictionary<GUID, String>& StringsTable = GetStringsTable();
+		return StringsTable[Id].C();
 	}
 
 	const GUID StringId::GetId() const
 	{
-		return Id;
-	}
-
-	GUID StringId::InternString(StringView Text)
-	{
-		GUID Id = Hash<>::HashObject(Text);
-		if (!Tables.ContainsKey(Id))
-		{
-			Tables.Append(Move(Id), Move(Text.ToString()));
-		}
 		return Id;
 	}
 

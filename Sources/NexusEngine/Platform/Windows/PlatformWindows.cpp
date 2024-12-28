@@ -8,7 +8,8 @@ namespace NxEn
 {
 	using DllFunction = Delegate<int64()>;
 
-	static Buffer<char> StaticBuffer = Buffer<char>(512);
+	static Buffer<char>& GetLocalBuffer() { static Buffer<char> LocalBuffer(512, nullptr); return LocalBuffer; }
+
 
 	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
 	{
@@ -84,9 +85,11 @@ namespace NxEn
 
 	String PlatformWindows::GetWorkingDirectory() const
 	{
-		DWORD Length = GetCurrentDirectoryA((DWORD)StaticBuffer.GetByteSize(), StaticBuffer.GetPtr());
-		NEXUS_ASSERT(Length != 0 && Length < StaticBuffer.GetByteSize(), "Buffer overflowed when getting the current working directory");
-		return Path::Normalize(StringView(StaticBuffer.GetPtr(), Length));
+		Buffer<char>& LocalBuffer = GetLocalBuffer();
+
+		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetByteSize(), LocalBuffer.GetPtr());
+		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetByteSize(), "Buffer overflowed when getting the current working directory");
+		return Path::Normalize(StringView(LocalBuffer.GetPtr(), Length));
 	}
 
 	void PlatformWindows::DirectoryCreate(StringView Path) const
