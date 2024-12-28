@@ -71,7 +71,6 @@ namespace NxEn
 			Clear();
 			Free();
 
-			Alloc = Other.Alloc;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
 

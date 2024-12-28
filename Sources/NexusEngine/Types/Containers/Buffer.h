@@ -46,7 +46,6 @@ namespace NxEn
 
 			Free();
 
-			Alloc = Other.Alloc;
 			Count = Other.Count;
 
 			Allocate(Count);

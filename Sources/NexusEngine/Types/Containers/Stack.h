@@ -69,7 +69,6 @@ namespace NxEn
 
 			Clear();
 
-			Alloc = Other.Alloc;
 			Buckets = Other.Buckets;
 			Count = Other.Count;
 			IndexLast = Other.IndexLast;

@@ -62,12 +62,10 @@ namespace NxEn
 			Clear();
 			Free();
 
-			Alloc = Other.Alloc;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
 
 			Allocate(Capacity);
-
 			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				Construct(Index, Other[Index]);

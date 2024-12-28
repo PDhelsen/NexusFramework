@@ -54,8 +54,6 @@ namespace NxEn
 
 			Clear();
 
-			Alloc = Other.Alloc;
-
 			AppendRange(nullptr, Other);
 
 			return *this;

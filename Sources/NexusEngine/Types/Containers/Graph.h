@@ -81,8 +81,6 @@ namespace NxEn
 
 			Clear();
 
-			Alloc = Other.Alloc;
-
 			N* Current = Other.Data;
 			while (Current)
 			{

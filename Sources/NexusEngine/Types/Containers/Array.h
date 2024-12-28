@@ -41,7 +41,6 @@ namespace NxEn
 			NEXUS_LOG(Warning, LoggerChannel::Performance, "Array - Copy constructor");
 
 			Allocate(Count);
-
 			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				Construct(Index, Other[Index]);
@@ -84,11 +83,9 @@ namespace NxEn
 			DestructRange(0, Count);
 			Free();
 
-			Alloc = Other.Alloc;
 			Count = Other.Count;
 
 			Allocate(Count);
-
 			for (uint64 Index = 0; Index < Count; ++Index)
 			{
 				Construct(Index, Other[Index]);
