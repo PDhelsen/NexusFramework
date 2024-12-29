@@ -36,9 +36,7 @@ namespace NxEn
 
 	public:
 		NEXUS_ENGINE_API static Instruments* Create(StringView Path, bool Start = false, Tools Tool = NEXUS_DEFAULT_INSTRUMENTOR);
-
-		NEXUS_ENGINE_API Instruments(StringView Path, bool Start = false);
-		NEXUS_ENGINE_API virtual ~Instruments();
+		NEXUS_ENGINE_API static void Destroy(Instruments* Instance);
 
 		NEXUS_ENGINE_API void StartRecording();
 		NEXUS_ENGINE_API void StopRecording();
@@ -50,6 +48,9 @@ namespace NxEn
 		NEXUS_ENGINE_API static Instruments* GetInstance();
 
 	protected:
+		NEXUS_ENGINE_API Instruments(StringView Path, bool Start = false);
+		NEXUS_ENGINE_API virtual ~Instruments();
+
 		NEXUS_ENGINE_API virtual void RecordMarker(const Marker& Data) = 0;
 
 		File Handle;

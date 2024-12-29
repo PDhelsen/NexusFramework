@@ -41,6 +41,6 @@ namespace NxTs
 		}
 
 		Instruments->StopRecording();
-		delete Instruments;
+		NxEn::Instruments::Destroy(Instruments);
 	}
 }

@@ -37,17 +37,9 @@ namespace NxEn
 		return nullptr;
 	}
 
-	Instruments::Instruments(StringView Path, bool Start)
-		: Handle(Path), Buffer(256), Recording(Start)
+	void Instruments::Destroy(Instruments* Instance)
 	{
-		Handle.Delete();
-		Handle.Create();
-		Handle.Open(File::Mode::Append);
-	}
-
-	Instruments::~Instruments()
-	{
-		Handle.Close();
+		delete Instance;
 	}
 
 	void Instruments::StartRecording()
@@ -70,5 +62,18 @@ namespace NxEn
 		}
 
 		RecordMarker(Data);
+	}
+
+	Instruments::Instruments(StringView Path, bool Start)
+		: Handle(Path), Buffer(256), Recording(Start)
+	{
+		Handle.Delete();
+		Handle.Create();
+		Handle.Open(File::Mode::Append);
+	}
+
+	Instruments::~Instruments()
+	{
+		Handle.Close();
 	}
 }
