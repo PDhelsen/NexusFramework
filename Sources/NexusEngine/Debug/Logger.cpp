@@ -6,6 +6,8 @@
 #include "Misc/IO/Path.h"
 #include "Misc/IO/File.h"
 
+#include "Core/NexusEngineGlobals.h"
+
 #define NEXUS_LOG_LINE 256
 #define NEXUS_LOG_BUFFER 4096
 
@@ -25,9 +27,7 @@ namespace NxEn
 
 	Logger* Logger::GetInstance()
 	{
-		AllocatorContext Context(nullptr);
-		static Logger* Instance = new Logger(true, LoggerVerbosity::All, LoggerOutput::Console, Path::GetWorkingDirectory() + "Logs.txt");
-		return Instance;
+		return Globals::Logs;
 	}
 
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
@@ -36,11 +36,6 @@ namespace NxEn
 		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
 
 		Channels = new Dictionary<StringId, bool, Hashing::Default>();
-		AddChannel(LoggerChannel::Default, true);
-		AddChannel(LoggerChannel::Assert, true);
-		AddChannel(LoggerChannel::Performance, false);
-		AddChannel(LoggerChannel::Routine, false);
-		AddChannel(LoggerChannel::UnitTest, false);
 
 		Target = Platform::GetInstance();
 

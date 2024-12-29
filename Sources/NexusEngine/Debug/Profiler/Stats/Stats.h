@@ -156,15 +156,15 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) Instance->RecordHeader(Id, Type, Mode)
-	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) Instance->RecordStatLabel(Id, Value)
-	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) Instance->RecordStatCheck(Id, Value);
-	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) Instance->RecordStatInteger(Id, Value)
-	#define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value) Instance->RecordStatUnsignedInteger(Id, Value)
-	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) Instance->RecordStatDecimal(Id, Value)
-	#define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value) Instance->RecordStatDecimalPrecision(Id, Value)
-	#define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value) Instance->RecordStatCount(Id, Value)
-	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) Instance->RecordComment(Id, Value)
+	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) if (Instance) { Instance->RecordHeader(Id, Type, Mode); }
+	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(Id, Value); }
+	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(Id, Value); }
+	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(Id, Value); }
+	#define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatUnsignedInteger(Id, Value); }
+	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(Id, Value); }
+	#define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimalPrecision(Id, Value); }
+	#define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCount(Id, Value); }
+	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(Id, Value); }
 
 	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxEn::Stats::GetInstance(), Id, Type, Mode)
 	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)

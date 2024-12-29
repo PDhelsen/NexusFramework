@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Stats.h"
 
+#include "Core/NexusEngineGlobals.h"
+
 namespace NxEn
 {
 	static const String Separator = ";";
@@ -9,9 +11,7 @@ namespace NxEn
 
 	Stats* Stats::GetInstance()
 	{
-		AllocatorContext Context(nullptr);
-		static Stats* Instance = new Stats(Path::GetWorkingDirectory() + "Stats.csv");
-		return Instance;
+		return Globals::Statistiques;
 	}
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------

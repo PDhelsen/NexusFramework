@@ -1,15 +1,13 @@
 #include "Core/NexusEnginePch.h"
 #include "HandleManager.h"
 
-#define NEXUS_HANDLES_COUNT 1024
+#include "Core/NexusEngineGlobals.h"
 
 namespace NxEn
 {
 	HandleManager* HandleManager::GetInstance()
 	{
-		AllocatorContext Context(nullptr);
-		static HandleManager* Instance = new HandleManager(NEXUS_HANDLES_COUNT);
-		return Instance;
+		return Globals::Handles;
 	}
 
 	HandleManager::HandleManager(uint64 Size)

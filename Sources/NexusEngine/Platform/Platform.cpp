@@ -8,12 +8,11 @@ namespace NxEn
 {
 	Platform* Platform::GetInstance()
 	{
-		AllocatorContext Context(nullptr);
 #if NEXUS_WINDOWS
-		static Platform* Instance = new PlatformWindows();
+		static PlatformWindows Instance;
 #else
-		static Platform* Instance = new PlatformNone();
+		static PlatformNone Instance;
 #endif
-		return Instance;
+		return &Instance;
 	}
 }

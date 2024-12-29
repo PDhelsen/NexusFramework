@@ -3,13 +3,13 @@
 
 #include "Debug/Profiler/Instruments/ChromeTracing.h"
 
+#include "Core/NexusEngineGlobals.h"
+
 namespace NxEn
 {
 	Instruments* Instruments::GetInstance()
 	{
-		AllocatorContext Context(nullptr);
-		static Instruments* Instance = Create(Path::GetWorkingDirectory() + "InstrumentSession.json");
-		return Instance;
+		return Globals::Instrumentor;
 	}
 
 	Instruments::Marker::Marker(StringView Text, Instruments* Target)

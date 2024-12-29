@@ -136,7 +136,7 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) Instance->Log(::NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__)
+	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->Log(::NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__); }
 
 	#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Logger::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
 #elif NEXUS_DISTRIB
