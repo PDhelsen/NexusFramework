@@ -6,7 +6,7 @@ namespace NxEn
 	PoolAllocator::PoolAllocator(uint64 Count, uint64 Stride)
 		: Allocator(Count * Stride), Head(nullptr), Stride(Stride)
 	{
-		NEXUS_ASSERT(Stride >= sizeof(void*), "Element size should be at least : %d bytes", sizeof(void*));
+		NEXUS_ASSERT(Stride >= sizeof(void*), Default, "Element size should be at least : %d bytes", sizeof(void*));
 
 		Clear();
 	}
@@ -19,7 +19,7 @@ namespace NxEn
 	{
 		if (FreeAmount() < Stride)
 		{
-			NEXUS_ASSERT(false, "Allocator is full");
+			NEXUS_ASSERT(false, Default, "Allocator is full");
 			return nullptr;
 		}
 
@@ -33,7 +33,7 @@ namespace NxEn
 
 	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(false, "Reallocate from Pool Allocator is not supported")
+		NEXUS_ASSERT(false, Default, "Reallocate from Pool Allocator is not supported")
 			return nullptr;
 	}
 

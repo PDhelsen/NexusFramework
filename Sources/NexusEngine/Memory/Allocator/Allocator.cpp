@@ -16,14 +16,14 @@ namespace NxEn
 
 	void Allocator::IncreaseAmount(uint64 Delta)
 	{
-		NEXUS_ASSERT(Amount + Delta <= Capacity, "Invalid delta");
+		NEXUS_ASSERT(Amount + Delta <= Capacity, Default, "Invalid delta");
 
 		Amount += Delta;
 	}
 
 	void Allocator::DecreaseAmount(uint64 Delta)
 	{
-		NEXUS_ASSERT(Amount > Delta, "Invalid delta");
+		NEXUS_ASSERT(Amount > Delta, Default, "Invalid delta");
 
 		Amount -= Delta;
 	}

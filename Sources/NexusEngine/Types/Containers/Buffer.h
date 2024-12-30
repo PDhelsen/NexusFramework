@@ -13,7 +13,7 @@ namespace NxEn
 		Buffer(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
-			NEXUS_ASSERT(Size > 0, "Buffer has to have size greater than 0");
+			NEXUS_ASSERT(Size > 0, Default, "Buffer has to have size greater than 0");
 
 			Allocate(Size);
 		}

@@ -26,8 +26,6 @@ namespace NxEn
 		List(const List<T>& Other)
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "List - Copy constructor");
-
 			Allocate(Capacity);
 
 			for (uint64 Index = 0; Index < Count; ++Index)
@@ -52,8 +50,6 @@ namespace NxEn
 
 		List<T>& operator=(const List<T>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "List - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -118,7 +114,7 @@ namespace NxEn
 
 		T& Assign(uint64 Index, const T& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Item = Value;
@@ -127,7 +123,7 @@ namespace NxEn
 
 		T& Assign(uint64 Index, T&& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Item = Move(Value);
@@ -137,7 +133,7 @@ namespace NxEn
 		template<typename... Args>
 		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Destruct(Index);
@@ -148,8 +144,8 @@ namespace NxEn
 		template<typename C>
 		T& AssignRange(uint64 Index, const C& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), Default, "Invalid Index");
 
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
@@ -200,7 +196,7 @@ namespace NxEn
 
 		T& Insert(uint64 Index, const T& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
@@ -210,7 +206,7 @@ namespace NxEn
 
 		T& Insert(uint64 Index, T&& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
@@ -221,7 +217,7 @@ namespace NxEn
 		template<typename... Args>
 		T& InsertConstruct(uint64 Index, Args&&... args)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
@@ -232,7 +228,7 @@ namespace NxEn
 		template<typename C>
 		T& InsertRange(uint64 Index, const C& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(GetCount() + Value.GetCount());
 			Shift(Index, Value.GetCount(), true);
@@ -248,7 +244,7 @@ namespace NxEn
 
 		void Remove(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Destruct(Index);
 			Shift(Index, 1, false);
@@ -257,8 +253,8 @@ namespace NxEn
 
 		void RemoveRange(uint64 Index, uint64 Size)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), Default, "Invalid Index");
 
 			DestructRange(Index, Size);
 			Shift(Index, Size, false);
@@ -267,7 +263,7 @@ namespace NxEn
 
 		void RemoveLast()
 		{
-			NEXUS_ASSERT(IsValidIndex(Count - 1), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
 			
 			Destruct(Count - 1);
 			Resize(--Count);
@@ -275,7 +271,7 @@ namespace NxEn
 
 		void RemoveSwap(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Swap(Index, Count - 1);
 			RemoveLast();
@@ -293,14 +289,14 @@ namespace NxEn
 
 		T& Get(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
 
 		const T& Get(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
@@ -327,14 +323,14 @@ namespace NxEn
 
 		I GetIterator(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIteratorIndex(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIteratorIndex(Index);
 		}
@@ -410,8 +406,8 @@ namespace NxEn
 
 		void Swap(uint64 IndexA, uint64 IndexB)
 		{
-			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexA), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexB), Default, "Invalid Index");
 			
 			T Temp = GetItem(IndexA);
 			GetItem(IndexA) = Move(GetItem(IndexB));
@@ -461,8 +457,6 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "List - Reallocate");
-
 			ValidateCapacity(Size);
 			Data = (T*)Memory::Reallocate(Data, sizeof(T) * Capacity, Alloc);
 		}

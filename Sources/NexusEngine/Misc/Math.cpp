@@ -467,56 +467,56 @@ namespace NxEn
 
 		int8 Modulo(int8 X, int8 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			int8 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		int16 Modulo(int16 X, int16 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			int16 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		int32 Modulo(int32 X, int32 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			int32 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		int64 Modulo(int64 X, int64 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			int64 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		uint8 Modulo(uint8 X, uint8 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			uint8 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		uint16 Modulo(uint16 X, uint16 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			uint16 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		uint32 Modulo(uint32 X, uint32 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			uint32 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
 		uint64 Modulo(uint64 X, uint64 Y)
 		{
-			NEXUS_ASSERT(Y != 0, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
 			uint64 Remainder = X % Y;
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
@@ -609,28 +609,28 @@ namespace NxEn
 
 		int8 LogTwoPowerOfTwo(uint8 X)
 		{
-			NEXUS_ASSERT(IsPowerOfTwo(X), "X is not a power of 2");
+			NEXUS_ASSERT(IsPowerOfTwo(X), Default, "X is not a power of 2");
 			NEXUS_BITSCANFORWARD(X, Index, Result)
 			return Result > 0 ? (int8)Index : -1;
 		}
 
 		int16 LogTwoPowerOfTwo(uint16 X)
 		{
-			NEXUS_ASSERT(IsPowerOfTwo(X), "X is not a power of 2");
+			NEXUS_ASSERT(IsPowerOfTwo(X), Default, "X is not a power of 2");
 			NEXUS_BITSCANFORWARD(X, Index, Result)
 			return Result > 0 ? (int16)Index : -1;
 		}
 
 		int32 LogTwoPowerOfTwo(uint32 X)
 		{
-			NEXUS_ASSERT(IsPowerOfTwo(X), "X is not a power of 2");
+			NEXUS_ASSERT(IsPowerOfTwo(X), Default, "X is not a power of 2");
 			NEXUS_BITSCANFORWARD(X, Index, Result)
 			return Result > 0 ? (int32)Index : -1;
 		}
 
 		int64 LogTwoPowerOfTwo(uint64 X)
 		{
-			NEXUS_ASSERT(IsPowerOfTwo(X), "X is not a power of 2");
+			NEXUS_ASSERT(IsPowerOfTwo(X), Default, "X is not a power of 2");
 			NEXUS_BITSCANFORWARD(X, Index, Result)
 			return Result > 0 ? (int64)Index : -1;
 		}

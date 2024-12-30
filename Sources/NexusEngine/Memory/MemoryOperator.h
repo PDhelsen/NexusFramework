@@ -21,37 +21,37 @@ void* operator new[](std::size_t Size)
 
 void* operator new(std::size_t Size, std::align_val_t Align)
 {
-	NEXUS_ASSERT(false, "Not supported new operator");
+	NEXUS_ASSERT(false, Default, "Not supported new operator");
 	return nullptr;
 }
 
 void* operator new[](std::size_t Size, std::align_val_t Align)
 {
-	NEXUS_ASSERT(false, "Not supported new operator");
+	NEXUS_ASSERT(false, Default, "Not supported new operator");
 	return nullptr;
 }
 
 void* operator new(std::size_t Size, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported new operator");
+	NEXUS_ASSERT(false, Default, "Not supported new operator");
 	return nullptr;
 }
 
 void* operator new[](std::size_t Size, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported new operator");
+	NEXUS_ASSERT(false, Default, "Not supported new operator");
 	return nullptr;
 }
 
 void* operator new(std::size_t Size, std::align_val_t Alignement, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported new operator");
+	NEXUS_ASSERT(false, Default, "Not supported new operator");
 	return nullptr;
 }
 
 void* operator new[](std::size_t Size, std::align_val_t Alignement, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported new operator");
+	NEXUS_ASSERT(false, Default, "Not supported new operator");
 	return nullptr;
 }
 
@@ -67,12 +67,12 @@ void operator delete[](void* Pointer)
 
 void operator delete(void* Pointer, std::align_val_t Align)
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete[](void* Pointer, std::align_val_t Align)
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete(void* Pointer, std::size_t Size)
@@ -87,32 +87,32 @@ void operator delete[](void* Pointer, std::size_t Size)
 
 void operator delete(void* Pointer, std::size_t Size, std::align_val_t Alignement)
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete[](void* Pointer, std::size_t Size, std::align_val_t Alignement)
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete(void* Pointer, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete[](void* Pointer, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete(void* Pointer, std::align_val_t Alignement, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 void operator delete[](void* Pointer, std::align_val_t Alignement, const std::nothrow_t& Tag) noexcept
 {
-	NEXUS_ASSERT(false, "Not supported delete operator");
+	NEXUS_ASSERT(false, Default, "Not supported delete operator");
 }
 
 #pragma warning(pop)

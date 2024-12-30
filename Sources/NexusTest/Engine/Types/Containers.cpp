@@ -59,7 +59,7 @@ namespace NxTs
 
 		~ContainerTest()
 		{
-			NEXUS_ASSERT(!Destroyed, "Already Destroyed");
+			NEXUS_ASSERT(!Destroyed, Default, "Already Destroyed");
 
 			Integer = 0;
 			Float = 0.0f;

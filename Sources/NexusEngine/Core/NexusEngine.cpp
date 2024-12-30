@@ -8,7 +8,7 @@ namespace NxEn
 {
 	void HelloWorld()
 	{ 
-		NEXUS_LOG(Info, NxEn::LoggerChannel::Default, "Hello World");
+		NEXUS_LOG(Info, Default, "Hello World");
 	}
 
 	bool Initialize()
@@ -21,10 +21,7 @@ namespace NxEn
 
 		Globals::Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, DebugPath + "Logs.txt");
 		Globals::Logs->AddChannel(LoggerChannel::Default, true);
-		Globals::Logs->AddChannel(LoggerChannel::Assert, true);
-		Globals::Logs->AddChannel(LoggerChannel::Performance, false);
-		Globals::Logs->AddChannel(LoggerChannel::Routine, false);
-		Globals::Logs->AddChannel(LoggerChannel::UnitTest, false);
+		Globals::Logs->AddChannel(LoggerChannel::Verbose, false);
 		Globals::Statistiques = new Stats(DebugPath + "Stats.csv");
 		Globals::Statistiques->Initialize();
 		Globals::Statistiques->StartRecording();

@@ -26,8 +26,6 @@ namespace NxEn
 		Dequeue(const Dequeue<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dequeue - Copy constructor");
-
 			if (Buckets)
 			{
 				Allocate(Buckets);
@@ -61,8 +59,6 @@ namespace NxEn
 
 		Dequeue<T, BS>& operator=(const Dequeue<T, BS>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dequeue - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -140,7 +136,7 @@ namespace NxEn
 
 		T& Assign(uint64 Index, const T& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 			
 			T& Item = GetItem(Index);
 			Item = Value;
@@ -149,7 +145,7 @@ namespace NxEn
 
 		T& Assign(uint64 Index, T&& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 			
 			T& Item = GetItem(Index);
 			Item = Move(Value);
@@ -159,7 +155,7 @@ namespace NxEn
 		template<typename... Args>
 		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 			
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
@@ -171,8 +167,8 @@ namespace NxEn
 		template<typename C>
 		T& AssignRange(uint64 Index, const C& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), "Overflow");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), Default, "Overflow");
 
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
@@ -254,7 +250,7 @@ namespace NxEn
 
 		void RemoveBack()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dequeue is Empty");
 
 			Destruct(Buckets - 1, IndexBack);
 			RemoveBucket(true);
@@ -262,7 +258,7 @@ namespace NxEn
 
 		void RemoveFront()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dequeue is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dequeue is Empty");
 			
 			Destruct(0, IndexFront);
 			RemoveBucket(false);
@@ -279,14 +275,14 @@ namespace NxEn
 
 		T& Get(uint64 Index) 
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
 
 		const T& Get(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
@@ -313,14 +309,14 @@ namespace NxEn
 
 		I GetIterator(uint64 Index) 
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIteratorIndex(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIteratorIndex(Index);
 		}
@@ -378,8 +374,8 @@ namespace NxEn
 
 		void Swap(uint64 IndexA, uint64 IndexB)
 		{
-			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexA), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexB), Default, "Invalid Index");
 			
 			T Temp = GetItem(IndexA);
 			GetItem(IndexA) = Move(GetItem(IndexB));

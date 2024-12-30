@@ -25,8 +25,6 @@ namespace NxEn
 		Queue(const Queue<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Queue - Copy constructor");
-
 			if (Buckets)
 			{
 				Allocate(Buckets);
@@ -60,7 +58,6 @@ namespace NxEn
 
 		Queue<T, BS>& operator=(const Queue<T, BS>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Queue - Assignement operator");
 
 			if (*this == Other)
 			{
@@ -164,7 +161,7 @@ namespace NxEn
 
 		void Remove()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Queue is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Queue is Empty");
 
 			Destruct(0, IndexFront);
 			RemoveBucket();
@@ -181,14 +178,14 @@ namespace NxEn
 
 		T& Get() 
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Queue is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Queue is Empty");
 
 			return GetItem(0, IndexFront);
 		}
 
 		const T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Queue is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Queue is Empty");
 
 			return GetItem(0, IndexFront);
 		}

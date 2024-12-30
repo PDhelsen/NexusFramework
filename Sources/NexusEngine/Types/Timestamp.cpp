@@ -13,11 +13,11 @@ namespace NxEn
 	Timestamp::Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd, int32 Yd, bool St)
 		: Seconds(S), Minutes(Mn), Hours(H), Days(D), Months(M), Years(Y), WeekDay(Wd), YearDay(Yd), DayLightSaving(St)
 	{
-		NEXUS_ASSERT(Months > 0 && Months <= 12, "Invalid Months");
-		NEXUS_ASSERT(Days > 0 && Days <= GetDaysPerMonth(), "Invalid Days");
-		NEXUS_ASSERT(Hours >= 0 && Hours < 24, "Invalid Hours");
-		NEXUS_ASSERT(Minutes >= 0 && Minutes < 60, "Invalid Minutes");
-		NEXUS_ASSERT(Seconds >= 0 && Seconds < 60, "Invalid Seconds");
+		NEXUS_ASSERT(Months > 0 && Months <= 12, Default, "Invalid Months");
+		NEXUS_ASSERT(Days > 0 && Days <= GetDaysPerMonth(), Default, "Invalid Days");
+		NEXUS_ASSERT(Hours >= 0 && Hours < 24, Default, "Invalid Hours");
+		NEXUS_ASSERT(Minutes >= 0 && Minutes < 60, Default, "Invalid Minutes");
+		NEXUS_ASSERT(Seconds >= 0 && Seconds < 60, Default, "Invalid Seconds");
 	}
 
 	Timestamp& Timestamp::operator+=(const Timespan& Other)

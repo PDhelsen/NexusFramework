@@ -20,7 +20,7 @@ namespace NxEn
 		Array()
 			: Alloc(nullptr), Count(0)
 		{
-			NEXUS_ASSERT(L >= 1, "The provided size is invalid");
+			NEXUS_ASSERT(L >= 1, Default, "The provided size is invalid");
 
 			Allocate(L);
 			ConstructRange(0, Count);
@@ -29,7 +29,7 @@ namespace NxEn
 		Array(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Count(0)
 		{
-			NEXUS_ASSERT(L == 1 && Size > 1, "The provided size is invalid");
+			NEXUS_ASSERT(L == 1 && Size > 1, Default, "The provided size is invalid");
 
 			Allocate(Size);
 			ConstructRange(0, Count);
@@ -38,8 +38,6 @@ namespace NxEn
 		Array(const Array<T, L>& Other)
 			: Alloc(Other.Alloc), Count(Other.Count)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Array - Copy constructor");
-
 			Allocate(Count);
 			for (uint64 Index = 0; Index < Count; ++Index)
 			{
@@ -73,8 +71,6 @@ namespace NxEn
 
 		Array<T, L>& operator=(const Array<T, L>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Array - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -146,7 +142,7 @@ namespace NxEn
 
 		T& Assign(uint64 Index, const T& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Item = Value;
@@ -155,7 +151,7 @@ namespace NxEn
 
 		T& Assign(uint64 Index, T&& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Item = Move(Value);
@@ -165,7 +161,7 @@ namespace NxEn
 		template<typename... Args>
 		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Destruct(Index);
@@ -176,8 +172,8 @@ namespace NxEn
 		template<typename C>
 		T& AssignRange(uint64 Index, const C& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount()  - 1), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount()  - 1), Default, "Invalid Index");
 
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
@@ -191,14 +187,14 @@ namespace NxEn
 
 		T& Get(uint64 Index) 
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
 
 		const T& Get(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
@@ -225,14 +221,14 @@ namespace NxEn
 
 		I GetIterator(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIteratorIndex(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIteratorIndex(Index);
 		}
@@ -288,8 +284,8 @@ namespace NxEn
 
 		void Swap(uint64 IndexA, uint64 IndexB)
 		{
-			NEXUS_ASSERT(IsValidIndex(IndexA), "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(IndexB), "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexA), Default, "Invalid Index");
+			NEXUS_ASSERT(IsValidIndex(IndexB), Default, "Invalid Index");
 
 			T Temp = GetItem(IndexA);
 			GetItem(IndexA) = Move(GetItem(IndexB));

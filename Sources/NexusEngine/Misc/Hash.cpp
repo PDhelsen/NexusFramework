@@ -17,7 +17,7 @@ namespace NxEn
 
 		XxHash32& XxHash32::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, "Invalid Data");
+			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
 
 			Size += Length;
 			const uint8* Pointer = reinterpret_cast<const uint8*>(Data);
@@ -158,7 +158,7 @@ namespace NxEn
 
 		XxHash64& XxHash64::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, "Invalid Data");
+			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
 
 			Size += Length;
 			const uint8* Pointer = reinterpret_cast<const uint8*>(Data);

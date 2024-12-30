@@ -26,8 +26,6 @@ namespace NxEn
 		Tree(const Tree<T>& Other)
 			: Alloc(Other.Alloc), Count(0), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Tree - Copy constructor");
-
 			AppendRange(nullptr, Other);
 		}
 
@@ -45,8 +43,6 @@ namespace NxEn
 
 		Tree<T>& operator=(const Tree<T>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Tree - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -90,8 +86,8 @@ namespace NxEn
 
 		T& Assign(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -101,8 +97,8 @@ namespace NxEn
 
 		T& Assign(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -113,8 +109,8 @@ namespace NxEn
 		template<typename... Args>
 		T& AssignConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -177,8 +173,8 @@ namespace NxEn
 
 		T& InsertSibling(T* Sibling, const T& Value)
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = Allocate();
 			Construct(Instance, Value);
@@ -190,8 +186,8 @@ namespace NxEn
 
 		T& InsertSibling(T* Sibling, T&& Value)
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = Allocate();
 			Construct(Instance, Move(Value));
@@ -204,8 +200,8 @@ namespace NxEn
 		template<typename... Args>
 		T& InsertSiblingConstruct(T* Sibling, Args&&... args)
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = Allocate();
 			Construct(Instance, args...);
@@ -217,8 +213,8 @@ namespace NxEn
 
 		T& InsertChild(T* Parent, const T& Value)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = Allocate();
 			Construct(Instance, Value);
@@ -230,8 +226,8 @@ namespace NxEn
 
 		T& InsertChild(T* Parent, T&& Value)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = Allocate();
 			Construct(Instance, Move(Value));
@@ -244,8 +240,8 @@ namespace NxEn
 		template<typename... Args>
 		T& InsertChildConstruct(T* Parent, Args&&... args)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = Allocate();
 			Construct(Instance, args...);
@@ -257,7 +253,7 @@ namespace NxEn
 
 		void Remove(T* Root)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			N* Instance = GetNode(Root);
 			RemoveNode(Instance);
@@ -265,7 +261,7 @@ namespace NxEn
 
 		void RemoveChildren(T* Root)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			N* Instance = GetNode(Root);
 			N* Child = Instance->Child;
@@ -290,38 +286,38 @@ namespace NxEn
 
 		T& Get()  
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetItem(Data);
 		}
 
 		const T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			return GetItem(Data);
 		}
 
 		T& GetParent(T* Child)
 		{
-			NEXUS_ASSERT(Child != nullptr, "Child is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Child != nullptr, Default, "Child is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetItem(GetNode(Child)->Parent);
 		}
 
 		const T& GetParent(const T* Child) const
 		{
-			NEXUS_ASSERT(Child != nullptr, "Child is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Child != nullptr, Default, "Child is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			return GetItem(GetNode(Child)->Parent);
 		}
 
 		T* TryGetParent(T* Child)
 		{
-			NEXUS_ASSERT(Child != nullptr, "Child is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Child != nullptr, Default, "Child is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Child);
 			if (!Instance->Parent)
@@ -333,8 +329,8 @@ namespace NxEn
 
 		const T* TryGetParent(const T* Child) const
 		{
-			NEXUS_ASSERT(Child != nullptr, "Child is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Child != nullptr, Default, "Child is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Child);
 			if (!Instance->Parent)
@@ -346,24 +342,24 @@ namespace NxEn
 
 		T& GetSibling(T* Sibling)
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetItem(GetNode(Sibling)->Sibling);
 		}
 
 		const T& GetSibling(const T* Sibling) const
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			return GetItem(GetNode(Sibling)->Sibling);
 		}
 
 		T* TryGetSibling(T* Sibling)
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Sibling);
 			if (!Instance->Sibling)
@@ -375,8 +371,8 @@ namespace NxEn
 
 		const T* TryGetSibling(const T* Sibling) const
 		{
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Sibling);
 			if (!Instance->Sibling)
@@ -388,24 +384,24 @@ namespace NxEn
 
 		T& GetChild(T* Parent)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetItem(GetNode(Parent)->Child);
 		}
 
 		const T& GetChild(const T* Parent) const
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			return GetItem(GetNode(Parent)->Child);
 		}
 
 		T* TryGetChild(T* Parent)
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Parent);
 			if (!Instance->Child)
@@ -417,8 +413,8 @@ namespace NxEn
 
 		const T* TryGetChild(const T* Parent) const
 		{
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			N* Instance = GetNode(Parent);
 			if (!Instance->Child)
@@ -430,36 +426,36 @@ namespace NxEn
 
 		bool IsParent(const T* Position, const T* Parent) const
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(Parent != nullptr, "Parent is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(Parent != nullptr, Default, "Parent is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetNode(Position)->Parent == GetNode(Parent);
 		}
 
 		bool IsSibling(const T* Position, const T* Sibling) const
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(Sibling != nullptr, "Sibling is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty"); 
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(Sibling != nullptr, Default, "Sibling is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetNode(Position)->Parent == GetNode(Sibling)->Parent;
 		}
 
 		bool IsChild(const T* Position, const T* Child) const
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(Child != nullptr, "Child is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty"); 
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(Child != nullptr, Default, "Child is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 			
 			return GetNode(Position) == GetNode(Child)->Parent;
 		}
 
 		bool IsConnected(const T* A, const T* B) const
 		{
-			NEXUS_ASSERT(A != nullptr, "A is null");
-			NEXUS_ASSERT(B != nullptr, "B is null");
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
+			NEXUS_ASSERT(A != nullptr, Default, "A is null");
+			NEXUS_ASSERT(B != nullptr, Default, "B is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
 
 			return IsParent(A, B) || IsSibling(A, B) || IsChild(A, B);
 		}
@@ -500,9 +496,9 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Tree is empty");
-			NEXUS_ASSERT(A != nullptr, "A is null");
-			NEXUS_ASSERT(B != nullptr, "B is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
+			NEXUS_ASSERT(A != nullptr, Default, "A is null");
+			NEXUS_ASSERT(B != nullptr, Default, "B is null");
 
 			T Temp = GetItem(GetNode(A));
 			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));
@@ -571,7 +567,7 @@ namespace NxEn
 			}
 			else if (Parent == nullptr && Data != nullptr)
 			{
-				NEXUS_ASSERT(false, "Trying to replace root of the tree is not allowed");
+				NEXUS_ASSERT(false, Default, "Trying to replace root of the tree is not allowed");
 			}
 			else if (Parent->Child)
 			{

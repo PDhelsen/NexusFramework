@@ -20,7 +20,7 @@ namespace NxEn
 
 		if (!IsPointerInMemoryBlock(NextPointer))
 		{
-			NEXUS_ASSERT(false, "Allocator is full");
+			NEXUS_ASSERT(false, Default, "Allocator is full");
 			return nullptr;
 		}
 
@@ -35,7 +35,7 @@ namespace NxEn
 
 	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(false, "Reallocate from Stack Allocator is not supported")
+		NEXUS_ASSERT(false, Default, "Reallocate from Stack Allocator is not supported")
 			return nullptr;
 	}
 

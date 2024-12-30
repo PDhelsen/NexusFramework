@@ -65,7 +65,7 @@ namespace NxEn
 
 	StringView StringView::ToView(uint64 Offset, uint64 Size) const
 	{
-		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
+		NEXUS_ASSERT(Offset + Size <= Count, Default, "Invalid String view");
 		return StringView(Data + Offset, Size);
 	}
 }

@@ -13,10 +13,7 @@ namespace NxEn
 	namespace LoggerChannel
 	{
 		const StringId Default = "Default"_Sid;
-		const StringId Assert = "Assert"_Sid;
-		const StringId Performance = "Performance"_Sid;
-		const StringId Routine = "Routine"_Sid;
-		const StringId UnitTest = "UnitTest"_Sid;
+		const StringId Verbose = "Verbose"_Sid;
 	}
 
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
@@ -30,7 +27,7 @@ namespace NxEn
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
 		: StringBuilderMessage(256), StringBuilderFormat(256), StringBuffer(4096), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(nullptr), Handle(nullptr)
 	{
-		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
+		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, Default, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
 
 		Channels = new Dictionary<StringId, bool, Hashing::Default>();
 
@@ -60,13 +57,13 @@ namespace NxEn
 
 	void Logger::AddChannel(StringId Channel, bool State /*true*/)
 	{
-		NEXUS_ASSERT(!HasChannel(Channel), "Already has channel : %s", Channel.C())
+		NEXUS_ASSERT(!HasChannel(Channel), Default, "Already has channel : %s", Channel.C())
 		Channels->Append(Channel, State);
 	}
 
 	void Logger::SetChannel(StringId Channel, bool State)
 	{
-		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
+		NEXUS_ASSERT(HasChannel(Channel), Default, "Doesn't have channel : %s", Channel.C())
 		Channels->Get(Channel) = State;
 	}
 
@@ -77,7 +74,7 @@ namespace NxEn
 
 	bool Logger::CheckChannel(StringId Channel) const
 	{
-		NEXUS_ASSERT(HasChannel(Channel), "Doesn't have channel : %s", Channel.C())
+		NEXUS_ASSERT(HasChannel(Channel), Default, "Doesn't have channel : %s", Channel.C())
 		return Channels->Get(Channel);
 	}
 

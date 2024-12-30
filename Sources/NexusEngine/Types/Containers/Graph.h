@@ -28,8 +28,6 @@ namespace NxEn
 		Graph(const Graph<T>& Other)
 			: Alloc(Other.Alloc), Count(0), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Graph - Copy constructor");
-
 			N* Current = Other.Data;
 			while (Current)
 			{
@@ -72,8 +70,6 @@ namespace NxEn
 
 		Graph<T>& operator=(const Graph<T>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Graph - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -142,8 +138,8 @@ namespace NxEn
 
 		T& Assign(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -153,8 +149,8 @@ namespace NxEn
 
 		T& Assign(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -165,8 +161,8 @@ namespace NxEn
 		template<typename... Args>
 		T& AssignConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -216,8 +212,8 @@ namespace NxEn
 
 		void Remove(T* Value)
 		{
-			NEXUS_ASSERT(Value != nullptr, "Value is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Value != nullptr, Default, "Value is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			N* Instance = GetNode(Value);
 			RemoveNode(Instance);
@@ -241,9 +237,9 @@ namespace NxEn
 
 		void Connect(T* From, T* To)
 		{
-			NEXUS_ASSERT(From != nullptr, "From is null");
-			NEXUS_ASSERT(To != nullptr, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(From != nullptr, Default, "From is null");
+			NEXUS_ASSERT(To != nullptr, Default, "To is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			N* Start = GetNode(From);
 			N* Target = GetNode(To);
@@ -254,9 +250,9 @@ namespace NxEn
 
 		void Disconnect(T* From, T* To)
 		{
-			NEXUS_ASSERT(From != nullptr, "From is null");
-			NEXUS_ASSERT(To != nullptr, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(From != nullptr, Default, "From is null");
+			NEXUS_ASSERT(To != nullptr, Default, "To is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Start = GetNode(From);
 			N* Target = GetNode(To);
@@ -267,22 +263,22 @@ namespace NxEn
 
 		T& Get()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			return GetItem(Data);
 		}
 
 		const T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			return GetItem(Data);
 		}
 
 		T& GetConnection(T* Position, CT Type, uint64 Index = 0) 
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			uint64 Idx = 0;
 			N* Instance = GetNode(Position);
@@ -303,14 +299,14 @@ namespace NxEn
 				Connect = Connect->Next;
 			}
 
-			NEXUS_ASSERT(Connect, "Failed to find connection");
+			NEXUS_ASSERT(Connect, Default, "Failed to find connection");
 			return *Position;
 		}
 
 		const T& GetConnection(const T* Position, CT Type, uint64 Index = 0) const
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			uint64 Idx = 0;
 			N* Instance = GetNode(Position);
@@ -331,14 +327,14 @@ namespace NxEn
 				Connect = Connect->Next;
 			}
 
-			NEXUS_ASSERT(Connect, "Failed to find connection");
+			NEXUS_ASSERT(Connect, Default, "Failed to find connection");
 			return *Position;
 		}
 
 		T* TryGetConnection(T* Position, CT Type, uint64 Index = 0) 
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			uint64 Idx = 0;
 			N* Instance = GetNode(Position);
@@ -364,8 +360,8 @@ namespace NxEn
 
 		const T* TryGetConnection(const T* Position, CT Type, uint64 Index = 0) const
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			uint64 Idx = 0;
 			N* Instance = GetNode(Position);
@@ -397,9 +393,9 @@ namespace NxEn
 		
 		bool IsConnected(const T* Position, const T* To, CT Type, uint64& Index) const
 		{
-			NEXUS_ASSERT(Position != nullptr, "Position is null");
-			NEXUS_ASSERT(To != nullptr, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(To != nullptr, Default, "To is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			Index = 0;
 			const N* Instance = GetNode(Position);
@@ -456,9 +452,9 @@ namespace NxEn
 
 		void Swap(T* A, T* B)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Graph is empty");
-			NEXUS_ASSERT(A != nullptr, "A is null");
-			NEXUS_ASSERT(B != nullptr, "B is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NEXUS_ASSERT(A != nullptr, Default, "A is null");
+			NEXUS_ASSERT(B != nullptr, Default, "B is null");
 
 			T Temp = GetItem(GetNode(A));
 			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));

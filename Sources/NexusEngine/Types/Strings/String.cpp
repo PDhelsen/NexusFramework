@@ -233,7 +233,7 @@ namespace NxEn
 
 	StringView String::ToView(uint64 Offset, uint64 Size) const
 	{
-		NEXUS_ASSERT(Offset + Size <= Count, "Invalid String view");
+		NEXUS_ASSERT(Offset + Size <= Count, Default, "Invalid String view");
 		return StringView(C() + Offset, Size);
 	}
 
@@ -277,7 +277,7 @@ namespace NxEn
 			// Once grow over the Sso limit, it cannot go back to Sso.
 			// The cost of allocating has been paid, so there is no point to freeing the memory until the string is destroyed
 			// The only exception is when using the move constructor / operator
-			NEXUS_ASSERT(false, "Not supposed to reallocate from sso to sso");
+			NEXUS_ASSERT(false, Default, "Not supposed to reallocate from sso to sso");
 		}
 
 		ValidateNullTermination();

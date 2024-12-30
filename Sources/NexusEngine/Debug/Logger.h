@@ -22,10 +22,7 @@ namespace NxEn
 	namespace LoggerChannel
 	{
 		NEXUS_ENGINE_API extern const StringId Default;
-		NEXUS_ENGINE_API extern const StringId Assert;
-		NEXUS_ENGINE_API extern const StringId Performance;
-		NEXUS_ENGINE_API extern const StringId Routine;
-		NEXUS_ENGINE_API extern const StringId UnitTest;
+		NEXUS_ENGINE_API extern const StringId Verbose;
 	}
 
 	enum class LoggerVerbosity : uint8
@@ -136,7 +133,7 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->Log(::NxEn::LoggerVerbosity::Vbs, Chn, Msg, __VA_ARGS__); }
+	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->Log(::NxEn::LoggerVerbosity::Vbs, ::NxEn::LoggerChannel::Chn, Msg, __VA_ARGS__); }
 
 	#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Logger::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
 #elif NEXUS_DISTRIB

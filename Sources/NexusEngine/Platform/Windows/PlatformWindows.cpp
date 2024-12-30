@@ -15,14 +15,14 @@ namespace NxEn
 		auto Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
 		{
-			NEXUS_LOG(Error, LoggerChannel::Default, "Failed to load library");
+			NEXUS_LOG(Error, Default, "Failed to load library");
 			return;
 		}
 
 		DllFunction Function = DllFunction(GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal)));
 		if (!Function)
 		{
-			NEXUS_LOG(Error, LoggerChannel::Default, "Failed to load function");
+			NEXUS_LOG(Error, Default, "Failed to load function");
 			FreeLibrary(Dll);
 			return;
 		}
@@ -87,31 +87,31 @@ namespace NxEn
 		Buffer<char>& LocalBuffer = GetLocalBuffer();
 
 		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetByteSize(), LocalBuffer.GetPtr());
-		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetByteSize(), "Buffer overflowed when getting the current working directory");
+		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetByteSize(), Default, "Buffer overflowed when getting the current working directory");
 		return Path::Normalize(StringView(LocalBuffer.GetPtr(), Length));
 	}
 
 	void PlatformWindows::DirectoryCreate(StringView Path) const
 	{
 		bool Result = CreateDirectoryA(Path.C(), nullptr);
-		NEXUS_ASSERT(Result, "Failed to create directory: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to create directory: %s", Path.C());
 	}
 
 	void PlatformWindows::DirectoryMove(StringView Path, StringView Target, bool Override) const
 	{
 		bool Result = MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
-		NEXUS_ASSERT(Result, "Failed to move directory: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to move directory: %s", Path.C());
 	}
 
 	void PlatformWindows::DirectoryCopy(StringView Path, StringView Target, bool Override) const
 	{
-		NEXUS_ASSERT(false, "Not supported at platform level");
+		NEXUS_ASSERT(false, Default, "Not supported at platform level");
 	}
 
 	void PlatformWindows::DirectoryDelete(StringView Path) const
 	{
 		bool Result = RemoveDirectoryA(Path.C());
-		NEXUS_ASSERT(Result, "Failed to delete directory: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to delete directory: %s", Path.C());
 	}
 
 	List<String> PlatformWindows::DirectoryContent(StringView Path) const
@@ -126,7 +126,7 @@ namespace NxEn
 		{
 			if (File == INVALID_HANDLE_VALUE)
 			{
-				NEXUS_LOG(Error, NxEn::LoggerChannel::Default, "Failed to open file %s", Temp.C());
+				NEXUS_LOG(Error, Default, "Failed to open file %s", Temp.C());
 				Result.Clear();
 				return Result;
 			}
@@ -164,7 +164,7 @@ namespace NxEn
 		);
 
 		bool Result = File != INVALID_HANDLE_VALUE;
-		NEXUS_ASSERT(Result, "Failed to create file: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to create file: %s", Path.C());
 
 		if (!KeepOpen)
 		{
@@ -177,19 +177,19 @@ namespace NxEn
 	void PlatformWindows::FileMove(StringView Path, StringView Target, bool Override) const
 	{
 		bool Result = MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
-		NEXUS_ASSERT(Result, "Failed to move file: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to move file: %s", Path.C());
 	}
 
 	void PlatformWindows::FileCopy(StringView Path, StringView Target, bool Override) const
 	{
 		bool Result = CopyFileA(Path.C(), Target.C(), !Override);
-		NEXUS_ASSERT(Result, "Failed to copy file: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to copy file: %s", Path.C());
 	}
 
 	void PlatformWindows::FileDelete(StringView Path) const
 	{
 		bool Result = DeleteFileA(Path.C());
-		NEXUS_ASSERT(Result, "Failed to delete file: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to delete file: %s", Path.C());
 	}
 
 	void* PlatformWindows::FileOpen(StringView Path, FileMode Mode) const
@@ -213,7 +213,7 @@ namespace NxEn
 		);
 
 		bool Result = File != INVALID_HANDLE_VALUE;
-		NEXUS_ASSERT(Result, "Failed to open file: %s", Path.C());
+		NEXUS_ASSERT(Result, Default, "Failed to open file: %s", Path.C());
 
 		if (Result && Mode == FileMode::Append)
 		{
@@ -226,7 +226,7 @@ namespace NxEn
 	void PlatformWindows::FileClose(void* File) const
 	{
 		bool Result = CloseHandle(File);
-		NEXUS_ASSERT(Result, "Failed to close file");
+		NEXUS_ASSERT(Result, Default, "Failed to close file");
 	}
 
 	uint64 PlatformWindows::FileSize(void* File) const
@@ -238,12 +238,12 @@ namespace NxEn
 
 	void PlatformWindows::FileWriteByte(void* File, BufferView<Byte> Data) const
 	{
-		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), "Failed to write to file");
+		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), Default, "Failed to write to file");
 	}
 
 	Buffer<Byte> PlatformWindows::FileReadByte(void* File) const
@@ -253,7 +253,7 @@ namespace NxEn
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Read, nullptr);
 
-		NEXUS_ASSERT(Result && Read == Data.GetByteSize(), "Failed to read to file");
+		NEXUS_ASSERT(Result && Read == Data.GetByteSize(), Default, "Failed to read to file");
 
 		return Data;
 	}
@@ -263,12 +263,12 @@ namespace NxEn
 		String Content = Text.ToString();
 		Content.Replace("\n", "\r\n");
 
-		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32(), "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Content.C(), (DWORD)Content.GetCount(), &Written, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Content.GetCount(), "Failed to write to file");
+		NEXUS_ASSERT(Result && Written == Content.GetCount(), Default, "Failed to write to file");
 	}
 
 	String PlatformWindows::FileReadText(void* File) const
@@ -279,7 +279,7 @@ namespace NxEn
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Text, (DWORD)Size, &Read, nullptr);
 
-		NEXUS_ASSERT(Result && Read == Size, "Failed to read to file");
+		NEXUS_ASSERT(Result && Read == Size, Default, "Failed to read to file");
 
 		String Content = String::Create(Text, Size + 1, Size);
 		Content.Replace("\r\n", "\n");

@@ -55,7 +55,7 @@ namespace NxEn
 
 				if (Count == Capacity)
 				{
-					NEXUS_ASSERT(false, "Pool is full");
+					NEXUS_ASSERT(false, Default, "Pool is full");
 					return nullptr;
 				}
 
@@ -73,13 +73,13 @@ namespace NxEn
 
 				if (Instance == nullptr || !Memory::IsPointerInRange(Instance, Data, sizeof(N) * Capacity))
 				{
-					NEXUS_ASSERT(false, "Trying to recycle invalid address");
+					NEXUS_ASSERT(false, Default, "Trying to recycle invalid address");
 					return;
 				}
 
 				if (Count == 0)
 				{
-					NEXUS_ASSERT(false, "Pool is full");
+					NEXUS_ASSERT(false, Default, "Pool is full");
 					return;
 				}
 
@@ -262,7 +262,7 @@ namespace NxEn
 
 				if (Instance == nullptr)
 				{
-					NEXUS_ASSERT(false, "Trying to recycle invalid address");
+					NEXUS_ASSERT(false, Default, "Trying to recycle invalid address");
 					return;
 				}
 

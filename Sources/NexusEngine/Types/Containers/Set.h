@@ -31,8 +31,6 @@ namespace NxEn
 		Set(const Set<T, H>& Other)
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Copy constructor");
-
 			Allocate(Capacity);
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
@@ -61,8 +59,6 @@ namespace NxEn
 
 		Set<T, H>& operator=(const Set<T, H>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -177,7 +173,7 @@ namespace NxEn
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index != Capacity, "Could not find value");
+			NEXUS_ASSERT(Index != Capacity, Default, "Could not find value");
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -270,8 +266,6 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Reallocate");
-
 			N* Temp = Data;
 			uint64 Length = Capacity;
 
@@ -306,7 +300,7 @@ namespace NxEn
 		void Construct(uint64 Index, uint64 Hash, Args&&... args)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(Instance.IsFree(), "Construct on an already occupied slot");
+			NEXUS_ASSERT(Instance.IsFree(), Default, "Construct on an already occupied slot");
 			Memory::Construct<T>(&Instance.Value, args...);
 			Instance.Hash = Hash;
 		}
@@ -314,7 +308,7 @@ namespace NxEn
 		void Destruct(uint64 Index)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(!Instance.IsFree(), "Destruct on a free slot");
+			NEXUS_ASSERT(!Instance.IsFree(), Default, "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
 			Instance.Hash = 0;
 		}
@@ -352,9 +346,7 @@ namespace NxEn
 			while (!Data[Index].IsFree())
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				NEXUS_ASSERT(Iteration < MaxProbingIteration(), "Failed to find a free spot");
-
-				NEXUS_LOG(Warning, LoggerChannel::Performance, "Set - Collision");
+				NEXUS_ASSERT(Iteration < MaxProbingIteration(), Default, "Failed to find a free spot");
 			}
 
 			return Index;

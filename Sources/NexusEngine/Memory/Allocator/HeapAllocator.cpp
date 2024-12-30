@@ -20,7 +20,7 @@ namespace NxEn
 
 		if (Slot == nullptr)
 		{
-			NEXUS_ASSERT(false, "Allocator is full");
+			NEXUS_ASSERT(false, Default, "Allocator is full");
 			return nullptr;
 		}
 
@@ -118,7 +118,7 @@ namespace NxEn
 
 	void HeapAllocator::Defragment(HandleManager* Manager, uint64 Count)
 	{
-		NEXUS_LOG(Info, LoggerChannel::Routine, "Starting defragmentation (Current amount : %d)", UsedAmount());
+		NEXUS_LOG(Info, Verbose, "Starting defragmentation (Current amount : %d)", UsedAmount());
 
 		Dictionary<void*, Handle<uint8>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
@@ -170,7 +170,7 @@ namespace NxEn
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot));
 				Manager->UpdateHandle(Handle, Data);
-				NEXUS_LOG(Info, LoggerChannel::Routine, "Moved from %p to %p", Slot->Next, Slot);
+				NEXUS_LOG(Info, Verbose, "Moved from %p to %p", Slot->Next, Slot);
 
 				// Update HeapSlot
 				uint64 NewAddress = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot) + NextSize;
@@ -186,7 +186,7 @@ namespace NxEn
 			Count--;
 		}
 
-		NEXUS_LOG(Info, LoggerChannel::Routine, "End defragmentation (Current amount : %d)", UsedAmount());
+		NEXUS_LOG(Info, Verbose, "End defragmentation (Current amount : %d)", UsedAmount());
 	}
 
 	void HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
@@ -197,7 +197,7 @@ namespace NxEn
 		void* NextPointer = reinterpret_cast<void*>(NextAddress);
 		bool NextIsInsideHeap = NextPointer && IsPointerInMemoryBlock(NextPointer);
 
-		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, "Overlap");
+		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, Default, "Overlap");
 
 		bool AddHeapSlot = NextIsInsideHeap && Slot->Next == nullptr;
 		bool InsertHeapSlot = NextIsInsideHeap && !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + Memory::DefaultAlignement);

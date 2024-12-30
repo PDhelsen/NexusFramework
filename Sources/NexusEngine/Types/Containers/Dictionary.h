@@ -30,8 +30,6 @@ namespace NxEn
 		Dictionary(const Dictionary<K, T, H>& Other)
 			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Copy constructor");
-
 			Allocate(Capacity);
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
@@ -60,8 +58,6 @@ namespace NxEn
 
 		Dictionary<K, T, H>& operator=(const Dictionary<K, T, H>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -131,11 +127,11 @@ namespace NxEn
 
 		T& Assign(const K& Key, const T& Value)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
 			N& Instance = Data[Index];
 			Instance.Value.Value = Value;
 			return Instance.Value.Value;
@@ -143,11 +139,11 @@ namespace NxEn
 
 		T& Assign(const K& Key, T&& Value)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
 			N& Instance = Data[Index];
 			Instance.Value.Value = Move(Value);
 			return Instance.Value.Value;
@@ -156,11 +152,11 @@ namespace NxEn
 		template<typename... Args>
 		T& AssignConstruct(const K& Key, Args&&... args)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
 			N& Instance = Data[Index];
 			Memory::Construct<T>(&Instance.Value.Value, args...);
 			return Instance.Value.Value;
@@ -173,7 +169,7 @@ namespace NxEn
 			{
 				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndexRead(Hash);
-				NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+				NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
 				GetItem(Index).Value = It->Value;
 			}
 
@@ -253,11 +249,11 @@ namespace NxEn
 
 		void Remove(const K& Key)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index != Capacity, "Failed to find key");
+			NEXUS_ASSERT(Index != Capacity, Default, "Failed to find key");
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -270,27 +266,27 @@ namespace NxEn
 
 		T& Get(const K& Key)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
 			return GetItem(Index).Value;
 		}
 
 		const T& Get(const K& Key) const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, "Failed to find key");
+			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
 			return GetItem(Index).Value;
 		}
 
 		T* TryGet(const K& Key) 
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
@@ -303,7 +299,7 @@ namespace NxEn
 
 		const T* TryGet(const K& Key) const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
@@ -370,7 +366,7 @@ namespace NxEn
 
 		void Swap(const K& A, const K& B)
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Dictionary is empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			T Temp = Get(A);
 			Get(A) = Move(Get(B));
@@ -425,8 +421,6 @@ namespace NxEn
 
 		void Reallocate(uint64 Size)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Reallocate");
-
 			N* Temp = Data;
 			uint64 Length = Capacity;
 
@@ -458,7 +452,7 @@ namespace NxEn
 		void Construct(uint64 Index, uint64 Hash, Args&&... args)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(Instance.IsFree(), "Construct on an already occupied slot");
+			NEXUS_ASSERT(Instance.IsFree(), Default, "Construct on an already occupied slot");
 			Memory::Construct<KV>(&Instance.Value, args...);
 			Instance.Hash = Hash;
 		}
@@ -466,7 +460,7 @@ namespace NxEn
 		void Destruct(uint64 Index)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(!Instance.IsFree(), "Destruct on a free slot");
+			NEXUS_ASSERT(!Instance.IsFree(), Default, "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
 			Instance.Hash = 0;
 		}
@@ -504,9 +498,7 @@ namespace NxEn
 			while (!Data[Index].IsFree())
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				NEXUS_ASSERT(Iteration < MaxProbingIteration(), "Failed to find a free spot");
-
-				NEXUS_LOG(Warning, LoggerChannel::Performance, "Dictionary - Collision");
+				NEXUS_ASSERT(Iteration < MaxProbingIteration(), Default, "Failed to find a free spot");
 			}
 
 			return Index;

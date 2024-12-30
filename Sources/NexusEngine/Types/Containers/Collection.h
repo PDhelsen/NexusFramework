@@ -69,7 +69,7 @@ namespace NxEn
 			bool Equals(const Interface<T>& Other) const override
 			{
 				const Wrapper* Cast = dynamic_cast<const Wrapper*>(&Other);
-				NEXUS_ASSERT(Cast, "Failed to cast");
+				NEXUS_ASSERT(Cast, Default, "Failed to cast");
 				return Iterator.Equals(Cast->Iterator);
 			}
 
@@ -91,7 +91,7 @@ namespace NxEn
 			void Copy(const Interface<T>& Other) override
 			{
 				const Wrapper* Cast = dynamic_cast<const Wrapper*>(&Other);
-				NEXUS_ASSERT(Cast, "Failed to cast");
+				NEXUS_ASSERT(Cast, Default, "Failed to cast");
 				Iterator = Cast->Iterator;
 			}
 

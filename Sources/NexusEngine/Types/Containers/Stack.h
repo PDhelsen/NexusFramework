@@ -25,8 +25,6 @@ namespace NxEn
 		Stack(const Stack<T, BS>& Other)
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(nullptr)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Stack - Copy constructor");
-
 			if (Buckets)
 			{
 				Allocate(Buckets);
@@ -60,8 +58,6 @@ namespace NxEn
 
 		Stack<T, BS>& operator=(const Stack<T, BS>& Other)
 		{
-			NEXUS_LOG(Warning, LoggerChannel::Performance, "Stack - Assignement operator");
-
 			if (*this == Other)
 			{
 				return *this;
@@ -162,7 +158,7 @@ namespace NxEn
 
 		void Remove()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Stack is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Stack is Empty");
 
 			Destruct(Buckets - 1, IndexLast);
 			RemoveBucket();
@@ -179,14 +175,14 @@ namespace NxEn
 
 		T& Get()
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Stack is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Stack is Empty");
 
 			return GetItem(Buckets - 1, IndexLast);
 		}
 
 		const T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), "Stack is Empty");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Stack is Empty");
 
 			return GetItem(Buckets - 1, IndexLast);
 		}
