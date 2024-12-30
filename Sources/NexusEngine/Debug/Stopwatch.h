@@ -15,6 +15,7 @@ namespace NxEn
 		NEXUS_ENGINE_API void Resume();
 		NEXUS_ENGINE_API double Stop(double Unit = 1.0);
 		NEXUS_ENGINE_API void Reset();
+		NEXUS_ENGINE_API double Peek(double Unit = 1.0);
 
 		NEXUS_ENGINE_API double GetStartTime(double Unit = 1.0) const;
 		NEXUS_ENGINE_API double GetElapsedTime(double Unit = 1.0) const;
@@ -23,7 +24,7 @@ namespace NxEn
 		bool IsPaused() const { return Paused; }
 
 	private:
-		void ComputeElapsed();
+		inline double Now() const;
 
 		double StartTimer;
 		double ElapsedTime;

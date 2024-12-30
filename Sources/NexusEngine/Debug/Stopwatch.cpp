@@ -26,7 +26,7 @@ namespace NxEn
 			return;
 		}
 
-		StartTimer = Platform::GetInstance()->GetProcessorTimer();
+		StartTimer = Now();
 		ElapsedTime = 0.0;
 		Started = true;
 		Paused = false;
@@ -46,7 +46,7 @@ namespace NxEn
 			return 0.0;
 		}
 
-		ComputeElapsed();
+		ElapsedTime += Now() - StartTimer;
 		Paused = true;
 
 		return GetElapsedTime(Unit);
@@ -78,7 +78,7 @@ namespace NxEn
 			return 0.0;
 		}
 
-		ComputeElapsed();
+		ElapsedTime += Paused ? 0 : Now() - StartTimer;
 		Started = false;
 		Paused = false;
 
@@ -96,6 +96,22 @@ namespace NxEn
 		ElapsedTime = 0.0;
 		Started = false;
 		Paused = false;
+	}
+
+	double Stopwatch::Peek(double Unit)
+	{
+		if (!Started)
+		{
+			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
+			return 0.0;
+		}
+
+		if (Paused)
+		{
+			return GetElapsedTime(Unit);
+		}
+
+		return (Now() - StartTimer) * Unit;
 	}
 
 	double Stopwatch::GetStartTime(double Unit) const
@@ -126,9 +142,8 @@ namespace NxEn
 		return ElapsedTime * Unit;
 	}
 
-	void Stopwatch::ComputeElapsed()
+	double Stopwatch::Now() const
 	{
-		double EndTimer = Platform::GetInstance()->GetProcessorTimer();
-		ElapsedTime += EndTimer - StartTimer;
+		return Platform::GetInstance()->GetProcessorTimer();
 	}
 }
