@@ -3,7 +3,7 @@
 
 namespace NxEn
 {
-	static Stack<Allocator*, 10>& GetAllocators() { static Stack<Allocator*, 10> Allocators(nullptr); return Allocators; }
+	static Stack<Allocator*>& GetAllocators() { static Stack<Allocator*> Allocators(nullptr); return Allocators; }
 
 	AllocatorContext::AllocatorContext(Allocator* Allocator)
 	{
@@ -17,19 +17,19 @@ namespace NxEn
 
 	void AllocatorContext::Push(Allocator* Alloc)
 	{
-		Stack<Allocator*, 10>& Allocators = GetAllocators();
+		Stack<Allocator*>& Allocators = GetAllocators();
 		Allocators.Append(Alloc);
 	}
 
 	void AllocatorContext::Pop()
 	{
-		Stack<Allocator*, 10>& Allocators = GetAllocators();
+		Stack<Allocator*>& Allocators = GetAllocators();
 		Allocators.Remove();
 	}
 
 	Allocator* AllocatorContext::Get()
 	{
-		Stack<Allocator*, 10>& Allocators = GetAllocators();
+		Stack<Allocator*>& Allocators = GetAllocators();
 
 		if (Allocators.GetCount() == 0)
 		{

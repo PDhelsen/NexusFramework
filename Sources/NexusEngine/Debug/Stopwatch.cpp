@@ -34,9 +34,15 @@ namespace NxEn
 
 	double Stopwatch::Pause(double Unit)
 	{
-		if (Paused || !Started)
+		if (Paused)
 		{
 			NEXUS_LOG(Warning, Default, "Stopwatch was already paused");
+			return 0.0;
+		}
+
+		if (!Started)
+		{
+			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
 			return 0.0;
 		}
 
@@ -48,9 +54,15 @@ namespace NxEn
 
 	void Stopwatch::Resume()
 	{
-		if (!Paused || !Started)
+		if (!Paused)
 		{
 			NEXUS_LOG(Warning, Default, "Stopwatch was not paused");
+			return;
+		}
+
+		if (!Started)
+		{
+			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
 			return;
 		}
 
@@ -60,7 +72,7 @@ namespace NxEn
 
 	double Stopwatch::Stop(double Unit)
 	{
-		if (!Started || Paused)
+		if (!Started)
 		{
 			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
 			return 0.0;
@@ -75,6 +87,11 @@ namespace NxEn
 
 	void Stopwatch::Reset()
 	{
+		if (Started)
+		{
+			NEXUS_LOG(Warning, Default, "Stopwatch was running");
+		}
+
 		StartTimer = 0.0;
 		ElapsedTime = 0.0;
 		Started = false;
@@ -83,11 +100,29 @@ namespace NxEn
 
 	double Stopwatch::GetStartTime(double Unit) const
 	{
+		if (StartTimer == 0.0)
+		{
+			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
+			return 0.0;
+		}
+
 		return StartTimer * Unit;
 	}
 
 	double Stopwatch::GetElapsedTime(double Unit) const
 	{
+		if (ElapsedTime == 0.0)
+		{
+			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
+			return 0.0;
+		}
+
+		if (Started)
+		{
+			NEXUS_LOG(Error, Default, "Stopwatch is running");
+			return 0.0;
+		}
+
 		return ElapsedTime * Unit;
 	}
 

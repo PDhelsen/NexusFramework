@@ -498,7 +498,11 @@ namespace NxEn
 			while (!Data[Index].IsFree())
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				NEXUS_ASSERT(Iteration < MaxProbingIteration(), Default, "Failed to find a free spot");
+				if (Iteration >= MaxProbingIteration())
+				{
+					NEXUS_ASSERT(false, Default, "Failed to find a free spot");
+					return Capacity;
+				}
 			}
 
 			return Index;

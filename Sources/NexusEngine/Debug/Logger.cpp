@@ -57,13 +57,23 @@ namespace NxEn
 
 	void Logger::AddChannel(StringId Channel, bool State /*true*/)
 	{
-		NEXUS_ASSERT(!HasChannel(Channel), Default, "Already has channel : %s", Channel.C())
+		if (HasChannel(Channel))
+		{
+			NEXUS_LOG(Warning, Default, "Already has channel : %s", Channel.C());
+			return;
+		}
+
 		Channels->Append(Channel, State);
 	}
 
 	void Logger::SetChannel(StringId Channel, bool State)
 	{
-		NEXUS_ASSERT(HasChannel(Channel), Default, "Doesn't have channel : %s", Channel.C())
+		if (!HasChannel(Channel))
+		{
+			NEXUS_LOG(Error, Default, "Doesn't have channel : %s", Channel.C());
+			return;
+		}
+
 		Channels->Get(Channel) = State;
 	}
 
@@ -74,7 +84,12 @@ namespace NxEn
 
 	bool Logger::CheckChannel(StringId Channel) const
 	{
-		NEXUS_ASSERT(HasChannel(Channel), Default, "Doesn't have channel : %s", Channel.C())
+		if (!HasChannel(Channel))
+		{
+			NEXUS_LOG(Error, Default, "Doesn't have channel : %s", Channel.C());
+			return false;
+		}
+
 		return Channels->Get(Channel);
 	}
 

@@ -168,7 +168,7 @@ namespace NxEn
 		T& AssignRange(uint64 Index, const C& Value)
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), Default, "Overflow");
+			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), Default, "Invalid Index");
 
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)

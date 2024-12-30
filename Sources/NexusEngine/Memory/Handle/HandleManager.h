@@ -2,6 +2,7 @@
 
 #include "Core/NexusEngine.h"
 #include "Memory/Handle/Handle.h"
+#include "Debug/Assert.h"
 
 namespace NxEn
 {
@@ -49,6 +50,8 @@ namespace NxEn
 	template<typename T>
 	Handle<T> HandleManager::AcquireHandle(T* Pointer)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
+
 		Handle<T> Handle;
 		Handle.Pointer = AllocateHandle(Pointer);
 		return Handle;
@@ -57,6 +60,8 @@ namespace NxEn
 	template<typename T>
 	void HandleManager::UpdateHandle(Handle<T>& Handle, T* Pointer)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
+
 		ModifyHandle(Handle.Pointer, Pointer);
 	}
 
@@ -72,6 +77,8 @@ namespace NxEn
 	template<typename T>
 	Handle<T> HandleManager::FindHandle(T* Pointer)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
+
 		Handle<T> Handle;
 		Handle.Pointer = GetHandle(Pointer);
 		return Handle;

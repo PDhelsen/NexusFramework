@@ -58,7 +58,7 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) if (Instance) { ::NxEn::Instruments::Marker Marker##Line(Name, Instance); }
+	#define NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) ::NxEn::Instruments::Marker Marker##Line(Name, Instance);
 	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, Name) NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, NEXUS_LINE_NUMBER)
 	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance) NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, NEXUS_FUNCTION_SIGNATURE)
 

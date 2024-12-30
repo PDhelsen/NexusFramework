@@ -3,6 +3,7 @@
 #include "Types/Integer.h"
 #include "Types/Delegate.h"
 #include "Misc/References.h"
+#include "Debug/Logger.h"
 
 namespace NxEn
 {
@@ -327,6 +328,8 @@ namespace NxEn
 		template<typename T, typename S = Sorting::DefaultLinkBased, typename N>
 		static void SortLinkBased(N** Data, Sorting::CompareFunction<T> Comparison = nullptr)
 		{
+			NEXUS_ASSERT(Data, Default, "Invalid Data");
+
 			*Data = S::SortLinkBased(*Data, Comparison);
 		}
 	};

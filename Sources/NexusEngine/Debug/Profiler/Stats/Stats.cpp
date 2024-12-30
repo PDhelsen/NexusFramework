@@ -223,10 +223,9 @@ namespace NxEn
 
 	void Stats::Initialize()
 	{
-		NEXUS_ASSERT(!Initialized, Default, "Stats is already initialized");
-
 		if (Initialized)
 		{
+			NEXUS_LOG(Warning, Default, "Stats is already initialized");
 			return;
 		}
 
@@ -243,42 +242,87 @@ namespace NxEn
 
 	void Stats::Lock()
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(!Locked, Default, "Stats is already locked");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (Locked)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is already locked");
+			return;
+		}
 
 		Locked = true;
 	}
 
 	void Stats::Unlock()
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(Locked, Default, "Stats is already unlocked");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (!Locked)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is already unlocked");
+			return;
+		}
 
 		Locked = false;
 	}
 
 	void Stats::StartRecording()
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(!Recording, Default, "Stats is already recording");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (Recording)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is already recording");
+			return;
+		}
 
 		Recording = true;
 	}
 
 	void Stats::StopRecording()
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(Recording, Default, "Stats is not recording");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (!Recording)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is not recording");
+			return;
+		}
 
 		Recording = false;
 	}
 
 	void Stats::Flush()
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(!Locked, Default, "Stats is locked");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || Locked || !Recording)
+		if (Locked)
+		{
+			NEXUS_LOG(Error, Default, "Stats is locked");
+			return;
+		}
+
+		if (!Recording)
 		{
 			return;
 		}
@@ -302,11 +346,15 @@ namespace NxEn
 
 	void Stats::Reset()
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(!Locked, Default, "Stats is locked");
-
-		if (!Initialized || Locked)
+		if (!Initialized)
 		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (Locked)
+		{
+			NEXUS_LOG(Error, Default, "Stats is locked");
 			return;
 		}
 
@@ -321,10 +369,9 @@ namespace NxEn
 
 	void Stats::RecordHeader(StringId Name, StatType Type, StatMode Mode)
 	{
-		NEXUS_ASSERT(!Initialized, Default, "Stats is already initialized");
-
 		if (Initialized)
 		{
+			NEXUS_LOG(Error, Default, "Stats is already initialized");
 			return;
 		}
 
@@ -341,9 +388,13 @@ namespace NxEn
 
 	void Stats::RecordStatLabel(StringId Id, StringView Value)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -356,9 +407,13 @@ namespace NxEn
 
 	void Stats::RecordStatCheck(StringId Id, bool Value)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -371,9 +426,13 @@ namespace NxEn
 
 	void Stats::RecordStatInteger(StringId Id, int64 Value)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -386,9 +445,13 @@ namespace NxEn
 
 	void Stats::RecordStatUnsignedInteger(StringId Id, uint64 Value)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -401,9 +464,13 @@ namespace NxEn
 
 	void Stats::RecordStatDecimal(StringId Id, float Value)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -416,9 +483,13 @@ namespace NxEn
 
 	void Stats::RecordStatDecimalPrecision(StringId Id, double Value)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -431,9 +502,13 @@ namespace NxEn
 
 	void Stats::RecordStatCount(StringId Id)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -446,9 +521,13 @@ namespace NxEn
 
 	void Stats::RecordComment(StringView Comment)
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
 
-		if (!Initialized || !Recording)
+		if (!Recording)
 		{
 			return;
 		}
@@ -460,10 +539,13 @@ namespace NxEn
 
 	Dictionary<StringId, const Stats::Stat*> Stats::GetAllCurrentStats() const
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-		NEXUS_ASSERT(!Locked, Default, "Stats is locked");
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return Dictionary<StringId, const Stats::Stat*>();
+		}
 
-		if (!Initialized || Locked)
+		if (Locked)
 		{
 			return Dictionary<StringId, const Stats::Stat*>();
 		}
@@ -473,15 +555,15 @@ namespace NxEn
 		{
 			Result.Append(Header, &Data[Index]);
 		}
+
 		return Result;
 	}
 
 	const Stats::Stat* Stats::GetCurrentStat(StringId Id) const
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-
 		if (!Initialized)
 		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
 			return nullptr;
 		}
 
@@ -490,10 +572,9 @@ namespace NxEn
 
 	uint64 Stats::GetCurrentTick() const
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-
 		if (!Initialized)
 		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
 			return 0;
 		}
 
@@ -502,10 +583,9 @@ namespace NxEn
 
 	StringView Stats::GetCurrentComment() const
 	{
-		NEXUS_ASSERT(Initialized, Default, "Stats is not initialized");
-
 		if (!Initialized)
 		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
 			return StringUtility::Empty;
 		}
 

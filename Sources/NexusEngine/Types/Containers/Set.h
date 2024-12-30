@@ -300,7 +300,6 @@ namespace NxEn
 		void Construct(uint64 Index, uint64 Hash, Args&&... args)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(Instance.IsFree(), Default, "Construct on an already occupied slot");
 			Memory::Construct<T>(&Instance.Value, args...);
 			Instance.Hash = Hash;
 		}
@@ -308,7 +307,6 @@ namespace NxEn
 		void Destruct(uint64 Index)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(!Instance.IsFree(), Default, "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
 			Instance.Hash = 0;
 		}
@@ -346,7 +344,11 @@ namespace NxEn
 			while (!Data[Index].IsFree())
 			{
 				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				NEXUS_ASSERT(Iteration < MaxProbingIteration(), Default, "Failed to find a free spot");
+				if (Iteration >= MaxProbingIteration())
+				{
+					NEXUS_ASSERT(false, Default, "Failed to find a free spot");
+					return Capacity;
+				}
 			}
 
 			return Index;

@@ -13,7 +13,11 @@ namespace NxEn
 	Timespan::Timespan(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S)
 		: Seconds(S), Minutes(Mn), Hours(H), Days(D), Months(M), Years(Y)
 	{
-
+		NEXUS_ASSERT(Months >= 0, Default, "Invalid Months");
+		NEXUS_ASSERT(Days >= 0, Default, "Invalid Days");
+		NEXUS_ASSERT(Hours >= 0, Default, "Invalid Hours");
+		NEXUS_ASSERT(Minutes >= 0, Default, "Invalid Minutes");
+		NEXUS_ASSERT(Seconds >= 0, Default, "Invalid Seconds");
 	}
 
 	Timespan& Timespan::operator+=(const Timespan& Other)

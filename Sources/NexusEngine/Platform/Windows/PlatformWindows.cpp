@@ -225,12 +225,15 @@ namespace NxEn
 
 	void PlatformWindows::FileClose(void* File) const
 	{
+		NEXUS_ASSERT(File, Default, "Invalid File");
 		bool Result = CloseHandle(File);
 		NEXUS_ASSERT(Result, Default, "Failed to close file");
 	}
 
 	uint64 PlatformWindows::FileSize(void* File) const
 	{
+		NEXUS_ASSERT(File, Default, "Invalid File");
+
 		LARGE_INTEGER FileSize;
 		bool Result = GetFileSizeEx(File, &FileSize);
 		return FileSize.QuadPart;
@@ -238,6 +241,7 @@ namespace NxEn
 
 	void PlatformWindows::FileWriteByte(void* File, BufferView<Byte> Data) const
 	{
+		NEXUS_ASSERT(File, Default, "Invalid File");
 		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
@@ -248,6 +252,8 @@ namespace NxEn
 
 	Buffer<Byte> PlatformWindows::FileReadByte(void* File) const
 	{
+		NEXUS_ASSERT(File, Default, "Invalid File");
+
 		Buffer<Byte> Data = Buffer<Byte>(FileSize(File));
 
 		DWORD Read = 0;
@@ -260,6 +266,8 @@ namespace NxEn
 
 	void PlatformWindows::FileWriteText(void* File, StringView Text) const
 	{
+		NEXUS_ASSERT(File, Default, "Invalid File");
+
 		String Content = Text.ToString();
 		Content.Replace("\n", "\r\n");
 
@@ -273,6 +281,8 @@ namespace NxEn
 
 	String PlatformWindows::FileReadText(void* File) const
 	{
+		NEXUS_ASSERT(File, Default, "Invalid File");
+
 		uint64 Size = FileSize(File);
 		char* Text = (char*)Memory::Allocate(Size + 1);
 

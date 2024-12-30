@@ -18,11 +18,7 @@ namespace NxEn
 		void* Pointer = Memory::AlignPointer(Marker, Alignement);
 		void* NextPointer = Memory::OffsetPointer(Pointer, Size);
 
-		if (!IsPointerInMemoryBlock(NextPointer))
-		{
-			NEXUS_ASSERT(false, Default, "Allocator is full");
-			return nullptr;
-		}
+		NEXUS_ASSERT(IsPointerInMemoryBlock(NextPointer), Default, "Allocator is full");
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
 		Next(NextPointer);
@@ -35,16 +31,23 @@ namespace NxEn
 
 	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(false, Default, "Reallocate from Stack Allocator is not supported")
-			return nullptr;
+		NEXUS_ASSERT(false, Default, "Reallocate from Stack Allocator is not supported");
+		return nullptr;
 	}
 
 	void StackAllocator::Free(void* Pointer)
 	{
+		if (!Pointer)
+		{
+			return;
+		}
+
+		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		uint64 Current = reinterpret_cast<uint64>(Marker);
 
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer) || Address >= Current)
+		if (Address >= Current)
 		{
 			return;
 		}

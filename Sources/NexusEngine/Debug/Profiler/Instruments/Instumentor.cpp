@@ -15,8 +15,6 @@ namespace NxEn
 	Instruments::Marker::Marker(StringView Text, Instruments* Target)
 		: Text(Text), Target(Target)
 	{
-		NEXUS_ASSERT(Target, Default, "Target cannot be null");
-
 		Watch.Start();
 	}
 
@@ -24,7 +22,10 @@ namespace NxEn
 	{
 		Watch.Stop();
 
-		Target->Record(*this);
+		if (Target)
+		{
+			Target->Record(*this);
+		}
 	}
 
 	Instruments* Instruments::Create(StringView Path, bool Start, Instruments::Tools Tool)
@@ -44,13 +45,23 @@ namespace NxEn
 
 	void Instruments::StartRecording()
 	{
-		NEXUS_ASSERT(!Recording, Default, "Instruments is already recording");
+		if (Recording)
+		{
+			NEXUS_LOG(Warning, Default, "Instruments is already recording");
+			return;
+		}
+
 		Recording = true;
 	}
 
 	void Instruments::StopRecording()
 	{
-		NEXUS_ASSERT(Recording, Default, "Instruments is not recording");
+		if (!Recording)
+		{
+			NEXUS_LOG(Warning, Default, "Instruments is not recording");
+			return;
+		}
+
 		Recording = false;
 	}
 

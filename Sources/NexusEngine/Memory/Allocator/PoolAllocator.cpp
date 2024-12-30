@@ -17,11 +17,7 @@ namespace NxEn
 
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		if (FreeAmount() < Stride)
-		{
-			NEXUS_ASSERT(false, Default, "Allocator is full");
-			return nullptr;
-		}
+		NEXUS_ASSERT(FreeAmount() >= Stride, Default, "Allocator is full");
 
 		void* Pointer = Head;
 
@@ -33,16 +29,18 @@ namespace NxEn
 
 	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(false, Default, "Reallocate from Pool Allocator is not supported")
-			return nullptr;
+		NEXUS_ASSERT(false, Default, "Reallocate from Pool Allocator is not supported");
+		return nullptr;
 	}
 
 	void PoolAllocator::Free(void* Pointer)
 	{
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
+		if (!Pointer)
 		{
 			return;
 		}
+
+		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		EraseMemory(Pointer, Stride);
 

@@ -31,11 +31,17 @@ namespace NxEn
 
 	bool Memory::MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination)
 	{
+		NEXUS_ASSERT(Source != nullptr, Default, "Trying to compare memory from null address");
+		NEXUS_ASSERT(Destination != nullptr, Default, "Trying to compare memory to null address");
+
 		return SizeSource == SizeDestination && MemCompare(Source, Destination, SizeSource);
 	}
 
 	bool Memory::MemCompare(const void* Source, const void* Destination, uint64 Size)
 	{
+		NEXUS_ASSERT(Source != nullptr, Default, "Trying to compare memory from null address");
+		NEXUS_ASSERT(Destination != nullptr, Default, "Trying to compare memory to null address");
+
 		return memcmp(Source, Destination, Size) == 0;
 	}
 
@@ -48,6 +54,9 @@ namespace NxEn
 
 	void* Memory::AlignPointer(void* Pointer, uint64 Alignement)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Invalid Pointer");
+		NEXUS_ASSERT(Math::IsPowerOfTwo(Alignement), Default, "Invalid Alignement");
+
 		uint64 RawAddress = reinterpret_cast<uint64>(Pointer);
 
 		uint64 AlignedAddress = AlignAddress(RawAddress, Alignement);
@@ -57,9 +66,9 @@ namespace NxEn
 		}
 
 		uint64 Shift = AlignedAddress - RawAddress;
-		NEXUS_ASSERT(Shift > 0 && Shift <= 256, Default, "Shift is too large")
+		NEXUS_ASSERT(Shift > 0 && Shift <= 256, Default, "Shift is too large");
 
-			uint8* MemoryBlock = reinterpret_cast<uint8*>(AlignedAddress);
+		uint8* MemoryBlock = reinterpret_cast<uint8*>(AlignedAddress);
 		MemoryBlock[-1] = static_cast<uint8>(Shift & 0xFF);
 
 		return reinterpret_cast<void*>(AlignedAddress);
@@ -67,10 +76,7 @@ namespace NxEn
 
 	void* Memory::UnalignPointer(void* Pointer)
 	{
-		if (Pointer == nullptr)
-		{
-			return nullptr;
-		}
+		NEXUS_ASSERT(Pointer, Default, "Invalid Pointer");
 
 		uint8* AlignedPointer = reinterpret_cast<uint8*>(Pointer);
 
@@ -85,6 +91,8 @@ namespace NxEn
 
 	void* Memory::OffsetPointer(void* Pointer, uint64 Offset)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Invalid Pointer");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		Address += Offset;
 		return reinterpret_cast<void*>(Address);
@@ -92,6 +100,8 @@ namespace NxEn
 
 	bool Memory::IsPointerInRange(void* Pointer, void* Position, uint64 Offset)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Invalid Pointer");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
 		uint64 Start = reinterpret_cast<uint64>(Position);
@@ -102,6 +112,7 @@ namespace NxEn
 	void* Memory::Allocate(uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
 		NEXUS_ASSERT(Size > 0, Default, "Allocation Size is 0");
+		NEXUS_ASSERT(Math::IsPowerOfTwo(Alignement), Default, "Invalid Alignement");
 		void* Return = nullptr;
 
 		if (Allocator != nullptr)
@@ -120,6 +131,7 @@ namespace NxEn
 	void* Memory::Reallocate(void* Pointer, uint64 Size, Allocator* Allocator, uint64 Alignement)
 	{
 		NEXUS_ASSERT(Size > 0, Default, "Allocation Size is 0");
+		NEXUS_ASSERT(Math::IsPowerOfTwo(Alignement), Default, "Invalid Alignement");
 		void* Return = nullptr;
 
 		if (Allocator != nullptr)

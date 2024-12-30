@@ -18,11 +18,7 @@ namespace NxEn
 		Size = GetAlignedSize(Size);
 		HeapSlot* Slot = GetHeapSlot(Size);
 
-		if (Slot == nullptr)
-		{
-			NEXUS_ASSERT(false, Default, "Allocator is full");
-			return nullptr;
-		}
+		NEXUS_ASSERT(Slot, Default, "Allocator is full");
 
 		void* Pointer = GetHeapSlotMemory(Slot);
 
@@ -34,10 +30,12 @@ namespace NxEn
 
 	void* HeapAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
+		if (!Pointer)
 		{
 			return nullptr;
 		}
+
+		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		void* NewPointer = nullptr;
 		Size = GetAlignedSize(Size);
@@ -78,10 +76,12 @@ namespace NxEn
 
 	void HeapAllocator::Free(void* Pointer)
 	{
-		if (!Pointer || !IsPointerInMemoryBlock(Pointer))
+		if (!Pointer)
 		{
 			return;
 		}
+
+		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		HeapSlot* Slot = GetHeapSlot(Pointer);
 		uint64 Size = GetHeapSlotSize(Slot);

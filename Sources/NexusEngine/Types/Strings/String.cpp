@@ -60,6 +60,9 @@ namespace NxEn
 
 	String String::Create(char* Text, uint64 Capacity, uint64 Size)
 	{
+		NEXUS_ASSERT(Text, Default, "Invalid Text");
+		NEXUS_ASSERT(Capacity > 0, Default, "Invalid Capacity");
+
 		String Result;
 		Result.Alloc = AllocatorContext::Get();
 		Result.Capacity = Math::Max(Capacity, (uint64)(SmallStringCapacity + 1));
