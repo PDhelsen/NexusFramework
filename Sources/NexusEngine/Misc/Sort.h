@@ -4,9 +4,6 @@
 #include "Types/Delegate.h"
 #include "Misc/References.h"
 
-#define NEXUS_SORTING_DEFAULT_INDEX ::NxEn::Sorting::HeapSort
-#define NEXUS_SORTING_DEFAULT_LINK ::NxEn::Sorting::MergeSort
-
 namespace NxEn
 {
 	namespace Sorting
@@ -314,8 +311,8 @@ namespace NxEn
 			}
 		};
 
-		using DefaultIndexBased = NEXUS_SORTING_DEFAULT_INDEX;
-		using DefaultLinkBased = NEXUS_SORTING_DEFAULT_LINK;
+		using DefaultIndexBased = HeapSort;
+		using DefaultLinkBased = MergeSort;
 	}
 
 	class Sort

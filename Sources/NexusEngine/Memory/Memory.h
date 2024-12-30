@@ -5,8 +5,6 @@
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
 
-#define NEXUS_MEMORY_ALIGN 16
-
 namespace NxEn
 {
 	namespace Memory
@@ -18,6 +16,8 @@ namespace NxEn
 		constexpr double KiloToByte = 1.0 / (1024.0);
 		constexpr double MegaToByte = 1.0 / (1024.0 * 1024.0);
 		constexpr double GigaToByte = 1.0 / (1024.0 * 1024.0 * 1024.0);
+
+		constexpr uint64 DefaultAlignement = 16;
 
 		NEXUS_ENGINE_API void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_ENGINE_API void MemCopy(const void* Source, void* Destination, uint64 Size);
@@ -31,8 +31,8 @@ namespace NxEn
 		NEXUS_ENGINE_API void* OffsetPointer(void* Pointer, uint64 Offset);
 		NEXUS_ENGINE_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
-		NEXUS_ENGINE_API void* Allocate(uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = NEXUS_MEMORY_ALIGN);
-		NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = NEXUS_MEMORY_ALIGN);
+		NEXUS_ENGINE_API void* Allocate(uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = DefaultAlignement);
+		NEXUS_ENGINE_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = DefaultAlignement);
 		NEXUS_ENGINE_API void Free(void* Pointer, Allocator* Allocator = AllocatorContext::Get());
 
 		template<typename T, typename... Args>

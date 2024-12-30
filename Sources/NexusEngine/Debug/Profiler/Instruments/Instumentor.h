@@ -5,8 +5,6 @@
 #include "Misc/IO/File.h"
 #include "Debug/Stopwatch.h"
 
-#define NEXUS_DEFAULT_INSTRUMENTOR ::NxEn::Instruments::Tools::ChromeTracing
-
 namespace NxEn
 {
 	class Instruments
@@ -35,7 +33,7 @@ namespace NxEn
 		};
 
 	public:
-		NEXUS_ENGINE_API static Instruments* Create(StringView Path, bool Start = false, Tools Tool = NEXUS_DEFAULT_INSTRUMENTOR);
+		NEXUS_ENGINE_API static Instruments* Create(StringView Path, bool Start = false, Tools Tool = Tools::ChromeTracing);
 		NEXUS_ENGINE_API static void Destroy(Instruments* Instance);
 
 		NEXUS_ENGINE_API void StartRecording();

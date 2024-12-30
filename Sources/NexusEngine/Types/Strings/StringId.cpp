@@ -3,7 +3,7 @@
 
 namespace NxEn
 {
-	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(11, nullptr); return StringsTable; }
+	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(97, nullptr); return StringsTable; }
 
 	static GUID InternString(StringView Text)
 	{

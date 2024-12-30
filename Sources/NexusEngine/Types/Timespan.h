@@ -5,8 +5,6 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 
-#define NEXUS_TIMESPAN_FORMAT "%Yy%mm%dd - %Hh%Mm%Ss"
-
 namespace NxEn
 {
 	struct Timespan
@@ -24,7 +22,7 @@ namespace NxEn
 
 		NEXUS_ENGINE_API bool IsValid() const;
 
-		inline static const StringView Format = NEXUS_TIMESPAN_FORMAT;
+		inline static const String Format = "%Yy%mm%dd - %Hh%Mm%Ss";
 
 		int32 Seconds;
 		int32 Minutes;

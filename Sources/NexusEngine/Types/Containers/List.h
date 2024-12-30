@@ -548,7 +548,7 @@ namespace NxEn
 			return Capacity * 2;
 		}
 
-		inline static const uint64 DefaultSize = 16;
+		inline static const uint64 DefaultSize = 8;
 
 		Allocator* Alloc;
 		uint64 Capacity;

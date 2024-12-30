@@ -200,7 +200,7 @@ namespace NxEn
 		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, "Overlap");
 
 		bool AddHeapSlot = NextIsInsideHeap && Slot->Next == nullptr;
-		bool InsertHeapSlot = NextIsInsideHeap && !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + NEXUS_MEMORY_ALIGN);
+		bool InsertHeapSlot = NextIsInsideHeap && !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + Memory::DefaultAlignement);
 
 		HeapSlot* NewHeapSlot = nullptr;
 		if (AddHeapSlot || InsertHeapSlot)
@@ -269,8 +269,8 @@ namespace NxEn
 
 	uint64 HeapAllocator::GetAlignedSize(uint64 Size) const
 	{
-		uint64 UnalignedBytes = Size % NEXUS_MEMORY_ALIGN;
-		Size += UnalignedBytes == 0 ? 0 : NEXUS_MEMORY_ALIGN - UnalignedBytes;
+		uint64 UnalignedBytes = Size % Memory::DefaultAlignement;
+		Size += UnalignedBytes == 0 ? 0 : Memory::DefaultAlignement - UnalignedBytes;
 		return Size;
 	}
 

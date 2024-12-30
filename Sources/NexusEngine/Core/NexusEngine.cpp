@@ -4,19 +4,6 @@
 #include "Core/NexusEngineGlobals.h"
 #include "Memory/MemoryOperator.h"
 
-#define NEXUS_LOGS_FLUSH true
-#define NEXUS_LOGS_VERBOSITY LoggerVerbosity::All
-#define NEXUS_LOGS_OUTPUT LoggerOutput::All
-#define NEXUS_LOGS_PATH Path::GetWorkingDirectory() + "Logs.txt"
-
-#define NEXUS_STATISTIQUES_PATH Path::GetWorkingDirectory() + "Stats.csv"
-
-#define NEXUS_INSTRUMENTOR_PATH Path::GetWorkingDirectory() + "Instruments.json"
-#define NEXUS_INSTRUMENTOR_START false
-#define NEXUS_INSTRUMENTOR_TOOL NEXUS_DEFAULT_INSTRUMENTOR
-
-#define NEXUS_HANDLES_COUNT 1024
-
 namespace NxEn
 {
 	void HelloWorld()
@@ -28,19 +15,23 @@ namespace NxEn
 	{
 		AllocatorContext Context(nullptr);
 
-		Globals::Logs = new Logger(NEXUS_LOGS_FLUSH, NEXUS_LOGS_VERBOSITY, NEXUS_LOGS_OUTPUT, NEXUS_LOGS_PATH);
+		Path DebugPath = Path::GetWorkingDirectory() + "Debug";
+		Directory DebugDirectory = Directory(DebugPath);
+		DebugDirectory.Create();
+
+		Globals::Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, DebugPath + "Logs.txt");
 		Globals::Logs->AddChannel(LoggerChannel::Default, true);
 		Globals::Logs->AddChannel(LoggerChannel::Assert, true);
 		Globals::Logs->AddChannel(LoggerChannel::Performance, false);
 		Globals::Logs->AddChannel(LoggerChannel::Routine, false);
 		Globals::Logs->AddChannel(LoggerChannel::UnitTest, false);
-		Globals::Statistiques = new Stats(NEXUS_STATISTIQUES_PATH);
+		Globals::Statistiques = new Stats(DebugPath + "Stats.csv");
 		Globals::Statistiques->Initialize();
 		Globals::Statistiques->StartRecording();
-		Globals::Instrumentor = Instruments::Create(NEXUS_INSTRUMENTOR_PATH, NEXUS_INSTRUMENTOR_START, NEXUS_INSTRUMENTOR_TOOL);
+		Globals::Instrumentor = Instruments::Create(DebugPath + "Instruments.json", false);
 		Globals::Instrumentor->StartRecording();
 
-		Globals::Handles = new HandleManager(NEXUS_HANDLES_COUNT);
+		Globals::Handles = new HandleManager(1024);
 
 
 		return true;

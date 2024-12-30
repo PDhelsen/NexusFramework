@@ -8,9 +8,6 @@
 
 #include "Core/NexusEngineGlobals.h"
 
-#define NEXUS_LOG_LINE 256
-#define NEXUS_LOG_BUFFER 4096
-
 namespace NxEn
 {
 	namespace LoggerChannel
@@ -31,7 +28,7 @@ namespace NxEn
 	}
 
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: StringBuilderMessage(NEXUS_LOG_LINE), StringBuilderFormat(NEXUS_LOG_LINE), StringBuffer(NEXUS_LOG_BUFFER), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(nullptr), Handle(nullptr)
+		: StringBuilderMessage(256), StringBuilderFormat(256), StringBuffer(4096), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(nullptr), Handle(nullptr)
 	{
 		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
 
