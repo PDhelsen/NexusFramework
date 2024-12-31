@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
+#include "Core/NexusEngineCore.h"
 #include "Platform/PlatformInteger.h"
 
 using int8		= PlaftormInteger::int8;

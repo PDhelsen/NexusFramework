@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Types/Integer.h"
-#include "Types/Delegate.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Functions/Delegate.h"
 #include "Misc/References.h"
-#include "Debug/Logger.h"
+#include "Debug/Logger/Logger.h"
 
 namespace NxEn
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
+#include "Core/NexusEngineCore.h"
 #include "Memory/Handle/HandleManager.h"
-#include "Debug/Logger.h"
+#include "Debug/Logger/Logger.h"
 #include "Debug/Profiler/Stats/Stats.h"
 #include "Debug/Profiler/Instruments/Instumentor.h"
 

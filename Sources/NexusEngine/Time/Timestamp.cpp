@@ -1,7 +1,7 @@
 #include "Core/NexusEnginePch.h"
-#include "Types/Timestamp.h"
+#include "Timestamp.h"
 
-#include "Application/Time.h"
+#include "Time/Time.h"
 
 namespace NxEn
 {

@@ -1,12 +1,12 @@
 #pragma once 
 
-#include "Core/NexusEngine.h"
-#include "Types/Integer.h"
-#include "Types/Enum.h"
-#include "Types/Timestamp.h"
+#include "Core/NexusEngineCore.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Numbers/Enum.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 #include "Types/Strings/StringId.h"
+#include "Time/Timestamp.h"
 
 namespace NxEn
 {

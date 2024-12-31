@@ -1,7 +1,7 @@
 #include "Core/NexusTestPch.h"
 
-#include "Debug/Logger.h"
-#include "Misc/IO/Path.h"
+#include "Debug/Logger/Logger.h"
+#include "IO/Path.h"
 
 namespace NxTs
 {

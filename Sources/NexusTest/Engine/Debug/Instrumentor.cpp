@@ -1,7 +1,7 @@
 #include "Core/NexusTestPch.h"
 
 #include "Debug/Profiler/Instruments/Instumentor.h"
-#include "Misc/IO/Path.h"
+#include "IO/Path.h"
 #include "Platform/Platform.h"
 
 namespace NxTs

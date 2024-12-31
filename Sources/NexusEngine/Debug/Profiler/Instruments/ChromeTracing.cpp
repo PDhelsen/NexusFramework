@@ -1,7 +1,7 @@
 #include "Core/NexusEnginePch.h"
 #include "ChromeTracing.h"
 
-#include "Application/Time.h"
+#include "Time/Time.h"
 
 namespace NxEn
 {

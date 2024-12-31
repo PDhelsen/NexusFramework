@@ -1,6 +1,6 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Integer.h"
+#include "Types/Numbers/Integer.h"
 
 namespace NxTs
 {

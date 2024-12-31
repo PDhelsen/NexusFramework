@@ -1,15 +1,59 @@
 #pragma once
 
-#if NEXUS_ENGINE_DLL_BUILD
-	#define NEXUS_ENGINE_API __declspec(dllexport)
-#else
-	#define NEXUS_ENGINE_API __declspec(dllimport)
-#endif
+#include "Types/Numbers/Integer.h"
+#include "Types/Numbers/Decimal.h"
+#include "Types/Numbers/Enum.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringId.h"
+#include "Types/Strings/StringView.h"
+#include "Types/Strings/StringCApi.h"
+#include "Types/Strings/StringFunctions.h"
+#include "Types/Strings/StringTemplate.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
+#include "Types/Containers/Array.h"
+#include "Types/Containers/List.h"
+#include "Types/Containers/Dequeue.h"
+#include "Types/Containers/Stack.h"
+#include "Types/Containers/Queue.h"
+#include "Types/Containers/LinkedList.h"
+#include "Types/Containers/Set.h"
+#include "Types/Containers/Dictionary.h"
+#include "Types/Containers/Tree.h"
+#include "Types/Containers/Graph.h"
+#include "Types/Containers/Collection.h"
+#include "Types/Containers/Buffer.h"
+#include "Types/Containers/Pool.h"
+#include "Types/Containers/Tuple.h"
+#include "Types/Containers/ContainersUtils.h"
+#include "Types/Functions/Delegate.h"
+#include "Types/Functions/Event.h"
 
-namespace NxEn
-{
-	NEXUS_ENGINE_API void HelloWorld();
+#include "Time/Timestamp.h"
+#include "Time/Timespan.h"
+#include "Time/Stopwatch.h"
+#include "Time/Time.h"
 
-	NEXUS_ENGINE_API bool Initialize();
-	NEXUS_ENGINE_API bool Shutdown();
-}
+#include "Debug/Logger/Logger.h"
+#include "Debug/Logger/Assert.h"
+#include "Debug/Profiler/Profiler.h"
+
+#include "Misc/References.h"
+#include "Misc/Hash.h"
+#include "Misc/Sort.h"
+#include "Misc/Math.h"
+
+#include "IO/Path.h"
+#include "IO/File.h"
+#include "IO/Directory.h"
+
+#include "Memory/Memory.h"
+#include "Memory/Handle/Handle.h"
+#include "Memory/Handle/HandleManager.h"
+#include "Memory/Allocator/Allocator.h"
+#include "Memory/Allocator/AllocatorContext.h"
+#include "Memory/Allocator/StackAllocator.h"
+#include "Memory/Allocator/HeapAllocator.h"
+#include "Memory/Allocator/PoolAllocator.h"
+
+#include "Platform/Platform.h"

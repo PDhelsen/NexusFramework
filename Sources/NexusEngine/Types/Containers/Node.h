@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types/Integer.h"
+#include "Types/Numbers/Integer.h"
 #include "Memory/Memory.h"
 #include "Misc/References.h"
 

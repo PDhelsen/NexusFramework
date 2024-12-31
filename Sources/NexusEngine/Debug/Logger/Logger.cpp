@@ -1,10 +1,10 @@
 #include "Core/NexusEnginePch.h"
 #include "Logger.h"
 
-#include "Application/Time.h"
 #include "Platform/Platform.h"
-#include "Misc/IO/Path.h"
-#include "Misc/IO/File.h"
+#include "Time/Time.h"
+#include "IO/Path.h"
+#include "IO/File.h"
 
 #include "Core/NexusEngineGlobals.h"
 

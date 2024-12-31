@@ -1,6 +1,6 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Enum.h"
+#include "Types/Numbers/Enum.h"
 
 namespace NxTs
 {

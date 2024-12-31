@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types/Integer.h"
+#include "Types/Numbers/Integer.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
 

@@ -1,7 +1,6 @@
 #include "Core/NexusTestPch.h"
 
-#include "Debug/Stopwatch.h"
-#include "Application/Time.h"
+#include "Time/Stopwatch.h"
 #include "Platform/Platform.h"
 
 namespace NxTs

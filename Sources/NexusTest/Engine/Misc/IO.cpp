@@ -1,8 +1,8 @@
 #include "Core/NexusTestPch.h"
 
-#include "Misc/IO/Path.h"
-#include "Misc/IO/Directory.h"
-#include "Misc/IO/File.h"
+#include "IO/Path.h"
+#include "IO/Directory.h"
+#include "IO/File.h"
 
 namespace NxTs
 {

@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
-#include "Types/Integer.h"
+#include "Core/NexusEngineCore.h"
+#include "Types/Numbers/Integer.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
-#include "Types/Timespan.h"
+#include "Time/Timespan.h"
 
 namespace NxEn
 {

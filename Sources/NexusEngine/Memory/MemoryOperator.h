@@ -2,7 +2,7 @@
 
 #include "External/StandardLibrary.h"
 #include "Memory/Memory.h"
-#include "Debug/Assert.h"
+#include "Debug/Logger/Assert.h"
 
 #pragma warning(push)
 #pragma warning(disable: 6387)

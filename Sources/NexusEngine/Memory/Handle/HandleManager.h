@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
+#include "Core/NexusEngineCore.h"
 #include "Memory/Handle/Handle.h"
-#include "Debug/Assert.h"
+#include "Debug/Logger/Assert.h"
 
 namespace NxEn
 {

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngineBase.h"
+#include "Core/NexusEngineCore.h"
 #include "Instumentor.h"
 
 namespace NxEn

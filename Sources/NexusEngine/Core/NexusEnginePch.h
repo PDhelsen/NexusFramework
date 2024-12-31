@@ -8,13 +8,11 @@
 #include "External/Intrinsics.h"
 #include "External/StandardLibrary.h"
 
-#include "Core/NexusEngine.h"
+#include "Core/NexusEngineCore.h"
 
-#include "Types/Integer.h"
-#include "Types/Decimal.h"
-#include "Types/Enum.h"
-#include "Types/Timestamp.h"
-#include "Types/Timespan.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Numbers/Decimal.h"
+#include "Types/Numbers/Enum.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringId.h"
 #include "Types/Strings/StringView.h"
@@ -38,18 +36,22 @@
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
 #include "Types/Containers/ContainersUtils.h"
-#include "Types/Delegate.h"
+#include "Types/Functions/Delegate.h"
 
-#include "Debug/Logger.h"
-#include "Debug/Assert.h"
+#include "Time/Timestamp.h"
+#include "Time/Timespan.h"
+
+#include "Debug/Logger/Logger.h"
+#include "Debug/Logger/Assert.h"
 
 #include "Misc/References.h"
 #include "Misc/Hash.h"
 #include "Misc/Sort.h"
 #include "Misc/Math.h"
-#include "Misc/IO/Path.h"
-#include "Misc/IO/File.h"
-#include "Misc/IO/Directory.h"
+
+#include "IO/Path.h"
+#include "IO/File.h"
+#include "IO/Directory.h"
 
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"

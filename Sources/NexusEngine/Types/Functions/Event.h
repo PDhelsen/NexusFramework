@@ -2,7 +2,7 @@
 
 #include "Misc/References.h"
 #include "Types/Containers/List.h"
-#include "Types/Delegate.h"
+#include "Types/Functions/Delegate.h"
 
 namespace NxEn
 {

@@ -1,7 +1,7 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Delegate.h"
-#include "Types/Event.h"
+#include "Types/Functions/Delegate.h"
+#include "Types/Functions/Event.h"
 
 namespace NxTs
 {

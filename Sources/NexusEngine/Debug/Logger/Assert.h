@@ -1,7 +1,7 @@
 #pragma once
 
 #include "External/Intrinsics.h"
-#include "Debug/Logger.h"
+#include "Debug/Logger/Logger.h"
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
 	#define NEXUS_BREAK NEXUS_DEBUGBREAK

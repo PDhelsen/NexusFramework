@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Core/NexusEngineBase.h"
-#include "Misc/IO/Path.h"
-#include "Misc/IO/File.h"
+#include "Core/NexusEngineCore.h"
+#include "IO/Path.h"
+#include "IO/File.h"
 
 namespace NxEn
 {

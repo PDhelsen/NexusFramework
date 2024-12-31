@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Core/NexusEngine.h"
+#include "Core/NexusEngineCore.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 #include "Types/Containers/List.h"

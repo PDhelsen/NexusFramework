@@ -1,8 +1,8 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Timestamp.h"
-#include "Types/Timespan.h"
-#include "Application/Time.h"
+#include "Time/Timestamp.h"
+#include "Time/Timespan.h"
+#include "Time/Time.h"
 
 namespace NxTs
 {

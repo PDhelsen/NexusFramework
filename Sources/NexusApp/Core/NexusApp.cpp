@@ -1,10 +1,10 @@
 #include "NexusApp.h"
 #include "Memory/MemoryOperator.h"
 
-#include "Core/NexusEngineBase.h"
+#include "Core/NexusEngine.h"
 #include "Core/NexusEditor.h"
 
-#include "Platform/Platform.h"
+#include "Core/NexusEngineEntryPoint.h"
 
 namespace NxAp
 {
