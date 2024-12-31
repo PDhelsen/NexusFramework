@@ -6,8 +6,12 @@
 namespace NxEn
 {
 	static const String Separator = ";";
-	static const StringId TickId = "Tick"_Sid;
-	static const StringId CommentId = "Comments"_Sid;
+
+	namespace StatsHeader
+	{
+		const StringId TickId = "Tick"_Sid;
+		const StringId CommentId = "Comments"_Sid;
+	}
 
 	Stats* Stats::GetInstance()
 	{
@@ -34,7 +38,7 @@ namespace NxEn
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	Stats::Stat::Stat(StatType Type, StatMode Mode)
-		: Type(Type), Mode(Mode)
+		: Type(Type), Mode(Mode), Tick(0)
 	{
 		switch (Type)
 		{
@@ -53,6 +57,7 @@ namespace NxEn
 	{
 		Type = Other.Type;
 		Mode = Other.Mode;
+		Tick = Other.Tick;
 
 		if (Type == StatType::Label)
 		{
@@ -74,6 +79,7 @@ namespace NxEn
 	{
 		Type = Other.Type;
 		Mode = Other.Mode;
+		Tick = Other.Tick;
 
 		if (Type == StatType::Label)
 		{
@@ -103,6 +109,7 @@ namespace NxEn
 	{
 		Type = Other.Type;
 		Mode = Other.Mode;
+		Tick = Other.Tick;
 
 		switch (Type)
 		{
@@ -121,6 +128,7 @@ namespace NxEn
 	{
 		Type = Other.Type;
 		Mode = Other.Mode;
+		Tick = Other.Tick;
 
 		switch (Type)
 		{
@@ -137,6 +145,8 @@ namespace NxEn
 
 	void Stats::Stat::Reset()
 	{
+		Tick = 0;
+
 		switch (Type)
 		{
 		case NxEn::Stats::StatType::Label: Value.Label.Clear(); break;
@@ -150,53 +160,50 @@ namespace NxEn
 
 	void Stats::Stat::RecordLabel(StringView Statistique)
 	{
+		Tick++;
 		Value.Label = Statistique.ToString();
 	}
 
 	void Stats::Stat::RecordCheck(bool Statistique)
 	{
+		Tick++;
 		Value.State = Statistique;
 	}
 
 	void Stats::Stat::RecordInteger(int64 Statistique)
 	{
 		Value.Integer = Compute(Value.Integer, Statistique);
+		Tick++;
 	}
 
 	void Stats::Stat::RecordUnsignedInteger(uint64 Statistique)
 	{
+		Tick++;
 		Value.UnsignedInteger = Compute(Value.UnsignedInteger, Statistique);
 	}
 
 	void Stats::Stat::RecordDecimal(float Statistique)
 	{
+		Tick++;
 		Value.Decimal = Compute(Value.Decimal, Statistique);
 	}
 
 	void Stats::Stat::RecordDecimalPrecision(double Statistique)
 	{
+		Tick++;
 		Value.DecimalPrecise = Compute(Value.DecimalPrecise, Statistique);
 	}
 
-	void Stats::Stat::RecordCount()
+	const String& Stats::Stat::ToString(String& PreAllocated) const
 	{
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Integer: Value.Integer = Compute(Value.Integer, int64(0)); break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Compute(Value.UnsignedInteger, uint64(0)); break;
-		}
-	}
-
-	const String& Stats::Stat::ToString(String& PreAllocated, double Span) const
-	{
-		switch (Type)
-		{
-		case NxEn::Stats::StatType::Label: return Value.Label;
-		case NxEn::Stats::StatType::Check: StringUtility::Format(PreAllocated, StringView("%s"), Value.State ? "X" : ""); return PreAllocated;
-		case NxEn::Stats::StatType::Integer: StringUtility::Format(PreAllocated, StringView("%d"), Finalize(Value.Integer, Span)); return PreAllocated;
-		case NxEn::Stats::StatType::UnsignedInteger: StringUtility::Format(PreAllocated, StringView("%d"), Finalize(Value.UnsignedInteger, Span)); return PreAllocated;
-		case NxEn::Stats::StatType::Decimal: StringUtility::Format(PreAllocated, StringView("%.2f"), Finalize(Value.Decimal, Span)); return PreAllocated;
-		case NxEn::Stats::StatType::DecimalPrecision: StringUtility::Format(PreAllocated, StringView("%.2f"), Finalize(Value.DecimalPrecise, Span)); return PreAllocated;
+		case NxEn::Stats::StatType::Label: return GetValue<const String&>();
+		case NxEn::Stats::StatType::Check: StringUtility::Format(PreAllocated, StringView("%s"), GetValue<bool>() ? "X" : ""); return PreAllocated;
+		case NxEn::Stats::StatType::Integer: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<int64>()); return PreAllocated;
+		case NxEn::Stats::StatType::UnsignedInteger: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<uint64>()); return PreAllocated;
+		case NxEn::Stats::StatType::Decimal: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<float>()); return PreAllocated;
+		case NxEn::Stats::StatType::DecimalPrecision: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<double>()); return PreAllocated;
 		}
 
 		return PreAllocated;
@@ -207,13 +214,13 @@ namespace NxEn
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	Stats::Stats(StringView Path)
-		: Headers(), Data(), Handle(Path), Line(1024), Cell(), Span(0.0), Initialized(false), Recording(false), Locked(false)
+		: Headers(), Data(), Handle(Path), Line(1024), Cell(), Initialized(false), Recording(false), Locked(false)
 	{
 		Handle.Delete();
 		Handle.Create();
 		Handle.Open(File::Mode::Append);
 
-		RecordHeader(TickId, StatType::UnsignedInteger, StatMode::Cnt);
+		RecordHeader(StatsHeader::TickId, StatType::UnsignedInteger, StatMode::Cnt);
 	}
 
 	Stats::~Stats()
@@ -229,13 +236,12 @@ namespace NxEn
 			return;
 		}
 
-		RecordHeader(CommentId, StatType::Label, StatMode::Set);
+		RecordHeader(StatsHeader::CommentId, StatType::Label, StatMode::Set);
 
 		WriteLine();
 
-		GetStat(CommentId).Reset();
-		GetStat(TickId).RecordCount();
-		Span = 1.0;
+		GetStat(StatsHeader::CommentId).RecordLabel("");
+		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
 
 		Initialized = true;
 	}
@@ -329,7 +335,7 @@ namespace NxEn
 
 		for (auto& Statistique : Data)
 		{
-			const String& Text = Statistique.ToString(Cell, Span);
+			const String& Text = Statistique.ToString(Cell);
 
 			Line += Text;
 			Line += Separator;
@@ -339,9 +345,8 @@ namespace NxEn
 
 		WriteLine();
 
-		GetStat(CommentId).Reset();
-		GetStat(TickId).RecordCount();
-		Span++;
+		GetStat(StatsHeader::CommentId).RecordLabel("");
+		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
 	}
 
 	void Stats::Reset()
@@ -358,13 +363,12 @@ namespace NxEn
 			return;
 		}
 
-		// Skip Tick and Comments
-		for (uint64 Index = 1; Index < Data.GetCount() - 1; ++Index)
+		for (auto& Statistique : Data)
 		{
-			Data[Index].Reset();
+			Statistique.Reset();
 		}
 
-		Span = 1.0;
+		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
 	}
 
 	void Stats::RecordHeader(StringId Name, StatType Type, StatMode Mode)
@@ -377,7 +381,8 @@ namespace NxEn
 
 		NEXUS_ASSERT(!(Type == StatType::Label && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Check && Mode != StatMode::Set), Default, "Combination not supported");
-		NEXUS_ASSERT(!(Mode == StatMode::Cnt && Type != StatType::Integer && Type != StatType::UnsignedInteger), Default, "Combination not supported");
+		NEXUS_ASSERT(!(Type == StatType::Decimal && Mode == StatMode::Cnt), Default, "Combination not supported");
+		NEXUS_ASSERT(!(Type == StatType::DecimalPrecision && Mode == StatMode::Cnt), Default, "Combination not supported");
 
 		Headers.Append(Name, Data.GetCount());
 		Data.Append(Stat(Type, Mode));
@@ -439,7 +444,7 @@ namespace NxEn
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
-		NEXUS_ASSERT(Statistique.Type == StatType::Integer && Statistique.Mode != StatMode::Cnt, Default, "Invalid record call");
+		NEXUS_ASSERT(Statistique.Type == StatType::Integer, Default, "Invalid record call");
 		Statistique.RecordInteger(Value);
 	}
 
@@ -458,7 +463,7 @@ namespace NxEn
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
-		NEXUS_ASSERT(Statistique.Type == StatType::UnsignedInteger && Statistique.Mode != StatMode::Cnt, Default, "Invalid record call");
+		NEXUS_ASSERT(Statistique.Type == StatType::UnsignedInteger, Default, "Invalid record call");
 		Statistique.RecordUnsignedInteger(Value);
 	}
 
@@ -500,25 +505,6 @@ namespace NxEn
 		Statistique.RecordDecimalPrecision(Value);
 	}
 
-	void Stats::RecordStatCount(StringId Id)
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (!Recording)
-		{
-			return;
-		}
-
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
-		NEXUS_ASSERT((Statistique.Type == StatType::Integer || Statistique.Type == StatType::UnsignedInteger) && Statistique.Mode == StatMode::Cnt, Default, "Invalid record call");
-		Statistique.RecordCount();
-	}
-
 	void Stats::RecordComment(StringView Comment)
 	{
 		if (!Initialized)
@@ -532,7 +518,7 @@ namespace NxEn
 			return;
 		}
 
-		String& Comments = GetStat(CommentId).Value.Label;
+		String& Comments = GetStat(StatsHeader::CommentId).Value.Label;
 		Comments += Comment;
 		Comments += Separator;
 	}
@@ -578,10 +564,10 @@ namespace NxEn
 			return 0;
 		}
 
-		return GetStat(TickId).Value.UnsignedInteger;
+		return GetCurrentStatValue<uint64>(StatsHeader::TickId);
 	}
 
-	StringView Stats::GetCurrentComment() const
+	const String& Stats::GetCurrentComment() const
 	{
 		if (!Initialized)
 		{
@@ -589,7 +575,7 @@ namespace NxEn
 			return StringUtility::Empty;
 		}
 
-		return GetStat(CommentId).Value.Label;
+		return GetCurrentStatValue<const String&>(StatsHeader::CommentId);
 	}
 
 	void Stats::WriteLine()

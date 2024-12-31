@@ -46,7 +46,7 @@ namespace NxTs
 			Stats.RecordStatUnsignedInteger(MinId, Iteration);
 			Stats.RecordStatDecimal(MaxId, (float)Iteration);
 			Stats.RecordStatDecimalPrecision(AvgId, (double)Iteration);
-			Stats.RecordStatCount(CntId);
+			Stats.RecordStatUnsignedInteger(CntId, 0);
 			Stats.RecordStatInteger(AddId, 2);
 
 			Stats.RecordComment(NxEn::StringUtility::Format("Iteration: %d", Iteration));
@@ -55,15 +55,13 @@ namespace NxTs
 			Stats.Unlock();
 			ASSERT_EQ(!Stats.IsLocked(), true);
 
-			ASSERT_EQ(Stats.GetCurrentTick(), Iteration);
 			ASSERT_EQ(Stats.GetCurrentComment(), NxEn::StringUtility::Format("Iteration: %d", Iteration) + ";" + NxEn::StringUtility::Format("Iteration (Again): %d", Iteration) + ";");
-			ASSERT_EQ(Stats.GetCurrentStat(SetId)->GetValue().Integer, Iteration);
+			ASSERT_EQ(Stats.GetCurrentStatValue<int64>(SetId), Iteration);
 
 			Stats.Flush();
 			if (Iteration == 3)
 			{
 				Stats.Reset();
-				ASSERT_EQ(Stats.GetSpan(), 1.0);
 			}
 		}
 

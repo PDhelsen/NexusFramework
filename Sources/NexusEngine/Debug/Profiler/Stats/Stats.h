@@ -6,6 +6,12 @@
 
 namespace NxEn
 {
+	namespace StatsHeader
+	{
+		NEXUS_ENGINE_API extern const StringId TickId;
+		NEXUS_ENGINE_API extern const StringId CommentId;
+	}
+
 	class Stats
 	{
 	public:
@@ -16,7 +22,7 @@ namespace NxEn
 
 		enum class StatMode
 		{
-			Set, Avg, Min, Max, Cnt, Add
+			Set, Cnt, Add, Avg, Min, Max
 		};
 
 		union StatValue
@@ -45,9 +51,10 @@ namespace NxEn
 			NEXUS_ENGINE_API Stat& operator=(const Stat& Other);
 			NEXUS_ENGINE_API Stat& operator=(Stat&& Other) noexcept;
 
+			template<typename T>
+			T GetValue() const;
 			StatType GetType() const { return Type; }
 			StatMode GetMode() const { return Mode; }
-			const StatValue& GetValue() const { return Value; }
 
 		private:
 			NEXUS_ENGINE_API void Reset();
@@ -58,18 +65,18 @@ namespace NxEn
 			NEXUS_ENGINE_API void RecordUnsignedInteger(uint64 Statistique);
 			NEXUS_ENGINE_API void RecordDecimal(float Statistique);
 			NEXUS_ENGINE_API void RecordDecimalPrecision(double Statistique);
-			NEXUS_ENGINE_API void RecordCount();
 
 			template<typename T>
 			T Compute(T Current, T New) const;
 			template<typename T>
-			T Finalize(T Current, double Span) const;
+			T Finalize(T Current) const;
 
-			NEXUS_ENGINE_API const String& ToString(String& PreAllocated, double Span) const;
+			NEXUS_ENGINE_API const String& ToString(String& PreAllocated) const;
 
 			StatValue Value;
 			StatType Type;
 			StatMode Mode;
+			uint64 Tick;
 		};
 
 	public:
@@ -92,17 +99,18 @@ namespace NxEn
 		NEXUS_ENGINE_API void RecordStatUnsignedInteger(StringId Id, uint64 Value);
 		NEXUS_ENGINE_API void RecordStatDecimal(StringId Id, float Value);
 		NEXUS_ENGINE_API void RecordStatDecimalPrecision(StringId Id, double Value);
-		NEXUS_ENGINE_API void RecordStatCount(StringId Id);
 		NEXUS_ENGINE_API void RecordComment(StringView Comment);
 
 		NEXUS_ENGINE_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
 		NEXUS_ENGINE_API const Stat* GetCurrentStat(StringId Id) const;
 		NEXUS_ENGINE_API uint64 GetCurrentTick() const;
-		NEXUS_ENGINE_API StringView GetCurrentComment() const;
+		NEXUS_ENGINE_API const String& GetCurrentComment() const;
+
+		template<typename T>
+		T GetCurrentStatValue(StringId Id) const;
 
 		StringView GetPath() const { return Handle.GetPath(); }
 		uint64 GetCount() const { return Data.GetCount(); }
-		double GetSpan() const { return Span; }
 		bool IsInitialized() const { return Initialized; }
 		bool IsRecording() const { return Recording; }
 		bool IsLocked() const { return Locked; }
@@ -121,11 +129,52 @@ namespace NxEn
 		String Line;
 		String Cell;
 
-		double Span;
 		bool Initialized;
 		bool Recording;
 		bool Locked;
 	};
+
+	template<typename T>
+	inline T Stats::Stat::GetValue() const
+	{
+		return 0;
+	}
+
+	template<>
+	inline const String& Stats::Stat::GetValue() const
+	{
+		return Value.Label;
+	}
+
+	template<>
+	inline bool Stats::Stat::GetValue() const
+	{
+		return Value.State;
+	}
+
+	template<>
+	inline int64 Stats::Stat::GetValue() const
+	{
+		return Finalize(Value.Integer);
+	}
+
+	template<>
+	inline uint64 Stats::Stat::GetValue() const
+	{
+		return Finalize(Value.UnsignedInteger);
+	}
+
+	template<>
+	inline float Stats::Stat::GetValue() const
+	{
+		return Finalize(Value.Decimal);
+	}
+
+	template<>
+	inline double Stats::Stat::GetValue() const
+	{
+		return Finalize(Value.DecimalPrecise);
+	}
 
 	template<typename T>
 	inline T Stats::Stat::Compute(T Current, T New) const
@@ -133,25 +182,31 @@ namespace NxEn
 		switch (Mode)
 		{
 		case NxEn::Stats::StatMode::Set: return New;
+		case NxEn::Stats::StatMode::Cnt: return ++Current;
+		case NxEn::Stats::StatMode::Add: return Current + New;
 		case NxEn::Stats::StatMode::Avg: return Current + New;
 		case NxEn::Stats::StatMode::Min: return Math::Min(Current, New);
 		case NxEn::Stats::StatMode::Max: return Math::Max(Current, New);
-		case NxEn::Stats::StatMode::Cnt: return ++Current;
-		case NxEn::Stats::StatMode::Add: return Current + New;
 		}
 
 		return New;
 	}
 
 	template<typename T>
-	inline T Stats::Stat::Finalize(T Current, double Span) const
+	inline T Stats::Stat::Finalize(T Current) const
 	{
 		if (Mode == StatMode::Avg)
 		{
-			return (T)(Current / Span);
+			return (T)(Current / (double)Tick);
 		}
 
 		return Current;
+	}
+
+	template<typename T>
+	inline T Stats::GetCurrentStatValue(StringId Id) const
+	{
+		return GetStat(Id).GetValue<T>();
 	}
 }
 
