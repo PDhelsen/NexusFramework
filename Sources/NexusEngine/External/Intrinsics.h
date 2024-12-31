@@ -12,9 +12,9 @@
 	#define NEXUS_FUNCTION_SIGNATURE __FUNCSIG__
 
 	#define NEXUS_BITSCANFORWARD(Mask, Index, Result)	unsigned long Index;\
-														uint64 Result = _BitScanForward(&Index, (unsigned long)Mask);
+														unsigned char Result = _BitScanForward(&Index, (unsigned long)Mask);
 	#define NEXUS_BITSCANBACKWARD(Mask, Index, Result)	unsigned long Index;\
-														uint64 Result = _BitScanReverse(&Index, (unsigned long)Mask);
+														unsigned char Result = _BitScanReverse(&Index, (unsigned long)Mask);
 #else
 	#error "Compiler is not suppored"
 #endif

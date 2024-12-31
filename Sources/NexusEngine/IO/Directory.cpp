@@ -2,6 +2,8 @@
 #include "Directory.h"
 
 #include "Platform/Platform.h"
+#include "IO/Path.h"
+#include "IO/File.h"
 
 namespace NxEn
 {

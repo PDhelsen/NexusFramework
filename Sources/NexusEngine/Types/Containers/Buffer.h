@@ -1,8 +1,10 @@
 #pragma once
 
 #include "Types/Numbers/Integer.h"
+#include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
+#include "Debug/Logger/Assert.h"
 
 namespace NxEn
 {

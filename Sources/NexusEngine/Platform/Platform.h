@@ -1,7 +1,11 @@
 #pragma once
 
 #include "Core/NexusEngineCore.h"
-#include "Memory/Allocator/AllocatorContext.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Containers/List.h"
+#include "Types/Containers/Buffer.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
 
 namespace NxEn
 {

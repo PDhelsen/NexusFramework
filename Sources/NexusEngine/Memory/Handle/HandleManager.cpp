@@ -11,22 +11,22 @@ namespace NxEn
 	}
 
 	HandleManager::HandleManager(uint64 Size)
+		: Buffer(Size)
 	{
-		AllocatorContext Context(nullptr);
-		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(Size);
 	}
 
 	HandleManager::~HandleManager()
 	{
-		AllocatorContext Context(nullptr);
-		delete Buffer;
+
 	}
 
 	void* HandleManager::AllocateHandle(void* Pointer)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		uint64& Redirection = Buffer->Acquire();
+		uint64& Redirection = Buffer.Acquire();
 		Redirection = Address;
 
 		return &Redirection;
@@ -34,6 +34,8 @@ namespace NxEn
 
 	void HandleManager::ModifyHandle(void* Handle, void* Pointer)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
 		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
@@ -45,22 +47,24 @@ namespace NxEn
 		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
 		*Redirection = 0;
 
-		Buffer->Recycle(*Redirection);
+		Buffer.Recycle(*Redirection);
 	}
 
 	void* HandleManager::GetHandle(void* Pointer)
 	{
+		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
+
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		auto It = Buffer->Find(Address);
-		return It == Buffer->End() ? nullptr : &It.Get();
+		auto It = Buffer.Find(Address);
+		return It == Buffer.End() ? nullptr : &It.Get();
 	}
 
-	Dictionary<void*, Handle<uint8>, Hashing::Default> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
+	Dictionary<void*, Handle<uint8>> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
 	{
-		Dictionary<void*, Handle<uint8>, Hashing::Default> Handles;
+		Dictionary<void*, Handle<uint8>> Handles;
 
-		for (auto It = Buffer->Begin(); It != Buffer->End(); ++It)
+		for (auto It = Buffer.Begin(); It != Buffer.End(); ++It)
 		{
 			void* Data = reinterpret_cast<void*>(*It);
 			if (Memory::IsPointerInRange(Data, Pointer, Offset))

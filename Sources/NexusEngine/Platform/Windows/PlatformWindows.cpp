@@ -1,6 +1,10 @@
 #include "Core/NexusEnginePch.h"
 #include "PlatformWindows.h"
 
+#include "External/StandardLibrary.h"
+#include "Memory/Memory.h"
+#include "IO/Path.h"
+
 #include <windows.h>
 #include <sys/stat.h>
 

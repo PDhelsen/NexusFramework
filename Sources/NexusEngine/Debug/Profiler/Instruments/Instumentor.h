@@ -1,7 +1,10 @@
 #pragma once
 
+#include "External/Intrinsics.h"
 #include "Core/NexusEngineCore.h"
-#include "IO/Path.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
 #include "IO/File.h"
 #include "Time/Stopwatch.h"
 

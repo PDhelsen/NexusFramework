@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Types/Numbers/Integer.h"
-#include "Types/Containers/Iterator.h"
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
-#include "Debug/Logger/Assert.h"
 #include "Misc/References.h"
+#include "Types/Containers/Iterator.h"
+#include "Debug/Logger/Assert.h"
 
 namespace NxEn
 {

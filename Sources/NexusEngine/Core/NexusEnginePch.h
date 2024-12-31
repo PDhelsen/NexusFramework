@@ -5,9 +5,6 @@
 // Also, avoid to include files that will change often
 
 
-#include "External/Intrinsics.h"
-#include "External/StandardLibrary.h"
-
 #include "Core/NexusEngineCore.h"
 
 #include "Types/Numbers/Integer.h"
@@ -37,27 +34,7 @@
 #include "Types/Containers/Tuple.h"
 #include "Types/Containers/ContainersUtils.h"
 #include "Types/Functions/Delegate.h"
-
-#include "Time/Timestamp.h"
-#include "Time/Timespan.h"
+#include "Types/Functions/Event.h"
 
 #include "Debug/Logger/Logger.h"
 #include "Debug/Logger/Assert.h"
-
-#include "Misc/References.h"
-#include "Misc/Hash.h"
-#include "Misc/Sort.h"
-#include "Misc/Math.h"
-
-#include "IO/Path.h"
-#include "IO/File.h"
-#include "IO/Directory.h"
-
-#include "Memory/Memory.h"
-#include "Memory/Handle/Handle.h"
-#include "Memory/Handle/HandleManager.h"
-#include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/AllocatorContext.h"
-#include "Memory/Allocator/StackAllocator.h"
-#include "Memory/Allocator/HeapAllocator.h"
-#include "Memory/Allocator/PoolAllocator.h"

@@ -2,10 +2,9 @@
 
 #include "Core/NexusEngineCore.h"
 #include "Types/Numbers/Integer.h"
+#include "Types/Containers/Collection.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
-#include "Types/Strings/StringFunctions.h"
-#include "Types/Containers/Collection.h"
 
 namespace NxEn
 {

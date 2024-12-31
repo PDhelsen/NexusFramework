@@ -1,6 +1,9 @@
 #include "Core/NexusEnginePch.h"
 #include "NexusEngineEntryPoint.h"
 
+#include "IO/Path.h"
+#include "IO/Directory.h"
+
 #include "Core/NexusEngineGlobals.h"
 
 namespace NxEn

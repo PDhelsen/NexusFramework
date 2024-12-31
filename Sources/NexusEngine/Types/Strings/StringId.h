@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Core/NexusEngineCore.h"
-#include "Misc/Hash.h"
 #include "Types/Numbers/Integer.h"
+#include "Misc/Hash.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 

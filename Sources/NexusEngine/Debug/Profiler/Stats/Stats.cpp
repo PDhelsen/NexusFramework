@@ -1,6 +1,7 @@
 #include "Core/NexusEnginePch.h"
 #include "Stats.h"
 
+#include "External/StandardLibrary.h"
 #include "Core/NexusEngineGlobals.h"
 
 namespace NxEn

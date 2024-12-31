@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Integer.h"
 
+#include "External/StandardLibrary.h"
+
 namespace NxEn::Integer
 {
 	constexpr int8 MinI8()

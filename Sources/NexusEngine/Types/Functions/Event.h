@@ -1,8 +1,8 @@
 #pragma once
 
 #include "Misc/References.h"
-#include "Types/Containers/List.h"
 #include "Types/Functions/Delegate.h"
+#include "Types/Containers/List.h"
 
 namespace NxEn
 {

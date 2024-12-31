@@ -1,6 +1,21 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
+#include "Types/Containers/Node.h"
+#include "Types/Containers/Iterator.h"
+#include "Types/Containers/Array.h"
+#include "Types/Containers/List.h"
+#include "Types/Containers/Dequeue.h"
+#include "Types/Containers/Stack.h"
+#include "Types/Containers/Queue.h"
+#include "Types/Containers/LinkedList.h"
+#include "Types/Containers/Set.h"
+#include "Types/Containers/Dictionary.h"
+#include "Types/Containers/Tree.h"
+#include "Types/Containers/Graph.h"
+#include "Types/Containers/Collection.h"
+#include "Types/Containers/Buffer.h"
+#include "Types/Containers/Pool.h"
+#include "Types/Containers/Tuple.h"
 
 namespace NxEn
 {

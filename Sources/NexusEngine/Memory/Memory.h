@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Core/NexusEngineCore.h"
+#include "External/StandardLibrary.h"
 #include "Types/Numbers/Integer.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"

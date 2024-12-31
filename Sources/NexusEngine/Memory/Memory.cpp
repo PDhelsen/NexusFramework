@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Memory.h"
 
+#include "External/StandardLibrary.h"
+
 namespace NxEn
 {
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)

@@ -1,6 +1,8 @@
 #include "Core/NexusEnginePch.h"
 #include "Decimal.h"
 
+#include "External/StandardLibrary.h"
+
 namespace NxEn::Decimal
 {
 	constexpr float InfinityF()

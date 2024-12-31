@@ -4,6 +4,7 @@
 #include "Types/Numbers/Integer.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
+#include "Memory/Memory.h"
 
 namespace NxEn
 {

@@ -1,6 +1,9 @@
 #include "Core/NexusEnginePch.h"
 #include "Math.h"
 
+#include "External/Intrinsics.h"
+#include "External/StandardLibrary.h"
+
 namespace NxEn
 {
 	namespace Math

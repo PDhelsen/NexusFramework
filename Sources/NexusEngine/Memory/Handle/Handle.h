@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Types/Numbers/Integer.h"
+
 namespace NxEn
 {
 	class HandleManager;

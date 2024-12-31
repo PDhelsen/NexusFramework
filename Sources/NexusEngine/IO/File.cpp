@@ -2,6 +2,7 @@
 #include "File.h"
 
 #include "Platform/Platform.h"
+#include "IO/Path.h"
 
 namespace NxEn
 {

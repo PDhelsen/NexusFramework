@@ -1,7 +1,12 @@
 #pragma once
 
 #include "Core/NexusEngineCore.h"
-#include "IO/Path.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Containers/List.h"
+#include "Types/Containers/Dictionary.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
+#include "Types/Strings/StringId.h"
 #include "IO/File.h"
 
 namespace NxEn

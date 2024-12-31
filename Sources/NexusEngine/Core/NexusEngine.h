@@ -29,24 +29,6 @@
 #include "Types/Functions/Delegate.h"
 #include "Types/Functions/Event.h"
 
-#include "Time/Timestamp.h"
-#include "Time/Timespan.h"
-#include "Time/Stopwatch.h"
-#include "Time/Time.h"
-
-#include "Debug/Logger/Logger.h"
-#include "Debug/Logger/Assert.h"
-#include "Debug/Profiler/Profiler.h"
-
-#include "Misc/References.h"
-#include "Misc/Hash.h"
-#include "Misc/Sort.h"
-#include "Misc/Math.h"
-
-#include "IO/Path.h"
-#include "IO/File.h"
-#include "IO/Directory.h"
-
 #include "Memory/Memory.h"
 #include "Memory/Handle/Handle.h"
 #include "Memory/Handle/HandleManager.h"
@@ -56,4 +38,22 @@
 #include "Memory/Allocator/HeapAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 
+#include "Misc/References.h"
+#include "Misc/Hash.h"
+#include "Misc/Sort.h"
+#include "Misc/Math.h"
+
 #include "Platform/Platform.h"
+
+#include "Time/Timestamp.h"
+#include "Time/Timespan.h"
+#include "Time/Stopwatch.h"
+#include "Time/Time.h"
+
+#include "IO/Path.h"
+#include "IO/File.h"
+#include "IO/Directory.h"
+
+#include "Debug/Logger/Logger.h"
+#include "Debug/Logger/Assert.h"
+#include "Debug/Profiler/Profiler.h"
