@@ -16,7 +16,6 @@ namespace NxEn
 		};
 
 		NEXUS_ENGINE_API File(StringView Path);
-		NEXUS_ENGINE_API File(String&& Path);
 		NEXUS_ENGINE_API ~File();
 
 		NEXUS_ENGINE_API explicit operator bool() const;

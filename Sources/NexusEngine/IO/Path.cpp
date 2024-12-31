@@ -5,10 +5,6 @@
 
 namespace NxEn
 {
-	Path::Path()
-	{
-	}
-
 	Path::Path(StringView Path)
 		: Data(Path.C(), Path.GetCount())
 	{
@@ -20,7 +16,7 @@ namespace NxEn
 
 	Path Path::ConvertStringToPath(String&& Temp)
 	{
-		Path Result;
+		Path Result("");
 		Result.Data = Move(Temp);
 		return Result;
 	}

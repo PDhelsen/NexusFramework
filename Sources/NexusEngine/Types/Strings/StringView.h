@@ -6,6 +6,8 @@
 
 namespace NxEn
 {
+	template <typename T> class List;
+
 	struct StringView
 	{
 	public:

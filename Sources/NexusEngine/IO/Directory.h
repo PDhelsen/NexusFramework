@@ -13,7 +13,6 @@ namespace NxEn
 		using I = List<String>::I;
 
 		NEXUS_ENGINE_API Directory(StringView Path);
-		NEXUS_ENGINE_API Directory(String&& Path);
 		NEXUS_ENGINE_API ~Directory();
 
 		NEXUS_ENGINE_API explicit operator bool() const;

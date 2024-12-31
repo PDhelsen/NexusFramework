@@ -24,12 +24,6 @@ namespace NxEn
 		Refresh();
 	}
 
-	File::File(String&& Path)
-		: Path(Path), Exist(false), Handle(nullptr)
-	{
-		Refresh();
-	}
-
 	File::~File()
 	{
 		NEXUS_ASSERT(!Handle, Default, "Delete file while it is still open: %s", Path.C());

@@ -13,12 +13,6 @@ namespace NxEn
 		Refresh();
 	}
 
-	Directory::Directory(String&& Path)
-		: Path(Path), Exist(false), Content()
-	{
-		Refresh();
-	}
-
 	Directory::~Directory()
 	{
 	}

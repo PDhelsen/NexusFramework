@@ -16,7 +16,6 @@ namespace NxEn
 			Invalid, File, Directory
 		};
 
-		NEXUS_ENGINE_API Path();
 		NEXUS_ENGINE_API Path(StringView Path);
 		NEXUS_ENGINE_API ~Path();
 		NEXUS_ENGINE_API static Path ConvertStringToPath(String&& Temp);

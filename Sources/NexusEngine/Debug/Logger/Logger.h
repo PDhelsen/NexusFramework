@@ -1,61 +1,13 @@
 #pragma once 
 
-#include "Core/NexusEngineCore.h"
-#include "Types/Numbers/Integer.h"
-#include "Types/Numbers/Enum.h"
-#include "Types/Strings/String.h"
-#include "Types/Strings/StringView.h"
-#include "Types/Strings/StringId.h"
-#include "Time/Timestamp.h"
+#include "Debug/Logger/ILogger.h"
+#include "Types/Containers/Dictionary.h"
+#include "Platform/Platform.h"
+#include "IO/File.h"
 
 namespace NxEn
 {
-	class Platform;
-	class File;
-	namespace Hashing
-	{
-		class Fnv1a64;
-		using Default = Fnv1a64;
-	}
-	template <typename K, typename T, class H> class Dictionary;
-
-	namespace LoggerChannel
-	{
-		NEXUS_ENGINE_API extern const StringId Default;
-		NEXUS_ENGINE_API extern const StringId Verbose;
-	}
-
-	enum class LoggerVerbosity : uint8
-	{
-		None	= 0,
-
-		Fatal	= 1 << 0,
-		Error	= 1 << 1,
-		Warning = 1 << 2,
-		Info	= 1 << 3,
-
-		All = Fatal | Error | Warning | Info,
-
-		COUNT
-	};
-	NEXUS_ENUM_TO_FLAG(LoggerVerbosity)
-	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
-
-	enum class LoggerOutput : uint8
-	{
-		None	= 0,
-
-		Console = 1 << 0,
-		IDE		= 1 << 1,
-		File	= 1 << 2,
-
-		All = Console | IDE | File,
-
-		COUNT
-	};
-	NEXUS_ENUM_TO_FLAG(LoggerOutput)
-
-	class Logger
+	class Logger : public ILogger
 	{
 	public:
 		NEXUS_ENGINE_API Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "");
@@ -76,22 +28,22 @@ namespace NxEn
 
 		NEXUS_ENGINE_API bool CheckOutput(LoggerOutput Output) const;
 
-		template<typename... Args>
-		void Log(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 		NEXUS_ENGINE_API void Flush();
 
-		NEXUS_ENGINE_API static Logger* GetInstance();
+	protected:
+		NEXUS_ENGINE_API bool ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const override;
+		NEXUS_ENGINE_API String& GetMessage() override;
+		NEXUS_ENGINE_API void LogMessage(LoggerVerbosity Verbosity, StringId Channel) override;
 
 	private:
-		NEXUS_ENGINE_API inline bool ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const;
-		NEXUS_ENGINE_API inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
-		NEXUS_ENGINE_API inline void GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const;
-		NEXUS_ENGINE_API inline void CopyIntoBuffer(String& Text);
-		NEXUS_ENGINE_API inline void Print(String& Text);
+		inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
+		inline void GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const;
+		inline void CopyIntoBuffer(String& Text);
+		inline void Print(String& Text);
 
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s\n";
 
-		Dictionary<StringId, bool, Hashing::Default>* Channels;
+		Dictionary<StringId, bool, Hashing::Default> Channels;
 		String StringBuilderMessage;
 		String StringBuilderFormat;
 		String StringBuffer;
@@ -101,43 +53,6 @@ namespace NxEn
 		bool FlushOnLog;
 
 		Platform* Target;
-		File* Handle;
+		File Handle;
 	};
-
-	template<typename... Args>
-	void Logger::Log(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
-	{
-		if (!ShouldLog(Verbosity, Channel))
-		{
-			return;
-		}
-
-		uint8 VerbosityLevel = GetLogLevel(Verbosity);
-
-		StringView VerbosityString = "";
-		int8 Hours = 0, Minutes = 0, Seconds = 0;
-		GatherInfo(VerbosityLevel, VerbosityString, Hours, Minutes, Seconds);
-
-		StringBuilderMessage.Format(Message, args...);
-		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, VerbosityString.C(), Channel.C(), StringBuilderMessage.C());
-
-		if (FlushOnLog)
-		{
-			Print(StringBuilderFormat);
-		}
-		else
-		{
-			CopyIntoBuffer(StringBuilderFormat);
-		}
-	}
 }
-
-#if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->Log(::NxEn::LoggerVerbosity::Vbs, ::NxEn::LoggerChannel::Chn, Msg, __VA_ARGS__); }
-
-	#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Logger::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
-#elif NEXUS_DISTRIB
-	#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...)
-
-	#define NEXUS_LOG(Vbs, Chn, Msg, ...)
-#endif
