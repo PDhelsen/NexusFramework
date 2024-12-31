@@ -29,6 +29,8 @@ namespace NxEn
 	{
 		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, Default, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
 
+		AllocatorContext Context(nullptr);
+
 		Channels = new Dictionary<StringId, bool, Hashing::Default>();
 
 		Target = Platform::GetInstance();
@@ -45,6 +47,8 @@ namespace NxEn
 	Logger::~Logger()
 	{
 		Flush();
+
+		AllocatorContext Context(nullptr);
 
 		if (CheckOutput(LoggerOutput::File))
 		{

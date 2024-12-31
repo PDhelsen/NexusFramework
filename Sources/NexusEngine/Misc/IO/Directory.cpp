@@ -6,7 +6,7 @@
 namespace NxEn
 {
 	Directory::Directory(StringView Path)
-		: Path(Path.ToString()), Exist(false), Content()
+		: Path(Path.C(), Path.GetCount()), Exist(false), Content()
 	{
 		Refresh();
 	}

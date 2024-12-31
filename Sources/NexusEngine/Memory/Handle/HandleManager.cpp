@@ -12,7 +12,8 @@ namespace NxEn
 
 	HandleManager::HandleManager(uint64 Size)
 	{
-		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(Size, nullptr);
+		AllocatorContext Context(nullptr);
+		Buffer = new Pool<uint64, Pooling::PreAllocated<uint64>>(Size);
 	}
 
 	HandleManager::~HandleManager()

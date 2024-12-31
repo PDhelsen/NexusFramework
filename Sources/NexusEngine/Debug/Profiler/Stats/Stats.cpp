@@ -161,7 +161,8 @@ namespace NxEn
 	void Stats::Stat::RecordLabel(StringView Statistique)
 	{
 		Tick++;
-		Value.Label = Statistique.ToString();
+		Value.Label.Clear();
+		Value.Label += Statistique;
 	}
 
 	void Stats::Stat::RecordCheck(bool Statistique)
