@@ -13,6 +13,28 @@ namespace NxEn
 	{
 	}
 
+	void StackAllocator::Clear()
+	{
+		WipeoutMemory();
+		ResetAmount();
+
+		Reset();
+	}
+
+	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	{
+		void* Pointer = Memory::AlignPointer(Marker, Alignement);
+		Pointer = Memory::OffsetPointer(Pointer, Size);
+		return IsPointerInMemoryBlock(Pointer);
+	}
+
+	bool StackAllocator::BelongToAllocator(void* Pointer) const
+	{
+		uint64 Address = reinterpret_cast<uint64>(Pointer);
+		uint64 Current = reinterpret_cast<uint64>(Marker);
+		return Pointer && IsPointerInMemoryBlock(Pointer) && Address < Current;
+	}
+
 	void* StackAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		void* Pointer = Memory::AlignPointer(Marker, Alignement);
@@ -59,28 +81,6 @@ namespace NxEn
 		EraseMemory(Marker, FreeAmount());
 
 		DecreaseAmount(Before - After);
-	}
-
-	void StackAllocator::Clear()
-	{
-		WipeoutMemory();
-		ResetAmount();
-
-		Reset();
-	}
-
-	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
-	{
-		void* Pointer = Memory::AlignPointer(Marker, Alignement);
-		Pointer = Memory::OffsetPointer(Pointer, Size);
-		return IsPointerInMemoryBlock(Pointer);
-	}
-
-	bool StackAllocator::BelongToAllocator(void* Pointer) const
-	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-		uint64 Current = reinterpret_cast<uint64>(Marker);
-		return Pointer && IsPointerInMemoryBlock(Pointer) && Address < Current;
 	}
 
 	void StackAllocator::Next(void* Pointer)

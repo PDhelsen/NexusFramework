@@ -15,6 +15,24 @@ namespace NxEn
 	{
 	}
 
+	void PoolAllocator::Clear()
+	{
+		WipeoutMemory();
+		ResetAmount();
+
+		Reset();
+	}
+
+	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	{
+		return FreeAmount() >= Stride;
+	}
+
+	bool PoolAllocator::BelongToAllocator(void* Pointer) const
+	{
+		return Pointer && IsPointerInMemoryBlock(Pointer);
+	}
+
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		NEXUS_ASSERT(FreeAmount() >= Stride, Default, "Allocator is full");
@@ -47,24 +65,6 @@ namespace NxEn
 		Previous(Pointer);
 
 		DecreaseAmount(Stride);
-	}
-
-	void PoolAllocator::Clear()
-	{
-		WipeoutMemory();
-		ResetAmount();
-
-		Reset();
-	}
-
-	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
-	{
-		return FreeAmount() >= Stride;
-	}
-
-	bool PoolAllocator::BelongToAllocator(void* Pointer) const
-	{
-		return Pointer && IsPointerInMemoryBlock(Pointer);
 	}
 
 	void PoolAllocator::Next()
