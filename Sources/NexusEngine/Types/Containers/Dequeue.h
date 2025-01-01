@@ -4,10 +4,10 @@
 #include "Memory/Memory.h"
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
-#include "Misc/References.h"
+#include "Misc/Templates.h"
 #include "Misc/Sort.h"
 #include "Types/Containers/Iterator.h"
-#include "Debug/Logger/Assert.h"
+#include "Debug/Logger/Log.h"
 
 namespace NxEn
 {

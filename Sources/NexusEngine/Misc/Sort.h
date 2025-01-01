@@ -2,7 +2,7 @@
 
 #include "Types/Numbers/Integer.h"
 #include "Types/Functions/Delegate.h"
-#include "Misc/References.h"
+#include "Misc/Templates.h"
 
 namespace NxEn
 {

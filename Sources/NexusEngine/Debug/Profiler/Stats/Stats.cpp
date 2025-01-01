@@ -525,6 +525,17 @@ namespace NxEn
 		Comments += Separator;
 	}
 
+	const Stats::Stat* Stats::GetCurrentStat(StringId Id) const
+	{
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return nullptr;
+		}
+
+		return &GetStat(Id);
+	}
+
 	Dictionary<StringId, const Stats::Stat*> Stats::GetAllCurrentStats() const
 	{
 		if (!Initialized)
@@ -545,39 +556,6 @@ namespace NxEn
 		}
 
 		return Result;
-	}
-
-	const Stats::Stat* Stats::GetCurrentStat(StringId Id) const
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return nullptr;
-		}
-
-		return &GetStat(Id);
-	}
-
-	uint64 Stats::GetCurrentTick() const
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return 0;
-		}
-
-		return GetCurrentStatValue<uint64>(StatsHeader::TickId);
-	}
-
-	const String& Stats::GetCurrentComment() const
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return StringUtility::Empty;
-		}
-
-		return GetCurrentStatValue<const String&>(StatsHeader::CommentId);
 	}
 
 	void Stats::WriteLine()

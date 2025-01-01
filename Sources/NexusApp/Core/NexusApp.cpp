@@ -18,7 +18,6 @@ int main()
 {
 	NxEn::Initialize();
 
-	NxEn::HelloWorld();
 	NxEd::HelloWorld();
 	NxAp::HelloWorld();
 

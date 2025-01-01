@@ -106,13 +106,10 @@ namespace NxEn
 		NEXUS_ENGINE_API void RecordStatDecimalPrecision(StringId Id, double Value);
 		NEXUS_ENGINE_API void RecordComment(StringView Comment);
 
-		NEXUS_ENGINE_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
-		NEXUS_ENGINE_API const Stat* GetCurrentStat(StringId Id) const;
-		NEXUS_ENGINE_API uint64 GetCurrentTick() const;
-		NEXUS_ENGINE_API const String& GetCurrentComment() const;
-
 		template<typename T>
 		T GetCurrentStatValue(StringId Id) const;
+		NEXUS_ENGINE_API const Stat* GetCurrentStat(StringId Id) const;
+		NEXUS_ENGINE_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
 
 		StringView GetPath() const { return Handle.GetPath(); }
 		uint64 GetCount() const { return Data.GetCount(); }
@@ -211,7 +208,7 @@ namespace NxEn
 	template<typename T>
 	inline T Stats::GetCurrentStatValue(StringId Id) const
 	{
-		return GetStat(Id).GetValue<T>();
+		return GetCurrentStat(Id)->GetValue<T>();
 	}
 }
 

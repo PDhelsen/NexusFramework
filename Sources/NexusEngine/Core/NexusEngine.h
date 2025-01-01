@@ -38,7 +38,7 @@
 #include "Memory/Allocator/HeapAllocator.h"
 #include "Memory/Allocator/PoolAllocator.h"
 
-#include "Misc/References.h"
+#include "Misc/Templates.h"
 #include "Misc/Hash.h"
 #include "Misc/Sort.h"
 #include "Misc/Math.h"
@@ -55,5 +55,4 @@
 #include "IO/Directory.h"
 
 #include "Debug/Logger/Logger.h"
-#include "Debug/Logger/Assert.h"
 #include "Debug/Profiler/Profiler.h"

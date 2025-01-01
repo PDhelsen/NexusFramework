@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Misc/Hash.h"
-#include "Misc/References.h"
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringFunctions.h"
 #include "Types/Strings/StringCApi.h"

@@ -22,8 +22,6 @@ namespace NxEn
 
 	void* HandleManager::AllocateHandle(void* Pointer)
 	{
-		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
-
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
 		uint64& Redirection = Buffer.Acquire();
@@ -34,8 +32,6 @@ namespace NxEn
 
 	void HandleManager::ModifyHandle(void* Handle, void* Pointer)
 	{
-		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
-
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
 		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
@@ -52,8 +48,6 @@ namespace NxEn
 
 	void* HandleManager::GetHandle(void* Pointer)
 	{
-		NEXUS_ASSERT(Pointer, Default, "Null Pointer");
-
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
 		auto It = Buffer.Find(Address);

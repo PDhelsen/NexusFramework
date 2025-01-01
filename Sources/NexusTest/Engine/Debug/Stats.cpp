@@ -55,7 +55,6 @@ namespace NxTs
 			Stats.Unlock();
 			ASSERT_EQ(!Stats.IsLocked(), true);
 
-			ASSERT_EQ(Stats.GetCurrentComment(), NxEn::StringUtility::Format("Iteration: %d", Iteration) + ";" + NxEn::StringUtility::Format("Iteration (Again): %d", Iteration) + ";");
 			ASSERT_EQ(Stats.GetCurrentStatValue<int64>(SetId), Iteration);
 
 			Stats.Flush();

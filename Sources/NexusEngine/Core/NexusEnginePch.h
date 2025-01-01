@@ -37,4 +37,3 @@
 #include "Types/Functions/Event.h"
 
 #include "Debug/Logger/Logger.h"
-#include "Debug/Logger/Assert.h"

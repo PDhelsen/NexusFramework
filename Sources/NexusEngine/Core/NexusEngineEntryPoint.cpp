@@ -3,36 +3,92 @@
 
 #include "IO/Path.h"
 #include "IO/Directory.h"
-#include "Debug/Logger/Logger.h"
 
 #include "Core/NexusEngineGlobals.h"
 
 namespace NxEn
 {
-	void HelloWorld()
+	Path GetDebugPath()
 	{
-		NEXUS_LOG(Info, Default, "Hello World");
+		Path DebugPath = Path::GetWorkingDirectory() + "Debug";
+		Directory DebugFolder = Directory(DebugPath);
+		DebugFolder.Create();
+		return DebugPath;
+	}
+
+	void CreateLogger(const Path& Folder)
+	{
+		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Folder + "Logs.txt");
+		Logs->AddChannel(LoggerChannel::Default, true);
+		Logs->AddChannel(LoggerChannel::Verbose, false);
+		Globals::Logs = Logs;
+	}
+
+	void CreateStats(const Path& Folder)
+	{
+		Stats* Statistiques = new Stats(Folder + "Stats.csv");
+		Statistiques->Initialize();
+		Statistiques->StartRecording();
+		Globals::Statistiques = Statistiques;
+	}
+
+	void CreateIntruments(const Path& Folder)
+	{
+		Instruments* Instrumentor = Instruments::Create(Folder + "Instruments.json", false);
+		Instrumentor->StartRecording();
+		Globals::Instrumentor = Instrumentor;
+	}
+
+	void CreateHandleManager()
+	{
+		HandleManager* Handles = new HandleManager(1024);
+		Globals::Handles = Handles;
+	}
+
+	void DestroyLogger()
+	{
+		Logger* Logs = Globals::Logs;
+		Globals::Logs = nullptr;
+
+		delete Logs;
+	}
+
+	void DestroyStatistique()
+	{
+		Stats* Statistiques = Globals::Statistiques;
+		Globals::Statistiques = nullptr;
+
+		Statistiques->StopRecording();
+		delete Statistiques;
+	}
+
+	void DestroyInstruments()
+	{
+		Instruments* Instrumentor = Globals::Instrumentor;
+		Globals::Instrumentor = nullptr;
+
+		Instrumentor->StopRecording();
+		Instruments::Destroy(Instrumentor);
+	}
+
+	void DestroyHandleManager()
+	{
+		HandleManager* Handles = Globals::Handles;
+		Globals::Handles = nullptr;
+
+		delete Handles;
 	}
 
 	bool Initialize()
 	{
 		AllocatorContext Context(nullptr);
 
-		Path DebugPath = Path::GetWorkingDirectory() + "Debug";
-		Directory DebugDirectory = Directory(DebugPath);
-		DebugDirectory.Create();
+		Path DebugPath = GetDebugPath();
+		CreateLogger(DebugPath);
+		CreateStats(DebugPath);
+		CreateIntruments(DebugPath);
 
-		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, DebugPath + "Logs.txt");
-		Logs->AddChannel(LoggerChannel::Default, true);
-		Logs->AddChannel(LoggerChannel::Verbose, false);
-		Globals::Logs = Logs;
-		Globals::Statistiques = new Stats(DebugPath + "Stats.csv");
-		Globals::Statistiques->Initialize();
-		Globals::Statistiques->StartRecording();
-		Globals::Instrumentor = Instruments::Create(DebugPath + "Instruments.json", false);
-		Globals::Instrumentor->StartRecording();
-
-		Globals::Handles = new HandleManager(1024);
+		CreateHandleManager();
 
 		return true;
 	}
@@ -41,13 +97,11 @@ namespace NxEn
 	{
 		AllocatorContext Context(nullptr);
 
-		delete Globals::Handles;
+		DestroyHandleManager();
 
-		Globals::Instrumentor->StopRecording();
-		Instruments::Destroy(Globals::Instrumentor);
-		Globals::Statistiques->StopRecording();
-		delete Globals::Statistiques;
-		delete (Logger*)Globals::Logs;
+		DestroyInstruments();
+		DestroyStatistique();
+		DestroyLogger();
 
 		return true;
 	}

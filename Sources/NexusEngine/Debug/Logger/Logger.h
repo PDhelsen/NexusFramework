@@ -1,13 +1,13 @@
 #pragma once 
 
-#include "Debug/Logger/ILogger.h"
+#include "Debug/Logger/Log.h"
 #include "Types/Containers/Dictionary.h"
 #include "Platform/Platform.h"
 #include "IO/File.h"
 
 namespace NxEn
 {
-	class Logger : public ILogger
+	class Logger : public Log
 	{
 	public:
 		NEXUS_ENGINE_API Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "");
@@ -30,10 +30,12 @@ namespace NxEn
 
 		NEXUS_ENGINE_API void Flush();
 
+		NEXUS_ENGINE_API static Logger* GetInstance();
+
 	protected:
-		NEXUS_ENGINE_API bool ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const override;
-		NEXUS_ENGINE_API String& GetMessage() override;
-		NEXUS_ENGINE_API void LogMessage(LoggerVerbosity Verbosity, StringId Channel) override;
+		NEXUS_ENGINE_API bool ShouldLogMessage(LoggerVerbosity Verbosity, StringId Channel) const override;
+		NEXUS_ENGINE_API String& GetMessageBuffer() override;
+		NEXUS_ENGINE_API void LogMessageInternal(LoggerVerbosity Verbosity, StringId Channel) override;
 
 	private:
 		inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;

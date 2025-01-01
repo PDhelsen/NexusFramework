@@ -6,7 +6,7 @@ namespace NxEn
 	namespace Globals
 	{
 		HandleManager* Handles = nullptr;
-		ILogger* Logs = nullptr;
+		Logger* Logs = nullptr;
 		Stats* Statistiques = nullptr;
 		Instruments* Instrumentor = nullptr;
 	}

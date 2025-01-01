@@ -11,10 +11,10 @@ namespace NxTs
 	{
 		NxEn::Logger Logger = NxEn::Logger(false, NxEn::LoggerVerbosity::All, NxEn::LoggerOutput::All, NxEn::Path::GetWorkingDirectory() + "Logs.txt");
 		Logger.AddChannel(ChannelTest, true);
-		Logger.Log(NxEn::LoggerVerbosity::Info, ChannelTest, "Test");
-		Logger.Log(NxEn::LoggerVerbosity::Warning, ChannelTest, "Test: %d", 10);
-		Logger.Log(NxEn::LoggerVerbosity::Error, ChannelTest, "Test: %f", 10.0f);
-		Logger.Log(NxEn::LoggerVerbosity::Fatal, ChannelTest, "Test: %s", "Hello World");
+		Logger.LogMessage(NxEn::LoggerVerbosity::Info, ChannelTest, "Test");
+		Logger.LogMessage(NxEn::LoggerVerbosity::Warning, ChannelTest, "Test: %d", 10);
+		Logger.LogMessage(NxEn::LoggerVerbosity::Error, ChannelTest, "Test: %f", 10.0f);
+		Logger.LogMessage(NxEn::LoggerVerbosity::Fatal, ChannelTest, "Test: %s", "Hello World");
 	}
 
 	TEST(Logger, Channel)

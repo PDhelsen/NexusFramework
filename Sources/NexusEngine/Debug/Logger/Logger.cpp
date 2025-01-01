@@ -20,7 +20,13 @@ namespace NxEn
 	// Keep the const char array sync with the Verbosity & Source enum in the h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
 
-	ILogger* ILogger::GetInstance()
+	Log* Log::GetInstance()
+	{
+		return Globals::Logs;
+	}
+
+
+	Logger* Logger::GetInstance()
 	{
 		return Globals::Logs;
 	}
@@ -112,17 +118,17 @@ namespace NxEn
 		Print(StringBuffer);
 	}
 
-	bool Logger::ShouldLog(LoggerVerbosity Verbosity, StringId Channel) const
+	bool Logger::ShouldLogMessage(LoggerVerbosity Verbosity, StringId Channel) const
 	{
 		return Target && CheckVerbosity(Verbosity) && CheckChannel(Channel);
 	}
 
-	String& Logger::GetMessage()
+	String& Logger::GetMessageBuffer()
 	{
 		return StringBuilderMessage;
 	}
 
-	void Logger::LogMessage(LoggerVerbosity Verbosity, StringId Channel)
+	void Logger::LogMessageInternal(LoggerVerbosity Verbosity, StringId Channel)
 	{
 		uint8 VerbosityLevel = GetLogLevel(Verbosity);
 
