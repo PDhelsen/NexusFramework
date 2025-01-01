@@ -5,173 +5,14 @@
 
 namespace NxEn
 {
-	Path::Path(StringView Path)
-		: Data(Path.C(), Path.GetCount())
+	Path Path::GetWorkingDirectory()
 	{
+		return Path::ConvertStringToPath(Platform::GetInstance()->GetWorkingDirectory());
 	}
 
-	Path::~Path()
-	{
-	}
-
-	Path Path::ConvertStringToPath(String&& Temp)
-	{
-		Path Result("");
-		Result.Data = Move(Temp);
-		return Result;
-	}
-
-	Path::operator bool() const
-	{
-		return IsValid();
-	}
-
-	Path::operator StringView() const
-	{
-		return ToView();
-	}
-
-	Path& Path::operator+=(const Path& Other)
-	{
-		Join(Other);
-		return *this;
-	}
-
-	Path& Path::operator+=(StringView Other)
-	{
-		Join(Other);
-		return *this;
-	}
-
-	Path& Path::operator-=(uint64 Count)
-	{
-		Previous(Count);
-		return *this;
-	}
-
-	Path& Path::Join(StringView Element)
-	{
-		Path::Combine(Data, Element);
-		return *this;
-	}
-
-	Path& Path::Previous(uint64 Count)
-	{
-		Path::Previous(Data, Count);
-		return *this;
-	}
-
-	Path& Path::ChangeFileName(StringView File)
-	{
-		Path::ChangeFileName(Data, File);
-		return *this;
-	}
-
-	Path& Path::ChangeDirectoryPath(StringView Directory)
-	{
-		Path::ChangeDirectoryPath(Data, Directory);
-		return *this;
-	}
-
-	Path& Path::ChangeExtension(StringView Extension)
-	{
-		Path::ChangeExtension(Data, Extension);
-		return *this;
-	}
-
-	Path& Path::ConvertAbsoluteToRelative(StringView Root)
-	{
-		Path::ConvertAbsoluteToRelative(Data, Root);
-		return *this;
-	}
-
-	Path& Path::ConvertRelativeToAbsolute(StringView Root)
-	{
-		Path::ConvertRelativeToAbsolute(Data, Root);
-		return *this;
-	}
-
-	Path& Path::Resolve()
-	{
-		Path::Resolve(Data);
-		return *this;
-	}
-
-	Path& Path::Normalize()
-	{
-		Path::Normalize(Data);
-		return *this;
-	}
-
-	Path::Type Path::GetType() const
-	{
-		return Path::GetType(Data);
-	}
-
-	bool Path::Exist() const
-	{
-		return Path::Exist(Data);
-	}
-
-	bool Path::IsFile() const
-	{
-		return Path::IsFile(Data);
-	}
-
-	bool Path::IsDirectory() const
-	{
-		return Path::IsDirectory(Data);
-	}
-
-	bool Path::IsAbsolute() const
-	{
-		return Path::IsAbsolute(Data);
-	}
-
-	bool Path::IsRelative() const
-	{
-		return Path::IsRelative(Data);
-	}
-
-	bool Path::HasExtension(StringView Extension) const
-	{
-		return Path::HasExtension(Data, Extension);
-	}
-
-	StringView Path::GetDrive() const
-	{
-		return Path::GetDrive(Data);
-	}
-
-	StringView Path::GetDirectoryPath() const
-	{
-		return Path::GetDirectoryPath(Data);
-	}
-
-	StringView Path::GetDirectoryName() const
-	{
-		return Path::GetDirectoryName(Data);
-	}
-
-	StringView Path::GetParent() const
-	{
-		return Path::GetParent(Data);
-	}
-
-	StringView Path::GetFileName(bool Extension) const
-	{
-		return Path::GetFileName(Data, Extension);
-	}
-
-	StringView Path::GetExtension() const
-	{
-		return Path::GetExtension(Data);
-	}
-
-	List<StringView> Path::Split() const
-	{
-		return Path::Split(Data);
-	}
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Static
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	String Path::Combine(StringView Base, StringView Element)
 	{
@@ -257,7 +98,7 @@ namespace NxEn
 		{
 			return StringUtility::Empty;
 		}
-		
+
 		String Result = Path.ToString();
 		Path::ConvertAbsoluteToRelative(Result, Root);
 		return Result;
@@ -458,10 +299,181 @@ namespace NxEn
 		return StringUtility::SplitAll(Path, SeparatorDirectory);
 	}
 
-	Path Path::GetWorkingDirectory()
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Instance
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+	Path::Path(StringView Path)
+		: Data(Path.C(), Path.GetCount())
 	{
-		return Path::ConvertStringToPath(Platform::GetInstance()->GetWorkingDirectory());
 	}
+
+	Path::~Path()
+	{
+	}
+
+	Path Path::ConvertStringToPath(String&& Temp)
+	{
+		Path Result("");
+		Result.Data = Move(Temp);
+		return Result;
+	}
+
+	Path::operator bool() const
+	{
+		return IsValid();
+	}
+
+	Path::operator StringView() const
+	{
+		return ToView();
+	}
+
+	Path& Path::operator+=(const Path& Other)
+	{
+		Join(Other);
+		return *this;
+	}
+
+	Path& Path::operator+=(StringView Other)
+	{
+		Join(Other);
+		return *this;
+	}
+
+	Path& Path::operator-=(uint64 Count)
+	{
+		Previous(Count);
+		return *this;
+	}
+
+	Path& Path::Join(StringView Element)
+	{
+		Path::Combine(Data, Element);
+		return *this;
+	}
+
+	Path& Path::Previous(uint64 Count)
+	{
+		Path::Previous(Data, Count);
+		return *this;
+	}
+
+	Path& Path::ChangeFileName(StringView File)
+	{
+		Path::ChangeFileName(Data, File);
+		return *this;
+	}
+
+	Path& Path::ChangeDirectoryPath(StringView Directory)
+	{
+		Path::ChangeDirectoryPath(Data, Directory);
+		return *this;
+	}
+
+	Path& Path::ChangeExtension(StringView Extension)
+	{
+		Path::ChangeExtension(Data, Extension);
+		return *this;
+	}
+
+	Path& Path::ConvertAbsoluteToRelative(StringView Root)
+	{
+		Path::ConvertAbsoluteToRelative(Data, Root);
+		return *this;
+	}
+
+	Path& Path::ConvertRelativeToAbsolute(StringView Root)
+	{
+		Path::ConvertRelativeToAbsolute(Data, Root);
+		return *this;
+	}
+
+	Path& Path::Resolve()
+	{
+		Path::Resolve(Data);
+		return *this;
+	}
+
+	Path& Path::Normalize()
+	{
+		Path::Normalize(Data);
+		return *this;
+	}
+
+	Path::Type Path::GetType() const
+	{
+		return Path::GetType(Data);
+	}
+
+	bool Path::Exist() const
+	{
+		return Path::Exist(Data);
+	}
+
+	bool Path::IsFile() const
+	{
+		return Path::IsFile(Data);
+	}
+
+	bool Path::IsDirectory() const
+	{
+		return Path::IsDirectory(Data);
+	}
+
+	bool Path::IsAbsolute() const
+	{
+		return Path::IsAbsolute(Data);
+	}
+
+	bool Path::IsRelative() const
+	{
+		return Path::IsRelative(Data);
+	}
+
+	bool Path::HasExtension(StringView Extension) const
+	{
+		return Path::HasExtension(Data, Extension);
+	}
+
+	StringView Path::GetDrive() const
+	{
+		return Path::GetDrive(Data);
+	}
+
+	StringView Path::GetDirectoryPath() const
+	{
+		return Path::GetDirectoryPath(Data);
+	}
+
+	StringView Path::GetDirectoryName() const
+	{
+		return Path::GetDirectoryName(Data);
+	}
+
+	StringView Path::GetParent() const
+	{
+		return Path::GetParent(Data);
+	}
+
+	StringView Path::GetFileName(bool Extension) const
+	{
+		return Path::GetFileName(Data, Extension);
+	}
+
+	StringView Path::GetExtension() const
+	{
+		return Path::GetExtension(Data);
+	}
+
+	List<StringView> Path::Split() const
+	{
+		return Path::Split(Data);
+	}
+
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+	// Operator
+	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	Path operator+(const Path& A, const Path& B)
 	{

@@ -8,6 +8,9 @@ namespace NxEn
 {
 	namespace Sorting
 	{
+		using DefaultIndexBased = class HeapSort;
+		using DefaultLinkBased = class MergeSort;
+
 		template<typename T>
 		using CompareFunction = const Delegate<bool(const T&, const T&)>&;
 
@@ -310,9 +313,6 @@ namespace NxEn
 				Data[Index] = Move(Temp);
 			}
 		};
-
-		using DefaultIndexBased = HeapSort;
-		using DefaultLinkBased = MergeSort;
 	}
 
 	class Sort

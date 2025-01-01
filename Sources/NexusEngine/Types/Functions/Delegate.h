@@ -58,6 +58,22 @@ namespace NxEn
 			F Target;
 		};
 
+		inline static const uint8 SmallFunctionSize = 16;
+		inline static const uint8 BufferSize = SmallFunctionSize + 8;
+
+		union Storage
+		{
+			struct
+			{
+				void* Function;
+			} Large;
+			struct
+			{
+				Byte Function[BufferSize];
+				uint64 Size;
+			} Small;
+		};
+
 	public:
 		Delegate(Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Sbo(true), Comparable(false)
@@ -265,22 +281,6 @@ namespace NxEn
 		Interface* GetFunction() const { return (Interface*)(Sbo ? Data.Small.Function : Data.Large.Function); }
 		uint64 GetSize() const { return Sbo ? Data.Small.Size : 0; }
 		bool HasFunction() const { return Sbo ? Data.Small.Size != 0 : Data.Large.Function != nullptr; }
-
-		inline static const uint8 SmallFunctionSize = 16;
-		inline static const uint8 BufferSize = SmallFunctionSize + 8;
-
-		union Storage
-		{
-			struct
-			{
-				void* Function;
-			} Large;
-			struct
-			{
-				Byte Function[BufferSize];
-				uint64 Size;
-			} Small;
-		};
 
 		Storage Data;
 		Allocator* Alloc;

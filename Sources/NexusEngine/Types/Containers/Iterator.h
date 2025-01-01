@@ -124,6 +124,8 @@ namespace NxEn
 		class IteratorBucket
 		{
 		public:
+			inline static const uint64 BucketSize = BS;
+
 			IteratorBucket(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
 				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
@@ -245,8 +247,6 @@ namespace NxEn
 			}
 
 		private:
-			inline static const uint64 BucketSize = BS;
-
 			T** Data;
 			uint64 Offset;
 			uint64 BucketIndex;

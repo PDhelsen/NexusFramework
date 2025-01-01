@@ -15,7 +15,18 @@ namespace NxEn
 	{
 		friend class StringUtility;
 
+	private:
+		inline static const uint8 SmallStringCapacity = 16;
+
+		union Buffer
+		{
+			char* Large;
+			char Small[SmallStringCapacity];
+		};
+
 	public:
+		NEXUS_ENGINE_API static String Create(char* Text, uint64 Capacity, uint64 Size);
+
 		NEXUS_ENGINE_API String(Allocator* Allctr = AllocatorContext::Get());
 		NEXUS_ENGINE_API String(uint64 Bytes, Allocator* Allctr = AllocatorContext::Get());
 		NEXUS_ENGINE_API String(const char* Text, Allocator* Allctr = AllocatorContext::Get());
@@ -23,8 +34,6 @@ namespace NxEn
 		NEXUS_ENGINE_API String(const String& Other);
 		NEXUS_ENGINE_API String(String&& Other) noexcept;
 		NEXUS_ENGINE_API ~String();
-
-		NEXUS_ENGINE_API static String Create(char* Text, uint64 Capacity, uint64 Size);
 
 		NEXUS_ENGINE_API String& operator=(const String& Other);
 		NEXUS_ENGINE_API String& operator=(String&& Other) noexcept;
@@ -81,14 +90,6 @@ namespace NxEn
 		inline const char* GetBuffer() const { return Sso() ? Data.Small : Data.Large; }
 		inline char* GetData() { return Sso() ? Data.Small : Data.Large; }
 		inline bool Sso() const { return Capacity <= SmallStringCapacity; }
-
-		inline static const uint8 SmallStringCapacity = 16;
-
-		union Buffer
-		{
-			char* Large;
-			char Small[SmallStringCapacity];
-		};
 
 		Allocator* Alloc;
 		uint64 Capacity;

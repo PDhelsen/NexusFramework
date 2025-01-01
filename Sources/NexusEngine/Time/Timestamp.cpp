@@ -149,11 +149,6 @@ namespace NxEn
 		return IsValid();
 	}
 
-	String Timestamp::ToString(StringView Format) const
-	{
-		return Time::ToString(*this, Format);
-	}
-
 	StringView Timestamp::GetWeekDay() const
 	{
 		return Time::GetWeekDay(WeekDay);
@@ -169,6 +164,11 @@ namespace NxEn
 		return Time::GetDaysPerMonth(Months, Time::IsLeapYear(Years));
 	}
 
+	String Timestamp::ToString(StringView Format) const
+	{
+		return Time::ToString(*this, Format);
+	}
+	
 	bool Timestamp::IsValid() const
 	{
 		return Seconds >= 0 && Seconds < 60 && Minutes >= 0 && Minutes < 60 && Hours >= 0 && Hours < 24 && Days > 0 && Days <= GetDaysPerMonth() && Months > 0 && Months <= 12;

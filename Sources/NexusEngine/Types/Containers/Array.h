@@ -14,6 +14,16 @@ namespace NxEn
 	template<typename T, uint64 L = 1>
 	class Array
 	{
+	private:
+		union Buffer
+		{
+			T* Heap;
+			T Stack[L];
+
+			Buffer() : Heap(nullptr) {};
+			~Buffer() {};
+		};
+
 	public:
 		using I = Iterator::IteratorBlock<T>;
 
@@ -422,15 +432,6 @@ namespace NxEn
 		{
 			Count = Size > 1 ? Size : 1;
 		}
-
-		union Buffer
-		{
-			T* Heap;
-			T Stack[L];
-
-			Buffer(): Heap(nullptr) {};
-			~Buffer() {};
-		};
 
 		Allocator* Alloc;
 		uint64 Count;

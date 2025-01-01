@@ -16,6 +16,52 @@ namespace NxEn
 			Invalid, File, Directory
 		};
 
+		inline static const String SeparatorDirectory = "/";
+		inline static const String SeparatorExtension = ".";
+		inline static const String SeparatorPrevious = "..";
+		inline static const String SeparatorDrive = ":/";
+
+		NEXUS_ENGINE_API static Path GetWorkingDirectory();
+
+		template<typename T>
+		static String Combine(const Collection<T>& Elements);
+		template<typename T>
+		static void Combine(String& Base, const Collection<T>& Elements);
+		NEXUS_ENGINE_API static String Combine(StringView Base, StringView Element);
+		NEXUS_ENGINE_API static void Combine(String& Base, StringView Element);
+		NEXUS_ENGINE_API static String Previous(StringView Path, uint64 Count = 1);
+		NEXUS_ENGINE_API static void Previous(String& Path, uint64 Count = 1);
+
+		NEXUS_ENGINE_API static String ChangeFileName(StringView Path, StringView File);
+		NEXUS_ENGINE_API static void ChangeFileName(String& Path, StringView File);
+		NEXUS_ENGINE_API static String ChangeDirectoryPath(StringView Path, StringView Directory);
+		NEXUS_ENGINE_API static void ChangeDirectoryPath(String& Path, StringView Directory);
+		NEXUS_ENGINE_API static String ChangeExtension(StringView Path, StringView Extension);
+		NEXUS_ENGINE_API static void ChangeExtension(String& Path, StringView Extension);
+		NEXUS_ENGINE_API static String ConvertAbsoluteToRelative(StringView Path, StringView Root);
+		NEXUS_ENGINE_API static void ConvertAbsoluteToRelative(String& Path, StringView Root);
+		NEXUS_ENGINE_API static String ConvertRelativeToAbsolute(StringView Path, StringView Root);
+		NEXUS_ENGINE_API static void ConvertRelativeToAbsolute(String& Path, StringView Root);
+		NEXUS_ENGINE_API static String Resolve(StringView Path);
+		NEXUS_ENGINE_API static void Resolve(String& Path);
+		NEXUS_ENGINE_API static String Normalize(StringView Path);
+		NEXUS_ENGINE_API static void Normalize(String& Path);
+
+		NEXUS_ENGINE_API static Type GetType(StringView Path);
+		NEXUS_ENGINE_API static bool Exist(StringView Path);
+		NEXUS_ENGINE_API static bool IsFile(StringView Path);
+		NEXUS_ENGINE_API static bool IsDirectory(StringView Path);
+		NEXUS_ENGINE_API static bool IsAbsolute(StringView Path);
+		NEXUS_ENGINE_API static bool IsRelative(StringView Path);
+		NEXUS_ENGINE_API static bool HasExtension(StringView Path, StringView Extension);
+		NEXUS_ENGINE_API static StringView GetDrive(StringView Path);
+		NEXUS_ENGINE_API static StringView GetDirectoryPath(StringView Path);
+		NEXUS_ENGINE_API static StringView GetDirectoryName(StringView Path);
+		NEXUS_ENGINE_API static StringView GetParent(StringView Path);
+		NEXUS_ENGINE_API static StringView GetFileName(StringView Path, bool Extension = false);
+		NEXUS_ENGINE_API static StringView GetExtension(StringView Path);
+		NEXUS_ENGINE_API static List<StringView> Split(StringView Path);
+
 		NEXUS_ENGINE_API Path(StringView Path);
 		NEXUS_ENGINE_API ~Path();
 		NEXUS_ENGINE_API static Path ConvertStringToPath(String&& Temp);
@@ -58,52 +104,6 @@ namespace NxEn
 		StringView ToView() const { return Data.ToView(); };
 		const char* C() const { return Data.C(); };
 		bool IsValid() const { return Data != StringUtility::Empty; }
-
-		template<typename T>
-		static String Combine(const Collection<T>& Elements);
-		template<typename T>
-		static void Combine(String& Base, const Collection<T>& Elements);
-		NEXUS_ENGINE_API static String Combine(StringView Base, StringView Element);
-		NEXUS_ENGINE_API static void Combine(String& Base, StringView Element);
-		NEXUS_ENGINE_API static String Previous(StringView Path, uint64 Count = 1);
-		NEXUS_ENGINE_API static void Previous(String& Path, uint64 Count = 1);
-
-		NEXUS_ENGINE_API static String ChangeFileName(StringView Path, StringView File);
-		NEXUS_ENGINE_API static void ChangeFileName(String& Path, StringView File);
-		NEXUS_ENGINE_API static String ChangeDirectoryPath(StringView Path, StringView Directory);
-		NEXUS_ENGINE_API static void ChangeDirectoryPath(String& Path, StringView Directory);
-		NEXUS_ENGINE_API static String ChangeExtension(StringView Path, StringView Extension);
-		NEXUS_ENGINE_API static void ChangeExtension(String& Path, StringView Extension);
-		NEXUS_ENGINE_API static String ConvertAbsoluteToRelative(StringView Path, StringView Root);
-		NEXUS_ENGINE_API static void ConvertAbsoluteToRelative(String& Path, StringView Root);
-		NEXUS_ENGINE_API static String ConvertRelativeToAbsolute(StringView Path, StringView Root);
-		NEXUS_ENGINE_API static void ConvertRelativeToAbsolute(String& Path, StringView Root);
-		NEXUS_ENGINE_API static String Resolve(StringView Path);
-		NEXUS_ENGINE_API static void Resolve(String& Path);
-		NEXUS_ENGINE_API static String Normalize(StringView Path);
-		NEXUS_ENGINE_API static void Normalize(String& Path);
-
-		NEXUS_ENGINE_API static Type GetType(StringView Path);
-		NEXUS_ENGINE_API static bool Exist(StringView Path);
-		NEXUS_ENGINE_API static bool IsFile(StringView Path);
-		NEXUS_ENGINE_API static bool IsDirectory(StringView Path);
-		NEXUS_ENGINE_API static bool IsAbsolute(StringView Path);
-		NEXUS_ENGINE_API static bool IsRelative(StringView Path);
-		NEXUS_ENGINE_API static bool HasExtension(StringView Path, StringView Extension);
-		NEXUS_ENGINE_API static StringView GetDrive(StringView Path);
-		NEXUS_ENGINE_API static StringView GetDirectoryPath(StringView Path);
-		NEXUS_ENGINE_API static StringView GetDirectoryName(StringView Path);
-		NEXUS_ENGINE_API static StringView GetParent(StringView Path);
-		NEXUS_ENGINE_API static StringView GetFileName(StringView Path, bool Extension = false);
-		NEXUS_ENGINE_API static StringView GetExtension(StringView Path);
-		NEXUS_ENGINE_API static List<StringView> Split(StringView Path);
-
-		NEXUS_ENGINE_API static Path GetWorkingDirectory();
-
-		inline static const String SeparatorDirectory = "/";
-		inline static const String SeparatorExtension = ".";
-		inline static const String SeparatorPrevious = "..";
-		inline static const String SeparatorDrive = ":/";
 
 		String Data;
 	};

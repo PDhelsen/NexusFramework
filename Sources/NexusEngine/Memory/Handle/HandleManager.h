@@ -12,6 +12,8 @@ namespace NxEn
 	class HandleManager
 	{
 	public:
+		NEXUS_ENGINE_API static HandleManager* GetInstance();
+
 		NEXUS_ENGINE_API HandleManager(uint64 Size);
 		NEXUS_ENGINE_API ~HandleManager();
 
@@ -25,8 +27,6 @@ namespace NxEn
 		Handle<T> FindHandle(T* Pointer);
 
 		NEXUS_ENGINE_API Dictionary<void*, Handle<uint8>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
-
-		NEXUS_ENGINE_API static HandleManager* GetInstance();
 
 	private:
 		NEXUS_ENGINE_API void* AllocateHandle(void* Pointer);

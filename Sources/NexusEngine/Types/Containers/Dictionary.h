@@ -21,6 +21,8 @@ namespace NxEn
 		using N = Node::NodeHashmap<KV>;
 		using I = Iterator::IteratorHashmap<KV, N>;
 
+		inline static const uint64 DefaultSize = 11;
+
 		Dictionary(uint64 Size = DefaultSize, Allocator * Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
@@ -597,8 +599,6 @@ namespace NxEn
 		{
 			return Capacity * 2;
 		}
-
-		inline static const uint64 DefaultSize = 11;
 
 		Allocator* Alloc;
 		uint64 Capacity;

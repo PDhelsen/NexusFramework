@@ -28,6 +28,8 @@ namespace NxEn
 			Read, Write, Append
 		};
 
+		NEXUS_ENGINE_API static Platform* GetInstance();
+
 		NEXUS_ENGINE_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
 		NEXUS_ENGINE_API virtual void Sleep(uint64 Milliseconds) const = 0;
 		NEXUS_ENGINE_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
@@ -58,7 +60,6 @@ namespace NxEn
 		NEXUS_ENGINE_API virtual String FileReadText(void* File) const = 0;
 
 		NEXUS_ENGINE_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
-		NEXUS_ENGINE_API static Platform* GetInstance();
 
 	protected:
 		Platform() = default;

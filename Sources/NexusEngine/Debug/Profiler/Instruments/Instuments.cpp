@@ -1,5 +1,5 @@
 #include "Core/NexusEnginePch.h"
-#include "Instumentor.h"
+#include "Instuments.h"
 
 #include "Debug/Profiler/Instruments/ChromeTracing.h"
 
@@ -43,6 +43,16 @@ namespace NxEn
 		delete Instance;
 	}
 
+	void Instruments::Record(const Marker& Data)
+	{
+		if (!Recording)
+		{
+			return;
+		}
+
+		RecordMarker(Data);
+	}
+
 	void Instruments::StartRecording()
 	{
 		if (Recording)
@@ -63,16 +73,6 @@ namespace NxEn
 		}
 
 		Recording = false;
-	}
-
-	void Instruments::Record(const Marker& Data)
-	{
-		if (!Recording)
-		{
-			return;
-		}
-
-		RecordMarker(Data);
 	}
 
 	Instruments::Instruments(StringView Path, bool Start)

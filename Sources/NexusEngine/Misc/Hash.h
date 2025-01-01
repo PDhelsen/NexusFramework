@@ -11,6 +11,8 @@ namespace NxEn
 
 	namespace Hashing
 	{
+		using Default = class Fnv1a64;
+
 		template<typename L>
 		class HashAlgorithm
 		{
@@ -181,8 +183,6 @@ namespace NxEn
 			HashLength Seed;
 			HashLength Accumulator;
 		};
-
-		using Default = Fnv1a64;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------------

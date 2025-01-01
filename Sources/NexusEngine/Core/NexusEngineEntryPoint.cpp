@@ -8,7 +8,7 @@
 
 namespace NxEn
 {
-	Path GetDebugPath()
+	static Path GetDebugPath()
 	{
 		Path DebugPath = Path::GetWorkingDirectory() + "Debug";
 		Directory DebugFolder = Directory(DebugPath);
@@ -16,7 +16,7 @@ namespace NxEn
 		return DebugPath;
 	}
 
-	void CreateLogger(const Path& Folder)
+	static void CreateLogger(const Path& Folder)
 	{
 		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Folder + "Logs.txt");
 		Logs->AddChannel(LoggerChannel::Default, true);
@@ -24,7 +24,7 @@ namespace NxEn
 		Globals::Logs = Logs;
 	}
 
-	void CreateStats(const Path& Folder)
+	static void CreateStats(const Path& Folder)
 	{
 		Stats* Statistiques = new Stats(Folder + "Stats.csv");
 		Statistiques->Initialize();
@@ -32,20 +32,20 @@ namespace NxEn
 		Globals::Statistiques = Statistiques;
 	}
 
-	void CreateIntruments(const Path& Folder)
+	static void CreateIntruments(const Path& Folder)
 	{
 		Instruments* Instrumentor = Instruments::Create(Folder + "Instruments.json", false);
 		Instrumentor->StartRecording();
 		Globals::Instrumentor = Instrumentor;
 	}
 
-	void CreateHandleManager()
+	static void CreateHandleManager()
 	{
 		HandleManager* Handles = new HandleManager(1024);
 		Globals::Handles = Handles;
 	}
 
-	void DestroyLogger()
+	static void DestroyLogger()
 	{
 		Logger* Logs = Globals::Logs;
 		Globals::Logs = nullptr;
@@ -53,7 +53,7 @@ namespace NxEn
 		delete Logs;
 	}
 
-	void DestroyStatistique()
+	static void DestroyStats()
 	{
 		Stats* Statistiques = Globals::Statistiques;
 		Globals::Statistiques = nullptr;
@@ -62,7 +62,7 @@ namespace NxEn
 		delete Statistiques;
 	}
 
-	void DestroyInstruments()
+	static void DestroyInstruments()
 	{
 		Instruments* Instrumentor = Globals::Instrumentor;
 		Globals::Instrumentor = nullptr;
@@ -71,7 +71,7 @@ namespace NxEn
 		Instruments::Destroy(Instrumentor);
 	}
 
-	void DestroyHandleManager()
+	static void DestroyHandleManager()
 	{
 		HandleManager* Handles = Globals::Handles;
 		Globals::Handles = nullptr;
@@ -100,7 +100,7 @@ namespace NxEn
 		DestroyHandleManager();
 
 		DestroyInstruments();
-		DestroyStatistique();
+		DestroyStats();
 		DestroyLogger();
 
 		return true;

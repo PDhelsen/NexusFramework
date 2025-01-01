@@ -4,7 +4,7 @@
 #include "Memory/Handle/HandleManager.h"
 #include "Debug/Logger/Logger.h"
 #include "Debug/Profiler/Stats/Stats.h"
-#include "Debug/Profiler/Instruments/Instumentor.h"
+#include "Debug/Profiler/Instruments/Instuments.h"
 
 namespace NxEn
 {

@@ -49,30 +49,31 @@ namespace NxEn
 	class Log
 	{
 	public:
+		NEXUS_ENGINE_API static Log* GetInstance();
+
 		template<typename... Args>
 		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
-
-		NEXUS_ENGINE_API static Log* GetInstance();
 
 	protected:
 		NEXUS_ENGINE_API Log() = default;
 		NEXUS_ENGINE_API ~Log() = default;
 
-		NEXUS_ENGINE_API virtual bool ShouldLogMessage(LoggerVerbosity Verbosity, StringId Channel) const = 0;
+		NEXUS_ENGINE_API virtual bool ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel) const = 0;
+		NEXUS_ENGINE_API virtual void PrintMessage(LoggerVerbosity Verbosity, StringId Channel) = 0;
+
 		NEXUS_ENGINE_API virtual String& GetMessageBuffer() = 0;
-		NEXUS_ENGINE_API virtual void LogMessageInternal(LoggerVerbosity Verbosity, StringId Channel) = 0;
 	};
 
 	template<typename... Args>
 	void Log::LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
-		if (!ShouldLogMessage(Verbosity, Channel))
+		if (!ShouldPrintMessage(Verbosity, Channel))
 		{
 			return;
 		}
 
 		GetMessageBuffer().Format(Message, args...);
-		LogMessageInternal(Verbosity, Channel);
+		PrintMessage(Verbosity, Channel);
 	}
 }
 

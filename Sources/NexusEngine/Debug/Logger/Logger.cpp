@@ -11,20 +11,19 @@
 
 namespace NxEn
 {
+	// Keep the const char array sync with the Verbosity & Source enum in the h file
+	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
+
 	namespace LoggerChannel
 	{
 		const StringId Default = "Default"_Sid;
 		const StringId Verbose = "Verbose"_Sid;
 	}
 
-	// Keep the const char array sync with the Verbosity & Source enum in the h file
-	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
-
 	Log* Log::GetInstance()
 	{
 		return Globals::Logs;
 	}
-
 
 	Logger* Logger::GetInstance()
 	{
@@ -32,7 +31,7 @@ namespace NxEn
 	}
 
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: Channels(), StringBuilderMessage(256), StringBuilderFormat(256), StringBuffer(4096), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), Target(Platform::GetInstance()), Handle("")
+		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle("")
 	{
 		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, Default, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
 
@@ -53,6 +52,16 @@ namespace NxEn
 		{
 			Handle.Close();
 		}
+	}
+
+	void Logger::Flush()
+	{
+		if (FlushOnLog)
+		{
+			return;
+		}
+
+		Write(BufferLogs);
 	}
 
 	void Logger::AddChannel(StringId Channel, bool State /*true*/)
@@ -108,27 +117,12 @@ namespace NxEn
 		return Enum::CheckFlag(Outputs, Output);
 	}
 
-	void Logger::Flush()
-	{
-		if (FlushOnLog)
-		{
-			return;
-		}
-
-		Print(StringBuffer);
-	}
-
-	bool Logger::ShouldLogMessage(LoggerVerbosity Verbosity, StringId Channel) const
+	bool Logger::ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel) const
 	{
 		return Target && CheckVerbosity(Verbosity) && CheckChannel(Channel);
 	}
 
-	String& Logger::GetMessageBuffer()
-	{
-		return StringBuilderMessage;
-	}
-
-	void Logger::LogMessageInternal(LoggerVerbosity Verbosity, StringId Channel)
+	void Logger::PrintMessage(LoggerVerbosity Verbosity, StringId Channel)
 	{
 		uint8 VerbosityLevel = GetLogLevel(Verbosity);
 
@@ -136,15 +130,15 @@ namespace NxEn
 		int8 Hours = 0, Minutes = 0, Seconds = 0;
 		GatherInfo(VerbosityLevel, VerbosityString, Hours, Minutes, Seconds);
 
-		StringBuilderFormat.Format(Format, Hours, Minutes, Seconds, VerbosityString.C(), Channel.C(), StringBuilderMessage.C());
+		BufferFormat.Format(Format, Hours, Minutes, Seconds, VerbosityString.C(), Channel.C(), BufferMessage.C());
 
 		if (FlushOnLog)
 		{
-			Print(StringBuilderFormat);
+			Write(BufferFormat);
 		}
 		else
 		{
-			CopyIntoBuffer(StringBuilderFormat);
+			CopyIntoBuffer(BufferFormat);
 		}
 	}
 
@@ -165,15 +159,15 @@ namespace NxEn
 
 	void Logger::CopyIntoBuffer(String& Text)
 	{
-		if (StringBuffer.GetCapacity() - StringBuffer.GetCount() < Text.GetCount())
+		if (BufferLogs.GetCapacity() - BufferLogs.GetCount() < Text.GetCount())
 		{
-			Print(Text);
+			Write(Text);
 		}
 
-		StringBuffer += Text;
+		BufferLogs += Text;
 	}
 
-	void Logger::Print(String& Text)
+	void Logger::Write(String& Text)
 	{
 		if (CheckOutput(LoggerOutput::Console))
 		{

@@ -2,6 +2,52 @@
 
 namespace NxEn
 {
+	using NullPtr = decltype(nullptr);
+
+	template <typename...>
+	using HasTrait = void;
+
+	template<typename T, typename U>
+	struct IsSameType
+	{
+		static const bool Value = false;
+	};
+
+	template<typename T>
+	struct IsSameType<T, T>
+	{
+		static const bool Value = true;
+	};
+
+	template<bool B, typename T = void>
+	struct EnableIf
+	{
+	};
+
+	template<typename T>
+	struct EnableIf<true, T>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
+	struct IsPointer
+	{
+		static bool Check()
+		{
+			return false;
+		}
+	};
+
+	template<typename T>
+	struct IsPointer<T*>
+	{
+		static bool Check()
+		{
+			return true;
+		}
+	};
+
 	template<typename T> 
 	struct RemoveReference 
 	{ 
@@ -37,52 +83,6 @@ namespace NxEn
 	{
 		return static_cast<T&&>(Arg);
 	}
-
-	template<typename T>
-	struct IsPointer
-	{ 
-		static bool Check() 
-		{
-			return false;
-		}
-	};
-
-	template<typename T>
-	struct IsPointer<T*> 
-	{ 
-		static bool Check()
-		{
-			return true;
-		}
-	};
-
-	template<typename T, typename U>
-	struct IsSameType
-	{
-		static const bool Value = false;
-	};
-
-	template<typename T>
-	struct IsSameType<T, T>
-	{
-		static const bool Value = true;
-	};
-
-	template<bool B, typename T = void>
-	struct EnableIf
-	{
-	};
-
-	template<typename T>
-	struct EnableIf<true, T>
-	{
-		using Type = T;
-	};
-
-	using NullPtr = decltype(nullptr);
-
-	template <typename...>
-	using HasTrait = void;
 
 	template <typename T, typename = void>
 	struct IsLambda

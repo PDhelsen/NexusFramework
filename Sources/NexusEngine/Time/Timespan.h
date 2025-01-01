@@ -10,6 +10,8 @@ namespace NxEn
 	struct Timespan
 	{
 	public:
+		inline static const String Format = "%Yy%mm%dd - %Hh%Mm%Ss";
+
 		NEXUS_ENGINE_API Timespan();
 		NEXUS_ENGINE_API Timespan(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S);
 
@@ -21,8 +23,6 @@ namespace NxEn
 		NEXUS_ENGINE_API String ToString(StringView Format = Format) const;
 
 		NEXUS_ENGINE_API bool IsValid() const;
-
-		inline static const String Format = "%Yy%mm%dd - %Hh%Mm%Ss";
 
 		int32 Seconds;
 		int32 Minutes;

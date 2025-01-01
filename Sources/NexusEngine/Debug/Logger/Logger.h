@@ -10,6 +10,10 @@ namespace NxEn
 	class Logger : public Log
 	{
 	public:
+		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s\n";
+
+		NEXUS_ENGINE_API static Logger* GetInstance();
+
 		NEXUS_ENGINE_API Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "");
 		NEXUS_ENGINE_API Logger(const Logger& Other) = delete;
 		NEXUS_ENGINE_API Logger(Logger&& Other) noexcept = delete;
@@ -17,6 +21,8 @@ namespace NxEn
 
 		NEXUS_ENGINE_API Logger& operator=(const Logger& Other) = delete;
 		NEXUS_ENGINE_API Logger& operator=(Logger&& Other) noexcept = delete;
+
+		NEXUS_ENGINE_API void Flush();
 
 		NEXUS_ENGINE_API void AddChannel(StringId Channel, bool State = true);
 		NEXUS_ENGINE_API void SetChannel(StringId Channel, bool State);
@@ -28,31 +34,26 @@ namespace NxEn
 
 		NEXUS_ENGINE_API bool CheckOutput(LoggerOutput Output) const;
 
-		NEXUS_ENGINE_API void Flush();
-
-		NEXUS_ENGINE_API static Logger* GetInstance();
-
 	protected:
-		NEXUS_ENGINE_API bool ShouldLogMessage(LoggerVerbosity Verbosity, StringId Channel) const override;
-		NEXUS_ENGINE_API String& GetMessageBuffer() override;
-		NEXUS_ENGINE_API void LogMessageInternal(LoggerVerbosity Verbosity, StringId Channel) override;
+		NEXUS_ENGINE_API bool ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel) const override;
+		NEXUS_ENGINE_API void PrintMessage(LoggerVerbosity Verbosity, StringId Channel) override;
+
+		NEXUS_ENGINE_API String& GetMessageBuffer() override { return BufferMessage; };
 
 	private:
 		inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
 		inline void GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const;
 		inline void CopyIntoBuffer(String& Text);
-		inline void Print(String& Text);
-
-		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s\n";
+		inline void Write(String& Text);
 
 		Dictionary<StringId, bool, Hashing::Default> Channels;
-		String StringBuilderMessage;
-		String StringBuilderFormat;
-		String StringBuffer;
-
 		LoggerVerbosity VerbosityMask;
 		LoggerOutput Outputs;
 		bool FlushOnLog;
+
+		String BufferMessage;
+		String BufferFormat;
+		String BufferLogs;
 
 		Platform* Target;
 		File Handle;

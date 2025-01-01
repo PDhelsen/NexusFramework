@@ -16,6 +16,22 @@ namespace NxEn
 			Substring, Characters
 		};
 
+	private:
+		enum class SearchBehaviour
+		{
+			Contains, Find, Split
+		};
+
+	public:
+		inline static const char NullChar = StringCApi::NullChar;
+		inline static const char NewLineChar = StringCApi::NewLineChar;
+		inline static const String NewLine = StringCApi::NewLine;
+		inline static const String Empty = "";
+
+	private:
+		static const uint8 GuessFormatingSize = 8;
+
+	public:
 		template<typename... Args>
 		static String Format(StringView Format, Args&&... args);
 		template<typename... Args>
@@ -46,20 +62,8 @@ namespace NxEn
 		NEXUS_ENGINE_API static String ToStringD(double Number, StringView Format = "%.2f");
 		NEXUS_ENGINE_API static String ToStringB(bool State, StringView Format = "%s");
 
-		inline static const char NullChar = StringCApi::NullChar;
-		inline static const char NewLineChar = StringCApi::NewLineChar;
-		inline static const String NewLine = StringCApi::NewLine;
-		inline static const String Empty = "";
-
 	private:
-		enum class SearchBehaviour
-		{
-			Contains, Find, Split
-		};
-
 		static StringView Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
-
-		static const uint8 GuessFormatingSize = 8;
 	};
 
 	NEXUS_ENGINE_API String operator+(StringView TextA, StringView TextB);

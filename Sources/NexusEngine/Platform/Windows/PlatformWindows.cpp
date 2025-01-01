@@ -91,7 +91,7 @@ namespace NxEn
 		Buffer<char>& LocalBuffer = GetLocalBuffer();
 
 		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetByteSize(), LocalBuffer.GetPtr());
-		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetByteSize(), Default, "Buffer overflowed when getting the current working directory");
+		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetByteSize(), Default, "BufferLogs overflowed when getting the current working directory");
 		return Path::Normalize(StringView(LocalBuffer.GetPtr(), Length));
 	}
 

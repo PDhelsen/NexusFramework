@@ -85,15 +85,12 @@ namespace NxEn
 		};
 
 	public:
+		NEXUS_ENGINE_API static Stats* GetInstance();
+
 		NEXUS_ENGINE_API Stats(StringView Path);
 		NEXUS_ENGINE_API ~Stats();
 
 		NEXUS_ENGINE_API void Initialize();
-		NEXUS_ENGINE_API void Lock();
-		NEXUS_ENGINE_API void Unlock();
-		NEXUS_ENGINE_API void StartRecording();
-		NEXUS_ENGINE_API void StopRecording();
-
 		NEXUS_ENGINE_API void Flush();
 		NEXUS_ENGINE_API void Reset();
 
@@ -106,6 +103,11 @@ namespace NxEn
 		NEXUS_ENGINE_API void RecordStatDecimalPrecision(StringId Id, double Value);
 		NEXUS_ENGINE_API void RecordComment(StringView Comment);
 
+		NEXUS_ENGINE_API void Lock();
+		NEXUS_ENGINE_API void Unlock();
+		NEXUS_ENGINE_API void StartRecording();
+		NEXUS_ENGINE_API void StopRecording();
+
 		template<typename T>
 		T GetCurrentStatValue(StringId Id) const;
 		NEXUS_ENGINE_API const Stat* GetCurrentStat(StringId Id) const;
@@ -117,8 +119,6 @@ namespace NxEn
 		bool IsRecording() const { return Recording; }
 		bool IsLocked() const { return Locked; }
 
-		NEXUS_ENGINE_API static Stats* GetInstance();
-
 	private:
 		NEXUS_ENGINE_API void WriteLine();
 		NEXUS_ENGINE_API Stat& GetStat(StringId Id);
@@ -127,9 +127,10 @@ namespace NxEn
 		Dictionary<StringId, uint64> Headers;
 		List<Stat> Data;
 
+		String BufferLine;
+		String BufferCell;
+
 		File Handle;
-		String Line;
-		String Cell;
 
 		bool Initialized;
 		bool Recording;

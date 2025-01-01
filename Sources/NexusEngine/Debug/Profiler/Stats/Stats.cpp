@@ -216,7 +216,7 @@ namespace NxEn
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	Stats::Stats(StringView Path)
-		: Headers(), Data(), Handle(Path), Line(1024), Cell(), Initialized(false), Recording(false), Locked(false)
+		: Headers(), Data(), Handle(Path), BufferLine(1024), BufferCell(), Initialized(false), Recording(false), Locked(false)
 	{
 		Handle.Delete();
 		Handle.Create();
@@ -248,74 +248,6 @@ namespace NxEn
 		Initialized = true;
 	}
 
-	void Stats::Lock()
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (Locked)
-		{
-			NEXUS_LOG(Warning, Default, "Stats is already locked");
-			return;
-		}
-
-		Locked = true;
-	}
-
-	void Stats::Unlock()
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (!Locked)
-		{
-			NEXUS_LOG(Warning, Default, "Stats is already unlocked");
-			return;
-		}
-
-		Locked = false;
-	}
-
-	void Stats::StartRecording()
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (Recording)
-		{
-			NEXUS_LOG(Warning, Default, "Stats is already recording");
-			return;
-		}
-
-		Recording = true;
-	}
-
-	void Stats::StopRecording()
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (!Recording)
-		{
-			NEXUS_LOG(Warning, Default, "Stats is not recording");
-			return;
-		}
-
-		Recording = false;
-	}
-
 	void Stats::Flush()
 	{
 		if (!Initialized)
@@ -337,12 +269,12 @@ namespace NxEn
 
 		for (auto& Statistique : Data)
 		{
-			const String& Text = Statistique.ToString(Cell);
+			const String& Text = Statistique.ToString(BufferCell);
 
-			Line += Text;
-			Line += Separator;
+			BufferLine += Text;
+			BufferLine += Separator;
 
-			Cell.Clear();
+			BufferCell.Clear();
 		}
 
 		WriteLine();
@@ -389,8 +321,8 @@ namespace NxEn
 		Headers.Append(Name, Data.GetCount());
 		Data.Append(Stat(Type, Mode));
 
-		Line += Name.ToString();
-		Line += Separator;
+		BufferLine += Name.ToString();
+		BufferLine += Separator;
 	}
 
 	void Stats::RecordStatLabel(StringId Id, StringView Value)
@@ -525,6 +457,74 @@ namespace NxEn
 		Comments += Separator;
 	}
 
+	void Stats::Lock()
+	{
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (Locked)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is already locked");
+			return;
+		}
+
+		Locked = true;
+	}
+
+	void Stats::Unlock()
+	{
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (!Locked)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is already unlocked");
+			return;
+		}
+
+		Locked = false;
+	}
+
+	void Stats::StartRecording()
+	{
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (Recording)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is already recording");
+			return;
+		}
+
+		Recording = true;
+	}
+
+	void Stats::StopRecording()
+	{
+		if (!Initialized)
+		{
+			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			return;
+		}
+
+		if (!Recording)
+		{
+			NEXUS_LOG(Warning, Default, "Stats is not recording");
+			return;
+		}
+
+		Recording = false;
+	}
+
 	const Stats::Stat* Stats::GetCurrentStat(StringId Id) const
 	{
 		if (!Initialized)
@@ -560,9 +560,9 @@ namespace NxEn
 
 	void Stats::WriteLine()
 	{
-		Line += StringUtility::NewLine;
-		Handle.WriteText(Line);
-		Line.Clear();
+		BufferLine += StringUtility::NewLine;
+		Handle.WriteText(BufferLine);
+		BufferLine.Clear();
 	}
 
 	Stats::Stat& Stats::GetStat(StringId Id)

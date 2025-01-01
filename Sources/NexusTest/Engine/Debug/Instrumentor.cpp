@@ -1,6 +1,6 @@
 #include "Core/NexusTestPch.h"
 
-#include "Debug/Profiler/Instruments/Instumentor.h"
+#include "Debug/Profiler/Instruments/Instuments.h"
 #include "IO/Path.h"
 #include "Platform/Platform.h"
 

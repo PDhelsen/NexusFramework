@@ -77,26 +77,6 @@ namespace NxEn
 			return TimeInfo.Stamp;
 		}
 
-		String ToString(const Timestamp& Stamp, StringView Format)
-		{
-			Buffer<char>& LocalBuffer = GetLocalBuffer();
-
-			TimeInfo.Stamp = Stamp;
-			ConvertFromNexusToCLib(true);
-			uint64 Size = strftime(LocalBuffer.GetPtr(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
-			return String(LocalBuffer.GetPtr(), Size);
-		}
-
-		String ToString(const Timespan& Span, StringView Format)
-		{
-			Buffer<char>& LocalBuffer = GetLocalBuffer();
-
-			TimeInfo.Span = Span;
-			ConvertFromNexusToCLib(false);
-			uint64 Size = strftime(LocalBuffer.GetPtr(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
-			return String(LocalBuffer.GetPtr(), Size);
-		}
-
 		StringView GetWeekDay(int32 Day)
 		{
 			NEXUS_ASSERT(Day >= 1 && Day <= 7, Default, "Day has to be between 1-7, value was %d");
@@ -123,6 +103,26 @@ namespace NxEn
 		bool IsLeapYear(int32 Year)
 		{
 			return (Year % 4 == 0 && (Year % 100 != 0 || Year % 400 == 0));
+		}
+
+		String ToString(const Timestamp& Stamp, StringView Format)
+		{
+			Buffer<char>& LocalBuffer = GetLocalBuffer();
+
+			TimeInfo.Stamp = Stamp;
+			ConvertFromNexusToCLib(true);
+			uint64 Size = strftime(LocalBuffer.GetPtr(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			return String(LocalBuffer.GetPtr(), Size);
+		}
+
+		String ToString(const Timespan& Span, StringView Format)
+		{
+			Buffer<char>& LocalBuffer = GetLocalBuffer();
+
+			TimeInfo.Span = Span;
+			ConvertFromNexusToCLib(false);
+			uint64 Size = strftime(LocalBuffer.GetPtr(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			return String(LocalBuffer.GetPtr(), Size);
 		}
 	}
 }

@@ -36,17 +36,17 @@ namespace NxEn
 		};
 
 	public:
+		NEXUS_ENGINE_API static Instruments* GetInstance();
+
 		NEXUS_ENGINE_API static Instruments* Create(StringView Path, bool Start = false, Tools Tool = Tools::ChromeTracing);
 		NEXUS_ENGINE_API static void Destroy(Instruments* Instance);
+
+		NEXUS_ENGINE_API void Record(const Marker& Data);
 
 		NEXUS_ENGINE_API void StartRecording();
 		NEXUS_ENGINE_API void StopRecording();
 
-		NEXUS_ENGINE_API void Record(const Marker& Data);
-
 		bool IsRecording() const { return Recording; }
-
-		NEXUS_ENGINE_API static Instruments* GetInstance();
 
 	protected:
 		NEXUS_ENGINE_API Instruments(StringView Path, bool Start = false);

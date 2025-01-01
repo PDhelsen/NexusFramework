@@ -17,6 +17,8 @@ namespace NxEn
 	public:
 		using I = Iterator::IteratorBlock<T>;
 
+		inline static const uint64 DefaultSize = 8;
+
 		List(uint64 Size = DefaultSize, Allocator * Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
@@ -541,8 +543,6 @@ namespace NxEn
 		{
 			return Capacity * 2;
 		}
-
-		inline static const uint64 DefaultSize = 8;
 
 		Allocator* Alloc;
 		uint64 Capacity;

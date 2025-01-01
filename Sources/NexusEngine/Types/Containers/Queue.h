@@ -16,6 +16,8 @@ namespace NxEn
 	public:
 		using I = Iterator::IteratorBucket<T, BS>;
 
+		inline static const uint64 BucketSize = BS;
+
 		Queue(Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
@@ -444,8 +446,6 @@ namespace NxEn
 			GetItem(IndexA) = Move(GetItem(IndexB));
 			GetItem(IndexB) = Move(Temp);
 		}
-
-		inline static const uint64 BucketSize = BS;
 
 		Allocator* Alloc;
 		uint64 Buckets;

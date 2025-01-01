@@ -8,6 +8,10 @@ namespace NxEn
 	class StringCApi
 	{
 	public:
+		inline static const char NullChar = '\0';
+		inline static const char NewLineChar = '\n';
+		inline static const char* NewLine = "\n";
+
 		NEXUS_ENGINE_API static void Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe);
 		NEXUS_ENGINE_API static const char* SearchStr(const char* Source, const char* Substring, uint64 Size);
 		NEXUS_ENGINE_API static uint64 Common(const char* Text1, const char* Text2);
@@ -27,9 +31,5 @@ namespace NxEn
 		NEXUS_ENGINE_API static  int64 ToInteger(const char* Text, int32 Radix = 10);
 		NEXUS_ENGINE_API static uint64 ToUnsignedInteger(const char* Text, int32 Radix = 10);
 		NEXUS_ENGINE_API static double ToDouble(const char* Text);
-
-		inline static const char NullChar = '\0';
-		inline static const char NewLineChar = '\n';
-		inline static const char* NewLine = "\n";
 	};
 }

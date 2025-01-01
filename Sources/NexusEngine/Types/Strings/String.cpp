@@ -3,6 +3,20 @@
 
 namespace NxEn
 {
+	String String::Create(char* Text, uint64 Capacity, uint64 Size)
+	{
+		NEXUS_ASSERT(Text, Default, "Invalid Text");
+		NEXUS_ASSERT(Capacity > 0, Default, "Invalid Capacity");
+
+		String Result;
+		Result.Alloc = AllocatorContext::Get();
+		Result.Capacity = Math::Max(Capacity, (uint64)(SmallStringCapacity + 1));
+		Result.Count = Size;
+		Result.Data.Large = Text;
+		Result.ValidateNullTermination();
+		return Result;
+	}
+
 	String::String(Allocator* Allctr)
 		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
@@ -56,20 +70,6 @@ namespace NxEn
 	String::~String()
 	{
 		Free();
-	}
-
-	String String::Create(char* Text, uint64 Capacity, uint64 Size)
-	{
-		NEXUS_ASSERT(Text, Default, "Invalid Text");
-		NEXUS_ASSERT(Capacity > 0, Default, "Invalid Capacity");
-
-		String Result;
-		Result.Alloc = AllocatorContext::Get();
-		Result.Capacity = Math::Max(Capacity, (uint64)(SmallStringCapacity + 1));
-		Result.Count = Size;
-		Result.Data.Large = Text;
-		Result.ValidateNullTermination();
-		return Result;
 	}
 
 	String& String::operator=(const String& Other)

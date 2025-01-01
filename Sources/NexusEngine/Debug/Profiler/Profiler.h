@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Debug/Profiler/Instruments/Instumentor.h"
+#include "Debug/Profiler/Instruments/Instuments.h"
 #include "Debug/Profiler/Stats/Stats.h"
 
 #if NEXUS_DEBUG || NEXUS_RELEASE

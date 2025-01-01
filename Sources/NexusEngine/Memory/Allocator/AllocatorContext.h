@@ -9,12 +9,12 @@ namespace NxEn
 	struct AllocatorContext
 	{
 	public:
-		NEXUS_ENGINE_API AllocatorContext(Allocator* Allocator);
-		NEXUS_ENGINE_API ~AllocatorContext();
-
+		NEXUS_ENGINE_API static Allocator* Get();
 		NEXUS_ENGINE_API static void Push(Allocator* Alloc);
 		NEXUS_ENGINE_API static void Pop();
-		NEXUS_ENGINE_API static Allocator* Get();
+
+		NEXUS_ENGINE_API AllocatorContext(Allocator* Allocator);
+		NEXUS_ENGINE_API ~AllocatorContext();
 	};
 }
 
