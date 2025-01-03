@@ -5,17 +5,20 @@
 #include "IO/Directory.h"
 
 #include "Core/NexusEngineGlobals.h"
+#include "Core/NexusEnginePaths.h"
 
 namespace NxEn
 {
+	static void CreateFolders()
+	{
+		Directory(Paths::Cook).Create();
+		Directory(Paths::Saved).Create();
+	}
+
 	static Path GetDebugPath()
 	{
-		Path SavedPath = Path::GetWorkingDirectory() + "saved";
-		Path DebugPath = SavedPath + "debug";
-
-		Directory(SavedPath).Create();
+		Path DebugPath = Paths::Saved + "debug";
 		Directory(DebugPath).Create();
-
 		return DebugPath;
 	}
 
@@ -86,7 +89,9 @@ namespace NxEn
 	{
 		AllocatorContext Context(nullptr);
 
+		CreateFolders();
 		Path DebugPath = GetDebugPath();
+
 		CreateLogger(DebugPath);
 		CreateStats(DebugPath);
 		CreateIntruments(DebugPath);
