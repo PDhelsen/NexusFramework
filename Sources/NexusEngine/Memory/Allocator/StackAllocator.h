@@ -4,10 +4,6 @@
 
 namespace NxEn
 {
-    // Stack allocator
-    // Return aligned pointer from pre-allocated memory
-    // Last object allocated need to be the first de-allocated
-
     class StackAllocator : public Allocator
     {
     public:

@@ -4,10 +4,6 @@
 
 namespace NxEn
 {
-    // Pool allocator
-    // Allow to store object from same size into a pool (doesn't need to be the same object type)
-    // Implicit alignement since everything has the same size
-
     class PoolAllocator : public Allocator
     {
     public:

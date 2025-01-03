@@ -11,7 +11,7 @@
 
 namespace NxEn
 {
-	// Keep the const char array sync with the Verbosity & Source enum in the h file
+	// Keep the const char array sync with the Verbosity enum in the Log.h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
 
 	namespace LoggerChannel

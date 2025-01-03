@@ -5,8 +5,6 @@
 
 namespace NxEn
 {
-	// Base class for custom allocator
-
 	class Allocator;
 	namespace Memory
 	{
