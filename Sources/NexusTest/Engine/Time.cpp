@@ -1,12 +1,8 @@
 #include "Core/NexusTestPch.h"
 
-#include "Time/Timestamp.h"
-#include "Time/Timespan.h"
-#include "Time/Time.h"
-
 namespace NxTs
 {
-	TEST(Type_Time, Timespan)
+	TEST(Time, Timespan)
 	{
 		NxEn::Timespan Span = NxEn::Timespan(1, 10, 5, 23, 55, 30);
 		ASSERT_EQ(Span.ToString(), "0001y10m05d - 23h55m30s");
@@ -28,7 +24,7 @@ namespace NxTs
 		ASSERT_EQ(Test5, Test1);
 	}
 
-	TEST(Type_Time, Timestamp)
+	TEST(Time, Timestamp)
 	{
 		NxEn::Timestamp Now = NxEn::Time::Now();
 		ASSERT_EQ(Now.IsValid(), true);

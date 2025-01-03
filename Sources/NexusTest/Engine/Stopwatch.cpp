@@ -1,8 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Time/Stopwatch.h"
-#include "Platform/Platform.h"
-
 namespace NxTs
 {
 	TEST(Stopwatch, Stopwatch)

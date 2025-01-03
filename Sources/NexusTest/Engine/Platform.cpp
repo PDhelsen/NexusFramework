@@ -1,7 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Platform/Platform.h"
-
 namespace NxTs
 {
 	TEST(Platform, Platform)

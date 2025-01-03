@@ -1,7 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Misc/Hash.h"
-
 namespace NxTs
 {
 	struct HashTest

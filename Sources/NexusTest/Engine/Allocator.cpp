@@ -1,13 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Memory/Memory.h"
-#include "Memory/Handle/Handle.h"
-#include "Memory/Handle/HandleManager.h"
-#include "Memory/Allocator/AllocatorContext.h"
-#include "Memory/Allocator/StackAllocator.h"
-#include "Memory/Allocator/PoolAllocator.h"
-#include "Memory/Allocator/HeapAllocator.h"
-
 namespace NxTs
 {
 	class MemoryTest
@@ -35,109 +27,7 @@ namespace NxTs
 		int32 Test;
 	};
 
-	TEST(Memory, MallocReallocFree)
-	{
-		MemoryTest* Test = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest) * 5);
-		ASSERT_NE(Test, nullptr);
-
-		for (int32 Index = 0; Index < 5; Index++)
-		{
-			Test[Index].Value = Index;
-		}
-
-		Test = (MemoryTest*)NxEn::Memory::Reallocate(Test, sizeof(MemoryTest) * 10);
-		ASSERT_NE(Test, nullptr);
-
-		for (int32 Index = 0; Index < 5; Index++)
-		{
-			ASSERT_EQ(Test[Index].Value, Index);
-		}
-
-		NxEn::Memory::Free(Test);
-	}
-
-	TEST(Memory, ConstructDestruct)
-	{
-		void* Pointer = NxEn::Memory::Allocate(sizeof(MemoryTest));
-		MemoryTest* Test = NxEn::Memory::Construct<MemoryTest>(Pointer);
-
-		ASSERT_EQ(Test->Value, 120);
-
-		NxEn::Memory::Destruct<MemoryTest>(Test);
-		NxEn::Memory::Free(Test);
-	}
-
-	TEST(Memory, Operator)
-	{
-		MemoryTest* Test = new MemoryTest();
-		ASSERT_NE(Test, nullptr);
-		delete Test;
-	}
-
-	TEST(Memory, MallocReallocFreeConstructDestruct)
-	{
-		MemoryTest * Test = NxEn::Memory::Create<MemoryTest>(sizeof(MemoryTest));
-	
-		ASSERT_EQ(Test->Value, 120);
-	
-		NxEn::Memory::Destroy<MemoryTest>(Test);
-	}
-
-	TEST(Memory, SetCopyMove)
-	{
-		uint8* Test = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
-		NxEn::Memory::MemSet(Test, 5, 10);
-		for (int32 Index = 0; Index < 10; Index++)
-		{
-			ASSERT_EQ(Test[Index], 5);
-		}
-
-		uint8* Copy = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
-		NxEn::Memory::MemCopy(Test, Copy, 10);
-		for (int32 Index = 0; Index < 10; Index++)
-		{
-			ASSERT_EQ(Copy[Index], 5);
-		}
-
-		uint8* Move = (uint8*)NxEn::Memory::Allocate(sizeof(uint8) * 10);
-		NxEn::Memory::MemMove(Test, Move, 10);
-		for (int32 Index = 0; Index < 10; Index++)
-		{
-			ASSERT_EQ(Move[Index], 5);
-		}
-
-		NxEn::Memory::Free(Test);
-		NxEn::Memory::Free(Copy);
-		NxEn::Memory::Free(Move);
-	}
-
-	TEST(Memory, Alignement)
-	{
-		const uint8 Alignement = 8;
-
-		void* Pointer = new uint64();
-
-		uint64 RawAddress = reinterpret_cast<uint64>(Pointer);
-		uint64 AlignedAddress = NxEn::Memory::AlignAddress(RawAddress, Alignement);
-		if (RawAddress == AlignedAddress)
-		{
-			AlignedAddress += Alignement;
-		}
-
-		void* AlignedPointer = NxEn::Memory::AlignPointer(Pointer, Alignement);
-		ASSERT_EQ(reinterpret_cast<uint64>(AlignedPointer), AlignedAddress);
-
-		uint8* MemoryBlock = reinterpret_cast<uint8*>(AlignedPointer);
-		uint8 Shift = MemoryBlock[-1];
-		ASSERT_EQ(Shift, Alignement);
-
-		void* UnalignedPointer = NxEn::Memory::UnalignPointer(AlignedPointer);
-		ASSERT_EQ(reinterpret_cast<uint64>(UnalignedPointer), reinterpret_cast<uint64>(Pointer));
-	
-		delete Pointer;
-	}
-
-	TEST(Memory, StackAllocator)
+	TEST(Allocator, StackAllocator)
 	{
 		NxEn::StackAllocator* Allocator = new NxEn::StackAllocator(512);
 
@@ -195,10 +85,10 @@ namespace NxTs
 		delete Allocator;
 	}
 
-	TEST(Memory, PoolAllocator)
+	TEST(Allocator, PoolAllocator)
 	{
 		NxEn::PoolAllocator* Allocator = new NxEn::PoolAllocator(16, sizeof(MemoryTest));
-	
+
 		MemoryTest* Test1 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Allocator);
 		Test1->Value = 1;
 		Test1->Test = 0xffffffff;
@@ -293,7 +183,7 @@ namespace NxTs
 		delete Allocator;
 	}
 
-	TEST(Memory, HeapAllocator)
+	TEST(Allocator, HeapAllocator)
 	{
 		NxEn::HeapAllocator* Allocator = new NxEn::HeapAllocator(512);
 
@@ -340,13 +230,13 @@ namespace NxTs
 		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
 		Allocator->Clear();
-		
+
 		ASSERT_EQ(Allocator->UsedAmount(), 16);
 
 		MemoryTest* Test6 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Allocator);
 		Test6->Value = 6;
 		Test6->Test = 0xffffffff;
-		
+
 		ASSERT_EQ(Allocator->UsedAmount(), 48);
 
 		MemoryTest* Test7 = (MemoryTest*)NxEn::Memory::Reallocate(Test6, sizeof(MemoryTest) * 3, Allocator);
@@ -417,7 +307,7 @@ namespace NxTs
 		delete Allocator;
 	}
 
-	TEST(Memory, AllocatorContext)
+	TEST(Allocator, AllocatorContext)
 	{
 		NxEn::HeapAllocator* Allocator = new NxEn::HeapAllocator(512);
 
@@ -436,100 +326,5 @@ namespace NxTs
 		}
 
 		delete Allocator;
-	}
-
-	TEST(Memory, Handle)
-	{
-		MemoryTest* Test1 = new MemoryTest();
-		MemoryTest* Test2 = new MemoryTest();
-
-		NxEn::HandleManager Manager = NxEn::HandleManager(10);
-
-		NxEn::Handle<MemoryTest> Handle = Manager.AcquireHandle<MemoryTest>(Test1);
-		ASSERT_EQ(Handle.IsValid(), true);
-		ASSERT_EQ(&Handle->Value, &Test1->Value);
-		ASSERT_EQ(Handle->Value, Test1->Value);
-
-		Handle->Value = 1;
-		Handle->Test = 0xffffffff;
-
-		Manager.UpdateHandle<MemoryTest>(Handle, Test2);
-		ASSERT_EQ(Handle.IsValid(), true);
-		ASSERT_EQ(&Handle->Value, &Test2->Value);
-		ASSERT_EQ(Handle->Value, Test2->Value);
-
-		Handle->Value = 2;
-		Handle->Test = 0xffffffff;
-
-		Manager.ReleaseHandle<MemoryTest>(Handle);
-		ASSERT_EQ(Handle.IsValid(), false);
-
-		delete Test1;
-		delete Test2;
-	}
-
-	TEST(Memory, Defragmentation)
-	{
-		NxEn::HeapAllocator* Heap = new NxEn::HeapAllocator(512);
-		NxEn::HandleManager Manager = NxEn::HandleManager(10);
-
-		Heap->Defragment(&Manager);
-
-		MemoryTest* Test1 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle1 = Manager.AcquireHandle<MemoryTest>(Test1);
-
-		MemoryTest* Test2 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test2->Value = 2;
-		Test2->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle2 = Manager.AcquireHandle<MemoryTest>(Test2);
-
-		MemoryTest* Test3 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle3 = Manager.AcquireHandle<MemoryTest>(Test3);
-
-		MemoryTest* Test4 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test4->Value = 4;
-		Test4->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle4 = Manager.AcquireHandle<MemoryTest>(Test4);
-
-		MemoryTest* Test5 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test5->Value = 5;
-		Test5->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle5 = Manager.AcquireHandle<MemoryTest>(Test5);
-
-		MemoryTest* Test6 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test6->Value = 6;
-		Test6->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle6 = Manager.AcquireHandle<MemoryTest>(Test6);
-
-		MemoryTest* Test7 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test7->Value = 7;
-		Test7->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle7 = Manager.AcquireHandle<MemoryTest>(Test7);
-
-		NxEn::Memory::Free(Manager.ReleaseHandle(Handle2), Heap);
-		NxEn::Memory::Free(Manager.ReleaseHandle(Handle4), Heap);
-		NxEn::Memory::Free(Manager.ReleaseHandle(Handle5), Heap);
-
-		uint64 StartAmount = Heap->UsedAmount();
-		Heap->Defragment(&Manager, 1);
-		Heap->Defragment(&Manager);
-		Heap->Defragment(&Manager);
-		uint64 EndAmount = Heap->UsedAmount();
-
-		ASSERT_EQ(Handle3->Value, 3);
-		ASSERT_EQ(Handle6->Value, 6);
-		ASSERT_EQ(Handle7->Value, 7);
-		ASSERT_EQ(StartAmount > EndAmount, true);
-
-		Manager.ReleaseHandle(Handle1);
-		Manager.ReleaseHandle(Handle3);
-		Manager.ReleaseHandle(Handle6);
-		Manager.ReleaseHandle(Handle7);
-
-		delete Heap;
 	}
 }

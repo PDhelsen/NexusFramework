@@ -1,15 +1,8 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Strings/String.h"
-#include "Types/Strings/StringId.h"
-#include "Types/Strings/StringView.h"
-#include "Types/Strings/StringCApi.h"
-#include "Types/Strings/StringFunctions.h"
-#include "Types/Strings/StringTemplate.h"
-
 namespace NxTs
 {
-	TEST(Type_String, String)
+	TEST(String, String)
 	{
 		NxEn::String Test = NxEn::String("Hello World");
 
@@ -63,7 +56,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCapacity(), 17);
 	}
 
-	TEST(Type_String, View)
+	TEST(String, View)
 	{
 		NxEn::String Reference = "Hello World Extended";
 
@@ -111,7 +104,7 @@ namespace NxTs
 		ASSERT_EQ(Functions.Split(Test2).IsEmpty(), false);
 	}
 
-	TEST(Type_String, Id)
+	TEST(String, Id)
 	{
 		NxEn::StringId Id = "Hello World"_Sid;
 
@@ -130,7 +123,7 @@ namespace NxTs
 		Test3 = Test2;
 	}
 
-	TEST(Type_String, Utility)
+	TEST(String, Utility)
 	{
 		NxEn::String Test1 = NxEn::String("Hello World");
 
@@ -175,7 +168,7 @@ namespace NxTs
 		ASSERT_EQ(NxEn::StringUtility::ToDouble("-10.0"), -10.0f);
 	}
 
-	TEST(Type_String, Operator)
+	TEST(String, Operator)
 	{
 		NxEn::String Test = NxEn::String("Hello World");
 		NxEn::String Reverse = NxEn::String("World Hello");
@@ -214,7 +207,7 @@ namespace NxTs
 		ASSERT_EQ("HelloWorld" - NxEn::String("World"), "Hello");
 	}
 
-	TEST(Type_String, Hash_Sort)
+	TEST(String, Hash_Sort)
 	{
 		uint64 Hash1 = 0x2474E7FB1AEC9F05;
 		uint64 Hash2 = 0x77F122B9F752AACB;

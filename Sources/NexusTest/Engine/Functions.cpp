@@ -1,8 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Functions/Delegate.h"
-#include "Types/Functions/Event.h"
-
 namespace NxTs
 {
 	void LogMessage(const NxEn::String& Message)
@@ -42,7 +39,7 @@ namespace NxTs
 		}
 	};
 
-	TEST(Types_FunctionPointer, Delegate)
+	TEST(Functions, Delegate)
 	{
 		DelegateTest Data { .A = 5 };
 
@@ -112,7 +109,7 @@ namespace NxTs
 		ASSERT_EQ(IsNull, false);
 	}
 
-	TEST(Types_FunctionPointer, Event)
+	TEST(Functions, Event)
 	{
 		NxEn::String Message = "Call from Event";
 		DelegateTest Data{ .A = 5 };

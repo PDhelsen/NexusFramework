@@ -1,7 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Misc/Sort.h"
-
 namespace NxTs
 {
 	const uint64 ArrayLength = 10;

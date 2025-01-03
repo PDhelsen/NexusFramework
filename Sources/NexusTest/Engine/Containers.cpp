@@ -1,20 +1,5 @@
 #include "Core/NexusTestPch.h"
 
-#include "Types/Containers/Array.h"
-#include "Types/Containers/List.h"
-#include "Types/Containers/Dequeue.h"
-#include "Types/Containers/Stack.h"
-#include "Types/Containers/Queue.h"
-#include "Types/Containers/LinkedList.h"
-#include "Types/Containers/Set.h"
-#include "Types/Containers/Dictionary.h"
-#include "Types/Containers/Tree.h"
-#include "Types/Containers/Graph.h"
-#include "Types/Containers/Collection.h"
-#include "Types/Containers/Pool.h"
-#include "Types/Containers/Tuple.h"
-#include "Types/Containers/ContainersUtils.h"
-
 namespace NxTs
 {
 	struct ContainerTest
@@ -140,7 +125,7 @@ namespace NxEn::Hashing
 
 namespace NxTs
 {
-	TEST(Type_Containers, Array)
+	TEST(Containers, Array)
 	{
 		NxEn::Array<ContainerTest, 10> Test = NxEn::Array<ContainerTest, 10>();
 		NxEn::ContainersUtils::Fill<ContainerTest>(Test, 5);
@@ -225,7 +210,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, List)
+	TEST(Containers, List)
 	{
 		NxEn::List<ContainerTest> Test = NxEn::List<ContainerTest>(10);
 		ASSERT_EQ(Test.GetCapacity(), 10);
@@ -358,7 +343,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Dequeue)
+	TEST(Containers, Dequeue)
 	{
 		NxEn::Dequeue<ContainerTest> Test = NxEn::Dequeue<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
@@ -480,7 +465,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Stack)
+	TEST(Containers, Stack)
 	{
 		NxEn::Stack<ContainerTest> Test = NxEn::Stack<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
@@ -548,7 +533,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Queue)
+	TEST(Containers, Queue)
 	{
 		NxEn::Queue<ContainerTest> Test = NxEn::Queue<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
@@ -614,7 +599,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, LinkedList)
+	TEST(Containers, LinkedList)
 	{
 		NxEn::LinkedList<ContainerTest> Test = NxEn::LinkedList<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
@@ -751,7 +736,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Set)
+	TEST(Containers, Set)
 	{
 		NxEn::Set<ContainerTest> Test = NxEn::Set<ContainerTest>();
 		ASSERT_EQ(Test.GetCapacity(), 11);
@@ -797,7 +782,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Dictionary)
+	TEST(Containers, Dictionary)
 	{
 		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>();
 		ASSERT_EQ(Test.GetCapacity(), 11);
@@ -874,7 +859,7 @@ namespace NxTs
 		NxEn::ContainersUtils::Fill<ContainerTest, ContainerTest>(Range, 4);
 	}
 
-	TEST(Type_Containers, Tree)
+	TEST(Containers, Tree)
 	{
 		NxEn::Tree<ContainerTest> Test = NxEn::Tree<ContainerTest>();
 		ContainerTest& Root = Test.Append(nullptr, 0);
@@ -972,7 +957,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Graph)
+	TEST(Containers, Graph)
 	{
 		NxEn::Graph<ContainerTest> Test = NxEn::Graph<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
@@ -1050,7 +1035,7 @@ namespace NxTs
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
-	TEST(Type_Containers, Collection)
+	TEST(Containers, Collection)
 	{
 		NxEn::List<ContainerTest> Data1 = NxEn::List<ContainerTest>(5);
 		Data1.Append(1);
@@ -1077,7 +1062,7 @@ namespace NxTs
 		ASSERT_EQ((*It).Integer, 1);
 	}
 
-	TEST(Type_Containers, ContainersUtils)
+	TEST(Containers, ContainersUtils)
 	{
 		NxEn::Set<ContainerTest> Base = NxEn::Set<ContainerTest>();
 		Base.Append(1);
@@ -1108,7 +1093,7 @@ namespace NxTs
 		ASSERT_EQ(Base.GetCount(), 3);
 	}
 
-	TEST(Type_Containers, Pool)
+	TEST(Containers, Pool)
 	{
 		NxEn::Pool<ContainerTest, NxEn::Pooling::PreAllocated<ContainerTest>> TestPreAllocated = NxEn::Pool<ContainerTest, NxEn::Pooling::PreAllocated<ContainerTest>>(10);
 		ASSERT_EQ(TestPreAllocated.GetCapacity(), 10);
@@ -1193,7 +1178,7 @@ namespace NxTs
 		ASSERT_EQ(TestOnDemand.GetUnused(), 4);
 	}
 
-	TEST(Type_Containers, Tuple)
+	TEST(Containers, Tuple)
 	{
 		NxEn::Tuple<ContainerTest, ContainerTest> Test = NxEn::Tuple(ContainerTest(5), ContainerTest(10));
 
@@ -1213,7 +1198,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetSecond().Integer, 20);
 	}
 
-	TEST(Type_Containers, NativeType)
+	TEST(Containers, NativeType)
 	{
 		NxEn::List<uint64> TestUint;
 		TestUint.Append(18);
@@ -1260,7 +1245,7 @@ namespace NxTs
 		ASSERT_EQ(TestPointer3.GetCount(), 1);
 	}
 
-	TEST(Type_Containers, Strings)
+	TEST(Containers, Strings)
 	{
 		const char* Text = "Hello World";
 		NxEn::String Data = Text;
@@ -1339,7 +1324,7 @@ namespace NxTs
 		Tuple.SetFirst(Tuple.GetSecond());
 	}
 
-	TEST(Type_Containers, Range)
+	TEST(Containers, Range)
 	{
 		NxEn::Array<ContainerTest> Container1(10);
 		Container1.Assign(0, 18);
@@ -1419,7 +1404,7 @@ namespace NxTs
 		Pair.AppendRange(Container10);
 	}
 
-	TEST(Type_Containers, Container)
+	TEST(Containers, Container)
 	{
 		NxEn::List<ContainerTest> Test;
 		Test.Append(1);
