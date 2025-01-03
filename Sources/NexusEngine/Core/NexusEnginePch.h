@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Core/NexusEngineCore.h"
-
 #include "Types/Numbers/Integer.h"
 #include "Types/Numbers/Decimal.h"
 #include "Types/Numbers/Enum.h"

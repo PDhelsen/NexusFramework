@@ -2,9 +2,11 @@
 
 namespace NxTs
 {
-	void LogMessage(const NxEn::String& Message)
+	static uint64 Total = 0;
+
+	void AddTotal(uint64 Value)
 	{
-		
+		Total += Value;
 	}
 
 	int8 Add(int8 A, int8 B)
@@ -23,9 +25,9 @@ namespace NxTs
 			return A + B + C;
 		}
 
-		void Log(const NxEn::String& Message)
+		void Sum(uint64 Value)
 		{
-			LogMessage(Message);
+			AddTotal(Value);
 		}
 
 		int8 operator()(int8 B, int8 C)
@@ -33,9 +35,9 @@ namespace NxTs
 			return Add(B, C);
 		}
 
-		void operator()(const NxEn::String& Message)
+		void operator()(uint64 Value)
 		{
-			Log(Message);
+			Sum(Value);
 		}
 	};
 
@@ -111,36 +113,44 @@ namespace NxTs
 
 	TEST(Functions, Event)
 	{
-		NxEn::String Message = "Call from Event";
 		DelegateTest Data{ .A = 5 };
 
-		NxEn::Delegate<void(const NxEn::String&)> Function(&LogMessage);
-		NxEn::Delegate<void(const NxEn::String&)> Object(&Data, &DelegateTest::Log);
-		NxEn::Delegate<void(const NxEn::String&)> Lambda([&](const NxEn::String& Message) { LogMessage(Message); });
-		NxEn::Delegate<void(const NxEn::String&)> Functor(Data);
+		NxEn::Delegate<void(uint64)> Function(&AddTotal);
+		NxEn::Delegate<void(uint64)> Object(&Data, &DelegateTest::Sum);
+		NxEn::Delegate<void(uint64)> Lambda([&](uint64 Value) { AddTotal(Value); });
+		NxEn::Delegate<void(uint64)> Functor(Data);
 
-		NxEn::Event<const NxEn::String&> Event;
+		NxEn::Event<uint64> Event;
 		Event += Function;
 		Event += Object;
 		Event += Lambda;
 		Event += Functor;
 
-		Event.Invoke(Message);
+		Event.Invoke(1);
+		ASSERT_EQ(Total, 4);
 
 		Event -= Function;
 		Event -= Object;
 		Event -= Functor;
 
-		NxEn::Event<const NxEn::String&> Copy = Event;
-
-		Event.Invoke(Message);
+		NxEn::Event<uint64> Copy = Event;
+		Copy.Invoke(1);
+		ASSERT_EQ(Total, 5);
 
 		Event.Clear();
-
-		Event.Invoke(Message);
+		Event.Invoke(1);
+		ASSERT_EQ(Total, 5);
 
 		Event = Copy;
+		Event.Invoke(1);
+		ASSERT_EQ(Total, 6);
 
-		Event.Invoke(Message);
+		NxEn::Event<uint64> Temp;
+		Temp += &AddTotal;
+		Temp += [&](uint64 Value) { AddTotal(Value); };
+		Temp += Data;
+
+		Temp.Invoke(1);
+		ASSERT_EQ(Total, 9);
 	}
 }

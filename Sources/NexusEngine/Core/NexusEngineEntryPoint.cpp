@@ -10,15 +10,18 @@ namespace NxEn
 {
 	static Path GetDebugPath()
 	{
-		Path DebugPath = Path::GetWorkingDirectory() + "Debug";
-		Directory DebugFolder = Directory(DebugPath);
-		DebugFolder.Create();
+		Path SavedPath = Path::GetWorkingDirectory() + "saved";
+		Path DebugPath = SavedPath + "debug";
+
+		Directory(SavedPath).Create();
+		Directory(DebugPath).Create();
+
 		return DebugPath;
 	}
 
 	static void CreateLogger(const Path& Folder)
 	{
-		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Folder + "Logs.txt");
+		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Folder + "logs.txt");
 		Logs->AddChannel(LoggerChannel::Default, true);
 		Logs->AddChannel(LoggerChannel::Verbose, false);
 		Globals::Logs = Logs;
@@ -26,7 +29,7 @@ namespace NxEn
 
 	static void CreateStats(const Path& Folder)
 	{
-		Stats* Statistiques = new Stats(Folder + "Stats.csv");
+		Stats* Statistiques = new Stats(Folder + "stats.csv");
 		Statistiques->Initialize();
 		Statistiques->StartRecording();
 		Globals::Statistiques = Statistiques;
@@ -34,7 +37,7 @@ namespace NxEn
 
 	static void CreateIntruments(const Path& Folder)
 	{
-		Instruments* Instrumentor = Instruments::Create(Folder + "Instruments.json", false);
+		Instruments* Instrumentor = Instruments::Create(Folder + "instruments.json", false);
 		Instrumentor->StartRecording();
 		Globals::Instrumentor = Instrumentor;
 	}
