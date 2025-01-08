@@ -1,8 +1,8 @@
 workspace "NexusEngine"
     location "../../"
-    startproject "NexusApp"
-    debugcommand "../../builds/NexusApp.exe"
-	debugdir "../../"
+    startproject "NexusSandbox"
+    debugcommand "../../build/package/NexusSandbox.exe"
+	debugdir "../../build/package/"
 
     configurations { "Debug", "Release", "Ditrib" }
     platforms { "Win64" }
@@ -33,14 +33,8 @@ workspace "NexusEngine"
     filter "toolset:msc"
         defines { "NEXUS_MSVC" }
 
-group "Engine"
-project "NexusEngine"
-project "NexusEditor"
-group ""
-group "App"
-project "NexusApp"
-group ""
-group "UnitTest"
+group "Test"
+project "NexusSandbox"
 project "NexusTest"
 group ""
 group "Libraries"
@@ -54,8 +48,8 @@ project "NexusEngine"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../build/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../build/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     pchheader "Core/NexusEnginePch.h"
 	pchsource "../../Sources/%{prj.name}/Core/NexusEnginePch.cpp"
@@ -82,25 +76,20 @@ project "NexusEngine"
         "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
     }
 
-project "NexusEditor"
+project "NexusSandbox"
     location "../../Sources/%{prj.name}/"
 
-    kind "SharedLib"
+    kind "ConsoleApp"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../build/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../build/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     files
     {
         "../../Sources/%{prj.name}/**.h",
         "../../Sources/%{prj.name}/**.cpp"
-    }
-
-    defines
-    {
-        "NEXUS_EDITOR_DLL_BUILD"
     }
 
     includedirs
@@ -111,41 +100,7 @@ project "NexusEditor"
 
     links
     {
-        "NexusEngine"
-    }
-
-    postbuildcommands
-    {
-        "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
-    }
-
-project "NexusApp"
-    location "../../Sources/%{prj.name}/"
-
-    kind "ConsoleApp"
-    language "C++"
-	cppdialect "C++20"
-
-	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-
-    files
-    {
-        "../../Sources/%{prj.name}/**.h",
-        "../../Sources/%{prj.name}/**.cpp"
-    }
-
-    includedirs
-    {
-        "../../Sources/%{prj.name}/",
-        "../../Sources/NexusEngine/",
-        "../../Sources/NexusEditor/"
-    }
-
-    links
-    {
         "NexusEngine",
-        "NexusEditor"
     }
 
     postbuildcommands
@@ -160,8 +115,8 @@ project "NexusTest"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../build/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../build/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     pchheader "Core/NexusTestPch.h"
 	pchsource "../../Sources/%{prj.name}/Core/NexusTestPch.cpp"
@@ -176,8 +131,6 @@ project "NexusTest"
     {
         "../../Sources/%{prj.name}/",
         "../../Sources/NexusEngine/",
-        "../../Sources/NexusEditor/",
-        "../../Sources/NexusApp/",
 
         "../../Libraries/googletest-1.14.0/include/"
     }
@@ -185,8 +138,6 @@ project "NexusTest"
     links
     {
         "NexusEngine",
-        "NexusEditor",
-        "NexusApp",
         "GoogleTest"
     }
 

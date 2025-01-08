@@ -3,7 +3,7 @@
 	<GoogleTestAdapterSettings>
 		<SolutionSettings>
 			<Settings>
-				<PathExtension>../../builds</PathExtension>
+				<PathExtension>../../package</PathExtension>
 			</Settings>
 		</SolutionSettings>
 		<ProjectSettings/>

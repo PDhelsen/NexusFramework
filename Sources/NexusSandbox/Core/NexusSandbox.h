@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NxAp
+namespace NxSb
 {
 	void HelloWorld();
 }

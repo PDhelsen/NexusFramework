@@ -1,6 +1,6 @@
 @echo off
 SET source=%1
-SET destination=%source%../../builds
+SET destination=%source%../../package
 
 robocopy %source% %destination% *.lib *.dll *.exe /it /is /e /v
 if %errorlevel% == 1 exit 0 else exit %errorlevel%
