@@ -9,7 +9,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Debug/Logger/Log.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename T, uint64 L = 1>
 	class Array

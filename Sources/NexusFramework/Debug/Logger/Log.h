@@ -8,7 +8,7 @@
 #include "Types/Strings/StringView.h"
 #include "Types/Strings/StringId.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace LoggerChannel
 	{
@@ -78,9 +78,9 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxEn::LoggerVerbosity::Vbs, ::NxEn::LoggerChannel::Chn, Msg, __VA_ARGS__); }
+#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }
 
-#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxEn::Log::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
+#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxFr::Log::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
 #elif NEXUS_DISTRIB
 #define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...)
 

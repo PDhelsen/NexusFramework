@@ -3,7 +3,7 @@
 #include "Types/Numbers/Integer.h"
 #include "Types/Containers/Node.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Iterator
 	{

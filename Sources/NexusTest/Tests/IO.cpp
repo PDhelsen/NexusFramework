@@ -3,68 +3,68 @@
 namespace NxTs
 {
 	uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
-	NxEn::String Text = "This was written by code.\n";
+	NxFr::String Text = "This was written by code.\n";
 
 	TEST(IO, Path_Static)
 	{
-		NxEn::String Working = NxEn::Path::GetWorkingDirectory().ToString();
-		NxEn::String WorkingName = Working.SplitAll("/").Last().ToString();
-		NxEn::String File = Working + "NexusTest.exe";
-		NxEn::String Directory = Working + "Test/Subfolder/Deep/";
-		NxEn::String Root = Working + "Test/Other/Deep/";
+		NxFr::String Working = NxFr::Path::GetWorkingDirectory().ToString();
+		NxFr::String WorkingName = Working.SplitAll("/").Last().ToString();
+		NxFr::String File = Working + "NexusTest.exe";
+		NxFr::String Directory = Working + "Test/Subfolder/Deep/";
+		NxFr::String Root = Working + "Test/Other/Deep/";
 
-		NxEn::Array<NxEn::StringView> Items = NxEn::Array<NxEn::StringView>(4);
+		NxFr::Array<NxFr::StringView> Items = NxFr::Array<NxFr::StringView>(4);
 		Items[0] = "D:";
 		Items[1] = "Nexus";
 		Items[2] = "Test";
 		Items[3] = "Test.txt";
 
-		ASSERT_EQ(NxEn::Path::Exist(Working), true);
-		ASSERT_EQ(NxEn::Path::Exist(File), true);
-		ASSERT_EQ(NxEn::Path::IsFile(File), true);
-		ASSERT_EQ(NxEn::Path::IsFile(Directory), false);
-		ASSERT_EQ(NxEn::Path::IsDirectory(Directory), true);
-		ASSERT_EQ(NxEn::Path::IsDirectory(File), false);
-		ASSERT_EQ(NxEn::Path::IsAbsolute(File), true);
-		ASSERT_EQ(NxEn::Path::IsRelative(File), false);
-		ASSERT_EQ(NxEn::Path::HasExtension(File, ".exe"), true);
-		ASSERT_EQ(NxEn::Path::GetDrive(File), "D");
-		ASSERT_EQ(NxEn::Path::GetDirectoryPath(File), Working);
-		ASSERT_EQ(NxEn::Path::GetDirectoryName(File), WorkingName);
-		ASSERT_EQ(NxEn::Path::GetParent(File), Working);
-		ASSERT_EQ(NxEn::Path::GetParent(Directory), Working + "Test/Subfolder/");
-		ASSERT_EQ(NxEn::Path::GetFileName(File), "NexusTest");
-		ASSERT_EQ(NxEn::Path::GetFileName(File, true), "NexusTest.exe");
-		ASSERT_EQ(NxEn::Path::GetExtension(File), "exe");
+		ASSERT_EQ(NxFr::Path::Exist(Working), true);
+		ASSERT_EQ(NxFr::Path::Exist(File), true);
+		ASSERT_EQ(NxFr::Path::IsFile(File), true);
+		ASSERT_EQ(NxFr::Path::IsFile(Directory), false);
+		ASSERT_EQ(NxFr::Path::IsDirectory(Directory), true);
+		ASSERT_EQ(NxFr::Path::IsDirectory(File), false);
+		ASSERT_EQ(NxFr::Path::IsAbsolute(File), true);
+		ASSERT_EQ(NxFr::Path::IsRelative(File), false);
+		ASSERT_EQ(NxFr::Path::HasExtension(File, ".exe"), true);
+		ASSERT_EQ(NxFr::Path::GetDrive(File), "D");
+		ASSERT_EQ(NxFr::Path::GetDirectoryPath(File), Working);
+		ASSERT_EQ(NxFr::Path::GetDirectoryName(File), WorkingName);
+		ASSERT_EQ(NxFr::Path::GetParent(File), Working);
+		ASSERT_EQ(NxFr::Path::GetParent(Directory), Working + "Test/Subfolder/");
+		ASSERT_EQ(NxFr::Path::GetFileName(File), "NexusTest");
+		ASSERT_EQ(NxFr::Path::GetFileName(File, true), "NexusTest.exe");
+		ASSERT_EQ(NxFr::Path::GetExtension(File), "exe");
 
-		ASSERT_EQ(NxEn::Path::ChangeFileName(File.ToView(), "Modified.exe"), Working + "Modified.exe");
-		ASSERT_EQ(NxEn::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTest.exe");
-		ASSERT_EQ(NxEn::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTest.txt");
-		ASSERT_EQ(NxEn::Path::ConvertAbsoluteToRelative(Directory.ToView(), Root), "../../Subfolder/Deep/");
-		ASSERT_EQ(NxEn::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
-		ASSERT_EQ(NxEn::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
-		ASSERT_EQ(NxEn::Path::Resolve(Working + "Test/Subfolder/Deep/"), Directory);
-		ASSERT_EQ(NxEn::Path::Normalize("Test//Subfolder\\Deep"), "Test/Subfolder/Deep/");
+		ASSERT_EQ(NxFr::Path::ChangeFileName(File.ToView(), "Modified.exe"), Working + "Modified.exe");
+		ASSERT_EQ(NxFr::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTest.exe");
+		ASSERT_EQ(NxFr::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTest.txt");
+		ASSERT_EQ(NxFr::Path::ConvertAbsoluteToRelative(Directory.ToView(), Root), "../../Subfolder/Deep/");
+		ASSERT_EQ(NxFr::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
+		ASSERT_EQ(NxFr::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
+		ASSERT_EQ(NxFr::Path::Resolve(Working + "Test/Subfolder/Deep/"), Directory);
+		ASSERT_EQ(NxFr::Path::Normalize("Test//Subfolder\\Deep"), "Test/Subfolder/Deep/");
 
-		ASSERT_EQ(NxEn::Path::Combine("D:/Nexus/Test", "Test"), "D:/Nexus/Test/Test/");
-		ASSERT_EQ(NxEn::Path::Combine("D:/Nexus/Test", "Test.txt"), "D:/Nexus/Test/Test.txt");
-		ASSERT_EQ(NxEn::Path::Combine<NxEn::StringView>(Items), "D:/Nexus/Test/Test.txt");
-		ASSERT_EQ(NxEn::Path::Previous(Directory.ToView(), 2), Working + "Test/");
+		ASSERT_EQ(NxFr::Path::Combine("D:/Nexus/Test", "Test"), "D:/Nexus/Test/Test/");
+		ASSERT_EQ(NxFr::Path::Combine("D:/Nexus/Test", "Test.txt"), "D:/Nexus/Test/Test.txt");
+		ASSERT_EQ(NxFr::Path::Combine<NxFr::StringView>(Items), "D:/Nexus/Test/Test.txt");
+		ASSERT_EQ(NxFr::Path::Previous(Directory.ToView(), 2), Working + "Test/");
 	}
 
 	TEST(IO, Path_Instance)
 	{
-		NxEn::Path Working = NxEn::Path::GetWorkingDirectory();
-		NxEn::Path WorkingName = Working.Split().Last();
-		NxEn::Path File = Working + "NexusTest.exe";
-		NxEn::Path Directory = Working + "Test/Subfolder/Deep/";
-		NxEn::Path Root = Working + "Test/Other/Deep/";
-		NxEn::Path Relative = NxEn::Path("../../Subfolder/Deep/");
-		NxEn::Path ToResolve1 = NxEn::Path("D:/Nexus/Test/../../Test/Subfolder/Deep/");
-		NxEn::Path ToResolve2 = Working + "Test/Subfolder/Deep/";
-		NxEn::Path ToNormalize = NxEn::Path("Test//Subfolder\\Deep");
+		NxFr::Path Working = NxFr::Path::GetWorkingDirectory();
+		NxFr::Path WorkingName = Working.Split().Last();
+		NxFr::Path File = Working + "NexusTest.exe";
+		NxFr::Path Directory = Working + "Test/Subfolder/Deep/";
+		NxFr::Path Root = Working + "Test/Other/Deep/";
+		NxFr::Path Relative = NxFr::Path("../../Subfolder/Deep/");
+		NxFr::Path ToResolve1 = NxFr::Path("D:/Nexus/Test/../../Test/Subfolder/Deep/");
+		NxFr::Path ToResolve2 = Working + "Test/Subfolder/Deep/";
+		NxFr::Path ToNormalize = NxFr::Path("Test//Subfolder\\Deep");
 
-		NxEn::Array<NxEn::StringView> Items = NxEn::Array<NxEn::StringView>(3);
+		NxFr::Array<NxFr::StringView> Items = NxFr::Array<NxFr::StringView>(3);
 		Items[0] = "Nexus";
 		Items[1] = "Test";
 		Items[2] = "Test.txt";
@@ -98,14 +98,14 @@ namespace NxTs
 
 		ASSERT_EQ(Directory.Join("Test"), "../../Subfolder/Deep/Test/");
 		ASSERT_EQ(Directory.Join("Test.txt"), "../../Subfolder/Deep/Test/Test.txt");
-		ASSERT_EQ(Root.Join<NxEn::StringView>(Items), Working + "Test/Other/Deep/" + "Nexus/Test/Test.txt");
+		ASSERT_EQ(Root.Join<NxFr::StringView>(Items), Working + "Test/Other/Deep/" + "Nexus/Test/Test.txt");
 		ASSERT_EQ(Directory.Previous(2), "../../Subfolder/Deep/");
 	}
 
 	TEST(IO, Directory)
 	{
-		NxEn::Path Working = NxEn::Path::GetWorkingDirectory();
-		NxEn::Directory Directory = NxEn::Directory(Working);
+		NxFr::Path Working = NxFr::Path::GetWorkingDirectory();
+		NxFr::Directory Directory = NxFr::Directory(Working);
 
 		ASSERT_EQ(Directory.GetPath(), Working);
 		ASSERT_EQ(Directory.Exists(), true);
@@ -115,14 +115,14 @@ namespace NxTs
 		ASSERT_EQ(Directory.GetFiles(true).GetCount() > 0, true);
 		ASSERT_EQ(Directory.GetDirectories(true).GetCount() == 0, true);
 
-		NxEn::Directory SubDirectory = NxEn::Directory(Working + "Test");
+		NxFr::Directory SubDirectory = NxFr::Directory(Working + "Test");
 
 		SubDirectory.Create();
 		ASSERT_EQ(SubDirectory.Exists(), true);
 
-		NxEn::Directory(Working + "Test" + "Test1").Create();
-		NxEn::Directory(Working + "Test" + "Test2").Create();
-		NxEn::Directory(Working + "Test" + "Test3").Create();
+		NxFr::Directory(Working + "Test" + "Test1").Create();
+		NxFr::Directory(Working + "Test" + "Test2").Create();
+		NxFr::Directory(Working + "Test" + "Test3").Create();
 
 		SubDirectory.Move(Working + "UnitTest");
 		ASSERT_EQ(SubDirectory.Exists(), true);
@@ -133,8 +133,8 @@ namespace NxTs
 
 	TEST(IO, File)
 	{
-		NxEn::Path Working = NxEn::Path::GetWorkingDirectory() + "UnitTest.txt";
-		NxEn::File File = NxEn::File(Working);
+		NxFr::Path Working = NxFr::Path::GetWorkingDirectory() + "UnitTest.txt";
+		NxFr::File File = NxFr::File(Working);
 
 		ASSERT_EQ(File.GetPath(), Working);
 		ASSERT_EQ(File.Exists(), false);
@@ -145,23 +145,23 @@ namespace NxTs
 		File.Move(Working.ChangeFileName("UnitTestRenamed.txt"));
 		ASSERT_EQ(File.Exists(), true);
 
-		File.Open(NxEn::File::Mode::Write);
+		File.Open(NxFr::File::Mode::Write);
 		ASSERT_EQ(File.IsOpened(), true);
-		File.WriteByte(NxEn::BufferView((NxEn::Byte*)Data, 8 * 10));
+		File.WriteByte(NxFr::BufferView((NxFr::Byte*)Data, 8 * 10));
 		ASSERT_EQ(File.GetSize(), 8 * 10);
 		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
 
-		File.Open(NxEn::File::Mode::Read);
+		File.Open(NxFr::File::Mode::Read);
 		ASSERT_EQ(File.IsOpened(), true);
-		NxEn::Buffer Content = File.ReadByte();
+		NxFr::Buffer Content = File.ReadByte();
 		ASSERT_EQ(((uint64*)Content.GetPtr())[5], 15);
 		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
 
-		File.Open(NxEn::File::Mode::Append);
+		File.Open(NxFr::File::Mode::Append);
 		ASSERT_EQ(File.IsOpened(), true);
-		File.WriteByte(NxEn::BufferView((NxEn::Byte*)Data, 8 * 10));
+		File.WriteByte(NxFr::BufferView((NxFr::Byte*)Data, 8 * 10));
 		ASSERT_EQ(File.GetSize(), 8 * 10 * 2);
 		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
@@ -172,30 +172,30 @@ namespace NxTs
 
 	TEST(IO, Text)
 	{
-		NxEn::Path Working = NxEn::Path::GetWorkingDirectory() + "UnitTestText.txt";
-		NxEn::File File = NxEn::File(Working);
+		NxFr::Path Working = NxFr::Path::GetWorkingDirectory() + "UnitTestText.txt";
+		NxFr::File File = NxFr::File(Working);
 
 		File.Create();
 
-		File.Open(NxEn::File::Mode::Write);
+		File.Open(NxFr::File::Mode::Write);
 		File.WriteText(Text);
 		ASSERT_EQ(File.GetSize() > 0, true);
 		File.Close();
 
-		File.Open(NxEn::File::Mode::Read);
-		NxEn::String Content1 = File.ReadText();
+		File.Open(NxFr::File::Mode::Read);
+		NxFr::String Content1 = File.ReadText();
 		ASSERT_EQ(Content1, Text);
 		File.Close();
 
-		File.Open(NxEn::File::Mode::Append);
+		File.Open(NxFr::File::Mode::Append);
 		File.WriteText(Text);
 		File.WriteText(Text);
 		File.WriteText(Text);
 		ASSERT_EQ(File.GetSize() > 0, true);
 		File.Close();
 
-		File.Open(NxEn::File::Mode::Read);
-		NxEn::String Content2 = File.ReadText();
+		File.Open(NxFr::File::Mode::Read);
+		NxFr::String Content2 = File.ReadText();
 		ASSERT_EQ(Content2, Text + Text + Text + Text);
 		File.Close();
 

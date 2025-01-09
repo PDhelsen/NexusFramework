@@ -32,27 +32,27 @@ namespace NxTs
 		delete[] Data;
 	}
 
-	NxEn::Node::NodeSimple<uint64>* CreateNodes()
+	NxFr::Node::NodeSimple<uint64>* CreateNodes()
 	{
-		NxEn::Node::NodeSimple<uint64>* Node50 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node50 = new NxFr::Node::NodeSimple<uint64>();
 		Node50->Value = 5;
-		NxEn::Node::NodeSimple<uint64>* Node4 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node4 = new NxFr::Node::NodeSimple<uint64>();
 		Node4->Value = 4;
-		NxEn::Node::NodeSimple<uint64>* Node7 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node7 = new NxFr::Node::NodeSimple<uint64>();
 		Node7->Value = 7;
-		NxEn::Node::NodeSimple<uint64>* Node1 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node1 = new NxFr::Node::NodeSimple<uint64>();
 		Node1->Value = 1;
-		NxEn::Node::NodeSimple<uint64>* Node0 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node0 = new NxFr::Node::NodeSimple<uint64>();
 		Node0->Value = 0;
-		NxEn::Node::NodeSimple<uint64>* Node51 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node51 = new NxFr::Node::NodeSimple<uint64>();
 		Node51->Value = 5;
-		NxEn::Node::NodeSimple<uint64>* Node6 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node6 = new NxFr::Node::NodeSimple<uint64>();
 		Node6->Value = 6;
-		NxEn::Node::NodeSimple<uint64>* Node2 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node2 = new NxFr::Node::NodeSimple<uint64>();
 		Node2->Value = 2;
-		NxEn::Node::NodeSimple<uint64>* Node52 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node52 = new NxFr::Node::NodeSimple<uint64>();
 		Node52->Value = 5;
-		NxEn::Node::NodeSimple<uint64>* Node3 = new NxEn::Node::NodeSimple<uint64>();
+		NxFr::Node::NodeSimple<uint64>* Node3 = new NxFr::Node::NodeSimple<uint64>();
 		Node3->Value = 3;
 
 		Node50->Next = Node4;
@@ -68,7 +68,7 @@ namespace NxTs
 		return Node50;
 	}
 
-	void DestroyNodes(NxEn::Node::NodeSimple<uint64>* Data)
+	void DestroyNodes(NxFr::Node::NodeSimple<uint64>* Data)
 	{
 		if (Data->Next)
 			DestroyNodes(Data->Next);
@@ -76,9 +76,9 @@ namespace NxTs
 		delete Data;
 	}
 
-	NxEn::Array<uint64>& CreateNexusArray()
+	NxFr::Array<uint64>& CreateNexusArray()
 	{
-		NxEn::Array<uint64>* Data = new NxEn::Array<uint64>(ArrayLength);
+		NxFr::Array<uint64>* Data = new NxFr::Array<uint64>(ArrayLength);
 
 		(*Data)[0] = 5;
 		(*Data)[1] = 4;
@@ -94,29 +94,29 @@ namespace NxTs
 		return *Data;
 	}
 
-	void DestroyNexusArray(NxEn::Array<uint64>& Data)
+	void DestroyNexusArray(NxFr::Array<uint64>& Data)
 	{
 		delete &Data;
 	}
 
 	TEST(Sort, MergeSort)
 	{
-		NxEn::Array<uint64>& Data = CreateNexusArray();
-		NxEn::Node::NodeSimple<uint64>* Data2 = CreateNodes();
+		NxFr::Array<uint64>& Data = CreateNexusArray();
+		NxFr::Node::NodeSimple<uint64>* Data2 = CreateNodes();
 
-		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount());
+		NxFr::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount());
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
+		NxFr::Sorting::MergeSort::SortIndexBased<uint64>(Data, Data.GetCount(), &CompareFunction);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		Data2 = NxEn::Sorting::MergeSort::SortLinkBased<uint64>(Data2);
+		Data2 = NxFr::Sorting::MergeSort::SortLinkBased<uint64>(Data2);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data2->Value <= Data2->Next->Value, true);
@@ -130,13 +130,13 @@ namespace NxTs
 	{
 		uint64* Data = CreateRawArray();
 
-		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, ArrayLength);
+		NxFr::Sorting::QuickSort::SortIndexBased<uint64>(Data, ArrayLength);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sorting::QuickSort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
+		NxFr::Sorting::QuickSort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
@@ -149,19 +149,19 @@ namespace NxTs
 	{
 		uint64* Data = CreateRawArray();
 
-		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, ArrayLength);
+		NxFr::Sorting::HeapSort::SortIndexBased<uint64>(Data, ArrayLength);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sorting::HeapSort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
+		NxFr::Sorting::HeapSort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		NxEn::Sorting::HeapSort::Heapify<uint64>(Data, ArrayLength);
+		NxFr::Sorting::HeapSort::Heapify<uint64>(Data, ArrayLength);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			uint64 Left = 2 * Index + 1;
@@ -183,21 +183,21 @@ namespace NxTs
 	TEST(Sort, Sort)
 	{
 		uint64* Data = CreateRawArray();
-		NxEn::Node::NodeSimple<uint64>* Data2 = CreateNodes();
+		NxFr::Node::NodeSimple<uint64>* Data2 = CreateNodes();
 
-		NxEn::Sort::SortIndexBased<uint64>(Data, ArrayLength);
+		NxFr::Sort::SortIndexBased<uint64>(Data, ArrayLength);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
 
-		NxEn::Sort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
+		NxFr::Sort::SortIndexBased<uint64>(Data, ArrayLength, &CompareFunction);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] >= Data[Index], true);
 		}
 
-		NxEn::Sort::SortLinkBased<uint64>(&Data2);
+		NxFr::Sort::SortLinkBased<uint64>(&Data2);
 		for (uint64 Index = 1; Index < ArrayLength; Index++)
 		{
 			ASSERT_EQ(Data2->Value <= Data2->Next->Value, true);

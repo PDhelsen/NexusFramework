@@ -4,7 +4,7 @@
 #include "Memory/Handle/Handle.h"
 #include "Memory/Handle/HandleManager.h"
 
-namespace NxEn
+namespace NxFr
 {
 	HeapAllocator::HeapAllocator(uint64 Size)
 		: Allocator(Size), Root(nullptr)

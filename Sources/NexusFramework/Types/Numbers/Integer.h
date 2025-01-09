@@ -13,7 +13,7 @@ using uint16	= PlaftormInteger::uint16;
 using uint32	= PlaftormInteger::uint32;
 using uint64	= PlaftormInteger::uint64;
 
-namespace NxEn
+namespace NxFr
 {
 	using GUID = uint64;
 	using Byte = uint8;
@@ -25,7 +25,7 @@ inline Type SetBit1(Type Value, Type Offset) { return Value |= Type(1) << Offset
 inline Type SetBit0(Type Value, Type Offset) { return Value &= ~(Type(1) << Offset); }\
 inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1(Value, Offset) : SetBit0(Value, Offset); }\
 
-namespace NxEn::Integer
+namespace NxFr::Integer
 {
 	NEXUS_BIT_CHECK_SET(int8);
 	NEXUS_BIT_CHECK_SET(int16);

@@ -3,7 +3,7 @@
 
 #include "Time/Time.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Timespan::Timespan()
 		: Seconds(0), Minutes(0), Hours(0), Days(0), Months(0), Years(0)

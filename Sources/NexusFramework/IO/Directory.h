@@ -5,7 +5,7 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class Directory
 	{

@@ -4,7 +4,7 @@
 #include "Types/Functions/Delegate.h"
 #include "Types/Containers/List.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename Signature>
 	class Event;

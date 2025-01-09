@@ -3,7 +3,7 @@
 
 #include "External/StandardLibrary.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Time
 	{

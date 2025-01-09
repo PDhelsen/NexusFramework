@@ -3,7 +3,7 @@
 
 #include "External/StandardLibrary.h"
 
-namespace NxEn::Decimal
+namespace NxFr::Decimal
 {
 	constexpr float InfinityF()
 	{

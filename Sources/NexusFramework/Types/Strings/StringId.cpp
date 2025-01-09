@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "StringId.h"
 
-namespace NxEn
+namespace NxFr
 {
 	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(97, nullptr); return StringsTable; }
 

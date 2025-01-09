@@ -3,7 +3,7 @@
 
 #include "Time/Time.h"
 
-namespace NxEn
+namespace NxFr
 {
 	ChromeTracing::ChromeTracing(StringView Path, bool Start)
 		: Instruments(Path, Start)

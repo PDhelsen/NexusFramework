@@ -8,7 +8,7 @@
 #include <windows.h>
 #include <sys/stat.h>
 
-namespace NxEn
+namespace NxFr
 {
 	using DllFunction = Delegate<int64()>;
 
@@ -201,9 +201,9 @@ namespace NxEn
 		DWORD Attributes = 0;
 		switch (Mode)
 		{
-		case NxEn::Platform::FileMode::Read: Attributes = GENERIC_READ; break;
-		case NxEn::Platform::FileMode::Write: Attributes = GENERIC_WRITE; break;
-		case NxEn::Platform::FileMode::Append: Attributes = FILE_APPEND_DATA; break;
+		case NxFr::Platform::FileMode::Read: Attributes = GENERIC_READ; break;
+		case NxFr::Platform::FileMode::Write: Attributes = GENERIC_WRITE; break;
+		case NxFr::Platform::FileMode::Append: Attributes = FILE_APPEND_DATA; break;
 		}
 
 		HANDLE File = CreateFileA(

@@ -7,7 +7,7 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 
-namespace NxEn
+namespace NxFr
 {
 	enum class PlatformTarget : uint8
 	{

@@ -2,7 +2,7 @@
 
 #include "Allocator.h"
 
-namespace NxEn
+namespace NxFr
 {
     class PoolAllocator : public Allocator
     {

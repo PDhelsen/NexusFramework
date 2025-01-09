@@ -4,7 +4,7 @@
 #include "External/Intrinsics.h"
 #include "External/StandardLibrary.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Math
 	{

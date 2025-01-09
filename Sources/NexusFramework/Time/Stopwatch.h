@@ -2,7 +2,7 @@
 
 #include "Core/NexusFrameworkCore.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class Stopwatch
 	{

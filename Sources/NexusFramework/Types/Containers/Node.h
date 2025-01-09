@@ -4,7 +4,7 @@
 #include "Memory/Memory.h"
 #include "Misc/Templates.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Node
 	{

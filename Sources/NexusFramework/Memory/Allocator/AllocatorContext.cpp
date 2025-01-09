@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "AllocatorContext.h"
 
-namespace NxEn
+namespace NxFr
 {
 	static Stack<Allocator*>& GetAllocators() { static Stack<Allocator*> Allocators(nullptr); return Allocators; }
 

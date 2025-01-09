@@ -4,7 +4,7 @@
 #include "Types/Functions/Delegate.h"
 #include "Misc/Templates.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Sorting
 	{

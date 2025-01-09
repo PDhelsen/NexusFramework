@@ -32,9 +32,9 @@ namespace NxTs
 		MemoryTest* Test1 = new MemoryTest();
 		MemoryTest* Test2 = new MemoryTest();
 
-		NxEn::HandleManager Manager = NxEn::HandleManager(10);
+		NxFr::HandleManager Manager = NxFr::HandleManager(10);
 
-		NxEn::Handle<MemoryTest> Handle = Manager.AcquireHandle<MemoryTest>(Test1);
+		NxFr::Handle<MemoryTest> Handle = Manager.AcquireHandle<MemoryTest>(Test1);
 		ASSERT_EQ(Handle.IsValid(), true);
 		ASSERT_EQ(&Handle->Value, &Test1->Value);
 		ASSERT_EQ(Handle->Value, Test1->Value);
@@ -59,49 +59,49 @@ namespace NxTs
 
 	TEST(Handle, Defragmentation)
 	{
-		NxEn::HeapAllocator* Heap = new NxEn::HeapAllocator(512);
-		NxEn::HandleManager Manager = NxEn::HandleManager(10);
+		NxFr::HeapAllocator* Heap = new NxFr::HeapAllocator(512);
+		NxFr::HandleManager Manager = NxFr::HandleManager(10);
 
 		Heap->Defragment(&Manager);
 
-		MemoryTest* Test1 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test1->Value = 1;
 		Test1->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle1 = Manager.AcquireHandle<MemoryTest>(Test1);
+		NxFr::Handle<MemoryTest> Handle1 = Manager.AcquireHandle<MemoryTest>(Test1);
 
-		MemoryTest* Test2 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test2 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test2->Value = 2;
 		Test2->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle2 = Manager.AcquireHandle<MemoryTest>(Test2);
+		NxFr::Handle<MemoryTest> Handle2 = Manager.AcquireHandle<MemoryTest>(Test2);
 
-		MemoryTest* Test3 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test3->Value = 3;
 		Test3->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle3 = Manager.AcquireHandle<MemoryTest>(Test3);
+		NxFr::Handle<MemoryTest> Handle3 = Manager.AcquireHandle<MemoryTest>(Test3);
 
-		MemoryTest* Test4 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test4 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test4->Value = 4;
 		Test4->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle4 = Manager.AcquireHandle<MemoryTest>(Test4);
+		NxFr::Handle<MemoryTest> Handle4 = Manager.AcquireHandle<MemoryTest>(Test4);
 
-		MemoryTest* Test5 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test5 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test5->Value = 5;
 		Test5->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle5 = Manager.AcquireHandle<MemoryTest>(Test5);
+		NxFr::Handle<MemoryTest> Handle5 = Manager.AcquireHandle<MemoryTest>(Test5);
 
-		MemoryTest* Test6 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test6 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test6->Value = 6;
 		Test6->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle6 = Manager.AcquireHandle<MemoryTest>(Test6);
+		NxFr::Handle<MemoryTest> Handle6 = Manager.AcquireHandle<MemoryTest>(Test6);
 
-		MemoryTest* Test7 = (MemoryTest*)NxEn::Memory::Allocate(sizeof(MemoryTest), Heap);
+		MemoryTest* Test7 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
 		Test7->Value = 7;
 		Test7->Test = 0xffffffff;
-		NxEn::Handle<MemoryTest> Handle7 = Manager.AcquireHandle<MemoryTest>(Test7);
+		NxFr::Handle<MemoryTest> Handle7 = Manager.AcquireHandle<MemoryTest>(Test7);
 
-		NxEn::Memory::Free(Manager.ReleaseHandle(Handle2), Heap);
-		NxEn::Memory::Free(Manager.ReleaseHandle(Handle4), Heap);
-		NxEn::Memory::Free(Manager.ReleaseHandle(Handle5), Heap);
+		NxFr::Memory::Free(Manager.ReleaseHandle(Handle2), Heap);
+		NxFr::Memory::Free(Manager.ReleaseHandle(Handle4), Heap);
+		NxFr::Memory::Free(Manager.ReleaseHandle(Handle5), Heap);
 
 		uint64 StartAmount = Heap->UsedAmount();
 		Heap->Defragment(&Manager, 1);

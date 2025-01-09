@@ -7,7 +7,7 @@
 #include "Memory/Handle/Handle.h"
 #include "Debug/Logger/Log.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class HandleManager
 	{

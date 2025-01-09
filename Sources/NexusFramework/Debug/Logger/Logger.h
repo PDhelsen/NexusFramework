@@ -5,7 +5,7 @@
 #include "Platform/Platform.h"
 #include "IO/File.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class Logger : public Log
 	{

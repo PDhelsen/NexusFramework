@@ -1,6 +1,6 @@
 #pragma once
 
-namespace NxEn
+namespace NxFr
 {
 	using NullPtr = decltype(nullptr);
 

@@ -4,7 +4,7 @@
 #include "Types/Numbers/Integer.h"
 #include "Memory/Allocator/Allocator.h"
 
-namespace NxEn
+namespace NxFr
 {
 	struct AllocatorContext
 	{

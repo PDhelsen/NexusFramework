@@ -2,7 +2,7 @@
 
 #include "Misc/Templates.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename T1, typename T2>
 	class Tuple

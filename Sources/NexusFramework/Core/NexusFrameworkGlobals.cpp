@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "NexusFrameworkGlobals.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Globals
 	{

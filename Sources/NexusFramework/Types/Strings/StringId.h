@@ -6,7 +6,7 @@
 #include "Types/Strings/String.h"
 #include "Types/Strings/StringView.h"
 
-namespace NxEn
+namespace NxFr
 {
 	struct StringId
 	{
@@ -30,4 +30,4 @@ namespace NxEn
 
 	NEXUS_FRAMEWORK_API StringId operator""_Sid(const char* Text, uint64 Size);
 }
-using NxEn::operator""_Sid;
+using NxFr::operator""_Sid;

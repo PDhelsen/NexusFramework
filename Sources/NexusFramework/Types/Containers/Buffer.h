@@ -6,7 +6,7 @@
 #include "Memory/Allocator/AllocatorContext.h"
 #include "Debug/Logger/Log.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename T = Byte>
 	class Buffer

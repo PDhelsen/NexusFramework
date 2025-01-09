@@ -17,7 +17,7 @@
 #include "Types/Containers/Pool.h"
 #include "Types/Containers/Tuple.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class ContainersUtils
 	{

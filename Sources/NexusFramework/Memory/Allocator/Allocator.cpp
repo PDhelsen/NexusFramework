@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "Allocator.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Allocator::Allocator(uint64 Size)
 		: Capacity(Size), Amount(0), Data(nullptr)

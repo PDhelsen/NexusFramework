@@ -6,7 +6,7 @@
 #include "Types/Strings/StringView.h"
 #include "Time/Timespan.h"
 
-namespace NxEn
+namespace NxFr
 {
     struct Timestamp
     {

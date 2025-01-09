@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "String.h"
 
-namespace NxEn
+namespace NxFr
 {
 	String String::Create(char* Text, uint64 Capacity, uint64 Size)
 	{

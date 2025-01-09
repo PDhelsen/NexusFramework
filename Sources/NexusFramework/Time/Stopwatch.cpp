@@ -3,7 +3,7 @@
 
 #include "Platform/Platform.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Stopwatch::Stopwatch(bool AutoStart)
 		: StartTimer(0.0), ElapsedTime(0.0), Started(false), Paused(false)

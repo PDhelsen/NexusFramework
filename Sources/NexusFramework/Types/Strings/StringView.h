@@ -4,7 +4,7 @@
 #include "Types/Numbers/Integer.h"
 #include "Types/Strings/String.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template <typename T> class List;
 

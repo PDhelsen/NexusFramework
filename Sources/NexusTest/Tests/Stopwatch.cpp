@@ -4,16 +4,16 @@ namespace NxTs
 {
 	TEST(Stopwatch, Stopwatch)
 	{
-		NxEn::Stopwatch Stopwatch(true);
+		NxFr::Stopwatch Stopwatch(true);
 
-		NxEn::Platform::GetInstance()->Sleep(5);
+		NxFr::Platform::GetInstance()->Sleep(5);
 
-		double Peek = Stopwatch.Peek(NxEn::Time::SecondToMilli);
+		double Peek = Stopwatch.Peek(NxFr::Time::SecondToMilli);
 		ASSERT_EQ(Peek >= 5, true);
 
-		NxEn::Platform::GetInstance()->Sleep(5);
+		NxFr::Platform::GetInstance()->Sleep(5);
 
-		double ElapsedTime = Stopwatch.Stop(NxEn::Time::SecondToMilli);
+		double ElapsedTime = Stopwatch.Stop(NxFr::Time::SecondToMilli);
 		ASSERT_EQ(ElapsedTime >= 5 && ElapsedTime >= Peek, true);
 	}
 }

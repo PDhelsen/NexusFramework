@@ -10,7 +10,7 @@
 #include "Types/Containers/Iterator.h"
 #include "Debug/Logger/Log.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename T, class H = Hashing::Default>
 	class Set

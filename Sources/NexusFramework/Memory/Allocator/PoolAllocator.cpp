@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "PoolAllocator.h"
 
-namespace NxEn
+namespace NxFr
 {
 	PoolAllocator::PoolAllocator(uint64 Count, uint64 Stride)
 		: Allocator(Count * Stride), Head(nullptr), Stride(Stride)

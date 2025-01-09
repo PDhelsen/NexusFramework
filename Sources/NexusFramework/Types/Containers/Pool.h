@@ -8,7 +8,7 @@
 #include "Types/Containers/Node.h"
 #include "Debug/Logger/Log.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Pooling
 	{

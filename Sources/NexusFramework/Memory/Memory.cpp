@@ -3,7 +3,7 @@
 
 #include "External/StandardLibrary.h"
 
-namespace NxEn
+namespace NxFr
 {
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{

@@ -5,7 +5,7 @@
 #include "Memory/Memory.h"
 #include "Misc/Templates.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename Signature>
 	class Delegate;

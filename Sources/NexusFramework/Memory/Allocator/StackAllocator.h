@@ -2,7 +2,7 @@
 
 #include "Allocator.h"
 
-namespace NxEn
+namespace NxFr
 {
     class StackAllocator : public Allocator
     {

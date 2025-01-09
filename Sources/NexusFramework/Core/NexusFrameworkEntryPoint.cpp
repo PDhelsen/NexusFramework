@@ -7,7 +7,7 @@
 #include "Core/NexusFrameworkGlobals.h"
 #include "Core/NexusFrameworkPaths.h"
 
-namespace NxEn
+namespace NxFr
 {
 	static void CreateFolders()
 	{

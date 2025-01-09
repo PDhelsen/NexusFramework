@@ -3,7 +3,7 @@
 
 #include "Time/Time.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Timestamp::Timestamp()
 		: Seconds(-1), Minutes(-1), Hours(-1), Days(-1), Months(-1), Years(-1), WeekDay(-1), YearDay(-1), DayLightSaving(false)

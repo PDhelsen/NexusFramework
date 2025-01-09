@@ -5,7 +5,7 @@
 
 #include "Core/NexusFrameworkGlobals.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Instruments* Instruments::GetInstance()
 	{
@@ -32,7 +32,7 @@ namespace NxEn
 	{
 		switch (Tool)
 		{
-		case NxEn::Instruments::Tools::ChromeTracing: return new ChromeTracing(Path, Start);
+		case NxFr::Instruments::Tools::ChromeTracing: return new ChromeTracing(Path, Start);
 		}
 
 		return nullptr;

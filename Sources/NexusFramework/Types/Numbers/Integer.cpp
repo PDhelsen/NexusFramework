@@ -3,7 +3,7 @@
 
 #include "External/StandardLibrary.h"
 
-namespace NxEn::Integer
+namespace NxFr::Integer
 {
 	constexpr int8 MinI8()
 	{

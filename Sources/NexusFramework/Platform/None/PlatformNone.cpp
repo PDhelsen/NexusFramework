@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "PlatformNone.h"
 
-namespace NxEn
+namespace NxFr
 {
     void PlatformNone::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
     {

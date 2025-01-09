@@ -3,7 +3,7 @@
 #include "Core/NexusFrameworkCore.h"
 #include "Platform/Platform.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class PlatformNone : public Platform
 	{

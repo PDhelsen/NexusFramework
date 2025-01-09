@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
-	<Type Name="NxEn::String">
+	<Type Name="NxFr::String">
 		<Intrinsic Name="buffer" Expression="Capacity == 16 ? Data.Small : Data.Large" />
 		<DisplayString>{ buffer(), s8 }</DisplayString>
 		<StringView>buffer(), s8</StringView>
@@ -14,7 +14,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::StringView">
+	<Type Name="NxFr::StringView">
 		<DisplayString>{ Data, [Count]s8 }</DisplayString>
 		<StringView>Data, [Count]s8</StringView>
 		<Expand>
@@ -26,11 +26,11 @@
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::StringId">
+	<Type Name="NxFr::StringId">
 		<DisplayString>{ Id }</DisplayString>
 	</Type>
 	
-  <Type Name="NxEn::Array&lt;*&gt;">
+  <Type Name="NxFr::Array&lt;*&gt;">
 		<Intrinsic Name="buffer" Expression="Count == $T2 ? Data.Stack: Data.Heap" />
 		<DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
@@ -41,7 +41,7 @@
     </Expand>
   </Type>
   
-  <Type Name="NxEn::List&lt;*&gt;">
+  <Type Name="NxFr::List&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
       <ArrayItems>
@@ -51,7 +51,7 @@
     </Expand>
   </Type>
 
-  <Type Name="NxEn::Dequeue&lt;*&gt;">
+  <Type Name="NxFr::Dequeue&lt;*&gt;">
     <DisplayString>{{ size={Count} }}</DisplayString>
     <Expand>
       <IndexListItems>
@@ -61,7 +61,7 @@
     </Expand>
   </Type>
 
-  <Type Name="NxEn::Stack&lt;*&gt;">
+  <Type Name="NxFr::Stack&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<IndexListItems>
@@ -71,7 +71,7 @@
 		</Expand>
   </Type>
 
-  <Type Name="NxEn::Queue&lt;*&gt;">
+  <Type Name="NxFr::Queue&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<IndexListItems>
@@ -81,7 +81,7 @@
 		</Expand>
   </Type>
 
-	<Type Name="NxEn::LinkedList&lt;*&gt;">
+	<Type Name="NxFr::LinkedList&lt;*&gt;">
 		<DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<LinkedListItems>
@@ -93,7 +93,7 @@
 		</Expand>
 	</Type>
 	
-  <Type Name="NxEn::Set&lt;*&gt;">
+  <Type Name="NxFr::Set&lt;*&gt;">
 		<DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<CustomListItems>
@@ -111,7 +111,7 @@
 		</Expand>
   </Type>
 
-  <Type Name="NxEn::Dictionary&lt;*&gt;">
+  <Type Name="NxFr::Dictionary&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<CustomListItems>
@@ -129,7 +129,7 @@
 		</Expand>
   </Type>
 
-  <Type Name="NxEn::Tree&lt;*&gt;">
+  <Type Name="NxFr::Tree&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
       <TreeItems>
@@ -142,7 +142,7 @@
     </Expand>
   </Type>
 
-  <Type Name="NxEn::Graph&lt;*&gt;">
+  <Type Name="NxFr::Graph&lt;*&gt;">
     <DisplayString>{{ Count={Count} }}</DisplayString>
     <Expand>
       <LinkedListItems>
@@ -154,21 +154,21 @@
     </Expand>
   </Type>
 
-	<Type Name="NxEn::Collection&lt;*&gt;::Wrapper&lt;*&gt;">
+	<Type Name="NxFr::Collection&lt;*&gt;::Wrapper&lt;*&gt;">
 		<DisplayString>{ Iterator }</DisplayString>
 		<Expand>
 			<Item Name="Value">Iterator</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Pool&lt;*&gt;">
+	<Type Name="NxFr::Pool&lt;*&gt;">
 		<DisplayString>{{ Count={Data.Count} }}</DisplayString>
 		<Expand>
 			<Item Name="Data">Data</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Pooling::PreAllocated&lt;*&gt;">
+	<Type Name="NxFr::Pooling::PreAllocated&lt;*&gt;">
 		<DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<CustomListItems>
@@ -186,7 +186,7 @@
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Pooling::OnDemand&lt;*&gt;">
+	<Type Name="NxFr::Pooling::OnDemand&lt;*&gt;">
 		<DisplayString>{{ Count={Count} }}</DisplayString>
 		<Expand>
 			<LinkedListItems>
@@ -198,63 +198,63 @@
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorBlock&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorBlock&lt;*&gt;">
 		<DisplayString>{ Data[Index] }</DisplayString>
 		<Expand>
 			<Item Name="Value">Data[Index]</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorBucket&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorBucket&lt;*&gt;">
 		<DisplayString>{ Data[BucketIndex][DataIndex] }</DisplayString>
 		<Expand>
 			<Item Name="Value">Data[BucketIndex][DataIndex]</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorHashmap&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorHashmap&lt;*&gt;">
 		<DisplayString>{ Data[Index].Value }</DisplayString>
 		<Expand>
 			<Item Name="Value">Data[Index].Value</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorPreAllocated&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorPreAllocated&lt;*&gt;">
 		<DisplayString>{ Data[Index].Value }</DisplayString>
 		<Expand>
 			<Item Name="Value">Data[Index].Value</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorNodeSimple&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorNodeSimple&lt;*&gt;">
 		<DisplayString>{ Current->Value }</DisplayString>
 		<Expand>
 			<Item Name="Value">Current->Value</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorNodeDouble&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorNodeDouble&lt;*&gt;">
 		<DisplayString>{ Current->Value }</DisplayString>
 		<Expand>
 			<Item Name="Value">Current->Value</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorNodeTree&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorNodeTree&lt;*&gt;">
 		<DisplayString>{ Current->Value }</DisplayString>
 		<Expand>
 			<Item Name="Value">Current->Value</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Iterator::IteratorNodeGraph&lt;*&gt;">
+	<Type Name="NxFr::Iterator::IteratorNodeGraph&lt;*&gt;">
 		<DisplayString>{ Current->Value }</DisplayString>
 		<Expand>
 			<Item Name="Value">Current->Value</Item>
 		</Expand>
 	</Type>
 
-	<Type Name="NxEn::Handle&lt;*&gt;">
+	<Type Name="NxFr::Handle&lt;*&gt;">
 		<DisplayString>{ *(($T1*)(*(uint64*)(Pointer))) }</DisplayString>
 		<Expand>
 			<Item Name="Value">*(($T1*)(*(uint64*)(Pointer)))</Item>

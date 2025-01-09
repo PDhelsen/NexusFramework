@@ -9,7 +9,7 @@
 #include "Types/Strings/StringId.h"
 #include "IO/File.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace StatsHeader
 	{
@@ -184,12 +184,12 @@ namespace NxEn
 	{
 		switch (Mode)
 		{
-		case NxEn::Stats::StatMode::Set: return New;
-		case NxEn::Stats::StatMode::Cnt: return ++Current;
-		case NxEn::Stats::StatMode::Add: return Current + New;
-		case NxEn::Stats::StatMode::Avg: return Current + New;
-		case NxEn::Stats::StatMode::Min: return Math::Min(Current, New);
-		case NxEn::Stats::StatMode::Max: return Math::Max(Current, New);
+		case NxFr::Stats::StatMode::Set: return New;
+		case NxFr::Stats::StatMode::Cnt: return ++Current;
+		case NxFr::Stats::StatMode::Add: return Current + New;
+		case NxFr::Stats::StatMode::Avg: return Current + New;
+		case NxFr::Stats::StatMode::Min: return Math::Min(Current, New);
+		case NxFr::Stats::StatMode::Max: return Math::Max(Current, New);
 		}
 
 		return New;
@@ -214,25 +214,25 @@ namespace NxEn
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) if (Instance) { Instance->RecordHeader(::NxEn::StatsHeader::Id, Type, Mode); }
-	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatUnsignedInteger(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimalPrecision(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCount(::NxEn::StatsHeader::Id, Value); }
-	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(::NxEn::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) if (Instance) { Instance->RecordHeader(::NxFr::StatsHeader::Id, Type, Mode); }
+	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatUnsignedInteger(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimalPrecision(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCount(::NxFr::StatsHeader::Id, Value); }
+	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(::NxFr::StatsHeader::Id, Value); }
 
-	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxEn::Stats::GetInstance(), Id, Type, Mode)
-	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_UNSIGNEDINTEGER(Id, Value) NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_DECIMALPRECISION(Id, Value) NEXUS_STAT_DECIMALPRECISION_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_COUNT(Id, Value) NEXUS_STAT_COUNT_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxEn::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Stats::GetInstance(), Id, Type, Mode)
+	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_UNSIGNEDINTEGER(Id, Value) NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_DECIMALPRECISION(Id, Value) NEXUS_STAT_DECIMALPRECISION_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_COUNT(Id, Value) NEXUS_STAT_COUNT_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
+	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
 #elif NEXUS_DISTRIB
 	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode)
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value)

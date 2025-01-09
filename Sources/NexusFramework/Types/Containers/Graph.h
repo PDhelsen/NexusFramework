@@ -9,15 +9,15 @@
 #include "Types/Containers/Iterator.h"
 #include "Debug/Logger/Log.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename T>
 	class Graph
 	{
 	public:
 		using N = Node::NodeGraph<T>;
-		using C = NxEn::Node::NodeGraphConnection<T>;
-		using CT = NxEn::Node::NodeGraphConnectionType;
+		using C = NxFr::Node::NodeGraphConnection<T>;
+		using CT = NxFr::Node::NodeGraphConnectionType;
 		using I = Iterator::IteratorNodeGraph<T, N>;
 
 		Graph(Allocator* Allctr = AllocatorContext::Get())

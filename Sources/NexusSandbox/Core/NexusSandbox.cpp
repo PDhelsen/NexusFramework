@@ -14,10 +14,10 @@ namespace NxSb
 
 int main()
 {
-	NxEn::Initialize();
+	NxFr::Initialize();
 
 	NxSb::HelloWorld();
-	NxEn::Platform::GetInstance()->WaitForUserToCloseTerminal();
+	NxFr::Platform::GetInstance()->WaitForUserToCloseTerminal();
 
-	NxEn::Shutdown();
+	NxFr::Shutdown();
 }

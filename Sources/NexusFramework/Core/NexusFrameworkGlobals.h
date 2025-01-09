@@ -6,7 +6,7 @@
 #include "Debug/Profiler/Stats/Stats.h"
 #include "Debug/Profiler/Instruments/Instuments.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Globals
 	{

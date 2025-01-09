@@ -3,7 +3,7 @@
 #include "Core/NexusFrameworkCore.h"
 #include "IO/Path.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Paths
 	{

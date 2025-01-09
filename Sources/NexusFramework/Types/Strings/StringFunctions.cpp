@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "StringFunctions.h"
 
-namespace NxEn
+namespace NxFr
 {
 	bool StringUtility::Start(StringView Text, StringView Substring)
 	{

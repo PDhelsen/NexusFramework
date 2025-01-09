@@ -5,7 +5,7 @@
 #include "Types/Strings/StringFunctions.h"
 #include "Types/Strings/StringCApi.h"
 
-namespace NxEn
+namespace NxFr
 {
 	template<typename... Args>
 	void String::Format(StringView Format, Args&&... args)

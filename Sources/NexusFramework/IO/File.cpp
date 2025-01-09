@@ -4,15 +4,15 @@
 #include "Platform/Platform.h"
 #include "IO/Path.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Platform::FileMode ConvertFileToPlatformMode(File::Mode Mode)
 	{
 		switch (Mode)
 		{
-		case NxEn::File::Mode::Read: return Platform::FileMode::Read;
-		case NxEn::File::Mode::Write: return Platform::FileMode::Write;
-		case NxEn::File::Mode::Append: return Platform::FileMode::Append;
+		case NxFr::File::Mode::Read: return Platform::FileMode::Read;
+		case NxFr::File::Mode::Write: return Platform::FileMode::Write;
+		case NxFr::File::Mode::Append: return Platform::FileMode::Append;
 		}
 
 		return Platform::FileMode::Read;

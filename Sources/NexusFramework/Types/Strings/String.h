@@ -6,7 +6,7 @@
 #include "Memory/Allocator/AllocatorContext.h"
 #include "Memory/Memory.h"
 
-namespace NxEn
+namespace NxFr
 {
 	struct StringView;
 	template <typename T> class List;

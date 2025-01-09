@@ -2,7 +2,7 @@
 
 #include "Core/NexusFrameworkCore.h"
 
-namespace NxEn::Decimal
+namespace NxFr::Decimal
 {
 	NEXUS_FRAMEWORK_API constexpr	float	InfinityF();
 	NEXUS_FRAMEWORK_API constexpr	double	InfinityD();

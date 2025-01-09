@@ -7,7 +7,7 @@
 #include "Time/Timespan.h"
 #include "Time/Timestamp.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Time
 	{

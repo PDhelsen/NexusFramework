@@ -9,7 +9,7 @@
 
 #include "Core/NexusFrameworkGlobals.h"
 
-namespace NxEn
+namespace NxFr
 {
 	// Keep the const char array sync with the Verbosity enum in the Log.h file
 	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");

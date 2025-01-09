@@ -3,7 +3,7 @@
 #include "Core/NexusFrameworkCore.h"
 #include "Instuments.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class ChromeTracing : public Instruments
 	{

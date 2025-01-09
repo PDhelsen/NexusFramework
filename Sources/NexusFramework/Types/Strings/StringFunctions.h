@@ -6,7 +6,7 @@
 #include "Types/Strings/StringView.h"
 #include "Types/Strings/StringCApi.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class StringUtility
 	{

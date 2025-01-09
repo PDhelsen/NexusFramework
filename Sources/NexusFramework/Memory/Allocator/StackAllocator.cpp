@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "StackAllocator.h"
 
-namespace NxEn
+namespace NxFr
 {
 	StackAllocator::StackAllocator(uint64 Size)
 		: Allocator(Size), Marker(nullptr)

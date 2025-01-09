@@ -6,7 +6,7 @@
 #include "Memory/Allocator/Allocator.h"
 #include "Memory/Allocator/AllocatorContext.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Memory
 	{

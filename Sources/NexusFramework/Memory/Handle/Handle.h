@@ -2,7 +2,7 @@
 
 #include "Types/Numbers/Integer.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class HandleManager;
 

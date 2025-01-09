@@ -4,7 +4,7 @@
 #include "Platform/None/PlatformNone.h"
 #include "Platform/Windows/PlatformWindows.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Platform* Platform::GetInstance()
 	{

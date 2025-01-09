@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "StringView.h"
 
-namespace NxEn
+namespace NxFr
 {
 	StringView::StringView()
 		:Data(""), Count(0)

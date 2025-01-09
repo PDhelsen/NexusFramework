@@ -5,7 +5,7 @@
 #include "IO/Path.h"
 #include "IO/File.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Directory::Directory(StringView Path)
 		: Path(Path.C(), Path.GetCount()), Exist(false), Content()

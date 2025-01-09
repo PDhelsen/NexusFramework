@@ -102,7 +102,7 @@ namespace NxTs
 	};
 }
 
-namespace NxEn::Hashing
+namespace NxFr::Hashing
 {
 	template<typename H>
 	class HashProcess<NxTs::ContainerTest, H>
@@ -127,13 +127,13 @@ namespace NxTs
 {
 	TEST(Containers, Array)
 	{
-		NxEn::Array<ContainerTest, 10> Test = NxEn::Array<ContainerTest, 10>();
-		NxEn::ContainersUtils::Fill<ContainerTest>(Test, 5);
+		NxFr::Array<ContainerTest, 10> Test = NxFr::Array<ContainerTest, 10>();
+		NxFr::ContainersUtils::Fill<ContainerTest>(Test, 5);
 		ASSERT_EQ(Test.GetCount(), 10);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Array<ContainerTest> Range = NxEn::Array<ContainerTest>(5);
-		NxEn::ContainersUtils::Fill<ContainerTest>(Range, 4);
+		NxFr::Array<ContainerTest> Range = NxFr::Array<ContainerTest>(5);
+		NxFr::ContainersUtils::Fill<ContainerTest>(Range, 4);
 
 		Test.Assign(0, Container1);
 		Test.Assign(1, ContainerTest(2));
@@ -153,7 +153,7 @@ namespace NxTs
 		AccesRef.Integer = 10;
 		ASSERT_EQ(Test[5].Integer, 10);
 
-		NxEn::Array<ContainerTest, 10> Copy = Test;
+		NxFr::Array<ContainerTest, 10> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
@@ -192,7 +192,7 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
-		Test.Sort<NxEn::Sorting::MergeSort>();
+		Test.Sort<NxFr::Sorting::MergeSort>();
 		auto ItFirst = Test.Begin();
 		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
@@ -212,13 +212,13 @@ namespace NxTs
 
 	TEST(Containers, List)
 	{
-		NxEn::List<ContainerTest> Test = NxEn::List<ContainerTest>(10);
+		NxFr::List<ContainerTest> Test = NxFr::List<ContainerTest>(10);
 		ASSERT_EQ(Test.GetCapacity(), 10);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::List<ContainerTest> Range = NxEn::List<ContainerTest>();
+		NxFr::List<ContainerTest> Range = NxFr::List<ContainerTest>();
 		Range.Append(4);
 		Range.Append(4);
 		Range.Append(4);
@@ -280,7 +280,7 @@ namespace NxTs
 		AccesRef.Integer = 10;
 		ASSERT_EQ(Test[5].Integer, 10);
 
-		NxEn::List<ContainerTest> Copy = Test;
+		NxFr::List<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
@@ -325,7 +325,7 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
-		Test.Sort<NxEn::Sorting::QuickSort>();
+		Test.Sort<NxFr::Sorting::QuickSort>();
 		auto ItFirst = Test.Begin();
 		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
@@ -345,12 +345,12 @@ namespace NxTs
 
 	TEST(Containers, Dequeue)
 	{
-		NxEn::Dequeue<ContainerTest> Test = NxEn::Dequeue<ContainerTest>();
+		NxFr::Dequeue<ContainerTest> Test = NxFr::Dequeue<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Dequeue<ContainerTest> Range = NxEn::Dequeue<ContainerTest>();
+		NxFr::Dequeue<ContainerTest> Range = NxFr::Dequeue<ContainerTest>();
 		Range.AppendBack(4);
 		Range.AppendBack(4);
 		Range.AppendBack(4);
@@ -406,7 +406,7 @@ namespace NxTs
 		AccesRef.Integer = 10;
 		ASSERT_EQ(Test[5].Integer, 10);
 
-		NxEn::Dequeue<ContainerTest> Copy = Test;
+		NxFr::Dequeue<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy[0].Integer, Test[0].Integer);
@@ -447,7 +447,7 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
-		Test.Sort<NxEn::Sorting::HeapSort>();
+		Test.Sort<NxFr::Sorting::HeapSort>();
 		auto ItFirst = Test.Begin();
 		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
@@ -467,12 +467,12 @@ namespace NxTs
 
 	TEST(Containers, Stack)
 	{
-		NxEn::Stack<ContainerTest> Test = NxEn::Stack<ContainerTest>();
+		NxFr::Stack<ContainerTest> Test = NxFr::Stack<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Stack<ContainerTest> Range = NxEn::Stack<ContainerTest>();
+		NxFr::Stack<ContainerTest> Range = NxFr::Stack<ContainerTest>();
 		Range.Append(4);
 		Range.Append(4);
 		Range.Append(4);
@@ -497,7 +497,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 4);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::Stack<ContainerTest> Copy = Test;
+		NxFr::Stack<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy.Get().Integer, Test.Get().Integer);
@@ -535,12 +535,12 @@ namespace NxTs
 
 	TEST(Containers, Queue)
 	{
-		NxEn::Queue<ContainerTest> Test = NxEn::Queue<ContainerTest>();
+		NxFr::Queue<ContainerTest> Test = NxFr::Queue<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Queue<ContainerTest> Range = NxEn::Queue<ContainerTest>();
+		NxFr::Queue<ContainerTest> Range = NxFr::Queue<ContainerTest>();
 		Range.Append(4);
 		Range.Append(4);
 		Range.Append(4);
@@ -563,7 +563,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 6);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::Queue<ContainerTest> Copy = Test;
+		NxFr::Queue<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy.Get().Integer, Test.Get().Integer);
@@ -601,12 +601,12 @@ namespace NxTs
 
 	TEST(Containers, LinkedList)
 	{
-		NxEn::LinkedList<ContainerTest> Test = NxEn::LinkedList<ContainerTest>();
+		NxFr::LinkedList<ContainerTest> Test = NxFr::LinkedList<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::LinkedList<ContainerTest> Range = NxEn::LinkedList<ContainerTest>();
+		NxFr::LinkedList<ContainerTest> Range = NxFr::LinkedList<ContainerTest>();
 		Range.AppendBack(4);
 		Range.AppendBack(4);
 		Range.AppendBack(4);
@@ -673,7 +673,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 22);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::LinkedList<ContainerTest> Copy = Test;
+		NxFr::LinkedList<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy.First().Integer, Test.First().Integer);
@@ -738,13 +738,13 @@ namespace NxTs
 
 	TEST(Containers, Set)
 	{
-		NxEn::Set<ContainerTest> Test = NxEn::Set<ContainerTest>();
+		NxFr::Set<ContainerTest> Test = NxFr::Set<ContainerTest>();
 		ASSERT_EQ(Test.GetCapacity(), 11);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Set<ContainerTest> Range = NxEn::Set<ContainerTest>();
+		NxFr::Set<ContainerTest> Range = NxFr::Set<ContainerTest>();
 		Range.Append(6);
 		Range.Append(7);
 		Range.Append(8);
@@ -763,7 +763,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 6);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::Set<ContainerTest> Copy = Test;
+		NxFr::Set<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		Copy.Clear();
@@ -784,13 +784,13 @@ namespace NxTs
 
 	TEST(Containers, Dictionary)
 	{
-		NxEn::Dictionary<ContainerTest, ContainerTest> Test = NxEn::Dictionary<ContainerTest, ContainerTest>();
+		NxFr::Dictionary<ContainerTest, ContainerTest> Test = NxFr::Dictionary<ContainerTest, ContainerTest>();
 		ASSERT_EQ(Test.GetCapacity(), 11);
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Dictionary<ContainerTest, ContainerTest> Range = NxEn::Dictionary<ContainerTest, ContainerTest>();
+		NxFr::Dictionary<ContainerTest, ContainerTest> Range = NxFr::Dictionary<ContainerTest, ContainerTest>();
 		Range.Append(6, 60);
 		Range.Append(7, 70);
 		Range.Append(8, 80);
@@ -828,7 +828,7 @@ namespace NxTs
 		AccesCopy.Integer = 2000;
 		ASSERT_NE(Test[2].Integer, 2000);
 
-		NxEn::Dictionary<ContainerTest, ContainerTest> Copy = Test;
+		NxFr::Dictionary<ContainerTest, ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		Copy.Clear();
@@ -856,18 +856,18 @@ namespace NxTs
 		ASSERT_EQ(Test.FindKey(ToFind1)->Key.Integer, ToFind1.Integer);
 		ASSERT_EQ(Test.FindValue(ToFind2)->Value.Integer, ToFind2.Integer);
 
-		NxEn::ContainersUtils::Fill<ContainerTest, ContainerTest>(Range, 4);
+		NxFr::ContainersUtils::Fill<ContainerTest, ContainerTest>(Range, 4);
 	}
 
 	TEST(Containers, Tree)
 	{
-		NxEn::Tree<ContainerTest> Test = NxEn::Tree<ContainerTest>();
+		NxFr::Tree<ContainerTest> Test = NxFr::Tree<ContainerTest>();
 		ContainerTest& Root = Test.Append(nullptr, 0);
 		ASSERT_EQ(Test.GetCount(), 1);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Tree<ContainerTest> Range = NxEn::Tree<ContainerTest>();
+		NxFr::Tree<ContainerTest> Range = NxFr::Tree<ContainerTest>();
 		ContainerTest& RangeRoot = Range.Append(nullptr, 0);
 		Range.Append(&RangeRoot, 4);
 		Range.Append(&RangeRoot, 4);
@@ -915,7 +915,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 13);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::Tree<ContainerTest> Copy = Test;
+		NxFr::Tree<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		ASSERT_EQ(Copy.Begin()->Integer, Test.Begin()->Integer);
@@ -959,12 +959,12 @@ namespace NxTs
 
 	TEST(Containers, Graph)
 	{
-		NxEn::Graph<ContainerTest> Test = NxEn::Graph<ContainerTest>();
+		NxFr::Graph<ContainerTest> Test = NxFr::Graph<ContainerTest>();
 		ASSERT_EQ(Test.GetCount(), 0);
 		ASSERT_EQ(Test.IsEmpty(), true);
 
 		ContainerTest Container1 = ContainerTest(1);
-		NxEn::Graph<ContainerTest> Range = NxEn::Graph<ContainerTest>();
+		NxFr::Graph<ContainerTest> Range = NxFr::Graph<ContainerTest>();
 		Range.Append(4);
 		Range.Append(4);
 		Range.Append(4);
@@ -992,7 +992,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 7);
 		ASSERT_EQ(Test.IsEmpty(), false);
 
-		NxEn::Graph<ContainerTest> Copy = Test;
+		NxFr::Graph<ContainerTest> Copy = Test;
 		ASSERT_EQ(Copy == Test, false);
 		ASSERT_EQ(Copy.GetCount(), Test.GetCount());
 		Copy.Clear();
@@ -1001,17 +1001,17 @@ namespace NxTs
 		Test.Connect(&Index1, &Index2);
 		Test.Connect(&Index1, &Index3);
 		Test.Connect(&Index2, &Index3);
-		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::CT::To, 0).Integer, 2);
-		ASSERT_EQ(Test.GetConnection(&Index1, NxEn::Graph<ContainerTest>::CT::To, 1).Integer, 3);
-		ASSERT_EQ(Test.GetConnection(&Index2, NxEn::Graph<ContainerTest>::CT::To, 0).Integer, 3);
-		ASSERT_EQ(Test.IsConnected(&Index1, &Index2, NxEn::Graph<ContainerTest>::CT::To), true);
-		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::CT::From), true);
+		ASSERT_EQ(Test.GetConnection(&Index1, NxFr::Graph<ContainerTest>::CT::To, 0).Integer, 2);
+		ASSERT_EQ(Test.GetConnection(&Index1, NxFr::Graph<ContainerTest>::CT::To, 1).Integer, 3);
+		ASSERT_EQ(Test.GetConnection(&Index2, NxFr::Graph<ContainerTest>::CT::To, 0).Integer, 3);
+		ASSERT_EQ(Test.IsConnected(&Index1, &Index2, NxFr::Graph<ContainerTest>::CT::To), true);
+		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxFr::Graph<ContainerTest>::CT::From), true);
 
 		Test.Disconnect(&Index1, &Index3);
-		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxEn::Graph<ContainerTest>::CT::From), false);
+		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxFr::Graph<ContainerTest>::CT::From), false);
 
 		ASSERT_EQ(Test.GetIterator(&Index1)->Integer, Index1.Integer);
-		ASSERT_EQ(Test.GetIterator(&Index1).Connections(NxEn::Graph<ContainerTest>::CT::To, 0)->Integer, Index2.Integer);
+		ASSERT_EQ(Test.GetIterator(&Index1).Connections(NxFr::Graph<ContainerTest>::CT::To, 0)->Integer, Index2.Integer);
 		ASSERT_EQ(Test.Begin()->Integer, Test.Get().Integer);
 		ASSERT_EQ(Test.End(), nullptr);
 
@@ -1037,14 +1037,14 @@ namespace NxTs
 
 	TEST(Containers, Collection)
 	{
-		NxEn::List<ContainerTest> Data1 = NxEn::List<ContainerTest>(5);
+		NxFr::List<ContainerTest> Data1 = NxFr::List<ContainerTest>(5);
 		Data1.Append(1);
 		Data1.Append(2);
 		Data1.Append(3);
 		Data1.Append(4);
 		Data1.Append(5);
 
-		NxEn::Queue<ContainerTest> Data2 = NxEn::Queue<ContainerTest>();
+		NxFr::Queue<ContainerTest> Data2 = NxFr::Queue<ContainerTest>();
 		Data2.Append(1);
 		Data2.Append(2);
 		Data2.Append(3);
@@ -1052,7 +1052,7 @@ namespace NxTs
 		Data2.Append(5);
 
 		uint64 Index = 0;
-		NxEn::Collection<ContainerTest> Test = Data2;
+		NxFr::Collection<ContainerTest> Test = Data2;
 		for (auto& It = Test.Current(); It != Test.End(); ++It)
 		{
 			ASSERT_EQ(It->Integer, ++Index);
@@ -1064,24 +1064,24 @@ namespace NxTs
 
 	TEST(Containers, ContainersUtils)
 	{
-		NxEn::Set<ContainerTest> Base = NxEn::Set<ContainerTest>();
+		NxFr::Set<ContainerTest> Base = NxFr::Set<ContainerTest>();
 		Base.Append(1);
 		Base.Append(3);
 		Base.Append(5);
 		Base.Append(7);
 		Base.Append(9);
 
-		NxEn::Set<ContainerTest> Other = NxEn::Set<ContainerTest>();
+		NxFr::Set<ContainerTest> Other = NxFr::Set<ContainerTest>();
 		Other.Append(2);
 		Other.Append(4);
 		Other.Append(6);
 		Other.Append(8);
 		Other.Append(10);
 
-		NxEn::ContainersUtils::SetUnion(Base, Other);
+		NxFr::ContainersUtils::SetUnion(Base, Other);
 		ASSERT_EQ(Base.GetCount(), 10);
 
-		NxEn::ContainersUtils::SetDifference(Base, Other);
+		NxFr::ContainersUtils::SetDifference(Base, Other);
 		ASSERT_EQ(Base.GetCount(), 5);
 
 		auto It = Other.Begin();
@@ -1089,13 +1089,13 @@ namespace NxTs
 		Base.Append(*It++);
 		Base.Append(*It++);
 
-		NxEn::ContainersUtils::SetIntersection(Base, Other);
+		NxFr::ContainersUtils::SetIntersection(Base, Other);
 		ASSERT_EQ(Base.GetCount(), 3);
 	}
 
 	TEST(Containers, Pool)
 	{
-		NxEn::Pool<ContainerTest, NxEn::Pooling::PreAllocated<ContainerTest>> TestPreAllocated = NxEn::Pool<ContainerTest, NxEn::Pooling::PreAllocated<ContainerTest>>(10);
+		NxFr::Pool<ContainerTest, NxFr::Pooling::PreAllocated<ContainerTest>> TestPreAllocated = NxFr::Pool<ContainerTest, NxFr::Pooling::PreAllocated<ContainerTest>>(10);
 		ASSERT_EQ(TestPreAllocated.GetCapacity(), 10);
 		ASSERT_EQ(TestPreAllocated.GetCount(), 0);
 		ASSERT_EQ(TestPreAllocated.GetUnused(), 10);
@@ -1136,7 +1136,7 @@ namespace NxTs
 		ASSERT_EQ(TestPreAllocated.GetCount(), 0);
 		ASSERT_EQ(TestPreAllocated.GetUnused(), 10);
 
-		NxEn::Pool<ContainerTest> TestOnDemand = NxEn::Pool<ContainerTest>();
+		NxFr::Pool<ContainerTest> TestOnDemand = NxFr::Pool<ContainerTest>();
 		ASSERT_EQ(TestOnDemand.GetCapacity(), 0);
 		ASSERT_EQ(TestOnDemand.GetCount(), 0);
 		ASSERT_EQ(TestOnDemand.GetUnused(), 0);
@@ -1180,7 +1180,7 @@ namespace NxTs
 
 	TEST(Containers, Tuple)
 	{
-		NxEn::Tuple<ContainerTest, ContainerTest> Test = NxEn::Tuple(ContainerTest(5), ContainerTest(10));
+		NxFr::Tuple<ContainerTest, ContainerTest> Test = NxFr::Tuple(ContainerTest(5), ContainerTest(10));
 
 		ContainerTest& Test1 = Test.GetFirst();
 		ContainerTest& Test2 = Test.GetSecond();
@@ -1200,7 +1200,7 @@ namespace NxTs
 
 	TEST(Containers, NativeType)
 	{
-		NxEn::List<uint64> TestUint;
+		NxFr::List<uint64> TestUint;
 		TestUint.Append(18);
 		TestUint.Append(24);
 		TestUint.Append(36);
@@ -1211,7 +1211,7 @@ namespace NxTs
 		ASSERT_EQ(TestUint.GetCount(), 7);
 
 		ContainerTest Container;
-		NxEn::List<ContainerTest*> TestPointer;
+		NxFr::List<ContainerTest*> TestPointer;
 		TestPointer.Append(&Container);
 		TestPointer.Append(&Container);
 		TestPointer.Append(&Container);
@@ -1224,7 +1224,7 @@ namespace NxTs
 		ContainerTest TestPointer23(3);
 		ContainerTest TestPointer24(4);
 
-		NxEn::Dictionary<ContainerTest*, ContainerTest> TestPointer2;
+		NxFr::Dictionary<ContainerTest*, ContainerTest> TestPointer2;
 		TestPointer2.Append(&TestPointer21, TestPointer21);
 		TestPointer2.Append(&TestPointer22, TestPointer22);
 		TestPointer2.Append(&TestPointer23, TestPointer23);
@@ -1237,7 +1237,7 @@ namespace NxTs
 		ContainerTest* TestPointer33 = &TestPointer30;
 		ContainerTest* TestPointer34 = &TestPointer30;
 
-		NxEn::Dictionary<ContainerTest*, ContainerTest> TestPointer3;
+		NxFr::Dictionary<ContainerTest*, ContainerTest> TestPointer3;
 		TestPointer3.Append(TestPointer31, TestPointer30);
 		TestPointer3.Append(TestPointer32, TestPointer30);
 		TestPointer3.Append(TestPointer33, TestPointer30);
@@ -1248,15 +1248,15 @@ namespace NxTs
 	TEST(Containers, Strings)
 	{
 		const char* Text = "Hello World";
-		NxEn::String Data = Text;
+		NxFr::String Data = Text;
 
-		NxEn::Array<NxEn::String> Array = NxEn::Array<NxEn::String>(10);
+		NxFr::Array<NxFr::String> Array = NxFr::Array<NxFr::String>(10);
 		Array.Assign(0, Data);
 		Array.Assign(0, Text);
 		Array[0] = Data;
 		Array[0] = Text;
 
-		NxEn::List<NxEn::String> List = NxEn::List<NxEn::String>();
+		NxFr::List<NxFr::String> List = NxFr::List<NxFr::String>();
 		List.Append(Data);
 		List.Append(Text);
 		List.Insert(1, Data);
@@ -1266,7 +1266,7 @@ namespace NxTs
 		List.Remove(1);
 		List.Remove(1);
 
-		NxEn::Dequeue<NxEn::String> Dequeue = NxEn::Dequeue<NxEn::String>();
+		NxFr::Dequeue<NxFr::String> Dequeue = NxFr::Dequeue<NxFr::String>();
 		Dequeue.AppendFront(Data);
 		Dequeue.AppendBack(Text);
 		List[1] = Data;
@@ -1274,108 +1274,108 @@ namespace NxTs
 		Dequeue.RemoveFront();
 		Dequeue.RemoveBack();
 
-		NxEn::LinkedList<NxEn::String> LinkedList = NxEn::LinkedList<NxEn::String>();
+		NxFr::LinkedList<NxFr::String> LinkedList = NxFr::LinkedList<NxFr::String>();
 		LinkedList.AppendFront(Data);
 		LinkedList.AppendBack(Text);
 		LinkedList.RemoveFront();
 		LinkedList.RemoveBack();
 
-		NxEn::Stack<NxEn::String> Stack = NxEn::Stack<NxEn::String>();
+		NxFr::Stack<NxFr::String> Stack = NxFr::Stack<NxFr::String>();
 		Stack.Append(Data);
 		Stack.Append(Text);
 		Stack.Remove();
 		Stack.Remove();
 
-		NxEn::Queue<NxEn::String> Queue = NxEn::Queue<NxEn::String>();
+		NxFr::Queue<NxFr::String> Queue = NxFr::Queue<NxFr::String>();
 		Queue.Append(Data);
 		Queue.Append(Text);
 		Queue.Remove();
 		Queue.Remove();
 
-		NxEn::Set<NxEn::String> Set = NxEn::Set<NxEn::String>();
+		NxFr::Set<NxFr::String> Set = NxFr::Set<NxFr::String>();
 		Set.Append(Data);
 		Set.Append(Text);
 		Set.Remove(Data);
 
-		NxEn::Dictionary<NxEn::String, NxEn::String> Dictionary = NxEn::Dictionary<NxEn::String, NxEn::String>();
+		NxFr::Dictionary<NxFr::String, NxFr::String> Dictionary = NxFr::Dictionary<NxFr::String, NxFr::String>();
 		Dictionary.Append("Key 1", Data);
 		Dictionary.Append("Key 2", Text);
 		Dictionary.AppendConstruct("Key 3", "Hello World");
 		Dictionary.Remove("Key 1");
 
-		NxEn::Tree<NxEn::String> Tree = NxEn::Tree<NxEn::String>();
-		NxEn::String& Root = Tree.Append(nullptr, Data);
+		NxFr::Tree<NxFr::String> Tree = NxFr::Tree<NxFr::String>();
+		NxFr::String& Root = Tree.Append(nullptr, Data);
 		Tree.Append(&Root, Text);
 		Tree.Remove(&Root);
 
-		NxEn::Graph<NxEn::String> Graph = NxEn::Graph<NxEn::String>();
-		NxEn::String& A = Graph.Append(Data);
-		NxEn::String& B = Graph.Append(Text);
+		NxFr::Graph<NxFr::String> Graph = NxFr::Graph<NxFr::String>();
+		NxFr::String& A = Graph.Append(Data);
+		NxFr::String& B = Graph.Append(Text);
 		Graph.Connect(&A, &B);
 		Graph.Disconnect(&A, &B);
 		Graph.Remove(&A);
 		Graph.Remove(&B);
 
-		//NxEn::Pool<NxEn::String> Pool = NxEn::Pool<NxEn::String>();
-		//NxEn::String& C = Pool.Acquire();
+		//NxFr::Pool<NxFr::String> Pool = NxFr::Pool<NxFr::String>();
+		//NxFr::String& C = Pool.Acquire();
 		//Pool.Recycle(C);
 
-		NxEn::Tuple<NxEn::String, NxEn::String> Tuple = NxEn::Tuple<NxEn::String, NxEn::String>(Data, Text);
+		NxFr::Tuple<NxFr::String, NxFr::String> Tuple = NxFr::Tuple<NxFr::String, NxFr::String>(Data, Text);
 		Tuple.SetFirst(Tuple.GetSecond());
 	}
 
 	TEST(Containers, Range)
 	{
-		NxEn::Array<ContainerTest> Container1(10);
+		NxFr::Array<ContainerTest> Container1(10);
 		Container1.Assign(0, 18);
 		Container1.Assign(1, 24);
 		Container1.Assign(2, 36);
 		Container1.Assign(3, 45);
 		Container1.Assign(4, 58);
 
-		NxEn::List<ContainerTest> Container2;
+		NxFr::List<ContainerTest> Container2;
 		Container2.Append(36);
 		Container2.Append(58);
 		Container2.Append(45);
 		Container2.Append(24);
 		Container2.Append(18);
 
-		NxEn::Dequeue<ContainerTest> Container3;
+		NxFr::Dequeue<ContainerTest> Container3;
 		Container3.AppendBack(36);
 		Container3.AppendBack(24);
 		Container3.AppendBack(18);
 		Container3.AppendBack(58);
 		Container3.AppendBack(45);
 
-		NxEn::LinkedList<ContainerTest> Container4;
+		NxFr::LinkedList<ContainerTest> Container4;
 		ContainerTest& Ref4 = Container4.AppendBack(36);
 		Container4.AppendBack(24);
 		Container4.AppendBack(18);
 		Container4.AppendBack(58);
 		Container4.AppendBack(45);
 
-		NxEn::Stack<ContainerTest> Container5;
+		NxFr::Stack<ContainerTest> Container5;
 		Container5.Append(36);
 		Container5.Append(24);
 		Container5.Append(18);
 		Container5.Append(58);
 		Container5.Append(45);
 
-		NxEn::Queue<ContainerTest> Container6;
+		NxFr::Queue<ContainerTest> Container6;
 		Container6.Append(36);
 		Container6.Append(24);
 		Container6.Append(18);
 		Container6.Append(58);
 		Container6.Append(45);
 
-		NxEn::Tree<ContainerTest> Container7;
+		NxFr::Tree<ContainerTest> Container7;
 		ContainerTest& Root = Container7.Append(nullptr, 36);
 		Container7.Append(&Root, 24);
 		Container7.Append(&Root, 18);
 		Container7.Append(&Root, 58);
 		Container7.Append(&Root, 45);
 
-		NxEn::Graph<ContainerTest> Container8;
+		NxFr::Graph<ContainerTest> Container8;
 		Container8.Append(36);
 		Container8.Append(24);
 		Container8.Append(18);
@@ -1391,32 +1391,32 @@ namespace NxTs
 		Container7.AppendRange(&Root, Container2);
 		Container8.AppendRange(Container6);
 
-		NxEn::Set<ContainerTest> Container9;
+		NxFr::Set<ContainerTest> Container9;
 		Container9.AppendRange(Container2);
 		Container2.AppendRange(Container9);
 
-		NxEn::List<NxEn::KeyValuePair<const ContainerTest, ContainerTest>> Pair;
+		NxFr::List<NxFr::KeyValuePair<const ContainerTest, ContainerTest>> Pair;
 		Pair.Append({ ContainerTest(1), ContainerTest(10) });
 		Pair.Append({ ContainerTest(2), ContainerTest(20) });
 
-		NxEn::Dictionary<ContainerTest, ContainerTest> Container10;
+		NxFr::Dictionary<ContainerTest, ContainerTest> Container10;
 		Container10.AppendRange(Pair);
 		Pair.AppendRange(Container10);
 	}
 
 	TEST(Containers, Container)
 	{
-		NxEn::List<ContainerTest> Test;
+		NxFr::List<ContainerTest> Test;
 		Test.Append(1);
 		Test.Append(2);
 		Test.Append(3);
 		Test.Append(4);
 		Test.Append(5);
 
-		NxEn::Array<NxEn::List<ContainerTest>> Array = NxEn::Array<NxEn::List<ContainerTest>>(5);
+		NxFr::Array<NxFr::List<ContainerTest>> Array = NxFr::Array<NxFr::List<ContainerTest>>(5);
 		Array.Assign(0, Test);
 
-		NxEn::List<NxEn::List<ContainerTest>> List;
+		NxFr::List<NxFr::List<ContainerTest>> List;
 		List.Append(Test);
 		Test.Append(1);
 		Test.Append(2);
@@ -1425,10 +1425,10 @@ namespace NxTs
 		Test.Append(5);
 		List.Assign(0, Test);
 
-		NxEn::LinkedList<NxEn::List<ContainerTest>> LinkedList;
+		NxFr::LinkedList<NxFr::List<ContainerTest>> LinkedList;
 		LinkedList.AppendBack(Test);
 
-		NxEn::Dictionary<ContainerTest, NxEn::List<ContainerTest>> Dictionary;
+		NxFr::Dictionary<ContainerTest, NxFr::List<ContainerTest>> Dictionary;
 		Dictionary.Append(ContainerTest(10), Test);
 		Test.Append(1);
 		Test.Append(2);

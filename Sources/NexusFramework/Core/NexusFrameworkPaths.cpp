@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "NexusFrameworkPaths.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Paths
 	{

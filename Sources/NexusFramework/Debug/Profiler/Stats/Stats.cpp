@@ -4,7 +4,7 @@
 #include "External/StandardLibrary.h"
 #include "Core/NexusFrameworkGlobals.h"
 
-namespace NxEn
+namespace NxFr
 {
 	static const String Separator = ";";
 
@@ -43,12 +43,12 @@ namespace NxEn
 	{
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: new (&Value.Label) String(32); break;
-		case NxEn::Stats::StatType::Check: Value.State = false; break;
-		case NxEn::Stats::StatType::Integer: Value.Integer = 0; break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = 0; break;
-		case NxEn::Stats::StatType::Decimal: Value.Decimal = 0.0f; break;
-		case NxEn::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = 0.0; break;
+		case NxFr::Stats::StatType::Label: new (&Value.Label) String(32); break;
+		case NxFr::Stats::StatType::Check: Value.State = false; break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = 0; break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = 0; break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = 0.0f; break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = 0.0; break;
 		}
 
 		Reset();
@@ -67,12 +67,12 @@ namespace NxEn
 
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: Value.Label = Other.Value.Label; break;
-		case NxEn::Stats::StatType::Check: Value.State = Other.Value.State; break;
-		case NxEn::Stats::StatType::Integer: Value.Integer = Other.Value.Integer; break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Other.Value.UnsignedInteger; break;
-		case NxEn::Stats::StatType::Decimal: Value.Decimal = Other.Value.Decimal; break;
-		case NxEn::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Other.Value.DecimalPrecise; break;
+		case NxFr::Stats::StatType::Label: Value.Label = Other.Value.Label; break;
+		case NxFr::Stats::StatType::Check: Value.State = Other.Value.State; break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = Other.Value.Integer; break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Other.Value.UnsignedInteger; break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = Other.Value.Decimal; break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Other.Value.DecimalPrecise; break;
 		}
 	}
 
@@ -89,12 +89,12 @@ namespace NxEn
 
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: Value.Label = Move(Other.Value.Label); break;
-		case NxEn::Stats::StatType::Check: Value.State = Move(Other.Value.State); break;
-		case NxEn::Stats::StatType::Integer: Value.Integer = Move(Other.Value.Integer); break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Move(Other.Value.UnsignedInteger); break;
-		case NxEn::Stats::StatType::Decimal: Value.Decimal = Move(Other.Value.Decimal); break;
-		case NxEn::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Move(Other.Value.DecimalPrecise); break;
+		case NxFr::Stats::StatType::Label: Value.Label = Move(Other.Value.Label); break;
+		case NxFr::Stats::StatType::Check: Value.State = Move(Other.Value.State); break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = Move(Other.Value.Integer); break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Move(Other.Value.UnsignedInteger); break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = Move(Other.Value.Decimal); break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Move(Other.Value.DecimalPrecise); break;
 		}
 	}
 
@@ -114,12 +114,12 @@ namespace NxEn
 
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: Value.Label = Other.Value.Label; break;
-		case NxEn::Stats::StatType::Check: Value.State = Other.Value.State; break;
-		case NxEn::Stats::StatType::Integer: Value.Integer = Other.Value.Integer; break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Other.Value.UnsignedInteger; break;
-		case NxEn::Stats::StatType::Decimal: Value.Decimal = Other.Value.Decimal; break;
-		case NxEn::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Other.Value.DecimalPrecise; break;
+		case NxFr::Stats::StatType::Label: Value.Label = Other.Value.Label; break;
+		case NxFr::Stats::StatType::Check: Value.State = Other.Value.State; break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = Other.Value.Integer; break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Other.Value.UnsignedInteger; break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = Other.Value.Decimal; break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Other.Value.DecimalPrecise; break;
 		}
 
 		return *this;
@@ -133,12 +133,12 @@ namespace NxEn
 
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: Value.Label = Move(Other.Value.Label); break;
-		case NxEn::Stats::StatType::Check: Value.State = Move(Other.Value.State); break;
-		case NxEn::Stats::StatType::Integer: Value.Integer = Move(Other.Value.Integer); break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Move(Other.Value.UnsignedInteger); break;
-		case NxEn::Stats::StatType::Decimal: Value.Decimal = Move(Other.Value.Decimal); break;
-		case NxEn::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Move(Other.Value.DecimalPrecise); break;
+		case NxFr::Stats::StatType::Label: Value.Label = Move(Other.Value.Label); break;
+		case NxFr::Stats::StatType::Check: Value.State = Move(Other.Value.State); break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = Move(Other.Value.Integer); break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Move(Other.Value.UnsignedInteger); break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = Move(Other.Value.Decimal); break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Move(Other.Value.DecimalPrecise); break;
 		}
 
 		return *this;
@@ -150,12 +150,12 @@ namespace NxEn
 
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: Value.Label.Clear(); break;
-		case NxEn::Stats::StatType::Check: Value.State = false; break;
-		case NxEn::Stats::StatType::Integer: Value.Integer = Mode == StatMode::Min ? Integer::MaxI64() : Mode == StatMode::Max ? Integer::MinI64() : 0; break;
-		case NxEn::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Mode == StatMode::Min ? Integer::MaxUI64() : Mode == StatMode::Max ? Integer::MinUI64() : 0u; break;
-		case NxEn::Stats::StatType::Decimal: Value.Decimal = Mode == StatMode::Min ? Decimal::MaxF() : Mode == StatMode::Max ? Decimal::MinF() : 0.0f; break;
-		case NxEn::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Mode == StatMode::Min ? Decimal::MaxD() : Mode == StatMode::Max ? Decimal::MinD() : 0.0; break;
+		case NxFr::Stats::StatType::Label: Value.Label.Clear(); break;
+		case NxFr::Stats::StatType::Check: Value.State = false; break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = Mode == StatMode::Min ? Integer::MaxI64() : Mode == StatMode::Max ? Integer::MinI64() : 0; break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Mode == StatMode::Min ? Integer::MaxUI64() : Mode == StatMode::Max ? Integer::MinUI64() : 0u; break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = Mode == StatMode::Min ? Decimal::MaxF() : Mode == StatMode::Max ? Decimal::MinF() : 0.0f; break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Mode == StatMode::Min ? Decimal::MaxD() : Mode == StatMode::Max ? Decimal::MinD() : 0.0; break;
 		}
 	}
 
@@ -200,12 +200,12 @@ namespace NxEn
 	{
 		switch (Type)
 		{
-		case NxEn::Stats::StatType::Label: return GetValue<const String&>();
-		case NxEn::Stats::StatType::Check: StringUtility::Format(PreAllocated, StringView("%s"), GetValue<bool>() ? "X" : ""); return PreAllocated;
-		case NxEn::Stats::StatType::Integer: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<int64>()); return PreAllocated;
-		case NxEn::Stats::StatType::UnsignedInteger: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<uint64>()); return PreAllocated;
-		case NxEn::Stats::StatType::Decimal: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<float>()); return PreAllocated;
-		case NxEn::Stats::StatType::DecimalPrecision: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<double>()); return PreAllocated;
+		case NxFr::Stats::StatType::Label: return GetValue<const String&>();
+		case NxFr::Stats::StatType::Check: StringUtility::Format(PreAllocated, StringView("%s"), GetValue<bool>() ? "X" : ""); return PreAllocated;
+		case NxFr::Stats::StatType::Integer: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<int64>()); return PreAllocated;
+		case NxFr::Stats::StatType::UnsignedInteger: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<uint64>()); return PreAllocated;
+		case NxFr::Stats::StatType::Decimal: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<float>()); return PreAllocated;
+		case NxFr::Stats::StatType::DecimalPrecision: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<double>()); return PreAllocated;
 		}
 
 		return PreAllocated;

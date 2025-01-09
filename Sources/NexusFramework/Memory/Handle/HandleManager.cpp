@@ -3,7 +3,7 @@
 
 #include "Core/NexusFrameworkGlobals.h"
 
-namespace NxEn
+namespace NxFr
 {
 	HandleManager* HandleManager::GetInstance()
 	{

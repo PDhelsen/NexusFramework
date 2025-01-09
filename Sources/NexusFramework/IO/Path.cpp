@@ -3,7 +3,7 @@
 
 #include "Platform/Platform.h"
 
-namespace NxEn
+namespace NxFr
 {
 	Path Path::GetWorkingDirectory()
 	{

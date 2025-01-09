@@ -1,7 +1,7 @@
 #include "Core/NexusFrameworkPch.h"
 #include "Hash.h"
 
-namespace NxEn
+namespace NxFr
 {
 	namespace Hashing
 	{

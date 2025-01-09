@@ -3,7 +3,7 @@
 #include "Core/NexusFrameworkCore.h"
 #include "Types/Numbers/Integer.h"
 
-namespace NxEn
+namespace NxFr
 {
 	class Allocator;
 	namespace Memory
