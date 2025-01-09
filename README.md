@@ -1,7 +1,4 @@
-# Nexus Engine
+# Nexus Framework
 
-Nexus Engine is a small game engine made on my spare time to learn and improve my knowledge of the engine side of things.
-It is composed of multiple parts :
-- Engine : Actual game engine 
-- Editor : Editor application use to work with the engine
-- App : Empty shell in which the engine, the editor and the game are injected to run.
+Nexus Framework is a small C++ Framework made on my spare time to learn and improve my knowledge of low-level concept.
+It will serve as the base for the others Nexus Project

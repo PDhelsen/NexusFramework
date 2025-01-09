@@ -1,8 +1,8 @@
 #include "NexusSandbox.h"
 #include "Memory/MemoryOperator.h"
 
-#include "Core/NexusEngine.h"
-#include "Core/NexusEngineEntryPoint.h"
+#include "Core/NexusFramework.h"
+#include "Core/NexusFrameworkEntryPoint.h"
 
 namespace NxSb
 {

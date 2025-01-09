@@ -1,0 +1,118 @@
+#include "Core/NexusFrameworkPch.h"
+#include "PlatformNone.h"
+
+namespace NxEn
+{
+    void PlatformNone::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
+    {
+    }
+
+	void PlatformNone::Sleep(uint64 Milliseconds) const
+	{
+	}
+
+	double PlatformNone::GetProcessorTimer(double Unit) const
+    {
+		return 0.0;
+    }
+
+	void PlatformNone::WaitForUserToCloseTerminal() const
+    {
+    }
+
+    void PlatformNone::WriteToTerminal(StringView Message) const
+    {
+    }
+
+    void PlatformNone::WriteToDebugger(StringView Message) const
+    {
+    }
+
+	Platform::PathType PlatformNone::GetPathType(StringView Path) const
+	{
+		return PathType::None;
+	}
+
+	String PlatformNone::GetWorkingDirectory() const
+	{
+		return StringUtility::Empty;
+	}
+
+	void PlatformNone::DirectoryCreate(StringView Path) const
+	{
+	}
+
+	void PlatformNone::DirectoryMove(StringView Path, StringView Target, bool Override) const
+	{
+	}
+
+	void PlatformNone::DirectoryCopy(StringView Path, StringView Target, bool Override) const
+	{
+	}
+
+	void PlatformNone::DirectoryDelete(StringView Path) const
+	{
+	}
+
+	List<String> PlatformNone::DirectoryContent(StringView Path) const
+    {
+        return List<String>();
+    }
+
+	void* PlatformNone::FileCreate(StringView Path, bool KeepOpen) const
+	{
+		return nullptr;
+	}
+
+	void PlatformNone::FileMove(StringView Path, StringView Target, bool Override) const
+	{
+	}
+
+	void PlatformNone::FileCopy(StringView Path, StringView Target, bool Override) const
+	{
+	}
+
+	void PlatformNone::FileDelete(StringView Path) const
+	{
+	}
+
+	void* PlatformNone::FileOpen(StringView Path, FileMode Mode) const
+	{
+		return nullptr;
+	}
+
+	void PlatformNone::FileClose(void* File) const
+	{
+	}
+
+	uint64 PlatformNone::FileSize(void* File) const
+	{
+		return 0;
+	}
+
+	void PlatformNone::FileWriteByte(void* File, BufferView<Byte> Data) const
+	{
+	}
+
+	Buffer<Byte> PlatformNone::FileReadByte(void* File) const
+	{
+		return Buffer<Byte>(1);
+	}
+
+	void PlatformNone::FileWriteText(void* File, StringView Text) const
+	{
+	}
+
+	String PlatformNone::FileReadText(void* File) const
+	{
+		return StringUtility::Empty;
+	}
+
+    PlatformNone::PlatformNone()
+    {
+    }
+
+    PlatformNone::~PlatformNone()
+    {
+    }
+}

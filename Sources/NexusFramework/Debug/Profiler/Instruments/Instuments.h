@@ -1,0 +1,79 @@
+#pragma once
+
+#include "External/Intrinsics.h"
+#include "Core/NexusFrameworkCore.h"
+#include "Types/Numbers/Integer.h"
+#include "Types/Strings/String.h"
+#include "Types/Strings/StringView.h"
+#include "IO/File.h"
+#include "Time/Stopwatch.h"
+
+namespace NxEn
+{
+	class Instruments
+	{
+	public:
+		enum class Tools
+		{
+			ChromeTracing
+		};
+
+		class Marker
+		{
+			friend class Instruments;
+
+		public:
+			NEXUS_FRAMEWORK_API Marker(StringView Text, Instruments* Target);
+			NEXUS_FRAMEWORK_API ~Marker();
+
+			const Stopwatch& GetWatch() const { return Watch; }
+			StringView GetText() const { return Text; }
+
+		private:
+			Stopwatch Watch;
+			StringView Text;
+			Instruments* Target;
+		};
+
+	public:
+		NEXUS_FRAMEWORK_API static Instruments* GetInstance();
+
+		NEXUS_FRAMEWORK_API static Instruments* Create(StringView Path, bool Start = false, Tools Tool = Tools::ChromeTracing);
+		NEXUS_FRAMEWORK_API static void Destroy(Instruments* Instance);
+
+		NEXUS_FRAMEWORK_API void Record(const Marker& Data);
+
+		NEXUS_FRAMEWORK_API void StartRecording();
+		NEXUS_FRAMEWORK_API void StopRecording();
+
+		bool IsRecording() const { return Recording; }
+
+	protected:
+		NEXUS_FRAMEWORK_API Instruments(StringView Path, bool Start = false);
+		NEXUS_FRAMEWORK_API virtual ~Instruments();
+
+		NEXUS_FRAMEWORK_API virtual void RecordMarker(const Marker& Data) = 0;
+
+		File Handle;
+		String Buffer;
+		bool Recording;
+	};
+}
+
+#if NEXUS_DEBUG || NEXUS_RELEASE
+	#define NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) ::NxEn::Instruments::Marker Marker##Line(Name, Instance);
+	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, Name) NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, NEXUS_LINE_NUMBER)
+	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance) NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, NEXUS_FUNCTION_SIGNATURE)
+
+	#define NEXUS_INSTUMENT_LINE(Name, Line) NEXUS_INSTUMENT_LINE_INSTANCE(::NxEn::Instruments::GetInstance(), Name, Line)
+	#define NEXUS_INSTUMENT_SCOPE(Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(::NxEn::Instruments::GetInstance(), Name)
+	#define NEXUS_INSTUMENT_FUNCTION() NEXUS_INSTUMENT_FUNCTION_INSTANCE(::NxEn::Instruments::GetInstance())
+#elif NEXUS_DISTRIB
+	#define NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, Instance)
+	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, Instance)
+	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance)
+
+	#define NEXUS_INSTUMENT_LINE(Name, Line)
+	#define NEXUS_INSTUMENT_SCOPE(Name)
+	#define NEXUS_INSTUMENT_FUNCTION()
+#endif

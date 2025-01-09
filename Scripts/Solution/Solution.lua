@@ -1,4 +1,4 @@
-workspace "NexusEngine"
+workspace "NexusFramework"
     location "../../"
     startproject "NexusSandbox"
     debugcommand "../../builds/artifacts/NexusSandbox.exe"
@@ -41,7 +41,7 @@ group "Libraries"
 project "GoogleTest"
 group ""
 
-project "NexusEngine"
+project "NexusFramework"
     location "../../Sources/%{prj.name}/"
 
     kind "SharedLib"
@@ -51,8 +51,8 @@ project "NexusEngine"
 	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
-    pchheader "Core/NexusEnginePch.h"
-	pchsource "../../Sources/%{prj.name}/Core/NexusEnginePch.cpp"
+    pchheader "Core/NexusFrameworkPch.h"
+	pchsource "../../Sources/%{prj.name}/Core/NexusFrameworkPch.cpp"
 
     files
     {
@@ -68,7 +68,7 @@ project "NexusEngine"
 
     defines
     {
-        "NEXUS_ENGINE_DLL_BUILD"
+        "NEXUS_FRAMEWORK_DLL_BUILD"
     }
 
     postbuildcommands
@@ -95,12 +95,12 @@ project "NexusSandbox"
     includedirs
     {
         "../../Sources/%{prj.name}/",
-        "../../Sources/NexusEngine/"
+        "../../Sources/NexusFramework/"
     }
 
     links
     {
-        "NexusEngine",
+        "NexusFramework",
     }
 
     postbuildcommands
@@ -130,14 +130,14 @@ project "NexusTest"
     includedirs
     {
         "../../Sources/%{prj.name}/",
-        "../../Sources/NexusEngine/",
+        "../../Sources/NexusFramework/",
 
         "../../Libraries/googletest-1.14.0/include/"
     }
 
     links
     {
-        "NexusEngine",
+        "NexusFramework",
         "GoogleTest"
     }
 
