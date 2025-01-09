@@ -11,7 +11,7 @@ namespace NxEn
 {
 	static void CreateFolders()
 	{
-		Directory(Paths::Cook).Create();
+		Directory(Paths::Cooked).Create();
 		Directory(Paths::Saved).Create();
 	}
 

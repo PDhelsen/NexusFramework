@@ -1,8 +1,8 @@
 workspace "NexusEngine"
     location "../../"
     startproject "NexusSandbox"
-    debugcommand "../../build/package/NexusSandbox.exe"
-	debugdir "../../build/package/"
+    debugcommand "../../builds/artifacts/NexusSandbox.exe"
+	debugdir "../../"
 
     configurations { "Debug", "Release", "Ditrib" }
     platforms { "Win64" }
@@ -48,8 +48,8 @@ project "NexusEngine"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../build/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../build/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     pchheader "Core/NexusEnginePch.h"
 	pchsource "../../Sources/%{prj.name}/Core/NexusEnginePch.cpp"
@@ -83,8 +83,8 @@ project "NexusSandbox"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../build/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../build/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     files
     {
@@ -115,8 +115,8 @@ project "NexusTest"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../build/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../build/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     pchheader "Core/NexusTestPch.h"
 	pchsource "../../Sources/%{prj.name}/Core/NexusTestPch.cpp"
@@ -154,8 +154,8 @@ project "GoogleTest"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../Libraries/googletest-1.14.0/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../Libraries/googletest-1.14.0/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
 
     disablewarnings { "26495", "26439" }
 
@@ -174,4 +174,9 @@ project "GoogleTest"
     {
         "../../Libraries/googletest-1.14.0/",
         "../../Libraries/googletest-1.14.0/include/"
+    }
+
+	postbuildcommands
+    {
+        "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
     }

@@ -3,7 +3,7 @@
 	<GoogleTestAdapterSettings>
 		<SolutionSettings>
 			<Settings>
-				<PathExtension>../../package</PathExtension>
+				<PathExtension>../../artifacts</PathExtension>
 			</Settings>
 		</SolutionSettings>
 		<ProjectSettings/>
