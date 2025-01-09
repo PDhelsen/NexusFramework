@@ -58,7 +58,7 @@ project "NexusEngine"
     {
         "../../Sources/%{prj.name}/**.h",
         "../../Sources/%{prj.name}/**.cpp",
-        "../../Config/NexusEngine.natvis",
+        "../../Sources/%{prj.name}/**.natvis",
     }
 
     includedirs
