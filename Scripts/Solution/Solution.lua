@@ -1,8 +1,31 @@
+Root = "../../"
+
+Builds = Root .. "builds/"
+Configs = Root .. "Configs/"
+Libraries = Root .. "Libraries/"
+Scripts = Root .. "Scripts/"
+Sources = Root .. "Sources/"
+
+Artifacts = Builds .. "artifacts/"
+Binaries = Builds .. "binaries/"
+Intermediates = Builds .. "intermediates/"
+
+GoogleTest = Libraries .. "googletest-1.14.0/"
+
+ProjectToken = "%{prj.name}"
+OutputToken = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
+
+SourceCodeToken = Sources .. ProjectToken .. "/"
+TargetToken = Binaries .. OutputToken .. "/"
+ObjectToken = Intermediates .. OutputToken .. "/"
+
+PostBuildCommandToken = Scripts .. "Build/PostBuild.bat " .. TargetToken
+
 workspace "NexusFramework"
-    location "../../"
+    location (Root)
     startproject "NexusSandbox"
-    debugcommand "../../builds/artifacts/NexusSandbox.exe"
-	debugdir "../../"
+    debugcommand (Artifacts .. "NexusSandbox.exe")
+	debugdir (Root)
 
     configurations { "Debug", "Release", "Ditrib" }
     platforms { "Win64" }
@@ -42,28 +65,28 @@ project "GoogleTest"
 group ""
 
 project "NexusFramework"
-    location "../../Sources/%{prj.name}/"
+    location (SourceCodeToken)
 
     kind "SharedLib"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir (TargetToken)
+	objdir (ObjectToken)
 
-    pchheader "Core/NexusFrameworkPch.h"
-	pchsource "../../Sources/%{prj.name}/Core/NexusFrameworkPch.cpp"
+    pchheader ("Core/NexusFrameworkPch.h")
+	pchsource (SourceCodeToken .. "Core/NexusFrameworkPch.cpp")
 
     files
     {
-        "../../Sources/%{prj.name}/**.h",
-        "../../Sources/%{prj.name}/**.cpp",
-        "../../Sources/%{prj.name}/**.natvis",
+        SourceCodeToken .. "**.h",
+        SourceCodeToken .. "**.cpp",
+        SourceCodeToken .. "**.natvis",
     }
 
     includedirs
     {
-        "../../Sources/%{prj.name}/"
+        SourceCodeToken
     }
 
     defines
@@ -73,29 +96,29 @@ project "NexusFramework"
 
     postbuildcommands
     {
-        "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
+        PostBuildCommandToken
     }
 
 project "NexusSandbox"
-    location "../../Sources/%{prj.name}/"
+    location (SourceCodeToken)
 
     kind "ConsoleApp"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir (TargetToken)
+	objdir (ObjectToken)
 
     files
     {
-        "../../Sources/%{prj.name}/**.h",
-        "../../Sources/%{prj.name}/**.cpp"
+        SourceCodeToken .. "**.h",
+        SourceCodeToken .. "**.cpp"
     }
 
     includedirs
     {
-        "../../Sources/%{prj.name}/",
-        "../../Sources/NexusFramework/"
+        SourceCodeToken,
+        Sources .. "NexusFramework/"
     }
 
     links
@@ -105,34 +128,34 @@ project "NexusSandbox"
 
     postbuildcommands
     {
-        "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
+        PostBuildCommandToken
     }
 
 project "NexusTest"
-    location "../../Sources/%{prj.name}/"
+    location (SourceCodeToken)
 
     kind "ConsoleApp"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir (TargetToken)
+	objdir (ObjectToken)
 
     pchheader "Core/NexusTestPch.h"
-	pchsource "../../Sources/%{prj.name}/Core/NexusTestPch.cpp"
+	pchsource (SourceCodeToken .. "Core/NexusTestPch.cpp")
 
     files
     {
-        "../../Sources/%{prj.name}/**.h",
-        "../../Sources/%{prj.name}/**.cpp",
+        SourceCodeToken .. "**.h",
+        SourceCodeToken .. "**.cpp"
     }
 
     includedirs
     {
-        "../../Sources/%{prj.name}/",
-        "../../Sources/NexusFramework/",
+        SourceCodeToken,
+        Sources .. "NexusFramework/",
 
-        "../../Libraries/googletest-1.14.0/include/"
+        GoogleTest .. "include/"
     }
 
     links
@@ -143,40 +166,40 @@ project "NexusTest"
 
     postbuildcommands
     {
-        "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
+        PostBuildCommandToken
     }
 
 
 project "GoogleTest"
-    location "../../Libraries/googletest-1.14.0/"
+    location (GoogleTest)
 
     kind "StaticLib"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir ("../../builds/binaries/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
-	objdir ("../../builds/intermediates/%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}/")
+	targetdir (TargetToken)
+	objdir (ObjectToken)
 
     disablewarnings { "26495", "26439" }
 
     files
     {
-        "../../Libraries/googletest-1.14.0/**.h",
-        "../../Libraries/googletest-1.14.0/**.cc"
+        GoogleTest .. "**.h",
+        GoogleTest .. "**.cc"
     }
 
     removefiles
     {
-        "../../Libraries/googletest-1.14.0/src/gtest-all.cc"
+        GoogleTest .. "src/gtest-all.cc"
     }
 
     includedirs
     {
-        "../../Libraries/googletest-1.14.0/",
-        "../../Libraries/googletest-1.14.0/include/"
+		GoogleTest,
+        GoogleTest .. "include/"
     }
 
 	postbuildcommands
     {
-        "../../Scripts/Build/PostBuild.bat %{cfg.buildtarget.directory}"
+        PostBuildCommandToken
     }
