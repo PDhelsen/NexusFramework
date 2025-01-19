@@ -1,42 +1,53 @@
-Root = "../../"
+Name = "%{prj.name}"
+Output = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
+
+Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
+
+Framework = "NexusFramework"
+Sandbox = "NexusSandbox"
+Tests = "NexusTest"
+GoogleTest = "googletest-1.14.0"
 
 Builds = Root .. "builds/"
 Configs = Root .. "Configs/"
 Libraries = Root .. "Libraries/"
+Saved = Root .. "saved/"
 Scripts = Root .. "Scripts/"
 Sources = Root .. "Sources/"
 
 Artifacts = Builds .. "artifacts/"
 Binaries = Builds .. "binaries/"
 Intermediates = Builds .. "intermediates/"
+Code = Sources .. Name .. "/"
+External = Libraries .. Name .. "/"
+Target = Binaries .. Output .. "/"
+Object = Intermediates .. Output .. "/"
 
-GoogleTest = Libraries .. "googletest-1.14.0/"
+PostBuild = Scripts .. "Build/PostBuild.bat " .. Target
 
-ProjectToken = "%{prj.name}"
-OutputToken = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
-
-SourceCodeToken = Sources .. ProjectToken .. "/"
-TargetToken = Binaries .. OutputToken .. "/"
-ObjectToken = Intermediates .. OutputToken .. "/"
-
-PostBuildCommandToken = Scripts .. "Build/PostBuild.bat " .. TargetToken
-
-workspace "NexusFramework"
+workspace (Framework)
     location (Root)
-    startproject "NexusSandbox"
+
+    platforms { "Win64" }
+    configurations { "Debug", "Release", "Ditrib" }
+
+	startproject "NexusSandbox"
     debugcommand (Artifacts .. "NexusSandbox.exe")
 	debugdir (Root)
 
-    configurations { "Debug", "Release", "Ditrib" }
-    platforms { "Win64" }
+	characterset "Unicode"
     flags { "MultiProcessorCompile" }
 
-    filter "action:vs*"
+	filter "action:vs*"
         toolset "msc"
+
+    filter "toolset:msc"
+        defines { "NEXUS_MSVC" }
 
     filter "platforms:Win64"
         defines { "NEXUS_WINDOWS" }
         architecture "x64"
+		system "windows"
 
     filter "configurations:Debug"
         defines { "NEXUS_DEBUG" }
@@ -53,40 +64,36 @@ workspace "NexusFramework"
         symbols "Off"
         optimize "On"
 
-    filter "toolset:msc"
-        defines { "NEXUS_MSVC" }
-
-group "Test"
-project "NexusSandbox"
-project "NexusTest"
-group ""
 group "Libraries"
-project "GoogleTest"
+project (GoogleTest)
+group "Tests"
+project (Sandbox)
+project (Tests)
 group ""
 
-project "NexusFramework"
-    location (SourceCodeToken)
+project (Framework)
+    location (Code)
 
     kind "SharedLib"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir (TargetToken)
-	objdir (ObjectToken)
+	targetdir (Target)
+	objdir (Object)
 
     pchheader ("Core/NexusFrameworkPch.h")
-	pchsource (SourceCodeToken .. "Core/NexusFrameworkPch.cpp")
+	pchsource (Code .. "Core/NexusFrameworkPch.cpp")
 
     files
     {
-        SourceCodeToken .. "**.h",
-        SourceCodeToken .. "**.cpp",
-        SourceCodeToken .. "**.natvis",
+        Code .. "**.h",
+        Code .. "**.cpp",
+        Code .. "**.natvis",
     }
 
     includedirs
     {
-        SourceCodeToken
+        Code
     }
 
     defines
@@ -96,110 +103,110 @@ project "NexusFramework"
 
     postbuildcommands
     {
-        PostBuildCommandToken
+        PostBuild
     }
 
-project "NexusSandbox"
-    location (SourceCodeToken)
+project (Sandbox)
+    location (Code)
 
     kind "ConsoleApp"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir (TargetToken)
-	objdir (ObjectToken)
+	targetdir (Target)
+	objdir (Object)
 
     files
     {
-        SourceCodeToken .. "**.h",
-        SourceCodeToken .. "**.cpp"
+        Code .. "**.h",
+        Code .. "**.cpp"
     }
 
     includedirs
     {
-        SourceCodeToken,
-        Sources .. "NexusFramework/"
+        Code,
+        Sources .. Framework .. "/"
     }
 
     links
     {
-        "NexusFramework",
+        Framework,
     }
 
     postbuildcommands
     {
-        PostBuildCommandToken
+        PostBuild
     }
 
-project "NexusTest"
-    location (SourceCodeToken)
+project (Tests)
+    location (Code)
 
     kind "ConsoleApp"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir (TargetToken)
-	objdir (ObjectToken)
+	targetdir (Target)
+	objdir (Object)
 
     pchheader "Core/NexusTestPch.h"
-	pchsource (SourceCodeToken .. "Core/NexusTestPch.cpp")
+	pchsource (Code .. "Core/NexusTestPch.cpp")
 
     files
     {
-        SourceCodeToken .. "**.h",
-        SourceCodeToken .. "**.cpp"
+        Code .. "**.h",
+        Code .. "**.cpp",
+        Configs .. "UnitTest.runsettings"
     }
 
     includedirs
     {
-        SourceCodeToken,
-        Sources .. "NexusFramework/",
-
-        GoogleTest .. "include/"
+        Code,
+        Sources .. Framework .. "/",
+        Libraries .. GoogleTest .. "/include/"
     }
 
     links
     {
-        "NexusFramework",
-        "GoogleTest"
+        Framework,
+        GoogleTest
     }
 
     postbuildcommands
     {
-        PostBuildCommandToken
+        PostBuild
     }
 
 
-project "GoogleTest"
-    location (GoogleTest)
+project (GoogleTest)
+    location (External)
 
     kind "StaticLib"
     language "C++"
 	cppdialect "C++20"
 
-	targetdir (TargetToken)
-	objdir (ObjectToken)
+	targetdir (Target)
+	objdir (Object)
 
     disablewarnings { "26495", "26439" }
 
     files
     {
-        GoogleTest .. "**.h",
-        GoogleTest .. "**.cc"
+        External .. "**.h",
+        External .. "**.cc"
     }
 
     removefiles
     {
-        GoogleTest .. "src/gtest-all.cc"
+        External .. "src/gtest-all.cc"
     }
 
     includedirs
     {
-		GoogleTest,
-        GoogleTest .. "include/"
+		External,
+        External .. "include/"
     }
 
 	postbuildcommands
     {
-        PostBuildCommandToken
+        PostBuild
     }
