@@ -1,4 +1,5 @@
 @echo off
+
 set Root=%~dp0..\
 
 call :DeleteFolder %Root%builds
