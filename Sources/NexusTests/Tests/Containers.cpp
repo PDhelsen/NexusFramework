@@ -1,4 +1,4 @@
-#include "Core/NexusTestPch.h"
+#include "Core/NexusTests.h"
 
 namespace NxTs
 {
@@ -244,7 +244,7 @@ namespace NxTs
 		Test.AssignRange(0, Range);
 		ASSERT_EQ(Test.GetCapacity(), 10);
 		ASSERT_EQ(Test.GetCount(), 8);
-		ASSERT_EQ(Test.IsEmpty(), false); 
+		ASSERT_EQ(Test.IsEmpty(), false);
 		ASSERT_EQ(Test[7].Integer, 1);
 		ASSERT_EQ(Test[6].Integer, 2);
 		ASSERT_EQ(Test[5].Integer, 3);

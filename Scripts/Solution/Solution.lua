@@ -5,7 +5,7 @@ Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
 
 Framework = "NexusFramework"
 Sandbox = "NexusSandbox"
-Tests = "NexusTest"
+Tests = "NexusTests"
 GoogleTest = "googletest-1.14.0"
 
 Builds = Root .. "builds/"
@@ -148,9 +148,6 @@ project (Tests)
 	targetdir (Target)
 	objdir (Object)
 
-    pchheader "Core/NexusTestPch.h"
-	pchsource (Code .. "Core/NexusTestPch.cpp")
-
     files
     {
         Code .. "**.h",
@@ -186,8 +183,6 @@ project (GoogleTest)
 
 	targetdir (Target)
 	objdir (Object)
-
-    disablewarnings { "26495", "26439" }
 
     files
     {

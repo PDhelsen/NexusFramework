@@ -1,4 +1,4 @@
-#include "Core/NexusTestPch.h"
+#include "Core/NexusTests.h"
 
 namespace NxTs
 {
@@ -9,7 +9,7 @@ namespace NxTs
 	{
 		NxFr::String Working = NxFr::Path::GetWorkingDirectory().ToString();
 		NxFr::String WorkingName = Working.SplitAll("/").Last().ToString();
-		NxFr::String File = Working + "NexusTest.exe";
+		NxFr::String File = Working + "NexusTests.exe";
 		NxFr::String Directory = Working + "Test/Subfolder/Deep/";
 		NxFr::String Root = Working + "Test/Other/Deep/";
 
@@ -33,13 +33,13 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Path::GetDirectoryName(File), WorkingName);
 		ASSERT_EQ(NxFr::Path::GetParent(File), Working);
 		ASSERT_EQ(NxFr::Path::GetParent(Directory), Working + "Test/Subfolder/");
-		ASSERT_EQ(NxFr::Path::GetFileName(File), "NexusTest");
-		ASSERT_EQ(NxFr::Path::GetFileName(File, true), "NexusTest.exe");
+		ASSERT_EQ(NxFr::Path::GetFileName(File), "NexusTests");
+		ASSERT_EQ(NxFr::Path::GetFileName(File, true), "NexusTests.exe");
 		ASSERT_EQ(NxFr::Path::GetExtension(File), "exe");
 
 		ASSERT_EQ(NxFr::Path::ChangeFileName(File.ToView(), "Modified.exe"), Working + "Modified.exe");
-		ASSERT_EQ(NxFr::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTest.exe");
-		ASSERT_EQ(NxFr::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTest.txt");
+		ASSERT_EQ(NxFr::Path::ChangeDirectoryPath(File.ToView(), "D:/Test/"), "D:/Test/NexusTests.exe");
+		ASSERT_EQ(NxFr::Path::ChangeExtension(File.ToView(), "txt"), Working + "NexusTests.txt");
 		ASSERT_EQ(NxFr::Path::ConvertAbsoluteToRelative(Directory.ToView(), Root), "../../Subfolder/Deep/");
 		ASSERT_EQ(NxFr::Path::ConvertRelativeToAbsolute("../../Subfolder/Deep/", Root), Directory);
 		ASSERT_EQ(NxFr::Path::Resolve("D:/Nexus/Test/../../Test/Subfolder/Deep/"), "D:/Test/Subfolder/Deep/");
@@ -56,7 +56,7 @@ namespace NxTs
 	{
 		NxFr::Path Working = NxFr::Path::GetWorkingDirectory();
 		NxFr::Path WorkingName = Working.Split().Last();
-		NxFr::Path File = Working + "NexusTest.exe";
+		NxFr::Path File = Working + "NexusTests.exe";
 		NxFr::Path Directory = Working + "Test/Subfolder/Deep/";
 		NxFr::Path Root = Working + "Test/Other/Deep/";
 		NxFr::Path Relative = NxFr::Path("../../Subfolder/Deep/");
@@ -83,11 +83,11 @@ namespace NxTs
 		ASSERT_EQ(File.GetDirectoryName(), WorkingName);
 		ASSERT_EQ(File.GetParent(), Working);
 		ASSERT_EQ(Directory.GetParent(), Working + "Test/Subfolder/");
-		ASSERT_EQ(File.GetFileName(), "NexusTest");
-		ASSERT_EQ(File.GetFileName(true), "NexusTest.exe");
+		ASSERT_EQ(File.GetFileName(), "NexusTests");
+		ASSERT_EQ(File.GetFileName(true), "NexusTests.exe");
 		ASSERT_EQ(File.GetExtension(), "exe");
 
-		ASSERT_EQ(File.ChangeDirectoryPath("D:/Test/"), "D:/Test/NexusTest.exe");
+		ASSERT_EQ(File.ChangeDirectoryPath("D:/Test/"), "D:/Test/NexusTests.exe");
 		ASSERT_EQ(File.ChangeFileName("Modified.exe"), "D:/Test/Modified.exe");
 		ASSERT_EQ(File.ChangeExtension("txt"), "D:/Test/Modified.txt");
 		ASSERT_EQ(Directory.ConvertAbsoluteToRelative(Root), "../../Subfolder/Deep/");

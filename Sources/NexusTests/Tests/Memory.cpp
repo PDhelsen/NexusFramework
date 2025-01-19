@@ -1,4 +1,4 @@
-#include "Core/NexusTestPch.h"
+#include "Core/NexusTests.h"
 
 namespace NxTs
 {
@@ -69,9 +69,9 @@ namespace NxTs
 	TEST(Memory, MallocReallocFreeConstructDestruct)
 	{
 		MemoryTest * Test = NxFr::Memory::Create<MemoryTest>(sizeof(MemoryTest));
-	
+
 		ASSERT_EQ(Test->Value, 120);
-	
+
 		NxFr::Memory::Destroy<MemoryTest>(Test);
 	}
 
@@ -125,7 +125,7 @@ namespace NxTs
 
 		void* UnalignedPointer = NxFr::Memory::UnalignPointer(AlignedPointer);
 		ASSERT_EQ(reinterpret_cast<uint64>(UnalignedPointer), reinterpret_cast<uint64>(Pointer));
-	
+
 		delete Pointer;
 	}
 }

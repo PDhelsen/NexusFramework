@@ -1,4 +1,4 @@
-#include "Core/NexusTestPch.h"
+#include "Core/NexusTests.h"
 
 namespace NxTs
 {
@@ -18,7 +18,7 @@ namespace NxTs
 		ASSERT_EQ(Test4, NxFr::Timespan(2, 13, 32, 24, 60, 60));
 		Test4.Normalize();
 		ASSERT_EQ(Test4, NxFr::Timespan(3, 2, 2, 1, 1, 0));
-		
+
 		NxFr::Timespan Test5 = Test4 - Test3;
 		Test5.Normalize();
 		ASSERT_EQ(Test5, Test1);
