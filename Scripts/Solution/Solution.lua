@@ -23,7 +23,7 @@ External = Libraries .. Name .. "/"
 Target = Binaries .. Output .. "/"
 Object = Intermediates .. Output .. "/"
 
-PostBuild = Scripts .. "Build/PostBuild.bat " .. Target
+PostBuild = Scripts .. "Build/Steps/PostBuild.bat " .. Target
 
 workspace (Framework)
     location (Root)
