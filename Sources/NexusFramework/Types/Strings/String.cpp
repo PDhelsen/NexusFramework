@@ -330,7 +330,7 @@ namespace NxFr
 
 	void String::Assign(const char* OldText, uint64 OldSize, const char* NewText, uint64 NewSize, uint64 Offset, uint64 Occurrence, bool All)
 	{
-		if (OldSize <= 0 || NewSize <= 0 || (OldSize == NewSize && StringCApi::Compare(OldText, NewText, OldSize) == 0))
+		if (OldSize <= 0 || (OldSize == NewSize && StringCApi::Compare(OldText, NewText, OldSize) == 0))
 		{
 			return;
 		}
