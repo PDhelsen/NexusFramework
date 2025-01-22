@@ -6,4 +6,4 @@ cd %Root%
 call %Root%builds\artifacts\NexusSandbox.exe
 cd %Current%
 
-if %errorlevel% == 0 exit /b else pause
+if %errorlevel% NEQ 0 pause

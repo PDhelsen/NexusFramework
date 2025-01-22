@@ -8,4 +8,4 @@ set Result=%errorlevel%
 cd %Current%
 
 if %Result% NEQ 0 pause
-if %errorlevel% == 0 exit /b else pause
+if %errorlevel% NEQ 0 pause
