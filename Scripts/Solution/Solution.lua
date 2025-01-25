@@ -29,7 +29,7 @@ workspace (Framework)
     location (Root)
 
     platforms { "Win64" }
-    configurations { "Debug", "Release", "Ditrib" }
+    configurations { "Debug", "Release", "Distrib" }
 
 	startproject "NexusSandbox"
     debugcommand (Artifacts .. "NexusSandbox.exe")
@@ -59,7 +59,7 @@ workspace (Framework)
         symbols "On"
         optimize "On"
 
-    filter "configurations:Ditrib"
+    filter "configurations:Distrib"
         defines { "NEXUS_DISTRIB" }
         symbols "Off"
         optimize "On"
