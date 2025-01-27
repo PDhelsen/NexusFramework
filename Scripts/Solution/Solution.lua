@@ -1,7 +1,7 @@
+Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
+
 Name = "%{prj.name}"
 Output = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
-
-Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
 
 Framework = "NexusFramework"
 Sandbox = "NexusSandbox"
@@ -11,7 +11,6 @@ GoogleTest = "googletest-1.14.0"
 Builds = Root .. "builds/"
 Configs = Root .. "Configs/"
 Libraries = Root .. "Libraries/"
-Saved = Root .. "saved/"
 Scripts = Root .. "Scripts/"
 Sources = Root .. "Sources/"
 
