@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "StackAllocator.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Memory/Allocator/StackAllocator.h"
 
 namespace NxFr
 {

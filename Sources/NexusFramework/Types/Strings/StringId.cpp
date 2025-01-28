@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "StringId.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Types/Strings/StringId.h"
 
 namespace NxFr
 {

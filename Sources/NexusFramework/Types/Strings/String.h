@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "Types/Numbers/Integer.h"
-#include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/AllocatorContext.h"
-#include "Memory/Memory.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
+#include "NexusFramework/Memory/Memory.h"
 
 namespace NxFr
 {

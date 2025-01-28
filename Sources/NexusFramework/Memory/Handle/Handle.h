@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
 
 namespace NxFr
 {

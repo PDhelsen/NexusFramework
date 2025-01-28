@@ -1,12 +1,12 @@
 #pragma once
 
-#include "External/Intrinsics.h"
-#include "Core/NexusFrameworkCore.h"
-#include "Types/Numbers/Integer.h"
-#include "Types/Numbers/Enum.h"
-#include "Types/Strings/String.h"
-#include "Types/Strings/StringView.h"
-#include "Types/Strings/StringId.h"
+#include "NexusFramework/External/Intrinsics.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numbers/Enum.h"
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Types/Strings/StringId.h"
 
 namespace NxFr
 {

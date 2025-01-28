@@ -1,9 +1,9 @@
-#include "Core/NexusFrameworkPch.h"
-#include "PlatformWindows.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Platform/Windows/PlatformWindows.h"
 
-#include "External/StandardLibrary.h"
-#include "Memory/Memory.h"
-#include "IO/Path.h"
+#include "NexusFramework/External/StandardLibrary.h"
+#include "NexusFramework/Memory/Memory.h"
+#include "NexusFramework/IO/Path.h"
 
 #include <windows.h>
 #include <sys/stat.h>

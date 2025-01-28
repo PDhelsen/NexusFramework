@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "Platform/PlatformInteger.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Platform/PlatformInteger.h"
 
 using int8		= PlaftormInteger::int8;
 using int16		= PlaftormInteger::int16;

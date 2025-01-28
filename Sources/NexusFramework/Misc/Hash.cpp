@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Hash.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Misc/Hash.h"
 
 namespace NxFr
 {

@@ -1,8 +1,8 @@
 #pragma once
 
-#include "External/StandardLibrary.h"
-#include "Memory/Memory.h"
-#include "Debug/Logger/Log.h"
+#include "NexusFramework/External/StandardLibrary.h"
+#include "NexusFramework/Memory/Memory.h"
+#include "NexusFramework/Debug/Logger/Log.h"
 
 #pragma warning(push)
 #pragma warning(disable: 6387)

@@ -1,7 +1,7 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Integer.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
 
-#include "External/StandardLibrary.h"
+#include "NexusFramework/External/StandardLibrary.h"
 
 namespace NxFr::Integer
 {

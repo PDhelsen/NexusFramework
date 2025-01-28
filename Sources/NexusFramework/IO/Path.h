@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "Types/Numbers/Integer.h"
-#include "Types/Containers/Collection.h"
-#include "Types/Strings/String.h"
-#include "Types/Strings/StringView.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Containers/Collection.h"
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringView.h"
 
 namespace NxFr
 {

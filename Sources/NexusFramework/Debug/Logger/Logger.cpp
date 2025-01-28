@@ -1,13 +1,13 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Logger.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Debug/Logger/Logger.h"
 
-#include "Platform/Platform.h"
-#include "Time/Time.h"
-#include "Time/Timestamp.h"
-#include "IO/Path.h"
-#include "IO/File.h"
+#include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/Time/Time.h"
+#include "NexusFramework/Time/Timestamp.h"
+#include "NexusFramework/IO/Path.h"
+#include "NexusFramework/IO/File.h"
 
-#include "Core/NexusFrameworkGlobals.h"
+#include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
 namespace NxFr
 {

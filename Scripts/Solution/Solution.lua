@@ -80,7 +80,7 @@ project (Framework)
 	targetdir (Target)
 	objdir (Object)
 
-    pchheader ("Core/NexusFrameworkPch.h")
+    pchheader ("NexusFramework/Core/NexusFrameworkPch.h")
 	pchsource (Code .. "Core/NexusFrameworkPch.cpp")
 
     files
@@ -92,7 +92,7 @@ project (Framework)
 
     includedirs
     {
-        Code
+        Sources
     }
 
     defines
@@ -123,8 +123,7 @@ project (Sandbox)
 
     includedirs
     {
-        Code,
-        Sources .. Framework .. "/"
+        Sources
     }
 
     links
@@ -156,8 +155,7 @@ project (Tests)
 
     includedirs
     {
-        Code,
-        Sources .. Framework .. "/",
+        Sources,
         Libraries .. GoogleTest .. "/include/"
     }
 
@@ -196,8 +194,8 @@ project (GoogleTest)
 
     includedirs
     {
-		External,
-        External .. "include/"
+        External,
+        External .. "include/",
     }
 
 	postbuildcommands

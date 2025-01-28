@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Memory/Memory.h"
-#include "Memory/Allocator/Allocator.h"
-#include "Memory/Allocator/AllocatorContext.h"
+#include "NexusFramework/Memory/Memory.h"
+#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 
 namespace NxFr
 {

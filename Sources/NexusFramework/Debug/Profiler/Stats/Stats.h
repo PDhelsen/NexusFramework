@@ -1,13 +1,13 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "Types/Numbers/Integer.h"
-#include "Types/Containers/List.h"
-#include "Types/Containers/Dictionary.h"
-#include "Types/Strings/String.h"
-#include "Types/Strings/StringView.h"
-#include "Types/Strings/StringId.h"
-#include "IO/File.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Containers/List.h"
+#include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Types/Strings/StringId.h"
+#include "NexusFramework/IO/File.h"
 
 namespace NxFr
 {

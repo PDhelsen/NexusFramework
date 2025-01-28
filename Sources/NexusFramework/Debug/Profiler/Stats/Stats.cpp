@@ -1,8 +1,8 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Stats.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Debug/Profiler/Stats/Stats.h"
 
-#include "External/StandardLibrary.h"
-#include "Core/NexusFrameworkGlobals.h"
+#include "NexusFramework/External/StandardLibrary.h"
+#include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
 namespace NxFr
 {

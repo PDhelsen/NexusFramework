@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "Instuments.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
 
 namespace NxFr
 {

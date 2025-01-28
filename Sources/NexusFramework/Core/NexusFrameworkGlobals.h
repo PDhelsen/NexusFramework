@@ -1,10 +1,10 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "Memory/Handle/HandleManager.h"
-#include "Debug/Logger/Logger.h"
-#include "Debug/Profiler/Stats/Stats.h"
-#include "Debug/Profiler/Instruments/Instuments.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Memory/Handle/HandleManager.h"
+#include "NexusFramework/Debug/Logger/Logger.h"
+#include "NexusFramework/Debug/Profiler/Stats/Stats.h"
+#include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
 
 namespace NxFr
 {

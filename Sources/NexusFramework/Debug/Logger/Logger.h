@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Debug/Logger/Log.h"
-#include "Types/Containers/Dictionary.h"
-#include "Platform/Platform.h"
-#include "IO/File.h"
+#include "NexusFramework/Debug/Logger/Log.h"
+#include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/IO/File.h"
 
 namespace NxFr
 {

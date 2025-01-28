@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Types/Numbers/Integer.h"
-#include "Types/Containers/Node.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Containers/Node.h"
 
 namespace NxFr
 {

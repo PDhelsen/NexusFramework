@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "NexusFrameworkPaths.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Core/NexusFrameworkPaths.h"
 
 namespace NxFr
 {

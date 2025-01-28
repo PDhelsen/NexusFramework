@@ -1,7 +1,7 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Memory.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Memory/Memory.h"
 
-#include "External/StandardLibrary.h"
+#include "NexusFramework/External/StandardLibrary.h"
 
 namespace NxFr
 {

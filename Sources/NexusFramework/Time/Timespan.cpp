@@ -1,7 +1,7 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Timespan.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Time/Timespan.h"
 
-#include "Time/Time.h"
+#include "NexusFramework/Time/Time.h"
 
 namespace NxFr
 {

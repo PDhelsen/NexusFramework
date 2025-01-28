@@ -1,9 +1,8 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Instuments.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
 
-#include "Debug/Profiler/Instruments/ChromeTracing.h"
-
-#include "Core/NexusFrameworkGlobals.h"
+#include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
+#include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
 namespace NxFr
 {

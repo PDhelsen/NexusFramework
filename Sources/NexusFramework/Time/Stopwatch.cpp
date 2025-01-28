@@ -1,7 +1,7 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Stopwatch.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Time/Stopwatch.h"
 
-#include "Platform/Platform.h"
+#include "NexusFramework/Platform/Platform.h"
 
 namespace NxFr
 {

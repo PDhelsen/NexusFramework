@@ -1,2 +1,2 @@
-#include "NexusTests.h"
-#include "Memory/MemoryOperator.h"
+#include "NexusTests/Core/NexusTests.h"
+#include "NexusFramework/Memory/MemoryOperator.h"

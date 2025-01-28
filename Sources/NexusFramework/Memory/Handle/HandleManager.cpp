@@ -1,7 +1,7 @@
-#include "Core/NexusFrameworkPch.h"
-#include "HandleManager.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Memory/Handle/HandleManager.h"
 
-#include "Core/NexusFrameworkGlobals.h"
+#include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
 namespace NxFr
 {

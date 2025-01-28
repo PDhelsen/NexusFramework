@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "PlatformNone.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Platform/None/PlatformNone.h"
 
 namespace NxFr
 {

@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "PoolAllocator.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Memory/Allocator/PoolAllocator.h"
 
 namespace NxFr
 {

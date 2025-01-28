@@ -1,8 +1,8 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Platform.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Platform/Platform.h"
 
-#include "Platform/None/PlatformNone.h"
-#include "Platform/Windows/PlatformWindows.h"
+#include "NexusFramework/Platform/None/PlatformNone.h"
+#include "NexusFramework/Platform/Windows/PlatformWindows.h"
 
 namespace NxFr
 {

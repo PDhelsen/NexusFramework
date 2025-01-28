@@ -1,4 +1,4 @@
-#include "Core/NexusFrameworkPch.h"
-#include "NexusFramework.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Core/NexusFramework.h"
 
-#include "Memory/MemoryOperator.h"
+#include "NexusFramework/Memory/MemoryOperator.h"

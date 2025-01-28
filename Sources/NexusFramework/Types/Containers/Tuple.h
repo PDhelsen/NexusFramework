@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Misc/Templates.h"
+#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {

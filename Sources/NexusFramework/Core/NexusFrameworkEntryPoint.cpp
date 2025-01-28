@@ -1,11 +1,11 @@
-#include "Core/NexusFrameworkPch.h"
-#include "NexusFrameworkEntryPoint.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Core/NexusFrameworkEntryPoint.h"
 
-#include "IO/Path.h"
-#include "IO/Directory.h"
+#include "NexusFramework/IO/Path.h"
+#include "NexusFramework/IO/Directory.h"
 
-#include "Core/NexusFrameworkGlobals.h"
-#include "Core/NexusFrameworkPaths.h"
+#include "NexusFramework/Core/NexusFrameworkGlobals.h"
+#include "NexusFramework/Core/NexusFrameworkPaths.h"
 
 namespace NxFr
 {

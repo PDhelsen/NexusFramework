@@ -1,8 +1,8 @@
-#include "Core/NexusFrameworkPch.h"
-#include "Math.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Misc/Math.h"
 
-#include "External/Intrinsics.h"
-#include "External/StandardLibrary.h"
+#include "NexusFramework/External/Intrinsics.h"
+#include "NexusFramework/External/StandardLibrary.h"
 
 namespace NxFr
 {

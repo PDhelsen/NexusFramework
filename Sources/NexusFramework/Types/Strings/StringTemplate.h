@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Misc/Hash.h"
-#include "Types/Strings/String.h"
-#include "Types/Strings/StringFunctions.h"
-#include "Types/Strings/StringCApi.h"
+#include "NexusFramework/Misc/Hash.h"
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringFunctions.h"
+#include "NexusFramework/Types/Strings/StringCApi.h"
 
 namespace NxFr
 {

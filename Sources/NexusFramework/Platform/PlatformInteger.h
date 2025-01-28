@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Platform/None/PlaftormNoneInteger.h"
-#include "Platform/Windows/PlaftormWindowsInteger.h"
+#include "NexusFramework/Platform/None/PlaftormNoneInteger.h"
+#include "NexusFramework/Platform/Windows/PlaftormWindowsInteger.h"
 
 struct PlaftormInteger
 {

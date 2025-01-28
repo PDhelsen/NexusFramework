@@ -1,9 +1,9 @@
 @echo off
 
-set Current=%cd%
 set Root=%~dp0..\
-cd %Root%
+
+pushd %Root%
 call %Root%builds\artifacts\NexusSandbox.exe
-cd %Current%
+popd %Current%
 
 if %errorlevel% NEQ 0 pause

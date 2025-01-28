@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "AllocatorContext.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 
 namespace NxFr
 {

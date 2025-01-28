@@ -1,8 +1,8 @@
-#include "Core/NexusFrameworkPch.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "HeapAllocator.h"
 
-#include "Memory/Handle/Handle.h"
-#include "Memory/Handle/HandleManager.h"
+#include "NexusFramework/Memory/Handle/Handle.h"
+#include "NexusFramework/Memory/Handle/HandleManager.h"
 
 namespace NxFr
 {

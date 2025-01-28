@@ -1,7 +1,7 @@
-#include "Core/NexusFrameworkPch.h"
-#include "ChromeTracing.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
 
-#include "Time/Time.h"
+#include "NexusFramework/Time/Time.h"
 
 namespace NxFr
 {

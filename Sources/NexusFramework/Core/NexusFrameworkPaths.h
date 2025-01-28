@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Core/NexusFrameworkCore.h"
-#include "IO/Path.h"
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/IO/Path.h"
 
 namespace NxFr
 {

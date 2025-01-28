@@ -1,5 +1,5 @@
-#include "Core/NexusFrameworkPch.h"
-#include "StringView.h"
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Types/Strings/StringView.h"
 
 namespace NxFr
 {

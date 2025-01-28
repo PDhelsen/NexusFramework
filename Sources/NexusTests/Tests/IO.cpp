@@ -1,4 +1,4 @@
-#include "Core/NexusTests.h"
+#include "NexusTests/Core/NexusTests.h"
 
 namespace NxTs
 {

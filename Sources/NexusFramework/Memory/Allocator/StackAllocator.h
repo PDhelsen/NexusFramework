@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Allocator.h"
+#include "NexusFramework/Memory/Allocator/Allocator.h"
 
 namespace NxFr
 {
