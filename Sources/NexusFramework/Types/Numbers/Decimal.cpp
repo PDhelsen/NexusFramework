@@ -5,32 +5,32 @@
 
 namespace NxFr::Decimal
 {
-	constexpr float InfinityF()
+	float InfinityF()
 	{
 		return INFINITY;
 	}
 
-	constexpr double InfinityD()
+	double InfinityD()
 	{
 		return INFINITY;
 	}
 
-	constexpr float MinF()
+	float MinF()
 	{
 		return FLT_MIN;
 	}
 
-	constexpr double MinD()
+	double MinD()
 	{
 		return DBL_MIN;
 	}
 
-	constexpr float MaxF()
+	float MaxF()
 	{
 		return FLT_MAX;
 	}
 
-	constexpr double MaxD()
+	double MaxD()
 	{
 		return DBL_MAX;
 	}

@@ -24,6 +24,8 @@ Object = Intermediates .. Output .. "/"
 
 PostBuild = Scripts .. "Build/Steps/PostBuild.bat " .. Target
 
+LibraryType = "StaticLib" -- "SharedLib" or "StaticLib"
+
 workspace (Framework)
     location (Root)
 
@@ -73,7 +75,7 @@ group ""
 project (Framework)
     location (Code)
 
-    kind "SharedLib"
+    kind (LibraryType)
     language "C++"
 	cppdialect "C++20"
 
@@ -95,15 +97,18 @@ project (Framework)
         Sources
     }
 
-    defines
-    {
-        "NEXUS_FRAMEWORK_DLL_BUILD"
-    }
-
     postbuildcommands
     {
         PostBuild
     }
+
+    if LibraryType == "SharedLib" then
+        defines
+        {
+            "NEXUS_FRAMEWORK_DLL",
+            "NEXUS_FRAMEWORK_DLL_BUILD"
+        }
+    end
 
 project (Sandbox)
     location (Code)
@@ -135,6 +140,13 @@ project (Sandbox)
     {
         PostBuild
     }
+
+    if LibraryType == "SharedLib" then
+        defines
+        {
+            "NEXUS_FRAMEWORK_DLL"
+        }
+    end
 
 project (Tests)
     location (Code)
@@ -170,6 +182,12 @@ project (Tests)
         PostBuild
     }
 
+    if LibraryType == "SharedLib" then
+        defines
+        {
+            "NEXUS_FRAMEWORK_DLL"
+        }
+    end
 
 project (GoogleTest)
     location (External)

@@ -298,52 +298,52 @@ namespace NxFr
 			return sqrt(X);
 		}
 
-		constexpr float Square(float X)
+		float Square(float X)
 		{
 			return X * X;
 		}
 
-		constexpr double Square(double X)
+		double Square(double X)
 		{
 			return X * X;
 		}
 
-		constexpr int8 Square(int8 X)
+		int8 Square(int8 X)
 		{
 			return X * X;
 		}
 
-		constexpr int16 Square(int16 X)
+		int16 Square(int16 X)
 		{
 			return X * X;
 		}
 
-		constexpr int32 Square(int32 X)
+		int32 Square(int32 X)
 		{
 			return X * X;
 		}
 
-		constexpr int64 Square(int64 X)
+		int64 Square(int64 X)
 		{
 			return X * X;
 		}
 
-		constexpr uint8 Square(uint8 X)
+		uint8 Square(uint8 X)
 		{
 			return X * X;
 		}
 
-		constexpr uint16 Square(uint16 X)
+		uint16 Square(uint16 X)
 		{
 			return X * X;
 		}
 
-		constexpr uint32 Square(uint32 X)
+		uint32 Square(uint32 X)
 		{
 			return X * X;
 		}
 
-		constexpr uint64 Square(uint64 X)
+		uint64 Square(uint64 X)
 		{
 			return X * X;
 		}
@@ -524,27 +524,27 @@ namespace NxFr
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
-		constexpr bool IsPowerOfTwo(uint8 X)
+		bool IsPowerOfTwo(uint8 X)
 		{
 			return (X & (X - 1)) == 0;
 		}
 
-		constexpr bool IsPowerOfTwo(uint16 X)
+		bool IsPowerOfTwo(uint16 X)
 		{
 			return (X & (X - 1)) == 0;
 		}
 
-		constexpr bool IsPowerOfTwo(uint32 X)
+		bool IsPowerOfTwo(uint32 X)
 		{
 			return (X & (X - 1)) == 0;
 		}
 
-		constexpr bool IsPowerOfTwo(uint64 X)
+		bool IsPowerOfTwo(uint64 X)
 		{
 			return (X & (X - 1)) == 0;
 		}
 
-		constexpr uint8 NextPowerOfTwo(uint8 X)
+		uint8 NextPowerOfTwo(uint8 X)
 		{
 			if (X == 0)
 			{
@@ -559,7 +559,7 @@ namespace NxFr
 			return X + 1;
 		}
 
-		constexpr uint16 NextPowerOfTwo(uint16 X)
+		uint16 NextPowerOfTwo(uint16 X)
 		{
 			if (X == 0)
 			{
@@ -575,7 +575,7 @@ namespace NxFr
 			return X + 1;
 		}
 
-		constexpr uint32 NextPowerOfTwo(uint32 X)
+		uint32 NextPowerOfTwo(uint32 X)
 		{
 			if (X == 0)
 			{
@@ -592,7 +592,7 @@ namespace NxFr
 			return X + 1;
 		}
 
-		constexpr uint64 NextPowerOfTwo(uint64 X)
+		uint64 NextPowerOfTwo(uint64 X)
 		{
 			if (X == 0)
 			{
@@ -638,7 +638,7 @@ namespace NxFr
 			return Result > 0 ? (int64)Index : -1;
 		}
 
-		constexpr bool IsPrime(uint8 X)
+		bool IsPrime(uint8 X)
 		{
 			if (X <= 1) return false;
 			for (uint8 N = 2; N <= sqrt(X); ++N)
@@ -648,7 +648,7 @@ namespace NxFr
 			return true;
 		}
 
-		constexpr bool IsPrime(uint16 X)
+		bool IsPrime(uint16 X)
 		{
 			if (X <= 1) return false;
 			for (uint16 N = 2; N <= sqrt(X); ++N)
@@ -658,7 +658,7 @@ namespace NxFr
 			return true;
 		}
 
-		constexpr bool IsPrime(uint32 X)
+		bool IsPrime(uint32 X)
 		{
 			if (X <= 1) return false;
 			for (uint32 N = 2; N <= sqrt(X); ++N)
@@ -668,7 +668,7 @@ namespace NxFr
 			return true;
 		}
 
-		constexpr bool IsPrime(uint64 X)
+		bool IsPrime(uint64 X)
 		{
 			if (X <= 1) return false;
 			for (uint64 N = 2; N <= sqrt(X); ++N)
@@ -678,7 +678,7 @@ namespace NxFr
 			return true;
 		}
 
-		constexpr uint8 NextPrime(uint8 X)
+		uint8 NextPrime(uint8 X)
 		{
 			uint8 N = X + 1;
 			while (!IsPrime(N))
@@ -688,7 +688,7 @@ namespace NxFr
 			return N;
 		}
 
-		constexpr uint16 NextPrime(uint16 X)
+		uint16 NextPrime(uint16 X)
 		{
 			uint16 N = X + 1;
 			while (!IsPrime(N))
@@ -698,7 +698,7 @@ namespace NxFr
 			return N;
 		}
 
-		constexpr uint32 NextPrime(uint32 X)
+		uint32 NextPrime(uint32 X)
 		{
 			uint32 N = X + 1;
 			while (!IsPrime(N))
@@ -708,7 +708,7 @@ namespace NxFr
 			return N;
 		}
 
-		constexpr uint64 NextPrime(uint64 X)
+		uint64 NextPrime(uint64 X)
 		{
 			uint64 N = X + 1;
 			while (!IsPrime(N))
