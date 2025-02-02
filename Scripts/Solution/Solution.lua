@@ -30,8 +30,8 @@ workspace (Framework)
     platforms { "Win64" }
     configurations { "Debug", "Release", "Distrib" }
 
-	startproject "NexusSandbox"
-    debugcommand (Artifacts .. "NexusSandbox.exe")
+	startproject (Sandbox)
+    debugcommand (Artifacts .. Sandbox .. ".exe")
 	debugdir (Root)
 
 	characterset "Unicode"
