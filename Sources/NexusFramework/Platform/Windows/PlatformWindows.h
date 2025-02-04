@@ -10,7 +10,7 @@ namespace NxFr
 		friend Platform;
 
 	public:
-		NEXUS_FRAMEWORK_API void ExecuteFromDll(StringView DllName, uint8 Ordinal) const override;
+		NEXUS_FRAMEWORK_API void ExecuteFromDll(StringView DllName, StringView FunctionName) const override;
 		NEXUS_FRAMEWORK_API void Sleep(uint64 Milliseconds) const override;
 		NEXUS_FRAMEWORK_API double GetProcessorTimer(double Unit = 1.0) const override;
 

@@ -3,7 +3,7 @@
 
 namespace NxFr
 {
-    void PlatformNone::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
+    void PlatformNone::ExecuteFromDll(StringView DllName, StringView FunctionName) const
     {
     }
 

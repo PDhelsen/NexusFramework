@@ -14,7 +14,7 @@ namespace NxFr
 
 	static Buffer<char>& GetLocalBuffer() { static Buffer<char> LocalBuffer(512, nullptr); return LocalBuffer; }
 
-	void PlatformWindows::ExecuteFromDll(StringView DllName, uint8 Ordinal) const
+	void PlatformWindows::ExecuteFromDll(StringView DllName, StringView FunctionName) const
 	{
 		auto Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
@@ -23,7 +23,7 @@ namespace NxFr
 			return;
 		}
 
-		DllFunction Function = DllFunction(GetProcAddress(Dll, MAKEINTRESOURCEA(Ordinal)));
+		DllFunction Function = DllFunction(GetProcAddress(Dll, FunctionName.C()));
 		if (!Function)
 		{
 			NEXUS_LOG(Error, Default, "Failed to load function");

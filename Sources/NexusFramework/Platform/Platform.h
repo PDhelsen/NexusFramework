@@ -30,7 +30,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API static Platform* GetInstance();
 
-		NEXUS_FRAMEWORK_API virtual void ExecuteFromDll(StringView DllName, uint8 Ordinal) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ExecuteFromDll(StringView DllName, StringView FunctionName) const = 0;
 		NEXUS_FRAMEWORK_API virtual void Sleep(uint64 Milliseconds) const = 0;
 		NEXUS_FRAMEWORK_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 
