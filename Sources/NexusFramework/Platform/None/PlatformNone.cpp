@@ -3,9 +3,19 @@
 
 namespace NxFr
 {
-    void PlatformNone::ExecuteFromDll(StringView DllName, StringView FunctionName) const
+	void* PlatformNone::LoadDll(StringView DllName)
+	{
+		return nullptr;
+	}
+
+	void PlatformNone::UnloadDll(StringView DllName)
+	{
+	}
+
+	void* PlatformNone::GetFromDll(StringView DllName, StringView FunctionName)
     {
-    }
+		return nullptr;
+	}
 
 	void PlatformNone::Sleep(uint64 Milliseconds) const
 	{

@@ -10,30 +10,48 @@
 
 namespace NxFr
 {
-	using DllFunction = Delegate<int64()>;
-
 	static Buffer<char>& GetLocalBuffer() { static Buffer<char> LocalBuffer(512, nullptr); return LocalBuffer; }
 
-	void PlatformWindows::ExecuteFromDll(StringView DllName, StringView FunctionName) const
+	void* PlatformWindows::LoadDll(StringView DllName)
 	{
-		auto Dll = LoadLibraryA(DllName.C());
+		String Key = DllName.ToString();
+		if (Dlls.ContainsKey(Key))
+		{
+			return Dlls[Key];
+		}
+
+		HMODULE Dll = LoadLibraryA(Key.C());
 		if (Dll == nullptr)
 		{
 			NEXUS_LOG(Error, Default, "Failed to load library");
+		}
+
+		return Dll;
+	}
+
+	void PlatformWindows::UnloadDll(StringView DllName)
+	{
+		String Key = DllName.ToString();
+		if (!Dlls.ContainsKey(Key))
+		{
 			return;
 		}
 
-		DllFunction Function = DllFunction(GetProcAddress(Dll, FunctionName.C()));
+		HMODULE Dll = (HMODULE)Dlls[Key];
+		FreeLibrary(Dll);
+	}
+
+	void* PlatformWindows::GetFromDll(StringView DllName, StringView FunctionName)
+	{
+		HMODULE Dll = (HMODULE)LoadDll(DllName);
+		
+		auto Function = GetProcAddress(Dll, FunctionName.C());
 		if (!Function)
 		{
 			NEXUS_LOG(Error, Default, "Failed to load function");
-			FreeLibrary(Dll);
-			return;
 		}
 
-		Function.Invoke();
-
-		FreeLibrary(Dll);
+		return Function;
 	}
 
 	void PlatformWindows::Sleep(uint64 Milliseconds) const

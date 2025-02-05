@@ -15,4 +15,12 @@ namespace NxFr
 #endif
 		return &Instance;
 	}
+
+	void Platform::ClearDll()
+	{
+		for (auto& [Name, Ptr] : Dlls)
+		{
+			UnloadDll(Name);
+		}
+	}
 }

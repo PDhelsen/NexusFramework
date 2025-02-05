@@ -111,6 +111,8 @@ namespace NxFr
 		DestroyStats();
 		DestroyLogger();
 
+		Platform::GetInstance()->ClearDll();
+
 		return true;
 	}
 }

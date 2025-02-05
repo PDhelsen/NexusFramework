@@ -2,8 +2,10 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Buffer.h"
+#include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 
@@ -30,7 +32,14 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API static Platform* GetInstance();
 
-		NEXUS_FRAMEWORK_API virtual void ExecuteFromDll(StringView DllName, StringView FunctionName) const = 0;
+		template<typename R, typename... Args>
+		Delegate<R(Args...)> GetFunctionFromDll(StringView DllName, StringView FunctionName);
+
+		NEXUS_FRAMEWORK_API virtual void* LoadDll(StringView DllName) = 0;
+		NEXUS_FRAMEWORK_API virtual void UnloadDll(StringView DllName) = 0;
+		NEXUS_FRAMEWORK_API virtual void* GetFromDll(StringView DllName, StringView FunctionName) = 0;
+		NEXUS_FRAMEWORK_API virtual void ClearDll();
+
 		NEXUS_FRAMEWORK_API virtual void Sleep(uint64 Milliseconds) const = 0;
 		NEXUS_FRAMEWORK_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 
@@ -64,5 +73,14 @@ namespace NxFr
 	protected:
 		Platform() = default;
 		virtual ~Platform() = default;
+
+		Dictionary<String, void*> Dlls;
 	};
+
+	template<typename R, typename ...Args>
+	inline Delegate<R(Args...)> Platform::GetFunctionFromDll(StringView DllName, StringView FunctionName)
+	{
+		typedef void (*Type)(Args...);
+		return Delegate<R(Args...)>((Type)GetFromDll(DllName, FunctionName));
+	}
 }
