@@ -24,8 +24,10 @@ namespace NxFr
 		if (Dll == nullptr)
 		{
 			NEXUS_LOG(Error, Default, "Failed to load library");
+			return nullptr;
 		}
 
+		Dlls.Append(Key, Dll);
 		return Dll;
 	}
 
@@ -38,6 +40,7 @@ namespace NxFr
 		}
 
 		HMODULE Dll = (HMODULE)Dlls[Key];
+		Dlls.Remove(Key);
 		FreeLibrary(Dll);
 	}
 
