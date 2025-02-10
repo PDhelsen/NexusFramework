@@ -6,7 +6,7 @@ Output = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
 Framework = "NexusFramework"
 Sandbox = "NexusSandbox"
 Tests = "NexusTests"
-GoogleTest = "googletest-1.14.0"
+GoogleTest = "GoogleTest"
 
 Builds = Root .. "builds/"
 Configs = Root .. "Configs/"
@@ -92,7 +92,8 @@ project (Framework)
 
     includedirs
     {
-        Sources
+		Sources,
+		Libraries,
     }
 
 	defines
@@ -156,6 +157,8 @@ project (Tests)
     includedirs
     {
         Sources,
+		Libraries,
+
         Libraries .. GoogleTest .. "/include/"
     }
 
