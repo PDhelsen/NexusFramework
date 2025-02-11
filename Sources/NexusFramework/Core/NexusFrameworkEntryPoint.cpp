@@ -45,12 +45,6 @@ namespace NxFr
 		Globals::Instrumentor = Instrumentor;
 	}
 
-	static void CreateHandleManager()
-	{
-		HandleManager* Handles = new HandleManager(1024);
-		Globals::Handles = Handles;
-	}
-
 	static void DestroyLogger()
 	{
 		Logger* Logs = Globals::Logs;
@@ -77,14 +71,6 @@ namespace NxFr
 		Instruments::Destroy(Instrumentor);
 	}
 
-	static void DestroyHandleManager()
-	{
-		HandleManager* Handles = Globals::Handles;
-		Globals::Handles = nullptr;
-
-		delete Handles;
-	}
-
 	bool Initialize()
 	{
 		AllocatorContext Context(nullptr);
@@ -96,16 +82,12 @@ namespace NxFr
 		CreateStats(DebugPath);
 		CreateIntruments(DebugPath);
 
-		CreateHandleManager();
-
 		return true;
 	}
 
 	bool Shutdown()
 	{
 		AllocatorContext Context(nullptr);
-
-		DestroyHandleManager();
 
 		DestroyInstruments();
 		DestroyStats();

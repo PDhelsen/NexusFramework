@@ -5,11 +5,6 @@
 
 namespace NxFr
 {
-	HandleManager* HandleManager::GetInstance()
-	{
-		return Globals::Handles;
-	}
-
 	HandleManager::HandleManager(uint64 Size)
 		: Buffer(Size)
 	{

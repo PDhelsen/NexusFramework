@@ -10,7 +10,6 @@ namespace NxFr
 {
 	namespace Globals
 	{
-		NEXUS_FRAMEWORK_API extern HandleManager* Handles;
 		NEXUS_FRAMEWORK_API extern Logger* Logs;
 		NEXUS_FRAMEWORK_API extern Stats* Statistiques;
 		NEXUS_FRAMEWORK_API extern Instruments* Instrumentor;

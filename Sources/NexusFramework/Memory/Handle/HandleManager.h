@@ -12,8 +12,6 @@ namespace NxFr
 	class HandleManager
 	{
 	public:
-		NEXUS_FRAMEWORK_API static HandleManager* GetInstance();
-
 		NEXUS_FRAMEWORK_API HandleManager(uint64 Size);
 		NEXUS_FRAMEWORK_API ~HandleManager();
 
