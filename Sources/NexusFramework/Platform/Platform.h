@@ -80,7 +80,7 @@ namespace NxFr
 	template<typename R, typename ...Args>
 	inline Delegate<R(Args...)> Platform::GetFunctionFromDll(StringView DllName, StringView FunctionName)
 	{
-		typedef void (*Type)(Args...);
+		typedef R(*Type)(Args...);
 		return Delegate<R(Args...)>((Type)GetFromDll(DllName, FunctionName));
 	}
 }
