@@ -7,6 +7,8 @@
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
+#include "NexusFramework/Types/Strings/StringFunctions.h"
+#include "NexusFramework/Types/Strings/StringTemplate.h"
 
 namespace NxFr
 {

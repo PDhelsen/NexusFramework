@@ -140,6 +140,11 @@ namespace NxFr
 		{
 			CopyIntoBuffer(BufferFormat);
 		}
+
+		if (Enum::CheckFlag(Verbosity, LoggerVerbosity::Fatal))
+		{
+			Flush();
+		}
 	}
 
 	uint8 Logger::GetLogLevel(LoggerVerbosity Verbosity) const
