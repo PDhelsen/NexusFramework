@@ -56,3 +56,5 @@
 
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"
+
+#include "NexusFramework/Application/Arguments.h"
