@@ -6,7 +6,6 @@ namespace NxFr
 	namespace Arguments
 	{
 		static Dictionary<StringView, StringView>& GetArgs() { static Dictionary<StringView, StringView> Args(1, nullptr); return Args; }
-		static const char* Program = "Program";
 
 		void Parse(uint64 ArgC, char* ArgV[])
 		{
@@ -15,14 +14,14 @@ namespace NxFr
 
 			Args.Grow(Math::NextPrime(ArgC));
 
-			Args.Append(Program, ArgV[0]);
+			Args.Append(KeyProgram, ArgV[0]);
 			for (uint64 Index = 1; Index < ArgC; ++Index)
 			{
 				StringView Arg = ArgV[Index];
 
 				List<StringView> KeyValue = Arg.SplitAll("=");
 				StringView Key = KeyValue[0];
-				StringView Value = KeyValue.GetCount() == 2 ? KeyValue[1] : "";
+				StringView Value = KeyValue.GetCount() == 2 ? KeyValue[1] : "True";
 
 				Args.Append(Key, Value);
 			}
@@ -42,14 +41,19 @@ namespace NxFr
 			return Contain != nullptr ? *Contain: Default;
 		}
 
+		Dictionary<StringView, StringView>::I Begin()
+		{
+			return GetArgs().Begin();
+		}
+
+		Dictionary<StringView, StringView>::I End()
+		{
+			return GetArgs().End();
+		}
+
 		int64 GetCount()
 		{
 			return GetArgs().GetCount();
-		}
-
-		StringView GetProgram()
-		{
-			return GetArgs()[Program];
 		}
 
 		void Log()
@@ -58,17 +62,9 @@ namespace NxFr
 			NEXUS_LOG(Info, Default, "Arguments count: %d", Args.GetCount());
 
 			uint64 Index = 0;
-			for (auto& [Key, Value] : Args)
+			for (auto Iter = Begin(); Iter != End(); ++Iter, ++Index)
 			{
-				if (Value == "")
-				{
-					NEXUS_LOG(Info, Default, "Argument %d: %s", Index, Key.C());
-				}
-				else
-				{
-					NEXUS_LOG(Info, Default, "Argument %d: %s = %s", Index, Key.C(), Value.C());
-				}
-				Index++;
+				NEXUS_LOG(Info, Default, "Argument %d: %s = %s", Index, Iter->Key.ToString().C(), Iter->Value.ToString().C());
 			}
 		}
 	}
