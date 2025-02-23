@@ -6,11 +6,8 @@
 
 namespace NxFr
 {
-	template<typename Signature>
-	class Event;
-
 	template<typename... Args>
-	class Event<Args...>
+	class Event
 	{
 	public:
 		using F = Delegate<void(Args...)>;
