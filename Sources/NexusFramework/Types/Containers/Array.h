@@ -11,14 +11,14 @@
 
 namespace NxFr
 {
-	template<typename T, uint64 L = 1>
+	template<typename T, uint64 L = 0>
 	class Array
 	{
 	private:
 		union Buffer
 		{
 			T* Heap;
-			T Stack[L];
+			T Stack[L > 0 ? L : 1];
 
 			Buffer() : Heap(nullptr) {};
 			~Buffer() {};
@@ -39,7 +39,7 @@ namespace NxFr
 		Array(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Count(0)
 		{
-			NEXUS_ASSERT(L == 1 && Size > 1, Default, "The provided size is invalid");
+			NEXUS_ASSERT(L == 0 && Size >= 1, Default, "The provided size is invalid");
 
 			Allocate(Size);
 			ConstructRange(0, Count);
