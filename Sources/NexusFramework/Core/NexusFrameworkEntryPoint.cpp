@@ -71,7 +71,7 @@ namespace NxFr
 		Instruments::Destroy(Instrumentor);
 	}
 
-	bool Initialize()
+	void Initialize()
 	{
 		AllocatorContext Context(nullptr);
 
@@ -81,18 +81,14 @@ namespace NxFr
 		CreateLogger(DebugPath);
 		CreateStats(DebugPath);
 		CreateIntruments(DebugPath);
-
-		return true;
 	}
 
-	bool Shutdown()
+	void Shutdown()
 	{
 		AllocatorContext Context(nullptr);
 
 		DestroyInstruments();
 		DestroyStats();
 		DestroyLogger();
-
-		return true;
 	}
 }
