@@ -4,6 +4,7 @@ Name = "%{prj.name}"
 Output = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
 
 Framework = "NexusFramework"
+Utility = "NexusUtility"
 Sandbox = "NexusSandbox"
 Tests = "NexusTests"
 GoogleTest = "GoogleTest"
@@ -68,6 +69,8 @@ project (GoogleTest)
 group "Tests"
 project (Sandbox)
 project (Tests)
+group "Misc"
+project (Utility)
 group ""
 
 project (Framework)
@@ -104,6 +107,19 @@ project (Framework)
     postbuildcommands
     {
         PostBuild
+    }
+
+project (Utility)
+    location (Code)
+
+    kind "Utility"
+
+	targetdir (Target)
+	objdir (Object)
+
+    files
+    {
+        Code .. "**.natvis",
     }
 
 project (Sandbox)

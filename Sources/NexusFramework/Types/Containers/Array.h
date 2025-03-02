@@ -30,8 +30,6 @@ namespace NxFr
 		Array()
 			: Alloc(nullptr), Count(0)
 		{
-			NEXUS_ASSERT(L >= 1, Default, "The provided size is invalid");
-
 			Allocate(L);
 			ConstructRange(0, Count);
 		}
@@ -39,7 +37,7 @@ namespace NxFr
 		Array(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Count(0)
 		{
-			NEXUS_ASSERT(L == 0 && Size >= 1, Default, "The provided size is invalid");
+			NEXUS_ASSERT((L == 0 && Size == 0) || (L == 0 && Size > 0), Default, "The provided size is invalid");
 
 			Allocate(Size);
 			ConstructRange(0, Count);
@@ -430,7 +428,7 @@ namespace NxFr
 
 		void ValidateCapacity(uint64 Size)
 		{
-			Count = Size > 1 ? Size : 1;
+			Count = Size;
 		}
 
 		Allocator* Alloc;

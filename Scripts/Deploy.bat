@@ -9,7 +9,8 @@ set Deploy=%Target%\NexusFramework\
 if exist %Deploy% rmdir /s /q %Deploy%
 mkdir %Deploy%
 
-robocopy %Root%Sources\NexusFramework\ %Deploy%Sources\NexusFramework\ *.h *.cpp *.natvis /e
+robocopy %Root%Sources\NexusFramework\ %Deploy%Sources\NexusFramework\ *.h *.cpp /e
+robocopy %Root%Sources\NexusUtility\ %Deploy%Sources\NexusUtility\ *.natvis /e
 
 for /d %%F in (%Root%builds\binaries\*) do (
     echo %%~nxF | findstr /i NexusFramework > nul
