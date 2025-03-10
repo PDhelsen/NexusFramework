@@ -174,6 +174,11 @@ namespace NxFr
 
 	void Logger::Write(String& Text)
 	{
+		if (Text.GetCount() == 0)
+		{
+			return;
+		}
+
 		if (CheckOutput(LoggerOutput::Console))
 		{
 			Target->WriteToTerminal(Text);
