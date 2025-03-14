@@ -1,6 +1,8 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Core/NexusFrameworkPaths.h"
 
+#include "NexusFramework/IO/Directory.h"
+
 namespace NxFr
 {
 	namespace Paths
@@ -17,5 +19,11 @@ namespace NxFr
 		Path Builds = Root + "builds";
 		Path Cooked = Root + "cooked";
 		Path Saved = Root + "saved";
+
+		void CreateFrameworkFolders()
+		{
+			Directory(Paths::Cooked).Create();
+			Directory(Paths::Saved).Create();
+		}
 	}
 }

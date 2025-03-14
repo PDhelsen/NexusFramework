@@ -9,12 +9,6 @@
 
 namespace NxFr
 {
-	static void CreateFolders()
-	{
-		Directory(Paths::Cooked).Create();
-		Directory(Paths::Saved).Create();
-	}
-
 	static Path GetDebugPath()
 	{
 		Path DebugPath = Paths::Saved + "debug";
@@ -75,7 +69,7 @@ namespace NxFr
 	{
 		AllocatorContext Context(nullptr);
 
-		CreateFolders();
+		Paths::CreateFrameworkFolders();
 		Path DebugPath = GetDebugPath();
 
 		CreateLogger(DebugPath);
