@@ -46,6 +46,7 @@ namespace NxFr
 		void Reset();
 
         HeapSlot* Root;
+		mutable HeapSlot* Cache;
     };
 }
 

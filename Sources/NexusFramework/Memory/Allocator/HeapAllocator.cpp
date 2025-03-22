@@ -7,7 +7,7 @@
 namespace NxFr
 {
 	HeapAllocator::HeapAllocator(uint64 Size)
-		: Allocator(Size), Root(nullptr)
+		: Allocator(Size), Root(nullptr), Cache(nullptr)
 	{
 		Clear();
 	}
@@ -27,7 +27,8 @@ namespace NxFr
 	bool HeapAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
 		Size = GetAlignedSize(Size);
-		return GetHeapSlot(Size) != nullptr;
+		Cache = GetHeapSlot(Size);
+		return Cache != nullptr;
 	}
 
 	bool HeapAllocator::BelongToAllocator(void* Pointer) const
@@ -120,6 +121,7 @@ namespace NxFr
 		UpdateHeapSlot(Slot, Size);
 
 		IncreaseAmount(Size);
+		Cache = nullptr;
 		return Pointer;
 	}
 
@@ -166,6 +168,7 @@ namespace NxFr
 			Free(Pointer);
 		}
 
+		Cache = Slot;
 		return NewPointer;
 	}
 
@@ -190,6 +193,7 @@ namespace NxFr
 		}
 
 		DecreaseAmount(Size);
+		Cache = Slot;
 	}
 
 	void HeapAllocator::UpdateHeapSlot(HeapSlot* Slot, uint64 Size)
@@ -240,10 +244,19 @@ namespace NxFr
 
 	HeapAllocator::HeapSlot* HeapAllocator::GetHeapSlot(uint64 Size) const
 	{
-		HeapSlot* Slot = Root;
-		while (Slot && (!Slot->Free || GetHeapSlotSize(Slot) < Size))
+		HeapSlot* Slot = nullptr;
+
+		if (Cache && Cache->Free && GetHeapSlotSize(Cache) >= Size)
 		{
-			Slot = Slot->Next;
+			Slot = Cache;
+		}
+		else
+		{
+			Slot = Root;
+			while (Slot && (!Slot->Free || GetHeapSlotSize(Slot) < Size))
+			{
+				Slot = Slot->Next;
+			}
 		}
 
 		return Slot;
@@ -282,6 +295,8 @@ namespace NxFr
 		Root = (HeapSlot*)GetMemoryBlock();
 		Root->Next = nullptr;
 		Root->Free = true;
+
+		Cache = nullptr;
 
 		IncreaseAmount(sizeof(HeapSlot));
 	}
