@@ -166,7 +166,7 @@ namespace NxFr
 	{
 		if (BufferLogs.GetCapacity() - BufferLogs.GetCount() < Text.GetCount())
 		{
-			Write(Text);
+			Write(BufferLogs);
 		}
 
 		BufferLogs += Text;
