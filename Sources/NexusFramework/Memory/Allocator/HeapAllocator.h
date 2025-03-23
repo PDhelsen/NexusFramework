@@ -30,6 +30,8 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager, uint64 Count = 0);
 
+		NEXUS_FRAMEWORK_API virtual bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
+
 	protected:
 		void* Allocate(uint64 Size, uint64 Alignement) override;
 		void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;

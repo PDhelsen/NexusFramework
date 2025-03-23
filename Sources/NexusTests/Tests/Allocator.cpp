@@ -87,7 +87,7 @@ namespace NxTs
 
 	TEST(Allocator, PoolAllocator)
 	{
-		NxFr::PoolAllocator* Allocator = new NxFr::PoolAllocator(16, sizeof(MemoryTest));
+		NxFr::PoolAllocator* Allocator = new NxFr::PoolAllocator(16 * sizeof(MemoryTest), sizeof(MemoryTest));
 
 		MemoryTest* Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
 		Test1->Value = 1;
@@ -149,7 +149,7 @@ namespace NxTs
 
 		delete Allocator;
 
-		Allocator = new NxFr::PoolAllocator(4, sizeof(MemoryTest));
+		Allocator = new NxFr::PoolAllocator(4 * sizeof(MemoryTest), sizeof(MemoryTest));
 
 		MemoryTest* Test15 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
 		Test15->Value = 1;

@@ -111,6 +111,14 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API	uint16	Modulo				(uint16		X, uint16	Y);
 		NEXUS_FRAMEWORK_API	uint32	Modulo				(uint32		X, uint32	Y);
 		NEXUS_FRAMEWORK_API	uint64	Modulo				(uint64		X, uint64	Y);
+		NEXUS_FRAMEWORK_API	int8	IsMultiple			(int8		X, int8		Y);
+		NEXUS_FRAMEWORK_API	int16	IsMultiple			(int16		X, int16	Y);
+		NEXUS_FRAMEWORK_API	int32	IsMultiple			(int32		X, int32	Y);
+		NEXUS_FRAMEWORK_API	int64	IsMultiple			(int64		X, int64	Y);
+		NEXUS_FRAMEWORK_API	uint8	IsMultiple			(uint8		X, uint8	Y);
+		NEXUS_FRAMEWORK_API	uint16	IsMultiple			(uint16		X, uint16	Y);
+		NEXUS_FRAMEWORK_API	uint32	IsMultiple			(uint32		X, uint32	Y);
+		NEXUS_FRAMEWORK_API	uint64	IsMultiple			(uint64		X, uint64	Y);
 
 		NEXUS_FRAMEWORK_API bool	IsPowerOfTwo		(uint8		X);
 		NEXUS_FRAMEWORK_API bool	IsPowerOfTwo		(uint16		X);

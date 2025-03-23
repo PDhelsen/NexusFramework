@@ -3,10 +3,11 @@
 
 namespace NxFr
 {
-	PoolAllocator::PoolAllocator(uint64 Count, uint64 Stride)
-		: Allocator(Count * Stride), Head(nullptr), Stride(Stride)
+	PoolAllocator::PoolAllocator(uint64 Size, uint64 Stride)
+		: Allocator(Size), Head(nullptr), Stride(Stride)
 	{
 		NEXUS_ASSERT(Stride >= sizeof(void*), Default, "Element size should be at least : %d bytes", sizeof(void*));
+		NEXUS_ASSERT(Math::IsMultiple(Size, Stride), Default, "Size (%d) is not a multiple of the stride (%d)", Size, Stride);
 
 		Clear();
 	}

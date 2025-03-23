@@ -32,11 +32,12 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual bool CanAllocate(uint64 Size, uint64 Alignement) const = 0;
 		NEXUS_FRAMEWORK_API virtual bool BelongToAllocator(void* Pointer) const = 0;
 
-		NEXUS_FRAMEWORK_API bool IsFull() const { return Usage() > 0.95f; };
-		NEXUS_FRAMEWORK_API float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }
-		NEXUS_FRAMEWORK_API uint64 UsedAmount() const { return Amount; };
-		NEXUS_FRAMEWORK_API uint64 FreeAmount() const { return Amount < Capacity ? Capacity - Amount : 0; };
-		NEXUS_FRAMEWORK_API uint64 TotalAmount() const { return Capacity; };
+		NEXUS_FRAMEWORK_API virtual bool IsEmpty() const { return UsedAmount() == 0; };
+		NEXUS_FRAMEWORK_API virtual bool IsFull() const { return Usage() > 0.95f; };
+		NEXUS_FRAMEWORK_API virtual float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }
+		NEXUS_FRAMEWORK_API virtual uint64 UsedAmount() const { return Amount; };
+		NEXUS_FRAMEWORK_API virtual uint64 FreeAmount() const { return Amount < Capacity ? Capacity - Amount : 0; };
+		NEXUS_FRAMEWORK_API virtual uint64 TotalAmount() const { return Capacity; };
 
 	protected:
 		virtual void* Allocate(uint64 Size, uint64 Alignement) = 0;

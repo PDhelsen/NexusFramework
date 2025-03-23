@@ -524,6 +524,46 @@ namespace NxFr
 			return Remainder < 0 ? Remainder + Y : Remainder;
 		}
 
+		int8 IsMultiple(int8 X, int8 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		int16 IsMultiple(int16 X, int16 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		int32 IsMultiple(int32 X, int32 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		int64 IsMultiple(int64 X, int64 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		uint8 IsMultiple(uint8 X, uint8 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		uint16 IsMultiple(uint16 X, uint16 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		uint32 IsMultiple(uint32 X, uint32 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
+		uint64 IsMultiple(uint64 X, uint64 Y)
+		{
+			return Y != 0 && X % Y == 0;
+		}
+
 		bool IsPowerOfTwo(uint8 X)
 		{
 			return (X & (X - 1)) == 0;

@@ -7,7 +7,7 @@ namespace NxFr
     class PoolAllocator : public Allocator
     {
     public:
-        NEXUS_FRAMEWORK_API PoolAllocator(uint64 Count, uint64 Stride);
+        NEXUS_FRAMEWORK_API PoolAllocator(uint64 Size, uint64 Stride);
 		NEXUS_FRAMEWORK_API PoolAllocator(const PoolAllocator& Other) = delete;
 		NEXUS_FRAMEWORK_API PoolAllocator(PoolAllocator&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API virtual ~PoolAllocator();
@@ -20,6 +20,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool BelongToAllocator(void* Pointer) const override;
 
 		NEXUS_FRAMEWORK_API uint64 SlotAvailable() const { return FreeAmount() / Stride; }
+		NEXUS_FRAMEWORK_API uint64 GetStride() const { return Stride; }
 
 	protected:
 		void* Allocate(uint64 Size, uint64 Alignement) override;

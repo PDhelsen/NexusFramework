@@ -21,6 +21,27 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Math::Modulo(-6, 4), 2);
 	}
 
+	TEST(Math, IsMultiple)
+	{
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 2), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 6), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 3), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 4), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 1), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 5), false);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 7), false);
+		ASSERT_EQ(NxFr::Math::IsMultiple(12, 8), false);
+
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 2), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, -6), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 3), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, -4), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 1), true);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 5), false);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, -7), false);
+		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 8), false);
+	}
+
 	TEST(Math, PowerOfTwo)
 	{
 		ASSERT_EQ(NxFr::Math::IsPowerOfTwo((uint32)16), true);
