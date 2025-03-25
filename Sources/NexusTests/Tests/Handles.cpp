@@ -104,7 +104,7 @@ namespace NxTs
 		NxFr::Memory::Free(Manager.ReleaseHandle(Handle5), Heap);
 
 		uint64 StartAmount = Heap->UsedAmount();
-		Heap->Defragment(&Manager, 1);
+		Heap->Defragment(&Manager, 1.0f);
 		Heap->Defragment(&Manager);
 		Heap->Defragment(&Manager);
 		uint64 EndAmount = Heap->UsedAmount();

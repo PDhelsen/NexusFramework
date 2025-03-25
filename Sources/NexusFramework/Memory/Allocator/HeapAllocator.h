@@ -28,7 +28,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
 		NEXUS_FRAMEWORK_API bool BelongToAllocator(void* Pointer) const override;
 
-		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager, uint64 Count = 0);
+		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager);
+		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager, float Time);
+		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager, uint64 Count);
 
 		NEXUS_FRAMEWORK_API virtual bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
 
@@ -47,7 +49,10 @@ namespace NxFr
 		uint64 GetAlignedSize(uint64 Size) const;
 		void Reset();
 
-        HeapSlot* Root;
+		void Defragment(HandleManager* Manager, float Time, uint64 Count);
+
+	private:
+		HeapSlot* Root;
 		mutable HeapSlot* Cache;
     };
 }

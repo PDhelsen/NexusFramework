@@ -32,7 +32,8 @@ namespace NxFr
 		inline void Previous(void* Pointer);
 		inline void Reset();
 
-        uint64* Head;
+	private:
+		uint64* Head;
         uint64 Stride;
     };
 }

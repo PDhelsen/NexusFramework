@@ -29,7 +29,8 @@ namespace NxFr
 		inline void Previous(void* Pointer);
 		inline void Reset();
 
-        void* Marker;
+	private:
+		void* Marker;
     };
 }
 
