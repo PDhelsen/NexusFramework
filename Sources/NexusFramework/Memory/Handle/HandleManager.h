@@ -26,6 +26,10 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API Dictionary<void*, Handle<uint8>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
+		bool IsEmpty() const { return Buffer.GetCount() == 0; }
+		uint64 GetCount() const { return Buffer.GetCount(); }
+		uint64 GetCapacity() const { return Buffer.GetCapacity(); }
+
 	private:
 		NEXUS_FRAMEWORK_API void* AllocateHandle(void* Pointer);
 		NEXUS_FRAMEWORK_API void ModifyHandle(void* Handle, void* Pointer);
