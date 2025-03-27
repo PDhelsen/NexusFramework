@@ -68,7 +68,7 @@ namespace NxTs
 
 	TEST(Memory, MallocReallocFreeConstructDestruct)
 	{
-		MemoryTest * Test = NxFr::Memory::Create<MemoryTest>(sizeof(MemoryTest));
+		MemoryTest * Test = NxFr::Memory::Create<MemoryTest>();
 
 		ASSERT_EQ(Test->Value, 120);
 

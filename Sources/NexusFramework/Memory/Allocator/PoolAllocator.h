@@ -1,10 +1,10 @@
 #pragma once
 
-#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
 
 namespace NxFr
 {
-    class PoolAllocator : public Allocator
+    class PoolAllocator : public MemoryAllocator
     {
     public:
         NEXUS_FRAMEWORK_API PoolAllocator(uint64 Size, uint64 Stride);

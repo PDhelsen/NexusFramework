@@ -4,7 +4,7 @@
 namespace NxFr
 {
 	StackAllocator::StackAllocator(uint64 Size)
-		: Allocator(Size), Marker(nullptr)
+		: MemoryAllocator(Size), Marker(nullptr)
 	{
 		Clear();
 	}

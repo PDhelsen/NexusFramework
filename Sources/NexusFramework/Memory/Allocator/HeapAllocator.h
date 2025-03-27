@@ -1,12 +1,12 @@
 #pragma once
 
-#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
 
 namespace NxFr
 {
 	class HandleManager;
 
-    class HeapAllocator : public Allocator
+    class HeapAllocator : public MemoryAllocator
     {
 	private:
 		struct HeapSlot

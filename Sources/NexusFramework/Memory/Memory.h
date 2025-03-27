@@ -49,9 +49,9 @@ namespace NxFr
 		}
 
 		template<typename T, typename ...Args>
-		T* Create(uint64 Size, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
+		T* Create(Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
 		{
-			void* Ptr = Allocate(Size, Allocator, alignof(T));
+			void* Ptr = Allocate(sizeof(T), Allocator, alignof(T));
 			return Construct<T>(Ptr, args...);
 		}
 

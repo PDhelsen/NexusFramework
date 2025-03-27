@@ -10,7 +10,7 @@
 namespace NxFr
 {
 	HeapAllocator::HeapAllocator(uint64 Size)
-		: Allocator(Size), Root(nullptr), Cache(nullptr)
+		: MemoryAllocator(Size), Root(nullptr), Cache(nullptr)
 	{
 		Clear();
 	}

@@ -75,4 +75,21 @@ namespace NxFr
 		Handle.Pointer = GetHandle(Pointer);
 		return Handle;
 	}
+
+	namespace Memory
+	{
+		template<typename T, typename ...Args>
+		::NxFr::Handle<T> Create(HandleManager* Manager, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
+		{
+			T* Pointer = Create<T>(Allocator, args...);
+			return Manager->AcquireHandle<T>(Pointer);
+		}
+
+		template<typename T>
+		void Destroy(HandleManager* Manager, ::NxFr::Handle<T> Handle, Allocator* Allocator = AllocatorContext::Get())
+		{
+			Destroy(Handle.GetRedirectedPointer(), Allocator);
+			Manager->ReleaseHandle<T>(Handle);
+		}
+	}
 }

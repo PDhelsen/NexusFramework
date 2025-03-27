@@ -1,10 +1,10 @@
 #pragma once
 
-#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
 
 namespace NxFr
 {
-    class StackAllocator : public Allocator
+    class StackAllocator : public MemoryAllocator
     {
     public:
         NEXUS_FRAMEWORK_API StackAllocator(uint64 Size);
