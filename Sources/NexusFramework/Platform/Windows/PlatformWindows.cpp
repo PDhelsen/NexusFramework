@@ -7,6 +7,7 @@
 
 #include <windows.h>
 #include <sys/stat.h>
+#include <psapi.h>
 
 namespace NxFr
 {
@@ -67,6 +68,19 @@ namespace NxFr
 		LARGE_INTEGER Counter;
 		QueryPerformanceCounter(&Counter);
 		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
+	}
+
+	Platform::MemoryInfo PlatformWindows::GetMemoryInfo() const
+	{
+		PROCESS_MEMORY_COUNTERS Info;
+		GetProcessMemoryInfo(GetCurrentProcess(), &Info, sizeof(Info));
+
+		return MemoryInfo {
+			.CurrentUsage = Info.WorkingSetSize,
+			.PeakUsage = Info.PeakWorkingSetSize,
+			.CurrentAllocated = Info.PagefileUsage,
+			.PeakAllocated = Info.PeakPagefileUsage
+		};
 	}
 
 	void PlatformWindows::WaitForUserToCloseTerminal() const

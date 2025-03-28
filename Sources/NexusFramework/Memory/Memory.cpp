@@ -2,6 +2,7 @@
 #include "NexusFramework/Memory/Memory.h"
 
 #include "NexusFramework/External/StandardLibrary.h"
+#include "NexusFramework/Debug/Profiler/Memory/MemoryTracker.h"
 
 namespace NxFr
 {
@@ -124,6 +125,7 @@ namespace NxFr
 		else
 		{
 			Return = malloc(Size);
+			NEXUS_TRACKMEMORY_ALLOCATION(Return, Size);
 		}
 
 		NEXUS_ASSERT(Return != nullptr, Default, "Pointer is null");
@@ -143,6 +145,7 @@ namespace NxFr
 		else
 		{
 			Return = realloc(Pointer, Size);
+			NEXUS_TRACKMEMORY_REALLOCATION(Pointer, Return, Size);
 		}
 
 		NEXUS_ASSERT(Return != nullptr, Default, "Pointer is null");
@@ -157,6 +160,7 @@ namespace NxFr
 		}
 		else
 		{
+			NEXUS_TRACKMEMORY_DEALLOCATION(Pointer);
 			free(Pointer);
 		}
 	}

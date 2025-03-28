@@ -2,6 +2,7 @@
 
 #include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"
+#include "NexusFramework/Debug/Profiler/Memory/MemoryTracker.h"
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
 	#define NEXUS_PROFILE_SCOPE_INSTANCE(Instance, Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, Name);

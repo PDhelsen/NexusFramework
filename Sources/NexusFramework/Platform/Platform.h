@@ -30,6 +30,15 @@ namespace NxFr
 			Read, Write, Append
 		};
 
+		struct MemoryInfo
+		{
+		public:
+			uint64 CurrentUsage;
+			uint64 PeakUsage;
+			uint64 CurrentAllocated;
+			uint64 PeakAllocated;
+		};
+
 		NEXUS_FRAMEWORK_API static Platform* GetInstance();
 
 		template<typename R, typename... Args>
@@ -42,6 +51,8 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API virtual void Sleep(uint64 Milliseconds) const = 0;
 		NEXUS_FRAMEWORK_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
+
+		NEXUS_FRAMEWORK_API virtual MemoryInfo GetMemoryInfo() const = 0;
 
 		NEXUS_FRAMEWORK_API virtual void WaitForUserToCloseTerminal() const = 0;
 		NEXUS_FRAMEWORK_API virtual void WriteToTerminal(StringView Message) const = 0;
