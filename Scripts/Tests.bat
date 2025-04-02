@@ -7,5 +7,5 @@ call %Root%builds\artifacts\NexusTests.exe
 set Result=%errorlevel%
 cd %Current%
 
-if %Result% NEQ 0 pause
-if %errorlevel% NEQ 0 pause
+if %Result% 1 (pause) else (exit /b 0)
+if errorlevel 1 (pause) else (exit /b 0)

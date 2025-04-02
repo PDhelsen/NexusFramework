@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 
 set Root=%~dp0..\
 
@@ -9,14 +10,41 @@ set Deploy=%Target%\NexusFramework\
 if exist %Deploy% rmdir /s /q %Deploy%
 mkdir %Deploy%
 
-robocopy %Root%Sources\NexusFramework\ %Deploy%Sources\NexusFramework\ *.h *.cpp /e
-robocopy %Root%Sources\NexusUtility\ %Deploy%Sources\NexusUtility\ *.natvis /e
+set FolderLastIndex=1
+set Folders[0]=NexusFramework
+set Folders[1]=NexusUtility
 
-for /d %%F in (%Root%builds\binaries\*) do (
-    echo %%~nxF | findstr /i NexusFramework > nul
-    if not errorlevel 1 (
-        robocopy %%F %Deploy%Builds\%%~nxF /e
-    )
+call :Copy %Root%Sources %Deploy%Sources ".h .cpp .natvis"
+call :Copy %Root%builds\binaries %Deploy%Builds
+
+if errorlevel 1 (pause) else (exit /b 0)
+
+::------------------------------------------------
+:Copy
+setlocal
+
+for /d %%F in (%1\*) do (
+	call :ContainsSubstring %%~nxF
+	if !Result!==true (
+		robocopy %%F %2\%%~nxF /e %3
+	)
 )
 
-if %errorlevel% NEQ 0 pause
+endlocal
+exit /b 0
+
+::------------------------------------------------
+:ContainsSubstring
+setlocal
+set "Contains=false"
+
+for /L %%I in (0,1,%FolderLastIndex%) do (
+	set "Folder=!Folders[%%I]!"
+	echo %1 | findstr /i /c:"!Folder!" > nul
+	if not errorlevel 1 (
+		set "Contains=true"
+	)
+)
+
+(endlocal & set "Result=%Contains%")
+exit /b 0
