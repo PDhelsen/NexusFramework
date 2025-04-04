@@ -14,19 +14,19 @@ set FolderLastIndex=1
 set Folders[0]=NexusFramework
 set Folders[1]=NexusUtility
 
-call :Copy %Root%Sources %Deploy%Sources "*.h *.cpp *.natvis"
-call :Copy %Root%builds\binaries %Deploy%Builds
+call :CopyFolder %Root%Sources %Deploy%Sources "*.h *.cpp *.natvis"
+call :CopyFolder %Root%builds\binaries %Deploy%Builds "*.dll *.lib *.pdb"
 
 if errorlevel 1 (pause) else (exit /b 0)
 
 ::------------------------------------------------
-:Copy
+:CopyFolder
 setlocal
 
 for /d %%F in (%1\*) do (
 	call :ContainsSubstring %%~nxF
 	if !Result!==true (
-		robocopy %%F %2\%%~nxF %~3 /e
+		robocopy %%F %2\%%~nxF %~3 /e /s
 	)
 )
 
