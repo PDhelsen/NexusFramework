@@ -69,7 +69,7 @@ namespace NxFr
 	{
 		AllocatorContext Context(nullptr);
 
-		Paths::CreateFrameworkFolders();
+		Paths::SetupPathsAndFolders();
 		Path DebugPath = GetDebugPath();
 
 		CreateLogger(DebugPath);

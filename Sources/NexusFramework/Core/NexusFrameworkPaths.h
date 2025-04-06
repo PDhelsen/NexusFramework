@@ -20,6 +20,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API extern Path Cooked;
 		NEXUS_FRAMEWORK_API extern Path Saved;
 
-		NEXUS_FRAMEWORK_API extern void CreateFrameworkFolders();
+		NEXUS_FRAMEWORK_API extern void SetupPathsAndFolders();
 	}
 }

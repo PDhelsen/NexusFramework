@@ -7,21 +7,34 @@ namespace NxFr
 {
 	namespace Paths
 	{
-		Path Root = Path::GetWorkingDirectory();
+		Path Root = Path("");
 
-		Path Assets = Root + "Assets";
-		Path Configs = Root + "Configs";
-		Path Libraries = Root + "Libraries";
-		Path Resources = Root + "Resources";
-		Path Scripts = Root + "Scripts";
-		Path Sources = Root + "Sources";
+		Path Assets = Path("");
+		Path Configs = Path("");
+		Path Libraries = Path("");
+		Path Resources = Path("");
+		Path Scripts = Path("");
+		Path Sources = Path("");
 
-		Path Builds = Root + "builds";
-		Path Cooked = Root + "cooked";
-		Path Saved = Root + "saved";
+		Path Builds = Path("");
+		Path Cooked = Path("");
+		Path Saved = Path("");
 
-		void CreateFrameworkFolders()
+		void SetupPathsAndFolders()
 		{
+			Root = Path::GetWorkingDirectory();
+
+			Assets = Root + "Assets";
+			Configs = Root + "Configs";
+			Libraries = Root + "Libraries";
+			Resources = Root + "Resources";
+			Scripts = Root + "Scripts";
+			Sources = Root + "Sources";
+
+			Builds = Root + "builds";
+			Cooked = Root + "cooked";
+			Saved = Root + "saved";
+
 			Directory(Paths::Cooked).Create();
 			Directory(Paths::Saved).Create();
 		}
