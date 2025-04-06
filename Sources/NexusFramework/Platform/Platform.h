@@ -60,6 +60,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API virtual PathType GetPathType(StringView Path) const = 0;
 		NEXUS_FRAMEWORK_API virtual String GetWorkingDirectory() const = 0;
+		NEXUS_FRAMEWORK_API virtual void SetWorkingDirectory(StringView Path) const = 0;
 
 		NEXUS_FRAMEWORK_API virtual void DirectoryCreate(StringView Path) const = 0;
 		NEXUS_FRAMEWORK_API virtual void DirectoryMove(StringView Path, StringView Target, bool Override = false) const = 0;

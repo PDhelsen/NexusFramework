@@ -25,6 +25,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API PathType GetPathType(StringView Path) const override;
 		NEXUS_FRAMEWORK_API String GetWorkingDirectory() const override;
+		NEXUS_FRAMEWORK_API void SetWorkingDirectory(StringView Path) const override;
 
 		NEXUS_FRAMEWORK_API void DirectoryCreate(StringView Path) const override;
 		NEXUS_FRAMEWORK_API void DirectoryMove(StringView Path, StringView Target, bool Override = false) const override;

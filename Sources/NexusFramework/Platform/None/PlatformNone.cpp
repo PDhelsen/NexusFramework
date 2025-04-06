@@ -53,6 +53,10 @@ namespace NxFr
 		return StringUtility::Empty;
 	}
 
+	void PlatformNone::SetWorkingDirectory(StringView Path) const
+	{
+	}
+
 	void PlatformNone::DirectoryCreate(StringView Path) const
 	{
 	}

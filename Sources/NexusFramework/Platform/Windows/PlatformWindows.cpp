@@ -130,6 +130,11 @@ namespace NxFr
 		return Path::Normalize(StringView(LocalBuffer.GetPtr(), Length));
 	}
 
+	void PlatformWindows::SetWorkingDirectory(StringView Path) const
+	{
+		SetCurrentDirectoryA(Path.C());
+	}
+
 	void PlatformWindows::DirectoryCreate(StringView Path) const
 	{
 		bool Result = CreateDirectoryA(Path.C(), nullptr);
