@@ -1,12 +1,12 @@
 #pragma once
 
-#define NEXUS_ENUM_TO_STRING_DEFINITION_NAME(EnumType, EnumName)\
+#define NEXUS_ENUM_TO_STRING_DEFINITION_NAME(Dll, EnumType, EnumName)\
 namespace Enum\
 {\
-NEXUS_FRAMEWORK_API const char* EnumName##ToString(EnumType Value);\
-NEXUS_FRAMEWORK_API const char* EnumName##ToString(uint64 Value);\
+Dll const char* EnumName##ToString(EnumType Value);\
+Dll const char* EnumName##ToString(uint64 Value);\
 }
-#define NEXUS_ENUM_TO_STRING_DEFINITION(EnumType) NEXUS_ENUM_TO_STRING_DEFINITION_NAME(EnumType, EnumType)
+#define NEXUS_ENUM_TO_STRING_DEFINITION(Dll, EnumType) NEXUS_ENUM_TO_STRING_DEFINITION_NAME(Dll, EnumType, EnumType)
 
 #define NEXUS_ENUM_TO_STRING_IMPLEMENTATION_NAME_COUNT(EnumType, EnumName, Count, ...)\
 namespace Enum\

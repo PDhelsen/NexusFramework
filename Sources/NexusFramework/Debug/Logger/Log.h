@@ -32,7 +32,7 @@ namespace NxFr
 		COUNT
 	};
 	NEXUS_ENUM_TO_FLAG(LoggerVerbosity)
-	NEXUS_ENUM_TO_STRING_DEFINITION(LoggerVerbosity)
+	NEXUS_ENUM_TO_STRING_DEFINITION(NEXUS_FRAMEWORK_API, LoggerVerbosity)
 
 	enum class LoggerOutput : uint8
 	{
