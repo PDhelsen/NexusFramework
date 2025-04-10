@@ -63,7 +63,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static String ToStringB(bool State, StringView Format = "%s");
 
 	private:
-		static StringView Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
+		static StringView Search(const char* Text, const char* Substring, uint64 Capacity, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
 	};
 
 	NEXUS_FRAMEWORK_API String operator+(StringView TextA, StringView TextB);

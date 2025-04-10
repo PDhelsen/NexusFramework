@@ -342,7 +342,7 @@ namespace NxFr
 
 		do
 		{
-			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, OldText, OldSize));
+			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, OldText, Count, OldSize));
 
 			if (Substring)
 			{
@@ -397,7 +397,7 @@ namespace NxFr
 
 		do
 		{
-			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, ReferenceText, ReferenceSize));
+			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, ReferenceText, Count, ReferenceSize));
 
 			if (Substring)
 			{
@@ -438,7 +438,7 @@ namespace NxFr
 
 		do
 		{
-			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, Text, Size));
+			Substring = const_cast<char*>(StringCApi::SearchStr(Substring, Text, Count, Size));
 
 			if (Substring)
 			{

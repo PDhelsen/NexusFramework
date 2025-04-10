@@ -26,7 +26,7 @@ namespace NxFr
 
 	bool StringUtility::Contains(StringView Text, StringView Substring, SearchMode Mode)
 	{
-		StringView Result = Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Contains, Mode, 0, nullptr);
+		StringView Result = Search(Text.C(), Substring.C(), Text.GetCount(), Substring.GetCount(), SearchBehaviour::Contains, Mode, 0, nullptr);
 		return !Result.IsEmpty();
 	}
 
@@ -38,25 +38,25 @@ namespace NxFr
 
 	StringView StringUtility::Find(StringView Text, StringView Substring, uint64 Offset, SearchMode Mode)
 	{
-		return Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, Offset, nullptr);
+		return Search(Text.C(), Substring.C(), Text.GetCount(), Substring.GetCount(), SearchBehaviour::Find, Mode, Offset, nullptr);
 	}
 
 	List<StringView> StringUtility::FindAll(StringView Text, StringView Substring, SearchMode Mode)
 	{
 		List<StringView> Results;
-		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Find, Mode, 0, &Results);
+		Search(Text.C(), Substring.C(), Text.GetCount(), Substring.GetCount(), SearchBehaviour::Find, Mode, 0, &Results);
 		return Results;
 	}
 
 	StringView StringUtility::Split(StringView Text, StringView Substring, uint64 Offset, SearchMode Mode)
 	{
-		return Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, Offset, nullptr);
+		return Search(Text.C(), Substring.C(), Text.GetCount(), Substring.GetCount(), SearchBehaviour::Split, Mode, Offset, nullptr);
 	}
 
 	List<StringView> StringUtility::SplitAll(StringView Text, StringView Substring, SearchMode Mode)
 	{
 		List<StringView> Results;
-		Search(Text.C(), Substring.C(), Substring.GetCount(), SearchBehaviour::Split, Mode, 0, &Results);
+		Search(Text.C(), Substring.C(), Text.GetCount(), Substring.GetCount(), SearchBehaviour::Split, Mode, 0, &Results);
 		return Results;
 	}
 
@@ -100,7 +100,7 @@ namespace NxFr
 		return StringUtility::Format(Format, State ? "True" : "False");
 	}
 
-	StringView StringUtility::Search(const char* Text, const char* Substring, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results)
+	StringView StringUtility::Search(const char* Text, const char* Substring, uint64 Capacity, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results)
 	{
 		uint64 Index = 0;
 		const char* Previous = Text;
@@ -111,15 +111,15 @@ namespace NxFr
 		{
 			switch (Mode)
 			{
-			case SearchMode::Substring: Pointer = StringCApi::SearchStr(Pointer, Substring, Size); break;
+			case SearchMode::Substring: Pointer = StringCApi::SearchStr(Pointer, Substring, Capacity - (Pointer - Text), Size); break;
 			case SearchMode::Characters: Pointer = StringCApi::SearchChr(Pointer, Substring); break;
 			}
 
 			switch (Behaviour)
 			{
 			case SearchBehaviour::Contains:
-			case SearchBehaviour::Find: Result = Pointer != nullptr ? StringView(Pointer) : StringView(); break;
-			case SearchBehaviour::Split: Result = Pointer != nullptr ? StringView(Previous, StringCApi::Length(Previous) - StringCApi::Length(Pointer)) : StringView(Previous); break;
+			case SearchBehaviour::Find: Result = Pointer != nullptr ? StringView(Pointer, Capacity - (StringCApi::Length(Text) - StringCApi::Length(Previous))) : StringView(); break;
+			case SearchBehaviour::Split: Result = Pointer != nullptr ? StringView(Previous, StringCApi::Length(Previous) - StringCApi::Length(Pointer)) : StringView(Previous, Capacity - (StringCApi::Length(Text) - StringCApi::Length(Previous))); break;
 			}
 
 			if (Results && Result != StringUtility::Empty)

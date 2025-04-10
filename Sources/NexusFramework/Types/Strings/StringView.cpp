@@ -25,37 +25,37 @@ namespace NxFr
 
 	bool StringView::Start(StringView Substring) const
 	{
-		return StringUtility::Start(C(), Substring);
+		return StringUtility::Start(*this, Substring);
 	}
 
 	bool StringView::End(StringView Substring) const
 	{
-		return StringUtility::End(C(), Substring);
+		return StringUtility::End(*this, Substring);
 	}
 
 	bool StringView::Contains(StringView Substring) const
 	{
-		return StringUtility::Contains(C(), Substring);
+		return StringUtility::Contains(*this, Substring);
 	}
 
 	StringView StringView::Find(StringView Substring, uint64 Offset) const
 	{
-		return StringUtility::Find(C(), Substring, Offset);
+		return StringUtility::Find(*this, Substring, Offset);
 	}
 
 	List<StringView> StringView::FindAll(StringView Substring) const
 	{
-		return StringUtility::FindAll(C(), Substring);
+		return StringUtility::FindAll(*this, Substring);
 	}
 
 	StringView StringView::Split(StringView Substring, uint64 Offset) const
 	{
-		return StringUtility::Split(C(), Substring, Offset);
+		return StringUtility::Split(*this, Substring, Offset);
 	}
 
 	List<StringView> StringView::SplitAll(StringView Substring) const
 	{
-		return StringUtility::SplitAll(C(), Substring);
+		return StringUtility::SplitAll(*this, Substring);
 	}
 
 	String StringView::ToString() const

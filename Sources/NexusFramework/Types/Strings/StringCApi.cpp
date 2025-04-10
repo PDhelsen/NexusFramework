@@ -22,7 +22,7 @@ namespace NxFr
 		}
 	}
 
-	const char* StringCApi::SearchStr(const char* Source, const char* Substring, uint64 Size)
+	const char* StringCApi::SearchStr(const char* Source, const char* Substring, uint64 Capacity, uint64 Size)
 	{
 		NEXUS_ASSERT(Source, Default, "Invalid Source");
 		NEXUS_ASSERT(Substring, Default, "Invalid Substring");
@@ -32,8 +32,9 @@ namespace NxFr
 		const char* Result = nullptr;
 		const char* Current = Source;
 		const char* Target = Substring;
+		const char* End = Source + Capacity;
 
-		while (*Current != NullChar)
+		while (*Current != NullChar && Current < End)
 		{
 			if (*Current == *Target)
 			{

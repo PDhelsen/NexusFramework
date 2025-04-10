@@ -13,7 +13,7 @@ namespace NxFr
 		inline static const char* NewLine = "\n";
 
 		NEXUS_FRAMEWORK_API static void Copy(const char* Source, char* Destination, uint64 Capacity, uint64 Size, bool NotSafe);
-		NEXUS_FRAMEWORK_API static const char* SearchStr(const char* Source, const char* Substring, uint64 Size);
+		NEXUS_FRAMEWORK_API static const char* SearchStr(const char* Source, const char* Substring, uint64 Capacity, uint64 Size);
 		NEXUS_FRAMEWORK_API static uint64 Common(const char* Text1, const char* Text2);
 
 		NEXUS_FRAMEWORK_API static uint64 Length(const char* Text);
