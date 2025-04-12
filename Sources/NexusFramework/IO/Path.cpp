@@ -192,6 +192,11 @@ namespace NxFr
 
 	void Path::Normalize(String& Path)
 	{
+		if (Path.IsEmpty())
+		{
+			return;
+		}
+
 		if (!Path::IsFile(Path) && !Path.End(SeparatorDirectory))
 		{
 			Path += SeparatorDirectory;
