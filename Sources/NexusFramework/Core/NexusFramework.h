@@ -51,8 +51,9 @@
 #include "NexusFramework/Time/Time.h"
 
 #include "NexusFramework/IO/Path.h"
-#include "NexusFramework/IO/File.h"
 #include "NexusFramework/IO/Directory.h"
+#include "NexusFramework/IO/File.h"
+#include "NexusFramework/IO/Stream.h"
 
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"

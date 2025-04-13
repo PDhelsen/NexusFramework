@@ -118,7 +118,7 @@ namespace NxFr
 			switch (Behaviour)
 			{
 			case SearchBehaviour::Contains:
-			case SearchBehaviour::Find: Result = Pointer != nullptr ? StringView(Pointer, Capacity - (StringCApi::Length(Text) - StringCApi::Length(Previous))) : StringView(); break;
+			case SearchBehaviour::Find: Result = Pointer != nullptr ? StringView(Pointer, Capacity - (StringCApi::Length(Text) - StringCApi::Length(Pointer))) : StringView(); break;
 			case SearchBehaviour::Split: Result = Pointer != nullptr ? StringView(Previous, StringCApi::Length(Previous) - StringCApi::Length(Pointer)) : StringView(Previous, Capacity - (StringCApi::Length(Text) - StringCApi::Length(Previous))); break;
 			}
 

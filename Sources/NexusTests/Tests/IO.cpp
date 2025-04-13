@@ -4,6 +4,7 @@ namespace NxTs
 {
 	uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
 	NxFr::String Text = "This was written by code.\n";
+	NxFr::String Line = "This was written by code.";
 
 	NxFr::Dictionary<NxFr::String, const NxFr::String> CreateTestsFiles()
 	{
@@ -208,5 +209,30 @@ namespace NxTs
 		File.Close();
 
 		File.Delete();
+	}
+
+	TEST(IO, Line)
+	{
+		NxFr::Path Working = NxFr::Path::GetWorkingDirectory() + "UnitTestText.txt";
+		NxFr::Stream File(Working);
+
+		File.Open(NxFr::File::Mode::Write);
+		File.Write(Line);
+		File.Write(Line);
+		File.Write(Line);
+		File.Close();
+
+		File.Open(NxFr::File::Mode::Read);
+		NxFr::StringView Content1 = File.Read();
+		ASSERT_EQ(Content1, Line);
+		NxFr::StringView Content2 = File.Read();
+		ASSERT_EQ(Content2, Line);
+		NxFr::StringView Content3 = File.Read();
+		ASSERT_EQ(Content3, Line);
+		NxFr::StringView Content4 = File.Read();
+		ASSERT_EQ(Content4, "");
+		File.Close();
+
+		NxFr::File(Working).Delete();
 	}
 }
