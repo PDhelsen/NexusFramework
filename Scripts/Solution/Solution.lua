@@ -8,6 +8,7 @@ Utility = "NexusUtility"
 Sandbox = "NexusSandbox"
 Tests = "NexusTests"
 GTest = "gtest"
+Yaml = "yaml-cpp"
 
 Builds = Root .. "builds/"
 Configs = Root .. "Configs/"
@@ -66,6 +67,7 @@ workspace (Framework)
 
 group "Libraries"
 project (GTest)
+project (Yaml)
 group "Tests"
 project (Sandbox)
 project (Tests)
@@ -98,6 +100,11 @@ project (Framework)
 		Sources,
 		Libraries,
     }
+
+	links
+	{
+		Yaml
+	}
 
 	defines
 	{
@@ -219,3 +226,32 @@ project (GTest)
     {
         PostBuild
     }
+
+project (Yaml)
+    location (Lib)
+
+    kind "StaticLib"
+    language "C++"
+	cppdialect "C++20"
+
+	targetdir (Target)
+	objdir (Object)
+
+    files
+    {
+        Lib .. "**.h",
+        Lib .. "**.cpp"
+    }
+
+    includedirs
+    {
+        Libraries,
+    }
+
+	postbuildcommands
+    {
+        PostBuild
+    }
+
+	filter "toolset:msc*"
+    	disablewarnings { "4267" }

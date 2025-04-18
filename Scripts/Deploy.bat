@@ -10,10 +10,11 @@ set Deploy=%Target%\NexusFramework\
 if exist %Deploy% rmdir /s /q %Deploy%
 mkdir %Deploy%
 
-set FolderLastIndex=2
+set FolderLastIndex=3
 set Folders[0]=NexusFramework
 set Folders[1]=NexusUtility
 set Folders[2]=gtest
+set Folders[3]=yaml-cpp
 
 call :CopyFolder %Root%Libraries %Deploy%Libraries "*.h *.hpp *.cpp *.cc *.natvis"
 call :CopyFolder %Root%Sources %Deploy%Sources "*.h *.cpp *.natvis"
