@@ -7,7 +7,7 @@ Framework = "NexusFramework"
 Utility = "NexusUtility"
 Sandbox = "NexusSandbox"
 Tests = "NexusTests"
-GoogleTest = "GoogleTest"
+GTest = "gtest"
 
 Builds = Root .. "builds/"
 Configs = Root .. "Configs/"
@@ -19,7 +19,7 @@ Artifacts = Builds .. "artifacts/"
 Binaries = Builds .. "binaries/"
 Intermediates = Builds .. "intermediates/"
 Code = Sources .. Name .. "/"
-External = Libraries .. Name .. "/"
+Lib = Libraries .. Name .. "/"
 Target = Binaries .. Output .. "/"
 Object = Intermediates .. Output .. "/"
 
@@ -65,7 +65,7 @@ workspace (Framework)
         optimize "On"
 
 group "Libraries"
-project (GoogleTest)
+project (GTest)
 group "Tests"
 project (Sandbox)
 project (Tests)
@@ -140,7 +140,8 @@ project (Sandbox)
 
     includedirs
     {
-        Sources
+        Sources,
+		Libraries,
     }
 
     links
@@ -174,14 +175,12 @@ project (Tests)
     {
         Sources,
 		Libraries,
-
-        Libraries .. GoogleTest .. "/include/"
     }
 
     links
     {
         Framework,
-        GoogleTest
+		GTest
     }
 
     postbuildcommands
@@ -189,8 +188,8 @@ project (Tests)
         PostBuild
     }
 
-project (GoogleTest)
-    location (External)
+project (GTest)
+    location (Lib)
 
     kind "StaticLib"
     language "C++"
@@ -201,19 +200,19 @@ project (GoogleTest)
 
     files
     {
-        External .. "**.h",
-        External .. "**.cc"
+        Lib .. "**.h",
+        Lib .. "**.cc"
     }
 
     removefiles
     {
-        External .. "src/gtest-all.cc"
+        Lib .. "**/gtest-all.cc"
     }
 
     includedirs
     {
-        External,
-        External .. "include/",
+        Libraries,
+        Lib,
     }
 
 	postbuildcommands

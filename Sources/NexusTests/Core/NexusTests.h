@@ -1,4 +1,4 @@
 #pragma once
 
-#include "GoogleTest/include/gtest/gtest.h"
+#include "NexusFramework/External/UnitTest.h"
 #include "NexusFramework/Core/NexusFramework.h"
