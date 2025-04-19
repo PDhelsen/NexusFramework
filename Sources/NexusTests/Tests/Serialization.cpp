@@ -41,10 +41,10 @@ empty_map: {})";
 
 	struct YamlTest
 	{
-		uint64 Width;
-		uint64 Height;
-		bool FullScreen;
-		NxFr::String Title;
+		uint64 Width = 0;
+		uint64 Height = 0;
+		bool FullScreen = false;
+		NxFr::String Title = "";
 	};
 
 	bool operator==(const YamlTest& A, const YamlTest& B)
@@ -102,6 +102,8 @@ namespace NxTs
 			ArrayValue[Index] = Array[Index].as<uint64>();
 		}
 		ASSERT_EQ(ArrayValue.GetCount(), 5);
+		NxFr::Array<uint64, 5> ArrayDecoded = Array.as<NxFr::Array<uint64, 5>>();
+		ASSERT_EQ(ArrayDecoded.GetCount(), 5);
 
 		NxFr::Yaml::Node List = Yaml["list"];
 		ASSERT_EQ(List[0].as<NxFr::String>(), "Alice");
@@ -113,6 +115,8 @@ namespace NxTs
 			ListValue.Append(It->as<NxFr::String>());
 		}
 		ASSERT_EQ(ListValue.GetCount(), 3);
+		NxFr::List<NxFr::String> ListDecoded = List.as<NxFr::List<NxFr::String>>();
+		ASSERT_EQ(ListDecoded.GetCount(), 3);
 
 		NxFr::Yaml::Node Map = Yaml["map"];
 		ASSERT_EQ(Map["key"].as<NxFr::String>(), "value");
@@ -124,6 +128,8 @@ namespace NxTs
 			MapValue.Append(It->first.as<NxFr::String>(), It->second.as<NxFr::String>());
 		}
 		ASSERT_EQ(MapValue.GetCount(), 3);
+		NxFr::Dictionary<NxFr::String, NxFr::String> MapDecoded = Map.as<NxFr::Dictionary<NxFr::String, NxFr::String>>();
+		ASSERT_EQ(MapDecoded.GetCount(), 3);
 
 		NxFr::Yaml::Node Nested = Yaml["nested"];
 		ASSERT_EQ(Nested["created"].as<NxFr::String>(), "2025-04-12");
