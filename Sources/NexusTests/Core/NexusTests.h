@@ -1,4 +1,4 @@
 #pragma once
 
-#include "NexusFramework/External/UnitTest.h"
+#include "NexusFramework/External/GTest.h"
 #include "NexusFramework/Core/NexusFramework.h"

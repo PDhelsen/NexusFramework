@@ -1,7 +1,8 @@
 Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
 
 Name = "%{prj.name}"
-Output = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
+OutputDirectory = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
+OutputName = "%{cfg.buildtarget.basename}%{cfg.buildtarget.extension}"
 
 Framework = "NexusFramework"
 Utility = "NexusUtility"
@@ -21,10 +22,10 @@ Binaries = Builds .. "binaries/"
 Intermediates = Builds .. "intermediates/"
 Code = Sources .. Name .. "/"
 Lib = Libraries .. Name .. "/"
-Target = Binaries .. Output .. "/"
-Object = Intermediates .. Output .. "/"
+Target = Binaries .. OutputDirectory .. "/"
+Object = Intermediates .. OutputDirectory .. "/"
 
-PostBuild = Scripts .. "Build/Steps/PostBuild.bat " .. Target
+PostBuild = Scripts .. "Build/Steps/PostBuild.bat " .. Target .. " " .. OutputName
 
 workspace (Framework)
     location (Root)
@@ -116,6 +117,7 @@ project (Framework)
         PostBuild
     }
 
+-- ----------------------------------------------------------------------------------
 project (Utility)
     location (Code)
 
@@ -129,6 +131,7 @@ project (Utility)
         Code .. "**.natvis",
     }
 
+-- ----------------------------------------------------------------------------------
 project (Sandbox)
     location (Code)
 
@@ -153,7 +156,7 @@ project (Sandbox)
 
     links
     {
-        Framework,
+        Framework
     }
 
     postbuildcommands
@@ -187,7 +190,8 @@ project (Tests)
     links
     {
         Framework,
-		GTest
+		GTest,
+		Yaml
     }
 
     postbuildcommands
@@ -195,6 +199,7 @@ project (Tests)
         PostBuild
     }
 
+-- ----------------------------------------------------------------------------------
 project (GTest)
     location (Lib)
 
@@ -227,10 +232,13 @@ project (GTest)
         PostBuild
     }
 
+	filter "toolset:msc"
+		disablewarnings { "26439", "26495" }
+
 project (Yaml)
     location (Lib)
 
-    kind "StaticLib"
+    kind "SharedLib"
     language "C++"
 	cppdialect "C++20"
 
@@ -248,10 +256,15 @@ project (Yaml)
         Libraries,
     }
 
+	defines
+	{
+		"yaml_cpp_EXPORTS"
+	}
+
 	postbuildcommands
     {
         PostBuild
     }
 
-	filter "toolset:msc*"
-    	disablewarnings { "4267" }
+	filter "toolset:msc"
+		disablewarnings { "4267", "4251", "4275" }
