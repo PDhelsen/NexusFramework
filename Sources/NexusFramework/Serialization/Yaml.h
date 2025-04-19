@@ -6,11 +6,21 @@
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
 
+namespace NxFr
+{
+	namespace Yaml
+	{
+		using Node = YAML::Node;
+		using Iterator = YAML::iterator;
+		using ConstIterator = YAML::const_iterator;
+
+		NEXUS_FRAMEWORK_API Node Load(NxFr::StringView Data);
+		NEXUS_FRAMEWORK_API Node LoadFile(NxFr::StringView Path);
+	}
+}
+
 namespace YAML
 {
-	NEXUS_FRAMEWORK_API Node Load(NxFr::StringView Data);
-	NEXUS_FRAMEWORK_API Node LoadFile(NxFr::StringView Path);
-
 	template<>
 	struct convert<NxFr::String>
 	{

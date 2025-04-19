@@ -1,15 +1,18 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Serialization/Yaml.h"
 
-namespace YAML
+namespace NxFr
 {
-	Node Load(NxFr::StringView Data)
+	namespace Yaml
 	{
-		return Load(Data.C());
-	}
+		Node Load(NxFr::StringView Data)
+		{
+			return YAML::Load(Data.C());
+		}
 
-	Node LoadFile(NxFr::StringView Path)
-	{
-		return LoadFile(std::string(Path.C()));
+		Node LoadFile(NxFr::StringView Path)
+		{
+			return YAML::LoadFile(std::string(Path.C()));
+		}
 	}
 }
