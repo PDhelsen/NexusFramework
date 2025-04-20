@@ -17,11 +17,18 @@ namespace NxFr
 	namespace Yaml
 	{
 		using Node = YAML::Node;
+		using Emitter = YAML::Emitter;
 		using Iterator = YAML::iterator;
 		using ConstIterator = YAML::const_iterator;
 
-		NEXUS_FRAMEWORK_API Node Load(NxFr::StringView Data);
-		NEXUS_FRAMEWORK_API Node LoadFile(NxFr::StringView Path);
+		const uint64 SmallSequence = 10;
+
+		NEXUS_FRAMEWORK_API String Serialize(const Node& Data);
+		NEXUS_FRAMEWORK_API String Serialize(const Emitter& Data);
+		NEXUS_FRAMEWORK_API void SerializeFile(const Node& Data, StringView Path);
+		NEXUS_FRAMEWORK_API void SerializeFile(const Emitter& Data, StringView Path);
+		NEXUS_FRAMEWORK_API Node Deserialize(StringView Data);
+		NEXUS_FRAMEWORK_API Node DeserializeFile(StringView Path);
 	}
 }
 
@@ -30,56 +37,47 @@ namespace YAML
 	template<>
 	struct convert<NxFr::String>
 	{
-		static Node encode(const NxFr::String& rhs)
-		{
-			return Node(rhs.C());
-		}
-
-		static bool decode(const Node& node, NxFr::String& rhs)
-		{
-			rhs = node.as<std::string>().c_str();
-			return true;
-		}
+		NEXUS_FRAMEWORK_API static Node encode(const NxFr::String& rhs);
+		NEXUS_FRAMEWORK_API static bool decode(const Node& node, NxFr::String& rhs);
 	};
+	NEXUS_FRAMEWORK_API YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::String& rhs);
 
 	template<>
 	struct convert<NxFr::StringView>
 	{
-		static Node encode(const NxFr::StringView& rhs)
-		{
-			return Node(rhs.C());
-		}
-
-		static bool decode(const Node& node, NxFr::StringView& rhs)
-		{
-			rhs = node.as<std::string>().c_str();
-			return true;
-		}
+		NEXUS_FRAMEWORK_API static Node encode(const NxFr::StringView& rhs);
+		NEXUS_FRAMEWORK_API static bool decode(const Node& node, NxFr::StringView& rhs);
 	};
+	NEXUS_FRAMEWORK_API YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringView& rhs);
 
 	template<>
 	struct convert<NxFr::StringId>
 	{
-		static Node encode(const NxFr::StringId& rhs)
-		{
-			return Node(rhs.GetId());
-		}
-
-		static bool decode(const Node& node, NxFr::StringId& rhs)
-		{
-			if (!node.IsScalar())
-			{
-				return false;
-			}
-
-			rhs = node.as<NxFr::GUID>();
-			return true;
-		}
+		NEXUS_FRAMEWORK_API static Node encode(const NxFr::StringId& rhs);
+		NEXUS_FRAMEWORK_API static bool decode(const Node& node, NxFr::StringId& rhs);
 	};
+	NEXUS_FRAMEWORK_API YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringId& rhs);
 
 	template<typename T, uint64 N>
 	struct convert<NxFr::Array<T, N>>
 	{
+		static Node encode(const NxFr::Array<T, N>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
 		static bool decode(const Node& node, NxFr::Array<T, N>& rhs)
 		{
 			if (!node.IsSequence())
@@ -95,9 +93,44 @@ namespace YAML
 		}
 	};
 
+	template<typename T, uint64 N>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Array<T, N>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (auto& It : rhs)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
 	template<typename T>
 	struct convert<NxFr::List<T>>
 	{
+		static Node encode(const NxFr::List<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
 		static bool decode(const Node& node, NxFr::List<T>& rhs)
 		{
 			if (!node.IsSequence())
@@ -115,8 +148,43 @@ namespace YAML
 	};
 
 	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::List<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (auto& It : rhs)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
+	template<typename T>
 	struct convert<NxFr::Set<T>>
 	{
+		static Node encode(const NxFr::Set<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
 		static bool decode(const Node& node, NxFr::Set<T>& rhs)
 		{
 			if (!node.IsSequence())
@@ -133,9 +201,44 @@ namespace YAML
 		}
 	};
 
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Set<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (auto& It : rhs)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
 	template<typename K, typename T>
 	struct convert<NxFr::Dictionary<K, T>>
 	{
+		static Node encode(const NxFr::Dictionary<K, T>& rhs)
+		{
+			Node node;
+			node[""];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (auto& It : rhs)
+			{
+				node[It.Key] = It.Value;
+			}
+			return node;
+		}
+
 		static bool decode(const Node& node, NxFr::Dictionary<K, T>& rhs)
 		{
 			if (!node.IsMap())
@@ -151,4 +254,23 @@ namespace YAML
 			return true;
 		}
 	};
+
+	template<typename K, typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Dictionary<K, T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginMap;
+		for (auto& It : rhs)
+		{
+			out << YAML::Key << It.Key;
+			out << YAML::Value << It.Value;
+		}
+		out << YAML::EndMap;
+
+		return out;
+	}
 }
