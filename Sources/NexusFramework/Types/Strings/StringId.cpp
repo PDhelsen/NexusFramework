@@ -22,11 +22,6 @@ namespace NxFr
 	{
 	}
 
-	StringId::StringId(GUID Id)
-		: Id(Id)
-	{
-	}
-
 	StringId::StringId(StringView Text)
 		: Id(InternString(Text))
 	{

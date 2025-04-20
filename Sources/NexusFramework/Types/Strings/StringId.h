@@ -12,7 +12,6 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API StringId();
-		NEXUS_FRAMEWORK_API StringId(GUID Id);
 		NEXUS_FRAMEWORK_API explicit StringId(StringView Text);
 
 		NEXUS_FRAMEWORK_API bool operator==(const StringId& Other) const;
