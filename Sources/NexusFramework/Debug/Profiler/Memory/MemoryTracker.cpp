@@ -72,7 +72,14 @@ namespace NxFr
 			return;
 		}
 
-		uint64 Size = Alloctions[Pointer];
+		uint64* Allocation = Alloctions.TryGet(Pointer);
+		if (!Allocation)
+		{
+			NEXUS_LOG(Warning, Verbose, "Failed to find allocation %p", Pointer);
+			return;
+		}
+
+		uint64 Size = *Allocation;
 		NEXUS_ASSERT(Amount >= Size, Default, "Allocation Amount will overflow");
 		NEXUS_ASSERT(Count > 0, Default, "Allocation Count will overflow");
 
