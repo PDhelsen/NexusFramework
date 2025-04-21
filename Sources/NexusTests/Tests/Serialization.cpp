@@ -81,7 +81,7 @@ namespace NxTs
 {
 	TEST(Serialization, Yaml)
 	{
-		NxFr::Yaml::Node Deserialize = NxFr::Yaml::Deserialize(Data);
+		YAML::Node Deserialize = NxFr::Yaml::Deserialize(Data);
 
 		NxFr::String Name = Deserialize["name"].as<NxFr::String>();
 		ASSERT_EQ(Name, "NexusProject");
@@ -94,7 +94,7 @@ namespace NxTs
 		YamlTest Object = Deserialize["object"].as<YamlTest>();
 		ASSERT_EQ(Object, YamlTestReference);
 
-		NxFr::Yaml::Node Array = Deserialize["array"];
+		YAML::Node Array = Deserialize["array"];
 		ASSERT_EQ(Array[0].as<uint64>(), 3);
 		ASSERT_EQ(Array[2].as<uint64>(), 7);
 		ASSERT_EQ(Array[4].as<uint64>(), 13);
@@ -107,12 +107,12 @@ namespace NxTs
 		NxFr::Array<uint64, 5> ArrayDecoded = Array.as<NxFr::Array<uint64, 5>>();
 		ASSERT_EQ(ArrayDecoded.GetCount(), 5);
 
-		NxFr::Yaml::Node List = Deserialize["list"];
+		YAML::Node List = Deserialize["list"];
 		ASSERT_EQ(List[0].as<NxFr::String>(), "Alice");
 		ASSERT_EQ(List[1].as<NxFr::String>(), "Bob");
 		ASSERT_EQ(List[2].as<NxFr::String>(), "Charlie");
 		NxFr::List<NxFr::String> ListValue;
-		for (NxFr::Yaml::ConstIterator It = List.begin(); It != List.end(); ++It)
+		for (YAML::const_iterator It = List.begin(); It != List.end(); ++It)
 		{
 			ListValue.Append(It->as<NxFr::String>());
 		}
@@ -120,12 +120,12 @@ namespace NxTs
 		NxFr::List<NxFr::String> ListDecoded = List.as<NxFr::List<NxFr::String>>();
 		ASSERT_EQ(ListDecoded.GetCount(), 3);
 
-		NxFr::Yaml::Node Map = Deserialize["map"];
+		YAML::Node Map = Deserialize["map"];
 		ASSERT_EQ(Map["key"].as<NxFr::String>(), "value");
 		ASSERT_EQ(Map["first"].as<NxFr::String>(), "second");
 		ASSERT_EQ(Map["id"].as<NxFr::String>(), "data");
 		NxFr::Dictionary<NxFr::String, NxFr::String> MapValue;
-		for (NxFr::Yaml::ConstIterator It = Map.begin(); It != Map.end(); ++It)
+		for (YAML::const_iterator It = Map.begin(); It != Map.end(); ++It)
 		{
 			MapValue.Append(It->first.as<NxFr::String>(), It->second.as<NxFr::String>());
 		}
@@ -133,7 +133,7 @@ namespace NxTs
 		NxFr::Dictionary<NxFr::String, NxFr::String> MapDecoded = Map.as<NxFr::Dictionary<NxFr::String, NxFr::String>>();
 		ASSERT_EQ(MapDecoded.GetCount(), 3);
 
-		NxFr::Yaml::Node Nested = Deserialize["nested"];
+		YAML::Node Nested = Deserialize["nested"];
 		ASSERT_EQ(Nested["created"].as<NxFr::String>(), "2025-04-12");
 		ASSERT_EQ(Nested["tags"][0].as<NxFr::String>(), "engine");
 		ASSERT_EQ(Nested["config"]["gravity"].as<float>(), 9.81f);
@@ -142,7 +142,7 @@ namespace NxTs
 		ASSERT_EQ(Deserialize["empty_map"].size(), 0);
 
 
-		NxFr::Yaml::Node Serialize;
+		YAML::Node Serialize;
 
 		Serialize["name"] = Name;
 		Serialize["enabled"] = Enabled;
@@ -160,7 +160,7 @@ namespace NxTs
 		ASSERT_EQ(Output, Data);
 
 
-		NxFr::Yaml::Emitter Emitter;
+		YAML::Emitter Emitter;
 
 		Emitter << YAML::Key << "name" << YAML::Value << Name;
 		Emitter << YAML::Key << "enabled" << YAML::Value << Enabled;

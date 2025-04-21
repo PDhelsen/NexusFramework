@@ -5,7 +5,7 @@ namespace NxFr
 {
 	namespace Yaml
 	{
-		String Serialize(const Node& Data)
+		String Serialize(const YAML::Node& Data)
 		{
 			YAML::Emitter Emitter;
 			Emitter << Data;
@@ -13,12 +13,12 @@ namespace NxFr
 			return Serialize(Emitter);
 		}
 
-		String Serialize(const Emitter& Data)
+		String Serialize(const YAML::Emitter& Data)
 		{
 			return Data.c_str();
 		}
 
-		void SerializeFile(const Node& Data, StringView Path)
+		void SerializeFile(const YAML::Node& Data, StringView Path)
 		{
 			YAML::Emitter Emitter;
 			Emitter << Data;
@@ -26,7 +26,7 @@ namespace NxFr
 			SerializeFile(Emitter, Path);
 		}
 
-		void SerializeFile(const Emitter& Data, StringView Path)
+		void SerializeFile(const YAML::Emitter& Data, StringView Path)
 		{
 			File F = File(Path);
 			F.Create();
@@ -35,12 +35,12 @@ namespace NxFr
 			F.Close();
 		}
 
-		Node Deserialize(StringView Data)
+		YAML::Node Deserialize(StringView Data)
 		{
 			return YAML::Load(Data.C());
 		}
 
-		Node DeserializeFile(StringView Path)
+		YAML::Node DeserializeFile(StringView Path)
 		{
 			return YAML::LoadFile(std::string(Path.C()));
 		}

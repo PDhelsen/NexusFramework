@@ -16,19 +16,14 @@ namespace NxFr
 {
 	namespace Yaml
 	{
-		using Node = YAML::Node;
-		using Emitter = YAML::Emitter;
-		using Iterator = YAML::iterator;
-		using ConstIterator = YAML::const_iterator;
-
 		const uint64 SmallSequence = 10;
 
-		NEXUS_FRAMEWORK_API String Serialize(const Node& Data);
-		NEXUS_FRAMEWORK_API String Serialize(const Emitter& Data);
-		NEXUS_FRAMEWORK_API void SerializeFile(const Node& Data, StringView Path);
-		NEXUS_FRAMEWORK_API void SerializeFile(const Emitter& Data, StringView Path);
-		NEXUS_FRAMEWORK_API Node Deserialize(StringView Data);
-		NEXUS_FRAMEWORK_API Node DeserializeFile(StringView Path);
+		NEXUS_FRAMEWORK_API String Serialize(const YAML::Node& Data);
+		NEXUS_FRAMEWORK_API String Serialize(const YAML::Emitter& Data);
+		NEXUS_FRAMEWORK_API void SerializeFile(const YAML::Node& Data, StringView Path);
+		NEXUS_FRAMEWORK_API void SerializeFile(const YAML::Emitter& Data, StringView Path);
+		NEXUS_FRAMEWORK_API YAML::Node Deserialize(StringView Data);
+		NEXUS_FRAMEWORK_API YAML::Node DeserializeFile(StringView Path);
 	}
 }
 
