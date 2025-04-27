@@ -41,4 +41,21 @@ namespace NxFr
 		String Buffer;
 		uint64 Cursor;
 	};
+
+	class BinaryStream : public Stream
+	{
+	public:
+		NEXUS_FRAMEWORK_API BinaryStream(StringView Path);
+		NEXUS_FRAMEWORK_API virtual ~BinaryStream();
+
+		NEXUS_FRAMEWORK_API void Cache() override;
+		NEXUS_FRAMEWORK_API void Flush() override;
+
+		NEXUS_FRAMEWORK_API BufferView Read(uint64 Size, uint64 Offset = 0);
+		NEXUS_FRAMEWORK_API void Write(BufferView Data, uint64 Offset = 0);
+
+	private:
+		Buffer Buffer;
+		uint64 Cursor;
+	};
 }
