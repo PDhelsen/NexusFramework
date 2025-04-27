@@ -31,7 +31,7 @@ namespace NxFr
 			File F = File(Path);
 			F.Create();
 			F.Open(File::Mode::Write);
-			F.WriteText(Serialize(Data));
+			F.WriteText(Data.c_str());
 			F.Close();
 		}
 
@@ -42,7 +42,7 @@ namespace NxFr
 
 		YAML::Node DeserializeFile(StringView Path)
 		{
-			return YAML::LoadFile(std::string(Path.C()));
+			return YAML::LoadFile(Path.C());
 		}
 	}
 }
