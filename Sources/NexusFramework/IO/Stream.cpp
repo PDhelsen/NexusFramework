@@ -3,45 +3,71 @@
 
 namespace NxFr
 {
-	namespace Streaming
+	Stream::Stream(StringView Path)
+		: Handle(Path), FileMode(File::Mode::Read)
 	{
-		Line::Line(StringView Path)
-			: StreamingAlgorithm<Block>(Path), Buffer(1024), Cursor()
-		{
-		}
+	}
 
-		Line::~Line()
-		{
-			
-		}
+	Stream::~Stream()
+	{
+	}
 
-		void Line::Cache()
-		{
-			Buffer.Clear();
-			Buffer = Handle.ReadText();
-			Cursor = 0;
-		}
+	void Stream::Open(File::Mode Mode, bool CreateIfDontExist)
+	{
+		FileMode = Mode;
+		Handle.Open(Mode, CreateIfDontExist);
 
-		void Line::Flush()
+		if (FileMode == File::Mode::Read)
 		{
-			Handle.WriteText(Buffer);
-			Buffer.Clear();
+			Cache();
 		}
+	}
 
-		Line::Block Line::Read()
+	void Stream::Close()
+	{
+		if (FileMode == File::Mode::Write || FileMode == File::Mode::Append)
 		{
-			StringView Substring = Buffer.ToView(Cursor, Buffer.GetCount() - Cursor);
-			Substring = Substring.Split("\n");
-			Cursor = Math::Min(Cursor + Substring.GetCount() + 1, Buffer.GetCount());
-			return Substring;
-		}
-
-		void Line::Write(Line::Block Data)
-		{
-			Buffer.Append(Data);
-			Buffer.Append("\n");
 			Flush();
 		}
+
+		Handle.Close();
+	}
+
+	TextStream::TextStream(StringView Path)
+		: Stream(Path), Buffer(1024), Cursor()
+	{
+	}
+
+	TextStream::~TextStream()
+	{
+			
+	}
+
+	void TextStream::Cache()
+	{
+		Buffer.Clear();
+		Buffer = Handle.ReadText();
+		Cursor = 0;
+	}
+
+	void TextStream::Flush()
+	{
+		Handle.WriteText(Buffer);
+		Buffer.Clear();
+	}
+
+	StringView TextStream::Read()
+	{
+		StringView Substring = Buffer.ToView(Cursor, Buffer.GetCount() - Cursor);
+		Substring = Substring.Split("\n");
+		Cursor = Math::Min(Cursor + Substring.GetCount() + 1, Buffer.GetCount());
+		return Substring;
+	}
+
+	void TextStream::Write(StringView Data)
+	{
+		Buffer.Append(Data);
+		Buffer.Append("\n");
 	}
 }
 

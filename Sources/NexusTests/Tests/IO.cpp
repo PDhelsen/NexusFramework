@@ -211,10 +211,10 @@ namespace NxTs
 		File.Delete();
 	}
 
-	TEST(IO, Line)
+	TEST(IO, TextStream)
 	{
 		NxFr::Path Working = NxFr::Path::GetWorkingDirectory() + "UnitTestText.txt";
-		NxFr::Stream File(Working);
+		NxFr::TextStream File(Working);
 
 		File.Open(NxFr::File::Mode::Write);
 		File.Write(Line);
