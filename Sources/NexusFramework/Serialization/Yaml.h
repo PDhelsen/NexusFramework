@@ -2,8 +2,8 @@
 
 #include "NexusFramework/External/YamlCpp.h"
 
+#include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Misc/Math.h"
-
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
