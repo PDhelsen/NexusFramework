@@ -6,6 +6,8 @@ namespace NxFr
 	class Stream
 	{
 	public:
+		const uint64 BlockSize = 1024;
+
 		NEXUS_FRAMEWORK_API Stream(StringView Path);
 		NEXUS_FRAMEWORK_API virtual ~Stream();
 
@@ -51,8 +53,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Cache() override;
 		NEXUS_FRAMEWORK_API void Flush() override;
 
-		NEXUS_FRAMEWORK_API BufferView Read(uint64 Size, uint64 Offset = 0);
-		NEXUS_FRAMEWORK_API void Write(BufferView Data, uint64 Offset = 0);
+		NEXUS_FRAMEWORK_API BufferView Read(uint64 Size);
+		NEXUS_FRAMEWORK_API void Write(BufferView Data);
 
 	private:
 		Buffer Buffer;

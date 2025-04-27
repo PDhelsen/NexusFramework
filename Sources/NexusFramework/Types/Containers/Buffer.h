@@ -27,6 +27,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Clear();
 		NEXUS_FRAMEWORK_API BufferView Get(uint64 Size, uint64 Offset);
 		NEXUS_FRAMEWORK_API void Set(void* Source, uint64 Size = 0, uint64 OffsetBuffer = 0, uint64 OffsetSource = 0);
+		NEXUS_FRAMEWORK_API void Grow(uint64 Size);
 		NEXUS_FRAMEWORK_API void Resize(uint64 Size);
 
 		template<typename T>

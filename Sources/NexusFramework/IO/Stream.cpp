@@ -34,7 +34,7 @@ namespace NxFr
 	}
 
 	TextStream::TextStream(StringView Path)
-		: Stream(Path), Buffer(1024), Cursor()
+		: Stream(Path), Buffer(BlockSize), Cursor()
 	{
 	}
 
@@ -45,7 +45,6 @@ namespace NxFr
 
 	void TextStream::Cache()
 	{
-		Buffer.Clear();
 		Buffer = Handle.ReadText();
 		Cursor = 0;
 	}
@@ -68,6 +67,46 @@ namespace NxFr
 	{
 		Buffer.Append(Data);
 		Buffer.Append("\n");
+	}
+
+	BinaryStream::BinaryStream(StringView Path)
+		: Stream(Path), Buffer(BlockSize), Cursor()
+	{
+	}
+
+	BinaryStream::~BinaryStream()
+	{
+	}
+
+	void BinaryStream::Cache()
+	{
+		Buffer = Handle.ReadByte();
+		Cursor = 0;
+	}
+
+	void BinaryStream::Flush()
+	{
+		Handle.WriteByte(Buffer);
+		Buffer.Clear();
+	}
+
+	BufferView BinaryStream::Read(uint64 Size)
+	{
+		BufferView View = Buffer.Get(Size, Cursor);
+		Cursor += Size;
+		return View;
+	}
+
+	void BinaryStream::Write(BufferView Data)
+	{
+		if (Cursor + Data.GetCount() >= Buffer.GetCount())
+		{
+			uint64 Size = Math::Max(BlockSize, Data.GetCount());
+			Buffer.Grow(Size);
+		}
+
+		Buffer.Set(Data.GetPtr(), Data.GetCount(), Cursor);
+		Cursor += Data.GetCount();
 	}
 }
 

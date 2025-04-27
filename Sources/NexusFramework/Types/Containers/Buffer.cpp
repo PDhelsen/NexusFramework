@@ -89,6 +89,11 @@ namespace NxFr
 		Copy(Source, Size, OffsetBuffer, OffsetSource);
 	}
 
+	void Buffer::Grow(uint64 Size)
+	{
+		Reallocate(Count + Size);
+	}
+
 	void Buffer::Resize(uint64 Size)
 	{
 		Reallocate(Size);

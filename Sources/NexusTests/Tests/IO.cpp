@@ -235,4 +235,34 @@ namespace NxTs
 
 		NxFr::File(Working).Delete();
 	}
+
+	TEST(IO, BinaryStream)
+	{
+		NxFr::Path Working = NxFr::Path::GetWorkingDirectory() + "UnitTestText.txt";
+		NxFr::BufferView View = NxFr::BufferView(Data, sizeof(Data));
+		NxFr::BinaryStream File(Working);
+
+		File.Open(NxFr::File::Mode::Write);
+		File.Write(View);
+		File.Write(View);
+		File.Write(View);
+		File.Close();
+
+		File.Open(NxFr::File::Mode::Read);
+		NxFr::BufferView Content1 = File.Read(sizeof(Data));
+		ASSERT_EQ(*Content1.GetPtr<uint64>(0), 10);
+		ASSERT_EQ(*Content1.GetPtr<uint64>(16), 12);
+		ASSERT_EQ(*Content1.GetPtr<uint64>(72), 19);
+		NxFr::BufferView Content2 = File.Read(sizeof(Data));
+		ASSERT_EQ(*Content2.GetPtr<uint64>(0), 10);
+		ASSERT_EQ(*Content2.GetPtr<uint64>(16), 12);
+		ASSERT_EQ(*Content2.GetPtr<uint64>(72), 19);
+		NxFr::BufferView Content3 = File.Read(sizeof(Data));
+		ASSERT_EQ(*Content3.GetPtr<uint64>(0), 10);
+		ASSERT_EQ(*Content3.GetPtr<uint64>(16), 12);
+		ASSERT_EQ(*Content3.GetPtr<uint64>(72), 19);
+		File.Close();
+
+		NxFr::File(Working).Delete();
+	}
 }
