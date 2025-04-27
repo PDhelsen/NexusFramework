@@ -14,7 +14,7 @@ namespace NxFr
 		static String WeekDaysNames[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 		static String MonthsNames[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 		static int32 DayPerMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-		static Buffer<char>& GetLocalBuffer() { static Buffer<char> LocalBuffer(64, nullptr); return LocalBuffer; }
+		static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(64, nullptr); return LocalBuffer; }
 
 		//-----------------------------------------------------------------------------------------------------------------------
 		// C Lib Convertion
@@ -107,22 +107,22 @@ namespace NxFr
 
 		String ToString(const Timestamp& Stamp, StringView Format)
 		{
-			Buffer<char>& LocalBuffer = GetLocalBuffer();
+			Buffer& LocalBuffer = GetLocalBuffer();
 
 			TimeInfo.Stamp = Stamp;
 			ConvertFromNexusToCLib(true);
-			uint64 Size = strftime(LocalBuffer.GetPtr(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
-			return String(LocalBuffer.GetPtr(), Size);
+			uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			return String(LocalBuffer.GetPtr<char>(), Size);
 		}
 
 		String ToString(const Timespan& Span, StringView Format)
 		{
-			Buffer<char>& LocalBuffer = GetLocalBuffer();
+			Buffer& LocalBuffer = GetLocalBuffer();
 
 			TimeInfo.Span = Span;
 			ConvertFromNexusToCLib(false);
-			uint64 Size = strftime(LocalBuffer.GetPtr(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
-			return String(LocalBuffer.GetPtr(), Size);
+			uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			return String(LocalBuffer.GetPtr<char>(), Size);
 		}
 	}
 }

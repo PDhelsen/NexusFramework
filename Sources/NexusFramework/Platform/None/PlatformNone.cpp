@@ -109,13 +109,13 @@ namespace NxFr
 		return 0;
 	}
 
-	void PlatformNone::FileWriteByte(void* File, BufferView<Byte> Data) const
+	void PlatformNone::FileWriteByte(void* File, BufferView Data) const
 	{
 	}
 
-	Buffer<Byte> PlatformNone::FileReadByte(void* File) const
+	Buffer PlatformNone::FileReadByte(void* File) const
 	{
-		return Buffer<Byte>(1);
+		return Buffer();
 	}
 
 	void PlatformNone::FileWriteText(void* File, StringView Text) const

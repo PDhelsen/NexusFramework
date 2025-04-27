@@ -11,7 +11,7 @@
 
 namespace NxFr
 {
-	static Buffer<char>& GetLocalBuffer() { static Buffer<char> LocalBuffer(512, nullptr); return LocalBuffer; }
+	static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
 
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
@@ -123,11 +123,11 @@ namespace NxFr
 
 	String PlatformWindows::GetWorkingDirectory() const
 	{
-		Buffer<char>& LocalBuffer = GetLocalBuffer();
+		Buffer& LocalBuffer = GetLocalBuffer();
 
-		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetByteSize(), LocalBuffer.GetPtr());
-		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetByteSize(), Default, "BufferLogs overflowed when getting the current working directory");
-		return Path::Normalize(StringView(LocalBuffer.GetPtr(), Length));
+		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetCount(), LocalBuffer.GetPtr<char>());
+		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetCount(), Default, "BufferLogs overflowed when getting the current working directory");
+		return Path::Normalize(StringView(LocalBuffer.GetPtr<char>(), Length));
 	}
 
 	void PlatformWindows::SetWorkingDirectory(StringView Path) const
@@ -283,27 +283,27 @@ namespace NxFr
 		return FileSize.QuadPart;
 	}
 
-	void PlatformWindows::FileWriteByte(void* File, BufferView<Byte> Data) const
+	void PlatformWindows::FileWriteByte(void* File, BufferView Data) const
 	{
 		NEXUS_ASSERT(File, Default, "Invalid File");
-		NEXUS_ASSERT(Data.GetByteSize() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Data.GetCount() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
-		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Written, nullptr);
+		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetCount(), &Written, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Data.GetByteSize(), Default, "Failed to write to file");
+		NEXUS_ASSERT(Result && Written == Data.GetCount(), Default, "Failed to write to file");
 	}
 
-	Buffer<Byte> PlatformWindows::FileReadByte(void* File) const
+	Buffer PlatformWindows::FileReadByte(void* File) const
 	{
 		NEXUS_ASSERT(File, Default, "Invalid File");
 
-		Buffer<Byte> Data = Buffer<Byte>(FileSize(File));
+		Buffer Data = Buffer(FileSize(File));
 
 		DWORD Read = 0;
-		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetByteSize(), &Read, nullptr);
+		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetCount(), &Read, nullptr);
 
-		NEXUS_ASSERT(Result && Read == Data.GetByteSize(), Default, "Failed to read to file");
+		NEXUS_ASSERT(Result && Read == Data.GetCount(), Default, "Failed to read to file");
 
 		return Data;
 	}

@@ -33,8 +33,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Close();
 
 		NEXUS_FRAMEWORK_API uint64 GetSize();
-		NEXUS_FRAMEWORK_API void WriteByte(BufferView<Byte> Data);
-		NEXUS_FRAMEWORK_API Buffer<Byte> ReadByte();
+		NEXUS_FRAMEWORK_API void WriteByte(BufferView Data);
+		NEXUS_FRAMEWORK_API Buffer ReadByte();
 		NEXUS_FRAMEWORK_API void WriteText(StringView Text);
 		NEXUS_FRAMEWORK_API String ReadText();
 

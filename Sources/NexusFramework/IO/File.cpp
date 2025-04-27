@@ -177,18 +177,18 @@ namespace NxFr
 		return Size;
 	}
 
-	void File::WriteByte(BufferView<Byte> Data)
+	void File::WriteByte(BufferView Data)
 	{
 		NEXUS_ASSERT(Exist && Handle && Data.GetPtr(), Default, "Failed to write file: %s", Path.C());
 
 		Platform::GetInstance()->FileWriteByte(Handle, Data);
 	}
 
-	Buffer<Byte> File::ReadByte()
+	Buffer File::ReadByte()
 	{
 		NEXUS_ASSERT(Exist && Handle, Default, "Failed to read file: %s", Path.C());
 
-		Buffer<Byte> Data = Platform::GetInstance()->FileReadByte(Handle);
+		Buffer Data = Platform::GetInstance()->FileReadByte(Handle);
 
 		return Data;
 	}

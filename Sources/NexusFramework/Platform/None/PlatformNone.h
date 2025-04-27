@@ -40,8 +40,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void* FileOpen(StringView Path, FileMode Mode) const override;
 		NEXUS_FRAMEWORK_API void FileClose(void* File) const override;
 		NEXUS_FRAMEWORK_API uint64 FileSize(void* File) const override;
-		NEXUS_FRAMEWORK_API void FileWriteByte(void* File, BufferView<Byte> Data) const override;
-		NEXUS_FRAMEWORK_API Buffer<Byte> FileReadByte(void* File) const override;
+		NEXUS_FRAMEWORK_API void FileWriteByte(void* File, BufferView Data) const override;
+		NEXUS_FRAMEWORK_API Buffer FileReadByte(void* File) const override;
 		NEXUS_FRAMEWORK_API void FileWriteText(void* File, StringView Text) const override;
 		NEXUS_FRAMEWORK_API String FileReadText(void* File) const override;
 

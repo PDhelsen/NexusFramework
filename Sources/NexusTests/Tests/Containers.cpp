@@ -1093,6 +1093,23 @@ namespace NxTs
 		ASSERT_EQ(Base.GetCount(), 3);
 	}
 
+	TEST(Containers, Buffer)
+	{
+		ContainerTest Raw[5];
+		Raw[0].Integer = 0;
+		Raw[1].Integer = 1;
+		Raw[2].Integer = 2;
+		Raw[3].Integer = 3;
+		Raw[4].Integer = 4;
+
+		NxFr::BufferView View = NxFr::BufferView(Raw, 5 * sizeof(ContainerTest));
+		ASSERT_EQ(View.GetPtr<ContainerTest>(0 * sizeof(ContainerTest))->Integer, 0);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(1 * sizeof(ContainerTest))->Integer, 1);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(2 * sizeof(ContainerTest))->Integer, 2);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(3 * sizeof(ContainerTest))->Integer, 3);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(4 * sizeof(ContainerTest))->Integer, 4);
+	}
+
 	TEST(Containers, Pool)
 	{
 		NxFr::Pool<ContainerTest, NxFr::Pooling::PreAllocated<ContainerTest>> TestPreAllocated = NxFr::Pool<ContainerTest, NxFr::Pooling::PreAllocated<ContainerTest>>(10);

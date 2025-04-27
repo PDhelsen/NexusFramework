@@ -75,8 +75,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void* FileOpen(StringView Path, FileMode Mode) const = 0;
 		NEXUS_FRAMEWORK_API virtual void FileClose(void* File) const = 0;
 		NEXUS_FRAMEWORK_API virtual uint64 FileSize(void* File) const = 0;
-		NEXUS_FRAMEWORK_API virtual void FileWriteByte(void* File, BufferView<Byte> Data) const = 0;
-		NEXUS_FRAMEWORK_API virtual Buffer<Byte> FileReadByte(void* File) const = 0;
+		NEXUS_FRAMEWORK_API virtual void FileWriteByte(void* File, BufferView Data) const = 0;
+		NEXUS_FRAMEWORK_API virtual Buffer FileReadByte(void* File) const = 0;
 		NEXUS_FRAMEWORK_API virtual void FileWriteText(void* File, StringView Text) const = 0;
 		NEXUS_FRAMEWORK_API virtual String FileReadText(void* File) const = 0;
 

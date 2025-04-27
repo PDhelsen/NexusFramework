@@ -8,27 +8,23 @@
 
 namespace NxFr
 {
-	template<typename T = Byte>
 	class Buffer
 	{
 	public:
-		Buffer(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+		Buffer(uint64 Size = 0, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
-			NEXUS_ASSERT(Size > 0, Default, "BufferLogs has to have size greater than 0");
-
 			Allocate(Size);
 		}
 
-		Buffer(const Buffer<T>& Other)
+		Buffer(const Buffer& Other)
 			: Alloc(Other.Alloc), Count(Other.Count), Data(nullptr)
 		{
 			Allocate(Count);
-
-			Memory::MemCopy(Other.Data, Data, sizeof(T) * Count);
+			Copy(Other.Data);
 		}
 
-		Buffer(Buffer<T>&& Other) noexcept
+		Buffer(Buffer&& Other) noexcept
 			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
@@ -39,7 +35,7 @@ namespace NxFr
 			Free();
 		}
 
-		Buffer<T>& operator=(const Buffer<T>& Other)
+		Buffer& operator=(const Buffer& Other)
 		{
 			if (*this == Other)
 			{
@@ -51,13 +47,12 @@ namespace NxFr
 			Count = Other.Count;
 
 			Allocate(Count);
-
-			Memory::MemCopy(Other.Data, Data, sizeof(T) * Count);
+			Copy(Other.Data);
 
 			return *this;
 		}
 
-		Buffer<T>& operator=(Buffer<T>&& Other) noexcept
+		Buffer& operator=(Buffer&& Other) noexcept
 		{
 			if (*this == Other)
 			{
@@ -76,26 +71,26 @@ namespace NxFr
 			return *this;
 		}
 
-		bool operator==(const Buffer<T>& Other) const
+		bool operator==(const Buffer& Other) const
 		{
 			return Count == Other.Count && Data == Other.Data;
 		}
 
-		bool operator!=(const Buffer<T>& Other) const
+		bool operator!=(const Buffer& Other) const
 		{
 			return !(*this == Other);
 		}
 
+		template<typename T>
+		T* GetPtr(uint64 Offset = 0) const { return static_cast<T*>(GetPtr(Offset)); }
+		void* GetPtr(uint64 Offset = 0) const { return (Byte*)Data + Offset; }
 		uint64 GetCount() const { return Count; }
-		uint64 GetByteSize() const { return Count * sizeof(T); }
-		uint64 GetStride() const { return sizeof(T); }
-		T* GetPtr() const { return Data; }
 
 	private:
 		void Allocate(uint64 Size)
 		{
-			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Count, Alloc);
+			ValidateCount(Size);
+			Data = Memory::Allocate(Count, Alloc);
 		}
 
 		void Free()
@@ -103,42 +98,46 @@ namespace NxFr
 			Memory::Free(Data, Alloc);
 		}
 
-		void ValidateCapacity(uint64 Size)
+		void Copy(void* Source)
+		{
+			Memory::MemCopy(Source, Data, Count);
+		}
+
+		void ValidateCount(uint64 Size)
 		{
 			Count = Size > 1 ? Size : 1;
 		}
 
 		Allocator* Alloc;
 		uint64 Count;
-		T* Data;
+		void* Data;
 	};
 
-	template<typename T = Byte>
 	struct BufferView
 	{
 	public:
 		BufferView()
-			: Count(0), Data(nullptr)
+			: Data(nullptr), Count(0)
 		{
 		}
 
-		BufferView(T* Ptr, uint64 Size)
-			: Count(Size), Data(Ptr)
+		BufferView(void* Ptr, uint64 Size)
+			: Data(Ptr), Count(Size)
 		{
 		}
 
-		BufferView(const Buffer<T>& Other)
-			: Count(Other.GetCount()), Data(Other.GetPtr())
+		BufferView(const BufferView& Other)
+			: Data(Other.GetPtr()), Count(Other.GetCount())
 		{
 		}
 
+		template<typename T>
+		T* GetPtr(uint64 Offset = 0) const { return static_cast<T*>(GetPtr(Offset)); }
+		void* GetPtr(uint64 Offset = 0) const { return (Byte*)Data + Offset; }
 		uint64 GetCount() const { return Count; }
-		uint64 GetByteSize() const { return Count * sizeof(T); }
-		uint64 GetStride() const { return sizeof(T); }
-		T* GetPtr() const { return Data; }
 
 	private:
+		void* Data;
 		uint64 Count;
-		T* Data;
 	};
 }
