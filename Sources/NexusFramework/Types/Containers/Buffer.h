@@ -143,6 +143,11 @@ namespace NxFr
 		{
 		}
 
+		BufferView(const Buffer& Other)
+			: Data(Other.GetPtr()), Count(Other.GetCount())
+		{
+		}
+
 		BufferView(const BufferView& Other)
 			: Data(Other.GetPtr()), Count(Other.GetCount())
 		{
