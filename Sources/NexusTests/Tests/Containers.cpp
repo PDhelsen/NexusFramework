@@ -1108,6 +1108,20 @@ namespace NxTs
 		ASSERT_EQ(View.GetPtr<ContainerTest>(2 * sizeof(ContainerTest))->Integer, 2);
 		ASSERT_EQ(View.GetPtr<ContainerTest>(3 * sizeof(ContainerTest))->Integer, 3);
 		ASSERT_EQ(View.GetPtr<ContainerTest>(4 * sizeof(ContainerTest))->Integer, 4);
+
+		NxFr::Buffer Buffer(3 * sizeof(ContainerTest));
+		Buffer.Set(&Raw[0], sizeof(ContainerTest), 0 * sizeof(ContainerTest));
+		Buffer.Set(&Raw[2], sizeof(ContainerTest), 2 * sizeof(ContainerTest));
+		Buffer.Set(&Raw[1], sizeof(ContainerTest), 1 * sizeof(ContainerTest));
+		ASSERT_EQ(View.GetPtr<ContainerTest>(0 * sizeof(ContainerTest))->Integer, 0);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(1 * sizeof(ContainerTest))->Integer, 1);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(2 * sizeof(ContainerTest))->Integer, 2);
+
+		Buffer.Resize(5 * sizeof(ContainerTest));
+		Buffer.Set(&Raw[4], sizeof(ContainerTest), 4 * sizeof(ContainerTest));
+		Buffer.Set(&Raw[3], sizeof(ContainerTest), 3 * sizeof(ContainerTest));
+		ASSERT_EQ(View.GetPtr<ContainerTest>(3 * sizeof(ContainerTest))->Integer, 3);
+		ASSERT_EQ(View.GetPtr<ContainerTest>(4 * sizeof(ContainerTest))->Integer, 4);
 	}
 
 	TEST(Containers, Pool)
