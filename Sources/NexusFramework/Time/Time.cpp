@@ -7,18 +7,17 @@ namespace NxFr
 {
 	namespace Time
 	{
-		//-----------------------------------------------------------------------------------------------------------------------
-		// Constant
-		//-----------------------------------------------------------------------------------------------------------------------
+
+#pragma region Constant
 
 		static String WeekDaysNames[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
 		static String MonthsNames[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 		static int32 DayPerMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(64, nullptr); return LocalBuffer; }
 
-		//-----------------------------------------------------------------------------------------------------------------------
-		// C Lib Convertion
-		//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region C Lib Convertion
 
 		// Make sure Timestamp follow the same structure as tm from C library
 		static union TimeInfo
@@ -58,9 +57,9 @@ namespace NxFr
 			TimeInfo.Stamp.DayLightSaving = TimeInfo.TM.tm_isdst != 0 ? true : false;
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------
-		// Time
-		//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Time
 
 		int64 GetTimeSinceEpoch()
 		{
@@ -124,5 +123,8 @@ namespace NxFr
 			uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
 			return String(LocalBuffer.GetPtr<char>(), Size);
 		}
+
+#pragma endregion
+
 	}
 }

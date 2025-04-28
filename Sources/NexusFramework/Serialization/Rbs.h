@@ -79,6 +79,7 @@ namespace NxFr
 #pragma region Templates
 
 #pragma region RBS
+
 	template<typename T>
 	inline T RBS::ReadObject()
 	{
@@ -128,9 +129,11 @@ namespace NxFr
 	{
 		WriteByte(Pointer, Size, Offset);
 	}
+
 #pragma endregion
 
 #pragma region Converter
+
 	template<typename T>
 	inline T RBSConverter<T>::Decode(RBS& Rbs)
 	{
@@ -142,9 +145,11 @@ namespace NxFr
 	{
 		Rbs.WriteData<T>(&Object, sizeof(T));
 	}
+
 #pragma endregion
 
 #pragma region Specialization
+
 	template<>
 	struct RBSConverter<const char*>
 	{
@@ -311,6 +316,7 @@ namespace NxFr
 			}
 		}
 	};
+
 #pragma endregion
 
 #pragma endregion

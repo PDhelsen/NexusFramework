@@ -5,9 +5,8 @@ namespace NxFr
 {
 	namespace Hashing
 	{
-		//-----------------------------------------------------------------------------------------------------------------------
-		// XxHash32
-		//-----------------------------------------------------------------------------------------------------------------------
+
+#pragma region XxHash32
 
 		XxHash32::XxHash32(HashLength Seed)
 			: HashAlgorithm<HashLength>(Seed), Seed(Seed), Size(0), BufferSize(0)
@@ -150,9 +149,9 @@ namespace NxFr
 			return Accumulator;
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------
-		// XxHash64
-		//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region XxHash64
 
 		XxHash64::XxHash64(HashLength Seed)
 			: HashAlgorithm<HashLength>(Seed), Seed(Seed), Size(0), BufferSize(0)
@@ -311,9 +310,9 @@ namespace NxFr
 			return Accumulator;
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------
-		//	Murmur32
-		//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Murmur32
 
 		Murmur32::Murmur32(HashLength Seed)
 			: HashAlgorithm<HashLength>(Seed), Seed(Seed), Size(0), Accumulator(0)
@@ -395,9 +394,9 @@ namespace NxFr
 			return Accumulator;
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------
-		//	Fnv164
-		//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Fnv164
 
 		Fnv164::Fnv164(HashLength Seed)
 			: HashAlgorithm<HashLength>(Seed), Seed(Seed), Size(0), Accumulator(0)
@@ -439,9 +438,9 @@ namespace NxFr
 			return Finalize(CombinedHash);
 		}
 
-		//-----------------------------------------------------------------------------------------------------------------------
-		// Fnv1a64
-		//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Fnv1a64
 
 		Fnv1a64::Fnv1a64(HashLength Seed)
 			: HashAlgorithm<HashLength>(Seed), Seed(Seed), Size(0), Accumulator(0)
@@ -482,5 +481,8 @@ namespace NxFr
 
 			return Finalize(CombinedHash);
 		}
+
+#pragma endregion
+
 	}
 }

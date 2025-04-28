@@ -3,6 +3,8 @@
 
 namespace NxFr
 {
+#pragma region Functionality
+
 	bool StringUtility::Start(StringView Text, StringView Substring)
 	{
 		if (Text.GetCount() < Substring.GetCount())
@@ -144,9 +146,9 @@ namespace NxFr
 		return Result;
 	}
 
-	//-----------------------------------------------------------------------------------------------------------------------
-	// Operator
-	//-----------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Operator
 
 	String operator+(StringView TextA, StringView TextB)
 	{
@@ -197,4 +199,6 @@ namespace NxFr
 		int8 Comparaison = StringCApi::Compare(TextA.C(), TextB.C(), Math::Min(TextA.GetCount(), TextB.GetCount()));
 		return Comparaison <= 0 || (Comparaison == 0 && TextA.GetCount() <= TextB.GetCount());
 	}
+
+#pragma endregion
 }
