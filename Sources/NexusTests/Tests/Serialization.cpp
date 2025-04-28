@@ -27,7 +27,7 @@ nested:
 empty_list: []
 empty_map: {})";
 
-	struct YamlTest
+	struct SerializationTest
 	{
 		uint64 Width = 0;
 		uint64 Height = 0;
@@ -35,11 +35,11 @@ empty_map: {})";
 		NxFr::String Title = "";
 	};
 
-	bool operator==(const YamlTest& A, const YamlTest& B)
+	bool operator==(const SerializationTest& A, const SerializationTest& B)
 	{
 		return A.Width == B.Width && A.Height == B.Height && A.FullScreen == B.FullScreen && A.Title == B.Title;
 	}
-	YAML::Emitter& operator<<(YAML::Emitter& out, const YamlTest& rhs)
+	YAML::Emitter& operator<<(YAML::Emitter& out, const SerializationTest& rhs)
 	{
 		out << YAML::Key << "width" << YAML::Value << rhs.Width;
 		out << YAML::Key << "height" << YAML::Value << rhs.Height;
@@ -48,15 +48,15 @@ empty_map: {})";
 		return out;
 	}
 
-	static YamlTest YamlTestReference = { 1280, 720, false, "Nexus" };
+	static SerializationTest YamlTestReference = { 1280, 720, false, "Nexus" };
 }
 
 namespace YAML
 {
 	template<>
-	struct convert<NxTs::YamlTest>
+	struct convert<NxTs::SerializationTest>
 	{
-		static Node encode(const NxTs::YamlTest& rhs)
+		static Node encode(const NxTs::SerializationTest& rhs)
 		{
 			Node node;
 			node["width"] = rhs.Width;
@@ -66,13 +66,38 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, NxTs::YamlTest& rhs)
+		static bool decode(const Node& node, NxTs::SerializationTest& rhs)
 		{
 			rhs.Width = node["width"].as<uint64>();
 			rhs.Height = node["height"].as<uint64>();
 			rhs.FullScreen = node["fullscreen"].as<bool>();
 			rhs.Title = node["title"].as<NxFr::String>();
 			return true;
+		}
+	};
+}
+
+namespace NxFr
+{
+	template<>
+	struct RBSConverter<NxTs::SerializationTest>
+	{
+		static NxTs::SerializationTest Decode(RBS& Rbs)
+		{
+			NxTs::SerializationTest Test;
+			Test.Width = Rbs.ReadObject<uint64>();
+			Test.Height = Rbs.ReadObject<uint64>();
+			Test.FullScreen = Rbs.ReadObject<bool>();
+			Test.Title = Rbs.ReadObject<String>();
+			return Test;
+		}
+
+		static void Encode(RBS& Rbs, const NxTs::SerializationTest& Object)
+		{
+			Rbs.WriteObject(Object.Width);
+			Rbs.WriteObject(Object.Height);
+			Rbs.WriteObject(Object.FullScreen);
+			Rbs.WriteObject(Object.Title);
 		}
 	};
 }
@@ -91,7 +116,7 @@ namespace NxTs
 		ASSERT_EQ(Version, 2);
 		float Value = Deserialize["value"].as<float>();
 		ASSERT_EQ(Value, 3.14f);
-		YamlTest Object = Deserialize["object"].as<YamlTest>();
+		SerializationTest Object = Deserialize["object"].as<SerializationTest>();
 		ASSERT_EQ(Object, YamlTestReference);
 
 		YAML::Node Array = Deserialize["array"];
@@ -176,5 +201,59 @@ namespace NxTs
 
 		NxFr::String Emitted = NxFr::Yaml::Serialize(Serialize);
 		ASSERT_EQ(Emitted, Data);
+	}
+
+	TEST(Serialization, Rbs)
+	{
+		const char* CStringTest = "Nexus Test";
+		NxFr::String StringTest = "StringTest";
+		NxFr::String StringViewTest = "StringViewTest";
+		NxFr::StringId StringIdTest = "StringIdTest"_Sid;
+
+		NxFr::Array<NxFr::String> Array = NxFr::Array<NxFr::String>(5);
+		Array[0] = "First";
+		Array[1] = "Second";
+		Array[2] = "Third";
+		Array[3] = "Fourth";
+		Array[4] = "Fifth";
+		NxFr::List<NxFr::String> List = NxFr::List<NxFr::String>(5);
+		List.AppendRange(Array);
+		NxFr::Set<NxFr::String> Set = NxFr::Set<NxFr::String>(5);
+		Set.AppendRange(Array);
+		NxFr::Dictionary<NxFr::String, uint64> Dictionary = NxFr::Dictionary<NxFr::String, uint64>(5);
+		for (uint64 Index = 0; Index < Array.GetCount(); ++Index)
+		{
+			Dictionary.Append(Array[Index], Index + 1);
+		}
+
+		NxFr::RBS RbsSerialization;
+		RbsSerialization.WriteObject(true);
+		RbsSerialization.WriteObject(1);
+		RbsSerialization.WriteObject(3.14f);
+		RbsSerialization.WriteObject((const char*)"Nexus Test");
+		RbsSerialization.WriteObject(StringTest);
+		RbsSerialization.WriteObject(StringViewTest);
+		RbsSerialization.WriteObject(StringIdTest);
+		RbsSerialization.WriteObject(YamlTestReference);
+		RbsSerialization.WriteObject(Array);
+		RbsSerialization.WriteObject(List);
+		RbsSerialization.WriteObject(Set);
+		RbsSerialization.WriteObject(Dictionary);
+		NxFr::Buffer Serialization = NxFr::RBS::Serialize(RbsSerialization);
+
+		NxFr::RBS RbsDeserialization = NxFr::RBS::Deserialize(Serialization);
+		ASSERT_EQ(RbsDeserialization.ReadObject<bool>(), true);
+		ASSERT_EQ(RbsDeserialization.ReadObject<int>(), 1);
+		ASSERT_EQ(RbsDeserialization.ReadObject<float>(), 3.14f);
+		ASSERT_EQ(RbsDeserialization.ReadObject<const char*>(), NxFr::StringView(CStringTest));
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::String>(), StringTest);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::StringView>(), StringViewTest);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::StringId>(), StringIdTest);
+		ASSERT_EQ(RbsDeserialization.ReadObject<SerializationTest>(), YamlTestReference);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Array<NxFr::String>>()[4], "Fifth");
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::List<NxFr::String>>()[4], "Fifth");
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Set<NxFr::String>>().Contains("Fifth"), true);
+		auto Dict = RbsDeserialization.ReadObject<NxFr::Dictionary<NxFr::String, uint64>>();
+		ASSERT_EQ(Dict["Fifth"], 5);
 	}
 }

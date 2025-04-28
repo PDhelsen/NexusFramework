@@ -55,6 +55,7 @@
 #include "NexusFramework/IO/File.h"
 #include "NexusFramework/IO/Stream.h"
 
+#include "NexusFramework/Serialization/Rbs.h"
 #include "NexusFramework/Serialization/Yaml.h"
 
 #include "NexusFramework/Debug/Logger/Logger.h"

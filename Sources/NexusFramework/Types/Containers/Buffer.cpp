@@ -87,10 +87,9 @@ namespace NxFr
 		return BufferView((Byte*)GetPtr() + Offset, Size);
 	}
 
-	void Buffer::Set(void* Source, uint64 Size, uint64 OffsetBuffer, uint64 OffsetSource)
+	void Buffer::Set(const void* Source, uint64 Size, uint64 OffsetBuffer, uint64 OffsetSource)
 	{
 		NEXUS_ASSERT(Source, Default, "Source is null");
-		NEXUS_ASSERT(Size > 0, Default, "Size is 0");
 		NEXUS_ASSERT(Size <= Count, Default, "Size is greater than the size of the Buffer");
 		NEXUS_ASSERT(OffsetBuffer + Size <= Count, Default, "Set will overflow");
 
@@ -130,7 +129,7 @@ namespace NxFr
 		Memory::MemSet((Byte*)Data + Offset, 0, Size);
 	}
 
-	void Buffer::Copy(void* Source, uint64 Size, uint64 OffsetBuffer, uint64 OffsetSource)
+	void Buffer::Copy(const void* Source, uint64 Size, uint64 OffsetBuffer, uint64 OffsetSource)
 	{
 		Memory::MemCopy((Byte*)Source + OffsetSource, (Byte*)Data + OffsetBuffer, Size);
 	}
