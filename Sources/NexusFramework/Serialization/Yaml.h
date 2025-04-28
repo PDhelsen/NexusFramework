@@ -33,26 +33,70 @@ namespace YAML
 	template<>
 	struct convert<NxFr::String>
 	{
-		NEXUS_FRAMEWORK_API static Node encode(const NxFr::String& rhs);
-		NEXUS_FRAMEWORK_API static bool decode(const Node& node, NxFr::String& rhs);
+		static Node encode(const NxFr::String& rhs)
+		{
+			return Node(rhs.C());
+		}
+
+		static bool decode(const Node& node, NxFr::String& rhs)
+		{
+			rhs = node.as<std::string>().c_str();
+			return true;
+		}
 	};
-	NEXUS_FRAMEWORK_API YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::String& rhs);
+
+	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::String& rhs)
+	{
+		out << rhs.C();
+		return out;
+	}
 
 	template<>
 	struct convert<NxFr::StringView>
 	{
-		NEXUS_FRAMEWORK_API static Node encode(const NxFr::StringView& rhs);
-		NEXUS_FRAMEWORK_API static bool decode(const Node& node, NxFr::StringView& rhs);
+		static Node encode(const NxFr::StringView& rhs)
+		{
+			return Node(rhs.C());
+		}
+
+		static bool decode(const Node& node, NxFr::StringView& rhs)
+		{
+			rhs = node.as<std::string>().c_str();
+			return true;
+		}
 	};
-	NEXUS_FRAMEWORK_API YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringView& rhs);
+
+	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringView& rhs)
+	{
+		out << rhs.C();
+		return out;
+	}
 
 	template<>
 	struct convert<NxFr::StringId>
 	{
-		NEXUS_FRAMEWORK_API static Node encode(const NxFr::StringId& rhs);
-		NEXUS_FRAMEWORK_API static bool decode(const Node& node, NxFr::StringId& rhs);
+		static Node encode(const NxFr::StringId& rhs)
+		{
+			return Node(rhs.C());
+		}
+
+		static bool decode(const Node& node, NxFr::StringId& rhs)
+		{
+			if (!node.IsScalar())
+			{
+				return false;
+			}
+
+			rhs = NxFr::StringId(node.as<NxFr::StringView>());
+			return true;
+		}
 	};
-	NEXUS_FRAMEWORK_API YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringId& rhs);
+
+	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringId& rhs)
+	{
+		out << rhs.C();
+		return out;
+	}
 
 	template<typename T, uint64 N>
 	struct convert<NxFr::Array<T, N>>
