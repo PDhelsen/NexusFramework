@@ -1,5 +1,5 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
-#include "NexusFramework/Misc/Math.h"
+#include "NexusFramework/Math/Math.h"
 
 #include "NexusFramework/External/Intrinsics.h"
 #include "NexusFramework/External/StandardLibrary.h"

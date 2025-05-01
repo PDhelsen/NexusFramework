@@ -6,7 +6,7 @@
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Hash.h"
-#include "NexusFramework/Misc/Math.h"
+#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Types/Containers/Node.h"
 #include "NexusFramework/Types/Containers/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"

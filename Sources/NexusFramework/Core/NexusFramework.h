@@ -41,9 +41,10 @@
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Hash.h"
 #include "NexusFramework/Misc/Sort.h"
-#include "NexusFramework/Misc/Math.h"
 
 #include "NexusFramework/Platform/Platform.h"
+
+#include "NexusFramework/Math/Math.h"
 
 #include "NexusFramework/Time/Timestamp.h"
 #include "NexusFramework/Time/Timespan.h"
