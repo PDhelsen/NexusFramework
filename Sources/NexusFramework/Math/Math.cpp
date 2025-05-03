@@ -8,6 +8,66 @@ namespace NxFr
 {
 	namespace Math
 	{
+		bool Equals(float X, float Y)
+		{
+			return Equals(X, Y, Decimal::EpsilonF());
+		}
+
+		bool Equals(float X, float Y, float Epsilon)
+		{
+			return Abs(X - Y) <= Max(Max(X, Y), 1.0f) * Epsilon;
+		}
+
+		bool Equals(double X, double Y)
+		{
+			return Equals(X, Y, Decimal::EpsilonD());
+		}
+
+		bool Equals(double X, double Y, double Epsilon)
+		{
+			return Abs(X - Y) <= Max(Max(X, Y), 1.0) * Epsilon;
+		}
+
+		bool Equals(int8 X, int8 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(int16 X, int16 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(int32 X, int32 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(int64 X, int64 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(uint8 X, uint8 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(uint16 X, uint16 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(uint32 X, uint32 Y)
+		{
+			return X == Y;
+		}
+
+		bool Equals(uint64 X, uint64 Y)
+		{
+			return X == Y;
+		}
+
 		float Min(float X, float Y)
 		{
 			return X < Y ? X : Y;
@@ -106,6 +166,76 @@ namespace NxFr
 		uint64 Max(uint64 X, uint64 Y)
 		{
 			return X > Y ? X : Y;
+		}
+
+		float Clamp(float X, float A, float B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		double Clamp(double X, double A, double B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		int8 Clamp(int8 X, int8 A, int8 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		int16 Clamp(int16 X, int16 A, int16 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		int32 Clamp(int32 X, int32 A, int32 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		int64 Clamp(int64 X, int64 A, int64 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		uint8 Clamp(uint8 X, uint8 A, uint8 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		uint16 Clamp(uint16 X, uint16 A, uint16 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		uint32 Clamp(uint32 X, uint32 A, uint32 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		uint64 Clamp(uint64 X, uint64 A, uint64 B)
+		{
+			return Min(Max(X, A), B);
+		}
+
+		float ToDegree(float X)
+		{
+			return X * (180.0f / Decimal::PiF());
+		}
+
+		double ToDegree(double X)
+		{
+			return X * (180.0 / Decimal::PiD());
+		}
+
+		float ToRadians(float X)
+		{
+			return X * (Decimal::PiF() / 180.0f);
+		}
+
+		double ToRadians(double X)
+		{
+			return X * (Decimal::PiD() / 180.0);
 		}
 
 		float Acos(float X)

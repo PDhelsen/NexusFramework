@@ -34,4 +34,24 @@ namespace NxFr::Decimal
 	{
 		return DBL_MAX;
 	}
+
+	float EpsilonF()
+	{
+		return 1e-6f;
+	}
+
+	double EpsilonD()
+	{
+		return 1e-9f;
+	}
+
+	float PiF()
+	{
+		return 3.14159f;
+	}
+
+	double PiD()
+	{
+		return 3.14159;
+	}
 }

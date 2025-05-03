@@ -7,6 +7,19 @@ namespace NxFr
 {
 	namespace Math
 	{
+		NEXUS_FRAMEWORK_API	bool	Equals				(float		X, float	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(float		X, float	Y, float Epsilon);
+		NEXUS_FRAMEWORK_API	bool	Equals				(double		X, double	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(double		X, double	Y, double Epsilon);
+		NEXUS_FRAMEWORK_API	bool	Equals				(int8		X, int8		Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(int16		X, int16	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(int32		X, int32	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(int64		X, int64	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(uint8		X, uint8	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(uint16		X, uint16	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(uint32		X, uint32	Y);
+		NEXUS_FRAMEWORK_API	bool	Equals				(uint64		X, uint64	Y);
+
 		NEXUS_FRAMEWORK_API	float	Min					(float		X, float	Y);
 		NEXUS_FRAMEWORK_API	double	Min					(double		X, double	Y);
 		NEXUS_FRAMEWORK_API	int8	Min					(int8		X, int8		Y);
@@ -27,6 +40,21 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API	uint16	Max					(uint16		X, uint16	Y);
 		NEXUS_FRAMEWORK_API	uint32	Max					(uint32		X, uint32	Y);
 		NEXUS_FRAMEWORK_API	uint64	Max					(uint64		X, uint64	Y);
+		NEXUS_FRAMEWORK_API	float	Clamp				(float		X, float	A = 0, float	B = 1);
+		NEXUS_FRAMEWORK_API	double	Clamp				(double		X, double	A = 0, double	B = 1);
+		NEXUS_FRAMEWORK_API	int8	Clamp				(int8		X, int8		A = 0, int8		B = 1);
+		NEXUS_FRAMEWORK_API	int16	Clamp				(int16		X, int16	A = 0, int16	B = 1);
+		NEXUS_FRAMEWORK_API	int32	Clamp				(int32		X, int32	A = 0, int32	B = 1);
+		NEXUS_FRAMEWORK_API	int64	Clamp				(int64		X, int64	A = 0, int64	B = 1);
+		NEXUS_FRAMEWORK_API	uint8	Clamp				(uint8		X, uint8	A = 0, uint8	B = 1);
+		NEXUS_FRAMEWORK_API	uint16	Clamp				(uint16		X, uint16	A = 0, uint16	B = 1);
+		NEXUS_FRAMEWORK_API	uint32	Clamp				(uint32		X, uint32	A = 0, uint32	B = 1);
+		NEXUS_FRAMEWORK_API	uint64	Clamp				(uint64		X, uint64	A = 0, uint64	B = 1);
+
+		NEXUS_FRAMEWORK_API	float	ToDegree			(float		X);
+		NEXUS_FRAMEWORK_API	double	ToDegree			(double		X);
+		NEXUS_FRAMEWORK_API	float	ToRadians			(float		X);
+		NEXUS_FRAMEWORK_API	double	ToRadians			(double		X);
 
 		NEXUS_FRAMEWORK_API	float	Acos				(float		X);
 		NEXUS_FRAMEWORK_API	double	Acos				(double		X);
