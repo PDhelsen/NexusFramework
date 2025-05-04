@@ -28,44 +28,54 @@ namespace NxFr
 			return Abs(X - Y) <= Max(Max(X, Y), 1.0) * Epsilon;
 		}
 
-		bool Equals(int8 X, int8 Y)
+		float Lerp(float A, float B, float T)
 		{
-			return X == Y;
+			return (1.0f - T) * A + T * B;
 		}
 
-		bool Equals(int16 X, int16 Y)
+		double Lerp(double A, double B, double T)
 		{
-			return X == Y;
+			return (1.0f - T) * A + T * B;
 		}
 
-		bool Equals(int32 X, int32 Y)
+		int8 Lerp(int8 A, int8 B, float T)
 		{
-			return X == Y;
+			return (int8)((1.0f - T) * A + T * B);
 		}
 
-		bool Equals(int64 X, int64 Y)
+		int16 Lerp(int16 A, int16 B, float T)
 		{
-			return X == Y;
+			return (int16)((1.0f - T) * A + T * B);
 		}
 
-		bool Equals(uint8 X, uint8 Y)
+		int32 Lerp(int32 A, int32 B, float T)
 		{
-			return X == Y;
+			return (int32)((1.0f - T) * A + T * B);
 		}
 
-		bool Equals(uint16 X, uint16 Y)
+		int64 Lerp(int64 A, int64 B, float T)
 		{
-			return X == Y;
+			return (int64)((1.0f - T) * A + T * B);
 		}
 
-		bool Equals(uint32 X, uint32 Y)
+		uint8 Lerp(uint8 A, uint8 B, float T)
 		{
-			return X == Y;
+			return (uint8)((1.0f - T) * A + T * B);
 		}
 
-		bool Equals(uint64 X, uint64 Y)
+		uint16 Lerp(uint16 A, uint16 B, float T)
 		{
-			return X == Y;
+			return (uint16)((1.0f - T) * A + T * B);
+		}
+
+		uint32 Lerp(uint32 A, uint32 B, float T)
+		{
+			return (uint32)((1.0f - T) * A + T * B);
+		}
+
+		uint64 Lerp(uint64 A, uint64 B, float T)
+		{
+			return (uint64)((1.0f - T) * A + T * B);
 		}
 
 		float Min(float X, float Y)

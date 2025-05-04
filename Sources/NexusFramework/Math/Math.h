@@ -11,14 +11,17 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API	bool	Equals				(float		X, float	Y, float Epsilon);
 		NEXUS_FRAMEWORK_API	bool	Equals				(double		X, double	Y);
 		NEXUS_FRAMEWORK_API	bool	Equals				(double		X, double	Y, double Epsilon);
-		NEXUS_FRAMEWORK_API	bool	Equals				(int8		X, int8		Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(int16		X, int16	Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(int32		X, int32	Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(int64		X, int64	Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(uint8		X, uint8	Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(uint16		X, uint16	Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(uint32		X, uint32	Y);
-		NEXUS_FRAMEWORK_API	bool	Equals				(uint64		X, uint64	Y);
+
+		NEXUS_FRAMEWORK_API	float	Lerp				(float		A, float	B, float T);
+		NEXUS_FRAMEWORK_API	double	Lerp				(double		A, double	B, double T);
+		NEXUS_FRAMEWORK_API	int8	Lerp				(int8		A, int8		B, float T);
+		NEXUS_FRAMEWORK_API	int16	Lerp				(int16		A, int16	B, float T);
+		NEXUS_FRAMEWORK_API	int32	Lerp				(int32		A, int32	B, float T);
+		NEXUS_FRAMEWORK_API	int64	Lerp				(int64		A, int64	B, float T);
+		NEXUS_FRAMEWORK_API	uint8	Lerp				(uint8		A, uint8	B, float T);
+		NEXUS_FRAMEWORK_API	uint16	Lerp				(uint16		A, uint16	B, float T);
+		NEXUS_FRAMEWORK_API	uint32	Lerp				(uint32		A, uint32	B, float T);
+		NEXUS_FRAMEWORK_API	uint64	Lerp				(uint64		A, uint64	B, float T);
 
 		NEXUS_FRAMEWORK_API	float	Min					(float		X, float	Y);
 		NEXUS_FRAMEWORK_API	double	Min					(double		X, double	Y);

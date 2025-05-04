@@ -167,7 +167,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Vec3f::ProjectOnVector(NxFr::Vec3f(1.0f, 1.0f, 1.0f), NxFr::Vec3f(0.0f, 1.0f, 0.0f)), NxFr::Vec3f(0.0f, 1.0f, 0.0f));
 		ASSERT_EQ(NxFr::Vec3f::ProjectOnNormal(NxFr::Vec3f(1.0f, 1.0f, 1.0f), NxFr::Vec3f(0.0f, 1.0f, 0.0f)), NxFr::Vec3f(1.0f, 0.0f, 1.0f));
 		ASSERT_EQ(NxFr::Vec3f::Reflect(NxFr::Vec3f(1.0f, 1.0f, 1.0f), NxFr::Vec3f(0.0f, 1.0f, 0.0f)), NxFr::Vec3f(1.0f, -1.0f, 1.0f));
-		ASSERT_EQ(NxFr::Vec3f::SLerp(NxFr::Vec3f(1.0f, 0.0f, 0.0f), NxFr::Vec3f(0.0f, 1.0f, 0), 0.5f), NxFr::Vec3f(0.707106829f, 0.707106829f, 0.0f));
+		ASSERT_EQ(NxFr::Vec3f::SLerp(NxFr::Vec3f(1.0f, 0.0f, 0.0f), NxFr::Vec3f(0.0f, 1.0f, 0.0f), 0.5f), NxFr::Vec3f(0.707106829f, 0.707106829f, 0.0f));
 		ASSERT_EQ(NxFr::Vec3f::Cross(NxFr::Vec3f(1, 0, 0), NxFr::Vec3f(0, 1, 0)), NxFr::Vec3f(0.0f, 0.0f, 1.0f));
 		ASSERT_EQ(NxFr::Vec3f::Dot(NxFr::Vec3f(1, 0, 0), NxFr::Vec3f(0, 1, 0)), 0.0f);
 		ASSERT_EQ(NxFr::Vec3f::Equals(NxFr::Vec3f(0.5f), NxFr::Vec3f(0.5f)), true);
@@ -191,9 +191,9 @@ namespace NxTs
 		ASSERT_EQ(Vec3i * Vec3i, NxFr::Vec3i(9));
 		ASSERT_EQ(Vec3i / Vec3i, NxFr::Vec3i(1));
 
-		ASSERT_EQ(NxFr::Vec3i::Clamp(NxFr::Vec3i(-5, 0, 5), NxFr::Vec3i(0), NxFr::Vec3i(1)), NxFr::Vec3i(0, 0, 1));
-		ASSERT_EQ(NxFr::Vec3i::Lerp(NxFr::Vec3i(0), NxFr::Vec3i(1), 1), NxFr::Vec3i(1, 1, 1));
-		ASSERT_EQ(NxFr::Vec3i::Magnitude(NxFr::Vec3i(1, 1, 0)), 1);
-		ASSERT_EQ(NxFr::Vec3i::Normalize(NxFr::Vec3i(1, 1, 1)), NxFr::Vec3i(0));
+		ASSERT_EQ(NxFr::Vec3i::Clamp(NxFr::Vec3i(-5.5f, 0.5f, 5.5f), NxFr::Vec3i(0), NxFr::Vec3i(1)), NxFr::Vec3i(0, 0, 1));
+		ASSERT_EQ(NxFr::Vec3i::Lerp(NxFr::Vec3i(0), NxFr::Vec3i(1), 0.25f), NxFr::Vec3i(0));
+		ASSERT_EQ(NxFr::Vec3i::Magnitude(NxFr::Vec3i(1, 1, 0)), 1.41421354f);
+		ASSERT_EQ(NxFr::Vec3i::Normalize(NxFr::Vec3i(1, 1, 1)), NxFr::Vec3f(0.577350259f));
 	}
 }
