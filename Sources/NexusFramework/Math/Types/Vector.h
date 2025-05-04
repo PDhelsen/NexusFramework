@@ -46,8 +46,8 @@ namespace NxFr
 		static float Dot(const Vector<2, T>& A, const Vector<2, T>& B) { return A.x * B.x + A.y * B.y + A.z * B.z; }
 		static float Angle(const Vector<2, T>& A, const Vector<2, T>& B) { return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B)))); }
 		static Vector<2, float> Cross(const Vector<2, T>& A, const Vector<2, T>& B) { return Vector<2, float>(A.x * B.y - B.x * A.y); }
-		static Vector<2, float> ProjectOnVector(const Vector<2, T>& A, const Vector<2, T>& B) { return B * (Dot(A, B) / Dot(B, B)); }
-		static Vector<2, float> ProjectOnNormal(const Vector<2, T>& V, const Vector<2, T>& N) { return V - N * Dot(V, N); }
+		static Vector<2, float> ProjectOnVector(const Vector<2, T>& A, const Vector<2, T>& B) { return (Dot(A, B) / Dot(B, B)) * B; }
+		static Vector<2, float> ProjectOnNormal(const Vector<2, T>& V, const Vector<2, T>& N) { return V - Dot(V, N) * N; }
 		static Vector<2, float> Reflect(const Vector<2, T>& V, const Vector<2, T>& N) { return V - 2.0f * Dot(V, N) * N; }
 		static Vector<2, float> Normalize(const Vector<2, T>& V) { float Size = SqrMagnitude(V); if (Math::Equals(Size, 0.0f)) return Vector<2, float>(); return 1.0f / Math::Sqrt(Size) * Vector<2, float>(V); }
 		static float Distance(const Vector<2, T>& A, const Vector<2, T>& B) { return Magnitude(B - A); }
@@ -126,8 +126,8 @@ namespace NxFr
 		static float Dot(const Vector<3, T>& A, const Vector<3, T>& B) { return A.x * B.x + A.y * B.y + A.z * B.z; }
 		static float Angle(const Vector<3, T>& A, const Vector<3, T>& B) { return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B)))); }
 		static Vector<3, float> Cross(const Vector<3, T>& A, const Vector<3, T>& B) { return Vector<3, float>(A.y * B.z - B.y * A.z, A.z * B.x - B.z * A.x, A.x * B.y - B.x * A.y); }
-		static Vector<3, float> ProjectOnVector(const Vector<3, T>& A, const Vector<3, T>& B) { return B * (Dot(A, B) / Dot(B, B)); }
-		static Vector<3, float> ProjectOnNormal(const Vector<3, T>& V, const Vector<3, T>& N) { return V - N * Dot(V, N); }
+		static Vector<3, float> ProjectOnVector(const Vector<3, T>& A, const Vector<3, T>& B) { return (Dot(A, B) / Dot(B, B)) * B; }
+		static Vector<3, float> ProjectOnNormal(const Vector<3, T>& V, const Vector<3, T>& N) { return V - Dot(V, N) * N; }
 		static Vector<3, float> Reflect(const Vector<3, T>& V, const Vector<3, T>& N) { return V - 2.0f * Dot(V, N) * N; }
 		static Vector<3, float> Normalize(const Vector<3, T>& V) { float Size = SqrMagnitude(V); if (Math::Equals(Size, 0.0f)) return Vector<3, float>(); return 1.0f / Math::Sqrt(Size) * Vector<3, float>(V); }
 		static float Distance(const Vector<3, T>& A, const Vector<3, T>& B) { return Magnitude(B - A); }
@@ -207,8 +207,8 @@ namespace NxFr
 		static float Dot(const Vector<4, T>& A, const Vector<4, T>& B) { return A.x * B.x + A.y * B.y + A.z * B.z; }
 		static float Angle(const Vector<4, T>& A, const Vector<4, T>& B) { return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B)))); }
 		static Vector<4, T> Cross(const Vector<4, T>& A, const Vector<4, T>& B) { return Vector<4, float>(A.x * B.y - B.x * A.y); }
-		static Vector<4, T> ProjectOnVector(const Vector<4, T>& A, const Vector<4, T>& B) { return B * (Dot(A, B) / Dot(B, B)); }
-		static Vector<4, T> ProjectOnNormal(const Vector<4, T>& V, const Vector<4, T>& N) { return V - N * Dot(V, N); }
+		static Vector<4, T> ProjectOnVector(const Vector<4, T>& A, const Vector<4, T>& B) { return (Dot(A, B) / Dot(B, B)) * B; }
+		static Vector<4, T> ProjectOnNormal(const Vector<4, T>& V, const Vector<4, T>& N) { return V - Dot(V, N) * N; }
 		static Vector<4, T> Reflect(const Vector<4, T>& V, const Vector<4, T>& N) { return V - 2.0f * Dot(V, N) * N; }
 		static Vector<4, T> Normalize(const Vector<4, T>& V) { float Size = SqrMagnitude(V); if (Math::Equals(Size, 0.0f)) return Vector<4, float>(); return 1.0f / Math::Sqrt(Size) * Vector<4, float>(V); }
 		static float Distance(const Vector<4, T>& A, const Vector<4, T>& B) { return Magnitude(B - A); }
