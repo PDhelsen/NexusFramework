@@ -172,6 +172,9 @@ namespace NxTs
 		ASSERT_EQ(NxFr::VectorUtility::Cross(NxFr::Vector3(1, 0, 0), NxFr::Vector3(0, 1, 0)), NxFr::Vector3(0.0f, 0.0f, 1.0f));
 		ASSERT_EQ(NxFr::VectorUtility::Dot(NxFr::Vector3(1, 0, 0), NxFr::Vector3(0, 1, 0)), 0.0f);
 		ASSERT_EQ(NxFr::VectorUtility::Equals(NxFr::Vector3(0.5f), NxFr::Vector3(0.5f)), true);
+		ASSERT_EQ(NxFr::VectorUtility::Similar(NxFr::Vector3(1.0f, 0.0f), NxFr::Vector3(2.0f, 0.0f)), true);
+		ASSERT_EQ(NxFr::VectorUtility::Parallel(NxFr::Vector3(1.0f, 0.0f), NxFr::Vector3(2.0f, 0.0f)), true);
+		ASSERT_EQ(NxFr::VectorUtility::Perpendicular(NxFr::Vector3(1.0f, 0.0f), NxFr::Vector3(0.0f, 1.0f)), true);
 
 		ASSERT_EQ(NxFr::Vector3i(), NxFr::Vector3i(0, 0, 0));
 		ASSERT_EQ(NxFr::Vector3i(1), NxFr::Vector3i(1, 1, 1));
