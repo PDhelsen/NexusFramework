@@ -228,26 +228,6 @@ namespace NxFr
 			return Min(Max(X, A), B);
 		}
 
-		float ToDegree(float X)
-		{
-			return X * (180.0f / Decimal::PiF());
-		}
-
-		double ToDegree(double X)
-		{
-			return X * (180.0 / Decimal::PiD());
-		}
-
-		float ToRadians(float X)
-		{
-			return X * (Decimal::PiF() / 180.0f);
-		}
-
-		double ToRadians(double X)
-		{
-			return X * (Decimal::PiD() / 180.0);
-		}
-
 		float Acos(float X)
 		{
 			return acos(X);

@@ -7,6 +7,10 @@ namespace NxFr
 {
 	namespace Math
 	{
+		constexpr double Pi = 3.14159;
+		constexpr double Degree = 180.0 / Pi;
+		constexpr double Radians = Pi / 180.0;
+
 		NEXUS_FRAMEWORK_API	bool	Equals				(float		X, float	Y);
 		NEXUS_FRAMEWORK_API	bool	Equals				(float		X, float	Y, float Epsilon);
 		NEXUS_FRAMEWORK_API	bool	Equals				(double		X, double	Y);
@@ -53,11 +57,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API	uint16	Clamp				(uint16		X, uint16	A = 0, uint16	B = 1);
 		NEXUS_FRAMEWORK_API	uint32	Clamp				(uint32		X, uint32	A = 0, uint32	B = 1);
 		NEXUS_FRAMEWORK_API	uint64	Clamp				(uint64		X, uint64	A = 0, uint64	B = 1);
-
-		NEXUS_FRAMEWORK_API	float	ToDegree			(float		X);
-		NEXUS_FRAMEWORK_API	double	ToDegree			(double		X);
-		NEXUS_FRAMEWORK_API	float	ToRadians			(float		X);
-		NEXUS_FRAMEWORK_API	double	ToRadians			(double		X);
 
 		NEXUS_FRAMEWORK_API	float	Acos				(float		X);
 		NEXUS_FRAMEWORK_API	double	Acos				(double		X);

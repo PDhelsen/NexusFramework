@@ -44,14 +44,4 @@ namespace NxFr::Decimal
 	{
 		return 1e-9f;
 	}
-
-	float PiF()
-	{
-		return 3.14159f;
-	}
-
-	double PiD()
-	{
-		return 3.14159;
-	}
 }

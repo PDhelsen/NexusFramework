@@ -5,6 +5,7 @@
 #include "NexusFramework/Types/Numbers/Decimal.h"
 #include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringFunctions.h"
 
 namespace NxFr
 {
@@ -57,8 +58,11 @@ namespace NxFr
 		template<			typename T> Vector<4, T>		Max(Vector<4, T> A, Vector<4, T> B)						{ return Vector<4, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y), Math::Max(A.z, B.z), Math::Max(A.w, B.w)); }
 		template<uint8 D,	typename T> Vector<D, T>		Clamp(Vector<D, T> V, Vector<D, T> A, Vector<D, T> B)	{ return Min(Max(V, A), B); }
 		template<uint8 D,	typename T> Vector<D, T>		Lerp(Vector<D, T> A, Vector<D, T> B, float V)			{ return (1.0f - V) * Vector<D, float>(A) + V * Vector<D, float>(B); }
-		template<uint8 D,	typename T> Vector<D, float>	SLerp(Vector<D, T> A, Vector<D, T> B, float V)			{ float Theta = Math::Acos(Dot(A, B)); float SinTheta = Math::Sin(Theta); return Normalize(Math::Sin((1.0f - V) * Theta) / SinTheta * Vector<D, float>(A) + Math::Sin(V * Theta) / SinTheta * Vector<D, float>(B)); }}
-
+		template<uint8 D,	typename T> Vector<D, float>	SLerp(Vector<D, T> A, Vector<D, T> B, float V)			{ float Theta = Math::Acos(Dot(A, B)); float SinTheta = Math::Sin(Theta); return Normalize(Math::Sin((1.0f - V) * Theta) / SinTheta * Vector<D, float>(A) + Math::Sin(V * Theta) / SinTheta * Vector<D, float>(B)); }
+		template<uint8 D,	typename T>	bool				Similar(Vector<D, T> A, Vector<D, T> B)					{ return Equals(Normalize(A), Normalize(B)); }
+		template<uint8 D,	typename T>	bool				Parallel(Vector<D, T> A, Vector<D, T> B)				{ return Math::Equals(Math::Abs(Dot(Normalize(A), Normalize(B))), 1.0f); }
+		template<uint8 D,	typename T>	bool				Perpendicular(Vector<D, T> A, Vector<D, T> B)			{ return Math::Equals(Math::Abs(Dot(Normalize(A), Normalize(B))), 0.0f); }
+	}
 #pragma endregion
 
 #pragma region Vector

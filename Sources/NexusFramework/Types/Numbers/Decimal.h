@@ -12,6 +12,4 @@ namespace NxFr::Decimal
 	NEXUS_FRAMEWORK_API double	MaxD();
 	NEXUS_FRAMEWORK_API float	EpsilonF();
 	NEXUS_FRAMEWORK_API double	EpsilonD();
-	NEXUS_FRAMEWORK_API float	PiF();
-	NEXUS_FRAMEWORK_API double	PiD();
 }
