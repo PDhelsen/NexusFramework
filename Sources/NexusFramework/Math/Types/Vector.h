@@ -28,41 +28,13 @@ namespace NxFr
 	using Vector3 = Vector3f;
 	using Vector4 = Vector4f;
 
-#pragma endregion
-
-#pragma region VectorUtility
-
 	namespace VectorUtility
 	{
-		template<			typename T>						bool Equals(Vector<2, T> A, Vector<2, T> B)				{ return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y); }
-		template<			typename T>						bool Equals(Vector<3, T> A, Vector<3, T> B)				{ return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y) && Math::Equals((float)A.z, (float)B.z); }
-		template<			typename T>						bool Equals(Vector<4, T> A, Vector<4, T> B)				{ return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y) && Math::Equals((float)A.z, (float)B.z) && Math::Equals((float)A.w, (float)B.w); }
-		template<			typename T> float				Dot(Vector<2, T> A, Vector<2, T> B)						{ return A.x * B.x + A.y * B.y; }
-		template<			typename T> float				Dot(Vector<3, T> A, Vector<3, T> B)						{ return A.x * B.x + A.y * B.y + A.z * B.z; }
-		template<			typename T> float				Dot(Vector<4, T> A, Vector<4, T> B)						{ return A.x * B.x + A.y * B.y + A.z * B.z + A.w * B.w; }
-		template<			typename T> Vector<2, float>	Cross(Vector<2, T> A, Vector<2, T> B)					{ return Vector<2, float>(A.x * B.y - B.x * A.y); }
-		template<			typename T> Vector<3, float>	Cross(Vector<3, T> A, Vector<3, T> B)					{ return Vector<3, float>(A.y * B.z - B.y * A.z, A.z * B.x - B.z * A.x, A.x * B.y - B.x * A.y); }
-		template<uint8 D,	typename T> Vector<D, float>	ProjectOnVector(Vector<D, T> A, Vector<D, T> B)			{ return (Dot(A, B) / Dot(B, B)) * B; }
-		template<uint8 D,	typename T> Vector<D, float>	ProjectOnNormal(Vector<D, T> V, Vector<D, T> N)			{ return V - Dot(V, N) * N; }
-		template<uint8 D,	typename T> Vector<D, float>	Reflect(Vector<D, T> V, Vector<D, T> N)					{ return V - 2.0f * Dot(V, N) * N; }
-		template<uint8 D,	typename T> float				SqrMagnitude(Vector<D, T> V)							{ return Dot(V, V); }
-		template<uint8 D,	typename T> float				Magnitude(Vector<D, T> V)								{ return Math::Sqrt(Dot(V, V)); }
-		template<uint8 D,	typename T> float				Distance(Vector<D, T> A, Vector<D, T> B)				{ return Magnitude(B - A); }
-		template<uint8 D,	typename T> Vector<D, float>	Normalize(Vector<D, T> V)								{ float Size = SqrMagnitude(V); if (Math::Equals(Size, 0.0f)) return Vector<D, float>(); return 1.0f / Math::Sqrt(Size) * Vector<D, float>(V); }
-		template<uint8 D,	typename T> float				Angle(Vector<D, T> A, Vector<D, T> B)					{ return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B)))); }
-		template<			typename T> Vector<2, T>		Min(Vector<2, T> A, Vector<2, T> B)						{ return Vector<2, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y)); }
-		template<			typename T> Vector<3, T>		Min(Vector<3, T> A, Vector<3, T> B)						{ return Vector<3, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y), Math::Min(A.z, B.z)); }
-		template<			typename T> Vector<4, T>		Min(Vector<4, T> A, Vector<4, T> B)						{ return Vector<4, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y), Math::Min(A.z, B.z), Math::Min(A.w, B.w)); }
-		template<			typename T> Vector<2, T>		Max(Vector<2, T> A, Vector<2, T> B)						{ return Vector<2, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y)); }
-		template<			typename T> Vector<3, T>		Max(Vector<3, T> A, Vector<3, T> B)						{ return Vector<3, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y), Math::Max(A.z, B.z)); }
-		template<			typename T> Vector<4, T>		Max(Vector<4, T> A, Vector<4, T> B)						{ return Vector<4, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y), Math::Max(A.z, B.z), Math::Max(A.w, B.w)); }
-		template<uint8 D,	typename T> Vector<D, T>		Clamp(Vector<D, T> V, Vector<D, T> A, Vector<D, T> B)	{ return Min(Max(V, A), B); }
-		template<uint8 D,	typename T> Vector<D, T>		Lerp(Vector<D, T> A, Vector<D, T> B, float V)			{ return (1.0f - V) * Vector<D, float>(A) + V * Vector<D, float>(B); }
-		template<uint8 D,	typename T> Vector<D, float>	SLerp(Vector<D, T> A, Vector<D, T> B, float V)			{ float Theta = Math::Acos(Dot(A, B)); float SinTheta = Math::Sin(Theta); return Normalize(Math::Sin((1.0f - V) * Theta) / SinTheta * Vector<D, float>(A) + Math::Sin(V * Theta) / SinTheta * Vector<D, float>(B)); }
-		template<uint8 D,	typename T>	bool				Similar(Vector<D, T> A, Vector<D, T> B)					{ return Equals(Normalize(A), Normalize(B)); }
-		template<uint8 D,	typename T>	bool				Parallel(Vector<D, T> A, Vector<D, T> B)				{ return Math::Equals(Math::Abs(Dot(Normalize(A), Normalize(B))), 1.0f); }
-		template<uint8 D,	typename T>	bool				Perpendicular(Vector<D, T> A, Vector<D, T> B)			{ return Math::Equals(Math::Abs(Dot(Normalize(A), Normalize(B))), 0.0f); }
+		template<uint8 D, typename T>	float				SqrMagnitude(Vector<D, T> V);
+		template<uint8 D, typename T>	float				Magnitude(Vector<D, T> V);
+		template<uint8 D, typename T>	Vector<D, float>	Normalize(Vector<D, T> V);
 	}
+
 #pragma endregion
 
 #pragma region Vector
@@ -299,6 +271,42 @@ namespace NxFr
 	template<typename T> Vector<4, T> operator-(Vector<4, T> A, Vector<4, T> B) { return Vector<4, T>(A.x - B.x, A.y - B.y, A.z - B.z, A.w - B.w); }
 	template<typename T> Vector<4, T> operator*(Vector<4, T> A, Vector<4, T> B) { return Vector<4, T>(A.x * B.x, A.y * B.y, A.z * B.z, A.w * B.w); }
 	template<typename T> Vector<4, T> operator/(Vector<4, T> A, Vector<4, T> B) { return Vector<4, T>(A.x / B.x, A.y / B.y, A.z / B.z, A.w / B.w); }
+
+#pragma endregion
+
+#pragma region VectorUtility
+
+	namespace VectorUtility
+	{
+		template<			typename T>	bool				Equals(Vector<2, T> A, Vector<2, T> B)					{ return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y); }
+		template<			typename T>	bool				Equals(Vector<3, T> A, Vector<3, T> B)					{ return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y) && Math::Equals((float)A.z, (float)B.z); }
+		template<			typename T>	bool				Equals(Vector<4, T> A, Vector<4, T> B)					{ return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y) && Math::Equals((float)A.z, (float)B.z) && Math::Equals((float)A.w, (float)B.w); }
+		template<			typename T> float				Dot(Vector<2, T> A, Vector<2, T> B)						{ return A.x * B.x + A.y * B.y; }
+		template<			typename T> float				Dot(Vector<3, T> A, Vector<3, T> B)						{ return A.x * B.x + A.y * B.y + A.z * B.z; }
+		template<			typename T> float				Dot(Vector<4, T> A, Vector<4, T> B)						{ return A.x * B.x + A.y * B.y + A.z * B.z + A.w * B.w; }
+		template<			typename T> Vector<2, float>	Cross(Vector<2, T> A, Vector<2, T> B)					{ return Vector<2, float>(A.x * B.y - B.x * A.y); }
+		template<			typename T> Vector<3, float>	Cross(Vector<3, T> A, Vector<3, T> B)					{ return Vector<3, float>(A.y * B.z - B.y * A.z, A.z * B.x - B.z * A.x, A.x * B.y - B.x * A.y); }
+		template<uint8 D,	typename T> Vector<D, float>	ProjectOnVector(Vector<D, T> A, Vector<D, T> B)			{ return (Dot(A, B) / Dot(B, B)) * B; }
+		template<uint8 D,	typename T> Vector<D, float>	ProjectOnNormal(Vector<D, T> V, Vector<D, T> N)			{ return V - Dot(V, N) * N; }
+		template<uint8 D,	typename T> Vector<D, float>	Reflect(Vector<D, T> V, Vector<D, T> N)					{ return V - 2.0f * Dot(V, N) * N; }
+		template<uint8 D,	typename T> float				SqrMagnitude(Vector<D, T> V)							{ return Dot(V, V); }
+		template<uint8 D,	typename T> float				Magnitude(Vector<D, T> V)								{ return Math::Sqrt(Dot(V, V)); }
+		template<uint8 D,	typename T> float				Distance(Vector<D, T> A, Vector<D, T> B)				{ return Magnitude(B - A); }
+		template<uint8 D,	typename T> Vector<D, float>	Normalize(Vector<D, T> V)								{ float Size = SqrMagnitude(V); if (Math::Equals(Size, 0.0f)) return Vector<D, float>(); return 1.0f / Math::Sqrt(Size) * Vector<D, float>(V); }
+		template<uint8 D,	typename T> float				Angle(Vector<D, T> A, Vector<D, T> B)					{ return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B)))); }
+		template<			typename T> Vector<2, T>		Min(Vector<2, T> A, Vector<2, T> B)						{ return Vector<2, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y)); }
+		template<			typename T> Vector<3, T>		Min(Vector<3, T> A, Vector<3, T> B)						{ return Vector<3, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y), Math::Min(A.z, B.z)); }
+		template<			typename T> Vector<4, T>		Min(Vector<4, T> A, Vector<4, T> B)						{ return Vector<4, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y), Math::Min(A.z, B.z), Math::Min(A.w, B.w)); }
+		template<			typename T> Vector<2, T>		Max(Vector<2, T> A, Vector<2, T> B)						{ return Vector<2, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y)); }
+		template<			typename T> Vector<3, T>		Max(Vector<3, T> A, Vector<3, T> B)						{ return Vector<3, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y), Math::Max(A.z, B.z)); }
+		template<			typename T> Vector<4, T>		Max(Vector<4, T> A, Vector<4, T> B)						{ return Vector<4, T>(Math::Max(A.x, B.x), Math::Max(A.y, B.y), Math::Max(A.z, B.z), Math::Max(A.w, B.w)); }
+		template<uint8 D,	typename T> Vector<D, T>		Clamp(Vector<D, T> V, Vector<D, T> A, Vector<D, T> B)	{ return Min(Max(V, A), B); }
+		template<uint8 D,	typename T> Vector<D, T>		Lerp(Vector<D, T> A, Vector<D, T> B, float V)			{ return (1.0f - V) * Vector<D, float>(A) + V * Vector<D, float>(B); }
+		template<uint8 D,	typename T> Vector<D, float>	SLerp(Vector<D, T> A, Vector<D, T> B, float V)			{ float Theta = Math::Acos(Dot(A, B)); float SinTheta = Math::Sin(Theta); return Normalize(Math::Sin((1.0f - V) * Theta) / SinTheta * Vector<D, float>(A) + Math::Sin(V * Theta) / SinTheta * Vector<D, float>(B)); }
+		template<uint8 D,	typename T>	bool				Similar(Vector<D, T> A, Vector<D, T> B)					{ return Equals(Normalize(A), Normalize(B)); }
+		template<uint8 D,	typename T>	bool				Parallel(Vector<D, T> A, Vector<D, T> B)				{ return Math::Equals(Math::Abs(Dot(Normalize(A), Normalize(B))), 1.0f); }
+		template<uint8 D,	typename T>	bool				Perpendicular(Vector<D, T> A, Vector<D, T> B)			{ return Math::Equals(Math::Abs(Dot(Normalize(A), Normalize(B))), 0.0f); }
+	}
 
 #pragma endregion
 
