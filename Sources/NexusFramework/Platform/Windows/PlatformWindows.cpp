@@ -286,7 +286,7 @@ namespace NxFr
 	void PlatformWindows::FileWriteByte(void* File, BufferView Data) const
 	{
 		NEXUS_ASSERT(File, Default, "Invalid File");
-		NEXUS_ASSERT(Data.GetCount() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Data.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetCount(), &Written, nullptr);
@@ -315,7 +315,7 @@ namespace NxFr
 		String Content = Text.ToString();
 		Content.Replace("\n", "\r\n");
 
-		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32(), Default, "Currenlty support only file smaller that uint32 max value");
+		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Content.C(), (DWORD)Content.GetCount(), &Written, nullptr);

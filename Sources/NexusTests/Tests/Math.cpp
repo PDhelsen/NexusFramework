@@ -44,17 +44,17 @@ namespace NxTs
 
 	TEST(Math, PowerOfTwo)
 	{
-		ASSERT_EQ(NxFr::Math::IsPowerOfTwo((uint32)16), true);
-		ASSERT_EQ(NxFr::Math::IsPowerOfTwo((uint32)15), false);
+		ASSERT_EQ(NxFr::Math::IsPowerOfTwo(16), true);
+		ASSERT_EQ(NxFr::Math::IsPowerOfTwo(15), false);
 
-		ASSERT_EQ(NxFr::Math::NextPowerOfTwo((uint32)5), 8);
-		ASSERT_EQ(NxFr::Math::NextPowerOfTwo((uint32)48), 64);
-		ASSERT_EQ(NxFr::Math::NextPowerOfTwo((uint32)4), 4);
+		ASSERT_EQ(NxFr::Math::NextPowerOfTwo(5), 8);
+		ASSERT_EQ(NxFr::Math::NextPowerOfTwo(48), 64);
+		ASSERT_EQ(NxFr::Math::NextPowerOfTwo(4), 4);
 
-		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo((uint32)16), 4);
-		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo((uint32)8), 3);
-		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo((uint32)1), 0);
-		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo((uint32)0), -1);
+		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(16), 4);
+		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(8), 3);
+		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(1), 0);
+		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(0), -1);
 	}
 
 	TEST(Math, Prime)

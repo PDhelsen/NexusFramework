@@ -47,8 +47,8 @@ namespace NxFr
 		UntrackedScope Untracked;
 
 		NEXUS_ASSERT(Pointer, Default, "Null pointer");
-		NEXUS_ASSERT(Amount < Integer::MaxUI64() - Size, Default, "Allocation Amount will overflow");
-		NEXUS_ASSERT(Count < Integer::MaxUI64(), Default, "Allocation Count will overflow");
+		NEXUS_ASSERT(Amount < Integer::MaxUI64 - Size, Default, "Allocation Amount will overflow");
+		NEXUS_ASSERT(Count < Integer::MaxUI64, Default, "Allocation Count will overflow");
 
 		Alloctions.Append(Pointer, Size);
 		Amount += Size;

@@ -1,15 +1,16 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/External/StandardLibrary.h"
 
 namespace NxFr::Decimal
 {
-	NEXUS_FRAMEWORK_API float	InfinityF();
-	NEXUS_FRAMEWORK_API double	InfinityD();
-	NEXUS_FRAMEWORK_API float	MinF();
-	NEXUS_FRAMEWORK_API double	MinD();
-	NEXUS_FRAMEWORK_API float	MaxF();
-	NEXUS_FRAMEWORK_API double	MaxD();
-	NEXUS_FRAMEWORK_API float	EpsilonF();
-	NEXUS_FRAMEWORK_API double	EpsilonD();
+	constexpr float InfinityF = INFINITY;
+	constexpr double InfinityD = INFINITY;
+	constexpr float MinF = FLT_MIN;
+	constexpr double MinD = DBL_MIN;
+	constexpr float MaxF = FLT_MAX;
+	constexpr double MaxD = DBL_MAX;
+	constexpr float EpsilonF = 1e-6f;
+	constexpr double EpsilonD = 1e-9f;
 }

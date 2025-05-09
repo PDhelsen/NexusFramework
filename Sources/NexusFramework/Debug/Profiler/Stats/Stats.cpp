@@ -152,10 +152,10 @@ namespace NxFr
 		{
 		case NxFr::Stats::StatType::Label: Value.Label.Clear(); break;
 		case NxFr::Stats::StatType::Check: Value.State = false; break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = Mode == StatMode::Min ? Integer::MaxI64() : Mode == StatMode::Max ? Integer::MinI64() : 0; break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Mode == StatMode::Min ? Integer::MaxUI64() : Mode == StatMode::Max ? Integer::MinUI64() : 0u; break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = Mode == StatMode::Min ? Decimal::MaxF() : Mode == StatMode::Max ? Decimal::MinF() : 0.0f; break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Mode == StatMode::Min ? Decimal::MaxD() : Mode == StatMode::Max ? Decimal::MinD() : 0.0; break;
+		case NxFr::Stats::StatType::Integer: Value.Integer = Mode == StatMode::Min ? Integer::MaxI64 : Mode == StatMode::Max ? Integer::MinI64 : 0; break;
+		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Mode == StatMode::Min ? Integer::MaxUI64 : Mode == StatMode::Max ? Integer::MinUI64 : 0u; break;
+		case NxFr::Stats::StatType::Decimal: Value.Decimal = Mode == StatMode::Min ? Decimal::MaxF : Mode == StatMode::Max ? Decimal::MinF : 0.0f; break;
+		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Mode == StatMode::Min ? Decimal::MaxD : Mode == StatMode::Max ? Decimal::MinD : 0.0; break;
 		}
 	}
 
