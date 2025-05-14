@@ -9,14 +9,26 @@ namespace NxFr
 {
 	namespace Math
 	{
-		constexpr double Pi = 3.14159;
-		constexpr double Degree = 180.0 / Pi;
-		constexpr double Radians = Pi / 180.0;
+		constexpr float Pi = 3.14159f;
+		constexpr float Degree = 180.0f / Pi;
+		constexpr float Radians = Pi / 180.0f;
 
 		template<typename T>
 		T Abs(T X)
 		{
 			return abs(X);
+		}
+
+		template<typename T>
+		T Sign(T X)
+		{
+			return (T)(X == 0.0f ? 0.0f : X > 0.0f ? 1.0f : -1.0f);
+		}
+
+		template<typename T>
+		T CopySign(T V, T X)
+		{
+			return X >= 0.0f ? Abs(V) : -Abs(V);
 		}
 
 		template<typename T>
@@ -144,7 +156,7 @@ namespace NxFr
 		template<typename T>
 		T Atan(T X, T Y)
 		{
-			return atan2(Y, X);
+			return atan2(X, Y);
 		}
 
 		template<typename T>

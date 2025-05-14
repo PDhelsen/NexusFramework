@@ -1,0 +1,385 @@
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numbers/Decimal.h"
+#include "NexusFramework/Math/Math.h"
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringFunctions.h"
+
+#include "NexusFramework/Math/Types/Vector.h"
+
+namespace NxFr
+{
+#pragma region Declaration
+
+	struct Quaternion;
+
+	namespace RotationUtility
+	{
+		float SqrMagnitude(Quaternion Q);
+		float Magnitude(Quaternion Q);
+		Quaternion Normalize(Quaternion Q);
+		Quaternion Inverse(Quaternion Q);
+		Quaternion Concatenate(Quaternion A, Quaternion B);
+		Vector3 Rotate(Quaternion Q, Vector3 V);
+	}
+
+#pragma endregion
+
+#pragma region AxisAngle
+
+	struct AxisAngle
+	{
+	public:
+		AxisAngle()
+			: Axis(0), Angle(0)
+		{
+		}
+
+		AxisAngle(Vector3 Axis, float Angle)
+			: Axis(Axis), Angle(Angle)
+		{
+		}
+
+		AxisAngle(const AxisAngle& Other)
+			: Axis(Other.Axis), Angle(Other.Angle)
+		{
+		}
+
+		~AxisAngle()
+		{
+		}
+
+		bool operator==(AxisAngle Other) const { return Axis == Other.Axis && Angle == Other.Angle; }
+		bool operator!=(AxisAngle Other) const { return !(*this == Other); }
+
+		void Normalize() { Axis = VectorUtility::Normalize(Axis); }
+
+	public:
+		Vector3 Axis;
+		float Angle;
+	};
+
+#pragma endregion
+
+#pragma region Euler
+
+	struct Euler
+	{
+	public:
+		static const Euler Identity;
+
+		Euler()
+			: x(0), y(0), z(0)
+		{
+		}
+
+		Euler(float X, float Y, float Z)
+			: x(X), y(Y), z(Z)
+		{
+		}
+
+		Euler(Vector3 Angles)
+			: x(Angles.x), y(Angles.y), z(Angles.z)
+		{
+		}
+
+		Euler(const Euler& Other)
+			: x(Other.x), y(Other.y), z(Other.z)
+		{
+		}
+
+		~Euler()
+		{
+		}
+
+		operator Vector3() const { return Vector3(x, y, z); }
+
+		bool operator==(Euler Other) const { return x == Other.x && y == Other.y && z == Other.z; }
+		bool operator!=(Euler Other) const { return !(*this == Other); }
+		float& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+
+	public:
+		float x, y, z;
+		//float Pitch, Yaw, Roll;
+	};
+
+	inline const Euler Euler::Identity = Euler(0, 0, 0);
+
+#pragma endregion
+
+#pragma region Quaternion
+
+	struct Quaternion
+	{
+	public:
+		static const Quaternion Identity;
+
+		Quaternion()
+			: x(0), y(0), z(0), w(1)
+		{
+		}
+
+		Quaternion(AxisAngle AngleAxis)
+			: x(0), y(0), z(0), w(1)
+		{
+			AngleAxis.Angle *= Math::Radians;
+
+			float Half = AngleAxis.Angle * 0.5f;
+			float SinTheta = Math::Sin(Half);
+			float CosTheta = Math::Cos(Half);
+
+			w = CosTheta;
+			x = SinTheta * AngleAxis.Axis.x;
+			y = SinTheta * AngleAxis.Axis.y;
+			z = SinTheta * AngleAxis.Axis.z;
+		}
+
+		Quaternion(Euler EulerAngle)
+			: x(0), y(0), z(0), w(1)
+		{
+			EulerAngle.x *= Math::Radians * 0.5f;
+			EulerAngle.y *= Math::Radians * 0.5f;
+			EulerAngle.z *= Math::Radians * 0.5f;
+
+			float CosPitch = Math::Cos(EulerAngle.x);
+			float SinPitch = Math::Sin(EulerAngle.x);
+			float CosYaw = Math::Cos(EulerAngle.y);
+			float SinYaw = Math::Sin(EulerAngle.y);
+			float CosRoll = Math::Cos(EulerAngle.z);
+			float SinRoll = Math::Sin(EulerAngle.z);
+
+			w = CosPitch * CosYaw * CosRoll + SinPitch * SinYaw * SinRoll;
+			x = SinPitch * CosYaw * CosRoll + CosPitch * SinYaw * SinRoll;
+			y = CosPitch * SinYaw * CosRoll - SinPitch * CosYaw * SinRoll;
+			z = CosPitch * CosYaw * SinRoll - SinPitch * SinYaw * CosRoll;
+		}
+
+		Quaternion(float X, float Y, float Z, float W)
+			: x(X), y(Y), z(Z), w(W)
+		{
+		}
+
+		Quaternion(const Quaternion& Other)
+			: x(Other.x), y(Other.y), z(Other.z), w(Other.w)
+		{
+		}
+
+		~Quaternion()
+		{
+		}
+
+		operator AxisAngle() const
+		{
+			float Length = Math::Sqrt(1.0f - Math::Square(w));
+			float Angle = 2.0f * Math::Acos(w);
+			Vector3 Axis = (1.0f / Length) * Vector3(x, y, z);
+			return AxisAngle(Axis, Angle * Math::Degree);
+		}
+
+		operator Euler() const
+		{
+			float Yaw = 0.0f;
+			float SinYaw = 2 * (w * y + x * z);
+			float CosYaw = 1 - 2 * (y * y + x * x);
+			if (Math::Equals(Math::Abs(SinYaw), 0.0f) && Math::Equals(Math::Abs(CosYaw), 0.0f))
+				Yaw = 2.0f * Math::Atan(y, w);
+			else
+				Yaw = Math::Atan(SinYaw, CosYaw);
+
+			float SinPitch = 2.0f * Math::Clamp(w * x - y * z, -1.0f, 1.0f);
+			float Pitch  = Math::Asin(SinPitch);
+
+			float Roll = 0.0f;
+			float SinRoll = 2 * (w * z + x * y);
+			float CosRoll = 1 - 2 * (x * x + z * z);
+			if (Math::Equals(Math::Abs(SinRoll), 0.0f) && Math::Equals(Math::Abs(CosRoll), 0.0f))
+				Roll = 0.0f;
+			else
+				Roll = Math::Atan(SinRoll, CosRoll);
+
+			return Euler(Pitch * Math::Degree, Yaw * Math::Degree, Roll * Math::Degree);
+		}
+
+		Quaternion& operator=(Quaternion Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
+		bool operator==(Quaternion Other) const { return x == Other.x && y == Other.y && z == Other.z && w == Other.w; }
+		bool operator!=(Quaternion Other) const { return !(*this == Other); }
+		float& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
+
+		Quaternion& operator*=(Quaternion Other) { *this = RotationUtility::Concatenate(*this, Other); return *this; }
+
+		Quaternion Normalized() const { return RotationUtility::Normalize(*this); }
+		Quaternion Inverse() const { return RotationUtility::Inverse(*this); }
+		float SqrMagnitude() const { return RotationUtility::SqrMagnitude(*this); }
+		float Magnitude() const { return RotationUtility::Magnitude(*this); }
+
+		String ToString() const { return StringUtility::Format("(%.2f, %.2f, %.2f, %.2f)", (float)x, (float)y, (float)z, (float)w); }
+
+	public:
+		float x, y, z, w;
+	};
+
+	inline const Quaternion Quaternion::Identity = Quaternion(0, 0, 0, 1);
+
+	inline Quaternion operator-(Quaternion Q)
+	{
+		return RotationUtility::Inverse(Q);
+	}
+
+	inline Quaternion operator*(Quaternion A, Quaternion B)
+	{
+		return RotationUtility::Concatenate(A, B);
+	}
+
+	inline Vector3 operator*(Quaternion Q, Vector3 V)
+	{
+		return RotationUtility::Rotate(Q, V);
+	}
+
+	inline Vector3 operator*(Vector3 V, Quaternion Q)
+	{
+		return RotationUtility::Rotate(Q, V);
+	}
+
+#pragma endregion
+
+#pragma region RotationUtility
+
+	namespace RotationUtility
+	{
+		inline bool Equals(AxisAngle A, AxisAngle B)
+		{
+			return VectorUtility::Equals(A.Axis, B.Axis) && Math::Equals(A.Angle, B.Angle);
+		}
+
+		inline bool Equals(Euler A, Euler B)
+		{
+			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z);
+		}
+
+		inline bool Equals(Quaternion A, Quaternion B)
+		{
+			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z) && Math::Equals(A.w, B.w);
+		}
+
+		inline float Dot(Quaternion A, Quaternion B)
+		{
+			return A.x * B.x + A.y * B.y + A.z * B.z + A.w * B.w;
+		}
+
+		inline float SqrMagnitude(Quaternion Q)
+		{
+			return Dot(Q, Q);
+		}
+
+		inline float Magnitude(Quaternion Q)
+		{
+			return Math::Sqrt(Dot(Q, Q));
+		}
+
+		inline Quaternion Normalize(Quaternion Q)
+		{
+			float Size = SqrMagnitude(Q);
+			if (Math::Equals(Size, 0.0f))
+			{
+				return Quaternion::Identity;
+			}
+
+			Size = 1.0f / Math::Sqrt(Size);
+			return Quaternion(Size * Q.x, Size * Q.y, Size * Q.z, Size * Q.w);
+		}
+
+		inline Quaternion Inverse(Quaternion Q)
+		{
+			return Quaternion(-Q.x, -Q.y, -Q.z, Q.w);
+		}
+
+		inline float Angle(Quaternion A, Quaternion B)
+		{
+			return 2.0f * Math::Acos(Dot(A, B));
+		}
+
+		inline Quaternion Lerp(Quaternion A, Quaternion B, float V)
+		{
+			float InvV = 1.0f - V;
+			A = Quaternion(InvV * A.x, InvV * A.y, InvV * A.z, InvV * A.w);
+			B = Quaternion(V * B.x, V * B.y, V * B.z, V * B.w);
+			return Normalize(Quaternion(A.x + B.x, A.y + B.y, A.z + B.z, A.w + B.w));
+		}
+
+		inline Quaternion Slerp(Quaternion A, Quaternion B, float V)
+		{
+			float ADotB = Dot(A, B);
+			if (ADotB < 0.0f)
+			{
+				ADotB = -ADotB;
+				B = -B;
+			}
+
+			if (Math::Equals(ADotB, 1.0f))
+			{
+				return Lerp(A, B, V);
+			}
+
+			float Theta = Math::Acos(Dot(A, B));
+			float SinTheta = Math::Sin(Theta);
+
+			float WeightA = Math::Sin((1.0f - V) * Theta) / SinTheta;
+			float WeightB = Math::Sin(V * Theta) / SinTheta;
+
+			A = Quaternion(WeightA * A.x, WeightA * A.y, WeightA * A.z, WeightA * A.w);
+			B = Quaternion(WeightB * B.x, WeightB * B.y, WeightB * B.z, WeightB * B.w);
+			return Normalize(Quaternion(A.x + B.x, A.y + B.y, A.z + B.z, A.w + B.w));
+		}
+
+		inline bool Similar(Quaternion A, Quaternion B)
+		{
+			return Math::Equals(Math::Abs(Dot(A, B)), 1.0f);
+		}
+
+		inline Quaternion Concatenate(Quaternion A, Quaternion B)
+		{
+			Quaternion Result;
+			Result.w = A.w * B.w - A.x * B.x - A.y * B.y - A.z * B.z;
+			Result.x = A.w * B.x + A.x * B.w + A.y * B.z - A.z * B.y;
+			Result.y = A.w * B.y + A.y * B.w + A.z * B.x - A.x * B.z;
+			Result.z = A.w * B.z + A.z * B.w + A.x * B.y - A.y * B.x;
+			return Result;
+		}
+
+		inline Vector3 Rotate(Quaternion Q, Vector3 V)
+		{
+			float CMult = 2.0f * Q.w;
+			float VMult = 2.0f * (Q.x * V.x + Q.y * V.y + Q.z * V.z);
+			float PMult = CMult * Q.w - 1.0f;
+
+			return Vector3(
+				PMult * V.x + VMult * Q.x + CMult * (Q.y * V.z - Q.z * V.y),
+				PMult * V.y + VMult * Q.y + CMult * (Q.z * V.x - Q.x * V.z),
+				PMult * V.z + VMult * Q.z + CMult * (Q.x * V.y - Q.y * V.x)
+			);
+		}
+
+		inline Quaternion FromTo(Vector3 From, Vector3 To)
+		{
+			float Angle = VectorUtility::Dot(From, To);
+
+			if (Math::Equals(Angle, 1.0f))
+			{
+				return Quaternion::Identity;
+			}
+			else if (Math::Equals(Angle, -1.0f))
+			{
+				Vector3 Axis = VectorUtility::Orthogonal(From).Normalized();
+				return Quaternion({ Axis, 0 });
+			}
+
+			Vector3 Axis = VectorUtility::Cross(From, To);
+			float Scale = Math::Sqrt((1.0f + Angle) * 2.0f);
+			float Inv = 1.0f / Scale;
+
+			return Quaternion(Inv * Axis.x, Inv * Axis.y, Inv * Axis.z, 0.5f * Scale);
+		}
+	}
+
+#pragma endregion
+}

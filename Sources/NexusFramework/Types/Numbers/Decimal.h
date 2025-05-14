@@ -11,6 +11,6 @@ namespace NxFr::Decimal
 	constexpr double MinD = DBL_MIN;
 	constexpr float MaxF = FLT_MAX;
 	constexpr double MaxD = DBL_MAX;
-	constexpr float EpsilonF = 1e-6f;
+	constexpr float EpsilonF = 1e-4f;
 	constexpr double EpsilonD = 1e-9f;
 }

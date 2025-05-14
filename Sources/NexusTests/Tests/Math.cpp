@@ -168,7 +168,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::VectorUtility::ProjectOnVector(NxFr::Vector3(1.0f, 1.0f, 1.0f), NxFr::Vector3(0.0f, 1.0f, 0.0f)), NxFr::Vector3(0.0f, 1.0f, 0.0f));
 		ASSERT_EQ(NxFr::VectorUtility::ProjectOnNormal(NxFr::Vector3(1.0f, 1.0f, 1.0f), NxFr::Vector3(0.0f, 1.0f, 0.0f)), NxFr::Vector3(1.0f, 0.0f, 1.0f));
 		ASSERT_EQ(NxFr::VectorUtility::Reflect(NxFr::Vector3(1.0f, 1.0f, 1.0f), NxFr::Vector3(0.0f, 1.0f, 0.0f)), NxFr::Vector3(1.0f, -1.0f, 1.0f));
-		ASSERT_EQ(NxFr::VectorUtility::SLerp(NxFr::Vector3(1.0f, 0.0f, 0.0f), NxFr::Vector3(0.0f, 1.0f, 0.0f), 0.5f), NxFr::Vector3(0.707106829f, 0.707106829f, 0.0f));
+		ASSERT_EQ(NxFr::VectorUtility::Slerp(NxFr::Vector3(1.0f, 0.0f, 0.0f), NxFr::Vector3(0.0f, 1.0f, 0.0f), 0.5f), NxFr::Vector3(0.707106829f, 0.707106829f, 0.0f));
 		ASSERT_EQ(NxFr::VectorUtility::Cross(NxFr::Vector3(1, 0, 0), NxFr::Vector3(0, 1, 0)), NxFr::Vector3(0.0f, 0.0f, 1.0f));
 		ASSERT_EQ(NxFr::VectorUtility::Dot(NxFr::Vector3(1, 0, 0), NxFr::Vector3(0, 1, 0)), 0.0f);
 		ASSERT_EQ(NxFr::VectorUtility::Equals(NxFr::Vector3(0.5f), NxFr::Vector3(0.5f)), true);
@@ -199,5 +199,40 @@ namespace NxTs
 		ASSERT_EQ(NxFr::VectorUtility::Lerp(NxFr::Vector3i(0), NxFr::Vector3i(1), 0.25f), NxFr::Vector3i(0));
 		ASSERT_EQ(NxFr::VectorUtility::Magnitude(NxFr::Vector3i(1, 1, 0)), 1.41421354f);
 		ASSERT_EQ(NxFr::VectorUtility::Normalize(NxFr::Vector3i(1, 1, 1)), NxFr::Vector3(0.577350259f));
+	}
+
+	TEST(Math, Rotation)
+	{
+		NxFr::Quaternion Quaternion = NxFr::Quaternion({ NxFr::Vector3::Up, 45.0f });
+		ASSERT_EQ(NxFr::Quaternion::Identity, NxFr::Euler::Identity);
+
+		ASSERT_EQ(NxFr::RotationUtility::Equals(Quaternion, (NxFr::Quaternion)NxFr::AxisAngle(NxFr::Vector3::Up, 45.0f)), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals((NxFr::AxisAngle)Quaternion, NxFr::AxisAngle(NxFr::Vector3::Up, 45.0f)), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(Quaternion, (NxFr::Quaternion)NxFr::Euler(0.0f, 45.0f, 0.0f)), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals((NxFr::Euler)Quaternion, NxFr::Euler(0.0f, 45.0f, 0.0f)), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals((NxFr::Quaternion)NxFr::Euler(0.0f, 45.0f, 0.0f), (NxFr::Quaternion)NxFr::AxisAngle(NxFr::Vector3::Up, 45.0f)), true);
+
+		auto Rotation = NxFr::Quaternion::Identity;
+		Rotation = NxFr::Quaternion(NxFr::Euler(0, 0, 60)) * Rotation;
+		Rotation = NxFr::Quaternion(NxFr::Euler(45, 0, 0)) * Rotation;
+		Rotation = NxFr::Quaternion(NxFr::Euler(0, 30, 0)) * Rotation;
+		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)), Rotation), true);
+
+		auto From = NxFr::VectorUtility::Normalize(NxFr::Vector3(1.0f, 1.0f, 0.0f));
+		auto To = NxFr::VectorUtility::Normalize(NxFr::Vector3(0.0f, 1.0f, 1.0f));
+		auto FromTo = NxFr::RotationUtility::FromTo(From, To);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(From * FromTo, To), true);
+
+		ASSERT_EQ(NxFr::VectorUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)) * NxFr::Vector3::Forward, NxFr::Vector3(0.3535533f, -0.7071068f, 0.6123724f)), true);
+
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::RotationUtility::Dot(Quaternion, NxFr::Quaternion::Identity), 0.9238f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::RotationUtility::SqrMagnitude(Quaternion), 1.0f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::RotationUtility::Magnitude(Quaternion), 1.0f),true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::RotationUtility::Normalize(Quaternion), Quaternion), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::RotationUtility::Inverse(Quaternion), NxFr::Quaternion({ -NxFr::Vector3::Up, 45.0f })), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::RotationUtility::Angle(Quaternion, NxFr::Quaternion::Identity) * NxFr::Math::Degree, 45.0f), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::RotationUtility::Lerp(Quaternion, NxFr::Quaternion::Identity, 0.5f), NxFr::Quaternion({ NxFr::Vector3::Up, 22.5f })), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::RotationUtility::Slerp(Quaternion, NxFr::Quaternion::Identity, 0.5f), NxFr::Quaternion({ NxFr::Vector3::Up, 22.5f })), true);
+		ASSERT_EQ(NxFr::RotationUtility::Similar(Quaternion, NxFr::Quaternion({ NxFr::Vector3::Up, 45.0f })), true);
 	}
 }

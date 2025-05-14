@@ -95,7 +95,6 @@ namespace NxFr
 		bool operator!=(Vector<2, T> Other) const { return !(*this == Other); }
 		T& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : x; }
 
-		Vector<2, T>& operator-() { x = -x; y = -y; return *this; }
 		Vector<2, T>& operator+=(T Other) { x += Other; y += Other; return *this; }
 		Vector<2, T>& operator-=(T Other) { x -= Other; y -= Other; return *this; }
 		Vector<2, T>& operator*=(T Other) { x *= Other; y *= Other; return *this; }
@@ -121,6 +120,7 @@ namespace NxFr
 	template<typename T> const Vector<2, T> Vector<2, T>::Right = Vector<2, T>(1, 0);
 	template<typename T> const Vector<2, T> Vector<2, T>::Up = Vector<2, T>(0, 1);
 
+	template<typename T> Vector<2, T> operator-(Vector<2, T> A) { return Vector<2, T>(-A.x, -A.y); }
 	template<typename T> Vector<2, T> operator+(T A, Vector<2, T> B) { return Vector<2, T>(A + B.x, A + B.y); }
 	template<typename T> Vector<2, T> operator-(T A, Vector<2, T> B) { return Vector<2, T>(A - B.x, A - B.y); }
 	template<typename T> Vector<2, T> operator*(T A, Vector<2, T> B) { return Vector<2, T>(A * B.x, A * B.y); }
@@ -163,7 +163,6 @@ namespace NxFr
 		bool operator!=(Vector<3, T> Other) const { return !(*this == Other); }
 		T& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 
-		Vector<3, T>& operator-() { x = -x; y = -y; z = -z; return *this; }
 		Vector<3, T>& operator+=(T Other) { x += Other; y += Other; z += Other; return *this; }
 		Vector<3, T>& operator-=(T Other) { x -= Other; y -= Other; z -= Other; return *this; }
 		Vector<3, T>& operator*=(T Other) { x *= Other; y *= Other; z *= Other; return *this; }
@@ -190,6 +189,7 @@ namespace NxFr
 	template<typename T> const Vector<3, T> Vector<3, T>::Up = Vector<3, T>(0, 1, 0);
 	template<typename T> const Vector<3, T> Vector<3, T>::Forward = Vector<3, T>(0, 0, 1);
 
+	template<typename T> Vector<3, T> operator-(Vector<3, T> A) { return Vector<3, T>(-A.x, -A.y, -A.z); }
 	template<typename T> Vector<3, T> operator+(T A, Vector<3, T> B) { return Vector<3, T>(A + B.x, A + B.y, A + B.z); }
 	template<typename T> Vector<3, T> operator-(T A, Vector<3, T> B) { return Vector<3, T>(A - B.x, A - B.y, A - B.z); }
 	template<typename T> Vector<3, T> operator*(T A, Vector<3, T> B) { return Vector<3, T>(A * B.x, A * B.y, A * B.z); }
@@ -234,7 +234,6 @@ namespace NxFr
 		bool operator!=(Vector<4, T> Other) const { return !(*this == Other); }
 		T& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 
-		Vector<4, T>& operator-() { x = -x; y = -y; z = -z; w = -w; return *this; }
 		Vector<4, T>& operator+=(T Other) { x += Other; y += Other; z += Other; w += Other; return *this; }
 		Vector<4, T>& operator-=(T Other) { x -= Other; y -= Other; z -= Other; w -= Other; return *this; }
 		Vector<4, T>& operator*=(T Other) { x *= Other; y *= Other; z *= Other; w *= Other; return *this; }
@@ -262,6 +261,7 @@ namespace NxFr
 	template<typename T> const Vector<4, T> Vector<4, T>::Forward = Vector<4, T>(0, 0, 1, 0);
 	template<typename T> const Vector<4, T> Vector<4, T>::Fourth = Vector<4, T>(0, 0, 0, 1);
 
+	template<typename T> Vector<4, T> operator-(Vector<4, T> A) { return Vector<4, T>(-A.x, -A.y, -A.z, -A.w); }
 	template<typename T> Vector<4, T> operator+(T A, Vector<4, T> B) { return Vector<4, T>(A + B.x, A + B.y, A + B.z, A + B.w); }
 	template<typename T> Vector<4, T> operator-(T A, Vector<4, T> B) { return Vector<4, T>(A - B.x, A - B.y, A - B.z, A - B.w); }
 	template<typename T> Vector<4, T> operator*(T A, Vector<4, T> B) { return Vector<4, T>(A * B.x, A * B.y, A * B.z, A * B.w); }
@@ -284,19 +284,19 @@ namespace NxFr
 		template<typename T>
 		bool Equals(Vector<2, T> A, Vector<2, T> B)
 		{
-			return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y);
+			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y);
 		}
 
 		template<typename T>
 		bool Equals(Vector<3, T> A, Vector<3, T> B)
 		{
-			return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y) && Math::Equals((float)A.z, (float)B.z);
+			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z);
 		}
 
 		template<typename T>
 		bool Equals(Vector<4, T> A, Vector<4, T> B)
 		{
-			return Math::Equals((float)A.x, (float)B.x) && Math::Equals((float)A.y, (float)B.y) && Math::Equals((float)A.z, (float)B.z) && Math::Equals((float)A.w, (float)B.w);
+			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z) && Math::Equals(A.w, B.w);
 		}
 
 		template<typename T>
@@ -317,8 +317,8 @@ namespace NxFr
 			return A.x * B.x + A.y * B.y + A.z * B.z + A.w * B.w;
 		}
 
-		template<typename T> Vector<2, float>
-		Cross(Vector<2, T> A, Vector<2, T> B)
+		template<typename T>
+		Vector<2, float> Cross(Vector<2, T> A, Vector<2, T> B)
 		{
 			return Vector<2, float>(A.x * B.y - B.x * A.y);
 		}
@@ -327,6 +327,23 @@ namespace NxFr
 		Vector<3, float> Cross(Vector<3, T> A, Vector<3, T> B)
 		{
 			return Vector<3, float>(A.y * B.z - B.y * A.z, A.z * B.x - B.z * A.x, A.x * B.y - B.x * A.y);
+		}
+
+		template<typename T>
+		Vector<3, float> Orthogonal(Vector<3, T> V)
+		{
+			if (Math::Abs(V.x) < Math::Abs(V.y) && Math::Abs(V.x) < Math::Abs(V.z))
+			{
+				return Cross(V, Vector<3, float>(1.0f, 0.0f, 0.0f));
+			}
+			else if (Math::Abs(V.y) < Math::Abs(V.z))
+			{
+				return Cross(V, Vector<3, float>(0.0f, 1.0f, 0.0f));
+			}
+			else
+			{
+				return Cross(V, Vector<3, float>(0.0f, 0.0f, 1.0f));
+			}
 		}
 
 		template<uint8 D, typename T>
@@ -433,7 +450,7 @@ namespace NxFr
 		}
 
 		template<uint8 D, typename T>
-		Vector<D, float> SLerp(Vector<D, T> A, Vector<D, T> B, float V)
+		Vector<D, float> Slerp(Vector<D, T> A, Vector<D, T> B, float V)
 		{
 			float ADotB = Dot(A, B);
 			if (Math::Equals(Math::Abs(ADotB), 1.0f))
