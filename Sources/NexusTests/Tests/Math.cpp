@@ -217,6 +217,7 @@ namespace NxTs
 		Rotation = NxFr::Quaternion(NxFr::Euler(45, 0, 0)) * Rotation;
 		Rotation = NxFr::Quaternion(NxFr::Euler(0, 30, 0)) * Rotation;
 		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)), Rotation), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)), NxFr::Quaternion(NxFr::Euler(0, 30, 0)) * NxFr::Quaternion(NxFr::Euler(45, 0, 0)) * NxFr::Quaternion(NxFr::Euler(0, 0, 60))), true);
 
 		auto From = NxFr::VectorUtility::Normalize(NxFr::Vector3(1.0f, 1.0f, 0.0f));
 		auto To = NxFr::VectorUtility::Normalize(NxFr::Vector3(0.0f, 1.0f, 1.0f));
