@@ -97,6 +97,7 @@ namespace NxFr
 		bool operator==(Euler Other) const { return x == Other.x && y == Other.y && z == Other.z; }
 		bool operator!=(Euler Other) const { return !(*this == Other); }
 		float& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+		const float& operator[](uint64 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 
 	public:
 		float x, y, z;
@@ -204,6 +205,7 @@ namespace NxFr
 		bool operator==(Quaternion Other) const { return x == Other.x && y == Other.y && z == Other.z && w == Other.w; }
 		bool operator!=(Quaternion Other) const { return !(*this == Other); }
 		float& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
+		const float& operator[](uint64 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 
 		Quaternion& operator*=(Quaternion Other) { *this = RotationUtility::Concatenate(*this, Other); return *this; }
 
