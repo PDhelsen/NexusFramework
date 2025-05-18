@@ -1,3 +1,5 @@
+#pragma once
+
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Numbers/Decimal.h"
