@@ -50,8 +50,8 @@ namespace NxFr
 		Vector<D, T>& operator=(Vector<D, T> Other) { return *this; }
 		bool operator==(Vector<D, T> Other) const { return false; }
 		bool operator!=(Vector<D, T> Other) const { return !(*this == Other); }
-		T& operator[](uint64 Index) { return 0; }
-		const T& operator[](uint64 Index) const { return 0; }
+		T& operator[](uint8 Index) { return 0; }
+		const T& operator[](uint8 Index) const { return 0; }
 
 		Vector<D, T>& operator+=(T Other) { return *this; }
 		Vector<D, T>& operator-=(T Other) { return *this; }
@@ -94,8 +94,8 @@ namespace NxFr
 		Vector<2, T>& operator=(Vector<2, T> Other) { x = Other.x; y = Other.y; return *this; }
 		bool operator==(Vector<2, T> Other) const { return x == Other.x && y == Other.y; }
 		bool operator!=(Vector<2, T> Other) const { return !(*this == Other); }
-		T& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : x; }
-		const T& operator[](uint64 Index) const { return Index == 0 ? x : Index == 1 ? y : x; }
+		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : x; }
+		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : x; }
 
 		Vector<2, T>& operator+=(T Other) { x += Other; y += Other; return *this; }
 		Vector<2, T>& operator-=(T Other) { x -= Other; y -= Other; return *this; }
@@ -163,8 +163,8 @@ namespace NxFr
 		Vector<3, T>& operator=(Vector<3, T> Other) { x = Other.x; y = Other.y; z = Other.z; return *this; }
 		bool operator==(Vector<3, T> Other) const { return x == Other.x && y == Other.y && z == Other.z; }
 		bool operator!=(Vector<3, T> Other) const { return !(*this == Other); }
-		T& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
-		const T& operator[](uint64 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 
 		Vector<3, T>& operator+=(T Other) { x += Other; y += Other; z += Other; return *this; }
 		Vector<3, T>& operator-=(T Other) { x -= Other; y -= Other; z -= Other; return *this; }
@@ -235,8 +235,8 @@ namespace NxFr
 		Vector<4, T>& operator=(Vector<4, T> Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
 		bool operator==(Vector<4, T> Other) const { return x == Other.x && y == Other.y && z == Other.z && w == Other.w; }
 		bool operator!=(Vector<4, T> Other) const { return !(*this == Other); }
-		T& operator[](uint64 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
-		const T& operator[](uint64 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
+		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
+		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 
 		Vector<4, T>& operator+=(T Other) { x += Other; y += Other; z += Other; w += Other; return *this; }
 		Vector<4, T>& operator-=(T Other) { x -= Other; y -= Other; z -= Other; w -= Other; return *this; }

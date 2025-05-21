@@ -7,8 +7,8 @@
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 
-#include "NexusFramework/Math/Types/Vector.h"
-#include "NexusFramework/Math/Types/Rotation.h"
+#include "NexusFramework/Math/Vector.h"
+#include "NexusFramework/Math/Rotation.h"
 
 namespace NxFr
 {
@@ -22,7 +22,7 @@ namespace NxFr
 	namespace MatrixUtility
 	{
 		template<uint8 R, uint8 C,			typename T> Matrix<R, C, T>				Identity();
-		template<uint8 R, uint8 C,			typename T> Matrix<R - 1, C - 1, T>		Minor(const Matrix<R, C, T>& M, uint64 Row, uint64 Column);
+		template<uint8 R, uint8 C,			typename T> Matrix<R - 1, C - 1, T>		Minor(const Matrix<R, C, T>& M, uint8 Row, uint8 Column);
 		template<uint8 R, uint8 C,			typename T> Matrix<R, C, T>				Add(const Matrix<R, C, T>& A, T B);
 		template<uint8 R, uint8 C,			typename T> Matrix<R, C, T>				Add(const Matrix<R, C, T>& A, const Matrix<R, C, T>& B);
 		template<uint8 R, uint8 C,			typename T> Matrix<R, C, T>				Subtract(const Matrix<R, C, T>& A, T B);
@@ -34,7 +34,7 @@ namespace NxFr
 		template<uint8 R, uint8 C,			typename T> Matrix<C, R, T>				Transpose(const Matrix<R, C, T>& M);
 		template<uint8 R, uint8 C,			typename T> Matrix<R, C, T>				Inverse(const Matrix<R, C, T>& M);
 		template<uint8 R, uint8 C,			typename T> Matrix<R, C, T>				Cofactor(const Matrix<R, C, T>& M);
-		template<uint8 R, uint8 C,			typename T> float						Cofactor(const Matrix<R, C, T>& M, uint64 Row, uint64 Column);
+		template<uint8 R, uint8 C,			typename T> float						Cofactor(const Matrix<R, C, T>& M, uint8 Row, uint8 Column);
 		template<uint8 R, uint8 C,			typename T> float						Determinant(const Matrix<R, C, T>& M);
 		template<uint8 R, uint8 C,			typename T> float						Trace(const Matrix<R, C, T>& M);
 	}
@@ -48,9 +48,9 @@ namespace NxFr
 	{
 	public:
 		inline static const bool Square = R == C;
-		inline static const uint64 Dimension = Square ? R : 0;
-		inline static const uint64 Count = R * C;
-		inline static const uint64 Size = Count * sizeof(T);
+		inline static const uint8 Dimension = Square ? R : 0;
+		inline static const uint8 Count = R * C;
+		inline static const uint8 Size = Count * sizeof(T);
 
 		static const Matrix<R, C, T> Zero;
 		static const Matrix<R, C, T> Identity;
@@ -62,39 +62,40 @@ namespace NxFr
 		Matrix<R, C, T>& operator=(const Matrix<R, C, T>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
 		bool operator==(const Matrix<R, C, T>& Other) const { return Memory::MemCompare(&m[0], &Other.m[0], Size); }
 		bool operator!=(const Matrix<R, C, T>& Other) const { return !(*this == Other); }
-		T& operator[](uint64 Index) { return m[Index]; }
-		const T& operator[](uint64 Index) const { return m[Index]; }
-		T& operator()(uint64 Row, uint64 Column) { return m[GetIndex(Row, Column)]; }
-		const T& operator()(uint64 Row, uint64 Column) const { return m[GetIndex(Row, Column)]; }
+		T& operator[](uint8 Index) { return m[Index]; }
+		const T& operator[](uint8 Index) const { return m[Index]; }
+		T& operator()(uint8 Row, uint8 Column) { return m[GetIndex(Row, Column)]; }
+		const T& operator()(uint8 Row, uint8 Column) const { return m[GetIndex(Row, Column)]; }
 
 		Matrix<R, C, T>& operator+=(T Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
 		Matrix<R, C, T>& operator+=(const Matrix<R, C, T>& Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
 		Matrix<R, C, T>& operator*=(T Other) { *this = MatrixUtility::Multiply(*this, Other); return *this; }
 		Matrix<R, C, T>& operator*=(const Matrix<R, C, T>& Other) { *this = MatrixUtility::Multiply(*this, Other); return *this; }
 
-		constexpr uint64 GetIndex(uint64 Row, uint64 Column) const { return Column * R + Row; }
-		T Get(uint64 Row, uint64 Column) const { return m[GetIndex(Row, Column)]; }
-		void Set(uint64 Row, uint64 Column, T Value) { m[GetIndex(Row, Column)] = Value; }
-		Vector<C, T> GetRow(uint64 Index) const { Vector<C, T> Result; for (uint64 I = 0; I < C; I++) Result[I] = m[GetIndex(Index, I)]; return Result; }
-		void SetRow(uint64 Index, Vector<C, T> Value) { for (uint64 I = 0; I < C; I++) m[GetIndex(Index, I)] = Value[I]; }
-		Vector<R, T> GetColumn(uint64 Index) const { Vector<R, T> Result; for (uint64 I = 0; I < R; I++) Result[I] = m[GetIndex(I, Index)]; return Result; }
-		void SetColumn(uint64 Index, Vector<R, T> Value) { for (uint64 I = 0; I < R; I++) m[GetIndex(I, Index)] = Value[I]; }
-		Vector<R, T> GetDiagonal() const { Vector<R, T> Result; for (uint64 I = 0; I < R; I++) Result[I] = m[GetIndex(I, I)]; return Result; }
-		Matrix<R - 1, C - 1, T> GetMinor(uint64 Row, uint64 Column) const { return MatrixUtility::Minor(*this, Row, Column); }
+		constexpr uint8 GetIndex(uint8 Row, uint8 Column) const { return Column * R + Row; }
+		T Get(uint8 Row, uint8 Column) const { return m[GetIndex(Row, Column)]; }
+		void Set(uint8 Row, uint8 Column, T Value) { m[GetIndex(Row, Column)] = Value; }
+		Vector<C, T> GetRow(uint8 Index) const { Vector<C, T> Result; for (uint8 I = 0; I < C; I++) Result[I] = m[GetIndex(Index, I)]; return Result; }
+		void SetRow(uint8 Index, Vector<C, T> Value) { for (uint8 I = 0; I < C; I++) m[GetIndex(Index, I)] = Value[I]; }
+		Vector<R, T> GetColumn(uint8 Index) const { Vector<R, T> Result; for (uint8 I = 0; I < R; I++) Result[I] = m[GetIndex(I, Index)]; return Result; }
+		void SetColumn(uint8 Index, Vector<R, T> Value) { for (uint8 I = 0; I < R; I++) m[GetIndex(I, Index)] = Value[I]; }
+		Vector<Dimension, T> GetDiagonal() const { Vector<R, T> Result; for (uint8 I = 0; I < R; I++) Result[I] = m[GetIndex(I, I)]; return Result; }
+		void SetDiagonal(Vector<Dimension, T> Value) const { Vector<R, T> Result; for (uint8 I = 0; I < R; I++) m[GetIndex(I, I)] = Value[I]; return Result; }
+		Matrix<R - 1, C - 1, T> GetMinor(uint8 Row, uint8 Column) const { return MatrixUtility::Minor(*this, Row, Column); }
 
 		Matrix<C, R, T> Transpose() const { return MatrixUtility::Transpose(*this); }
 		Matrix<R, C, T> Inverse() const { return MatrixUtility::Inverse(*this); }
 		Matrix<R, C, T> Cofactor() const { return MatrixUtility::Cofactor(*this); }
-		float Cofactor(uint64 Row, uint64 Column) const { return MatrixUtility::Cofactor(*this, Row, Column); }
+		float Cofactor(uint8 Row, uint8 Column) const { return MatrixUtility::Cofactor(*this, Row, Column); }
 		float Determinant() const { return MatrixUtility::Determinant(*this); }
 		float Trace() const { return MatrixUtility::Trace(*this); }
 
 		String ToString() const
 		{
 			String Result;
-			for (uint64 Column = 0; Column < C; ++Column)
+			for (uint8 Column = 0; Column < C; ++Column)
 			{
-				for (uint64 Row = 0; Row < R; ++Row)
+				for (uint8 Row = 0; Row < R; ++Row)
 				{
 					Result += StringUtility::ToStringF((float)*this(Row, Column));
 					Result += ", ";
@@ -130,9 +131,9 @@ namespace NxFr
 	{
 	public:
 		inline static const bool Square = 4 == 4;
-		inline static const uint64 Dimension = Square ? 4 : 0;
-		inline static const uint64 Count = 4 * 4;
-		inline static const uint64 Size = Count * sizeof(float);
+		inline static const uint8 Dimension = Square ? 4 : 0;
+		inline static const uint8 Count = 4 * 4;
+		inline static const uint8 Size = Count * sizeof(float);
 
 		static const Matrix<4, 4, float> Zero;
 		static const Matrix<4, 4, float> Identity;
@@ -216,9 +217,9 @@ namespace NxFr
 		static Matrix<4, 4, float> Reflect(Vector<3, float> Normal)
 		{
 			Matrix<4, 4, float> Result = Identity;
-			for (uint64 Row = 0; Row < 3; ++Row)
+			for (uint8 Row = 0; Row < 3; ++Row)
 			{
-				for (uint64 Column = 0; Column < 3; ++Column)
+				for (uint8 Column = 0; Column < 3; ++Column)
 				{
 					Result(Row, Column) = (Row == Column ? 1.0f : 0.0f) - 2.0f * Normal[Row] * Normal[Column];
 				}
@@ -229,9 +230,9 @@ namespace NxFr
 		static Matrix<4, 4, float> Shear(Vector<3, float> Normal, Vector<3, float> Value)
 		{
 			Matrix<4, 4, float> Result = Identity;
-			for (uint64 Row = 0; Row < 3; ++Row)
+			for (uint8 Row = 0; Row < 3; ++Row)
 			{
-				for (uint64 Column = 0; Column < 3; ++Column)
+				for (uint8 Column = 0; Column < 3; ++Column)
 				{
 					Result(Row, Column) = (Row == Column ? 1.0f : 0.0f) + Value[Row] * Normal[Column];
 				}
@@ -246,10 +247,10 @@ namespace NxFr
 		Matrix<4, 4, float>& operator=(const Matrix<4, 4, float>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
 		bool operator==(const Matrix<4, 4, float>& Other) const { return Memory::MemCompare(&m[0], &Other.m[0], Size); }
 		bool operator!=(const Matrix<4, 4, float>& Other) const { return !(*this == Other); }
-		float& operator[](uint64 Index) { return m[Index]; }
-		const float& operator[](uint64 Index) const { return m[Index]; }
-		float& operator()(uint64 Row, uint64 Column) { return m[GetIndex(Row, Column)]; }
-		const float& operator()(uint64 Row, uint64 Column) const { return m[GetIndex(Row, Column)]; }
+		float& operator[](uint8 Index) { return m[Index]; }
+		const float& operator[](uint8 Index) const { return m[Index]; }
+		float& operator()(uint8 Row, uint8 Column) { return m[GetIndex(Row, Column)]; }
+		const float& operator()(uint8 Row, uint8 Column) const { return m[GetIndex(Row, Column)]; }
 
 		Matrix<4, 4, float>& operator+=(float Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
 		Matrix<4, 4, float>& operator+=(const Matrix<4, 4, float>& Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
@@ -259,15 +260,16 @@ namespace NxFr
 		Vector<3, float> MultiplyPosition(Vector<3, float> Other) const { return (Vector<3, float>)MatrixUtility::Multiply(*this, Vector<4, float>(Other.x, Other.y, Other.z, 1.0f)); }
 		Vector<3, float> MultiplyDirection(Vector<3, float> Other) const { return (Vector<3, float>)MatrixUtility::Multiply(*this, Vector<4, float>(Other.x, Other.y, Other.z, 0.0f)); }
 
-		constexpr uint64 GetIndex(uint64 Row, uint64 Column) const { return Column * 4 + Row; }
-		float Get(uint64 Row, uint64 Column) const { return m[GetIndex(Row, Column)]; }
-		void Set(uint64 Row, uint64 Column, float Value) { m[GetIndex(Row, Column)] = Value; }
-		Vector<4, float> GetRow(uint64 Index) const { Vector<4, float> Result; for (uint64 I = 0; I < 4; I++) Result[I] = m[GetIndex(Index, I)]; return Result; }
-		void SetRow(uint64 Index, Vector<4, float> Value) { for (uint64 I = 0; I < 4; I++) m[GetIndex(Index, I)] = Value[I]; }
-		Vector<4, float> GetColumn(uint64 Index) const { Vector<4, float> Result; for (uint64 I = 0; I < 4; I++) Result[I] = m[GetIndex(I, Index)]; return Result; }
-		void SetColumn(uint64 Index, Vector<4, float> Value) { for (uint64 I = 0; I < 4; I++) m[GetIndex(I, Index)] = Value[I]; }
-		Vector<4, float> GetDiagonal() const { Vector<4, float> Result; for (uint64 I = 0; I < 4; I++) Result[I] = m[GetIndex(I, I)]; return Result; }
-		Matrix<4 - 1, 4 - 1, float> GetMinor(uint64 Row, uint64 Column) const { return MatrixUtility::Minor(*this, Row, Column); }
+		constexpr uint8 GetIndex(uint8 Row, uint8 Column) const { return Column * 4 + Row; }
+		float Get(uint8 Row, uint8 Column) const { return m[GetIndex(Row, Column)]; }
+		void Set(uint8 Row, uint8 Column, float Value) { m[GetIndex(Row, Column)] = Value; }
+		Vector<4, float> GetRow(uint8 Index) const { return Vector<4, float>(m[GetIndex(Index, 0)], m[GetIndex(Index, 1)], m[GetIndex(Index, 2)], m[GetIndex(Index, 3)]); }
+		void SetRow(uint8 Index, Vector<4, float> Value) { m[GetIndex(Index, 0)] = Value[0]; m[GetIndex(Index, 1)] = Value[1]; m[GetIndex(Index, 2)] = Value[2]; m[GetIndex(Index, 3)] = Value[3]; }
+		Vector<4, float> GetColumn(uint8 Index) const { return Vector<4, float>(m[GetIndex(0, Index)], m[GetIndex(1, Index)], m[GetIndex(2, Index)], m[GetIndex(3, Index)]); }
+		void SetColumn(uint8 Index, Vector<4, float> Value) { m[GetIndex(0, Index)] = Value[0]; m[GetIndex(1, Index)] = Value[1]; m[GetIndex(2, Index)] = Value[2]; m[GetIndex(3, Index)] = Value[3]; }
+		Vector<4, float> GetDiagonal() const { return Vector<4, float>(m[GetIndex(0, 0)], m[GetIndex(1, 1)], m[GetIndex(2, 2)], m[GetIndex(3, 3)]); }
+		void SetDiagonal(Vector<4, float> Value) { m[GetIndex(0, 0)] = Value[0]; m[GetIndex(1, 1)] = Value[1]; m[GetIndex(2, 2)] = Value[2]; m[GetIndex(3, 3)] = Value[3]; }
+		Matrix<4 - 1, 4 - 1, float> GetMinor(uint8 Row, uint8 Column) const { return MatrixUtility::Minor(*this, Row, Column); }
 
 		Vector<3, float> GetPosition() const
 		{
@@ -324,16 +326,16 @@ namespace NxFr
 		Matrix<4, 4, float> Transpose() const { return MatrixUtility::Transpose(*this); }
 		Matrix<4, 4, float> Inverse() const { return MatrixUtility::Inverse(*this); }
 		Matrix<4, 4, float> Cofactor() const { return MatrixUtility::Cofactor(*this); }
-		float Cofactor(uint64 Row, uint64 Column) const { return MatrixUtility::Cofactor(*this, Row, Column); }
+		float Cofactor(uint8 Row, uint8 Column) const { return MatrixUtility::Cofactor(*this, Row, Column); }
 		float Determinant() const { return MatrixUtility::Determinant(*this); }
 		float Trace() const { return MatrixUtility::Trace(*this); }
 
 		String ToString() const
 		{
 			String Result;
-			for (uint64 Column = 0; Column < 4; ++Column)
+			for (uint8 Column = 0; Column < 4; ++Column)
 			{
-				for (uint64 Row = 0; Row < 4; ++Row)
+				for (uint8 Row = 0; Row < 4; ++Row)
 				{
 					Result += StringUtility::ToStringF((float)Get(Row, Column));
 					Result += ", ";
@@ -360,7 +362,7 @@ namespace NxFr
 		template<uint8 R, uint8 C, typename T>
 		inline bool Equals(const Matrix<R, C, T>& A, const Matrix<R, C, T>& B)
 		{
-			for (uint64 Index = 0; Index < A.Count; ++Index)
+			for (uint8 Index = 0; Index < A.Count; ++Index)
 			{
 				if (!Math::Equals(A[Index], B[Index]))
 				{
@@ -380,7 +382,7 @@ namespace NxFr
 			}
 
 			Matrix<R, C, T> Result;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Dimension; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Dimension; ++Index)
 			{
 				Result(Index, Index) = 1.0f;
 			}
@@ -389,13 +391,13 @@ namespace NxFr
 		}
 
 		template<uint8 R, uint8 C, typename T>
-		inline Matrix<R - 1, C - 1, T> Minor(const Matrix<R, C, T>& M, uint64 Row, uint64 Column)
+		inline Matrix<R - 1, C - 1, T> Minor(const Matrix<R, C, T>& M, uint8 Row, uint8 Column)
 		{
 			Matrix<R - 1, C - 1, T> Result;
-			for (uint64 Row1 = 0, Row2 = 0; Row1 < R; ++Row1)
+			for (uint8 Row1 = 0, Row2 = 0; Row1 < R; ++Row1)
 			{
 				if (Row1 == Row) continue;
-				for (uint64 Column1 = 0, Column2 = 0; Column1 < C; ++Column1)
+				for (uint8 Column1 = 0, Column2 = 0; Column1 < C; ++Column1)
 				{
 					if (Column1 == Column) continue;
 
@@ -413,7 +415,7 @@ namespace NxFr
 		inline Matrix<R, C, T> Add(const Matrix<R, C, T>& A, T B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
 			{
 				Result[Index] = A[Index] + B;
 			}
@@ -425,7 +427,7 @@ namespace NxFr
 		inline Matrix<R, C, T> Add(const Matrix<R, C, T>& A, const Matrix<R, C, T>& B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
 			{
 				Result[Index] = A[Index] + B[Index];
 			}
@@ -437,7 +439,7 @@ namespace NxFr
 		inline Matrix<R, C, T> Subtract(const Matrix<R, C, T>& A, T B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
 			{
 				Result[Index] = A[Index] - B;
 			}
@@ -449,7 +451,7 @@ namespace NxFr
 		inline Matrix<R, C, T> Subtract(const Matrix<R, C, T>& A, const Matrix<R, C, T>& B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
 			{
 				Result[Index] = A[Index] - B[Index];
 			}
@@ -461,7 +463,7 @@ namespace NxFr
 		inline Matrix<R, C, T> Multiply(const Matrix<R, C, T>& A, T B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Count; ++Index)
 			{
 				Result[Index] = A[Index] * B;
 			}
@@ -473,10 +475,10 @@ namespace NxFr
 		inline Vector<C, T> Multiply(const Matrix<R, C, T>& A, Vector<C, T> B)
 		{
 			Vector<C, T> Result;
-			for (uint64 Row = 0; Row < R; ++Row)
+			for (uint8 Row = 0; Row < R; ++Row)
 			{
 				T Sum = (T)0;
-				for (uint64 Index = 0; Index < C; ++Index)
+				for (uint8 Index = 0; Index < C; ++Index)
 				{
 					Sum += A(Row, Index) * B[Index];
 				}
@@ -490,12 +492,12 @@ namespace NxFr
 		inline Matrix<R, C, T> Multiply(const Matrix<R, K, T>& A, const Matrix<K, C, T>& B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Column = 0; Column < C; ++Column)
+			for (uint8 Column = 0; Column < C; ++Column)
 			{
-				for (uint64 Row = 0; Row < R; ++Row)
+				for (uint8 Row = 0; Row < R; ++Row)
 				{
 					T Sum = (T)0;
-					for (uint64 Index = 0; Index < K; ++Index)
+					for (uint8 Index = 0; Index < K; ++Index)
 					{
 						Sum += A(Row, Index) * B(Index, Column);
 					}
@@ -511,9 +513,9 @@ namespace NxFr
 		inline Matrix<R, C, T> Tensor(Vector<R, T>& A, Vector<C, T> B)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Row = 0; Row < R; ++Row)
+			for (uint8 Row = 0; Row < R; ++Row)
 			{
-				for (uint64 Column = 0; Column < C; ++Column)
+				for (uint8 Column = 0; Column < C; ++Column)
 				{
 					Result(Row, Column) = A[Row] * B[Column];
 				}
@@ -526,9 +528,9 @@ namespace NxFr
 		inline Matrix<C, R, T> Transpose(const Matrix<R, C, T>& M)
 		{
 			Matrix<C, R, T> Result;
-			for (uint64 Column = 0; Column < C; ++Column)
+			for (uint8 Column = 0; Column < C; ++Column)
 			{
-				for (uint64 Row = 0; Row < R; ++Row)
+				for (uint8 Row = 0; Row < R; ++Row)
 				{
 					Result(Row, Column) = M(Column, Row);
 				}
@@ -561,9 +563,9 @@ namespace NxFr
 		inline Matrix<R, C, T> Cofactor(const Matrix<R, C, T>& M)
 		{
 			Matrix<R, C, T> Result;
-			for (uint64 Column = 0; Column < C; ++Column)
+			for (uint8 Column = 0; Column < C; ++Column)
 			{
-				for (uint64 Row = 0; Row < R; ++Row)
+				for (uint8 Row = 0; Row < R; ++Row)
 				{
 					Result(Row, Column) = Cofactor(M, Row, Column);
 				}
@@ -573,7 +575,7 @@ namespace NxFr
 		}
 
 		template<uint8 R, uint8 C, typename T>
-		inline float Cofactor(const Matrix<R, C, T>& M, uint64 Row, uint64 Column)
+		inline float Cofactor(const Matrix<R, C, T>& M, uint8 Row, uint8 Column)
 		{
 			float Sign = (Row + Column) % 2 == 0 ? 1.0f : -1.0f;
 			Matrix<R - 1, C - 1, T> Minor = M.GetMinor(Row, Column);
@@ -602,7 +604,7 @@ namespace NxFr
 			else
 			{
 				float Result = 0.0f;
-				for (uint64 Column = 0; Column < C; ++Column)
+				for (uint8 Column = 0; Column < C; ++Column)
 				{
 					Result += M(0, Column) * Cofactor(M, 0, Column);
 				}
@@ -620,7 +622,7 @@ namespace NxFr
 			}
 
 			float Result = 0;
-			for (uint64 Index = 0; Index < Matrix<R, C, T>::Dimension; ++Index)
+			for (uint8 Index = 0; Index < Matrix<R, C, T>::Dimension; ++Index)
 			{
 				Result += M(Index, Index);
 			}
