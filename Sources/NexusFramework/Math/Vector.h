@@ -24,10 +24,6 @@ namespace NxFr
 	using Vector4f = Vector<4, float>;
 	using Vector4i = Vector<4, int32>;
 
-	using Vector2 = Vector2f;
-	using Vector3 = Vector3f;
-	using Vector4 = Vector4f;
-
 	namespace VectorUtility
 	{
 		template<uint8 D, typename T>	float				SqrMagnitude(Vector<D, T> V);

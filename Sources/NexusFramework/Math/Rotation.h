@@ -22,7 +22,7 @@ namespace NxFr
 		Quaternion Normalize(Quaternion Q);
 		Quaternion Inverse(Quaternion Q);
 		Quaternion Concatenate(Quaternion A, Quaternion B);
-		Vector3 Rotate(Quaternion Q, Vector3 V);
+		Vector<3, float> Rotate(Quaternion Q, Vector<3, float> V);
 	}
 
 #pragma endregion
@@ -37,7 +37,7 @@ namespace NxFr
 		{
 		}
 
-		AxisAngle(Vector3 Axis, float Angle)
+		AxisAngle(Vector<3, float> Axis, float Angle)
 			: Axis(Axis), Angle(Angle)
 		{
 		}
@@ -57,7 +57,7 @@ namespace NxFr
 		void Normalize() { Axis = VectorUtility::Normalize(Axis); }
 
 	public:
-		Vector3 Axis;
+		Vector<3, float> Axis;
 		float Angle;
 	};
 
@@ -80,7 +80,7 @@ namespace NxFr
 		{
 		}
 
-		Euler(Vector3 Angles)
+		Euler(Vector<3, float> Angles)
 			: x(Angles.x), y(Angles.y), z(Angles.z)
 		{
 		}
@@ -94,7 +94,7 @@ namespace NxFr
 		{
 		}
 
-		operator Vector3() const { return Vector3(x, y, z); }
+		operator Vector<3, float>() const { return Vector<3, float>(x, y, z); }
 
 		bool operator==(Euler Other) const { return x == Other.x && y == Other.y && z == Other.z; }
 		bool operator!=(Euler Other) const { return !(*this == Other); }
@@ -175,7 +175,7 @@ namespace NxFr
 		{
 			float Length = Math::Sqrt(1.0f - Math::Square(w));
 			float Angle = 2.0f * Math::Acos(w);
-			Vector3 Axis = (1.0f / Length) * Vector3(x, y, z);
+			Vector<3, float> Axis = (1.0f / Length) * Vector<3, float>(x, y, z);
 			return AxisAngle(Axis, Angle * Math::Degree);
 		}
 
@@ -234,12 +234,12 @@ namespace NxFr
 		return RotationUtility::Concatenate(A, B);
 	}
 
-	inline Vector3 operator*(Quaternion Q, Vector3 V)
+	inline Vector<3, float> operator*(Quaternion Q, Vector<3, float> V)
 	{
 		return RotationUtility::Rotate(Q, V);
 	}
 
-	inline Vector3 operator*(Vector3 V, Quaternion Q)
+	inline Vector<3, float> operator*(Vector<3, float> V, Quaternion Q)
 	{
 		return RotationUtility::Rotate(Q, V);
 	}
@@ -350,20 +350,20 @@ namespace NxFr
 			return Result;
 		}
 
-		inline Vector3 Rotate(Quaternion Q, Vector3 V)
+		inline Vector<3, float> Rotate(Quaternion Q, Vector<3, float> V)
 		{
 			float CMult = 2.0f * Q.w;
 			float VMult = 2.0f * (Q.x * V.x + Q.y * V.y + Q.z * V.z);
 			float PMult = CMult * Q.w - 1.0f;
 
-			return Vector3(
+			return Vector<3, float>(
 				PMult * V.x + VMult * Q.x + CMult * (Q.y * V.z - Q.z * V.y),
 				PMult * V.y + VMult * Q.y + CMult * (Q.z * V.x - Q.x * V.z),
 				PMult * V.z + VMult * Q.z + CMult * (Q.x * V.y - Q.y * V.x)
 			);
 		}
 
-		inline Quaternion FromTo(Vector3 From, Vector3 To)
+		inline Quaternion FromTo(Vector<3, float> From, Vector<3, float> To)
 		{
 			float Angle = VectorUtility::Dot(From, To);
 
@@ -373,11 +373,11 @@ namespace NxFr
 			}
 			else if (Math::Equals(Angle, -1.0f))
 			{
-				Vector3 Axis = VectorUtility::Orthogonal(From).Normalized();
+				Vector<3, float> Axis = VectorUtility::Orthogonal(From).Normalized();
 				return Quaternion({ Axis, 0 });
 			}
 
-			Vector3 Axis = VectorUtility::Cross(From, To);
+			Vector<3, float> Axis = VectorUtility::Cross(From, To);
 			float Scale = Math::Sqrt((1.0f + Angle) * 2.0f);
 			float Inv = 1.0f / Scale;
 

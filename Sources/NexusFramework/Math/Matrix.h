@@ -633,12 +633,12 @@ namespace NxFr
 
 	namespace RotationUtility
 	{
-		inline Quaternion LookAt(Vector3 Position, Vector3 Target, Vector3 Up)
+		inline Quaternion LookAt(Vector<3, float> Position, Vector<3, float> Target, Vector<3, float> Up)
 		{
 			return Matrix4x4f::LookAt(Position, Target, Up).GetRotation();
 		}
 
-		inline Quaternion LookAt(Vector3 Direction, Vector3 Up)
+		inline Quaternion LookAt(Vector<3, float> Direction, Vector<3, float> Up)
 		{
 			return Matrix4x4f::LookAt(Direction, Up).GetRotation();
 		}
