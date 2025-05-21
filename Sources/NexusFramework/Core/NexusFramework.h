@@ -47,6 +47,7 @@
 #include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Math/Types/Vector.h"
 #include "NexusFramework/Math/Types/Rotation.h"
+#include "NexusFramework/Math/Types/Matrix.h"
 
 #include "NexusFramework/Time/Timestamp.h"
 #include "NexusFramework/Time/Timespan.h"

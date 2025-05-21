@@ -219,10 +219,12 @@ namespace NxTs
 		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)), Rotation), true);
 		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)), NxFr::Quaternion(NxFr::Euler(0, 30, 0)) * NxFr::Quaternion(NxFr::Euler(45, 0, 0)) * NxFr::Quaternion(NxFr::Euler(0, 0, 60))), true);
 
-		auto From = NxFr::VectorUtility::Normalize(NxFr::Vector3(1.0f, 1.0f, 0.0f));
-		auto To = NxFr::VectorUtility::Normalize(NxFr::Vector3(0.0f, 1.0f, 1.0f));
-		auto FromTo = NxFr::RotationUtility::FromTo(From, To);
+		NxFr::Vector3 From = NxFr::VectorUtility::Normalize(NxFr::Vector3(1.0f, 1.0f, 0.0f));
+		NxFr::Vector3 To = NxFr::VectorUtility::Normalize(NxFr::Vector3(0.0f, 1.0f, 1.0f));
+		NxFr::Quaternion FromTo = NxFr::RotationUtility::FromTo(From, To);
 		ASSERT_EQ(NxFr::VectorUtility::Equals(From * FromTo, To), true);
+		NxFr::Quaternion LookAt = NxFr::RotationUtility::LookAt(NxFr::Vector3::Zero, NxFr::Vector3::Right, NxFr::Vector3::Up);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(LookAt * NxFr::Vector3::Forward, NxFr::Vector3::Right), true);
 
 		ASSERT_EQ(NxFr::VectorUtility::Equals(NxFr::Quaternion(NxFr::Euler(45, 30, 60)) * NxFr::Vector3::Forward, NxFr::Vector3(0.3535533f, -0.7071068f, 0.6123724f)), true);
 
@@ -235,5 +237,82 @@ namespace NxTs
 		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::RotationUtility::Lerp(Quaternion, NxFr::Quaternion::Identity, 0.5f), NxFr::Quaternion({ NxFr::Vector3::Up, 22.5f })), true);
 		ASSERT_EQ(NxFr::RotationUtility::Equals(NxFr::RotationUtility::Slerp(Quaternion, NxFr::Quaternion::Identity, 0.5f), NxFr::Quaternion({ NxFr::Vector3::Up, 22.5f })), true);
 		ASSERT_EQ(NxFr::RotationUtility::Similar(Quaternion, NxFr::Quaternion({ NxFr::Vector3::Up, 45.0f })), true);
+	}
+
+	TEST(Math, Matrix)
+	{
+		NxFr::Matrix4x4f Indentity = NxFr::Matrix4x4f();
+		Indentity[0] = Indentity[5] = Indentity[10] = Indentity[15] = 1.0f;
+		ASSERT_EQ(Indentity == NxFr::Matrix4x4f::Identity, true);
+
+		NxFr::Matrix4x4f Matrix = NxFr::Matrix4x4f();
+		for (uint64 Index = 0; Index < Matrix.Count; ++Index)
+		{
+			Matrix[Index] = (float)Index;
+		}
+
+		ASSERT_EQ(Matrix[4], Matrix(0, 1));
+		ASSERT_EQ(Matrix[10], Matrix(2, 2));
+		ASSERT_EQ(Matrix.GetColumn(1), NxFr::Vector4f(4.0f, 5.0f, 6.0f, 7.0f));
+		ASSERT_EQ(Matrix.GetRow(1), NxFr::Vector4f(1.0f, 5.0f, 9.0f, 13.0f));
+		ASSERT_EQ(Matrix.GetDiagonal(), NxFr::Vector4f(0.0f, 5.0f, 10.0f, 15.0f));
+
+		NxFr::Matrix4x4f AddScalar = Matrix + 1.0f;
+		ASSERT_EQ(AddScalar.GetColumn(0), NxFr::Vector4f(1.0f, 2.0f, 3.0f, 4.0f));
+		NxFr::Matrix4x4f AddMatrix = Matrix + Matrix;
+		ASSERT_EQ(AddMatrix.GetColumn(0), NxFr::Vector4f(0.0f, 2.0f, 4.0f, 6.0f));
+		NxFr::Matrix4x4f MultiplyScalar = Matrix * 2.0f;
+		ASSERT_EQ(MultiplyScalar.GetColumn(0), NxFr::Vector4f(0.0f, 2.0f, 4.0f, 6.0f));
+		NxFr::Vector4f MultiplyVector = Matrix * NxFr::Vector4f(2.0f);
+		ASSERT_EQ(MultiplyVector, NxFr::Vector4f(48.0f, 56.0f, 64.0f, 72.0f));
+		NxFr::Matrix4x4f MultiplyMatrix = Matrix * Matrix;
+		ASSERT_EQ(MultiplyMatrix.GetColumn(0), NxFr::Vector4f(56.0f, 62.0f, 68.0f, 74.0f));
+
+		NxFr::Matrix4x4f Transpose = Matrix.Transpose();
+		ASSERT_EQ(Transpose.GetRow(1), NxFr::Vector4f(4.0f, 5.0f, 6.0f, 7.0f));
+		ASSERT_EQ(Transpose.GetColumn(1), NxFr::Vector4f(1.0f, 5.0f, 9.0f, 13.0f));
+		float Trace = Matrix.Trace();
+		ASSERT_EQ(Trace, 30.0f);
+
+		Matrix = NxFr::Matrix4x4f();
+		Matrix[0] = 1.0f;
+		Matrix[5] = 2.0f;
+		Matrix[10] = 3.0f;
+		Matrix[15] = 4.0f;
+		NxFr::Matrix4x4f Inverse = Matrix.Inverse();
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Inverse.GetDiagonal(), NxFr::Vector4f(1.0f, 0.5f, 0.333333f, 0.25f)), true);
+		float Determinant = Matrix.Determinant();
+		ASSERT_EQ(Determinant, 24.0f);
+
+		NxFr::Vector3 Vector = NxFr::Vector3f(1.0f, 2.0f, 3.0f);
+		NxFr::Quaternion Quaternion = NxFr::Euler(45.0f, 30.0f, 60.0f);
+
+		NxFr::Matrix4x4f Translation = NxFr::Matrix4x4f::Translate(Vector);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Translation.MultiplyPosition(NxFr::Vector3f::One), NxFr::Vector3f::One + Vector), true);
+		NxFr::Matrix4x4f Rotation = NxFr::Matrix4x4f::Rotate(Quaternion);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Rotation.MultiplyPosition(NxFr::Vector3f::One), Quaternion * NxFr::Vector3f::One), true);
+		NxFr::Matrix4x4f Scale = NxFr::Matrix4x4f::Scale(Vector);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Scale.MultiplyPosition(NxFr::Vector3f::One), Vector), true);
+		NxFr::Matrix4x4f Reflection = NxFr::Matrix4x4f::Reflect(NxFr::Vector3f(0.0f, 1.0f, 0.0f));
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Reflection.MultiplyPosition(NxFr::Vector3f::One), NxFr::Vector3f(1.0f, -1.0f, 1.0f)), true);
+		NxFr::Matrix4x4f Shear = NxFr::Matrix4x4f::Shear(NxFr::Vector3f(0.0f, 1.0f, 0.0f), NxFr::Vector3f(1.0f, 0.0f, 3.0f));
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Shear.MultiplyPosition(NxFr::Vector3f::One), NxFr::Vector3f(2.0f, 1.0f, 4.0f)), true);
+
+		NxFr::Matrix4x4f Trs = NxFr::Matrix4x4f::TRS(Vector, Quaternion, Vector);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Trs.MultiplyPosition(Vector), NxFr::Vector3f(2.628287f, -2.337375f, 11.74848f)), true);
+		NxFr::Matrix4x4f Origin = NxFr::Matrix4x4f::Origin(Rotation * Scale, Vector);
+		ASSERT_EQ(NxFr::MatrixUtility::Equals(Origin, NxFr::Matrix4x4f::Translate(Vector) * Rotation * Scale * NxFr::Matrix4x4f::Translate(-Vector)), true);
+
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Trs.GetPosition(), Vector), true);
+		ASSERT_EQ(NxFr::RotationUtility::Equals(Trs.GetRotation(), Quaternion), true);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Trs.GetScale(), Vector), true);
+
+		NxFr::Vector3f Position = Translation.MultiplyPosition(Vector);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Position, 2.0f * Vector), true);
+		NxFr::Vector3f Direction = Translation.MultiplyDirection(Vector);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(Direction, Vector), true);
+
+		NxFr::Matrix4x4f LookAt = NxFr::Matrix4x4f::LookAt(NxFr::Vector3::Zero, NxFr::Vector3::Right, NxFr::Vector3::Up);
+		ASSERT_EQ(NxFr::VectorUtility::Equals(LookAt.MultiplyDirection(NxFr::Vector3::Forward), NxFr::Vector3::Right), true);
 	}
 }
