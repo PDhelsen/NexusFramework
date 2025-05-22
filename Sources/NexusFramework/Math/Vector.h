@@ -39,31 +39,58 @@ namespace NxFr
 	struct Vector
 	{
 	public:
-		Vector() {}
+		inline static const uint8 Count = D;
+		inline static const uint8 Size = Count * sizeof(T);
+
+		static const Vector<D, T> Zero;
+		static const Vector<D, T> One;
+
+		Vector() { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = 0; }
+		template<typename P> explicit Vector(P V) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = V; }
 		template<uint8 S, typename P> Vector(Vector<S, P> Other) {}
 		~Vector() {}
 
-		Vector<D, T>& operator=(Vector<D, T> Other) { return *this; }
-		bool operator==(Vector<D, T> Other) const { return false; }
+		Vector<D, T>& operator=(Vector<D, T> Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
+		bool operator==(Vector<D, T> Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
 		bool operator!=(Vector<D, T> Other) const { return !(*this == Other); }
-		T& operator[](uint8 Index) { return 0; }
-		const T& operator[](uint8 Index) const { return 0; }
+		T& operator[](uint8 Index) { return m[Index]; }
+		const T& operator[](uint8 Index) const { return m[Index]; }
 
-		Vector<D, T>& operator+=(T Other) { return *this; }
-		Vector<D, T>& operator-=(T Other) { return *this; }
-		Vector<D, T>& operator*=(T Other) { return *this; }
-		Vector<D, T>& operator/=(T Other) { return *this; }
-		Vector<D, T>& operator+=(Vector<D, T> Other) { return *this; }
-		Vector<D, T>& operator-=(Vector<D, T> Other) { return *this; }
-		Vector<D, T>& operator*=(Vector<D, T> Other) { return *this; }
-		Vector<D, T>& operator/=(Vector<D, T> Other) { return *this; }
+		Vector<D, T>& operator+=(T Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] += Other; return *this; }
+		Vector<D, T>& operator-=(T Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] -= Other; return *this; }
+		Vector<D, T>& operator*=(T Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] *= Other; return *this; }
+		Vector<D, T>& operator/=(T Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] /= Other; return *this; }
+		Vector<D, T>& operator+=(Vector<D, T> Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] += Other[Index]; return *this; }
+		Vector<D, T>& operator-=(Vector<D, T> Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] -= Other[Index]; return *this; }
+		Vector<D, T>& operator*=(Vector<D, T> Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] *= Other[Index]; return *this; }
+		Vector<D, T>& operator/=(Vector<D, T> Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] /= Other[Index]; return *this; }
 
 		Vector<D, T> Normalized() const { return VectorUtility::Normalize(*this); }
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
 
-		String ToString() const { return ""; }
+		String ToString() const { String Result; for (uint8 Index = 0; Index < Count; Index++) Result += StringUtility::ToStringF(m[Index]); return Result; }
+
+	public:
+		T m[Count];
 	};
+
+	template<uint8 D, typename T> const Vector<D, T> Vector<D, T>::Zero = Vector<D, T>(0);
+	template<uint8 D, typename T> const Vector<D, T> Vector<D, T>::One = Vector<D, T>(1);
+
+	template<uint8 D, typename T> Vector<D, T> operator-(Vector<D, T> A) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = -A[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator+(T A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A + B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator-(T A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A - B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator*(T A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A * B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator/(T A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A / B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator+(Vector<D, T> A, T B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] + B; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator-(Vector<D, T> A, T B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] - B; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator*(Vector<D, T> A, T B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] * B; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator/(Vector<D, T> A, T B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] / B; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator+(Vector<D, T> A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] + B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator-(Vector<D, T> A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] - B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator*(Vector<D, T> A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] * B[Index]; return Result; }
+	template<uint8 D, typename T> Vector<D, T> operator/(Vector<D, T> A, Vector<D, T> B) { Vector<D, T> Result; for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index) Result[Index] = A[Index] / B[Index]; return Result; }
 
 #pragma endregion
 
@@ -88,7 +115,7 @@ namespace NxFr
 		~Vector() {}
 
 		Vector<2, T>& operator=(Vector<2, T> Other) { x = Other.x; y = Other.y; return *this; }
-		bool operator==(Vector<2, T> Other) const { return x == Other.x && y == Other.y; }
+		bool operator==(Vector<2, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y); }
 		bool operator!=(Vector<2, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : x; }
 		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : x; }
@@ -157,7 +184,7 @@ namespace NxFr
 		~Vector() {}
 
 		Vector<3, T>& operator=(Vector<3, T> Other) { x = Other.x; y = Other.y; z = Other.z; return *this; }
-		bool operator==(Vector<3, T> Other) const { return x == Other.x && y == Other.y && z == Other.z; }
+		bool operator==(Vector<3, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
 		bool operator!=(Vector<3, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
@@ -229,7 +256,7 @@ namespace NxFr
 		~Vector() {}
 
 		Vector<4, T>& operator=(Vector<4, T> Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
-		bool operator==(Vector<4, T> Other) const { return x == Other.x && y == Other.y && z == Other.z && w == Other.w; }
+		bool operator==(Vector<4, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
 		bool operator!=(Vector<4, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
@@ -281,24 +308,6 @@ namespace NxFr
 
 	namespace VectorUtility
 	{
-		template<typename T>
-		bool Equals(Vector<2, T> A, Vector<2, T> B)
-		{
-			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y);
-		}
-
-		template<typename T>
-		bool Equals(Vector<3, T> A, Vector<3, T> B)
-		{
-			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z);
-		}
-
-		template<typename T>
-		bool Equals(Vector<4, T> A, Vector<4, T> B)
-		{
-			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z) && Math::Equals(A.w, B.w);
-		}
-
 		template<typename T>
 		float Dot(Vector<2, T> A, Vector<2, T> B)
 		{
@@ -469,7 +478,7 @@ namespace NxFr
 		template<uint8 D, typename T>
 		bool Similar(Vector<D, T> A, Vector<D, T> B)
 		{
-			return Equals(Normalize(A), Normalize(B));
+			return Normalize(A) == Normalize(B);
 		}
 
 		template<uint8 D, typename T>

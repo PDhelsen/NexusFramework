@@ -22,13 +22,13 @@ namespace NxFr
 		template<typename T>
 		T Sign(T X)
 		{
-			return (T)(X == 0.0f ? 0.0f : X > 0.0f ? 1.0f : -1.0f);
+			return (T)(X == (T)0 ? (T)0 : X > (T)0 ? (T)1 : -(T)1);
 		}
 
 		template<typename T>
 		T CopySign(T V, T X)
 		{
-			return X >= 0.0f ? Abs(V) : -Abs(V);
+			return X >= (T)0 ? Abs(V) : -Abs(V);
 		}
 
 		template<typename T>
@@ -88,15 +88,15 @@ namespace NxFr
 		template<typename T>
 		T Modulo(T X, T Y)
 		{
-			NEXUS_ASSERT(Y != 0, Default, "Modulo with Mode == 0 is undefined");
+			NEXUS_ASSERT(Y != (T)0, Default, "Modulo with Mode == 0 is undefined");
 			T Remainder = X % Y;
-			return Remainder < 0 ? Remainder + Y : Remainder;
+			return Remainder < (T)0 ? Remainder + Y : Remainder;
 		}
 
 		template<typename T>
 		T IsMultiple(T X, T Y)
 		{
-			return Y != 0 && X % Y == 0;
+			return Y != (T)0 && X % Y == (T)0;
 		}
 
 		template<typename T>
@@ -120,7 +120,7 @@ namespace NxFr
 		template<typename T>
 		T Lerp(T A, T B, T V)
 		{
-			return (1.0f - V) * A + V * B;
+			return ((T)1 - V) * A + V * B;
 		}
 
 		template<typename T>
@@ -132,7 +132,7 @@ namespace NxFr
 		template<typename T>
 		bool Equals(T X, T Y, float Epsilon = Decimal::EpsilonF)
 		{
-			return Abs(X - Y) <= Max(Max(X, Y), 1.0f) * Epsilon;
+			return Abs(X - Y) <= Max(Max(X, Y), (T)1) * Epsilon;
 		}
 
 		template<typename T>

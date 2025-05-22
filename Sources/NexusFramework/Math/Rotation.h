@@ -51,7 +51,7 @@ namespace NxFr
 		{
 		}
 
-		bool operator==(AxisAngle Other) const { return Axis == Other.Axis && Angle == Other.Angle; }
+		bool operator==(AxisAngle Other) const { return Axis == Other.Axis && Math::Equals(Angle, Other.Angle); }
 		bool operator!=(AxisAngle Other) const { return !(*this == Other); }
 
 		void Normalize() { Axis = VectorUtility::Normalize(Axis); }
@@ -96,7 +96,7 @@ namespace NxFr
 
 		operator Vector<3, float>() const { return Vector<3, float>(x, y, z); }
 
-		bool operator==(Euler Other) const { return x == Other.x && y == Other.y && z == Other.z; }
+		bool operator==(Euler Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
 		bool operator!=(Euler Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
@@ -204,7 +204,7 @@ namespace NxFr
 		}
 
 		Quaternion& operator=(Quaternion Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
-		bool operator==(Quaternion Other) const { return x == Other.x && y == Other.y && z == Other.z && w == Other.w; }
+		bool operator==(Quaternion Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
 		bool operator!=(Quaternion Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
@@ -250,21 +250,6 @@ namespace NxFr
 
 	namespace RotationUtility
 	{
-		inline bool Equals(AxisAngle A, AxisAngle B)
-		{
-			return VectorUtility::Equals(A.Axis, B.Axis) && Math::Equals(A.Angle, B.Angle);
-		}
-
-		inline bool Equals(Euler A, Euler B)
-		{
-			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z);
-		}
-
-		inline bool Equals(Quaternion A, Quaternion B)
-		{
-			return Math::Equals(A.x, B.x) && Math::Equals(A.y, B.y) && Math::Equals(A.z, B.z) && Math::Equals(A.w, B.w);
-		}
-
 		inline float Dot(Quaternion A, Quaternion B)
 		{
 			return A.x * B.x + A.y * B.y + A.z * B.z + A.w * B.w;
