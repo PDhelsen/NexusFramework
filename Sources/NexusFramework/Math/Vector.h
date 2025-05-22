@@ -308,6 +308,17 @@ namespace NxFr
 
 	namespace VectorUtility
 	{
+		template<uint8 D, typename T>
+		float Dot(Vector<D, T> A, Vector<D, T> B)
+		{
+			T Result = 0;
+			for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index)
+			{
+				Result += A[Index] * B[Index];
+			}
+			return Result;
+		}
+
 		template<typename T>
 		float Dot(Vector<2, T> A, Vector<2, T> B)
 		{
@@ -410,6 +421,17 @@ namespace NxFr
 			return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B))));
 		}
 
+		template<uint8 D, typename T>
+		float Min(Vector<D, T> A, Vector<D, T> B)
+		{
+			Vector<D, T> Result = 0;
+			for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index)
+			{
+				Result[Index] = Math::Min(A[Index], B[Index]);
+			}
+			return Result;
+		}
+
 		template<typename T> Vector<2, T>
 		Min(Vector<2, T> A, Vector<2, T> B)
 		{
@@ -426,6 +448,17 @@ namespace NxFr
 		Min(Vector<4, T> A, Vector<4, T> B)
 		{
 			return Vector<4, T>(Math::Min(A.x, B.x), Math::Min(A.y, B.y), Math::Min(A.z, B.z), Math::Min(A.w, B.w));
+		}
+
+		template<uint8 D, typename T>
+		float Max(Vector<D, T> A, Vector<D, T> B)
+		{
+			Vector<D, T> Result = 0;
+			for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index)
+			{
+				Result[Index] = Math::Max(A[Index], B[Index]);
+			}
+			return Result;
 		}
 
 		template<typename T> Vector<2, T>
