@@ -3,10 +3,10 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Numbers/Decimal.h"
-#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 
+#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Math/Vector.h"
 #include "NexusFramework/Math/Rotation.h"
 
@@ -613,6 +613,20 @@ namespace NxFr
 				Result += M(Index, Index);
 			}
 
+			return Result;
+		}
+
+		inline Matrix<2, 2, float> Rotation2D(float Angle)
+		{
+			Angle *= Math::Radians;
+			float Cos = Math::Cos(Angle);
+			float Sin = Math::Sin(Angle);
+
+			Matrix<2, 2, float> Result;
+			Result(0, 0) = Cos;
+			Result(1, 0) = Sin;
+			Result(0, 1) = -Sin;
+			Result(1, 1) = Cos;
 			return Result;
 		}
 	}

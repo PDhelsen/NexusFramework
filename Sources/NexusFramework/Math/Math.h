@@ -124,6 +124,12 @@ namespace NxFr
 		}
 
 		template<typename T>
+		T InverseLerp(T A, T B, T V)
+		{
+			return (V - A) / (B - A);
+		}
+
+		template<typename T>
 		T Remap(T X, T InMin, T InMax, T OutMin, T OutMax)
 		{
 			return OutMin + ((X - InMin) * (OutMax - OutMin)) / (InMax - InMin);
@@ -283,6 +289,11 @@ namespace NxFr
 				++N;
 			}
 			return N;
+		}
+
+		inline float Pythagoras(float A, float B)
+		{
+			return Sqrt(Square(A) + Square(B));
 		}
 	}
 }

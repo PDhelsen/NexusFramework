@@ -3,10 +3,10 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Numbers/Decimal.h"
-#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 
+#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Math/Vector.h"
 
 namespace NxFr
@@ -56,6 +56,8 @@ namespace NxFr
 
 		void Normalize() { Axis = VectorUtility::Normalize(Axis); }
 
+		String ToString() const { return StringUtility::Format("Axis: %s - Angle: %f", Axis.ToString().C(), Angle); }
+
 	public:
 		Vector<3, float> Axis;
 		float Angle;
@@ -100,6 +102,8 @@ namespace NxFr
 		bool operator!=(Euler Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+
+		String ToString() const { return StringUtility::Format("(%.2f, %.2f, %.2f)", (float)x, (float)y, (float)z); }
 
 	public:
 		float x, y, z;

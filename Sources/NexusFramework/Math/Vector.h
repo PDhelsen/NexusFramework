@@ -3,9 +3,10 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Numbers/Decimal.h"
-#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
+
+#include "NexusFramework/Math/Math.h"
 
 namespace NxFr
 {
@@ -419,6 +420,35 @@ namespace NxFr
 		float Angle(Vector<D, T> A, Vector<D, T> B)
 		{
 			return  Math::Acos((Dot(A, B) / (Magnitude(A) * Magnitude(B))));
+		}
+
+		template<uint8 D, typename T>
+		float Abs(Vector<D, T> A)
+		{
+			Vector<D, T> Result = 0;
+			for (uint8 Index = 0; Index < Vector<D, T>::Count; ++Index)
+			{
+				Result[Index] = Math::Abs(A[Index]);
+			}
+			return Result;
+		}
+
+		template<typename T> Vector<2, T>
+		Abs(Vector<2, T> A)
+		{
+			return Vector<2, T>(Math::Abs(A.x), Math::Abs(A.y));
+		}
+
+		template<typename T> Vector<3, T>
+		Abs(Vector<3, T> A)
+		{
+			return Vector<3, T>(Math::Abs(A.x), Math::Abs(A.y), Math::Abs(A.z));
+		}
+
+		template<typename T> Vector<4, T>
+		Abs(Vector<4, T> A, Vector<4, T> B)
+		{
+			return Vector<4, T>(Math::Abs(A.x), Math::Abs(A.y), Math::Abs(A.z), Math::Abs(A.w));
 		}
 
 		template<uint8 D, typename T>

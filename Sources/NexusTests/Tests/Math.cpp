@@ -318,4 +318,143 @@ namespace NxTs
 		NxFr::Matrix4x4f LookAt = NxFr::Matrix4x4f::LookAt(NxFr::Vector3f::Zero, NxFr::Vector3f::Right, NxFr::Vector3f::Up);
 		ASSERT_EQ(LookAt.MultiplyDirection(NxFr::Vector3f::Forward), NxFr::Vector3f::Right);
 	}
+
+	TEST(Math, Shape)
+	{
+		NxFr::Ray Ray = NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward);
+		ASSERT_EQ(Ray.Flip().Direction, -NxFr::Vector3f::Forward);
+		ASSERT_EQ(Ray.Flip().Direction, NxFr::Vector3f::Forward);
+		ASSERT_EQ(Ray.Translate(NxFr::Vector3f(0.0f, 1.0f, 0.0f)).Origin, NxFr::Vector3f(0.0f, 1.0f, 0.0f));
+		ASSERT_EQ(Ray.Rotate(NxFr::Euler(-90.0f, 0.0f, 0.0f)).Direction, NxFr::Vector3f::Up);
+		ASSERT_EQ(Ray.Rotate(NxFr::Euler(90.0f, 0.0f, 0.0f)).Direction, NxFr::Vector3f::Forward);
+		
+		NxFr::Plane Plane = NxFr::Plane(NxFr::Vector3f::Forward, 0.0f);
+		ASSERT_EQ(Plane.Flip().Normal, -NxFr::Vector3f::Forward);
+		ASSERT_EQ(Plane.Flip().Normal, NxFr::Vector3f::Forward);
+		ASSERT_EQ(Plane.Translate(1.0f).Distance, 1.0f);
+		ASSERT_EQ(Plane.Rotate(NxFr::Euler(-90.0f, 0.0f, 0.0f)).Normal, NxFr::Vector3f::Up);
+		ASSERT_EQ(Plane.Rotate(NxFr::Euler(90.0f, 0.0f, 0.0f)).Normal, NxFr::Vector3f::Forward);
+
+		NxFr::Triangle Triangle = NxFr::Triangle(NxFr::Vector3f(1.0f, 0.0f, 0.0f), NxFr::Vector3f(-1.0f, 0.0f, 0.0f), NxFr::Vector3f(0.0f, 1.0f, 0.0f));
+		ASSERT_EQ(Triangle.Normal(), NxFr::Vector3f::Forward);
+		Triangle.Scale(NxFr::Vector3f::One * 2.0f);
+		Triangle.Rotate(NxFr::Euler(0.0f, 0.0f, 45.0f));
+		Triangle.Translate(NxFr::Vector3f(0.0f, 1.0f, 0.0f));
+		
+		NxFr::Rectangle Rectangle = NxFr::Rectangle(NxFr::Vector2f::Zero, NxFr::Vector2f::One);
+		ASSERT_EQ(Rectangle.Translate(NxFr::Vector2f(0.0f, 1.0f)).Center, NxFr::Vector2f::Up);
+		ASSERT_EQ(Rectangle.Scale(NxFr::Vector2f::One * 2.0f).Extents, NxFr::Vector2f(2.0f));
+		ASSERT_EQ(Rectangle.Grow(NxFr::Vector2f::One).Extents, NxFr::Vector2f(3.0f));
+		ASSERT_EQ(Rectangle.GetBottomRight().x - Rectangle.GetBottomLeft().x, Rectangle.GetWidth());
+		ASSERT_EQ(Rectangle.GetTopLeft().y - Rectangle.GetBottomLeft().y, Rectangle.GetHeight());
+		ASSERT_EQ(Rectangle.GetCorner(2), Rectangle.GetTopRight());
+		ASSERT_EQ(Rectangle.Encapsulate(NxFr::Rectangle(NxFr::Vector2f::Right * 2.0f, NxFr::Vector2f::One * 3.0f)).Extents, NxFr::Vector2f(4.0f, 3.5f));
+
+		NxFr::Circle Circle = NxFr::Circle(NxFr::Vector3f::Zero, 1.0f);
+		ASSERT_EQ(Circle.Translate(NxFr::Vector2f(0.0f, 1.0f)).Center, NxFr::Vector2f::Up);
+		ASSERT_EQ(Circle.Scale(2.0f).Radius, 2.0f);
+		ASSERT_EQ(Circle.Grow(1.0f).Radius, 3.0f);
+		ASSERT_EQ(Circle.GetDiameter(), 6.0f);
+		ASSERT_EQ(Circle.Encapsulate(NxFr::Circle(NxFr::Vector2f::Up * 4.0f, 3.0f)).Radius, 4.5f);
+
+		NxFr::Box Box = NxFr::Box(NxFr::Vector3f::Zero, NxFr::Vector3f::One);
+		ASSERT_EQ(Box.Translate(NxFr::Vector3f(0.0f, 1.0f)).Center, NxFr::Vector3f::Up);
+		ASSERT_EQ(Box.Scale(NxFr::Vector3f::One * 2.0f).Extents, NxFr::Vector3f(2.0f));
+		ASSERT_EQ(Box.Grow(NxFr::Vector3f::One).Extents, NxFr::Vector3f(3.0f));
+		ASSERT_EQ(Box.GetMin(), NxFr::Vector3f(-3.0f, -2.0f, -3.0f));
+		ASSERT_EQ(Box.Encapsulate(NxFr::Box(NxFr::Vector3f::Right * 2.0f, NxFr::Vector3f::One * 3.0f)).Extents, NxFr::Vector3f(4.0f, 3.5f, 3.0f));
+
+		NxFr::Cuboid Cuboid = NxFr::Cuboid(NxFr::Vector3f::Zero, NxFr::Vector3f::One);
+		ASSERT_EQ(Cuboid.Translate(NxFr::Vector3f(0.0f, 1.0f)).Center, NxFr::Vector3f::Up);
+		ASSERT_EQ(Cuboid.Scale(NxFr::Vector3f::One * 2.0f).Extents, NxFr::Vector3f(2.0f));
+		ASSERT_EQ(Cuboid.Grow(NxFr::Vector3f::One).Extents, NxFr::Vector3f(3.0f));
+		ASSERT_EQ(Cuboid.Encapsulate(NxFr::Cuboid(NxFr::Vector3f::Right * 2.0f, NxFr::Vector3f::One * 3.0f)).Extents, NxFr::Vector3f(4.0f, 3.5f, 3.0f));
+		ASSERT_EQ(Cuboid.Rotate(NxFr::Euler(45.0f, 30.0f, 60.0)).Orientation, NxFr::Euler(45.0f, 30.0f, 60.0));
+
+		NxFr::Sphere Sphere = NxFr::Sphere(NxFr::Vector3f::Zero, 1.0f);
+		ASSERT_EQ(Sphere.Translate(NxFr::Vector3f(0.0f, 1.0f)).Center, NxFr::Vector3f::Up);
+		ASSERT_EQ(Sphere.Scale(2.0f).Radius, 2.0f);
+		ASSERT_EQ(Sphere.Grow(1.0f).Radius, 3.0f);
+		ASSERT_EQ(Sphere.GetDiameter(), 6.0f);
+		ASSERT_EQ(Sphere.Encapsulate(NxFr::Sphere(NxFr::Vector3f::Up * 4.0f, 3.0f)).Radius, 4.5f);
+
+		Ray = NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward);
+		Plane = NxFr::Plane(NxFr::Vector3f::Forward, 0.0f);
+		Triangle = NxFr::Triangle(NxFr::Vector3f(1.0f, 0.0f, 0.0f), NxFr::Vector3f(-1.0f, 0.0f, 0.0f), NxFr::Vector3f(0.0f, 1.0f, 0.0f));
+		Rectangle = NxFr::Rectangle(NxFr::Vector2f::Zero, NxFr::Vector2f::One);
+		Circle = NxFr::Circle(NxFr::Vector3f::Zero, 1.0f);
+		Box = NxFr::Box(NxFr::Vector3f::Zero, NxFr::Vector3f::One);
+		Cuboid = NxFr::Cuboid(NxFr::Vector3f::Zero, NxFr::Vector3f::One);
+		Sphere = NxFr::Sphere(NxFr::Vector3f::Zero, 1.0f);
+
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertRectangleToCircle(Rectangle), NxFr::Circle(NxFr::Math::Sqrt(2.0f)));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertCircleToRectangle(Circle), NxFr::Rectangle(NxFr::Vector2f::One));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertBoxToSphere(Box), NxFr::Sphere(NxFr::Math::Sqrt(3.0f)));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertCuboidToSphere(Cuboid), NxFr::Sphere(NxFr::Math::Sqrt(3.0f)));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertSphereToBox(Sphere), NxFr::Box(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertSphereToCuboid(Sphere), NxFr::Cuboid(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertBoxToCuboid(Box), NxFr::Cuboid(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::ShapeUtility::ConvertCuboidToBox(Cuboid), NxFr::Box(NxFr::Vector3f::One));
+
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Ray, 2.0f), NxFr::Vector3f::Forward * 2.0f);
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Plane, NxFr::Vector2f(0.5f, 0.5f)), NxFr::Vector3f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Triangle, NxFr::Vector2f(0.0f, 0.0f)), NxFr::Vector3f(0.0f, 1.0f, 0.0f));
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Rectangle, NxFr::Vector2f(0.5f, 0.5f)), NxFr::Vector2f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Circle, 0.25f), NxFr::Vector2f::Up);
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Box, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), NxFr::Vector3f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Cuboid, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), NxFr::Vector3f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Position(Sphere, NxFr::Vector2f(0.25f, 0.25f)), NxFr::Vector3f(0.0f, 1.0f, -1.0f).Normalized());
+
+		ASSERT_EQ(NxFr::ShapeUtility::Coordinates(Rectangle, NxFr::Vector2f::Zero), NxFr::Vector2f(0.5f, 0.5f));
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Coordinates(Circle, NxFr::Vector2f::Up), 0.25f), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Coordinates(Box,NxFr::Vector3f::Zero), NxFr::Vector3f(0.5f, 0.5f, 0.5f));
+		ASSERT_EQ(NxFr::ShapeUtility::Coordinates(Cuboid, NxFr::Vector3f::Zero), NxFr::Vector3f(0.5f, 0.5f, 0.5f));
+		ASSERT_EQ(NxFr::ShapeUtility::Coordinates(Sphere, NxFr::Vector3f(0.0f, 1.0f, -1.0f).Normalized()), NxFr::Vector2f(0.25f, 0.25f));
+
+		ASSERT_EQ(NxFr::ShapeUtility::Side(Ray, NxFr::Vector3f::Forward), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Side(Plane, NxFr::Vector3f::Forward), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Side(Triangle, NxFr::Vector3f::Forward), true);
+
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Ray, NxFr::Vector3f::Forward * 2.0f), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Plane, NxFr::Vector3f(0.5f, 0.5f, 0.0f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Triangle, NxFr::Vector3f(0.5f, 0.5f, 0.0f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Rectangle, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Circle, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Box, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Cuboid, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Contains(Sphere, NxFr::Vector3f(0.5f, 0.5f, 0.5f)), true);
+
+		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Rectangle, NxFr::Rectangle(NxFr::Vector2f::Right, NxFr::Vector2f::One)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Circle, NxFr::Circle(NxFr::Vector2f::Right, 1.0f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Box, NxFr::Box(NxFr::Vector3f::Right, NxFr::Vector3f::One)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Sphere, NxFr::Sphere(NxFr::Vector3f::Right, 1.0f)), true);
+
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Plane, Ray), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Triangle, Ray), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Triangle, NxFr::Plane(NxFr::Vector3f::Up, -0.5f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Box, Ray), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Box, Plane), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Cuboid, Ray), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Cuboid, Plane), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Sphere, Ray), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Sphere, Plane), true);
+
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Ray, NxFr::Vector3f::Up), NxFr::Vector3f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Plane, NxFr::Vector3f(0.0f, 0.0f, 1.0f)), NxFr::Vector3f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Triangle, NxFr::Vector3f(0.0f, 0.0f, 1.0f)), NxFr::Vector3f::Zero);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Rectangle, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), NxFr::Vector3f::Up);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Circle, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), NxFr::Vector3f::Up);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Box, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), NxFr::Vector3f::Up);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Cuboid, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), NxFr::Vector3f::Up);
+		ASSERT_EQ(NxFr::ShapeUtility::Closest(Sphere, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), NxFr::Vector3f::Up);
+
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Ray, NxFr::Vector3f::Up), 1.0f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Plane, NxFr::Vector3f(0.0f, 0.0f, 1.0f)), 1.0f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Triangle, NxFr::Vector3f(0.0f, 0.0f, 1.0f)), 1.0f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Rectangle, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Circle, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Box, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Cuboid, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
+		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Sphere, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
+	}
 }
