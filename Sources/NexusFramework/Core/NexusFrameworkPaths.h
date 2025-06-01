@@ -21,5 +21,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API extern Path Saved;
 
 		NEXUS_FRAMEWORK_API extern void SetupPathsAndFolders();
+		NEXUS_FRAMEWORK_API extern void CleanupFolders();
 	}
 }

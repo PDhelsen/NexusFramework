@@ -84,5 +84,7 @@ namespace NxFr
 		DestroyInstruments();
 		DestroyStats();
 		DestroyLogger();
+
+		Paths::CleanupFolders();
 	}
 }

@@ -19,6 +19,7 @@ namespace NxFr
 		Path Builds = Path("");
 		Path Cooked = Path("");
 		Path Saved = Path("");
+		Path Temp = Path("");
 
 		void SetupPathsAndFolders()
 		{
@@ -34,9 +35,16 @@ namespace NxFr
 			Builds = Root + "builds";
 			Cooked = Root + "cooked";
 			Saved = Root + "saved";
+			Temp = Root + "temp";
 
 			Directory(Paths::Cooked).Create();
 			Directory(Paths::Saved).Create();
+			Directory(Paths::Temp).Create();
+		}
+
+		void CleanupFolders()
+		{
+			Directory(Paths::Temp).Delete();
 		}
 	}
 }
