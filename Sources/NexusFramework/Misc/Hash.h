@@ -464,6 +464,38 @@ namespace NxFr
 		};
 
 		template<typename H>
+		class HashProcess<float, H>
+		{
+		public:
+			static void Accumulate(HashStrategy<H>& State, const float& Data)
+			{
+				State.Accumulate(&Data, sizeof(float));
+			}
+
+			static typename H::HashLength Hash(HashStrategy<H>& State, const float& Data)
+			{
+				HashProcess<float, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
+
+		template<typename H>
+		class HashProcess<double, H>
+		{
+		public:
+			static void Accumulate(HashStrategy<H>& State, const double& Data)
+			{
+				State.Accumulate(&Data, sizeof(double));
+			}
+
+			static typename H::HashLength Hash(HashStrategy<H>& State, const double& Data)
+			{
+				HashProcess<double, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
+
+		template<typename H>
 		class HashProcess<void*, H>
 		{
 		public:

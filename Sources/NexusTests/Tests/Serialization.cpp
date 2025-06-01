@@ -11,6 +11,14 @@ object:
   height: 720
   fullscreen: false
   title: Nexus
+vector: [1, 2, 3, 4]
+euler: [1, 2, 3]
+axisangle: [1, 0, 0, 0]
+quaternion: [1, 0, 0, 0]
+matrix: [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1]
+ray:
+  origin: [0, 0, 0]
+  direction: [0, 0, 1]
 array: [3, 5, 7, 11, 13]
 list: [Alice, Bob, Charlie]
 map: {id: data, key: value, first: second}
@@ -119,6 +127,19 @@ namespace NxTs
 		SerializationTest Object = Deserialize["object"].as<SerializationTest>();
 		ASSERT_EQ(Object, YamlTestReference);
 
+		NxFr::Vector4f Vector = Deserialize["vector"].as<NxFr::Vector4f>();
+		ASSERT_EQ(Vector, NxFr::Vector4f(1, 2, 3, 4));
+		NxFr::Euler Euler = Deserialize["euler"].as<NxFr::Euler>();
+		ASSERT_EQ(Euler, NxFr::Euler(1, 2, 3));
+		NxFr::AxisAngle AxisAngle = Deserialize["axisangle"].as<NxFr::AxisAngle>();
+		ASSERT_EQ(AxisAngle, NxFr::AxisAngle(NxFr::Vector3f::Zero, 1.0f));
+		NxFr::Quaternion Quaternion = Deserialize["quaternion"].as<NxFr::Quaternion>();
+		ASSERT_EQ(Quaternion, NxFr::Quaternion(0, 0, 0, 1));
+		NxFr::Matrix4x4f Matrix = Deserialize["matrix"].as<NxFr::Matrix4x4f>();
+		ASSERT_EQ(Matrix, NxFr::Matrix4x4f::Identity);
+		NxFr::Ray Ray = Deserialize["ray"].as<NxFr::Ray>();
+		ASSERT_EQ(Ray, NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward));
+
 		YAML::Node Array = Deserialize["array"];
 		ASSERT_EQ(Array[0].as<uint64>(), 3);
 		ASSERT_EQ(Array[2].as<uint64>(), 7);
@@ -174,6 +195,12 @@ namespace NxTs
 		Serialize["version"] = Version;
 		Serialize["value"] = Value;
 		Serialize["object"] = Object;
+		Serialize["vector"] = Vector;
+		Serialize["euler"] = Euler;
+		Serialize["axisangle"] = AxisAngle;
+		Serialize["quaternion"] = Quaternion;
+		Serialize["matrix"] = Matrix;
+		Serialize["ray"] = Ray;
 		Serialize["array"] = ArrayValue;
 		Serialize["list"] = ListValue;
 		Serialize["map"] = MapValue;
@@ -192,6 +219,12 @@ namespace NxTs
 		Emitter << YAML::Key << "version" << YAML::Value << Version;
 		Emitter << YAML::Key << "value" << YAML::Value << Value;
 		Emitter << YAML::Key << "object" << YAML::Value << Object;
+		Emitter << YAML::Key << "vector" << YAML::Value << Vector;
+		Emitter << YAML::Key << "euler" << YAML::Value << Euler;
+		Emitter << YAML::Key << "axisangle" << YAML::Value << AxisAngle;
+		Emitter << YAML::Key << "quaternion" << YAML::Value << Quaternion;
+		Emitter << YAML::Key << "matrix" << YAML::Value << Matrix;
+		Emitter << YAML::Key << "ray" << YAML::Value << Ray;
 		Emitter << YAML::Key << "array" << YAML::Value << ArrayValue;
 		Emitter << YAML::Key << "list" << YAML::Value << ListValue;
 		Emitter << YAML::Key << "map" << YAML::Value << MapValue;
@@ -209,6 +242,13 @@ namespace NxTs
 		NxFr::String StringTest = "StringTest";
 		NxFr::String StringViewTest = "StringViewTest";
 		NxFr::StringId StringIdTest = "StringIdTest"_Sid;
+
+		NxFr::Vector4f Vector = NxFr::Vector4f(1, 2, 3, 4);
+		NxFr::Euler Euler = NxFr::Euler();
+		NxFr::AxisAngle AxisAngle = NxFr::AxisAngle();
+		NxFr::Quaternion Quaternion = NxFr::Quaternion::Identity;
+		NxFr::Matrix4x4f Matrix = NxFr::Matrix4x4f::Identity;
+		NxFr::Ray Ray = NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward);
 
 		NxFr::Array<NxFr::String> Array = NxFr::Array<NxFr::String>(5);
 		Array[0] = "First";
@@ -234,6 +274,12 @@ namespace NxTs
 		RbsSerialization.WriteObject(StringTest);
 		RbsSerialization.WriteObject(StringViewTest);
 		RbsSerialization.WriteObject(StringIdTest);
+		RbsSerialization.WriteObject(Vector);
+		RbsSerialization.WriteObject(Euler);
+		RbsSerialization.WriteObject(AxisAngle);
+		RbsSerialization.WriteObject(Quaternion);
+		RbsSerialization.WriteObject(Matrix);
+		RbsSerialization.WriteObject(Ray);
 		RbsSerialization.WriteObject(YamlTestReference);
 		RbsSerialization.WriteObject(Array);
 		RbsSerialization.WriteObject(List);
@@ -249,6 +295,12 @@ namespace NxTs
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::String>(), StringTest);
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::StringView>(), StringViewTest);
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::StringId>(), StringIdTest);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Vector4f>(), Vector);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Euler>(), Euler);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::AxisAngle>(), AxisAngle);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Quaternion>(), Quaternion);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Matrix4x4f>(), Matrix);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Ray>(), Ray);
 		ASSERT_EQ(RbsDeserialization.ReadObject<SerializationTest>(), YamlTestReference);
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Array<NxFr::String>>()[4], "Fifth");
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::List<NxFr::String>>()[4], "Fifth");

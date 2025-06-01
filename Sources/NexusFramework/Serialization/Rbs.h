@@ -10,6 +10,10 @@
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Set.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Math/Vector.h"
+#include "NexusFramework/Math/Rotation.h"
+#include "NexusFramework/Math/Matrix.h"
+#include "NexusFramework/Math/Shape.h"
 
 namespace NxFr
 {
@@ -314,6 +318,262 @@ namespace NxFr
 				Rbs.WriteObject(It.Key);
 				Rbs.WriteObject(It.Value);
 			}
+		}
+	};
+
+	template<uint8 D, typename T>
+	struct RBSConverter<Vector<D, T>>
+	{
+		static Vector<D, T> Decode(RBS& Rbs)
+		{
+			Vector<D, T> Result;
+			for (uint8 I = 0; I < D; ++I)
+			{
+				Result[I] = Rbs.ReadObject<T>();
+			}
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Vector<D, T>& Object)
+		{
+			for (uint8 I = 0; I < D; ++I)
+			{
+				Rbs.WriteObject(Object[I]);
+			}
+		}
+	};
+
+	template<>
+	struct RBSConverter<Euler>
+	{
+		static Euler Decode(RBS& Rbs)
+		{
+			Euler Result;
+			Result.x = Rbs.ReadObject<float>();
+			Result.y = Rbs.ReadObject<float>();
+			Result.z = Rbs.ReadObject<float>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Euler& Object)
+		{
+			Rbs.WriteObject(Object.x);
+			Rbs.WriteObject(Object.y);
+			Rbs.WriteObject(Object.z);
+		}
+	};
+
+	template<>
+	struct RBSConverter<AxisAngle>
+	{
+		static AxisAngle Decode(RBS& Rbs)
+		{
+			AxisAngle Result;
+			Result.Angle = Rbs.ReadObject<float>();
+			Result.Axis.x = Rbs.ReadObject<float>();
+			Result.Axis.y = Rbs.ReadObject<float>();
+			Result.Axis.z = Rbs.ReadObject<float>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const AxisAngle& Object)
+		{
+			Rbs.WriteObject(Object.Angle);
+			Rbs.WriteObject(Object.Axis.x);
+			Rbs.WriteObject(Object.Axis.y);
+			Rbs.WriteObject(Object.Axis.z);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Quaternion>
+	{
+		static Quaternion Decode(RBS& Rbs)
+		{
+			Quaternion Result;
+			Result.w = Rbs.ReadObject<float>();
+			Result.x = Rbs.ReadObject<float>();
+			Result.y = Rbs.ReadObject<float>();
+			Result.z = Rbs.ReadObject<float>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Quaternion& Object)
+		{
+			Rbs.WriteObject(Object.w);
+			Rbs.WriteObject(Object.x);
+			Rbs.WriteObject(Object.y);
+			Rbs.WriteObject(Object.z);
+		}
+	};
+
+	template<uint8 R, uint8 C, typename T>
+	struct RBSConverter<Matrix<R, C, T>>
+	{
+		static Matrix<R, C, T> Decode(RBS& Rbs)
+		{
+			Matrix<R, C, T> Result;
+			for (uint8 I = 0; I < Matrix<R, C, T>::Count; ++I)
+			{
+				Result[I] = Rbs.ReadObject<T>();
+			}
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Matrix<R, C, T>& Object)
+		{
+			for (uint8 I = 0; I < Matrix<R, C, T>::Count; ++I)
+			{
+				Rbs.WriteObject(Object[I]);
+			}
+		}
+	};
+
+	template<>
+	struct RBSConverter<Ray>
+	{
+		static Ray Decode(RBS& Rbs)
+		{
+			Ray Result;
+			Result.Origin = Rbs.ReadObject<Vector3f>();
+			Result.Direction = Rbs.ReadObject<Vector3f>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Ray& Object)
+		{
+			Rbs.WriteObject(Object.Origin);
+			Rbs.WriteObject(Object.Direction);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Plane>
+	{
+		static Plane Decode(RBS& Rbs)
+		{
+			Plane Result;
+			Result.Normal = Rbs.ReadObject<Vector3f>();
+			Result.Distance = Rbs.ReadObject<float>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Plane& Object)
+		{
+			Rbs.WriteObject(Object.Normal);
+			Rbs.WriteObject(Object.Distance);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Triangle>
+	{
+		static Triangle Decode(RBS& Rbs)
+		{
+			Triangle Result;
+			Result.A = Rbs.ReadObject<Vector3f>();
+			Result.B = Rbs.ReadObject<Vector3f>();
+			Result.C = Rbs.ReadObject<Vector3f>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Triangle& Object)
+		{
+			Rbs.WriteObject(Object.A);
+			Rbs.WriteObject(Object.B);
+			Rbs.WriteObject(Object.C);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Rectangle>
+	{
+		static Rectangle Decode(RBS& Rbs)
+		{
+			Rectangle Result;
+			Result.Center = Rbs.ReadObject<Vector2f>();
+			Result.Extents = Rbs.ReadObject<Vector2f>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Rectangle& Object)
+		{
+			Rbs.WriteObject(Object.Center);
+			Rbs.WriteObject(Object.Extents);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Circle>
+	{
+		static Circle Decode(RBS& Rbs)
+		{
+			Circle Result;
+			Result.Center = Rbs.ReadObject<Vector2f>();
+			Result.Radius = Rbs.ReadObject<float>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Circle& Object)
+		{
+			Rbs.WriteObject(Object.Center);
+			Rbs.WriteObject(Object.Radius);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Box>
+	{
+		static Box Decode(RBS& Rbs)
+		{
+			Box Result;
+			Result.Center = Rbs.ReadObject<Vector3f>();
+			Result.Extents = Rbs.ReadObject<Vector3f>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Box& Object)
+		{
+			Rbs.WriteObject(Object.Center);
+			Rbs.WriteObject(Object.Extents);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Cuboid>
+	{
+		static Cuboid Decode(RBS& Rbs)
+		{
+			Cuboid Result;
+			Result.Center = Rbs.ReadObject<Vector3f>();
+			Result.Orientation = Rbs.ReadObject<Quaternion>();
+			Result.Extents = Rbs.ReadObject<Vector3f>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Cuboid& Object)
+		{
+			Rbs.WriteObject(Object.Center);
+			Rbs.WriteObject(Object.Orientation);
+			Rbs.WriteObject(Object.Extents);
+		}
+	};
+
+	template<>
+	struct RBSConverter<Sphere>
+	{
+		static Sphere Decode(RBS& Rbs)
+		{
+			Sphere Result;
+			Result.Center = Rbs.ReadObject<Vector3f>();
+			Result.Radius = Rbs.ReadObject<float>();
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Sphere& Object)
+		{
+			Rbs.WriteObject(Object.Center);
+			Rbs.WriteObject(Object.Radius);
 		}
 	};
 

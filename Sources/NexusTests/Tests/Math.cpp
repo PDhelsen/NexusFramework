@@ -457,4 +457,22 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Cuboid, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
 		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Sphere, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
 	}
+
+	TEST(Math, Hash)
+	{
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Vector3f()), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Euler()), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::AxisAngle()), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Quaternion()), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Matrix4x4f()), 0);
+
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Plane(NxFr::Vector3f::Forward, 0.0f)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Triangle(NxFr::Vector3f::Right, NxFr::Vector3f::Up, NxFr::Vector3f::Forward)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Rectangle(NxFr::Vector2f::Zero, NxFr::Vector2f::One)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Circle(NxFr::Vector2f::Zero, 1.0f)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Box(NxFr::Vector3f::Zero, NxFr::Vector3f::One)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Cuboid(NxFr::Vector3f::Zero, NxFr::Vector3f::One)), 0);
+		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Sphere(NxFr::Vector3f::Zero, 1.0f)), 0);
+	}
 }
