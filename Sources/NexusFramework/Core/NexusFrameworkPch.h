@@ -9,6 +9,7 @@
 #include "NexusFramework/Types/Strings/StringCApi.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 #include "NexusFramework/Types/Strings/StringTemplate.h"
+#include "NexusFramework/Types/Strings/StringHash.h"
 #include "NexusFramework/Types/Containers/Node.h"
 #include "NexusFramework/Types/Containers/Iterator.h"
 #include "NexusFramework/Types/Containers/Array.h"

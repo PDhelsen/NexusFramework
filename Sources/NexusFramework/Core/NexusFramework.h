@@ -9,6 +9,8 @@
 #include "NexusFramework/Types/Strings/StringCApi.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 #include "NexusFramework/Types/Strings/StringTemplate.h"
+#include "NexusFramework/Types/Strings/StringHash.h"
+#include "NexusFramework/Types/Strings/StringSerialization.h"
 #include "NexusFramework/Types/Containers/Node.h"
 #include "NexusFramework/Types/Containers/Iterator.h"
 #include "NexusFramework/Types/Containers/Array.h"
@@ -26,6 +28,7 @@
 #include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Types/Containers/Tuple.h"
 #include "NexusFramework/Types/Containers/ContainersUtils.h"
+#include "NexusFramework/Types/Containers/Serialization.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Functions/Event.h"
 
@@ -49,6 +52,8 @@
 #include "NexusFramework/Math/Rotation.h"
 #include "NexusFramework/Math/Matrix.h"
 #include "NexusFramework/Math/Shape.h"
+#include "NexusFramework/Math/Hash.h"
+#include "NexusFramework/Math/Serialization.h"
 
 #include "NexusFramework/Time/Timestamp.h"
 #include "NexusFramework/Time/Timespan.h"

@@ -645,30 +645,4 @@ namespace NxFr
 	}
 
 #pragma endregion
-
-#pragma region Hashing
-
-	namespace Hashing
-	{
-		template<uint8 R, uint8 C, typename T, typename H>
-		class HashProcess<Matrix<R, C, T>, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const Matrix<R, C, T>& Data)
-			{
-				for (uint8 I = 0; I < Matrix<R, C, T>::Count; ++I)
-				{
-					HashProcess<T, H>::Accumulate(State, Data[I]);
-				}
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const Matrix<R, C, T>& Data)
-			{
-				HashProcess<Matrix<R, C, T>, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-	}
-
-#pragma endregion
 }

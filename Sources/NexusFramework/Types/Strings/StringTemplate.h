@@ -1,6 +1,5 @@
 #pragma once
 
-#include "NexusFramework/Misc/Hash.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 #include "NexusFramework/Types/Strings/StringCApi.h"
@@ -65,71 +64,5 @@ namespace NxFr
 	static uint64 StringUtility::Scan(StringView Text, StringView Format, Args&&... args)
 	{
 		return StringCApi::Scan(Text.C(), Format.C(), args...);
-	}
-
-	namespace Hashing
-	{
-		template<typename H>
-		class HashProcess<const char*, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const char* Data)
-			{
-				State.Accumulate(Data, StringCApi::Length(Data));
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const char* Data)
-			{
-				HashProcess<const char*, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-
-		template<typename H>
-		class HashProcess<String, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const String& Data)
-			{
-				State.Accumulate(Data.C(), Data.GetCount());
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const String& Data)
-			{
-				HashProcess<String, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-
-		template<typename H>
-		class HashProcess<StringView, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const StringView& Data)
-			{
-				State.Accumulate(Data.C(), Data.GetCount());
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const StringView& Data)
-			{
-				HashProcess<StringView, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-
-		template<typename H>
-		class HashProcess<StringId, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const StringId& Data)
-			{
-				State.Accumulate(Data.C(), StringCApi::Length(Data.C()));
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const StringId& Data)
-			{
-				return Data.GetId();
-			}
-		};
 	}
 }
