@@ -15,7 +15,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API StringView GetValue(uint64 Index, StringView Default = "");
 		NEXUS_FRAMEWORK_API StringView GetValue(StringView Key, StringView Default = "");
-		NEXUS_FRAMEWORK_API bool HasFlag(StringView Key, bool Default = false);
+		NEXUS_FRAMEWORK_API bool HasFlag(StringView Key);
 
 		NEXUS_FRAMEWORK_API Dictionary<StringView, StringView>::I Begin();
 		NEXUS_FRAMEWORK_API Dictionary<StringView, StringView>::I End();

@@ -24,7 +24,8 @@ namespace NxFr
 		bool IsPaused() const { return Paused; }
 
 	private:
-		inline double Now() const;
+		static inline double Convert(double Time, double Unit = 1.0);
+		static inline double Now();
 
 		double StartTimer;
 		double ElapsedTime;

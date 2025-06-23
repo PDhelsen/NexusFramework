@@ -111,38 +111,37 @@ namespace NxFr
 			return GetElapsedTime(Unit);
 		}
 
-		return (Now() - StartTimer) * Unit;
+		return Convert(Now() - StartTimer, Unit);
 	}
 
 	double Stopwatch::GetStartTime(double Unit) const
 	{
-		if (StartTimer == 0.0)
+		if (!Started)
 		{
 			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
 			return 0.0;
 		}
 
-		return StartTimer * Unit;
+		return Convert(StartTimer, Unit);
 	}
 
 	double Stopwatch::GetElapsedTime(double Unit) const
 	{
-		if (ElapsedTime == 0.0)
-		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
-			return 0.0;
-		}
-
 		if (Started)
 		{
 			NEXUS_LOG(Error, Default, "Stopwatch is running");
 			return 0.0;
 		}
 
-		return ElapsedTime * Unit;
+		return Convert(ElapsedTime, Unit);
 	}
 
-	double Stopwatch::Now() const
+	double Stopwatch::Convert(double Time, double Unit)
+	{
+		return Time * Unit;
+	}
+
+	double Stopwatch::Now()
 	{
 		return Platform::GetInstance()->GetProcessorTimer();
 	}

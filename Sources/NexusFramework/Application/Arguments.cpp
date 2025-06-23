@@ -58,11 +58,10 @@ namespace NxFr
 			return Contain != nullptr ? *Contain : Default;
 		}
 
-		bool HasFlag(StringView Key, bool Default)
+		bool HasFlag(StringView Key)
 		{
 			Dictionary<StringView, StringView>& Args = GetArgsProcessed();
-			bool Contain = Args.ContainsKey(Key);
-			return Contain ? true : Default;
+			return Args.ContainsKey(Key);
 		}
 
 		Dictionary<StringView, StringView>::I Begin()
