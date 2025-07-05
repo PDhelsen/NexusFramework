@@ -135,6 +135,13 @@ namespace NxFr
 		}
 
 		template<typename... Args>
+		KeyValuePair(const K& Key, Args&&... args)
+			: Key(Key), Value(args...)
+		{
+
+		}
+
+		template<typename... Args>
 		KeyValuePair(K&& Key, Args&&... args)
 			: Key(Move(Key)), Value(args...)
 		{
