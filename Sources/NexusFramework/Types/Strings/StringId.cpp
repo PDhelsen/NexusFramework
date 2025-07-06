@@ -9,7 +9,7 @@ namespace NxFr
 	{
 		Dictionary<GUID, String>& StringsTable = GetStringsTable();
 
-		GUID Id = Hash<>::HashObject(Text);
+		GUID Id = !Text.IsEmpty() ? Hash<>::HashObject(Text) : 0;
 		if (!StringsTable.ContainsKey(Id))
 		{
 			StringsTable.Append(Move(Id), Move(Text.ToString()));
@@ -19,6 +19,11 @@ namespace NxFr
 
 	StringId::StringId()
 		: Id(0)
+	{
+	}
+
+	StringId::StringId(GUID Id)
+		: Id(Id)
 	{
 	}
 
@@ -55,13 +60,13 @@ namespace NxFr
 	const String& StringId::ToString() const
 	{
 		Dictionary<GUID, String>& StringsTable = GetStringsTable();
-		return StringsTable[Id];
+		String* Value = StringsTable.TryGet(Id);
+		return Value != nullptr ? *Value : Unknown;
 	}
 
 	const char* StringId::C() const
 	{
-		Dictionary<GUID, String>& StringsTable = GetStringsTable();
-		return StringsTable[Id].C();
+		return ToString().C();
 	}
 
 	const GUID StringId::GetId() const

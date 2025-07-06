@@ -121,6 +121,10 @@ namespace NxTs
 		ASSERT_EQ(Id.GetId(), 0x3D58DEE72D4E0C27);
 
 		Test3 = Test2;
+
+		NxFr::StringId Test4 = 0;
+		ASSERT_EQ(Test4.C(), NxFr::StringId::Unknown);
+		ASSERT_EQ(Test4.GetId(), 0);
 	}
 
 	TEST(String, Utility)
