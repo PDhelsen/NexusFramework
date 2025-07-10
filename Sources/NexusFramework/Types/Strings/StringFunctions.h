@@ -8,6 +8,8 @@
 
 namespace NxFr
 {
+	template <typename T> class Collection;
+
 	class StringUtility
 	{
 	public:
@@ -51,6 +53,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
 		NEXUS_FRAMEWORK_API static StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
 		NEXUS_FRAMEWORK_API static List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API static String Replace(StringView Text, StringView Old, StringView New);
+		NEXUS_FRAMEWORK_API static String Join(const Collection<StringView>& Text, StringView Separator = "");
 
 		NEXUS_FRAMEWORK_API static  int64 ToInteger(StringView Text, int32 Radix = 10);
 		NEXUS_FRAMEWORK_API static uint64 ToUnsignedInteger(StringView Text, int32 Radix = 10);

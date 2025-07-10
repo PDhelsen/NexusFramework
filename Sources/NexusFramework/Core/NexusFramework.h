@@ -67,6 +67,7 @@
 
 #include "NexusFramework/Serialization/Rbs.h"
 #include "NexusFramework/Serialization/Yaml.h"
+#include "NexusFramework/Serialization/Csv.h"
 
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"

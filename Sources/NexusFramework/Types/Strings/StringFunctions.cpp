@@ -62,6 +62,25 @@ namespace NxFr
 		return Results;
 	}
 
+	String StringUtility::Replace(StringView Text, StringView Old, StringView New)
+	{
+		return Text.ToString().Replace(Old, New);
+	}
+
+	String StringUtility::Join(const Collection<StringView>& Text, StringView Separator)
+	{
+		String Result;
+		for (auto& It = Text.Reset(); It != Text.End(); ++It)
+		{
+			Result += *It;
+			if (!Separator.IsEmpty())
+			{
+				Result += Separator;
+			}
+		}
+		return Result;
+	}
+
 	int64 StringUtility::ToInteger(StringView Text, int32 Radix)
 	{
 		return StringCApi::ToInteger(Text.C());

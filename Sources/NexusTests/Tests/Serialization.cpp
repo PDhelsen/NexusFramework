@@ -2,7 +2,7 @@
 
 namespace NxTs
 {
-	NxFr::String Data = R"(name: NexusProject
+	NxFr::String YamlData = R"(name: NexusProject
 enabled: true
 version: 2
 value: 3.14
@@ -114,7 +114,7 @@ namespace NxTs
 {
 	TEST(Serialization, Yaml)
 	{
-		YAML::Node Deserialize = NxFr::Yaml::Deserialize(Data);
+		YAML::Node Deserialize = NxFr::Yaml::Deserialize(YamlData);
 
 		NxFr::String Name = Deserialize["name"].as<NxFr::String>();
 		ASSERT_EQ(Name, "NexusProject");
@@ -209,7 +209,7 @@ namespace NxTs
 		Serialize["empty_map"] = NxFr::Dictionary<uint64, uint64>();
 
 		NxFr::String Output = NxFr::Yaml::Serialize(Serialize);
-		ASSERT_EQ(Output, Data);
+		ASSERT_EQ(Output, YamlData);
 
 
 		YAML::Emitter Emitter;
@@ -233,7 +233,7 @@ namespace NxTs
 		Emitter << YAML::Key << "empty_map" << YAML::Value << NxFr::Dictionary<uint64, uint64>();
 
 		NxFr::String Emitted = NxFr::Yaml::Serialize(Serialize);
-		ASSERT_EQ(Emitted, Data);
+		ASSERT_EQ(Emitted, YamlData);
 	}
 
 	TEST(Serialization, Rbs)
@@ -307,5 +307,42 @@ namespace NxTs
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Set<NxFr::String>>().Contains("Fifth"), true);
 		auto Dict = RbsDeserialization.ReadObject<NxFr::Dictionary<NxFr::String, uint64>>();
 		ASSERT_EQ(Dict["Fifth"], 5);
+	}
+
+	TEST(Serialization, Csv)
+	{
+		auto Path = NxFr::Path::GetWorkingDirectory() + "Csv.csv";
+
+		NxFr::Csv Csv(Path);
+
+		Csv.SetHeader("Header1;Header2;Header3");
+		Csv.SetData("Data11;Data12;Data13");
+		Csv.AppendSeparator();
+		Csv.AppendNewLine();
+		Csv.AppendData("Data21;Data22;Data23");
+		Csv.AppendSeparator();
+		Csv.AppendNewLine();
+		Csv.AppendData("Data31;Data32;Data33");
+		Csv.AppendSeparator();
+		Csv.AppendNewLine();
+
+		ASSERT_EQ(Csv.GetHeader(), "Header1;Header2;Header3");
+		ASSERT_EQ(Csv.GetData(), "Data11;Data12;Data13;\nData21;Data22;Data23;\nData31;Data32;Data33;\n");
+
+		Csv.SetHeader(1, "Header4");
+		ASSERT_EQ(Csv.GetHeader(1), "Header4");
+		Csv.SetData(1, 1, "Data44");
+		ASSERT_EQ(Csv.GetData(1, 1), "Data44");
+
+		Csv.WriteFile(true);
+
+		Csv.AppendLine("Data41;Data42;Data43");
+		Csv.AppendFile();
+
+		Csv.ReadFile();
+		ASSERT_EQ(Csv.GetLinesCount(), 4);
+		ASSERT_EQ(Csv.GetCellsCount(), 12);
+
+		NxFr::File(Path).Delete();
 	}
 }
