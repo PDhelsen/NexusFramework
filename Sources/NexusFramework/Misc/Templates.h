@@ -95,4 +95,23 @@ namespace NxFr
 	{
 		static const bool Value = true;
 	};
+
+	template<uint64... Indices>
+	struct IndexSequence
+	{
+	};
+
+	template<uint64 N, uint64... Indices>
+	struct MakeIndexSequenceHelper : MakeIndexSequenceHelper<N - 1, N - 1, Indices...>
+	{
+	};
+
+	template<uint64... Indices>
+	struct MakeIndexSequenceHelper<0, Indices...>
+	{
+		using Type = IndexSequence<Indices...>;
+	};
+
+	template<uint64 N>
+	using MakeIndexSequence = typename MakeIndexSequenceHelper<N>::Type;
 }
