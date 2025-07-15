@@ -249,6 +249,64 @@ namespace NxFr
 			return GetItem(Index).Value;
 		}
 
+		T& AppendOrAssign(const K& Key, const T& Value)
+		{
+			uint64 Hash = GetHash(Key);
+			uint64 Index = GetIndexRead(Hash);
+			if (Index != Capacity)
+			{
+				N& Instance = Data[Index];
+				Instance.Value.Value = Value;
+				return Instance.Value.Value;
+			}
+			else
+			{
+				Resize(++Count);
+				Index = GetIndexWrite(Hash);
+				Construct(Index, Hash, Key, Value);
+				return GetItem(Index).Value;
+			}
+		}
+
+		T& AppendOrAssign(K&& Key, T&& Value)
+		{
+			uint64 Hash = GetHash(Key);
+			uint64 Index = GetIndexRead(Hash);
+			if (Index != Capacity)
+			{
+				N& Instance = Data[Index];
+				Instance.Value.Value = Move(Value);
+				return Instance.Value.Value;
+			}
+			else
+			{
+				Resize(++Count);
+				Index = GetIndexWrite(Hash);
+				Construct(Index, Hash, Move(Key), Move(Value));
+				return GetItem(Index).Value;
+			}
+		}
+
+		template<typename... Args>
+		T& AppendOrAssignConstruct(K&& Key, Args&&... args)
+		{
+			uint64 Hash = GetHash(Key);
+			uint64 Index = GetIndexRead(Hash);
+			if (Index != Capacity)
+			{
+				N& Instance = Data[Index];
+				Memory::Construct<T>(&Instance.Value.Value, args...);
+				return Instance.Value.Value;
+			}
+			else
+			{
+				Resize(++Count);
+				Index = GetIndexWrite(Hash);
+				Construct(Index, Hash, Move(Key), args...);
+				return GetItem(Index).Value;
+			}
+		}
+
 		void Remove(const K& Key)
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
