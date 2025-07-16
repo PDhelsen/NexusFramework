@@ -60,7 +60,7 @@ namespace NxFr
 
 		Dictionary<K, T, H>& operator=(const Dictionary<K, T, H>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -87,7 +87,7 @@ namespace NxFr
 
 		Dictionary<K, T, H>& operator=(Dictionary<K, T, H>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

@@ -49,7 +49,7 @@ namespace NxFr
 
 		LinkedList<T>& operator=(const LinkedList<T>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -68,7 +68,7 @@ namespace NxFr
 
 		LinkedList<T>& operator=(LinkedList<T>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

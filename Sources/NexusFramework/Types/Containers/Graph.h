@@ -70,7 +70,7 @@ namespace NxFr
 
 		Graph<T>& operator=(const Graph<T>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -109,7 +109,7 @@ namespace NxFr
 
 		Graph<T>& operator=(Graph<T>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

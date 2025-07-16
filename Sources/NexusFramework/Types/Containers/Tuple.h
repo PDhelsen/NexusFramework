@@ -35,7 +35,7 @@ namespace NxFr
 
 		Tuple<T1, T2>& operator=(const Tuple<T1, T2>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -48,7 +48,7 @@ namespace NxFr
 
 		Tuple<T1, T2>& operator=(Tuple<T1, T2>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

@@ -48,8 +48,7 @@ namespace NxFr
 		Stack(Stack<T, BS>&& Other) noexcept
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(Other.Data)
 		{
-			Other.Capacity = 0;
-			Other.Count = 0;
+			Other.ValidateDefaultState();
 			Other.Data = nullptr;
 		}
 
@@ -60,7 +59,7 @@ namespace NxFr
 
 		Stack<T, BS>& operator=(const Stack<T, BS>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -93,7 +92,7 @@ namespace NxFr
 
 		Stack<T, BS>& operator=(Stack<T, BS>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -106,8 +105,7 @@ namespace NxFr
 			IndexLast = Other.IndexLast;
 			Data = Other.Data;
 
-			Other.Capacity = 0;
-			Other.Count = 0;
+			Other.ValidateDefaultState();
 			Other.Data = nullptr;
 
 			return *this;

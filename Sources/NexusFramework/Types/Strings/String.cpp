@@ -74,7 +74,7 @@ namespace NxFr
 
 	String& String::operator=(const String& Other)
 	{
-		if (*this == Other)
+		if (this == &Other)
 		{
 			return *this;
 		}
@@ -86,7 +86,7 @@ namespace NxFr
 
 	String& String::operator=(String&& Other) noexcept
 	{
-		if (*this == Other)
+		if (this == &Other)
 		{
 			return *this;
 		}

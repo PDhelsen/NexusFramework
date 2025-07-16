@@ -17,7 +17,7 @@ namespace NxFr
 
 	void Allocator::DecreaseAmount(uint64 Delta)
 	{
-		NEXUS_ASSERT(Amount > Delta, Default, "Invalid delta");
+		NEXUS_ASSERT(Amount >= Delta, Default, "Invalid delta");
 
 		Amount -= Delta;
 	}

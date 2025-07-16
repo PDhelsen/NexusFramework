@@ -43,7 +43,7 @@ namespace NxFr
 
 		Tree<T>& operator=(const Tree<T>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -57,7 +57,7 @@ namespace NxFr
 
 		Tree<T>& operator=(Tree<T>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

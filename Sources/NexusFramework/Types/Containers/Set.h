@@ -60,7 +60,7 @@ namespace NxFr
 
 		Set<T, H>& operator=(const Set<T, H>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -87,7 +87,7 @@ namespace NxFr
 
 		Set<T, H>& operator=(Set<T, H>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

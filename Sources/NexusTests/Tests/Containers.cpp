@@ -54,6 +54,11 @@ namespace NxTs
 
 		ContainerTest& operator=(const ContainerTest& Other)
 		{
+			if (this == &Other)
+			{
+				return *this;
+			}
+
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;
@@ -63,6 +68,11 @@ namespace NxTs
 
 		ContainerTest& operator=(ContainerTest&& Other) noexcept
 		{
+			if (this == &Other)
+			{
+				return *this;
+			}
+
 			Integer = Other.Integer;
 			Float = Other.Float;
 			Boolean = Other.Boolean;

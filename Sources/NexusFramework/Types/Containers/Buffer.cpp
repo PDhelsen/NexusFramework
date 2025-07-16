@@ -29,7 +29,7 @@ namespace NxFr
 
 	Buffer& Buffer::operator=(const Buffer& Other)
 	{
-		if (*this == Other)
+		if (this == &Other)
 		{
 			return *this;
 		}
@@ -46,7 +46,7 @@ namespace NxFr
 
 	Buffer& Buffer::operator=(Buffer&& Other) noexcept
 	{
-		if (*this == Other)
+		if (this == &Other)
 		{
 			return *this;
 		}

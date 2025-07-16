@@ -61,7 +61,7 @@ namespace NxFr
 
 		Dequeue<T, BS>& operator=(const Dequeue<T, BS>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -95,7 +95,7 @@ namespace NxFr
 
 		Dequeue<T, BS>& operator=(Dequeue<T, BS>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

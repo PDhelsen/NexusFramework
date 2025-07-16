@@ -79,7 +79,7 @@ namespace NxFr
 
 		Array<T, L>& operator=(const Array<T, L>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -100,7 +100,7 @@ namespace NxFr
 
 		Array<T, L>& operator=(Array<T, L>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

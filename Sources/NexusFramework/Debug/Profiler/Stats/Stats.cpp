@@ -108,6 +108,11 @@ namespace NxFr
 
 	Stats::Stat& Stats::Stat::operator=(const Stat& Other)
 	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
 		Type = Other.Type;
 		Mode = Other.Mode;
 		Tick = Other.Tick;
@@ -127,6 +132,11 @@ namespace NxFr
 
 	Stats::Stat& Stats::Stat::operator=(Stat&& Other) noexcept
 	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
 		Type = Other.Type;
 		Mode = Other.Mode;
 		Tick = Other.Tick;

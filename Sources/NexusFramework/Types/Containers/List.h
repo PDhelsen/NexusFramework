@@ -52,7 +52,7 @@ namespace NxFr
 
 		List<T>& operator=(const List<T>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -74,7 +74,7 @@ namespace NxFr
 
 		List<T>& operator=(List<T>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}

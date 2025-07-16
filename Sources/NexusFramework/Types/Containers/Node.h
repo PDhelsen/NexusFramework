@@ -160,7 +160,7 @@ namespace NxFr
 
 		KeyValuePair<K, T>& operator=(const KeyValuePair<K, T>& Other)
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
@@ -173,7 +173,7 @@ namespace NxFr
 
 		KeyValuePair<K, T>& operator=(KeyValuePair<K, T>&& Other) noexcept
 		{
-			if (*this == Other)
+			if (this == &Other)
 			{
 				return *this;
 			}
