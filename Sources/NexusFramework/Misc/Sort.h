@@ -20,7 +20,14 @@ namespace NxFr
 			template<typename T>
 			static bool Compare(const T& A, const T& B, CompareFunction<T> Comparison = nullptr)
 			{
-				return Comparison != nullptr ? Comparison(A, B) : A <= B;
+				return Comparison != nullptr ? Comparison(A, B) : CompareDefault(A, B);
+			}
+
+		private:
+			template<typename T>
+			static bool CompareDefault(const T& A, const T& B)
+			{
+				return A <= B;
 			}
 		};
 
@@ -321,6 +328,11 @@ namespace NxFr
 		template<typename T, typename S = Sorting::DefaultIndexBased, typename C>
 		static void SortIndexBased(C& Data, uint64 Count, Sorting::CompareFunction<T> Comparison = nullptr)
 		{
+			if (Count <= 1)
+			{
+				return;
+			}
+
 			S::SortIndexBased(Data, Count, Comparison);
 		}
 
