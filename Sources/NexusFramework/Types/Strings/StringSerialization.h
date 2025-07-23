@@ -108,12 +108,6 @@ namespace YAML
 		{
 			return Node(rhs.C());
 		}
-
-		static bool decode(const Node& node, NxFr::StringView& rhs)
-		{
-			rhs = node.as<std::string>().c_str();
-			return true;
-		}
 	};
 
 	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringView& rhs)
@@ -137,7 +131,7 @@ namespace YAML
 				return false;
 			}
 
-			rhs = NxFr::StringId(node.as<NxFr::StringView>());
+			rhs = NxFr::StringId(node.as<NxFr::String>());
 			return true;
 		}
 	};

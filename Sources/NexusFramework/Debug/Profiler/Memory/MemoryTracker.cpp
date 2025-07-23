@@ -50,7 +50,7 @@ namespace NxFr
 		NEXUS_ASSERT(Amount < Integer::MaxUI64 - Size, Default, "Allocation Amount will overflow");
 		NEXUS_ASSERT(Count < Integer::MaxUI64, Default, "Allocation Count will overflow");
 
-		Alloctions.Append(Pointer, Size);
+		Alloctions.AppendOrAssign(Pointer, Size);
 		Amount += Size;
 		Count++;
 	}

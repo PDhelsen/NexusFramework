@@ -184,11 +184,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			if (Index != Capacity)
-			{
-				return GetItem(Index).Value;
-			}
-
+			NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Key, Value);
@@ -199,11 +195,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			if (Index != Capacity)
-			{
-				return GetItem(Index).Value;
-			}
-
+			NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Key), Move(Value));
@@ -215,11 +207,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
-			if (Index != Capacity)
-			{
-				return GetItem(Index).Value;
-			}
-
+			NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
 			Resize(++Count);
 			Index = GetIndexWrite(Hash);
 			Construct(Index, Hash, Move(Key), args...);
@@ -235,11 +223,7 @@ namespace NxFr
 			{
 				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndexRead(Hash);
-				if (Index != Capacity)
-				{
-					continue;
-				}
-
+				NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
 				Index = GetIndexWrite(Hash);
 				Construct(Index, Hash, It->Key, It->Value);
 			}
@@ -346,8 +330,6 @@ namespace NxFr
 
 		T* TryGet(const K& Key) 
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
-
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
 			if (Index >= Capacity)
@@ -359,8 +341,6 @@ namespace NxFr
 
 		const T* TryGet(const K& Key) const
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
-
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndexRead(Hash);
 			if (Index >= Capacity)

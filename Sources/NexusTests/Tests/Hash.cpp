@@ -203,9 +203,11 @@ namespace NxTs
 		ASSERT_NE(NxFr::Hash<>::HashObject(double(2.0f)), 0);
 
 		ASSERT_EQ(NxFr::Hash<>::HashObject(bool(1)), 1);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(false), 0);
+		ASSERT_EQ(NxFr::Hash<>::HashObject(false), -1);
 
 		HashTest Data = { .A = 10, .B = 15, .C = 20 };
 		ASSERT_NE(NxFr::Hash<>::HashObject(&Data), 0);
+
+		ASSERT_EQ(NxFr::Hash<>::HashObject(0), uint64(-1));
 	}
 }

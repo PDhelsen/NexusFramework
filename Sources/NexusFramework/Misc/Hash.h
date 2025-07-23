@@ -28,10 +28,9 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API virtual uint64 GetSize() const = 0;
 			NEXUS_FRAMEWORK_API virtual HashLength GetSeed() const = 0;
 
-		protected:
-			HashLength Finalize(HashLength Value) const
+			NEXUS_FRAMEWORK_API static HashLength Finalize(HashLength Value)
 			{
-				Value |= Value == 0;
+				Value -= Value == 0;
 				return Value;
 			}
 		};
@@ -324,7 +323,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, bool Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -339,7 +338,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, char Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -354,7 +353,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int8 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -369,7 +368,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int16 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -384,7 +383,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int32 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -399,7 +398,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int64 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -414,7 +413,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint8 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -429,7 +428,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint16 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -444,7 +443,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint32 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -459,7 +458,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint64 Data)
 			{
-				return Data;
+				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
 			}
 		};
 
@@ -506,7 +505,8 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, void* Data)
 			{
-				return reinterpret_cast<typename H::HashLength>(Data);
+				typename H::HashLength Reinterpreted = reinterpret_cast<typename H::HashLength>(Data);
+				return HashAlgorithm<typename H::HashLength>::Finalize(Reinterpreted);
 			}
 		};
 	}

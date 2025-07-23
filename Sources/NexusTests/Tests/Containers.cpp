@@ -1270,20 +1270,15 @@ namespace NxTs
 		TestPointer2.Append(&TestPointer22, TestPointer22);
 		TestPointer2.Append(&TestPointer23, TestPointer23);
 		TestPointer2.Append(&TestPointer24, TestPointer24);
-		ASSERT_EQ(TestPointer2.GetCount(), 4);
+		TestPointer2.Append(nullptr, TestPointer24);
+		ASSERT_EQ(TestPointer2.GetCount(), 5);
 
-		ContainerTest TestPointer30(10);
-		ContainerTest* TestPointer31 = &TestPointer30;
-		ContainerTest* TestPointer32 = &TestPointer30;
-		ContainerTest* TestPointer33 = &TestPointer30;
-		ContainerTest* TestPointer34 = &TestPointer30;
-
-		NxFr::Dictionary<ContainerTest*, ContainerTest> TestPointer3;
-		TestPointer3.Append(TestPointer31, TestPointer30);
-		TestPointer3.Append(TestPointer32, TestPointer30);
-		TestPointer3.Append(TestPointer33, TestPointer30);
-		TestPointer3.Append(TestPointer34, TestPointer30);
-		ASSERT_EQ(TestPointer3.GetCount(), 1);
+		NxFr::Dictionary<int32, ContainerTest> TestPointer3;
+		TestPointer3.Append(1, TestPointer21);
+		TestPointer3.Append(2, TestPointer22);
+		TestPointer3.Append(3, TestPointer23);
+		TestPointer3.Append(4, TestPointer24);
+		TestPointer3.Append(0, TestPointer24);
 	}
 
 	TEST(Containers, Strings)
