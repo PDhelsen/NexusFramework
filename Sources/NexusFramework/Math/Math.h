@@ -56,13 +56,13 @@ namespace NxFr
 		}
 
 		template<typename T>
-		float Frac(float X)
+		T Frac(T X)
 		{
 			return X - Floor(X);
 		}
 
 		template<typename T>
-		float Round(float X)
+		T Round(T X)
 		{
 			return round(X);
 		}

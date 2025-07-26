@@ -44,6 +44,7 @@
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Hash.h"
 #include "NexusFramework/Misc/Sort.h"
+#include "NexusFramework/Misc/Color.h"
 
 #include "NexusFramework/Platform/Platform.h"
 
