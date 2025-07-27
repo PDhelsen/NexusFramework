@@ -100,12 +100,6 @@ namespace NxFr
 
 	double Stopwatch::Peek(double Unit)
 	{
-		if (!Started)
-		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
-			return 0.0;
-		}
-
 		if (Paused)
 		{
 			return GetElapsedTime(Unit);
@@ -116,23 +110,11 @@ namespace NxFr
 
 	double Stopwatch::GetStartTime(double Unit) const
 	{
-		if (!Started)
-		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
-			return 0.0;
-		}
-
 		return Convert(StartTimer, Unit);
 	}
 
 	double Stopwatch::GetElapsedTime(double Unit) const
 	{
-		if (Started)
-		{
-			NEXUS_LOG(Error, Default, "Stopwatch is running");
-			return 0.0;
-		}
-
 		return Convert(ElapsedTime, Unit);
 	}
 
