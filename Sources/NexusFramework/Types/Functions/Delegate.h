@@ -236,6 +236,12 @@ namespace NxFr
 
 		void Clone(const Delegate<R(Args...)>& Other, bool Allocate)
 		{
+			if (Other.IsNull())
+			{
+				Clear();
+				return;
+			}
+
 			if (!Other.Sbo)
 			{
 				if (Allocate)
