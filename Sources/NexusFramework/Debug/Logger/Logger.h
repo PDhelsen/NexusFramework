@@ -26,6 +26,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API void AddChannel(StringId Channel, bool State = true);
 		NEXUS_FRAMEWORK_API void SetChannel(StringId Channel, bool State);
+		NEXUS_FRAMEWORK_API void SetAllChannels(bool State);
 		NEXUS_FRAMEWORK_API bool HasChannel(StringId Channel) const;
 		NEXUS_FRAMEWORK_API bool CheckChannel(StringId Channel) const;
 

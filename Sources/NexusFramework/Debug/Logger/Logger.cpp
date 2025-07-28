@@ -86,6 +86,14 @@ namespace NxFr
 		Channels.Get(Channel) = State;
 	}
 
+	void Logger::SetAllChannels(bool State)
+	{
+		for (auto& [Id, Value] : Channels)
+		{
+			Channels[Id] = State;
+		}
+	}
+
 	bool Logger::HasChannel(StringId Channel) const
 	{
 		return Channels.ContainsKey(Channel);
