@@ -112,6 +112,7 @@ namespace NxFr
 		T GetCurrentStatValue(StringId Id) const;
 		NEXUS_FRAMEWORK_API const Stat* GetCurrentStat(StringId Id) const;
 		NEXUS_FRAMEWORK_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
+		NEXUS_FRAMEWORK_API void GetAllCurrentStats(Dictionary<StringId, const Stat*>& Result) const;
 
 		StringView GetPath() const { return Handle.GetPath(); }
 		uint64 GetCount() const { return Data.GetCount(); }

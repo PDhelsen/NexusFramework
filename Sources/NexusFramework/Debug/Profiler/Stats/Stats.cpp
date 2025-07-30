@@ -548,24 +548,34 @@ namespace NxFr
 
 	Dictionary<StringId, const Stats::Stat*> Stats::GetAllCurrentStats() const
 	{
+		Dictionary<StringId, const Stats::Stat*> Result;
+		Result.Grow(Math::NextPrime(Data.GetCount()));
+		GetAllCurrentStats(Result);
+		return Result;
+	}
+
+	void Stats::GetAllCurrentStats(Dictionary<StringId, const Stat*>& Result) const
+	{
 		if (!Initialized)
 		{
 			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return Dictionary<StringId, const Stats::Stat*>();
+			return;
 		}
 
-		if (Locked)
+		if (Result.IsEmpty())
 		{
-			return Dictionary<StringId, const Stats::Stat*>();
+			for (auto& [Header, Index] : Headers)
+			{
+				Result.Append(Header, &Data[Index]);
+			}
 		}
-
-		Dictionary<StringId, const Stats::Stat*> Result(Data.GetCount());
-		for (auto& [Header, Index] : Headers)
+		else
 		{
-			Result.Append(Header, &Data[Index]);
+			for (auto& [Header, Index] : Headers)
+			{
+				Result[Header] = &Data[Index];
+			}
 		}
-
-		return Result;
 	}
 
 	void Stats::WriteLine()
