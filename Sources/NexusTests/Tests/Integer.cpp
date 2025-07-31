@@ -24,6 +24,18 @@ namespace NxTs
 		ASSERT_EQ(Test, 0b10110010);
 	}
 
+	TEST(Integer, FlagCheckSet)
+	{
+		uint8 Test = 0b10101010;
+		ASSERT_EQ(NxFr::Integer::CheckFlag(Test, uint8(2)), true);
+		ASSERT_EQ(NxFr::Integer::CheckFlag(Test, uint8(4)), false);
+
+		Test = NxFr::Integer::SetFlag(Test, uint8(16), true);
+		ASSERT_EQ(Test, 0b10111010);
+		Test = NxFr::Integer::SetFlag(Test, uint8(8), false);
+		ASSERT_EQ(Test, 0b10110010);
+	}
+
 	TEST(Integer, Enum)
 	{
 		TestFlag None = TestFlag::Null;

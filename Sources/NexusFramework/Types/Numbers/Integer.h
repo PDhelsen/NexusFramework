@@ -25,6 +25,10 @@ inline bool CheckBit(Type Value, Type Offset) { return Value & (Type(1) << Offse
 inline Type SetBit1(Type Value, Type Offset) { return Value |= Type(1) << Offset; }\
 inline Type SetBit0(Type Value, Type Offset) { return Value &= ~(Type(1) << Offset); }\
 inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1(Value, Offset) : SetBit0(Value, Offset); }\
+inline bool CheckFlag(Type Value, Type Flag) { return Value & Flag; }\
+inline Type SetFlag1(Type Value, Type Flag) { return Value |= Flag; }\
+inline Type SetFlag0(Type Value, Type Flag) { return Value &= ~(Flag); }\
+inline Type SetFlag(Type Value, Type Flag, bool State) { return State ? SetFlag1(Value, Flag) : SetFlag0(Value, Flag); }\
 
 namespace NxFr::Integer
 {
