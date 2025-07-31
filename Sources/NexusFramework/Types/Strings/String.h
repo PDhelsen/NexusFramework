@@ -71,6 +71,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API StringView ToView(uint64 Offset, uint64 Size) const;
 
 		NEXUS_FRAMEWORK_API const char* C() const { return GetBuffer(); }
+		NEXUS_FRAMEWORK_API char* C_Buffer() { return GetData(); }
 		NEXUS_FRAMEWORK_API bool IsEmpty() const { return Count == 0; }
 		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Count; }
 		NEXUS_FRAMEWORK_API uint64 GetCapacity() const { return Capacity; }
