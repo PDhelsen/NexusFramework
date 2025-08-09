@@ -328,14 +328,15 @@ namespace NxFr
 		NEXUS_ASSERT(File, Default, "Invalid File");
 
 		uint64 Size = FileSize(File);
-		char* Text = (char*)Memory::Allocate(Size + 1);
+		uint64 Capacity = String::GetCapacityForCreate(Size);
+		char* Text = (char*)Memory::Allocate(Capacity);
 
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Text, (DWORD)Size, &Read, nullptr);
 
 		NEXUS_ASSERT(Result && Read == Size, Default, "Failed to read to file");
 
-		String Content = String::Create(Text, Size + 1, Size);
+		String Content = String::Create(Text, Capacity, Size);
 		Content.Replace("\r\n", "\n");
 		return Content;
 	}

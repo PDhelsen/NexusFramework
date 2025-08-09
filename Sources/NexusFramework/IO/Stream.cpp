@@ -43,6 +43,11 @@ namespace NxFr
 			
 	}
 
+	bool TextStream::IsAtTheEnd()
+	{
+		return Cursor == Buffer.GetCount();
+	}
+
 	void TextStream::Cache()
 	{
 		Buffer = Handle.ReadText();
@@ -76,6 +81,11 @@ namespace NxFr
 
 	BinaryStream::~BinaryStream()
 	{
+	}
+
+	bool BinaryStream::IsAtTheEnd()
+	{
+		return Cursor == Buffer.GetCount();
 	}
 
 	void BinaryStream::Cache()

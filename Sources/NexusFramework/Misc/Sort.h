@@ -216,14 +216,14 @@ namespace NxFr
 
 				if (Pivot - Current > 1)
 				{
-					Data[Current] = Move(Data[Pivot - 1]);
-					Data[Pivot - 1] = Move(Data[Pivot]);
-					Data[Pivot] = Move(Temp);
+					Data[Current] = Data[Pivot - 1];
+					Data[Pivot - 1] = Data[Pivot];
+					Data[Pivot] = Temp;
 				}
 				else
 				{
-					Data[Current] = Move(Data[Pivot]);
-					Data[Pivot] = Move(Temp);
+					Data[Current] = Data[Pivot];
+					Data[Pivot] = Temp;
 				}
 			}
 		};
@@ -305,8 +305,8 @@ namespace NxFr
 				if (Largest != Root)
 				{
 					T Temp = Data[Root];
-					Data[Root] = Move(Data[Largest]);
-					Data[Largest] = Move(Temp);
+					Data[Root] = Data[Largest];
+					Data[Largest] = Temp;
 
 					Swap(Data, Count, Largest, Comparison);
 				}
@@ -316,8 +316,8 @@ namespace NxFr
 			static void Swap(C& Data, uint64 Index)
 			{
 				T Temp = Data[0];
-				Data[0] = Move(Data[Index]);
-				Data[Index] = Move(Temp);
+				Data[0] = Data[Index];
+				Data[Index] = Temp;
 			}
 		};
 	}

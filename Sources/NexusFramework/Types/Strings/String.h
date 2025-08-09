@@ -26,6 +26,7 @@ namespace NxFr
 
 	public:
 		NEXUS_FRAMEWORK_API static String Create(char* Text, uint64 Capacity, uint64 Size);
+		NEXUS_FRAMEWORK_API static uint64 GetCapacityForCreate(uint64 Size);
 
 		NEXUS_FRAMEWORK_API String(Allocator* Allctr = AllocatorContext::Get());
 		NEXUS_FRAMEWORK_API String(uint64 Bytes, Allocator* Allctr = AllocatorContext::Get());

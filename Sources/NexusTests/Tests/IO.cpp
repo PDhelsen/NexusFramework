@@ -229,8 +229,7 @@ namespace NxTs
 		ASSERT_EQ(Content2, Line);
 		NxFr::StringView Content3 = File.Read();
 		ASSERT_EQ(Content3, Line);
-		NxFr::StringView Content4 = File.Read();
-		ASSERT_EQ(Content4, "");
+		ASSERT_EQ(File.IsAtTheEnd(), true);
 		File.Close();
 
 		NxFr::File(Working).Delete();

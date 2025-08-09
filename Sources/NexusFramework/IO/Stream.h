@@ -14,6 +14,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Open(File::Mode Mode, bool CreateIfDontExist = true);
 		NEXUS_FRAMEWORK_API void Close();
 
+		NEXUS_FRAMEWORK_API virtual bool IsAtTheEnd() = 0;
 		NEXUS_FRAMEWORK_API virtual void Cache() = 0;
 		NEXUS_FRAMEWORK_API virtual void Flush() = 0;
 
@@ -33,6 +34,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API TextStream(StringView Path);
 		NEXUS_FRAMEWORK_API virtual ~TextStream();
 
+		NEXUS_FRAMEWORK_API bool IsAtTheEnd() override;
 		NEXUS_FRAMEWORK_API void Cache() override;
 		NEXUS_FRAMEWORK_API void Flush() override;
 
@@ -50,6 +52,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API BinaryStream(StringView Path);
 		NEXUS_FRAMEWORK_API virtual ~BinaryStream();
 
+		NEXUS_FRAMEWORK_API bool IsAtTheEnd() override;
 		NEXUS_FRAMEWORK_API void Cache() override;
 		NEXUS_FRAMEWORK_API void Flush() override;
 
