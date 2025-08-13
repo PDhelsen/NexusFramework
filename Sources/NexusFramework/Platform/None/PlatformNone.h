@@ -24,6 +24,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void WriteToDebugger(StringView Message) const override;
 
 		NEXUS_FRAMEWORK_API PathType GetPathType(StringView Path) const override;
+		NEXUS_FRAMEWORK_API String OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const;
 		NEXUS_FRAMEWORK_API String GetWorkingDirectory() const override;
 		NEXUS_FRAMEWORK_API void SetWorkingDirectory(StringView Path) const override;
 

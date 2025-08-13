@@ -48,6 +48,11 @@ namespace NxFr
 		return PathType::None;
 	}
 
+	String PlatformNone::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const
+	{
+		return StringUtility::Empty;
+	}
+
 	String PlatformNone::GetWorkingDirectory() const
 	{
 		return StringUtility::Empty;

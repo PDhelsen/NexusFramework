@@ -21,6 +21,7 @@ namespace NxFr
 		inline static const String SeparatorPrevious = "..";
 		inline static const String SeparatorDrive = ":/";
 
+		NEXUS_FRAMEWORK_API static Path OpenFileDialog(NxFr::StringView Title = "", NxFr::StringView Extension = "", NxFr::StringView Name = "", NxFr::StringView Path = "");
 		NEXUS_FRAMEWORK_API static Path GetWorkingDirectory();
 
 		template<typename T>

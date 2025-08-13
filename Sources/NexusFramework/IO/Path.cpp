@@ -5,6 +5,11 @@
 
 namespace NxFr
 {
+	Path Path::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path)
+	{
+		return Path::ConvertStringToPath(Platform::GetInstance()->OpenFileDialog(Title, Extension, Name, Path));
+	}
+
 	Path Path::GetWorkingDirectory()
 	{
 		return Path::ConvertStringToPath(Platform::GetInstance()->GetWorkingDirectory());

@@ -13,6 +13,8 @@ namespace NxFr
 {
 	static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
 
+	static String ConvertPath(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
+
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
 		String Key = DllName.ToString();
@@ -119,6 +121,30 @@ namespace NxFr
 		}
 
 		return PathType::None;
+	}
+
+	String PlatformWindows::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const
+	{
+		String File = Name + "." + Extension;
+		String Directory = ConvertPath(Path);
+
+		Buffer& LocalBuffer = GetLocalBuffer();
+		LocalBuffer.Clear();
+		LocalBuffer.Set(File.C(), File.GetCount());
+
+		OPENFILENAMEA OpenFileName;
+		ZeroMemory(&OpenFileName, sizeof(OpenFileName));
+		OpenFileName.lStructSize = sizeof(OpenFileName);
+		OpenFileName.lpstrFile = LocalBuffer.GetPtr<char>();
+		OpenFileName.nMaxFile = (uint32)LocalBuffer.GetCount();
+		OpenFileName.lpstrTitle = Title.C();
+		OpenFileName.nMaxFileTitle = (uint32)Title.GetCount();
+		OpenFileName.lpstrInitialDir = Directory.C();
+		OpenFileName.lpstrFilter = nullptr;
+		OpenFileName.Flags = OFN_NOVALIDATE;
+
+		bool Success = GetSaveFileNameA(&OpenFileName);
+		return Success ? Path::Normalize(LocalBuffer.GetPtr<char>()) : StringUtility::Empty;
 	}
 
 	String PlatformWindows::GetWorkingDirectory() const
