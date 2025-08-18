@@ -35,6 +35,11 @@ namespace NxFr
     {
     }
 
+	String NxFr::PlatformNone::ReadFromTerminal() const
+	{
+		return StringUtility::Empty;
+	}
+
     void PlatformNone::WriteToTerminal(StringView Message) const
     {
     }

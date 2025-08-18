@@ -20,6 +20,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API MemoryInfo GetMemoryInfo() const override;
 
 		NEXUS_FRAMEWORK_API void WaitForUserToCloseTerminal() const override;
+		NEXUS_FRAMEWORK_API String ReadFromTerminal() const override;
 		NEXUS_FRAMEWORK_API void WriteToTerminal(StringView Message) const override;
 		NEXUS_FRAMEWORK_API void WriteToDebugger(StringView Message) const override;
 

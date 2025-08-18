@@ -55,6 +55,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual MemoryInfo GetMemoryInfo() const = 0;
 
 		NEXUS_FRAMEWORK_API virtual void WaitForUserToCloseTerminal() const = 0;
+		NEXUS_FRAMEWORK_API virtual String ReadFromTerminal() const = 0;
 		NEXUS_FRAMEWORK_API virtual void WriteToTerminal(StringView Message) const = 0;
 		NEXUS_FRAMEWORK_API virtual void WriteToDebugger(StringView Message) const = 0;
 

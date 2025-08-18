@@ -90,6 +90,51 @@ namespace NxFr
 		uint32 c = getchar();
 	}
 
+	String PlatformWindows::ReadFromTerminal() const
+	{
+		static String Buffer;
+
+		DWORD EventCount;
+		GetNumberOfConsoleInputEvents(TerminalIn, &EventCount);
+
+		for (uint64 Index = 0; Index < EventCount; ++Index)
+		{
+			DWORD Events;
+			INPUT_RECORD InputRecord;
+			ReadConsoleInputA(TerminalIn, &InputRecord, 1, &Events);
+
+			if (InputRecord.EventType == KEY_EVENT && InputRecord.Event.KeyEvent.bKeyDown)
+			{
+				char Code = InputRecord.Event.KeyEvent.uChar.AsciiChar;
+				char Converter[2] = { Code, '\0' };
+				NxFr::StringView Character = Converter;
+
+				if (InputRecord.Event.KeyEvent.wVirtualKeyCode == VK_RETURN)
+				{
+					WriteToTerminal("\n");
+
+					String Result = Buffer;
+					Buffer.Clear();
+					return Result;
+				}
+				else if (InputRecord.Event.KeyEvent.wVirtualKeyCode == VK_BACK && !Buffer.IsEmpty())
+				{
+					WriteToTerminal("\b \b");
+
+					Buffer.Terminate(Buffer.GetCount() - 1);
+				}
+				else if (Code >= 32 && Code < 127)
+				{
+					WriteToTerminal(Character);
+
+					Buffer += Character;
+				}
+			}
+		}
+
+		return StringUtility::Empty;
+	}
+
 	void PlatformWindows::WriteToTerminal(StringView Message) const
 	{
 		printf(Message.C());
@@ -368,7 +413,7 @@ namespace NxFr
 	}
 
 	PlatformWindows::PlatformWindows()
-		: Console(nullptr), PerformanceFrequency(1.0)
+		: TerminalOut(nullptr), TerminalIn(nullptr), PerformanceFrequency(1.0)
 	{
 		InitializeTerminal();
 		InitializePerformanceTimer();
@@ -380,15 +425,22 @@ namespace NxFr
 
 	void PlatformWindows::InitializeTerminal()
 	{
-		Console = GetStdHandle(STD_OUTPUT_HANDLE);
+		TerminalOut = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		DWORD TerminalOutDefaultMode = 0;
-		GetConsoleMode(Console, &TerminalOutDefaultMode);
-		DWORD TerminalOutRequestMode = ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-		DWORD TerminalOutMode = TerminalOutDefaultMode | TerminalOutRequestMode;
-		SetConsoleMode(Console, TerminalOutMode);
+		DWORD TerminalOutMode = 0;
+		GetConsoleMode(TerminalOut, &TerminalOutMode);
+		TerminalOutMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+		SetConsoleMode(TerminalOut, TerminalOutMode);
 
 		SetConsoleOutputCP(CP_UTF8);
+
+		TerminalIn = GetStdHandle(STD_INPUT_HANDLE);
+
+		DWORD TerminalInMode = 0;
+		GetConsoleMode(TerminalIn, &TerminalInMode);
+		TerminalInMode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+		TerminalInMode |= ENABLE_PROCESSED_INPUT;
+		SetConsoleMode(TerminalIn, TerminalInMode);
 	}
 
 	void PlatformWindows::InitializePerformanceTimer()
