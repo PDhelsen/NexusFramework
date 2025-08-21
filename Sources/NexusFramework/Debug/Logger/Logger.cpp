@@ -110,6 +110,19 @@ namespace NxFr
 		return Channels.Get(Channel);
 	}
 
+	Array<StringId> Logger::GetChannels() const
+	{
+		Array<StringId> Labels(Channels.GetCount());
+
+		uint64 Index = 0;
+		for (auto& [Id, State] : Channels)
+		{
+			Labels[Index++] = Id;
+		}
+
+		return Labels;
+	}
+
 	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
 	{
 		return Enum::CheckFlag(VerbosityMask, Verbosity);

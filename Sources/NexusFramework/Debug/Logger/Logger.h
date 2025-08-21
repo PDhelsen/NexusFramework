@@ -29,6 +29,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void SetAllChannels(bool State);
 		NEXUS_FRAMEWORK_API bool HasChannel(StringId Channel) const;
 		NEXUS_FRAMEWORK_API bool CheckChannel(StringId Channel) const;
+		NEXUS_FRAMEWORK_API Array<StringId> GetChannels() const;
 
 		NEXUS_FRAMEWORK_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
 		NEXUS_FRAMEWORK_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
