@@ -56,12 +56,8 @@ namespace NxFr
 
 	void Logger::Flush()
 	{
-		if (FlushOnLog)
-		{
-			return;
-		}
-
-		Write(BufferLogs);
+		Print(LoggerVerbosity::None, 0, BufferLogs, true);
+		BufferLogs.Clear();
 	}
 
 	void Logger::AddChannel(StringId Channel, bool State /*true*/)
@@ -138,29 +134,43 @@ namespace NxFr
 		return Enum::CheckFlag(Outputs, Output);
 	}
 
-	bool Logger::ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel) const
+	void Logger::RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback)
 	{
-		return Target && CheckVerbosity(Verbosity) && CheckChannel(Channel);
+		this->Callback += Callback;
 	}
 
-	void Logger::PrintMessage(LoggerVerbosity Verbosity, StringId Channel)
+	void Logger::UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback)
 	{
-		uint8 VerbosityLevel = GetLogLevel(Verbosity);
+		this->Callback -= Callback;
+	}
 
-		StringView VerbosityString = "";
-		int8 Hours = 0, Minutes = 0, Seconds = 0;
-		GatherInfo(VerbosityLevel, VerbosityString, Hours, Minutes, Seconds);
+	String* Logger::ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
+	{
+		BufferMessage.Clear();
+		bool ShouldPrint = !Message.IsEmpty() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
+		return ShouldPrint ? &BufferMessage : nullptr;
+	}
 
-		BufferFormat.Format(Format, Hours, Minutes, Seconds, VerbosityString.C(), Channel.C(), BufferMessage.C());
+	String* Logger::FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
+	{
+		uint8 VerbosityLevel = Enum::ToIndex(Verbosity);
+		StringView VerbosityLabel = Enum::LoggerVerbosityToString(VerbosityLevel);
 
-		if (FlushOnLog)
-		{
-			Write(BufferFormat);
-		}
-		else
-		{
-			CopyIntoBuffer(BufferFormat);
-		}
+		StringView ChannelLabel = Channel.C();
+
+		Timestamp Stamp = Time::Now();
+		int8 Hours = Stamp.Hours;
+		int8 Minutes = Stamp.Minutes;
+		int8 Seconds = Stamp.Seconds;
+
+		BufferFormat.Clear();
+		BufferFormat.Format(Format, Hours, Minutes, Seconds, VerbosityLabel.C(), ChannelLabel.C(), Message.C());
+		return &BufferFormat;
+	}
+
+	void Logger::PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
+	{
+		Print(Verbosity, Channel, Message, false);
 
 		if (Enum::CheckFlag(Verbosity, LoggerVerbosity::Fatal))
 		{
@@ -168,51 +178,40 @@ namespace NxFr
 		}
 	}
 
-	uint8 Logger::GetLogLevel(LoggerVerbosity Verbosity) const
+	void Logger::Print(LoggerVerbosity Verbosity, StringId Channel, StringView Message, bool Flushing)
 	{
-		return Math::LogTwoPowerOfTwo((uint8)Verbosity);
-	}
-
-	void Logger::GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const
-	{
-		VerbosityString = Enum::LoggerVerbosityToString(VerbosityLevel);
-
-		Timestamp Stamp = Time::Now();
-		Hours = Stamp.Hours;
-		Minutes = Stamp.Minutes;
-		Seconds = Stamp.Seconds;
-	}
-
-	void Logger::CopyIntoBuffer(String& Text)
-	{
-		if (BufferLogs.GetCapacity() - BufferLogs.GetCount() < Text.GetCount())
-		{
-			Write(BufferLogs);
-		}
-
-		BufferLogs += Text;
-	}
-
-	void Logger::Write(String& Text)
-	{
-		if (Text.GetCount() == 0)
+		if (Message.IsEmpty())
 		{
 			return;
 		}
 
-		if (CheckOutput(LoggerOutput::Console))
+		bool Write = FlushOnLog || Flushing;
+
+		if (!Write)
 		{
-			Target->WriteToTerminal(Text);
-		}
-		if (CheckOutput(LoggerOutput::IDE))
-		{
-			Target->WriteToDebugger(Text);
-		}
-		if (CheckOutput(LoggerOutput::File))
-		{
-			Handle.WriteText(Text);
+			if (BufferLogs.GetCapacity() - BufferLogs.GetCount() < Message.GetCount())
+			{
+				Flush();
+			}
+			
+			BufferLogs += Message;
 		}
 
-		Text.Clear();
+		if (CheckOutput(LoggerOutput::Console) && Write)
+		{
+			Target->WriteToTerminal(Message);
+		}
+		if (CheckOutput(LoggerOutput::IDE) && Write)
+		{
+			Target->WriteToDebugger(Message);
+		}
+		if (CheckOutput(LoggerOutput::File) && Write)
+		{
+			Handle.WriteText(Message);
+		}
+		if (CheckOutput(LoggerOutput::File) && !Flushing)
+		{
+			Callback.Invoke(Verbosity, Channel, Message);
+		}
 	}
 }

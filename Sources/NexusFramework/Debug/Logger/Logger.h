@@ -35,19 +35,16 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
 		NEXUS_FRAMEWORK_API bool CheckOutput(LoggerOutput Output) const;
+		NEXUS_FRAMEWORK_API void RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
+		NEXUS_FRAMEWORK_API void UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 
 	protected:
-		NEXUS_FRAMEWORK_API bool ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel) const override;
-		NEXUS_FRAMEWORK_API void PrintMessage(LoggerVerbosity Verbosity, StringId Channel) override;
-
-		NEXUS_FRAMEWORK_API String& GetMessageBuffer() override { return BufferMessage; };
+		NEXUS_FRAMEWORK_API String* ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
+		NEXUS_FRAMEWORK_API String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
+		NEXUS_FRAMEWORK_API void PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
+		NEXUS_FRAMEWORK_API void Print(LoggerVerbosity Verbosity, StringId Channel, StringView Message, bool Flushing);
 
 	private:
-		inline uint8 GetLogLevel(LoggerVerbosity Verbosity) const;
-		inline void GatherInfo(int8 VerbosityLevel, StringView& VerbosityString, int8& Hours, int8& Minutes, int8& Seconds) const;
-		inline void CopyIntoBuffer(String& Text);
-		inline void Write(String& Text);
-
 		Dictionary<StringId, bool, Hashing::Default> Channels;
 		LoggerVerbosity VerbosityMask;
 		LoggerOutput Outputs;
@@ -59,5 +56,6 @@ namespace NxFr
 
 		Platform* Target;
 		File Handle;
+		Event<LoggerVerbosity, StringId, StringView> Callback;
 	};
 }

@@ -41,8 +41,9 @@ namespace NxFr
 		Console = 1 << 0,
 		IDE = 1 << 1,
 		File = 1 << 2,
+		Callback = 1 << 3,
 
-		All = Console | IDE | File,
+		All = Console | IDE | File | Callback,
 
 		COUNT
 	};
@@ -60,22 +61,29 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Log() = default;
 		NEXUS_FRAMEWORK_API ~Log() = default;
 
-		NEXUS_FRAMEWORK_API virtual bool ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel) const = 0;
-		NEXUS_FRAMEWORK_API virtual void PrintMessage(LoggerVerbosity Verbosity, StringId Channel) = 0;
-
-		NEXUS_FRAMEWORK_API virtual String& GetMessageBuffer() = 0;
+		NEXUS_FRAMEWORK_API virtual String* ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
+		NEXUS_FRAMEWORK_API virtual String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
+		NEXUS_FRAMEWORK_API virtual void PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
 	};
 
 	template<typename... Args>
 	void Log::LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
-		if (!ShouldPrintMessage(Verbosity, Channel))
+		String* MessageBuffer = ShouldPrintMessage(Verbosity, Channel, Message);
+		if (!MessageBuffer)
 		{
 			return;
 		}
 
-		GetMessageBuffer().Format(Message, args...);
-		PrintMessage(Verbosity, Channel);
+		MessageBuffer->Format(Message, args...);
+
+		String* FormatBuffer = FormatMessage(Verbosity, Channel, *MessageBuffer);
+		if (!FormatBuffer)
+		{
+			return;
+		}
+
+		PrintMessage(Verbosity, Channel, *FormatBuffer);
 	}
 }
 
