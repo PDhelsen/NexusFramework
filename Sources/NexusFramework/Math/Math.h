@@ -4,6 +4,7 @@
 #include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numbers/Decimal.h"
 
 namespace NxFr
 {
@@ -88,7 +89,6 @@ namespace NxFr
 		template<typename T>
 		T Modulo(T X, T Y)
 		{
-			NEXUS_ASSERT(Y != (T)0, Default, "Modulo with Mode == 0 is undefined");
 			T Remainder = X % Y;
 			return Remainder < (T)0 ? Remainder + Y : Remainder;
 		}
@@ -264,7 +264,6 @@ namespace NxFr
 		template<typename T>
 		T LogTwoPowerOfTwo(T X)
 		{
-			NEXUS_ASSERT(IsPowerOfTwo(X), Default, "X is not a power of 2");
 			NEXUS_BITSCANFORWARD(X, Index, Result)
 			return Result > 0 ? (T)Index : -1;
 		}

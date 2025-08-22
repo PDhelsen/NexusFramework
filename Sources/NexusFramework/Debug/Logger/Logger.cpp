@@ -153,8 +153,8 @@ namespace NxFr
 
 	String* Logger::FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
-		uint8 VerbosityLevel = Enum::ToIndex(Verbosity);
-		StringView VerbosityLabel = Enum::LoggerVerbosityToString(VerbosityLevel);
+		uint8 VerbosityLevel = Enum::ToFlagIndex(Verbosity);
+		StringView VerbosityLabel = Enum::ToString((LoggerVerbosity)VerbosityLevel);
 
 		StringView ChannelLabel = Channel.C();
 
