@@ -35,6 +35,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
 		NEXUS_FRAMEWORK_API bool CheckOutput(LoggerOutput Output) const;
+		NEXUS_FRAMEWORK_API void SetOutput(LoggerOutput Output, bool State, StringView Path = "");
 		NEXUS_FRAMEWORK_API void RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 		NEXUS_FRAMEWORK_API void UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 
@@ -43,6 +44,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
 		NEXUS_FRAMEWORK_API void PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
 		NEXUS_FRAMEWORK_API void Print(LoggerVerbosity Verbosity, StringId Channel, StringView Message, bool Flushing);
+
+		void OpenFile(StringView Path);
+		void CloseFile();
 
 	private:
 		Dictionary<StringId, bool, Hashing::Default> Channels;

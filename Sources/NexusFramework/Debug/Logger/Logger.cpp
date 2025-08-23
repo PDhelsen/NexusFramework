@@ -33,25 +33,13 @@ namespace NxFr
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
 		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle("")
 	{
-		NEXUS_ASSERT(!Enum::CheckFlag(Output, LoggerOutput::File) || Path != StringUtility::Empty, Default, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
-
-		if (CheckOutput(LoggerOutput::File))
-		{
-			Handle = File(Path);
-			Handle.Delete();
-			Handle.Create();
-			Handle.Open(File::Mode::Append);
-		}
+		OpenFile(Path);
 	}
 
 	Logger::~Logger()
 	{
 		Flush();
-
-		if (CheckOutput(LoggerOutput::File))
-		{
-			Handle.Close();
-		}
+		CloseFile();
 	}
 
 	void Logger::Flush()
@@ -134,6 +122,22 @@ namespace NxFr
 		return Enum::CheckFlag(Outputs, Output);
 	}
 
+	void Logger::SetOutput(LoggerOutput Output, bool State, StringView Path)
+	{
+		if ((CheckOutput(LoggerOutput::File) && !Enum::CheckFlag(Output, LoggerOutput::File))
+		|| (CheckOutput(LoggerOutput::File) && Enum::CheckFlag(Output, LoggerOutput::File) && Handle.GetPath() != Path))
+		{
+			CloseFile();
+		}
+
+		Outputs = Enum::SetFlag(Outputs, Output, State);
+
+		if (CheckOutput(LoggerOutput::File))
+		{
+			OpenFile(Path);
+		}
+	}
+
 	void Logger::RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback)
 	{
 		this->Callback += Callback;
@@ -209,9 +213,30 @@ namespace NxFr
 		{
 			Handle.WriteText(Message);
 		}
-		if (CheckOutput(LoggerOutput::File) && !Flushing)
+		if (CheckOutput(LoggerOutput::Callback) && !Flushing)
 		{
 			Callback.Invoke(Verbosity, Channel, Message);
+		}
+	}
+
+	void Logger::OpenFile(StringView Path)
+	{
+		NEXUS_ASSERT(!Enum::CheckFlag(Outputs, LoggerOutput::File) || Path != StringUtility::Empty, Default, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
+
+		if (CheckOutput(LoggerOutput::File))
+		{
+			Handle = File(Path);
+			Handle.Delete();
+			Handle.Create();
+			Handle.Open(File::Mode::Append);
+		}
+	}
+
+	void Logger::CloseFile()
+	{
+		if (CheckOutput(LoggerOutput::File))
+		{
+			Handle.Close();
 		}
 	}
 }
