@@ -27,9 +27,9 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const Array<T>& Object)
 		{
 			Rbs.WriteObject(Object.GetCount());
-			for (auto& It : Object)
+			for (uint64 Index = 0; Index < Object.GetCount(); ++Index)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object[Index]);
 			}
 		}
 	};
@@ -51,9 +51,9 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const List<T>& Object)
 		{
 			Rbs.WriteObject(Object.GetCount());
-			for (auto& It : Object)
+			for (uint64 Index = 0; Index < Object.GetCount(); ++Index)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object[Index]);
 			}
 		}
 	};
@@ -125,9 +125,9 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			for (auto& It : rhs)
+			for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
 			{
-				node.push_back(It);
+				node.push_back(rhs[Index]);
 			}
 			return node;
 		}
@@ -156,9 +156,9 @@ namespace YAML
 		}
 
 		out << YAML::BeginSeq;
-		for (auto& It : rhs)
+		for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
 		{
-			out << It;
+			out << rhs[Index];
 		}
 		out << YAML::EndSeq;
 
@@ -178,9 +178,9 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			for (auto& It : rhs)
+			for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
 			{
-				node.push_back(It);
+				node.push_back(rhs[Index]);
 			}
 			return node;
 		}
@@ -193,9 +193,9 @@ namespace YAML
 			}
 
 			rhs.Grow(node.size());
-			for (YAML::const_iterator It = node.begin(); It != node.end(); ++It)
+			for (uint64 Index = 0; Index < node.size(); ++Index)
 			{
-				rhs.Append(It->as<T>());
+				rhs.Append(node[Index].as<T>());
 			}
 			return true;
 		}
@@ -210,9 +210,9 @@ namespace YAML
 		}
 
 		out << YAML::BeginSeq;
-		for (auto& It : rhs)
+		for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
 		{
-			out << It;
+			out << rhs[Index];
 		}
 		out << YAML::EndSeq;
 

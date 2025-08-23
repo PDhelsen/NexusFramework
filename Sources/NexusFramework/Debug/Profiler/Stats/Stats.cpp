@@ -277,9 +277,9 @@ namespace NxFr
 			return;
 		}
 
-		for (auto& Statistique : Data)
+		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			const String& Text = Statistique.ToString(BufferCell);
+			const String& Text = Data[Index].ToString(BufferCell);
 
 			BufferLine += Text;
 			BufferLine += Separator;
@@ -307,9 +307,9 @@ namespace NxFr
 			return;
 		}
 
-		for (auto& Statistique : Data)
+		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			Statistique.Reset();
+			Data[Index].Reset();
 		}
 
 		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
@@ -571,9 +571,9 @@ namespace NxFr
 		}
 		else
 		{
-			for (auto& [Header, Index] : Headers)
+			for (auto& [Header, Target] : Result)
 			{
-				Result[Header] = &Data[Index];
+				Result[Header] = &Data[Headers[Header]];
 			}
 		}
 	}

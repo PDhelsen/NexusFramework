@@ -120,7 +120,7 @@ namespace NxFr
 		StringView Remaining = Root.ToView(Common.GetCount(), Root.GetCount() - Common.GetCount());
 		List<StringView> Directories = StringUtility::SplitAll(Remaining, SeparatorDirectory);
 		String ToReplaceWith = String(Directories.GetCount() * 3);
-		for (auto It : Directories)
+		for (auto& It : Directories)
 		{
 			ToReplaceWith += SeparatorPrevious;
 			ToReplaceWith += SeparatorDirectory;
