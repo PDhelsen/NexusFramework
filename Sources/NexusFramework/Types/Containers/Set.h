@@ -421,10 +421,11 @@ namespace NxFr
 		uint64 ProbingPolicy(uint64 Index, uint64 Iteration) const
 		{
 			bool Flip = Iteration % 2 == 0;
-			uint64 Offset = Math::CeilToInt((double)(Iteration) / 2.0);
-			Index = Index + (Flip ? -1 : 1) * (Offset * Offset);
-			Index = Math::Modulo(Index, Capacity);
-			return Index;
+			uint64 Offset = (Iteration + 1) / 2;
+			Offset *= Offset;
+
+			Index = !Flip ? (Index + Offset) : (Index + Capacity - Offset);
+			return Index % Capacity;
 		}
 
 		Allocator* Alloc;
