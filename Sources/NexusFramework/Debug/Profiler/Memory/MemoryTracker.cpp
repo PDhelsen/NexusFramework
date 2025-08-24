@@ -75,7 +75,6 @@ namespace NxFr
 		uint64* Allocation = Alloctions.TryGet(Pointer);
 		if (!Allocation)
 		{
-			NEXUS_LOG(Warning, Verbose, "Failed to find allocation %p", Pointer);
 			return;
 		}
 
