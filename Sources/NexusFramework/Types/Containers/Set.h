@@ -345,13 +345,13 @@ namespace NxFr
 
 		uint64 GetIndex(uint64 Hash) const
 		{
-			uint64 IndexHashed = Hash % Capacity;
+			uint64 H1 = Hash % Capacity;
+			uint64 H2 = 1 + (Hash % (Capacity - 1));
+
+			uint64 Index = H1;
 			uint64 Tombstone = Capacity;
 
-			uint64 Iteration = 0;
-			uint64 Index = IndexHashed;
-
-			while (Iteration < Capacity)
+			for (uint64 Iteration = 0; Iteration < Capacity; ++Iteration)
 			{
 				N& Instance = Data[Index];
 
@@ -371,7 +371,7 @@ namespace NxFr
 					return Index;
 				}
 
-				Index = ProbingPolicy(IndexHashed, ++Iteration);
+				Index = (Index + H2) % Capacity;
 			}
 
 			return Tombstone != Capacity ? Tombstone : Capacity;
@@ -416,16 +416,6 @@ namespace NxFr
 		uint64 GrowPolicy() const
 		{
 			return Capacity * 2;
-		}
-
-		uint64 ProbingPolicy(uint64 Index, uint64 Iteration) const
-		{
-			bool Flip = Iteration % 2 == 0;
-			uint64 Offset = (Iteration + 1) / 2;
-			Offset *= Offset;
-
-			Index = !Flip ? (Index + Offset) : (Index + Capacity - Offset);
-			return Index % Capacity;
 		}
 
 		Allocator* Alloc;
