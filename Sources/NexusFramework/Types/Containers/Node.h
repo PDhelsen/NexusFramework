@@ -33,8 +33,14 @@ namespace NxFr
 		template<typename T>
 		struct NodeHashmap
 		{
+			enum class TombstoneMode
+			{
+				NotTombstone, IsTombstone, WasTombstone
+			};
+
 			T Value;
 			uint64 Hash;
+			TombstoneMode Tombstone;
 
 			bool IsFree() { return Hash == 0; }
 		};

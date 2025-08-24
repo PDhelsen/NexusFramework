@@ -20,6 +20,7 @@ namespace NxFr
 		using KV = KeyValuePair<const K, T>;
 		using N = Node::NodeHashmap<KV>;
 		using I = Iterator::IteratorHashmap<KV, N>;
+		using TB = typename N::TombstoneMode;
 
 		inline static const uint64 DefaultSize = 11;
 
@@ -36,11 +37,7 @@ namespace NxFr
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
-				N& Instance = Other.Data[Index];
-				if (!Instance.IsFree())
-				{
-					Construct(Index, Instance.Hash, Instance.Value);
-				}
+				Copy(Index, Other.Data[Index], false);
 			}
 		}
 
@@ -75,11 +72,7 @@ namespace NxFr
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
-				N& Instance = Other.Data[Index];
-				if (!Instance.IsFree())
-				{
-					Construct(Index, Instance.Hash, Instance.Value);
-				}
+				Copy(Index, Other.Data[Index], false);
 			}
 
 			return *this;
@@ -132,8 +125,8 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
 			N& Instance = Data[Index];
 			Instance.Value.Value = Value;
 			return Instance.Value.Value;
@@ -144,8 +137,8 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
 			N& Instance = Data[Index];
 			Instance.Value.Value = Move(Value);
 			return Instance.Value.Value;
@@ -157,8 +150,8 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
 			N& Instance = Data[Index];
 			Memory::Construct<T>(&Instance.Value.Value, args...);
 			return Instance.Value.Value;
@@ -170,125 +163,136 @@ namespace NxFr
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->Key);
-				uint64 Index = GetIndexRead(Hash);
-				NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
-				GetItem(Index).Value = It->Value;
+				uint64 Index = GetIndex(Hash);
+				NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
+				N& Instance = Data[Index];
+				Instance.Value.Value = Value;
 			}
 
 			uint64 Hash = GetHash(Value.Begin()->Key);
 			uint64 Index = GetIndexRead(Hash);
-			return GetItem(Index).Value;
+			return Data[Index].Value.Value;
 		}
 
 		T& Append(const K& Key, const T& Value)
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
-			Resize(++Count);
-			Index = GetIndexWrite(Hash);
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+			if (Resize(++Count))
+			{
+				Index = GetIndex(Hash);
+			}
 			Construct(Index, Hash, Key, Value);
-			return GetItem(Index).Value;
+			return Data[Index].Value.Value;
 		}
 
 		T& Append(K&& Key, T&& Value)
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
-			Resize(++Count);
-			Index = GetIndexWrite(Hash);
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+			if (Resize(++Count))
+			{
+				Index = GetIndex(Hash);
+			}
 			Construct(Index, Hash, Move(Key), Move(Value));
-			return GetItem(Index).Value;
+			return Data[Index].Value.Value;
 		}
 
 		template<typename... Args>
 		T& AppendConstruct(K&& Key, Args&&... args)
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
-			Resize(++Count);
-			Index = GetIndexWrite(Hash);
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+			if (Resize(++Count))
+			{
+				Index = GetIndex(Hash);
+			}
 			Construct(Index, Hash, Move(Key), args...);
-			return GetItem(Index).Value;
+			return Data[Index].Value.Value;
 		}
 
 		template<typename C>
 		T& AppendRange(const C& Value)
 		{
-			Resize(GetCount() + Value.GetCount());
-
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->Key);
-				uint64 Index = GetIndexRead(Hash);
-				NEXUS_ASSERT(Index == Capacity, Default, "Key already present in Dictionary");
-				Index = GetIndexWrite(Hash);
+				uint64 Index = GetIndex(Hash);
+				NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
+				}
 				Construct(Index, Hash, It->Key, It->Value);
 			}
 
 			uint64 Hash = GetHash(Value.Begin()->Key);
-			uint64 Index = GetIndexRead(Hash);
-			return GetItem(Index).Value;
+			uint64 Index = GetIndex(Hash);
+			return Data[Index].Value.Value;
 		}
 
 		T& AppendOrAssign(const K& Key, const T& Value)
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			if (Index != Capacity)
+			uint64 Index = GetIndex(Hash);
+			if (Index != Capacity && !Data[Index].IsFree())
 			{
 				N& Instance = Data[Index];
 				Instance.Value.Value = Value;
-				return Instance.Value.Value;
 			}
 			else
 			{
-				Resize(++Count);
-				Index = GetIndexWrite(Hash);
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
+				}
 				Construct(Index, Hash, Key, Value);
-				return GetItem(Index).Value;
 			}
+			return Data[Index].Value.Value;
 		}
 
 		T& AppendOrAssign(K&& Key, T&& Value)
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			if (Index != Capacity)
+			uint64 Index = GetIndex(Hash);
+			if (Index != Capacity && !Data[Index].IsFree())
 			{
 				N& Instance = Data[Index];
 				Instance.Value.Value = Move(Value);
-				return Instance.Value.Value;
 			}
 			else
 			{
-				Resize(++Count);
-				Index = GetIndexWrite(Hash);
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
+				}
 				Construct(Index, Hash, Move(Key), Move(Value));
-				return GetItem(Index).Value;
 			}
+			return Data[Index].Value.Value;
 		}
 
 		template<typename... Args>
 		T& AppendOrAssignConstruct(K&& Key, Args&&... args)
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			if (Index != Capacity)
+			uint64 Index = GetIndex(Hash);
+			if (Index != Capacity && !Data[Index].IsFree())
 			{
 				N& Instance = Data[Index];
 				Memory::Construct<T>(&Instance.Value.Value, args...);
-				return Instance.Value.Value;
 			}
 			else
 			{
-				Resize(++Count);
-				Index = GetIndexWrite(Hash);
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
+				}
 				Construct(Index, Hash, Move(Key), args...);
-				return GetItem(Index).Value;
 			}
+			return Data[Index].Value.Value;
 		}
 
 		void Remove(const K& Key)
@@ -296,8 +300,8 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index != Capacity, Default, "Failed to find key");
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -313,9 +317,9 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
-			return GetItem(Index).Value;
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
+			return Data[Index].Value.Value;
 		}
 
 		const T& Get(const K& Key) const
@@ -323,31 +327,23 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			NEXUS_ASSERT(Index < Capacity, Default, "Failed to find key");
-			return GetItem(Index).Value;
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
+			return Data[Index].Value.Value;
 		}
 
 		T* TryGet(const K& Key) 
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			if (Index >= Capacity)
-			{
-				return nullptr;
-			}
-			return &GetItem(Index).Value;
+			uint64 Index = GetIndex(Hash);
+			return Index < Capacity && !Data[Index].IsFree() ? &Data[Index].Value.Value : nullptr;
 		}
 
 		const T* TryGet(const K& Key) const
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			if (Index >= Capacity)
-			{
-				return nullptr;
-			}
-			return &GetItem(Index).Value;
+			uint64 Index = GetIndex(Hash);
+			return Index < Capacity && !Data[Index].IsFree() ? &Data[Index].Value.Value : nullptr;
 		}
 
 		I GetIterator(const K& Key)
@@ -456,6 +452,7 @@ namespace NxFr
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
 				Data[Index].Hash = 0;
+				Data[Index].Tombstone = TB::NotTombstone;
 			}
 		}
 
@@ -468,15 +465,9 @@ namespace NxFr
 
 			for (uint64 OldIndex = 0; OldIndex < Length; ++OldIndex)
 			{
-				N& Old = Temp[OldIndex];
-				if (Old.IsFree())
-				{
-					continue;
-				}
-
-				uint64 Hash = GetHash(Old.Value.Key);
-				uint64 NewIndex = GetIndexWrite(Hash);
-				Construct(NewIndex, Hash, Move(Old.Value.Key), Move(Old.Value.Value));
+				uint64 Hash = GetHash(Temp[OldIndex].Value.Key);
+				uint64 NewIndex = GetIndex(Hash);
+				Copy(NewIndex, Temp[OldIndex], true);
 			}
 
 			Memory::Free(Temp, Alloc);
@@ -495,6 +486,10 @@ namespace NxFr
 			NEXUS_ASSERT(Instance.IsFree(), Default, "Construct on an already occupied slot");
 			Memory::Construct<KV>(&Instance.Value, args...);
 			Instance.Hash = Hash;
+			if (Data[Index].Tombstone == TB::IsTombstone)
+			{
+				Data[Index].Tombstone = TB::WasTombstone;
+			}
 		}
 
 		void Destruct(uint64 Index)
@@ -503,6 +498,7 @@ namespace NxFr
 			NEXUS_ASSERT(!Instance.IsFree(), Default, "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
 			Instance.Hash = 0;
+			Instance.Tombstone = TB::IsTombstone;
 		}
 
 		void DestructRange(uint64 Index, uint64 Size)
@@ -514,6 +510,23 @@ namespace NxFr
 				{
 					Memory::Destruct(&Instance.Value);
 					Instance.Hash = 0;
+					Instance.Tombstone = TB::IsTombstone;
+				}
+			}
+		}
+
+		void Copy(uint64 Index, N& Instance, bool MoveData)
+		{
+			Data[Index].Tombstone = Instance.Tombstone;
+			if (!Instance.IsFree())
+			{
+				if (MoveData)
+				{
+					Construct(Index, Instance.Hash, Move(Instance.Value.Key), Move(Instance.Value.Value));
+				}
+				else
+				{
+					Construct(Index, Instance.Hash, Instance.Value);
 				}
 			}
 		}
@@ -523,48 +536,38 @@ namespace NxFr
 			return Hash<H>::HashObject(Value);
 		}
 
-		uint64 GetIndexHash(uint64 Hash) const
+		uint64 GetIndex(uint64 Hash) const
 		{
-			return Hash % Capacity;
-		}
-
-		uint64 GetIndexWrite(uint64 Hash) const
-		{
-			uint64 IndexHashed = GetIndexHash(Hash);
+			uint64 IndexHashed = Hash % Capacity;
+			uint64 Tombstone = Capacity;
 
 			uint64 Iteration = 0;
 			uint64 Index = IndexHashed;
 
-			while (!Data[Index].IsFree())
+			while (Iteration < Capacity)
 			{
-				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				if (Iteration >= MaxProbingIteration())
+				N& Instance = Data[Index];
+
+				if (Instance.IsFree() && Instance.Tombstone == TB::NotTombstone)
 				{
-					NEXUS_ASSERT(false, Default, "Failed to find a free spot");
-					return Capacity;
+					return Tombstone != Capacity ? Tombstone : Index;
 				}
+				else if (Instance.Tombstone == TB::IsTombstone)
+				{
+					if (Tombstone == Capacity)
+					{
+						Tombstone = Index;
+					}
+				}
+				else if (Instance.Hash == Hash)
+				{
+					return Index;
+				}
+
+				Index = ProbingPolicy(IndexHashed, ++Iteration);
 			}
 
-			return Index;
-		}
-
-		uint64 GetIndexRead(uint64 Hash) const
-		{
-			uint64 IndexHashed = GetIndexHash(Hash);
-
-			uint64 Iteration = 0;
-			uint64 Index = IndexHashed;
-
-			while (Data[Index].IsFree() || Data[Index].Hash != Hash)
-			{
-				Index = ProbingPolicy(IndexHashed, ++Iteration);
-				if (Iteration >= MaxProbingIteration())
-				{
-					return Capacity;
-				}
-			}
-
-			return Index;
+			return Tombstone != Capacity ? Tombstone : Capacity;
 		}
 
 		KV& GetItem(uint64 Index) const
@@ -580,8 +583,8 @@ namespace NxFr
 		I GetIteratorKey(const K& Key) const
 		{
 			uint64 Hash = GetHash(Key);
-			uint64 Index = GetIndexRead(Hash);
-			return Index != Capacity ? I(Data, Index, Capacity) : End();
+			uint64 Index = GetIndex(Hash);
+			return Index < Capacity && !Data[Index].IsFree() ? I(Data, Index, Capacity) : End();
 		}
 
 		I GetIteratorValue(const T& Value) const
@@ -597,45 +600,37 @@ namespace NxFr
 			return End();
 		}
 
-		void Resize(uint64 Size)
+		bool Resize(uint64 Size)
 		{
 			Count = Size;
 
 			if (Count > Capacity)
 			{
 				Reallocate(GrowPolicy());
+				return true;
 			}
+
+			return false;
 		}
 
 		void ValidateCapacity(uint64 Size)
 		{
 			Capacity = Size > 3 ? Size : 3;
+			Capacity = Math::IsPrime(Capacity) ? Capacity : Math::NextPrime(Capacity);
 		}
 
 		uint64 GrowPolicy() const
 		{
-			return Math::NextPrime(Capacity);
+			return Capacity * 2;
 		}
 
 		uint64 ProbingPolicy(uint64 Index, uint64 Iteration) const
 		{
-			if (Iteration < Capacity)
-			{
-				bool Flip = Iteration % 2 == 0;
-				uint64 Offset = Math::CeilToInt((double)(Iteration) / 2.0);
-				Index = Index + (Flip ? -1 : 1) * (Offset * Offset);
-				Index = Math::Modulo(Index, Capacity);
-				return Index;
-			}
-			else
-			{
-				return Iteration - Capacity;
-			}
-		}
-
-		uint64 MaxProbingIteration() const
-		{
-			return Capacity * 2;
+			bool Flip = Iteration % 2 == 0;
+			uint64 Offset = Math::CeilToInt((double)(Iteration) / 2.0);
+			Index = Index + (Flip ? -1 : 1) * (Offset * Offset);
+			Index = Math::Modulo(Index, Capacity);
+			return Index;
 		}
 
 		Allocator* Alloc;

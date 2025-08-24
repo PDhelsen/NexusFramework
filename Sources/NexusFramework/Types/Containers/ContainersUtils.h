@@ -43,19 +43,21 @@ namespace NxFr
 		template<typename T, class H = Hashing::Default>
 		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)
 		{
-			Base.Resize(Base.GetCount() + Other.GetCount());
-
 			for (typename Set<T, H>::I It = Other.Begin(); It != Other.End(); ++It)
 			{
 				uint64 Hash = Base.GetHash(*It);
-				uint64 Index = Base.GetIndexRead(Hash);
+				uint64 Index = Base.GetIndex(Hash);
 
-				if (Index != Base.GetCapacity())
+				if (!Base.Data[Index].IsFree())
 				{
 					continue;
 				}
 
-				Index = Base.GetIndexWrite(Hash);
+				if (Base.Resize(++Base.Count))
+				{
+					Index = Base.GetIndex(Hash);
+				}
+
 				Base.Construct(Index, Hash, *It);
 			}
 		}
@@ -66,9 +68,9 @@ namespace NxFr
 			for (typename Set<T, H>::I It = Other.Begin(); It != Other.End(); ++It)
 			{
 				uint64 Hash = Base.GetHash(*It);
-				uint64 Index = Base.GetIndexRead(Hash);
+				uint64 Index = Base.GetIndex(Hash);
 
-				if (Index == Base.GetCapacity())
+				if (Base.Data[Index].IsFree())
 				{
 					continue;
 				}
@@ -84,15 +86,15 @@ namespace NxFr
 			for (typename Set<T, H>::I It = Base.Begin(); It != Base.End(); ++It)
 			{
 				uint64 Hash = Other.GetHash(*It);
-				uint64 Index = Other.GetIndexRead(Hash);
+				uint64 Index = Other.GetIndex(Hash);
 
-				if (Index != Other.GetCapacity())
+				if (!Other.Data[Index].IsFree())
 				{
 					continue;
 				}
 
 				Hash = Base.GetHash(*It);
-				Index = Base.GetIndexRead(Hash);
+				Index = Base.GetIndex(Hash);
 				Base.Destruct(Index);
 				Base.Resize(--Base.Count);
 			}

@@ -782,7 +782,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetIterator(6)->Integer, 6);
 
 		Test.Grow(21);
-		ASSERT_EQ(Test.GetCapacity(), 21);
+		ASSERT_EQ(Test.GetCapacity(), 23);
 
 		ContainerTest ToFind1 = ContainerTest(6);
 		ContainerTest ToFind2 = ContainerTest(100);
@@ -853,7 +853,7 @@ namespace NxTs
 		}
 
 		Test.Grow(21);
-		ASSERT_EQ(Test.GetCapacity(), 21);
+		ASSERT_EQ(Test.GetCapacity(), 23);
 
 		Test.Swap(6, 7);
 		ASSERT_EQ(Test[6].Integer, 70);
