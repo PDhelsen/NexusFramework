@@ -9,9 +9,19 @@ namespace NxFr
 	template<typename T>
 	struct Handle
 	{
+		template<typename>
+		friend struct Handle;
 		friend HandleManager;
 
+		Handle() : Pointer(nullptr) {}
+		template<typename U>
+		Handle(const Handle<U>& Other) : Pointer(Other.Pointer) {}
+
+		inline operator T*() { return GetRedirectedPointer(); }
+		inline operator const T*() const { return GetRedirectedPointer(); }
+
 		inline T* operator->() { return GetRedirectedPointer(); }
+		inline const T* operator->() const { return GetRedirectedPointer(); }
 		inline bool operator==(const Handle<T>& Other) const { return Pointer == Other.Pointer; }
 		inline bool operator!=(const Handle<T>& Other) const { return Pointer != Other.Pointer; }
 
@@ -21,10 +31,13 @@ namespace NxFr
 			uint64* Address = reinterpret_cast<uint64*>(Pointer);
 			return (T*)(*Address);
 		}
+		inline const T* GetRedirectedPointer() const
+		{
+			uint64* Address = reinterpret_cast<uint64*>(Pointer);
+			return (T*)(*Address);
+		}
 
 	private:
-		Handle() = default;
-
-		void* Pointer = nullptr;
+		void* Pointer;
 	};
 }
