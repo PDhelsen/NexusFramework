@@ -158,7 +158,7 @@ namespace NxFr
 			}
 
 			++Index;
-			++Pointer;
+			Pointer += Size;
 			Previous = Pointer;
 		} while (true);
 

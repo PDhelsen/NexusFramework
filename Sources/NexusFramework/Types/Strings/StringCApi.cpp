@@ -45,6 +45,7 @@ namespace NxFr
 					Result = Current;
 				}
 
+				++Current;
 				++Target;
 				++Count;
 
@@ -58,9 +59,8 @@ namespace NxFr
 				Target = Substring;
 				Result = nullptr;
 				Finding = false;
+				++Current;
 			}
-
-			++Current;
 		}
 
 		if (Count != Size)
