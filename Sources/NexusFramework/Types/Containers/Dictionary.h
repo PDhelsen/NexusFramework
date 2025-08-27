@@ -176,26 +176,20 @@ namespace NxFr
 
 		T& Append(const K& Key, const T& Value)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
 			Construct(Index, Hash, Key, Value);
 			return Data[Index].Value.Value;
 		}
 
 		T& Append(K&& Key, T&& Value)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
 			Construct(Index, Hash, Move(Key), Move(Value));
 			return Data[Index].Value.Value;
 		}
@@ -203,13 +197,10 @@ namespace NxFr
 		template<typename... Args>
 		T& AppendConstruct(K&& Key, Args&&... args)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
 			Construct(Index, Hash, Move(Key), args...);
 			return Data[Index].Value.Value;
 		}
@@ -217,15 +208,13 @@ namespace NxFr
 		template<typename C>
 		T& AppendRange(const C& Value)
 		{
+			Resize(GetCount() + Value.GetCount());
+
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndex(Hash);
 				NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
-				if (Resize(++Count))
-				{
-					Index = GetIndex(Hash);
-				}
 				Construct(Index, Hash, It->Key, It->Value);
 			}
 
@@ -549,15 +538,18 @@ namespace NxFr
 			{
 				N& Instance = Data[Index];
 
-				if (Instance.IsFree() && Instance.Tombstone == TB::NotTombstone)
+				if (Instance.IsFree())
 				{
-					return Tombstone != Capacity ? Tombstone : Index;
-				}
-				else if (Instance.Tombstone == TB::IsTombstone)
-				{
-					if (Tombstone == Capacity)
+					if (Instance.Tombstone == TB::NotTombstone)
 					{
-						Tombstone = Index;
+						return (Tombstone != Capacity) ? Tombstone : Index;
+					}
+					else
+					{
+						if (Tombstone == Capacity)
+						{
+							Tombstone = Index;
+						}
 					}
 				}
 				else if (Instance.Hash == Hash)

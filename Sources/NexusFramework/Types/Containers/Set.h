@@ -112,32 +112,28 @@ namespace NxFr
 
 		const T& Append(const T& Value)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
 			if (!Data[Index].IsFree())
 			{
 				return Data[Index].Value;
 			}
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
+
 			Construct(Index, Hash, Value);
 			return Data[Index].Value;
 		}
 
 		const T& Append(T&& Value)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
 			if (!Data[Index].IsFree())
 			{
 				return Data[Index].Value;
 			}
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
+			
 			Construct(Index, Hash, Move(Value));
 			return Data[Index].Value;
 		}
@@ -145,6 +141,8 @@ namespace NxFr
 		template<typename C>
 		const T& AppendRange(const C& Value)
 		{
+			Resize(GetCount() + Value.GetCount());
+
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(*It);
@@ -152,10 +150,6 @@ namespace NxFr
 				if (!Data[Index].IsFree())
 				{
 					continue;
-				}
-				if (Resize(++Count))
-				{
-					Index = GetIndex(Hash);
 				}
 				Construct(Index, Hash, *It);
 			}
@@ -355,15 +349,18 @@ namespace NxFr
 			{
 				N& Instance = Data[Index];
 
-				if (Instance.IsFree() && Instance.Tombstone == TB::NotTombstone)
+				if (Instance.IsFree())
 				{
-					return Tombstone != Capacity ? Tombstone : Index;
-				}
-				else if (Instance.Tombstone == TB::IsTombstone)
-				{
-					if (Tombstone == Capacity)
+					if (Instance.Tombstone == TB::NotTombstone)
 					{
-						Tombstone = Index;
+						return (Tombstone != Capacity) ? Tombstone : Index;
+					}
+					else
+					{
+						if (Tombstone == Capacity)
+						{
+							Tombstone = Index;
+						}
 					}
 				}
 				else if (Instance.Hash == Hash)

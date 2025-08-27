@@ -43,6 +43,8 @@ namespace NxFr
 		template<typename T, class H = Hashing::Default>
 		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)
 		{
+			Base.Resize(Base.GetCount() + Other.GetCount());
+
 			for (typename Set<T, H>::I It = Other.Begin(); It != Other.End(); ++It)
 			{
 				uint64 Hash = Base.GetHash(*It);
@@ -51,11 +53,6 @@ namespace NxFr
 				if (!Base.Data[Index].IsFree())
 				{
 					continue;
-				}
-
-				if (Base.Resize(++Base.Count))
-				{
-					Index = Base.GetIndex(Hash);
 				}
 
 				Base.Construct(Index, Hash, *It);
