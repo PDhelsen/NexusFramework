@@ -388,7 +388,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			return Index != Capacity ? GetIteratorIndex(Index) : End();
+			return Index < Capacity && !Data[Index].IsFree() ? I(Data, Index, Capacity) : End();
 		}
 
 		bool Resize(uint64 Size)
