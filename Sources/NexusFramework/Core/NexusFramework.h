@@ -37,6 +37,8 @@
 #include "NexusFramework/Memory/Handle/HandleManager.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
+#include "NexusFramework/Memory/Allocator/RawAllocator.h"
+#include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
 #include "NexusFramework/Memory/Allocator/StackAllocator.h"
 #include "NexusFramework/Memory/Allocator/HeapAllocator.h"
 #include "NexusFramework/Memory/Allocator/PoolAllocator.h"

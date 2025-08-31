@@ -50,6 +50,9 @@ namespace NxTs
 		Handle->Value = 2;
 		Handle->Test = 0xffffffff;
 
+		ASSERT_EQ(Manager.BelongToManager(Handle), true);
+		ASSERT_EQ(Manager.BelongToManager(NxFr::Handle<MemoryTest>()), false);
+
 		Manager.ReleaseHandle<MemoryTest>(Handle);
 		ASSERT_EQ(Handle.IsValid(), false);
 

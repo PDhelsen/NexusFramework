@@ -49,6 +49,12 @@ namespace NxFr
 		return It == Buffer.End() ? nullptr : &It.Get();
 	}
 
+	bool HandleManager::IsBelonging(void* Pointer)
+	{
+		uint64* Address = reinterpret_cast<uint64*>(Pointer);
+		return &Buffer.Begin().Get() <= Address && Address < &Buffer.End().Get();
+	}
+
 	Dictionary<void*, Handle<uint8>> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
 	{
 		Dictionary<void*, Handle<uint8>> Handles;

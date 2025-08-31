@@ -23,6 +23,8 @@ namespace NxFr
 		void* ReleaseHandle(Handle<T>& Handle);
 		template<typename T>
 		Handle<T> FindHandle(T* Pointer);
+		template<typename T>
+		bool BelongToManager(Handle<T> Handle);
 
 		NEXUS_FRAMEWORK_API Dictionary<void*, Handle<uint8>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
@@ -35,6 +37,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void ModifyHandle(void* Handle, void* Pointer);
 		NEXUS_FRAMEWORK_API void FreeHandle(void* Handle);
 		NEXUS_FRAMEWORK_API void* GetHandle(void* Pointer);
+		NEXUS_FRAMEWORK_API bool IsBelonging(void* Pointer);
 
 		Pool<uint64, Pooling::PreAllocated<uint64>> Buffer;
 	};
@@ -74,6 +77,12 @@ namespace NxFr
 		Handle<T> Handle;
 		Handle.Pointer = GetHandle(Pointer);
 		return Handle;
+	}
+
+	template<typename T>
+	inline bool HandleManager::BelongToManager(Handle<T> Handle)
+	{
+		return IsBelonging(Handle.Pointer);
 	}
 
 	namespace Memory
