@@ -112,12 +112,15 @@ namespace NxFr
 
 		const T& Append(const T& Value)
 		{
-			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (!Data[Index].IsFree())
+			if (Index < Capacity && !Data[Index].IsFree())
 			{
 				return Data[Index].Value;
+			}
+			if (Resize(++Count))
+			{
+				Index = GetIndex(Hash);
 			}
 
 			Construct(Index, Hash, Value);
@@ -126,12 +129,15 @@ namespace NxFr
 
 		const T& Append(T&& Value)
 		{
-			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (!Data[Index].IsFree())
+			if (Index < Capacity && !Data[Index].IsFree())
 			{
 				return Data[Index].Value;
+			}
+			if (Resize(++Count))
+			{
+				Index = GetIndex(Hash);
 			}
 			
 			Construct(Index, Hash, Move(Value));
@@ -141,15 +147,17 @@ namespace NxFr
 		template<typename C>
 		const T& AppendRange(const C& Value)
 		{
-			Resize(GetCount() + Value.GetCount());
-
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(*It);
 				uint64 Index = GetIndex(Hash);
-				if (!Data[Index].IsFree())
+				if (Index < Capacity && !Data[Index].IsFree())
 				{
-					continue;
+					return Data[Index].Value;
+				}
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
 				}
 				Construct(Index, Hash, *It);
 			}

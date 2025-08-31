@@ -179,7 +179,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Key already present in Dictionary");
 			Construct(Index, Hash, Key, Value);
 			return Data[Index].Value.Value;
 		}
@@ -189,7 +189,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Key already present in Dictionary");
 			Construct(Index, Hash, Move(Key), Move(Value));
 			return Data[Index].Value.Value;
 		}
@@ -200,7 +200,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Key already present in Dictionary");
 			Construct(Index, Hash, Move(Key), args...);
 			return Data[Index].Value.Value;
 		}
@@ -214,7 +214,7 @@ namespace NxFr
 			{
 				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndex(Hash);
-				NEXUS_ASSERT(Data[Index].IsFree(), Default, "Key already present in Dictionary");
+				NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Key already present in Dictionary");
 				Construct(Index, Hash, It->Key, It->Value);
 			}
 
@@ -228,7 +228,7 @@ namespace NxFr
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			uint64 SaveIndex = Index;
-			if (Index != Capacity && !Data[Index].IsFree())
+			if (Index < Capacity && !Data[Index].IsFree())
 			{
 				N& Instance = Data[Index];
 				Instance.Value.Value = Value;
@@ -248,7 +248,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
-			if (Index != Capacity && !Data[Index].IsFree())
+			if (Index < Capacity && !Data[Index].IsFree())
 			{
 				N& Instance = Data[Index];
 				Instance.Value.Value = Move(Value);
@@ -269,7 +269,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
-			if (Index != Capacity && !Data[Index].IsFree())
+			if (Index < Capacity && !Data[Index].IsFree())
 			{
 				N& Instance = Data[Index];
 				Memory::Construct<T>(&Instance.Value.Value, args...);
