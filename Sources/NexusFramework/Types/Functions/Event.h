@@ -12,8 +12,14 @@ namespace NxFr
 	public:
 		using F = Delegate<void(Args...)>;
 
-		Event() = default;
-		~Event() = default;
+		Event(Allocator* Allctr = AllocatorContext::Get())
+			: Functions(4, Allctr)
+		{
+		}
+
+		~Event()
+		{
+		}
 
 		void operator()(Args... args) const
 		{

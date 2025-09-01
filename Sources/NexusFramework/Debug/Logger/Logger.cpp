@@ -31,7 +31,7 @@ namespace NxFr
 	}
 
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle("")
+		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle(""), Callback()
 	{
 		OpenFile(Path);
 	}
