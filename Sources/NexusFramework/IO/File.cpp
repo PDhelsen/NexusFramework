@@ -3,6 +3,7 @@
 
 #include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/IO/Path.h"
+#include "NexusFramework/IO/Directory.h"
 
 namespace NxFr
 {
@@ -47,6 +48,22 @@ namespace NxFr
 	File& File::Refresh()
 	{
 		Exist = Path::Exist(Path);
+		return *this;
+	}
+
+	File& File::EnsureParent()
+	{
+		if (Exist)
+		{
+			return *this;
+		}
+
+		NxFr::Path Parent = Path::GetParent(Path);
+		if (Parent.IsValid() && !Parent.Exist())
+		{
+			Directory(Parent).EnsureParent().Create();
+		}
+
 		return *this;
 	}
 

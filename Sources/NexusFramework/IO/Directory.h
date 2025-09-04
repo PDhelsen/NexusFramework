@@ -20,6 +20,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool operator !=(const Directory& Other) const;
 
 		NEXUS_FRAMEWORK_API Directory& Refresh();
+		NEXUS_FRAMEWORK_API Directory& EnsureParent();
 
 		NEXUS_FRAMEWORK_API void Create();
 		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false);

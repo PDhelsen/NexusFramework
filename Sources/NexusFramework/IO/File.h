@@ -23,6 +23,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool operator !=(const File& Other) const;
 
 		NEXUS_FRAMEWORK_API File& Refresh();
+		NEXUS_FRAMEWORK_API File& EnsureParent();
 
 		NEXUS_FRAMEWORK_API void Create(bool KeepOpen = false);
 		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false, bool CloseIfOpen = false);

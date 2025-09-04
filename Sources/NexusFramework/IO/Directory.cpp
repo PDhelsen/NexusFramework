@@ -43,6 +43,22 @@ namespace NxFr
 		return *this;
 	}
 
+	Directory& Directory::EnsureParent()
+	{
+		if (Exist)
+		{
+			return *this;
+		}
+
+		NxFr::Path Parent = Path::GetParent(Path);
+		if (Parent.IsValid() && !Parent.Exist())
+		{
+			Directory(Parent).EnsureParent().Create();
+		}
+
+		return *this;
+	}
+
 	void Directory::Create()
 	{
 		if (Exist)
