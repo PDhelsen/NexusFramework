@@ -15,7 +15,7 @@ namespace NxFr
 			NEXUS_ASSERT(Args.GetCount() == 0, Default, "Arguments were already parsed");
 
 			Args.Grow(ArgC);
-			ArgsProcessed.Grow(Math::NextPrime(ArgC));
+			ArgsProcessed.Grow(ArgC);
 
 			Args.Append(ArgV[0]);
 			ArgsProcessed.Append(KeyProgram, ArgV[0]);

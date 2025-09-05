@@ -246,7 +246,7 @@ namespace YAML
 				return false;
 			}
 
-			rhs.Grow(NxFr::Math::NextPrime(node.size()));
+			rhs.Grow(node.size());
 			for (YAML::const_iterator It = node.begin(); It != node.end(); ++It)
 			{
 				rhs.Append(It->as<T>());
@@ -300,7 +300,7 @@ namespace YAML
 				return false;
 			}
 
-			rhs.Grow(NxFr::Math::NextPrime(node.size()));
+			rhs.Grow(node.size());
 			for (YAML::const_iterator It = node.begin(); It != node.end(); ++It)
 			{
 				rhs.Append(It->first.as<K>(), It->second.as<T>());

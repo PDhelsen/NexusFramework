@@ -549,7 +549,7 @@ namespace NxFr
 	Dictionary<StringId, const Stats::Stat*> Stats::GetAllCurrentStats() const
 	{
 		Dictionary<StringId, const Stats::Stat*> Result;
-		Result.Grow(Math::NextPrime(Data.GetCount()));
+		Result.Grow(Data.GetCount());
 		GetAllCurrentStats(Result);
 		return Result;
 	}

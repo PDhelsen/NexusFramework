@@ -274,6 +274,11 @@ namespace NxFr
 
 			for (uint64 OldIndex = 0; OldIndex < Length; ++OldIndex)
 			{
+				if (Temp[OldIndex].IsFree() && Temp[OldIndex].Tombstone == TB::NotTombstone)
+				{
+					continue;
+				}
+
 				uint64 Hash = GetHash(Temp[OldIndex].Value);
 				uint64 NewIndex = GetIndex(Hash);
 				Copy(NewIndex, Temp[OldIndex], true);
@@ -326,7 +331,6 @@ namespace NxFr
 
 		void Copy(uint64 Index, N& Instance, bool MoveData)
 		{
-			Data[Index].Tombstone = Instance.Tombstone;
 			if (!Instance.IsFree())
 			{
 				if (MoveData)
@@ -338,6 +342,8 @@ namespace NxFr
 					Construct(Index, Instance.Hash, Instance.Value);
 				}
 			}
+
+			Data[Index].Tombstone = Instance.Tombstone;
 		}
 
 		uint64 GetHash(const T& Value) const
