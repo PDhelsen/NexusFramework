@@ -148,6 +148,26 @@ namespace NxFr
 		this->Callback -= Callback;
 	}
 
+	bool Logger::IsFlushingOnLog() const
+	{
+		return FlushOnLog;
+	}
+
+	void Logger::SetFlushOnLog(bool State)
+	{
+		if (FlushOnLog == State)
+		{
+			return;
+		}
+
+		if (!FlushOnLog)
+		{
+			Flush();
+		}
+
+		FlushOnLog = State;
+	}
+
 	String* Logger::ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
 		BufferMessage.Clear();

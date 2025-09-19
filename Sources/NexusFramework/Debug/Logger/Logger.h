@@ -39,6 +39,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 		NEXUS_FRAMEWORK_API void UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 
+		NEXUS_FRAMEWORK_API bool IsFlushingOnLog() const;
+		NEXUS_FRAMEWORK_API void SetFlushOnLog(bool State);
+
 	protected:
 		NEXUS_FRAMEWORK_API String* ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
 		NEXUS_FRAMEWORK_API String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
