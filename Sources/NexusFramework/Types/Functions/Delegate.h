@@ -187,7 +187,7 @@ namespace NxFr
 		template<typename F>
 		void Bind(F&& Func)
 		{
-			Store(Forward<F>(Func), !IsLambda<RemoveReference<F>::Type>::Value);
+			Store(Forward<F>(Func), !IsLambda<typename RemoveReference<F>::Type>::Value);
 		}
 
 		template<typename T>
