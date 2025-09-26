@@ -48,6 +48,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static bool Start(StringView Text, StringView Substring);
 		NEXUS_FRAMEWORK_API static bool End(StringView Text, StringView Substring);
 		NEXUS_FRAMEWORK_API static bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API static StringView RemoveLeading(StringView Text, char Character = ' ');
+		NEXUS_FRAMEWORK_API static StringView RemoveTrailing(StringView Text, char Character = ' ');
 		NEXUS_FRAMEWORK_API static StringView Common(StringView Text1, StringView Text2);
 		NEXUS_FRAMEWORK_API static StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
 		NEXUS_FRAMEWORK_API static List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);

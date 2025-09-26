@@ -5,78 +5,91 @@ namespace NxFr
 {
 	namespace Arguments
 	{
-		static List<StringView>& GetArgs() { static List<StringView> Args(1, nullptr); return Args; }
-		static Dictionary<StringView, StringView>& GetArgsProcessed() { static Dictionary<StringView, StringView> Args(1, nullptr); return Args; }
+		static String FlagTrue = "true";
+
+		List<String>& GetPositional() { static List<String> Args(1, nullptr); return Args; }
+		Dictionary<String, String>& GetNamed() { static Dictionary<String, String> Args(1, nullptr); return Args; }
 
 		void Parse(uint64 ArgC, char* ArgV[])
 		{
-			List<StringView>& Args = GetArgs();
-			Dictionary<StringView, StringView>& ArgsProcessed = GetArgsProcessed();
-			NEXUS_ASSERT(Args.GetCount() == 0, Default, "Arguments were already parsed");
+			List<String>& Positional = GetPositional();
+			Dictionary<String, String>& Named = GetNamed();
+			NEXUS_ASSERT(Positional.GetCount() == 0 && Named.GetCount() == 0, Default, "Arguments were already parsed");
 
-			Args.Grow(ArgC);
-			ArgsProcessed.Grow(ArgC);
+			Positional.Grow(ArgC);
+			Named.Grow(ArgC);
 
-			Args.Append(ArgV[0]);
-			ArgsProcessed.Append(KeyProgram, ArgV[0]);
-
-			for (uint64 Index = 1; Index < ArgC; ++Index)
+			for (uint64 Index = 0; Index < ArgC; ++Index)
 			{
 				StringView Arg = ArgV[Index];
 
-				List<StringView> KeyValue = Arg.SplitAll("=");
-				StringView Key = KeyValue[0];
-				StringView Value = KeyValue.GetCount() == 2 ? KeyValue[1] : "";
+				if (Arg.Start("--"))
+				{
+					Arg = Arg.ToView(2, Arg.GetCount() - 2);
+					Named.Append(Arg.ToString(), FlagTrue);
+				}
+				else if (Arg.Start("-"))
+				{
+					uint64 Equal = Arg.Find("=").C() - Arg.C();
 
-				Args.Append(ArgV[Index]);
-				ArgsProcessed.Append(Key, Value);
+					StringView Key = Arg.ToView(1, Equal - 1);
+					StringView Value = Arg.ToView(Equal + 1, Arg.GetCount() - (Equal + 1));
+
+					Named.Append(Key.ToString(), Value.ToString());
+				}
+				else
+				{
+					Positional.Append(Arg.ToString());
+				}
 			}
 		}
 
 		void Log()
 		{
-			Dictionary<StringView, StringView>& Args = GetArgsProcessed();
-			NEXUS_LOG(Info, Default, "Arguments count: %d", Args.GetCount());
+			List<String>& Positional = GetPositional();
+			Dictionary<String, String>& Named = GetNamed();
+			NEXUS_LOG(Info, Default, "Arguments count: %d", Positional.GetCount() + Named.GetCount());
 
-			uint64 Index = 0;
-			for (auto Iter = Begin(); Iter != End(); ++Iter, ++Index)
+			for (uint64 Index = 0; Index < Positional.GetCount(); ++Index)
 			{
-				NEXUS_LOG(Info, Default, "Argument %d: %s = %s", Index, Iter->Key.ToString().C(), Iter->Value.ToString().C());
+				NEXUS_LOG(Info, Default, "Argument %d: %s", Index, Positional[Index].C());
+			}
+			for (auto It = Named.Begin(); It != Named.End(); ++It)
+			{
+				if (It->Value.IsEmpty())
+				{
+					NEXUS_LOG(Info, Default, "Argument %s: true", It->Key.C());
+				}
+				else
+				{
+					NEXUS_LOG(Info, Default, "Argument %s: %s", It->Key.C(), It->Value.C());
+				}
 			}
 		}
 
-		StringView GetValue(uint64 Index, StringView Default)
+		const String& Get(uint64 Index, const String& Default)
 		{
-			List<StringView>& Args = GetArgs();
+			const List<String>& Args = GetPositional();
 			return Args[Index];
 		}
 
-		StringView GetValue(StringView Key, StringView Default)
+		const String& Get(const String& Key, const String& Default)
 		{
-			Dictionary<StringView, StringView>& Args = GetArgsProcessed();
-			StringView* Contain = Args.TryGet(Key);
+			const Dictionary<String, String>& Args = GetNamed();
+			const String* Contain = Args.TryGet(Key);
 			return Contain != nullptr ? *Contain : Default;
 		}
 
-		bool HasFlag(StringView Key)
+		bool Has(uint64 Index)
 		{
-			Dictionary<StringView, StringView>& Args = GetArgsProcessed();
+			const List<String>& Args = GetPositional();
+			return Args.IsValidIndex(Index);
+		}
+
+		bool Has(const String& Key)
+		{
+			const Dictionary<String, String>& Args = GetNamed();
 			return Args.ContainsKey(Key);
-		}
-
-		Dictionary<StringView, StringView>::I Begin()
-		{
-			return GetArgsProcessed().Begin();
-		}
-
-		Dictionary<StringView, StringView>::I End()
-		{
-			return GetArgsProcessed().End();
-		}
-
-		int64 GetCount()
-		{
-			return GetArgsProcessed().GetCount();
 		}
 	}
 }

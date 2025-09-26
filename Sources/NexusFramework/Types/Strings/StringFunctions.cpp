@@ -32,6 +32,35 @@ namespace NxFr
 		return !Result.IsEmpty();
 	}
 
+	StringView StringUtility::RemoveLeading(StringView Text, char Character)
+	{
+		uint64 Index = 0;
+		uint64 Count = Text.GetCount();
+		const char* Position = Text.C();
+
+		while (Index < Count && *Position == Character)
+		{
+			Position++;
+			Index++;
+		}
+
+		return StringView(Position, Count - Index);
+	}
+
+	StringView StringUtility::RemoveTrailing(StringView Text, char Character)
+	{
+		uint64 Count = Text.GetCount();
+		const char* Position = Text.C() + Count - 1;
+
+		while (Count >= 0 && *Position == Character)
+		{
+			Position--;
+			Count--;
+		}
+
+		return StringView(Text.C(), Count);
+	}
+
 	StringView StringUtility::Common(StringView Text1, StringView Text2)
 	{
 		uint64 Count = StringCApi::Common(Text1.C(), Text2.C());
