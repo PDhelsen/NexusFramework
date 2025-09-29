@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
@@ -41,6 +42,21 @@ namespace NxFr
 
 			Allocate(Size);
 			ConstructRange(0, Count);
+		}
+
+		Array(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0)
+		{
+			NEXUS_ASSERT((L == 0 && Init.size() == 0) || (L == 0 && Init.size() > 0), Default, "The provided size is invalid");
+
+			Allocate(Init.size());
+			ConstructRange(0, Count);
+
+			uint64 Index = 0;
+			for (auto& It : Init)
+			{
+				Assign(Index++, It);
+			}
 		}
 
 		Array(const Array<T, L>& Other)
@@ -146,6 +162,26 @@ namespace NxFr
 		bool operator!=(const Array<T, L>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const Array<T, L>& Other) const
+		{
+			return Count > Other.Count;
+		}
+
+		bool operator>=(const Array<T, L>&Other) const
+		{
+			return Count >= Other.Count;
+		}
+
+		bool operator<(const Array<T, L>& Other) const
+		{
+			return Count < Other.Count;
+		}
+
+		bool operator<=(const Array<T, L>& Other) const
+		{
+			return Count <= Other.Count;
 		}
 
 		T& Assign(uint64 Index, const T& Value)

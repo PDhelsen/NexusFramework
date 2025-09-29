@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
@@ -28,6 +29,17 @@ namespace NxFr
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
+		}
+
+		Dictionary(InitializerList<KV> Init, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+		{
+			Allocate(Init.size());
+
+			for (auto& It : Init)
+			{
+				Append(It.Key, It.Value);
+			}
 		}
 
 		Dictionary(const Dictionary<K, T, H>& Other)
@@ -118,6 +130,26 @@ namespace NxFr
 		bool operator!=(const Dictionary<K, T, H>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const Dictionary<K, T, H>& Other) const
+		{
+			return Count > Other.Count;
+		}
+
+		bool operator>=(const Dictionary<K, T, H>& Other) const
+		{
+			return Count >= Other.Count;
+		}
+
+		bool operator<(const Dictionary<K, T, H>& Other) const
+		{
+			return Count < Other.Count;
+		}
+
+		bool operator<=(const Dictionary<K, T, H>& Other) const
+		{
+			return Count <= Other.Count;
 		}
 
 		T& Assign(const K& Key, const T& Value)

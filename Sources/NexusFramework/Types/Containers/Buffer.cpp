@@ -73,6 +73,26 @@ namespace NxFr
 		return !(*this == Other);
 	}
 
+	bool Buffer::operator>(const Buffer& Other) const
+	{
+		return Count > Other.Count;
+	}
+
+	bool Buffer::operator>=(const Buffer& Other) const
+	{
+		return Count >= Other.Count;
+	}
+
+	bool Buffer::operator<(const Buffer& Other) const
+	{
+		return Count < Other.Count;
+	}
+
+	bool Buffer::operator<=(const Buffer& Other) const
+	{
+		return Count <= Other.Count;
+	}
+
 	void Buffer::Clear()
 	{
 		Clear(Count, 0);

@@ -84,6 +84,26 @@ namespace NxFr
 			return !(*this == Other);
 		}
 
+		bool operator>(const Tree<T>& Other) const
+		{
+			return Count > Other.Count;
+		}
+
+		bool operator>=(const Tree<T>& Other) const
+		{
+			return Count >= Other.Count;
+		}
+
+		bool operator<(const Tree<T>& Other) const
+		{
+			return Count < Other.Count;
+		}
+
+		bool operator<=(const Tree<T>& Other) const
+		{
+			return Count <= Other.Count;
+		}
+
 		T& Assign(T* Position, const T& Value)
 		{
 			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");

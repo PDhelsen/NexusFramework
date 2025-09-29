@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
@@ -23,6 +24,17 @@ namespace NxFr
 			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
 			ValidateDefaultState();
+		}
+
+		Dequeue(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
+		{
+			ValidateDefaultState();
+
+			for (auto& It : Init)
+			{
+				AppendBack(It);
+			}
 		}
 
 		Dequeue(const Dequeue<T, BS>& Other)
@@ -134,6 +146,26 @@ namespace NxFr
 		bool operator!=(const Dequeue<T, BS>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const Dequeue<T, BS>& Other) const
+		{
+			return Count > Other.Count;
+		}
+
+		bool operator>=(const Dequeue<T, BS>& Other) const
+		{
+			return Count >= Other.Count;
+		}
+
+		bool operator<(const Dequeue<T, BS>& Other) const
+		{
+			return Count < Other.Count;
+		}
+
+		bool operator<=(const Dequeue<T, BS>& Other) const
+		{
+			return Count <= Other.Count;
 		}
 
 		T& Assign(uint64 Index, const T& Value)

@@ -74,10 +74,13 @@ namespace NxFr
 
 		static void Encode(RBS& Rbs, const Set<T>& Object)
 		{
-			Rbs.WriteObject(Object.GetCount());
-			for (auto& It : Object)
+			Array<T> Data = ContainersUtils::ToArray<T>(Object);
+			Data.Sort();
+
+			Rbs.WriteObject(Data.GetCount());
+			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Data[Index]);
 			}
 		}
 	};
@@ -100,11 +103,14 @@ namespace NxFr
 
 		static void Encode(RBS& Rbs, const Dictionary<K, T>& Object)
 		{
-			Rbs.WriteObject(Object.GetCount());
-			for (auto& It : Object)
+			Array<KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(Object);
+			Data.Sort();
+
+			Rbs.WriteObject(Data.GetCount());
+			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
-				Rbs.WriteObject(It.Key);
-				Rbs.WriteObject(It.Value);
+				Rbs.WriteObject(Data[Index].Key);
+				Rbs.WriteObject(Data[Index].Value);
 			}
 		}
 	};
@@ -232,10 +238,14 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			for (auto& It : rhs)
+			NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
+			Data.Sort();
+
+			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
-				node.push_back(It);
+				node.push_back(Data[Index]);
 			}
+
 			return node;
 		}
 
@@ -263,10 +273,13 @@ namespace YAML
 			out << YAML::Flow;
 		}
 
+		NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
+		Data.Sort();
+
 		out << YAML::BeginSeq;
-		for (auto& It : rhs)
+		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			out << It;
+			out << Data[Index];
 		}
 		out << YAML::EndSeq;
 
@@ -286,10 +299,14 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			for (auto& It : rhs)
+			NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(rhs);
+			Data.Sort();
+
+			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
-				node[It.Key] = It.Value;
+				node[Data[Index].Key] = Data[Index].Value;
 			}
+
 			return node;
 		}
 
@@ -317,11 +334,14 @@ namespace YAML
 			out << YAML::Flow;
 		}
 
+		NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(rhs);
+		Data.Sort();
+
 		out << YAML::BeginMap;
-		for (auto& It : rhs)
+		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			out << YAML::Key << It.Key;
-			out << YAML::Value << It.Value;
+			out << YAML::Key << Data[Index].Key;
+			out << YAML::Value << Data[Index].Value;
 		}
 		out << YAML::EndMap;
 

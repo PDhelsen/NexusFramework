@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
@@ -21,6 +22,15 @@ namespace NxFr
 		LinkedList(Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
+		}
+
+		LinkedList(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
+		{
+			for (auto It : Init)
+			{
+				AppendBack(It);
+			}
 		}
 
 		LinkedList(const LinkedList<T>& Other)
@@ -95,6 +105,26 @@ namespace NxFr
 		bool operator!=(const LinkedList<T>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const LinkedList<T>& Other) const
+		{
+			return Count > Other.Count;
+		}
+
+		bool operator>=(const LinkedList<T>& Other) const
+		{
+			return Count >= Other.Count;
+		}
+
+		bool operator<(const LinkedList<T>& Other) const
+		{
+			return Count < Other.Count;
+		}
+
+		bool operator<=(const LinkedList<T>& Other) const
+		{
+			return Count <= Other.Count;
 		}
 
 		T& Assign(T* Position, const T& Value)

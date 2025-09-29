@@ -1,5 +1,6 @@
 #pragma once
 
+#include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
@@ -23,6 +24,17 @@ namespace NxFr
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
+		}
+
+		List(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+		{
+			Allocate(Init.size());
+
+			for (auto& It : Init)
+			{
+				Append(It);
+			}
 		}
 
 		List(const List<T>& Other)
@@ -112,6 +124,26 @@ namespace NxFr
 		bool operator!=(const List<T>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const List<T>& Other) const
+		{
+			return Count > Other.Count;
+		}
+
+		bool operator>=(const List<T>& Other) const
+		{
+			return Count >= Other.Count;
+		}
+
+		bool operator<(const List<T>& Other) const
+		{
+			return Count < Other.Count;
+		}
+
+		bool operator<=(const List<T>& Other) const
+		{
+			return Count <= Other.Count;
 		}
 
 		T& Assign(uint64 Index, const T& Value)

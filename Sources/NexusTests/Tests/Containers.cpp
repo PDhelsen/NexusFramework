@@ -1485,4 +1485,29 @@ namespace NxTs
 		ASSERT_NE(Test[2].Integer, LinkedList.Get()[2].Integer);
 		ASSERT_NE(Test[2].Integer, Dictionary[ContainerTest(10)][2].Integer);
 	}
+
+	TEST(Containers, InitializeList)
+	{
+		NxFr::Array<uint64> Array = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+		ASSERT_EQ(Array.GetCount(), 10);
+		ASSERT_EQ(Array[4], 5);
+
+		NxFr::List<uint64> List = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+		ASSERT_EQ(List.GetCount(), 10);
+		ASSERT_EQ(List[4], 5);
+
+		NxFr::LinkedList<uint64> LinkedList = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+		ASSERT_EQ(LinkedList.GetCount(), 10);
+
+		NxFr::Dequeue<uint64> Dequeue = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+		ASSERT_EQ(Dequeue.GetCount(), 10);
+
+		NxFr::Set<uint64> Set = { 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
+		ASSERT_EQ(Set.GetCount(), 10);
+		ASSERT_EQ(Set.Contains(4), true);
+
+		NxFr::Dictionary<uint64, uint64> Dictionary = { { 9, 9 }, { 8, 8 }, { 7, 7 }, { 6, 6 }, { 5, 5 }, { 4, 4 }, { 3, 3 }, { 2, 2 }, { 1, 1 }, { 0, 0 } };
+		ASSERT_EQ(Dictionary.GetCount(), 10);
+		ASSERT_EQ(Dictionary[4], 4);
+	}
 }

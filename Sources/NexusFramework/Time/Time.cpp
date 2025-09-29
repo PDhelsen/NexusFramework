@@ -10,9 +10,9 @@ namespace NxFr
 
 #pragma region Constant
 
-		static String WeekDaysNames[7] = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-		static String MonthsNames[12] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-		static int32 DayPerMonths[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+		static Array<String> WeekDaysNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+		static Array<String> MonthsNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+		static Array<int32> DayPerMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 		static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(64, nullptr); return LocalBuffer; }
 
 #pragma endregion

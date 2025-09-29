@@ -49,6 +49,26 @@ namespace NxFr
 				return !(*this == Other);
 			}
 
+			bool operator>(const PreAllocated<T>& Other) const
+			{
+				return Count > Other.Count;
+			}
+
+			bool operator>=(const PreAllocated<T>& Other) const
+			{
+				return Count >= Other.Count;
+			}
+
+			bool operator<(const PreAllocated<T>& Other) const
+			{
+				return Count < Other.Count;
+			}
+
+			bool operator<=(const PreAllocated<T>& Other) const
+			{
+				return Count <= Other.Count;
+			}
+
 			T* Acquire()
 			{
 				N* Instance = nullptr;
@@ -220,6 +240,26 @@ namespace NxFr
 			bool operator!=(const OnDemand<T>& Other) const
 			{
 				return !(*this == Other);
+			}
+
+			bool operator>(const OnDemand<T>& Other) const
+			{
+				return Count > Other.Count;
+			}
+
+			bool operator>=(const OnDemand<T>& Other) const
+			{
+				return Count >= Other.Count;
+			}
+
+			bool operator<(const OnDemand<T>& Other) const
+			{
+				return Count < Other.Count;
+			}
+
+			bool operator<=(const OnDemand<T>& Other) const
+			{
+				return Count <= Other.Count;
 			}
 
 			T* Acquire()
@@ -446,6 +486,26 @@ namespace NxFr
 		bool operator!=(const Pool<T, P>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const Pool<T, P>& Other) const
+		{
+			return Data > Other.Data;
+		}
+
+		bool operator>=(const Pool<T, P>& Other) const
+		{
+			return Data >= Other.Data;
+		}
+
+		bool operator<(const Pool<T, P>& Other) const
+		{
+			return Data < Other.Data;
+		}
+
+		bool operator<=(const Pool<T, P>& Other) const
+		{
+			return Data <= Other.Data;
 		}
 
 		T& Acquire()

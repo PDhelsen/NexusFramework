@@ -23,6 +23,10 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API bool operator==(const Buffer& Other) const;
 		NEXUS_FRAMEWORK_API bool operator!=(const Buffer& Other) const;
+		NEXUS_FRAMEWORK_API bool operator>(const Buffer& Other) const;
+		NEXUS_FRAMEWORK_API bool operator>=(const Buffer& Other) const;
+		NEXUS_FRAMEWORK_API bool operator<(const Buffer& Other) const;
+		NEXUS_FRAMEWORK_API bool operator<=(const Buffer& Other) const;
 
 		NEXUS_FRAMEWORK_API void Clear();
 		NEXUS_FRAMEWORK_API BufferView Get(uint64 Size, uint64 Offset);

@@ -128,6 +128,12 @@ namespace NxFr
 	class KeyValuePair
 	{
 	public:
+		KeyValuePair()
+			: Key(), Value()
+		{
+
+		}
+
 		KeyValuePair(const K& Key, const T& Value)
 			: Key(Key), Value(Value)
 		{
@@ -198,6 +204,26 @@ namespace NxFr
 		bool operator!=(const KeyValuePair<K, T>& Other) const
 		{
 			return !(*this == Other);
+		}
+
+		bool operator>(const KeyValuePair<K, T>& Other) const
+		{
+			return Key > Other.Key;
+		}
+
+		bool operator>=(const KeyValuePair<K, T>& Other) const
+		{
+			return Key >= Other.Key;
+		}
+
+		bool operator<(const KeyValuePair<K, T>& Other) const
+		{
+			return Key < Other.Key;
+		}
+
+		bool operator<=(const KeyValuePair<K, T>& Other) const
+		{
+			return Key <= Other.Key;
 		}
 
 		K Key;

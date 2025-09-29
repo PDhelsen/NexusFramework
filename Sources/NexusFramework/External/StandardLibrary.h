@@ -19,7 +19,15 @@
 
 #include <new>
 
+#include <initializer_list>
+
 #define NEXUS_VA(Format, Function)	va_list ArgList;\
 									va_start(ArgList, Format);\
 									Function;\
 									va_end(ArgList);
+
+namespace NxFr
+{
+	template<typename T>
+	using InitializerList = std::initializer_list<T>;
+}

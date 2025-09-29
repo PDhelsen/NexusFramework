@@ -21,7 +21,7 @@ ray:
   direction: [0, 0, 1]
 array: [3, 5, 7, 11, 13]
 list: [Alice, Bob, Charlie]
-map: {id: data, key: value, first: second}
+map: {first: second, id: data, key: value}
 nested:
   created: 2025-04-12
   tags:
@@ -344,5 +344,59 @@ namespace NxTs
 		ASSERT_EQ(Csv.GetCellsCount(), 12);
 
 		NxFr::File(Path).Delete();
+	}
+
+	TEST(Serialization, Dictionary)
+	{
+		NxFr::Dictionary<NxFr::String, NxFr::String> Data1;
+		Data1.Append("first", "One");
+		Data1.Append("second", "Two");
+		Data1.Append("third", "Three");
+		Data1.Append("fourth", "Four");
+		Data1.Append("fifth", "Five");
+		Data1.Append("sixth", "Six");
+		Data1.Append("seventh", "Seven");
+		Data1.Append("eightth", "Eight");
+		Data1.Append("nineth", "Nine");
+		Data1.Append("tenth", "Ten");
+		Data1.Append("eleventh", "Eleven");
+		YAML::Emitter Emitter1;
+		Emitter1 << Data1;
+		NxFr::String Serialization1 = NxFr::Yaml::Serialize(Emitter1);
+
+		NxFr::Dictionary<NxFr::String, NxFr::String> Data2;
+		Data2.Append("second", "Two");
+		Data2.Append("sixth", "Six");
+		Data2.Append("eleventh", "Eleven");
+		Data2.Append("third", "Three");
+		Data2.Append("fourth", "Four");
+		Data2.Append("first", "One");
+		Data2.Append("seventh", "Seven");
+		Data2.Append("nineth", "Nine");
+		Data2.Append("eightth", "Eight");
+		Data2.Append("fifth", "Five");
+		Data2.Append("tenth", "Ten");
+		YAML::Emitter Emitter2;
+		Emitter2 << Data2;
+		NxFr::String Serialization2 = NxFr::Yaml::Serialize(Emitter2);
+
+		NxFr::Dictionary<NxFr::String, NxFr::String> Data3;
+		Data3.Append("eightth", "Eight");
+		Data3.Append("third", "Three");
+		Data3.Append("fourth", "Four");
+		Data3.Append("second", "Two");
+		Data3.Append("fifth", "Five");
+		Data3.Append("first", "One");
+		Data3.Append("seventh", "Seven");
+		Data3.Append("nineth", "Nine");
+		Data3.Append("eleventh", "Eleven");
+		Data3.Append("tenth", "Ten");
+		Data3.Append("sixth", "Six");
+		YAML::Emitter Emitter3;
+		Emitter3 << Data3;
+		NxFr::String Serialization3 = NxFr::Yaml::Serialize(Emitter3);
+
+		ASSERT_EQ(Serialization1, Serialization2);
+		ASSERT_EQ(Serialization1, Serialization3);
 	}
 }
