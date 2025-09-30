@@ -9,6 +9,7 @@ namespace NxFr
 
 		const Color Clear = Color(0.0f, 0.0f, 0.0f, 0.0f);
 		const Color Black = Color(0.0f, 0.0f, 0.0f, 1.0f);
+		const Color Gray = Color(0.5f, 0.5f, 0.5f, 1.0f);
 		const Color White = Color(1.0f, 1.0f, 1.0f, 1.0f);
 		const Color Red = Color(1.0f, 0.0f, 0.0f, 1.0f);
 		const Color Green = Color(0.0f, 1.0f, 0.0f, 1.0f);

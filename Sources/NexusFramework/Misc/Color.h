@@ -20,6 +20,7 @@ namespace NxFr
 	{
 		NEXUS_FRAMEWORK_API extern const Color Clear;
 		NEXUS_FRAMEWORK_API extern const Color Black;
+		NEXUS_FRAMEWORK_API extern const Color Gray;
 		NEXUS_FRAMEWORK_API extern const Color White;
 		NEXUS_FRAMEWORK_API extern const Color Red;
 		NEXUS_FRAMEWORK_API extern const Color Green;
