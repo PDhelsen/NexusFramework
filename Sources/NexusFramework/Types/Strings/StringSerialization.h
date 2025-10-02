@@ -8,6 +8,8 @@
 
 namespace NxFr
 {
+	// TODO: Support specialization for string literal
+
 	template<>
 	struct RBSConverter<const char*>
 	{

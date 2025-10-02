@@ -9,6 +9,8 @@ namespace NxFr
 {
 	namespace Hashing
 	{
+		// TODO: Support specialization for string literal
+
 		template<typename H>
 		class HashProcess<const char*, H>
 		{
