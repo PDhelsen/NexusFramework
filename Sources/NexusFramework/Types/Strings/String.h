@@ -15,6 +15,9 @@ namespace NxFr
 	{
 		friend class StringUtility;
 
+	public:
+		using Similar = StringView;
+
 	private:
 		inline static const uint8 SmallStringCapacity = 16;
 

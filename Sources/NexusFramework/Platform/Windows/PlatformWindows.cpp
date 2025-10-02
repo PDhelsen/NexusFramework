@@ -17,33 +17,31 @@ namespace NxFr
 
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
-		String Key = DllName.ToString();
-		if (Dlls.ContainsKey(Key))
+		if (Dlls.ContainsKey(DllName))
 		{
-			return Dlls[Key];
+			return Dlls[DllName];
 		}
 
-		HMODULE Dll = LoadLibraryA(Key.C());
+		HMODULE Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
 		{
 			NEXUS_LOG(Error, Default, "Failed to load library");
 			return nullptr;
 		}
 
-		Dlls.Append(Key, Dll);
+		Dlls.Append(DllName.C(), Dll);
 		return Dll;
 	}
 
 	void PlatformWindows::UnloadDll(StringView DllName)
 	{
-		String Key = DllName.ToString();
-		if (!Dlls.ContainsKey(Key))
+		if (!Dlls.ContainsKey(DllName))
 		{
 			return;
 		}
 
-		HMODULE Dll = (HMODULE)Dlls[Key];
-		Dlls.Remove(Key);
+		HMODULE Dll = (HMODULE)Dlls[DllName];
+		Dlls.Remove(DllName);
 		FreeLibrary(Dll);
 	}
 

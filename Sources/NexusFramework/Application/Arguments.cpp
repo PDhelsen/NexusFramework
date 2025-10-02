@@ -67,13 +67,13 @@ namespace NxFr
 			}
 		}
 
-		const String& Get(uint64 Index, const String& Default)
+		StringView Get(uint64 Index, StringView Default)
 		{
 			const List<String>& Args = GetPositional();
 			return Args[Index];
 		}
 
-		const String& Get(const String& Key, const String& Default)
+		StringView Get(StringView Key, StringView Default)
 		{
 			const Dictionary<String, String>& Args = GetNamed();
 			const String* Contain = Args.TryGet(Key);
@@ -86,7 +86,7 @@ namespace NxFr
 			return Args.IsValidIndex(Index);
 		}
 
-		bool Has(const String& Key)
+		bool Has(StringView Key)
 		{
 			const Dictionary<String, String>& Args = GetNamed();
 			return Args.ContainsKey(Key);

@@ -22,6 +22,7 @@ namespace NxFr
 		using N = Node::NodeHashmap<T>;
 		using I = Iterator::IteratorHashmap<const T, N>;
 		using TB = typename N::TombstoneMode;
+		using Q = typename SimilarOf<T>::Type;
 
 		inline static const uint64 DefaultSize = 11;
 
@@ -199,7 +200,7 @@ namespace NxFr
 			return Data[Index].Value;
 		}
 
-		void Remove(const T& Value)
+		void Remove(const Q& Value)
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
@@ -216,12 +217,12 @@ namespace NxFr
 			Resize(0);
 		}
 
-		I GetIterator(const T& Value)
+		I GetIterator(const Q& Value)
 		{
 			return GetIteratorValue(Value);
 		}
 
-		const I GetIterator(const T& Value) const
+		const I GetIterator(const Q& Value) const
 		{
 			return GetIteratorValue(Value);
 		}
@@ -270,12 +271,12 @@ namespace NxFr
 			Reallocate(Size);
 		}
 
-		bool Contains(const T& Other) const
+		bool Contains(const Q& Other) const
 		{
 			return GetIteratorValue(Other) != End();
 		}
 
-		const I Find(const T& Other) const
+		const I Find(const Q& Other) const
 		{
 			return GetIteratorValue(Other);
 		}
@@ -378,7 +379,7 @@ namespace NxFr
 			Data[Index].Tombstone = Instance.Tombstone;
 		}
 
-		uint64 GetHash(const T& Value) const
+		uint64 GetHash(const Q& Value) const
 		{
 			return Hash<H>::HashObject(Value);
 		}
@@ -430,7 +431,7 @@ namespace NxFr
 			return I(Data, Index, Capacity);
 		}
 
-		I GetIteratorValue(const T& Value) const
+		I GetIteratorValue(const Q& Value) const
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);

@@ -22,6 +22,7 @@ namespace NxFr
 		using N = Node::NodeHashmap<KV>;
 		using I = Iterator::IteratorHashmap<KV, N>;
 		using TB = typename N::TombstoneMode;
+		using Q = typename SimilarOf<K>::Type;
 
 		inline static const uint64 DefaultSize = 11;
 
@@ -112,12 +113,12 @@ namespace NxFr
 			return *this;
 		}
 
-		T& operator[](const K& Key)
+		T& operator[](const Q& Key)
 		{
 			return Get(Key);
 		}
 
-		const T& operator[](const K& Key) const
+		const T& operator[](const Q& Key) const
 		{
 			return Get(Key);
 		}
@@ -317,7 +318,7 @@ namespace NxFr
 			return Data[Index].Value.Value;
 		}
 
-		void Remove(const K& Key)
+		void Remove(const Q& Key)
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
@@ -334,7 +335,7 @@ namespace NxFr
 			Resize(0);
 		}
 
-		T& Get(const K& Key)
+		T& Get(const Q& Key)
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
@@ -344,7 +345,7 @@ namespace NxFr
 			return Data[Index].Value.Value;
 		}
 
-		const T& Get(const K& Key) const
+		const T& Get(const Q& Key) const
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
@@ -354,26 +355,26 @@ namespace NxFr
 			return Data[Index].Value.Value;
 		}
 
-		T* TryGet(const K& Key) 
+		T* TryGet(const Q& Key)
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			return Index < Capacity && !Data[Index].IsFree() ? &Data[Index].Value.Value : nullptr;
 		}
 
-		const T* TryGet(const K& Key) const
+		const T* TryGet(const Q& Key) const
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			return Index < Capacity && !Data[Index].IsFree() ? &Data[Index].Value.Value : nullptr;
 		}
 
-		I GetIterator(const K& Key)
+		I GetIterator(const Q& Key)
 		{
 			return GetIteratorKey(Key);
 		}
 
-		const I GetIterator(const K& Key) const
+		const I GetIterator(const Q& Key) const
 		{
 			return GetIteratorKey(Key);
 		}
@@ -431,7 +432,7 @@ namespace NxFr
 			Get(B) = Move(Temp);
 		}
 
-		bool ContainsKey(const K& Key) const
+		bool ContainsKey(const Q& Key) const
 		{
 			return GetIteratorKey(Key) != End();
 		}
@@ -441,12 +442,12 @@ namespace NxFr
 			return GetIteratorValue(Value) != End();
 		}
 
-		I FindKey(const K& Key) 
+		I FindKey(const Q& Key)
 		{
 			return GetIteratorKey(Key);
 		}
 
-		const I FindKey(const K& Key) const
+		const I FindKey(const Q& Key) const
 		{
 			return GetIteratorKey(Key);
 		}
@@ -559,7 +560,7 @@ namespace NxFr
 			Data[Index].Tombstone = Instance.Tombstone;
 		}
 
-		uint64 GetHash(const K& Value) const
+		uint64 GetHash(const Q& Value) const
 		{
 			return Hash<H>::HashObject(Value);
 		}
@@ -611,7 +612,7 @@ namespace NxFr
 			return I(Data, Index, Capacity);
 		}
 
-		I GetIteratorKey(const K& Key) const
+		I GetIteratorKey(const Q& Key) const
 		{
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);

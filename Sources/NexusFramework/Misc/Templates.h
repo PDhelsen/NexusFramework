@@ -30,6 +30,30 @@ namespace NxFr
 		using Type = T;
 	};
 
+	template<typename T, typename = void>
+	struct HasSimilar
+	{
+		constexpr static bool Value = false;
+	};
+
+	template<typename T>
+	struct HasSimilar<T, decltype(void(typename T::Similar{}))>
+	{
+		constexpr static bool Value = true;
+	};
+
+	template<typename T, bool = HasSimilar<T>::Value>
+	struct SimilarOf
+	{
+		using Type = T;
+	};
+
+	template <typename T>
+	struct SimilarOf<T, true>
+	{
+		using Type = typename T::Similar;
+	};
+
 	template<typename T>
 	struct IsPointer
 	{
