@@ -32,7 +32,7 @@ namespace NxFr
 		return !Result.IsEmpty();
 	}
 
-	StringView StringUtility::RemoveLeading(StringView Text, char Character)
+	StringView StringUtility::TrimLeading(StringView Text, char Character)
 	{
 		uint64 Index = 0;
 		uint64 Count = Text.GetCount();
@@ -47,7 +47,7 @@ namespace NxFr
 		return StringView(Position, Count - Index);
 	}
 
-	StringView StringUtility::RemoveTrailing(StringView Text, char Character)
+	StringView StringUtility::TrimTrailing(StringView Text, char Character)
 	{
 		uint64 Count = Text.GetCount();
 		const char* Position = Text.C() + Count - 1;
@@ -107,6 +107,34 @@ namespace NxFr
 				Result += Separator;
 			}
 		}
+		return Result;
+	}
+
+	String StringUtility::Lower(StringView Text)
+	{
+		String Result = String(Text.C());
+
+		char* Position = Result.C_Buffer();
+		while (*Position != NullChar)
+		{
+			*Position = (*Position >= 'A' && *Position <= 'Z') ? *Position + ('a' - 'A') : *Position;
+			Position++;
+		}
+
+		return Result;
+	}
+
+	String StringUtility::Upper(StringView Text)
+	{
+		String Result = String(Text.C());
+
+		char* Position = Result.C_Buffer();
+		while (*Position != NullChar)
+		{
+			*Position = (*Position >= 'a' && *Position <= 'z') ? *Position - ('a' - 'A') : *Position;
+			Position++;
+		}
+
 		return Result;
 	}
 

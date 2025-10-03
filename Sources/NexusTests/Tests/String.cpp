@@ -137,8 +137,10 @@ namespace NxTs
 		ASSERT_EQ(NxFr::StringUtility::End(Test1,"Hello"), false);
 		ASSERT_EQ(NxFr::StringUtility::End(Test1,"World"), true);
 		ASSERT_EQ(NxFr::StringUtility::End(Test1, "Wor"), false);
-		ASSERT_EQ(NxFr::StringUtility::RemoveLeading("   Hello World"), "Hello World");
-		ASSERT_EQ(NxFr::StringUtility::RemoveTrailing("Hello World   "), "Hello World");
+		ASSERT_EQ(NxFr::StringUtility::TrimLeading("   Hello World"), "Hello World");
+		ASSERT_EQ(NxFr::StringUtility::TrimTrailing("Hello World   "), "Hello World");
+		ASSERT_EQ(NxFr::StringUtility::Lower("Hello World"), "hello world");
+		ASSERT_EQ(NxFr::StringUtility::Upper("Hello World"), "HELLO WORLD");
 
 		ASSERT_EQ(NxFr::StringUtility::Contains(Test1, "Hello"), true);
 		ASSERT_EQ(NxFr::StringUtility::Contains(Test1, "Wd", NxFr::StringUtility::SearchMode::Characters), true);

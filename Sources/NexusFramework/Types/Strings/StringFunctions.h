@@ -48,8 +48,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static bool Start(StringView Text, StringView Substring);
 		NEXUS_FRAMEWORK_API static bool End(StringView Text, StringView Substring);
 		NEXUS_FRAMEWORK_API static bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API static StringView RemoveLeading(StringView Text, char Character = ' ');
-		NEXUS_FRAMEWORK_API static StringView RemoveTrailing(StringView Text, char Character = ' ');
+		NEXUS_FRAMEWORK_API static StringView TrimLeading(StringView Text, char Character = ' ');
+		NEXUS_FRAMEWORK_API static StringView TrimTrailing(StringView Text, char Character = ' ');
 		NEXUS_FRAMEWORK_API static StringView Common(StringView Text1, StringView Text2);
 		NEXUS_FRAMEWORK_API static StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
 		NEXUS_FRAMEWORK_API static List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
@@ -57,6 +57,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
 		NEXUS_FRAMEWORK_API static String Replace(StringView Text, StringView Old, StringView New);
 		NEXUS_FRAMEWORK_API static String Join(const Collection<StringView>& Text, StringView Separator = "");
+		NEXUS_FRAMEWORK_API static String Lower(StringView Text);
+		NEXUS_FRAMEWORK_API static String Upper(StringView Text);
 
 		NEXUS_FRAMEWORK_API static  int64 ToInteger(StringView Text, int32 Radix = 10);
 		NEXUS_FRAMEWORK_API static uint64 ToUnsignedInteger(StringView Text, int32 Radix = 10);
