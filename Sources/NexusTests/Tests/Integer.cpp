@@ -2,15 +2,27 @@
 
 namespace NxTs
 {
+	enum class TestEnum : uint8
+	{
+		Null,
+		First,
+		Second,
+		Third,
+		Fourth,
+	};
+	NEXUS_ENUM_STRING(TestEnum, 5, "Null", "First", "Second", "Third", "Fourth")
+
 	enum class TestFlag : uint8
 	{
-		Null = 0,
+		None = 0,
+
 		First = 1 << 0,
 		Second = 1 << 1,
 		Third = 1 << 2,
 		Fourth = 1 << 3,
 	};
-	NEXUS_ENUM_TO_FLAG(TestFlag)
+	NEXUS_FLAG(TestFlag, uint8)
+	NEXUS_FLAG_STRING(TestFlag, 4, "First", "Second", "Third", "Fourth")
 
 	TEST(Integer, BitCheckSet)
 	{
@@ -36,10 +48,10 @@ namespace NxTs
 		ASSERT_EQ(Test, 0b10110010);
 	}
 
-	TEST(Integer, Enum)
+	TEST(Integer, Flag)
 	{
-		TestFlag None = TestFlag::Null;
-		TestFlag All = ~TestFlag::Null;
+		TestFlag None = TestFlag::None;
+		TestFlag All = ~TestFlag::None;
 		ASSERT_EQ((uint8)None, 0);
 		ASSERT_EQ((uint8)All, 255);
 		TestFlag First = TestFlag::First;
@@ -69,7 +81,7 @@ namespace NxTs
 		TestFlag Test6 = Mask4 & Mask5;
 		ASSERT_EQ((uint8)Test6, 0b10);
 		TestFlag Mask7 = TestFlag::First | TestFlag::Third;
-		TestFlag Test7 = ~TestFlag::Null;
+		TestFlag Test7 = ~TestFlag::None;
 		Test7 &= Mask7;
 		ASSERT_EQ((uint8)Test7, 0b101);
 
@@ -81,5 +93,11 @@ namespace NxTs
 		ASSERT_EQ((uint8)Test9, 0b101);
 		Test9 = Enum::SetFlag(Test9, TestFlag::First, false);
 		ASSERT_EQ((uint8)Test9, 0b100);
+	}
+
+	TEST(Integer, Enum)
+	{
+		ASSERT_EQ(Enum::TestEnumUtils::ToString(TestEnum::Third), "Third");
+		ASSERT_EQ(Enum::TestEnumUtils::FromString("Third"), TestEnum::Third);
 	}
 }

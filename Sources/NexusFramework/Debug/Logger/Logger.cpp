@@ -11,9 +11,6 @@
 
 namespace NxFr
 {
-	// Keep the const char array sync with the Verbosity enum in the Log.h file
-	NEXUS_ENUM_TO_STRING_IMPLEMENTATION_COUNT(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info");
-
 	namespace LoggerChannel
 	{
 		const StringId Default = "Default"_Sid;
@@ -177,8 +174,7 @@ namespace NxFr
 
 	String* Logger::FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
-		uint8 VerbosityLevel = Enum::ToFlagIndex(Verbosity);
-		StringView VerbosityLabel = Enum::ToString((LoggerVerbosity)VerbosityLevel);
+		StringView VerbosityLabel = Enum::LoggerVerbosityUtils::ToString(Verbosity);
 
 		Timestamp Stamp = Time::Now();
 		int8 Hours = Stamp.Hours;

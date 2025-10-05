@@ -32,8 +32,8 @@ namespace NxFr
 
 		COUNT
 	};
-	NEXUS_ENUM_TO_FLAG(LoggerVerbosity)
-	NEXUS_ENUM_TO_STRING_DEFINITION(NEXUS_FRAMEWORK_API, LoggerVerbosity)
+	NEXUS_FLAG(LoggerVerbosity, uint8)
+	NEXUS_FLAG_STRING(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
 
 	enum class LoggerOutput : uint8
 	{
@@ -48,7 +48,8 @@ namespace NxFr
 
 		COUNT
 	};
-	NEXUS_ENUM_TO_FLAG(LoggerOutput)
+	NEXUS_FLAG(LoggerOutput, uint8)
+	NEXUS_FLAG_STRING(LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 
 	class Log
 	{
