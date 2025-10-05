@@ -32,20 +32,17 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCount(), 11);
 		ASSERT_EQ(Test.GetCapacity(), 16);
 
-		Test.Append(" Appening");
-		Test.Append(" Appening");
-		ASSERT_EQ(Test, "Hello World Appening Appening");
-		Test.Replace(" Appening", " Replaced");
-		Test.Replace(" Replaced", " Again");
+		Test.Append(" Again");
+		Test.Append(" Again");
 		ASSERT_EQ(Test, "Hello World Again Again");
 		Test.Assign("Aga", "Aggga", 1, 1);
 		Test.Assign("o", "a", 0, 2);
 		ASSERT_EQ(Test, "Hella Warld Again Agggain");
 		Test.Insert("Agggain", "Inserted", 0, 1);
-		Test.Insert("Inserted", "In", 0, 0, true);
+		Test.Insert("Inserted", "In");
 		ASSERT_EQ(Test, "Hella Warld Again AgggainInsertedIn");
 		Test.Remove("Inserted", 0, 1);
-		Test.Remove("l", 0, 0, true);
+		Test.Remove("l");
 		ASSERT_EQ(Test, "Hea Ward Again AgggainIn");
 		Test.Clear();
 		ASSERT_EQ(Test.GetCount(), 0);
@@ -60,11 +57,11 @@ namespace NxTs
 	{
 		NxFr::String Reference = "Hello World Extended";
 
-		NxFr::StringView Test0 = Reference.ToView();
-		NxFr::StringView Test1 = Reference.ToView(0, 5);
-		NxFr::StringView Test2 = Reference.ToView(6, 5);
-		NxFr::StringView Test3 = Reference.ToView(3, 8);
-		NxFr::StringView Test4 = Reference.ToView(12, 8);
+		NxFr::StringView Test0 = Reference;
+		NxFr::StringView Test1 = Reference.Substring(0, 5);
+		NxFr::StringView Test2 = Reference.Substring(6, 5);
+		NxFr::StringView Test3 = Reference.Substring(3, 8);
+		NxFr::StringView Test4 = Reference.Substring(12, 8);
 
 		ASSERT_EQ(Reference.C() == Test0.C(), true);
 		ASSERT_EQ(Reference.C() == Test1.C(), true);
@@ -83,25 +80,8 @@ namespace NxTs
 		Array.AssignConstruct(5, Test4);
 		Array.Sort();
 
-		NxFr::String Builder = Reference;
-		Builder.Append(Test1);
-		ASSERT_EQ(Builder, "Hello World ExtendedHello");
-		Builder.Assign(Test1, Test4);
-		ASSERT_EQ(Builder, "Extended World ExtendedHello");
-		Builder.Insert(Test4, Test1);
-		ASSERT_EQ(Builder, "ExtendedHello World ExtendedHello");
-		Builder.Remove(Test2);
-		ASSERT_EQ(Builder, "ExtendedHello  ExtendedHello");
-
-		NxFr::String Convert = Test2.ToString();
+		NxFr::String Convert = Test2;
 		ASSERT_EQ(Convert, "World");
-
-		NxFr::String Functions = "Hello Not World Not Extended";
-		ASSERT_EQ(Functions.Start(Test1), true);
-		ASSERT_EQ(Functions.End(Test4), true);
-		ASSERT_EQ(Functions.Contains(Test2), true);
-		ASSERT_EQ(Functions.Find(Test2).IsEmpty(), false);
-		ASSERT_EQ(Functions.Split(Test2).IsEmpty(), false);
 	}
 
 	TEST(String, Id)
@@ -116,14 +96,14 @@ namespace NxTs
 		ASSERT_EQ(Id != Test2, true);
 		ASSERT_EQ(Id == Test3, true);
 
-		ASSERT_EQ(Id.ToString(), "Hello World");
-		ASSERT_EQ(Id.C(), NxFr::StringView("Hello World"));
+		ASSERT_EQ(Id, "Hello World");
+		ASSERT_EQ(Id.GetString(), "Hello World");
 		ASSERT_EQ(Id.GetId(), 0x3D58DEE72D4E0C27);
 
 		Test3 = Test2;
 
 		NxFr::StringId Test4 = 0;
-		ASSERT_EQ(Test4.C(), NxFr::StringId::Unknown);
+		ASSERT_EQ(Test4, NxFr::StringId::Unknown);
 		ASSERT_EQ(Test4.GetId(), 0);
 	}
 
@@ -188,7 +168,7 @@ namespace NxTs
 		ASSERT_EQ(Test < Reverse, true);
 		ASSERT_EQ(Test >= Reverse, false);
 
-		NxFr::StringView View = Test.ToView(0, 5);
+		NxFr::StringView View = Test.Substring(0, 5);
 		ASSERT_EQ(Test > View, true);
 		ASSERT_EQ(Test >= View, true);
 		ASSERT_EQ(Test < View, false);

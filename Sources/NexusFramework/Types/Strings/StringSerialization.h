@@ -36,12 +36,12 @@ namespace NxFr
 	{
 		static String Decode(RBS& Rbs)
 		{
-			return Rbs.ReadObject<StringView>().ToString();
+			return Rbs.ReadObject<const char*>();
 		}
 
 		static void Encode(RBS& Rbs, const String& Object)
 		{
-			Rbs.WriteObject(Object.ToView());
+			Rbs.WriteObject<const char*>(Object.C());
 		}
 	};
 
@@ -50,17 +50,12 @@ namespace NxFr
 	{
 		static StringView Decode(RBS& Rbs)
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			const char* Text = Rbs.ReadData<char>(Size);
-			Rbs.ReadByte(sizeof(StringCApi::NullChar));
-			return StringView(Text, Size);
+			return Rbs.ReadObject<const char*>();
 		}
 
 		static void Encode(RBS& Rbs, const StringView& Object)
 		{
-			Rbs.WriteObject(Object.GetCount());
-			Rbs.WriteData(Object.C(), Object.GetCount());
-			Rbs.WriteObject(StringCApi::NullChar);
+			Rbs.WriteObject<const char*>(Object.C(true));
 		}
 	};
 
@@ -69,12 +64,12 @@ namespace NxFr
 	{
 		static StringId Decode(RBS& Rbs)
 		{
-			return StringId(Rbs.ReadObject<StringView>());
+			return Rbs.ReadObject<StringView>();
 		}
 
 		static void Encode(RBS& Rbs, const StringId& Object)
 		{
-			Rbs.WriteObject(Object.C());
+			Rbs.WriteObject<StringView>(Object);
 		}
 	};
 
@@ -123,7 +118,7 @@ namespace YAML
 	{
 		static Node encode(const NxFr::StringId& rhs)
 		{
-			return Node(rhs.C());
+			return Node(rhs.GetString());
 		}
 
 		static bool decode(const Node& node, NxFr::StringId& rhs)
@@ -140,7 +135,7 @@ namespace YAML
 
 	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringId& rhs)
 	{
-		out << rhs.C();
+		out << rhs.GetString();
 		return out;
 	}
 }

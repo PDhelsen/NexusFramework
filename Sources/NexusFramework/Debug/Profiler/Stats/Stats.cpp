@@ -331,7 +331,7 @@ namespace NxFr
 		Headers.Append(Name, Data.GetCount());
 		Data.Append(Stat(Type, Mode));
 
-		BufferLine += Name.ToString();
+		BufferLine += Name;
 		BufferLine += Separator;
 	}
 

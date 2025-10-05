@@ -43,7 +43,7 @@ namespace NxFr
 		const I end() const { return End(); }
 		const I End() const { return Content.End(); }
 
-		StringView GetPath() const { return Path.ToView(); }
+		StringView GetPath() const { return Path; }
 		bool Exists() const { return Exist; }
 		uint64 GetCount() const { return Content.GetCount(); }
 

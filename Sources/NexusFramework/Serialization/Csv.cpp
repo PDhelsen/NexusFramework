@@ -18,7 +18,7 @@ namespace NxFr
 		Data = Handle.ReadText();
 		Handle.Close();
 
-		Header = Data.Split(StringUtility::NewLine).ToString();
+		Header = StringUtility::Split(Data, StringUtility::NewLine);
 		Data.Remove(Header + StringUtility::NewLine);
 	}
 
@@ -101,17 +101,17 @@ namespace NxFr
 
 	StringView Csv::GetHeader(uint64 Index) const
 	{
-		return Header.Split(Separator, Index);
+		return StringUtility::Split(Header, Separator, Index);
 	}
 
 	void Csv::SetHeader(StringView Text)
 	{
-		Header = Text.ToString();
+		Header = Text;
 	}
 
 	void Csv::SetHeader(uint64 Index, StringView Text)
 	{
-		List<StringView> Cells = Header.SplitAll(Separator);
+		List<StringView> Cells = StringUtility::SplitAll(Header, Separator);
 		Cells[Index] = Text;
 		Header = StringUtility::Join(Cells, Separator);
 	}
@@ -123,30 +123,31 @@ namespace NxFr
 
 	StringView Csv::GetData(uint64 Row) const
 	{
-		return Data.Split(StringUtility::NewLine, Row);
+		return StringUtility::Split(Data, StringUtility::NewLine, Row);
 	}
 
 	StringView Csv::GetData(uint64 Row, uint64 Column) const
 	{
-		return Data.Split(StringUtility::NewLine, Row).Split(Separator, Column);
+		StringView R = StringUtility::Split(Data, StringUtility::NewLine, Row);
+		return StringUtility::Split(R, Separator, Column);
 	}
 
 	void Csv::SetData(StringView Text)
 	{
-		Data = Text.ToString();
+		Data = Text;
 	}
 
 	void Csv::SetData(uint64 Row, StringView Text)
 	{
-		List<StringView> Lines = Data.SplitAll(StringUtility::NewLine);
+		List<StringView> Lines = StringUtility::SplitAll(Data, StringUtility::NewLine);
 		Lines[Row] = Text;
 		Data = StringUtility::Join(Lines, StringUtility::NewLine);
 	}
 
 	void Csv::SetData(uint64 Row, uint64 Column, StringView Text)
 	{
-		List<StringView> Lines = Data.SplitAll(StringUtility::NewLine);
-		List<StringView> Cells = Lines[Row].SplitAll(Separator);
+		List<StringView> Lines = StringUtility::SplitAll(Data, StringUtility::NewLine);
+		List<StringView> Cells = StringUtility::SplitAll(Lines[Row], Separator);
 		Cells[Column] = Text;
 		String Temp = StringUtility::Join(Cells, Separator);
 		Lines[Row] = Temp;
@@ -155,7 +156,7 @@ namespace NxFr
 
 	List<StringView> Csv::GetLines() const
 	{
-		return Data.SplitAll(StringUtility::NewLine);
+		return StringUtility::SplitAll(Data, StringUtility::NewLine);
 	}
 
 	uint64 Csv::GetLinesCount() const
@@ -165,20 +166,20 @@ namespace NxFr
 
 	List<StringView> Csv::GetCells() const
 	{
-		List<StringView> Cells = Data.SplitAll(Separator);
+		List<StringView> Cells = StringUtility::SplitAll(Data, Separator);
 		if (Cells.Last() == StringUtility::NewLine)
 		{
 			Cells.RemoveLast();
 		}
 		for (uint64 Index = 0; Index < Cells.GetCount(); ++Index)
 		{
-			if (Cells[Index].Start(StringUtility::NewLine))
+			if (StringUtility::Start(Cells[Index], StringUtility::NewLine))
 			{
-				Cells[Index] = Cells[Index].ToView(1, Cells[Index].GetCount() - 1);
+				Cells[Index] = Cells[Index].Substring(1, Cells[Index].GetCount() - 1);
 			}
-			if (Cells[Index].End(StringUtility::NewLine))
+			if (StringUtility::End(Cells[Index], StringUtility::NewLine))
 			{
-				Cells[Index] = Cells[Index].ToView(0, Cells[Index].GetCount() - 1);
+				Cells[Index] = Cells[Index].Substring(0, Cells[Index].GetCount() - 1);
 			}
 		}
 		return Cells;

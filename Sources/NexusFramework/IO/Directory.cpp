@@ -84,7 +84,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), Default, "Failed to move directory: %s", Path.C());
 
 		Platform::GetInstance()->DirectoryMove(Path, Target, Override);
-		Path = Target.ToString();
+		Path = Target;
 		Refresh();
 
 		NEXUS_ASSERT(Exist, Default, "Failed to move directory: %s", Path.C());
@@ -106,13 +106,13 @@ namespace NxFr
 			if (Path::IsDirectory(It))
 			{
 				Directory SubDirectory = Directory(It);
-				SubDirectory.Copy(String(It).Replace(Path, Target), Override);
+				SubDirectory.Copy(StringUtility::Replace(It, Path, Target), Override);
 			}
 
 			if (Path::IsFile(It))
 			{
 				File FileInDirectory = File(It);
-				FileInDirectory.Copy(String(It).Replace(Path, Target), Override);
+				FileInDirectory.Copy(StringUtility::Replace(It, Path, Target), Override);
 			}
 		}
 

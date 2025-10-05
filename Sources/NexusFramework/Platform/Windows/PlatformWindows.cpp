@@ -29,7 +29,7 @@ namespace NxFr
 			return nullptr;
 		}
 
-		Dlls.Append(DllName.C(), Dll);
+		Dlls.Append(DllName, Dll);
 		return Dll;
 	}
 
@@ -104,12 +104,12 @@ namespace NxFr
 			if (InputRecord.EventType == KEY_EVENT && InputRecord.Event.KeyEvent.bKeyDown)
 			{
 				char Code = InputRecord.Event.KeyEvent.uChar.AsciiChar;
-				char Converter[2] = { Code, '\0' };
+				char Converter[2] = { Code, StringUtility::NullChar };
 				NxFr::StringView Character = Converter;
 
 				if (InputRecord.Event.KeyEvent.wVirtualKeyCode == VK_RETURN)
 				{
-					WriteToTerminal("\n");
+					WriteToTerminal(StringUtility::NewLine);
 
 					String Result = Buffer;
 					Buffer.Clear();
@@ -117,7 +117,7 @@ namespace NxFr
 				}
 				else if (InputRecord.Event.KeyEvent.wVirtualKeyCode == VK_BACK && !Buffer.IsEmpty())
 				{
-					WriteToTerminal("\b \b");
+					WriteToTerminal(Backspace);
 
 					Buffer.Terminate(Buffer.GetCount() - 1);
 				}
@@ -381,8 +381,7 @@ namespace NxFr
 	{
 		NEXUS_ASSERT(File, Default, "Invalid File");
 
-		String Content = Text.ToString();
-		Content.Replace("\n", "\r\n");
+		String Content = StringUtility::Replace(Text, StringUtility::NewLine, NewLine);
 
 		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
 
@@ -397,17 +396,16 @@ namespace NxFr
 		NEXUS_ASSERT(File, Default, "Invalid File");
 
 		uint64 Size = FileSize(File);
-		uint64 Capacity = String::GetCapacityForCreate(Size);
-		char* Text = (char*)Memory::Allocate(Capacity);
+		String Text = String(Size + 1);
 
 		DWORD Read = 0;
-		bool Result = ReadFile(File, Text, (DWORD)Size, &Read, nullptr);
+		bool Result = ReadFile(File, Text.Characters(), (DWORD)Size, &Read, nullptr);
+		Text.Validate();
 
 		NEXUS_ASSERT(Result && Read == Size, Default, "Failed to read to file");
 
-		String Content = String::Create(Text, Capacity, Size);
-		Content.Replace("\r\n", "\n");
-		return Content;
+		Text.Assign(NewLine, StringUtility::NewLine);
+		return Text;
 	}
 
 	PlatformWindows::PlatformWindows()

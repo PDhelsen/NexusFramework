@@ -62,8 +62,8 @@ namespace NxFr
 
 	StringView TextStream::Read()
 	{
-		StringView Substring = Buffer.ToView(Cursor, Buffer.GetCount() - Cursor);
-		Substring = Substring.Split("\n");
+		StringView Substring = Buffer.Substring(Cursor, Buffer.GetCount() - Cursor);
+		Substring = StringUtility::Split(Substring, StringUtility::NewLine);
 		Cursor = Math::Min(Cursor + Substring.GetCount() + 1, Buffer.GetCount());
 		return Substring;
 	}
@@ -71,7 +71,7 @@ namespace NxFr
 	void TextStream::Write(StringView Data)
 	{
 		Buffer.Append(Data);
-		Buffer.Append("\n");
+		Buffer.Append(StringUtility::NewLine);
 	}
 
 	BinaryStream::BinaryStream(StringView Path)

@@ -1,34 +1,39 @@
 #pragma once
 
 #include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 #include "NexusFramework/Types/Strings/StringCApi.h"
 
 namespace NxFr
 {
-	template<typename... Args>
-	void String::Format(StringView Format, Args&&... args)
+	template<typename ...Args>
+	String& String::Format(StringView Format, Args && ...args)
 	{
-		StringUtility::Format(*this, Format, args...);
+		uint64 Size = StringCApi::Format(GetCapacity(), Characters(), Format.C(), args...);
+		if (Size >= GetCapacity())
+		{
+			Resize(Size);
+			StringCApi::Format(GetCapacity(), Characters(), Format.C(), args...);
+		}
+		Validate();
+		return *this;
 	}
 
-	template<typename... Args>
-	void String::Format(uint64 Size, StringView Format, Args&&... args)
+	template<typename ...Args>
+	String& String::Format(uint64 Size, StringView Format, Args && ...args)
 	{
-		StringUtility::Format(*this, Size, Format, args...);
-	}
-
-	template<typename... Args>
-	uint64 String::Scan(StringView Format, Args&&... args)
-	{
-		return StringUtility::Scan(*this, Format, args...);
+		Resize(Size);
+		StringCApi::Format(GetCapacity(), Characters(), Format.C(), args...);
+		Validate();
+		return *this;
 	}
 
 	template<typename... Args>
 	static String StringUtility::Format(StringView Format, Args&&... args)
 	{
 		String Result = String(Format.GetCount() + sizeof...(args) * GuessFormatingSize);
-		StringUtility::Format(Result, Format, args...);
+		Result.Format(Format, args...);
 		return Result;
 	}
 
@@ -36,28 +41,8 @@ namespace NxFr
 	static String StringUtility::Format(uint64 Size, StringView Format, Args&&... args)
 	{
 		String Result = String(Size);
-		StringUtility::Format(Result, Size, Format, args...);
+		Result.Format(Size, Format, args...);
 		return Result;
-	}
-
-	template<typename ...Args>
-	void StringUtility::Format(String& Text, StringView Format, Args && ...args)
-	{
-		uint64 Size = StringCApi::Format(Text.GetCapacity(), Text.GetData(), Format.C(), args...);
-		if (Size >= Text.GetCapacity())
-		{
-			Text.Resize(Size);
-			StringCApi::Format(Text.GetCapacity(), Text.GetData(), Format.C(), args...);
-		}
-		Text.Validate();
-	}
-
-	template<typename ...Args>
-	void StringUtility::Format(String& Text, uint64 Size, StringView Format, Args && ...args)
-	{
-		Text.Resize(Size);
-		StringCApi::Format(Text.GetCapacity(), Text.GetData(), Format.C(), args...);
-		Text.Validate();
 	}
 
 	template<typename... Args>

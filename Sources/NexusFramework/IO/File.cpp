@@ -20,7 +20,7 @@ namespace NxFr
 	}
 
 	File::File(StringView Path)
-		: Path(Path.ToString()), Exist(false), Handle(nullptr)
+		: Path(Path), Exist(false), Handle(nullptr)
 	{
 		Refresh();
 	}
@@ -105,7 +105,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exist && !Handle && Path != Target && !Path::Exist(Target), Default, "Failed to move file: %s", Path.C());
 
 		Platform::GetInstance()->FileMove(Path, Target, Override);
-		Path = Target.ToString();
+		Path = Target;
 		Refresh();
 
 		NEXUS_ASSERT(Exist && !Handle, Default, "Failed to move file: %s", Path.C());

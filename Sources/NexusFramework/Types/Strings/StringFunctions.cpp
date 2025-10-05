@@ -22,7 +22,7 @@ namespace NxFr
 			return false;
 		}
 
-		StringView View = Text.ToView(Text.GetCount() - Substring.GetCount(), Substring.GetCount());
+		StringView View = Text.Substring(Text.GetCount() - Substring.GetCount(), Substring.GetCount());
 		return StringCApi::Compare(View.C(), Substring.C(), Substring.GetCount()) == 0;
 	}
 
@@ -30,35 +30,6 @@ namespace NxFr
 	{
 		StringView Result = Search(Text.C(), Substring.C(), Text.GetCount(), Substring.GetCount(), SearchBehaviour::Contains, Mode, 0, nullptr);
 		return !Result.IsEmpty();
-	}
-
-	StringView StringUtility::TrimLeading(StringView Text, char Character)
-	{
-		uint64 Index = 0;
-		uint64 Count = Text.GetCount();
-		const char* Position = Text.C();
-
-		while (Index < Count && *Position == Character)
-		{
-			Position++;
-			Index++;
-		}
-
-		return StringView(Position, Count - Index);
-	}
-
-	StringView StringUtility::TrimTrailing(StringView Text, char Character)
-	{
-		uint64 Count = Text.GetCount();
-		const char* Position = Text.C() + Count - 1;
-
-		while (Count >= 0 && *Position == Character)
-		{
-			Position--;
-			Count--;
-		}
-
-		return StringView(Text.C(), Count);
 	}
 
 	StringView StringUtility::Common(StringView Text1, StringView Text2)
@@ -91,9 +62,72 @@ namespace NxFr
 		return Results;
 	}
 
+	StringView StringUtility::TrimLeading(StringView Text, char Character)
+	{
+		uint64 Index = 0;
+		uint64 Count = Text.GetCount();
+		const char* Position = Text.C();
+
+		while (Index < Count && *Position == Character)
+		{
+			Position++;
+			Index++;
+		}
+
+		return StringView(Position, Count - Index);
+	}
+
+	StringView StringUtility::TrimTrailing(StringView Text, char Character)
+	{
+		uint64 Count = Text.GetCount();
+		const char* Position = Text.C() + Count - 1;
+
+		while (Count >= 0 && *Position == Character)
+		{
+			Position--;
+			Count--;
+		}
+
+		return StringView(Text.C(), Count);
+	}
+
+	String StringUtility::Lower(StringView Text)
+	{
+		String Result = Text.GetCount() + 1;
+
+		const char* Position = Text.C();
+		while (*Position != NullChar)
+		{
+			char Character = (*Position >= 'A' && *Position <= 'Z') ? (*Position + 32) : *Position;
+			Result += StringView(&Character, 1);
+
+			Position++;
+		}
+
+		Result.Terminate(Text.GetCount());
+		return Result;
+	}
+
+	String StringUtility::Upper(StringView Text)
+	{
+		String Result = Text.GetCount() + 1;
+
+		const char* Position = Text.C();
+		while (*Position != NullChar)
+		{
+			char Character = (*Position >= 'a' && *Position <= 'z') ? (*Position - 32) : *Position;
+			Result += StringView(&Character, 1);
+
+			Position++;
+		}
+
+		Result.Terminate(Text.GetCount());
+		return Result;
+	}
+
 	String StringUtility::Replace(StringView Text, StringView Old, StringView New)
 	{
-		return Text.ToString().Replace(Old, New);
+		return String(Text).Assign(Old, New);
 	}
 
 	String StringUtility::Join(const Collection<StringView>& Text, StringView Separator)
@@ -107,34 +141,6 @@ namespace NxFr
 				Result += Separator;
 			}
 		}
-		return Result;
-	}
-
-	String StringUtility::Lower(StringView Text)
-	{
-		String Result = String(Text.C());
-
-		char* Position = Result.C_Buffer();
-		while (*Position != NullChar)
-		{
-			*Position = (*Position >= 'A' && *Position <= 'Z') ? *Position + ('a' - 'A') : *Position;
-			Position++;
-		}
-
-		return Result;
-	}
-
-	String StringUtility::Upper(StringView Text)
-	{
-		String Result = String(Text.C());
-
-		char* Position = Result.C_Buffer();
-		while (*Position != NullChar)
-		{
-			*Position = (*Position >= 'a' && *Position <= 'z') ? *Position - ('a' - 'A') : *Position;
-			Position++;
-		}
-
 		return Result;
 	}
 
@@ -238,7 +244,7 @@ namespace NxFr
 	{
 		String Return = String(TextA.GetCount());
 		Return.Append(TextA);
-		Return.Remove(TextB, 0, 0, true);
+		Return.Remove(TextB);
 		return Return;
 	}
 

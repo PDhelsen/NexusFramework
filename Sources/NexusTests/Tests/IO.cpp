@@ -8,7 +8,7 @@ namespace NxTs
 
 	NxFr::Dictionary<NxFr::String, const NxFr::String> CreateTestsFiles()
 	{
-		NxFr::String Root = NxFr::Path::GetWorkingDirectory().ToString();
+		NxFr::String Root = NxFr::Path::GetWorkingDirectory().Data;
 		NxFr::String UnitTestDirectory = Root + "UnitTest/";
 		NxFr::String UnitTestSubDirectory = UnitTestDirectory + "SubDir/";
 		NxFr::String UnitTestFile = UnitTestDirectory + "UnitTest.txt";

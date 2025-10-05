@@ -5,16 +5,23 @@ namespace NxFr
 {
 	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(97, nullptr); return StringsTable; }
 
-	static GUID InternString(StringView Text)
+	GUID StringId::InternString(StringView Text)
 	{
 		Dictionary<GUID, String>& StringsTable = GetStringsTable();
 
 		GUID Id = !Text.IsEmpty() ? Hash<>::HashObject(Text) : 0;
 		if (!StringsTable.ContainsKey(Id))
 		{
-			StringsTable.Append(Move(Id), Move(Text.ToString()));
+			StringsTable.Append(Id, Text);
 		}
 		return Id;
+	}
+
+	const String& StringId::LookupString(GUID Id)
+	{
+		Dictionary<GUID, String>& StringsTable = GetStringsTable();
+		String* Value = StringsTable.TryGet(Id);
+		return Value != nullptr ? *Value : StringId::Unknown;
 	}
 
 	StringId::StringId()
@@ -32,9 +39,14 @@ namespace NxFr
 	{
 	}
 
-	bool StringId::operator==(const StringId& Other) const
+	StringId::operator GUID() const
 	{
-		return Id == Other.Id;
+		return Id;
+	}
+
+	StringId::operator StringView() const
+	{
+		return LookupString(Id);
 	}
 
 	bool StringId::operator==(GUID Other) const
@@ -42,40 +54,53 @@ namespace NxFr
 		return Id == Other;
 	}
 
-	bool StringId::operator!=(const StringId& Other) const
-	{
-		return !(*this == Other);
-	}
-
 	bool StringId::operator!=(GUID Other) const
 	{
 		return !(*this == Other);
 	}
 
-	StringId::operator GUID() const
+	bool StringId::operator==(const StringId& Other) const
+	{
+		return Id == Other.Id;
+	}
+
+	bool StringId::operator!=(const StringId& Other) const
+	{
+		return !(*this == Other);
+	}
+
+	bool StringId::operator<(const StringId& Other) const
+	{
+		return LookupString(Id) < LookupString(Other.Id);
+	}
+
+	bool StringId::operator<=(const StringId& Other) const
+	{
+		return LookupString(Id) <= LookupString(Other.Id);
+	}
+
+	bool StringId::operator>(const StringId& Other) const
+	{
+		return LookupString(Id) > LookupString(Other.Id);
+	}
+
+	bool StringId::operator>=(const StringId& Other) const
+	{
+		return LookupString(Id) >= LookupString(Other.Id);
+	}
+
+	GUID StringId::GetId() const
 	{
 		return Id;
 	}
 
-	const String& StringId::ToString() const
+	const String& StringId::GetString() const
 	{
-		Dictionary<GUID, String>& StringsTable = GetStringsTable();
-		String* Value = StringsTable.TryGet(Id);
-		return Value != nullptr ? *Value : Unknown;
-	}
-
-	const char* StringId::C() const
-	{
-		return ToString().C();
-	}
-
-	const GUID StringId::GetId() const
-	{
-		return Id;
+		return LookupString(Id);
 	}
 
 	StringId operator""_Sid(const char* Text, uint64 Size)
 	{
-		return StringId(StringView(Text, Size));
+		return StringId(Text);
 	}
 }

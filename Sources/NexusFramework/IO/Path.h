@@ -69,6 +69,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API explicit operator bool () const;
 		NEXUS_FRAMEWORK_API operator StringView () const;
+
 		NEXUS_FRAMEWORK_API Path& operator +=(const Path& Other);
 		NEXUS_FRAMEWORK_API Path& operator +=(StringView Other);
 		NEXUS_FRAMEWORK_API Path& operator -=(uint64 Count);
@@ -101,10 +102,10 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API StringView GetExtension() const;
 		NEXUS_FRAMEWORK_API List<StringView> Split() const;
 
-		String ToString() const { return Data; };
-		StringView ToView() const { return Data.ToView(); };
-		const char* C() const { return Data.C(); };
-		bool IsValid() const { return Data != StringUtility::Empty; }
+		NEXUS_FRAMEWORK_API const char* C() const { return Data.C(); }
+		NEXUS_FRAMEWORK_API bool IsValid() const { return Data.IsEmpty(); }
+		NEXUS_FRAMEWORK_API bool IsEmpty() const { return Data.IsEmpty(); }
+		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Data.GetCount(); }
 
 		String Data;
 	};
@@ -153,7 +154,7 @@ namespace NxFr
 		for (auto& It = Elements.Reset(); It != Elements.End(); ++It)
 		{
 			Base += *It;
-			if (!(*It).End(SeparatorDirectory) && !IsFile(*It))
+			if (!StringUtility::End(*It, SeparatorDirectory) && !IsFile(*It))
 			{
 				Base += SeparatorDirectory;
 			}

@@ -3,26 +3,6 @@
 
 namespace NxFr
 {
-	String String::Create(char* Text, uint64 Capacity, uint64 Size)
-	{
-		NEXUS_ASSERT(Text, Default, "Invalid Text");
-		NEXUS_ASSERT(Capacity >= SmallStringCapacity + 1, Default, "Invalid Capacity");
-
-		String Result;
-		Result.Alloc = AllocatorContext::Get();
-		Result.Capacity = Capacity;
-		Result.Count = Size;
-		Result.Data.Large = Text;
-		Result.ValidateNullTermination();
-		return Result;
-	}
-
-	uint64 String::GetCapacityForCreate(uint64 Size)
-	{
-		Size++; // Null Terminate character
-		return Math::Max(Size, (uint64)(SmallStringCapacity + 1));
-	}
-
 	String::String(Allocator* Allctr)
 		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
@@ -46,6 +26,12 @@ namespace NxFr
 		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Size, Size, Text);
+	}
+
+	String::String(StringView Text, Allocator* Allctr)
+		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+	{
+		Allocate(Text.GetCount(), Text.GetCount(), Text.C());
 	}
 
 	String::String(const String& Other)
@@ -129,7 +115,19 @@ namespace NxFr
 
 	String& String::operator-=(StringView Other)
 	{
-		Remove(Other, 0, 0, true);
+		Remove(Other);
+		return *this;
+	}
+
+	String& String::Assign(StringView OldText, StringView NewText)
+	{
+		Assign(OldText.C(), OldText.GetCount(), NewText.C(), NewText.GetCount(), 0, 0, true);
+		return *this;
+	}
+
+	String& String::Assign(StringView OldText, StringView NewText, uint64 Offset, uint64 Occurrence)
+	{
+		Assign(OldText.C(), OldText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, false);
 		return *this;
 	}
 
@@ -139,26 +137,27 @@ namespace NxFr
 		return *this;
 	}
 
-	String& String::Replace(StringView Old, StringView New)
+	String& String::Insert(StringView ReferenceText, StringView NewText)
 	{
-		return Assign(Old, New, 0, 1, true);
-	}
-
-	String& String::Assign(StringView OldText, StringView NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
-	{
-		Assign(OldText.C(), OldText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, All);
+		Insert(ReferenceText.C(), ReferenceText.GetCount(), NewText.C(), NewText.GetCount(), 0, 0, true);
 		return *this;
 	}
 
-	String& String::Insert(StringView ReferenceText, StringView NewText, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Insert(StringView ReferenceText, StringView NewText, uint64 Offset, uint64 Occurrence)
 	{
-		Insert(ReferenceText.C(), ReferenceText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, All);
+		Insert(ReferenceText.C(), ReferenceText.GetCount(), NewText.C(), NewText.GetCount(), Offset, Occurrence, false);
 		return *this;
 	}
 
-	String& String::Remove(StringView Text, uint64 Offset /*0*/, uint64 Occurrence /*1*/, bool All /*false*/)
+	String& String::Remove(StringView Text)
 	{
-		Remove(Text.C(), Text.GetCount(), Offset, Occurrence, All);
+		Remove(Text.C(), Text.GetCount(), 0, 0, true);
+		return *this;
+	}
+
+	String& String::Remove(StringView Text, uint64 Offset, uint64 Occurrence)
+	{
+		Remove(Text.C(), Text.GetCount(), Offset, Occurrence, false);
 		return *this;
 	}
 
@@ -172,41 +171,6 @@ namespace NxFr
 	{
 		Resize(0);
 		return *this;
-	}
-
-	bool String::Start(StringView Substring) const
-	{
-		return StringUtility::Start(*this, Substring);
-	}
-
-	bool String::End(StringView Substring) const
-	{
-		return StringUtility::End(*this, Substring);
-	}
-
-	bool String::Contains(StringView Substring) const
-	{
-		return StringUtility::Contains(*this, Substring);
-	}
-
-	StringView String::Find(StringView Substring, uint64 Offset) const
-	{
-		return StringUtility::Find(*this, Substring, Offset);
-	}
-
-	List<StringView> String::FindAll(StringView Substring) const
-	{
-		return StringUtility::FindAll(*this, Substring);
-	}
-
-	StringView String::Split(StringView Substring, uint64 Offset) const
-	{
-		return StringUtility::Split(*this, Substring, Offset);
-	}
-
-	List<StringView> String::SplitAll(StringView Substring) const
-	{
-		return StringUtility::SplitAll(*this, Substring);
 	}
 
 	void String::Grow(uint64 Size)
@@ -235,15 +199,14 @@ namespace NxFr
 		ValidateNullTermination();
 	}
 
-	StringView String::ToView() const
+	StringView String::Substring(uint64 Offset, uint64 Size) const
 	{
-		return StringView(*this);
+		return StringView(C(), Offset, Size);
 	}
 
-	StringView String::ToView(uint64 Offset, uint64 Size) const
+	char* String::Characters()
 	{
-		NEXUS_ASSERT(Offset + Size <= Count, Default, "Invalid String view");
-		return StringView(C() + Offset, Size);
+		return GetData();
 	}
 
 	void String::Allocate(uint64 Bytes, uint64 Size, const char* Text)

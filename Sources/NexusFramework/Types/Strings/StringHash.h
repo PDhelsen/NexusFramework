@@ -65,7 +65,7 @@ namespace NxFr
 		public:
 			static void Accumulate(HashStrategy<H>& State, const StringId& Data)
 			{
-				State.Accumulate(Data.C(), StringCApi::Length(Data.C()));
+				HashProcess<StringView, H>::Accumulate(State, Data);
 			}
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, const StringId& Data)

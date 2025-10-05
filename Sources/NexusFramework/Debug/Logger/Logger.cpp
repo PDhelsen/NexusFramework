@@ -180,15 +180,13 @@ namespace NxFr
 		uint8 VerbosityLevel = Enum::ToFlagIndex(Verbosity);
 		StringView VerbosityLabel = Enum::ToString((LoggerVerbosity)VerbosityLevel);
 
-		StringView ChannelLabel = Channel.C();
-
 		Timestamp Stamp = Time::Now();
 		int8 Hours = Stamp.Hours;
 		int8 Minutes = Stamp.Minutes;
 		int8 Seconds = Stamp.Seconds;
 
 		BufferFormat.Clear();
-		BufferFormat.Format(Format, Hours, Minutes, Seconds, VerbosityLabel.C(), ChannelLabel.C(), Message.C());
+		BufferFormat.Format(Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), Message.C(), StringUtility::NewLine.C());
 		return &BufferFormat;
 	}
 

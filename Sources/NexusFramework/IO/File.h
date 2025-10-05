@@ -39,7 +39,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void WriteText(StringView Text);
 		NEXUS_FRAMEWORK_API String ReadText();
 
-		StringView GetPath() const { return Path.ToView(); }
+		StringView GetPath() const { return Path; }
 		bool Exists() const { return Exist; }
 		bool IsOpened() const { return Handle != nullptr; }
 

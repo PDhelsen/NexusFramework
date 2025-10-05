@@ -10,7 +10,7 @@ namespace NxFr
 	class Logger : public Log
 	{
 	public:
-		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s\n";
+		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s%s";
 
 		NEXUS_FRAMEWORK_API static Logger* GetInstance();
 

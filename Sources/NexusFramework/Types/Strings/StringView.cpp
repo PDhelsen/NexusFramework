@@ -3,19 +3,27 @@
 
 namespace NxFr
 {
+	static String Buffer;
+
 	StringView::StringView()
-		:Data(""), Count(0)
+		: Data(""), Count(0)
 	{
 	}
 
 	StringView::StringView(const char* Text)
-		:Data(Text), Count(StringCApi::Length(Text))
+		: Data(Text), Count(StringCApi::Length(Text))
 	{
 	}
 
 	StringView::StringView(const char* Text, uint64 Size)
-		:Data(Text), Count(Size)
+		: Data(Text), Count(Size)
 	{
+	}
+
+	StringView::StringView(const char* Text, uint64 Offset, uint64 Size)
+		: Data(Text + Offset), Count(Size)
+	{
+		NEXUS_ASSERT(Offset + Size <= StringCApi::Length(Text), Default, "Invalid String view");
 	}
 
 	StringView::StringView(const String& Text)
@@ -23,49 +31,15 @@ namespace NxFr
 	{
 	}
 
-	bool StringView::Start(StringView Substring) const
+	StringView StringView::Substring(uint64 Offset, uint64 Size) const
 	{
-		return StringUtility::Start(*this, Substring);
+		return StringView(C(), Offset, Size);
 	}
 
-	bool StringView::End(StringView Substring) const
+	const char* StringView::CString() const
 	{
-		return StringUtility::End(*this, Substring);
-	}
-
-	bool StringView::Contains(StringView Substring) const
-	{
-		return StringUtility::Contains(*this, Substring);
-	}
-
-	StringView StringView::Find(StringView Substring, uint64 Offset) const
-	{
-		return StringUtility::Find(*this, Substring, Offset);
-	}
-
-	List<StringView> StringView::FindAll(StringView Substring) const
-	{
-		return StringUtility::FindAll(*this, Substring);
-	}
-
-	StringView StringView::Split(StringView Substring, uint64 Offset) const
-	{
-		return StringUtility::Split(*this, Substring, Offset);
-	}
-
-	List<StringView> StringView::SplitAll(StringView Substring) const
-	{
-		return StringUtility::SplitAll(*this, Substring);
-	}
-
-	String StringView::ToString() const
-	{
-		return String(C(), Count);
-	}
-
-	StringView StringView::ToView(uint64 Offset, uint64 Size) const
-	{
-		NEXUS_ASSERT(Offset + Size <= Count, Default, "Invalid String view");
-		return StringView(Data + Offset, Size);
+		Buffer.Clear();
+		Buffer += *this;
+		return Buffer.C();
 	}
 }

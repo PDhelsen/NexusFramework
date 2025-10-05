@@ -23,23 +23,23 @@ namespace NxFr
 			{
 				StringView Arg = ArgV[Index];
 
-				if (Arg.Start("--"))
+				if (StringUtility::Start(Arg, "--"))
 				{
-					Arg = Arg.ToView(2, Arg.GetCount() - 2);
-					Named.Append(Arg.ToString(), FlagTrue);
+					Arg = Arg.Substring(2, Arg.GetCount() - 2);
+					Named.Append(Arg, FlagTrue);
 				}
-				else if (Arg.Start("-"))
+				else if (StringUtility::Start(Arg, "-"))
 				{
-					uint64 Equal = Arg.Find("=").C() - Arg.C();
+					uint64 Equal = StringUtility::Find(Arg, "=").C() - Arg.C();
 
-					StringView Key = Arg.ToView(1, Equal - 1);
-					StringView Value = Arg.ToView(Equal + 1, Arg.GetCount() - (Equal + 1));
+					StringView Key = Arg.Substring(1, Equal - 1);
+					StringView Value = Arg.Substring(Equal + 1, Arg.GetCount() - (Equal + 1));
 
-					Named.Append(Key.ToString(), Value.ToString());
+					Named.Append(Key, Value);
 				}
 				else
 				{
-					Positional.Append(Arg.ToString());
+					Positional.Append(Arg);
 				}
 			}
 		}
@@ -77,7 +77,12 @@ namespace NxFr
 		{
 			const Dictionary<String, String>& Args = GetNamed();
 			const String* Contain = Args.TryGet(Key);
-			return Contain != nullptr ? *Contain : Default;
+			if (Contain != nullptr)
+			{
+				return *Contain;
+			}
+
+			return Default;
 		}
 
 		bool Has(uint64 Index)
