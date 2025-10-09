@@ -90,7 +90,6 @@ namespace NxTs
 		ASSERT_EQ(Vec2c[1], 2);
 		ASSERT_EQ(NxFr::Vector2f(3), NxFr::Vector3f(3));
 		ASSERT_EQ(NxFr::Vector2f(4), NxFr::Vector4f(4));
-		ASSERT_EQ(NxFr::Vector2f(1, 2).ToString(), "(1.00, 2.00)");
 		ASSERT_EQ(NxFr::Vector2f::Zero, NxFr::Vector2f(0));
 		ASSERT_EQ(NxFr::Vector2f::One, NxFr::Vector2f(1));
 		ASSERT_EQ(NxFr::Vector2f::Right, NxFr::Vector2f(1, 0));
@@ -120,7 +119,6 @@ namespace NxTs
 		ASSERT_EQ(Vec3c[2], 3);
 		NxFr::Vector3f Vec3d = NxFr::Vector3f(1) + (NxFr::Vector3f)NxFr::Vector2f(1);
 		ASSERT_EQ(NxFr::Vector3f(4), NxFr::Vector4f(4));
-		ASSERT_EQ(NxFr::Vector3f(1, 2, 3).ToString(), "(1.00, 2.00, 3.00)");
 		ASSERT_EQ(NxFr::Vector3f::Zero, NxFr::Vector3f(0));
 		ASSERT_EQ(NxFr::Vector3f::One, NxFr::Vector3f(1));
 		ASSERT_EQ(NxFr::Vector3f::Right, NxFr::Vector3f(1, 0, 0));
@@ -151,12 +149,15 @@ namespace NxTs
 		ASSERT_EQ(Vec4c[1], 2);
 		ASSERT_EQ(Vec4c[2], 3);
 		ASSERT_EQ(Vec4c[3], 4);
-		ASSERT_EQ(NxFr::Vector4f(1, 2, 3, 4).ToString(), "(1.00, 2.00, 3.00, 4.00)");
 		ASSERT_EQ(NxFr::Vector4f::Zero, NxFr::Vector4f(0));
 		ASSERT_EQ(NxFr::Vector4f::One, NxFr::Vector4f(1));
 		ASSERT_EQ(NxFr::Vector4f::Right, NxFr::Vector4f(1, 0, 0));
 		ASSERT_EQ(NxFr::Vector4f::Up, NxFr::Vector4f(0, 1, 0));
 		ASSERT_EQ(NxFr::Vector4f::Forward, NxFr::Vector4f(0, 0, 1));
+
+		ASSERT_EQ(NxFr::StringUtility::ToString(NxFr::Vector2f(1, 2)), "(1.00, 2.00)");
+		ASSERT_EQ(NxFr::StringUtility::ToString(NxFr::Vector3f(1, 2, 3)), "(1.00, 2.00, 3.00)");
+		ASSERT_EQ(NxFr::StringUtility::ToString(NxFr::Vector4f(1, 2, 3, 4)), "(1.00, 2.00, 3.00, 4.00)");
 
 		ASSERT_EQ(NxFr::VectorUtility::Angle(NxFr::Vector3f(1, 0, 0), NxFr::Vector3f(1, 1, 0)), 0.785398185f);
 		ASSERT_EQ(NxFr::VectorUtility::Clamp(NxFr::Vector3f(-5.0f, 0.5f, 5.0f), NxFr::Vector3f(0), NxFr::Vector3f(1)), NxFr::Vector3f(0.0f, 0.5f, 1.0f));

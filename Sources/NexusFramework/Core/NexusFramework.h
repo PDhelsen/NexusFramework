@@ -29,6 +29,7 @@
 #include "NexusFramework/Types/Containers/Tuple.h"
 #include "NexusFramework/Types/Containers/ContainersUtils.h"
 #include "NexusFramework/Types/Containers/Serialization.h"
+#include "NexusFramework/Types/Containers/String.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Functions/Event.h"
 
@@ -57,6 +58,7 @@
 #include "NexusFramework/Math/Shape.h"
 #include "NexusFramework/Math/Hash.h"
 #include "NexusFramework/Math/Serialization.h"
+#include "NexusFramework/Math/String.h"
 
 #include "NexusFramework/Time/Timestamp.h"
 #include "NexusFramework/Time/Timespan.h"

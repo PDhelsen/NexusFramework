@@ -112,23 +112,35 @@ namespace NxTs
 	};
 }
 
-namespace NxFr::Hashing
+namespace NxFr
 {
-	template<typename H>
-	class HashProcess<NxTs::ContainerTest, H>
+	namespace Hashing
 	{
-	public:
-		static void Accumulate(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
+		template<typename H>
+		class HashProcess<NxTs::ContainerTest, H>
 		{
-			State.Accumulate(&Data.Integer, sizeof(uint64))
-				.Accumulate(&Data.Float, sizeof(float))
-				.Accumulate(&Data.Boolean, sizeof(bool));
-		}
+		public:
+			static void Accumulate(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
+			{
+				State.Accumulate(&Data.Integer, sizeof(uint64))
+					.Accumulate(&Data.Float, sizeof(float))
+					.Accumulate(&Data.Boolean, sizeof(bool));
+			}
 
-		static typename H::HashLength Hash(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
+			static typename H::HashLength Hash(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
+			{
+				HashProcess<NxTs::ContainerTest, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
+	}
+
+	template<>
+	struct StringConverter<NxTs::ContainerTest>
+	{
+		static void ToString(const NxTs::ContainerTest& Data, String& Result, StringView Format = "")
 		{
-			HashProcess<NxTs::ContainerTest, H>::Accumulate(State, Data);
-			return State.Hash();
+			Result.Format("Container: %d %.2f %s", Data.Integer, Data.Float, Data.Boolean ? "true" : "false");
 		}
 	};
 }
@@ -1509,5 +1521,56 @@ namespace NxTs
 		NxFr::Dictionary<uint64, uint64> Dictionary = { { 9, 9 }, { 8, 8 }, { 7, 7 }, { 6, 6 }, { 5, 5 }, { 4, 4 }, { 3, 3 }, { 2, 2 }, { 1, 1 }, { 0, 0 } };
 		ASSERT_EQ(Dictionary.GetCount(), 10);
 		ASSERT_EQ(Dictionary[4], 4);
+	}
+
+	TEST(Containers, ToString)
+	{
+		NxFr::Array<ContainerTest> Test1(5);
+		Test1[0] = 1;
+		Test1[1] = 2;
+		Test1[2] = 3;
+		Test1[3] = 4;
+		Test1[4] = 5;
+		NxFr::String String1 = NxFr::StringUtility::ToString(Test1);
+
+		NxFr::List<ContainerTest> Test2(5);
+		Test2.Append(1);
+		Test2.Append(2);
+		Test2.Append(3);
+		Test2.Append(4);
+		Test2.Append(5);
+		NxFr::String String2 = NxFr::StringUtility::ToString(Test2);
+
+		NxFr::Dequeue<ContainerTest> Test3;
+		Test3.AppendBack(1);
+		Test3.AppendBack(2);
+		Test3.AppendBack(3);
+		Test3.AppendBack(4);
+		Test3.AppendBack(5);
+		NxFr::String String3 = NxFr::StringUtility::ToString(Test3);
+
+		NxFr::LinkedList<ContainerTest> Test4;
+		Test4.AppendBack(1);
+		Test4.AppendBack(2);
+		Test4.AppendBack(3);
+		Test4.AppendBack(4);
+		Test4.AppendBack(5);
+		NxFr::String String4 = NxFr::StringUtility::ToString(Test4);
+
+		NxFr::Set<ContainerTest> Test5;
+		Test5.Append(1);
+		Test5.Append(2);
+		Test5.Append(3);
+		Test5.Append(4);
+		Test5.Append(5);
+		NxFr::String String5 = NxFr::StringUtility::ToString(Test5);
+
+		NxFr::Dictionary<ContainerTest, ContainerTest> Test6;
+		Test6.Append(1, 50);
+		Test6.Append(2, 40);
+		Test6.Append(3, 30);
+		Test6.Append(4, 20);
+		Test6.Append(5, 10);
+		NxFr::String String6 = NxFr::StringUtility::ToString(Test6);
 	}
 }

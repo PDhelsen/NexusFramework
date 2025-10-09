@@ -70,8 +70,6 @@ namespace NxFr
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
 
-		String ToString() const { String Result; for (uint8 Index = 0; Index < Count; Index++) Result += StringUtility::ToStringF(m[Index]); return Result; }
-
 	public:
 		T m[Count];
 	};
@@ -133,8 +131,6 @@ namespace NxFr
 		Vector<2, T> Normalized() const { return VectorUtility::Normalize(*this); }
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
-
-		String ToString() const { return StringUtility::Format("(%.2f, %.2f)", (float)x, (float)y); }
 
 	public:
 		T x, y;
@@ -202,8 +198,6 @@ namespace NxFr
 		Vector<3, T> Normalized() const { return VectorUtility::Normalize(*this); }
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
-
-		String ToString() const { return StringUtility::Format("(%.2f, %.2f, %.2f)", (float)x, (float)y, (float)z); }
 
 	public:
 		T x, y, z;
@@ -274,8 +268,6 @@ namespace NxFr
 		Vector<4, T> Normalized() const { return VectorUtility::Normalize(*this); }
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
-
-		String ToString() const { return StringUtility::Format("(%.2f, %.2f, %.2f, %.2f)", (float)x, (float)y, (float)z, (float)w); }
 
 	public:
 		T x, y, z, w;

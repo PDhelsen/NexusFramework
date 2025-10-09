@@ -5,7 +5,7 @@ namespace NxTs
 	TEST(Time, Timespan)
 	{
 		NxFr::Timespan Span = NxFr::Timespan(1, 10, 5, 23, 55, 30);
-		ASSERT_EQ(Span.ToString(), "0001y10m05d - 23h55m30s");
+		ASSERT_EQ(NxFr::StringUtility::ToString(Span), "0001y10m05d - 23h55m30s");
 
 		NxFr::Timespan Test1 = NxFr::Timespan(1, 1, 1, 1, 1, 1);
 		NxFr::Timespan Test2 = NxFr::Timespan(1, 2, 2, 2, 2, 2);
@@ -33,7 +33,7 @@ namespace NxTs
 		NxFr::Timestamp Date = NxFr::Timestamp(2024, 11, 17, 23, 55, 30, 7, -1, true);
 		ASSERT_EQ(Date.GetWeekDay(), "Sunday");
 		ASSERT_EQ(Date.GetMonth(), "November");
-		ASSERT_EQ(Date.ToString(), "Sunday - November 17 2024 - 23:55:30");
+		ASSERT_EQ(NxFr::StringUtility::ToString(Date), "Sunday - November 17 2024 - 23:55:30");
 
 		NxFr::Timestamp Test1 = NxFr::Timestamp(1, 1, 1, 1, 1, 1);
 		NxFr::Timestamp Test2 = NxFr::Timestamp(1, 2, 2, 2, 2, 2);

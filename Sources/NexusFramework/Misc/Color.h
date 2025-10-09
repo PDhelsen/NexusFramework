@@ -80,8 +80,6 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API String ToString() const;
-
 			NEXUS_FRAMEWORK_API float GetX() const { return r; }
 			NEXUS_FRAMEWORK_API float GetY() const { return g; }
 			NEXUS_FRAMEWORK_API float GetZ() const { return b; }
@@ -134,8 +132,6 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Type ToGrayscale() const;
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
-
-			NEXUS_FRAMEWORK_API String ToString() const;
 
 			NEXUS_FRAMEWORK_API float GetX() const { return r; }
 			NEXUS_FRAMEWORK_API float GetY() const { return g; }
@@ -190,8 +186,6 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API String ToString() const;
-
 			NEXUS_FRAMEWORK_API float GetX() const { return r; }
 			NEXUS_FRAMEWORK_API float GetY() const { return g; }
 			NEXUS_FRAMEWORK_API float GetZ() const { return b; }
@@ -241,8 +235,6 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API String ToString() const;
-
 			NEXUS_FRAMEWORK_API float GetX() const { return h; }
 			NEXUS_FRAMEWORK_API float GetY() const { return s; }
 			NEXUS_FRAMEWORK_API float GetZ() const { return v; }
@@ -253,12 +245,6 @@ namespace NxFr
 
 		namespace Utility
 		{
-			template<typename T>
-			NxFr::String ToString(const T& Instance)
-			{
-				return StringUtility::Format("(%.2f, %.2f, %.2f, %.2f)", Instance.GetX(), Instance.GetY(), Instance.GetZ(), Instance.GetW());
-			}
-
 			template<typename T>
 			bool Equals(const T& Instance, const T& Other)
 			{
@@ -417,6 +403,25 @@ namespace NxFr
 			Rbs.WriteObject(Object.g);
 			Rbs.WriteObject(Object.b);
 			Rbs.WriteObject(Object.a);
+		}
+	};
+
+	template<>
+	struct StringConverter<Color>
+	{
+		static StringView GetFormat(bool Pretty)
+		{
+			return Pretty ? "(%.2f, %.2f, %.2f, %.2f)" : "(%f, %f, %f, %f)";
+		}
+
+		static void ToString(const Color& Data, String& Result, StringView Format = "")
+		{
+			Result.Format(StringUtility::ConvertionFormat<Color>(Format, true), Data.r, Data.g, Data.b, Data.a);
+		}
+
+		static void FromString(StringView Data, Color& Result, StringView Format = "")
+		{
+			StringUtility::Scan(Data, StringUtility::ConvertionFormat<Color>(Format, false), &Result.r, &Result.g, &Result.b, &Result.a);
 		}
 	};
 }

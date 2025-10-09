@@ -41,6 +41,17 @@ namespace NxFr
 		template<typename... Args>
 		static uint64 Scan(StringView Text, StringView Format, Args&&... args);
 
+		template<typename T>
+		static String ToString(const T& Data, StringView Format = "");
+		template<typename T>
+		static void ToString(const T& Data, String& Result, StringView Format = "");
+		template<typename T>
+		static T FromString(StringView Data, StringView Format = "");
+		template<typename T>
+		static void FromString(StringView Data, T& Result, StringView Format = "");
+		template<typename T>
+		static StringView ConvertionFormat(StringView Format = "", bool Pretty = false);
+
 		NEXUS_FRAMEWORK_API static bool Start(StringView Text, StringView Substring);
 		NEXUS_FRAMEWORK_API static bool End(StringView Text, StringView Substring);
 		NEXUS_FRAMEWORK_API static bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
@@ -56,17 +67,16 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static String Replace(StringView Text, StringView Old, StringView New);
 		NEXUS_FRAMEWORK_API static String Join(const Collection<StringView>& Text, StringView Separator = "");
 
-		NEXUS_FRAMEWORK_API static  int64 ToInteger(StringView Text, int32 Radix = 10);
-		NEXUS_FRAMEWORK_API static uint64 ToUnsignedInteger(StringView Text, int32 Radix = 10);
-		NEXUS_FRAMEWORK_API static double ToDouble(StringView Text);
-		NEXUS_FRAMEWORK_API static String ToStringI(int64 Number, StringView Format = "%d");
-		NEXUS_FRAMEWORK_API static String ToStringU(uint64 Number, StringView Format = "%d");
-		NEXUS_FRAMEWORK_API static String ToStringF(float Number, StringView Format = "%.2f");
-		NEXUS_FRAMEWORK_API static String ToStringD(double Number, StringView Format = "%.2f");
-		NEXUS_FRAMEWORK_API static String ToStringB(bool State, StringView Format = "%s");
-
 	private:
 		static StringView Search(const char* Text, const char* Substring, uint64 Capacity, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
+	};
+
+	template<typename T>
+	struct StringConverter
+	{
+		static StringView GetFormat(bool Pretty) { return ""; };
+		static void ToString(const T& Data, String& Result, StringView Format = "");
+		static void FromString(StringView Data, T& Result, StringView Format = "");
 	};
 
 	NEXUS_FRAMEWORK_API String operator+(StringView TextA, StringView TextB);

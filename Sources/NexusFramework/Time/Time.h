@@ -30,9 +30,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API StringView GetMonth(int32 Month);
 		NEXUS_FRAMEWORK_API int32 GetDaysPerMonth(int32 Month, bool Leap);
 		NEXUS_FRAMEWORK_API bool IsLeapYear(int32 Year);
-
-		NEXUS_FRAMEWORK_API String ToString(const Timestamp& Stamp, StringView Format = Timestamp::Format);
-		NEXUS_FRAMEWORK_API String ToString(const Timespan& Span, StringView Format = Timespan::Format);
 	};
 }
 

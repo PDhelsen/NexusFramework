@@ -102,11 +102,6 @@ namespace NxFr
 		}
 	}
 
-	String Timespan::ToString(StringView Format) const
-	{
-		return Time::ToString(*this, Format);
-	}
-
 	bool Timespan::IsValid() const
 	{
 		return Seconds >= 0 && Minutes >= 0 && Hours >= 0 && Days >= 0 && Months >= 0 && Years >= 0;

@@ -154,11 +154,6 @@ namespace NxFr
 			return Vector4f(r, g, b, a);
 		}
 
-		String sRGB::ToString() const
-		{
-			return Utility::ToString(*this);
-		}
-
 #pragma endregion
 
 #pragma region Linear
@@ -292,11 +287,6 @@ namespace NxFr
 		Vector4f Linear::ToVector4f() const
 		{
 			return Vector4f(r, g, b, a);
-		}
-
-		String Linear::ToString() const
-		{
-			return Utility::ToString(*this);
 		}
 
 #pragma endregion
@@ -434,11 +424,6 @@ namespace NxFr
 			return Vector4f((float)r, (float)g, (float)b, (float)a);
 		}
 
-		String Bits::ToString() const
-		{
-			return Utility::ToString(*this);
-		}
-
 #pragma endregion
 
 #pragma region Hsv
@@ -572,11 +557,6 @@ namespace NxFr
 		Vector4f Hsv::ToVector4f() const
 		{
 			return Vector4f(h, s, v, a);
-		}
-
-		String Hsv::ToString() const
-		{
-			return Utility::ToString(*this);
 		}
 
 #pragma endregion

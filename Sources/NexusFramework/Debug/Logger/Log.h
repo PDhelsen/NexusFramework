@@ -32,8 +32,6 @@ namespace NxFr
 
 		COUNT
 	};
-	NEXUS_FLAG(LoggerVerbosity, uint8)
-	NEXUS_FLAG_STRING(LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
 
 	enum class LoggerOutput : uint8
 	{
@@ -48,8 +46,6 @@ namespace NxFr
 
 		COUNT
 	};
-	NEXUS_FLAG(LoggerOutput, uint8)
-	NEXUS_FLAG_STRING(LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 
 	class Log
 	{
@@ -88,6 +84,11 @@ namespace NxFr
 		PrintMessage(Verbosity, Channel, *FormatBuffer);
 	}
 }
+
+NEXUS_FLAG(NxFr::LoggerVerbosity, uint8)
+NEXUS_FLAG_STRING(NxFr::LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
+NEXUS_FLAG(NxFr::LoggerOutput, uint8)
+NEXUS_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
 #define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }

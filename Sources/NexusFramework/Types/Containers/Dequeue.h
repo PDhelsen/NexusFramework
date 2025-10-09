@@ -61,8 +61,7 @@ namespace NxFr
 		Dequeue(Dequeue<T, BS>&& Other) noexcept
 			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexFront(Other.IndexFront), IndexBack(Other.IndexBack), Data(Other.Data)
 		{
-			Other.Capacity = 0;
-			Other.Count = 0;
+			Other.ValidateDefaultState();
 			Other.Data = nullptr;
 		}
 
@@ -121,8 +120,7 @@ namespace NxFr
 			IndexBack = Other.IndexBack;
 			Data = Other.Data;
 
-			Other.Capacity = 0;
-			Other.Count = 0;
+			Other.ValidateDefaultState();
 			Other.Data = nullptr;
 
 			return *this;

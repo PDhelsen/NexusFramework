@@ -30,5 +30,8 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Colors::Hsv(0.3333f, 1.0f, 1.0f), NxFr::Color(0.0f, 1.0f, 0.0f));
 
 		ASSERT_EQ(NxFr::Colors::Red, NxFr::Color(1.0f, 0.0f, 0.0f));
+
+		ASSERT_EQ(NxFr::StringUtility::ToString(NxFr::Colors::Red), "(1.00, 0.00, 0.00, 1.00)");
+		ASSERT_EQ(NxFr::StringUtility::FromString<NxFr::Color>("(1.00, 0.00, 0.00, 1.00)"), NxFr::Colors::Red);
 	}
 }

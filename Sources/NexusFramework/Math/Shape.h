@@ -51,8 +51,6 @@ namespace NxFr
 		Ray& Translate(Vector<3, float> Offset) { Origin += Offset; return *this; }
 		Ray& Rotate(Quaternion Rotation) { Direction = Rotation * Direction; return *this; }
 
-		String ToString() const { return StringUtility::Format("Origin: %s - Direction: %s", Origin.ToString().C(), Direction.ToString().C()); }
-
 	public:
 		Vector<3, float> Origin;
 		Vector<3, float> Direction;
@@ -76,8 +74,6 @@ namespace NxFr
 		Plane& Flip() { Normal = -Normal; return *this; }
 		Plane& Translate(float  Delta) { Distance += Delta; return *this; }
 		Plane& Rotate(Quaternion Rotation) { Normal = Rotation * Normal; return *this; }
-
-		String ToString() const { return StringUtility::Format("Normal: %s - Distance: %f", Normal.ToString().C(), Distance); }
 
 	public:
 		Vector<3, float> Normal;
@@ -104,8 +100,6 @@ namespace NxFr
 		Vector<3, float> Center() const { return (A + B + C) / 3.0f; }
 		Vector<3, float> Edge(uint8 Index) const { return Index == 0 ? B - A : Index == 1 ? C - B : A - C; }
 		Vector<3, float> Normal() const { return VectorUtility::Normalize(VectorUtility::Cross((C - A).Normalized(), (B - A).Normalized())); }
-
-		String ToString() const { return StringUtility::Format("A: %s - B: s - C: %s", A.ToString().C(), B.ToString().C(), C.ToString().C()); }
 
 	public:
 		Vector<3, float> A;
@@ -167,8 +161,6 @@ namespace NxFr
 		float GetHeight() const { return 2.0f * Extents.y; }
 		void SetHeight(float Height) { Extents.y = Height * 0.5f; }
 
-		String ToString() const { return StringUtility::Format("Center: %s - Extents: %s", Center.ToString().C(), Extents.ToString().C()); }
-
 	public:
 		Vector<2, float> Center;
 		Vector<2, float> Extents;
@@ -215,8 +207,6 @@ namespace NxFr
 
 		float GetDiameter() const { return 2.0f * Radius; }
 		void SetDiameter(float Diameter) { Radius = Diameter * 0.5f; }
-
-		String ToString() const { return StringUtility::Format("Center: %s - Radius: %f", Center.ToString().C(), Radius); }
 
 	public:
 		Vector<2, float> Center;
@@ -265,8 +255,6 @@ namespace NxFr
 		void SetMinMax(Vector<3, float> Min, Vector<3, float> Max) { Center = (Min + Max) * 0.5f; Extents = (Max - Min) * 0.5f; }
 		Vector<3, float> GetSize() const { return Extents * 2.0f; }
 		void SetSize(Vector<3, float> Size) { Extents = Size * 0.5f; }
-
-		String ToString() const { return StringUtility::Format("Center: %s - Extents: %s", Center.ToString().C(), Extents.ToString().C()); }
 
 	public:
 		Vector<3, float> Center;
@@ -351,8 +339,6 @@ namespace NxFr
 
 		Vector<3, float> GetRotatedPosition(Vector<3, float> Position) const { return Position.x * (Orientation * Vector<3, float>::Right) + Position.y * (Orientation * Vector<3, float>::Up) + Position.z * (Orientation * Vector<3, float>::Forward); }
 
-		String ToString() const { return StringUtility::Format("Center: %s - Orientation: %s - Extents: %s", Center.ToString().C(), Orientation.ToString().C(), Extents.ToString().C()); }
-
 	public:
 		Vector<3, float> Center;
 		Quaternion Orientation;
@@ -400,8 +386,6 @@ namespace NxFr
 
 		float GetDiameter() const { return 2.0f * Radius; }
 		void SetDiameter(float Diameter) { Radius = Diameter * 0.5f; }
-
-		String ToString() const { return StringUtility::Format("Center: %s - Radius: %f", Center.ToString().C(), Radius); }
 
 	public:
 		Vector<3, float> Center;

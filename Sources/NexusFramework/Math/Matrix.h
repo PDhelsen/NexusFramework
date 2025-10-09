@@ -90,22 +90,6 @@ namespace NxFr
 		float Determinant() const { return MatrixUtility::Determinant(*this); }
 		float Trace() const { return MatrixUtility::Trace(*this); }
 
-		String ToString() const
-		{
-			String Result;
-			for (uint8 Column = 0; Column < C; ++Column)
-			{
-				for (uint8 Row = 0; Row < R; ++Row)
-				{
-					Result += StringUtility::ToStringF((float)*this(Row, Column));
-					Result += ", ";
-				}
-				Result += StringUtility::NewLine;
-
-			}
-			return Result;
-		}
-
 	public:
 		T m[Count];
 	};
@@ -329,22 +313,6 @@ namespace NxFr
 		float Cofactor(uint8 Row, uint8 Column) const { return MatrixUtility::Cofactor(*this, Row, Column); }
 		float Determinant() const { return MatrixUtility::Determinant(*this); }
 		float Trace() const { return MatrixUtility::Trace(*this); }
-
-		String ToString() const
-		{
-			String Result;
-			for (uint8 Column = 0; Column < 4; ++Column)
-			{
-				for (uint8 Row = 0; Row < 4; ++Row)
-				{
-					Result += StringUtility::ToStringF((float)Get(Row, Column));
-					Result += ", ";
-				}
-				Result += StringUtility::NewLine;
-
-			}
-			return Result;
-		}
 
 	public:
 		float m[Count];

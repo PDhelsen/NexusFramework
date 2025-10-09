@@ -76,8 +76,6 @@ namespace NxFr
 			template<typename T>
 			T Finalize(T Current) const;
 
-			NEXUS_FRAMEWORK_API const String& ToString(String& PreAllocated) const;
-
 			StatValue Value;
 			StatType Type;
 			StatMode Mode;

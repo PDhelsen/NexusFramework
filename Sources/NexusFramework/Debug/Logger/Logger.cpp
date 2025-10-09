@@ -174,7 +174,7 @@ namespace NxFr
 
 	String* Logger::FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
-		StringView VerbosityLabel = Enum::LoggerVerbosityUtils::ToString(Verbosity);
+		String VerbosityLabel = StringUtility::ToString(Verbosity);
 
 		Timestamp Stamp = Time::Now();
 		int8 Hours = Stamp.Hours;

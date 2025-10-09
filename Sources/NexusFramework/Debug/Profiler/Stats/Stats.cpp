@@ -206,20 +206,22 @@ namespace NxFr
 		Value.DecimalPrecise = Compute(Value.DecimalPrecise, Statistique);
 	}
 
-	const String& Stats::Stat::ToString(String& PreAllocated) const
+	template<>
+	struct StringConverter<Stats::Stat>
 	{
-		switch (Type)
+		static void ToString(const Stats::Stat& Data, String& Result, StringView Format = "")
 		{
-		case NxFr::Stats::StatType::Label: return GetValue<const String&>();
-		case NxFr::Stats::StatType::Check: StringUtility::Format(PreAllocated, StringView("%s"), GetValue<bool>() ? "X" : ""); return PreAllocated;
-		case NxFr::Stats::StatType::Integer: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<int64>()); return PreAllocated;
-		case NxFr::Stats::StatType::UnsignedInteger: StringUtility::Format(PreAllocated, StringView("%d"), GetValue<uint64>()); return PreAllocated;
-		case NxFr::Stats::StatType::Decimal: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<float>()); return PreAllocated;
-		case NxFr::Stats::StatType::DecimalPrecision: StringUtility::Format(PreAllocated, StringView("%.2f"), GetValue<double>()); return PreAllocated;
+			switch (Data.GetType())
+			{
+			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValue<const String&>(), Result); break;
+			case NxFr::Stats::StatType::Check: StringConverter<bool>::ToString(Data.GetValue<bool>(), Result); break;
+			case NxFr::Stats::StatType::Integer: StringConverter<int64>::ToString(Data.GetValue<int64>(), Result); break;
+			case NxFr::Stats::StatType::UnsignedInteger: StringConverter<uint64>::ToString(Data.GetValue<uint64>(), Result); break;
+			case NxFr::Stats::StatType::Decimal: StringConverter<float>::ToString(Data.GetValue<float>(), Result); break;
+			case NxFr::Stats::StatType::DecimalPrecision: StringConverter<double>::ToString(Data.GetValue<double>(), Result); break;
+			}
 		}
-
-		return PreAllocated;
-	}
+	};
 
 	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 	// Stats
@@ -279,9 +281,9 @@ namespace NxFr
 
 		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			const String& Text = Data[Index].ToString(BufferCell);
+			StringConverter<Stats::Stat>::ToString(Data[Index], BufferCell);
 
-			BufferLine += Text;
+			BufferLine += BufferCell;
 			BufferLine += Separator;
 
 			BufferCell.Clear();

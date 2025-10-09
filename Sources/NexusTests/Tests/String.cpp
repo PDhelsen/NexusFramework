@@ -148,12 +148,28 @@ namespace NxTs
 		ASSERT_EQ(Weekday, "Saturday");
 		ASSERT_EQ(ScanCount, 4);
 
-		ASSERT_EQ(NxFr::StringUtility::ToStringF(128.6f), "128.60");
-		ASSERT_EQ(NxFr::StringUtility::ToStringI(-100), "-100");
-		ASSERT_EQ(NxFr::StringUtility::ToStringB(true), "True");
-		ASSERT_EQ(NxFr::StringUtility::ToInteger("-10"), -10);
-		ASSERT_EQ(NxFr::StringUtility::ToUnsignedInteger("100"), 100);
-		ASSERT_EQ(NxFr::StringUtility::ToDouble("-10.0"), -10.0f);
+		ASSERT_EQ(NxFr::StringUtility::ToString<bool>(true), "true");
+		ASSERT_EQ(NxFr::StringUtility::FromString<bool>("True"), true);
+		ASSERT_EQ(NxFr::StringUtility::ToString<int8>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::ToString<int16>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::ToString<int32>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::ToString<int64>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::FromString<int8>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::FromString<int16>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::FromString<int32>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::FromString<int64>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::ToString<uint8>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::ToString<uint16>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::ToString<uint32>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::ToString<uint64>(100), "100");
+		ASSERT_EQ(NxFr::StringUtility::FromString<uint8>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::FromString<uint16>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::FromString<uint32>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::FromString<uint64>("100"), 100);
+		ASSERT_EQ(NxFr::StringUtility::ToString<float>(100.5f), "100.50");
+		ASSERT_EQ(NxFr::StringUtility::FromString<float>("100.50"), 100.5f);
+		ASSERT_EQ(NxFr::StringUtility::ToString<double>(100.5f), "100.50");
+		ASSERT_EQ(NxFr::StringUtility::FromString<double>("100.50"), 100.5f);
 	}
 
 	TEST(String, Operator)

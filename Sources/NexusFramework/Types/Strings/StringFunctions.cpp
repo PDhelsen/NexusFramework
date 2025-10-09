@@ -144,46 +144,6 @@ namespace NxFr
 		return Result;
 	}
 
-	int64 StringUtility::ToInteger(StringView Text, int32 Radix)
-	{
-		return StringCApi::ToInteger(Text.C());
-	}
-
-	uint64 StringUtility::ToUnsignedInteger(StringView Text, int32 Radix)
-	{
-		return StringCApi::ToUnsignedInteger(Text.C());
-	}
-
-	double StringUtility::ToDouble(StringView Text)
-	{
-		return StringCApi::ToDouble(Text.C());
-	}
-
-	String StringUtility::ToStringI(int64 Number, StringView Format)
-	{
-		return StringUtility::Format(Format, Number);
-	}
-
-	String StringUtility::ToStringU(uint64 Number, StringView Format)
-	{
-		return StringUtility::Format(Format, Number);
-	}
-
-	String StringUtility::ToStringF(float Number, StringView Format)
-	{
-		return StringUtility::Format(Format, Number);
-	}
-
-	String StringUtility::ToStringD(double Number, StringView Format)
-	{
-		return StringUtility::Format(Format, Number);
-	}
-
-	String StringUtility::ToStringB(bool State, StringView Format)
-	{
-		return StringUtility::Format(Format, State ? "True" : "False");
-	}
-
 	StringView StringUtility::Search(const char* Text, const char* Substring, uint64 Capacity, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results)
 	{
 		uint64 Index = 0;

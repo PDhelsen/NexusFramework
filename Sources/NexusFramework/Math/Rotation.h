@@ -56,8 +56,6 @@ namespace NxFr
 
 		void Normalize() { Axis = VectorUtility::Normalize(Axis); }
 
-		String ToString() const { return StringUtility::Format("Axis: %s - Angle: %f", Axis.ToString().C(), Angle); }
-
 	public:
 		Vector<3, float> Axis;
 		float Angle;
@@ -102,8 +100,6 @@ namespace NxFr
 		bool operator!=(Euler Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
-
-		String ToString() const { return StringUtility::Format("(%.2f, %.2f, %.2f)", (float)x, (float)y, (float)z); }
 
 	public:
 		float x, y, z;
@@ -219,8 +215,6 @@ namespace NxFr
 		Quaternion Inverse() const { return RotationUtility::Inverse(*this); }
 		float SqrMagnitude() const { return RotationUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return RotationUtility::Magnitude(*this); }
-
-		String ToString() const { return StringUtility::Format("(%.2f, %.2f, %.2f, %.2f)", (float)x, (float)y, (float)z, (float)w); }
 
 	public:
 		float x, y, z, w;
