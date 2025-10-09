@@ -228,18 +228,18 @@ namespace NxFr
 	};
 
 	template<>
-	struct RBSConverter<Cuboid>
+	struct RBSConverter<Cube>
 	{
-		static Cuboid Decode(RBS& Rbs)
+		static Cube Decode(RBS& Rbs)
 		{
-			Cuboid Result;
+			Cube Result;
 			Result.Center = Rbs.ReadObject<Vector3f>();
 			Result.Orientation = Rbs.ReadObject<Quaternion>();
 			Result.Extents = Rbs.ReadObject<Vector3f>();
 			return Result;
 		}
 
-		static void Encode(RBS& Rbs, const Cuboid& Object)
+		static void Encode(RBS& Rbs, const Cube& Object)
 		{
 			Rbs.WriteObject(Object.Center);
 			Rbs.WriteObject(Object.Orientation);
@@ -682,9 +682,9 @@ namespace YAML
 	}
 
 	template<>
-	struct convert<NxFr::Cuboid>
+	struct convert<NxFr::Cube>
 	{
-		static Node encode(const NxFr::Cuboid& rhs)
+		static Node encode(const NxFr::Cube& rhs)
 		{
 			Node node;
 
@@ -695,7 +695,7 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, NxFr::Cuboid& rhs)
+		static bool decode(const Node& node, NxFr::Cube& rhs)
 		{
 			rhs.Center = node["center"].as<NxFr::Vector3f>();
 			rhs.Orientation = node["orientation"].as<NxFr::Quaternion>();
@@ -705,7 +705,7 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Cuboid& rhs)
+	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Cube& rhs)
 	{
 		out << YAML::Key << "center" << YAML::Value << rhs.Center;
 		out << YAML::Key << "orientation" << YAML::Value << rhs.Orientation;

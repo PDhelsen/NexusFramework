@@ -80,10 +80,14 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API float GetX() const { return r; }
-			NEXUS_FRAMEWORK_API float GetY() const { return g; }
-			NEXUS_FRAMEWORK_API float GetZ() const { return b; }
-			NEXUS_FRAMEWORK_API float GetW() const { return a; }
+			NEXUS_FRAMEWORK_API float GetX() const { return r / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetY() const { return g / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetZ() const { return b / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetW() const { return a / BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetX(float x) { r = x * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetY(float y) { g = y * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetZ(float z) { b = z * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetW(float w) { a = w * BoundHigh; }
 
 			Type r, g, b, a;
 		};
@@ -133,10 +137,14 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API float GetX() const { return r; }
-			NEXUS_FRAMEWORK_API float GetY() const { return g; }
-			NEXUS_FRAMEWORK_API float GetZ() const { return b; }
-			NEXUS_FRAMEWORK_API float GetW() const { return a; }
+			NEXUS_FRAMEWORK_API float GetX() const { return r / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetY() const { return g / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetZ() const { return b / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetW() const { return a / BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetX(float x) { r = x * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetY(float y) { g = y * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetZ(float z) { b = z * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetW(float w) { a = w * BoundHigh; }
 
 			Type r, g, b, a;
 		};
@@ -186,10 +194,14 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API float GetX() const { return r; }
-			NEXUS_FRAMEWORK_API float GetY() const { return g; }
-			NEXUS_FRAMEWORK_API float GetZ() const { return b; }
-			NEXUS_FRAMEWORK_API float GetW() const { return a; }
+			NEXUS_FRAMEWORK_API float GetX() const { return r / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetY() const { return g / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetZ() const { return b / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetW() const { return a / BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetX(float x) { r = x * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetY(float y) { g = y * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetZ(float z) { b = z * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetW(float w) { a = w * BoundHigh; }
 
 			Type r, g, b, a;
 		};
@@ -235,10 +247,14 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 
-			NEXUS_FRAMEWORK_API float GetX() const { return h; }
-			NEXUS_FRAMEWORK_API float GetY() const { return s; }
-			NEXUS_FRAMEWORK_API float GetZ() const { return v; }
-			NEXUS_FRAMEWORK_API float GetW() const { return a; }
+			NEXUS_FRAMEWORK_API float GetX() const { return h / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetY() const { return s / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetZ() const { return v / BoundHigh; }
+			NEXUS_FRAMEWORK_API float GetW() const { return a / BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetX(float x) { h = x * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetY(float y) { s = y * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetZ(float z) { v = z * BoundHigh; }
+			NEXUS_FRAMEWORK_API void SetW(float w) { a = w * BoundHigh; }
 
 			Type h, s, v, a;
 		};

@@ -206,18 +206,18 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class HashProcess<Cuboid, H>
+		class HashProcess<Cube, H>
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, const Cuboid& Data)
+			static void Accumulate(HashStrategy<H>& State, const Cube& Data)
 			{
 				HashProcess<Vector<3, float>, H>::Accumulate(State, Data.Center);
 				HashProcess<Vector<3, float>, H>::Accumulate(State, Data.Extents);
 			}
 
-			static typename H::HashLength Hash(HashStrategy<H>& State, const Cuboid& Data)
+			static typename H::HashLength Hash(HashStrategy<H>& State, const Cube& Data)
 			{
-				HashProcess<Cuboid, H>::Accumulate(State, Data);
+				HashProcess<Cube, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
 		};

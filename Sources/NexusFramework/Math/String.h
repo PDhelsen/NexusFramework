@@ -366,21 +366,21 @@ namespace NxFr
 	};
 
 	template<>
-	struct StringConverter<Cuboid>
+	struct StringConverter<Cube>
 	{
 		static StringView GetFormat(bool Pretty)
 		{
 			return "Center: (%f, %f, %f) - Orientation: (%f, %f, %f, %f) - Extents: (%f, %f, %f)";
 		}
 
-		static void ToString(const Cuboid& Data, String& Result, StringView Format = "")
+		static void ToString(const Cube& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Cuboid>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Orientation.x, Data.Orientation.y, Data.Orientation.z, Data.Orientation.w, Data.Extents.x, Data.Extents.y, Data.Extents.z);
+			Result.Format(StringUtility::ConvertionFormat<Cube>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Orientation.x, Data.Orientation.y, Data.Orientation.z, Data.Orientation.w, Data.Extents.x, Data.Extents.y, Data.Extents.z);
 		}
 
-		static void FromString(StringView Data, Cuboid& Result, StringView Format = "")
+		static void FromString(StringView Data, Cube& Result, StringView Format = "")
 		{
-			StringUtility::Scan(Data, StringUtility::ConvertionFormat<Cuboid>(Format), &Result.Center.x, &Result.Center.y, &Result.Center.z, &Result.Orientation.x, &Result.Orientation.y, &Result.Orientation.z, &Result.Orientation.w, &Result.Extents.x, &Result.Extents.y, &Result.Extents.z);
+			StringUtility::Scan(Data, StringUtility::ConvertionFormat<Cube>(Format), &Result.Center.x, &Result.Center.y, &Result.Center.z, &Result.Orientation.x, &Result.Orientation.y, &Result.Orientation.z, &Result.Orientation.w, &Result.Extents.x, &Result.Extents.y, &Result.Extents.z);
 		}
 	};
 

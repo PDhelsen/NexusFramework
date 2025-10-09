@@ -21,7 +21,7 @@ namespace NxFr
 	struct Rectangle;
 	struct Circle;
 	struct Box;
-	struct Cuboid;
+	struct Cube;
 	struct Sphere;
 
 	namespace ShapeUtility
@@ -29,7 +29,7 @@ namespace NxFr
 		bool Contains(const Rectangle& Shape, const Rectangle& Other);
 		bool Contains(const Circle& Shape, const Circle& Other);
 		bool Contains(const Box& Shape, const Box& Other);
-		bool Contains(const Cuboid& Shape, const Cuboid& Other);
+		bool Contains(const Cube& Shape, const Cube& Other);
 		bool Contains(const Sphere& Shape, const Sphere& Other);
 	}
 
@@ -215,7 +215,7 @@ namespace NxFr
 
 #pragma endregion
 
-#pragma region Box & Cuboid
+#pragma region Box & Cube
 
 	struct Box
 	{
@@ -261,22 +261,22 @@ namespace NxFr
 		Vector<3, float> Extents;
 	};
 
-	struct Cuboid
+	struct Cube
 	{
 	public:
-		Cuboid() : Center(Vector<3, float>::Zero), Orientation(Vector<3, float>::Zero), Extents(Vector<3, float>::One) { }
-		Cuboid(Vector<3, float> Extents) : Center(Vector<3, float>::Zero), Orientation(Quaternion::Identity), Extents(Extents) {}
-		Cuboid(Vector<3, float> Center, Vector<3, float> Extents) : Center(Center), Orientation(Quaternion::Identity), Extents(Extents) {}
-		Cuboid(Vector<3, float> Center, Quaternion Orientation, Vector<3, float> Extents) : Center(Center), Orientation(Orientation), Extents(Extents) {}
+		Cube() : Center(Vector<3, float>::Zero), Orientation(Vector<3, float>::Zero), Extents(Vector<3, float>::One) { }
+		Cube(Vector<3, float> Extents) : Center(Vector<3, float>::Zero), Orientation(Quaternion::Identity), Extents(Extents) {}
+		Cube(Vector<3, float> Center, Vector<3, float> Extents) : Center(Center), Orientation(Quaternion::Identity), Extents(Extents) {}
+		Cube(Vector<3, float> Center, Quaternion Orientation, Vector<3, float> Extents) : Center(Center), Orientation(Orientation), Extents(Extents) {}
 
-		bool operator==(const Cuboid& Other) const { return Center == Other.Center && Orientation == Other.Orientation && Extents == Other.Extents; }
-		bool operator!=(const Cuboid& Other) const { return !(*this == Other); }
+		bool operator==(const Cube& Other) const { return Center == Other.Center && Orientation == Other.Orientation && Extents == Other.Extents; }
+		bool operator!=(const Cube& Other) const { return !(*this == Other); }
 
-		Cuboid& Translate(Vector<3, float> Offset) { Center += Offset; return *this;}
-		Cuboid& Rotate(Quaternion Rotation) { Orientation = Rotation * (Quaternion)Orientation; return *this; }
-		Cuboid& Scale(Vector<3, float> Factor) { Extents *= Factor; return *this; }
-		Cuboid& Grow(Vector<3, float> Factor) { Extents += Factor; return *this; }
-		Cuboid& Encapsulate(const Cuboid& Other)
+		Cube& Translate(Vector<3, float> Offset) { Center += Offset; return *this;}
+		Cube& Rotate(Quaternion Rotation) { Orientation = Rotation * (Quaternion)Orientation; return *this; }
+		Cube& Scale(Vector<3, float> Factor) { Extents *= Factor; return *this; }
+		Cube& Grow(Vector<3, float> Factor) { Extents += Factor; return *this; }
+		Cube& Encapsulate(const Cube& Other)
 		{
 			if (ShapeUtility::Contains(*this, Other))
 			{
@@ -413,7 +413,7 @@ namespace NxFr
 			return Sphere(Shape.Center, VectorUtility::Magnitude(Shape.Extents));
 		}
 
-		inline Sphere ConvertCuboidToSphere(const Cuboid& Shape)
+		inline Sphere ConvertCuboidToSphere(const Cube& Shape)
 		{
 			return Sphere(Shape.Center, VectorUtility::Magnitude(Shape.Orientation * Shape.Extents));
 		}
@@ -423,17 +423,17 @@ namespace NxFr
 			return Box(Shape.Center, Vector<3, float>::One * Shape.Radius);
 		}
 
-		inline Cuboid ConvertSphereToCuboid(const Sphere& Shape)
+		inline Cube ConvertSphereToCuboid(const Sphere& Shape)
 		{
-			return Cuboid(Shape.Center, Vector<3, float>::One * Shape.Radius);
+			return Cube(Shape.Center, Vector<3, float>::One * Shape.Radius);
 		}
 
-		inline Cuboid ConvertBoxToCuboid(const Box& Shape)
+		inline Cube ConvertBoxToCuboid(const Box& Shape)
 		{
-			return Cuboid(Shape.Center, Shape.Extents);
+			return Cube(Shape.Center, Shape.Extents);
 		}
 
-		inline Box ConvertCuboidToBox(const Cuboid& Shape)
+		inline Box ConvertCuboidToBox(const Cube& Shape)
 		{
 			Vector<3, float> Min, Max;
 			Shape.GetMinMax(Min, Max);
@@ -486,7 +486,7 @@ namespace NxFr
 			return Shape.Center + Shape.Extents * (Uv * 2.0f - 1.0f);
 		}
 
-		inline Vector<3, float> Position(const Cuboid& Shape, Vector<3, float> Uv)
+		inline Vector<3, float> Position(const Cube& Shape, Vector<3, float> Uv)
 		{
 			return Shape.Center + Shape.Orientation * (Shape.Extents * (Uv * 2.0f - 1.0f));
 		}
@@ -531,7 +531,7 @@ namespace NxFr
 			return Position;
 		}
 
-		inline Vector<3, float> Coordinates(const Cuboid& Shape, Vector<3, float> Position, bool Clamp = true)
+		inline Vector<3, float> Coordinates(const Cube& Shape, Vector<3, float> Position, bool Clamp = true)
 		{
 			Position -= Shape.Center;
 			Position = Shape.Orientation.Inverse() * Position;
@@ -655,7 +655,7 @@ namespace NxFr
 			return OtherMin.x >= ShapeMin.x && OtherMax.x <= ShapeMax.x && OtherMin.y >= ShapeMin.y && OtherMax.y <= ShapeMax.y && OtherMin.z >= ShapeMin.z && OtherMax.z <= ShapeMax.z;
 		}
 
-		inline bool Contains(const Cuboid& Shape, Vector<3, float> Position)
+		inline bool Contains(const Cube& Shape, Vector<3, float> Position)
 		{
 			Position -= Shape.Center;
 
@@ -666,7 +666,7 @@ namespace NxFr
 			return Math::Abs(X) <= Shape.Extents.x && Math::Abs(Y) <= Shape.Extents.y && Math::Abs(Z) <= Shape.Extents.z;
 		}
 
-		inline bool Contains(const Cuboid& Shape, const Cuboid& Other)
+		inline bool Contains(const Cube& Shape, const Cube& Other)
 		{
 			for (int8 Z = -1; Z <= 1; Z += 2)
 				for (int8 Y = -1; Y <= 1; Y += 2)
@@ -935,7 +935,7 @@ namespace NxFr
 			return Intersect(Shape, Other, Entry, Exit);
 		}
 
-		inline bool Intersect(const Cuboid& Shape, const Ray& Other, Vector<3, float>& Entry, Vector<3, float>& Exit)
+		inline bool Intersect(const Cube& Shape, const Ray& Other, Vector<3, float>& Entry, Vector<3, float>& Exit)
 		{
 			Matrix<4, 4, float> Axis = Matrix<4, 4, float>::Rotate(Shape.Orientation);
 
@@ -983,13 +983,13 @@ namespace NxFr
 			return true;
 		}
 
-		inline bool Intersect(const Cuboid& Shape, const Ray& Other)
+		inline bool Intersect(const Cube& Shape, const Ray& Other)
 		{
 			Vector<3, float> Entry, Exit;
 			return Intersect(Shape, Other, Entry, Exit);
 		}
 
-		inline bool Intersect(const Cuboid& Shape, const Plane& Other, Vector<3, float>& Entry, Vector<3, float>& Exit)
+		inline bool Intersect(const Cube& Shape, const Plane& Other, Vector<3, float>& Entry, Vector<3, float>& Exit)
 		{
 			Matrix<4, 4, float> Axis = Matrix<4, 4, float>::Rotate(Shape.Orientation);
 
@@ -1012,7 +1012,7 @@ namespace NxFr
 			return true;
 		}
 
-		inline bool Intersect(const Cuboid& Shape, const Plane& Other)
+		inline bool Intersect(const Cube& Shape, const Plane& Other)
 		{
 			Vector<3, float> Entry, Exit;
 			return Intersect(Shape, Other, Entry, Exit);
@@ -1181,7 +1181,7 @@ namespace NxFr
 			return VectorUtility::Clamp(Position, Min, Max);
 		}
 
-		inline Vector<3, float> Closest(const Cuboid& Shape, Vector<3, float> Position)
+		inline Vector<3, float> Closest(const Cube& Shape, Vector<3, float> Position)
 		{
 			Vector<3, float> Local = Shape.Orientation.Inverse() * (Position - Shape.Center);
 			Vector<3, float> Point = VectorUtility::Clamp(Local, -Shape.Extents, Shape.Extents);
@@ -1241,7 +1241,7 @@ namespace NxFr
 			return (Distance.x > 0.0f || Distance.y > 0.0f || Distance.z > 0.0f) ? Outside : Inside;
 		}
 
-		inline float Distance(const Cuboid& Shape, Vector<3, float> Position)
+		inline float Distance(const Cube& Shape, Vector<3, float> Position)
 		{
 			Vector<3, float> Local = Shape.Orientation.Inverse() * (Position - Shape.Center);
 
