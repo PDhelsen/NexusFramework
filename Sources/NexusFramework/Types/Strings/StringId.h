@@ -36,7 +36,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API const String& GetString() const;
 
 		NEXUS_FRAMEWORK_API const char* C() const { return LookupString(Id).C(); }
-		NEXUS_FRAMEWORK_API bool IsValid() const { return Id == 0; }
+		NEXUS_FRAMEWORK_API bool IsValid() const { return Id != 0; }
 		NEXUS_FRAMEWORK_API bool IsEmpty() const { return LookupString(Id).IsEmpty(); }
 		NEXUS_FRAMEWORK_API uint64 GetCount() const { return LookupString(Id).GetCount(); }
 
