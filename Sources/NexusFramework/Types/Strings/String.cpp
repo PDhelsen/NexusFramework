@@ -173,21 +173,21 @@ namespace NxFr
 		return *this;
 	}
 
-	void String::Grow(uint64 Size)
+	void String::Reserve(uint64 Size)
 	{
-		if (Size <= Capacity)
+		if (Size == 0)
 		{
-			return;
+			Size = Count + 1;
 		}
 
-		Reallocate(Size);
-	}
-
-	void String::Shrink(uint64 Size /*= 0*/)
-	{
-		if (Size >= Capacity)
+		if (Size <= SmallStringCapacity)
 		{
-			return;
+			if (Sso())
+			{
+				return;
+			}
+
+			Size = SmallStringCapacity + 1;
 		}
 
 		Reallocate(Size);

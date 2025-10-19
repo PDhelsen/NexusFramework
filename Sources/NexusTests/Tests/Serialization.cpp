@@ -144,13 +144,13 @@ namespace NxTs
 		ASSERT_EQ(Array[0].as<uint64>(), 3);
 		ASSERT_EQ(Array[2].as<uint64>(), 7);
 		ASSERT_EQ(Array[4].as<uint64>(), 13);
-		NxFr::Array<uint64, 5> ArrayValue;
+		NxFr::Array<uint64> ArrayValue = 5;
 		for (uint64 Index = 0; Index < Array.size(); Index++)
 		{
 			ArrayValue[Index] = Array[Index].as<uint64>();
 		}
 		ASSERT_EQ(ArrayValue.GetCount(), 5);
-		NxFr::Array<uint64, 5> ArrayDecoded = Array.as<NxFr::Array<uint64, 5>>();
+		NxFr::Array<uint64> ArrayDecoded = Array.as<NxFr::Array<uint64>>();
 		ASSERT_EQ(ArrayDecoded.GetCount(), 5);
 
 		YAML::Node List = Deserialize["list"];

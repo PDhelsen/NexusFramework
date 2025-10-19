@@ -16,8 +16,8 @@ namespace NxFr
 			Dictionary<String, String>& Named = GetNamed();
 			NEXUS_ASSERT(Positional.GetCount() == 0 && Named.GetCount() == 0, Default, "Arguments were already parsed");
 
-			Positional.Grow(ArgC);
-			Named.Grow(ArgC);
+			Positional.Reserve(ArgC);
+			Named.Reserve(ArgC);
 
 			for (uint64 Index = 0; Index < ArgC; ++Index)
 			{

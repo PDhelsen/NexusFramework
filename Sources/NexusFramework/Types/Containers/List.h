@@ -317,7 +317,7 @@ namespace NxFr
 			Resize(0);
 			if (ShrinkToZero)
 			{
-				Shrink();
+				Reserve(0);
 			}
 		}
 
@@ -418,21 +418,11 @@ namespace NxFr
 			return Index >= 0 && Index < Count;
 		}
 
-		void Grow(uint64 Size)
+		void Reserve(uint64 Size)
 		{
-			if (Size <= Capacity)
+			if (Size == 0)
 			{
-				return;
-			}
-
-			Reallocate(Size);
-		}
-
-		void Shrink(uint64 Size = 0)
-		{
-			if (Size > Capacity)
-			{
-				return;
+				Size = Count;
 			}
 
 			Reallocate(Size);

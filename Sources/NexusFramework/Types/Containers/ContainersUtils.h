@@ -40,6 +40,38 @@ namespace NxFr
 			}
 		}
 
+		template<typename T>
+		static void Resize(Array<T>& Container, uint64 Size)
+		{
+			uint64 Count = Math::Min(Container.GetCount(), Size);
+			Array<T> Result = Array<T>(Size);
+			
+			for (uint64 Index = 0; Index < Count; ++Index)
+			{
+				Result[Index] = Container[Index];
+			}
+
+			Container = Move(Result);
+		}
+
+		template<typename T>
+		static void Resize(List<T>& Container, uint64 Size)
+		{
+			if (Size > Container.GetCount())
+			{
+				uint64 Delta = Size - Container.GetCount();
+				while (Delta-- > 0)
+				{
+					Container.AppendConstruct();
+				}
+			}
+			else if(Size < Container.GetCount())
+			{
+				uint64 Delta = Container.GetCount() - Size;
+				Container.RemoveRange(Size, Delta);
+			}
+		}
+
 		template<typename T, typename C>
 		static Array<T> ToArray(const C& Container)
 		{

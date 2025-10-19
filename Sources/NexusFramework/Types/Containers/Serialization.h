@@ -4,6 +4,7 @@
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Set.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Types/Containers/ContainersUtils.h"
 
 #include "NexusFramework/Serialization/Rbs.h"
 #include "NexusFramework/Serialization/Yaml.h"
@@ -118,10 +119,10 @@ namespace NxFr
 
 namespace YAML
 {
-	template<typename T, uint64 N>
-	struct convert<NxFr::Array<T, N>>
+	template<typename T>
+	struct convert<NxFr::Array<T>>
 	{
-		static Node encode(const NxFr::Array<T, N>& rhs)
+		static Node encode(const NxFr::Array<T>& rhs)
 		{
 			Node node;
 			node[0];
@@ -138,13 +139,14 @@ namespace YAML
 			return node;
 		}
 
-		static bool decode(const Node& node, NxFr::Array<T, N>& rhs)
+		static bool decode(const Node& node, NxFr::Array<T>& rhs)
 		{
 			if (!node.IsSequence())
 			{
 				return false;
 			}
 
+			NxFr::ContainersUtils::Resize<T>(rhs, node.size());
 			for (uint64 Index = 0; Index < node.size(); ++Index)
 			{
 				rhs[Index] = node[Index].as<T>();
@@ -153,8 +155,8 @@ namespace YAML
 		}
 	};
 
-	template<typename T, uint64 N>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Array<T, N>& rhs)
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Array<T>& rhs)
 	{
 		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
 		{
@@ -198,7 +200,7 @@ namespace YAML
 				return false;
 			}
 
-			rhs.Grow(node.size());
+			rhs.Reserve(node.size());
 			for (uint64 Index = 0; Index < node.size(); ++Index)
 			{
 				rhs.Append(node[Index].as<T>());
@@ -256,7 +258,7 @@ namespace YAML
 				return false;
 			}
 
-			rhs.Grow(node.size());
+			rhs.Reserve(node.size());
 			for (YAML::const_iterator It = node.begin(); It != node.end(); ++It)
 			{
 				rhs.Append(It->as<T>());
@@ -317,7 +319,7 @@ namespace YAML
 				return false;
 			}
 
-			rhs.Grow(node.size());
+			rhs.Reserve(node.size());
 			for (YAML::const_iterator It = node.begin(); It != node.end(); ++It)
 			{
 				rhs.Append(It->first.as<K>(), It->second.as<T>());

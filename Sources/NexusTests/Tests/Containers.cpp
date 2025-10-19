@@ -330,9 +330,9 @@ namespace NxTs
 
 		ASSERT_EQ(Test.IsValidIndex(5), true);
 		ASSERT_EQ(Test.IsValidIndex(Test.GetCount()), false);
-		Test.Grow(30);
+		Test.Reserve(30);
 		ASSERT_EQ(Test.GetCapacity(), 30);
-		Test.Shrink();
+		Test.Reserve(0);
 		ASSERT_EQ(Test.GetCapacity(), 10);
 
 		Test[3].Integer = 3;
@@ -793,7 +793,7 @@ namespace NxTs
 
 		ASSERT_EQ(Test.GetIterator(6)->Integer, 6);
 
-		Test.Grow(21);
+		Test.Reserve(21);
 		ASSERT_EQ(Test.GetCapacity(), 23);
 
 		ContainerTest ToFind1 = ContainerTest(6);
@@ -864,7 +864,7 @@ namespace NxTs
 			Value.Integer = Key.Integer * 10;
 		}
 
-		Test.Grow(21);
+		Test.Reserve(21);
 		ASSERT_EQ(Test.GetCapacity(), 23);
 
 		Test.Swap(6, 7);

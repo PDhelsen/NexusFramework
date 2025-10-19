@@ -55,8 +55,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API String& Terminate(uint64 Size);
 		NEXUS_FRAMEWORK_API String& Clear();
 
-		NEXUS_FRAMEWORK_API void Grow(uint64 Size);
-		NEXUS_FRAMEWORK_API void Shrink(uint64 Size = 0);
+		NEXUS_FRAMEWORK_API void Reserve(uint64 Size);
 		NEXUS_FRAMEWORK_API void Validate();
 
 		NEXUS_FRAMEWORK_API StringView Substring(uint64 Offset, uint64 Size) const;
