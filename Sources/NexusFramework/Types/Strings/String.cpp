@@ -175,21 +175,8 @@ namespace NxFr
 
 	void String::Reserve(uint64 Size)
 	{
-		if (Size == 0)
-		{
-			Size = Count + 1;
-		}
-
-		if (Size <= SmallStringCapacity)
-		{
-			if (Sso())
-			{
-				return;
-			}
-
-			Size = SmallStringCapacity + 1;
-		}
-
+		Size = Math::Max(Size, Count + 1ull);
+		Size = Math::Max(Size, SmallStringCapacity + 1ull);
 		Reallocate(Size);
 	}
 

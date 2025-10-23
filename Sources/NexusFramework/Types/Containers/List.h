@@ -420,11 +420,7 @@ namespace NxFr
 
 		void Reserve(uint64 Size)
 		{
-			if (Size == 0)
-			{
-				Size = Count;
-			}
-
+			Size = Math::Max(Size, Count);
 			Reallocate(Size);
 		}
 

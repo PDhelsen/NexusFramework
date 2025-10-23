@@ -50,7 +50,7 @@ namespace NxFr
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
-				Copy(Index, Other.Data[Index], false);
+				Copy(Index, Other.Data[Index]);
 			}
 		}
 
@@ -85,7 +85,7 @@ namespace NxFr
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
-				Copy(Index, Other.Data[Index], false);
+				Copy(Index, Other.Data[Index]);
 			}
 
 			return *this;
@@ -253,11 +253,7 @@ namespace NxFr
 
 		void Reserve(uint64 Size)
 		{
-			if (Size == 0)
-			{
-				Size = Count;
-			}
-
+			Size = Math::Max(Size, Count);
 			Reallocate(Size);
 		}
 
@@ -297,14 +293,15 @@ namespace NxFr
 
 			for (uint64 OldIndex = 0; OldIndex < Length; ++OldIndex)
 			{
-				if (Temp[OldIndex].IsFree() && Temp[OldIndex].Tombstone == TB::NotTombstone)
+				N& Instance = Temp[OldIndex];
+				if (Instance.IsFree())
 				{
 					continue;
 				}
 
-				uint64 Hash = GetHash(Temp[OldIndex].Value);
+				uint64 Hash = GetHash(Instance.Value);
 				uint64 NewIndex = GetIndex(Hash);
-				Copy(NewIndex, Temp[OldIndex], true);
+				Construct(NewIndex, Instance.Hash, Move(Instance.Value));
 			}
 
 			Memory::Free(Temp, Alloc);
@@ -352,18 +349,11 @@ namespace NxFr
 			}
 		}
 
-		void Copy(uint64 Index, N& Instance, bool MoveData)
+		void Copy(uint64 Index, N& Instance)
 		{
 			if (!Instance.IsFree())
 			{
-				if (MoveData)
-				{
-					Construct(Index, Instance.Hash, Move(Instance.Value));
-				}
-				else
-				{
-					Construct(Index, Instance.Hash, Instance.Value);
-				}
+				Construct(Index, Instance.Hash, Instance.Value);
 			}
 
 			Data[Index].Tombstone = Instance.Tombstone;
