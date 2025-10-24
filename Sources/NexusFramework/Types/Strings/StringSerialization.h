@@ -105,6 +105,12 @@ namespace YAML
 		{
 			return Node(rhs.C());
 		}
+
+		static bool decode(const Node& node, NxFr::StringView& rhs)
+		{
+			rhs = node.as<std::string_view>().data();
+			return true;
+		}
 	};
 
 	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringView& rhs)
