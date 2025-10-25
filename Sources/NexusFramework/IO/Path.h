@@ -103,7 +103,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API List<StringView> Split() const;
 
 		NEXUS_FRAMEWORK_API const char* C() const { return Data.C(); }
-		NEXUS_FRAMEWORK_API bool IsValid() const { return Data.IsEmpty(); }
+		NEXUS_FRAMEWORK_API bool IsValid() const { return !Data.IsEmpty(); }
 		NEXUS_FRAMEWORK_API bool IsEmpty() const { return Data.IsEmpty(); }
 		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Data.GetCount(); }
 
