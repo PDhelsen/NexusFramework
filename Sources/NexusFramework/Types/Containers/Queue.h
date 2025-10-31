@@ -388,7 +388,10 @@ namespace NxFr
 			if (IndexFront == BucketSize - 1)
 			{
 				Free(0, 1);
-				Shift();
+				if (Buckets > 1)
+				{
+					Shift();
+				}
 				--Buckets;
 				if (Buckets > 0)
 				{
