@@ -9,7 +9,12 @@ namespace NxFr
 		const uint64 BlockSize = 1024;
 
 		NEXUS_FRAMEWORK_API Stream(StringView Path);
+		NEXUS_FRAMEWORK_API Stream(const Stream& Other) = delete;
+		NEXUS_FRAMEWORK_API Stream(Stream&& Other) noexcept;
 		NEXUS_FRAMEWORK_API virtual ~Stream();
+
+		NEXUS_FRAMEWORK_API Stream& operator=(const Stream& Other) = delete;
+		NEXUS_FRAMEWORK_API Stream& operator=(Stream&& Other) noexcept;
 
 		NEXUS_FRAMEWORK_API void Open(File::Mode Mode, bool CreateIfDontExist = true);
 		NEXUS_FRAMEWORK_API void Close();
@@ -32,7 +37,12 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API TextStream(StringView Path);
+		NEXUS_FRAMEWORK_API TextStream(const TextStream& Other) = delete;
+		NEXUS_FRAMEWORK_API TextStream(TextStream&& Other) noexcept;
 		NEXUS_FRAMEWORK_API virtual ~TextStream();
+
+		NEXUS_FRAMEWORK_API TextStream& operator=(const TextStream& Other) = delete;
+		NEXUS_FRAMEWORK_API TextStream& operator=(TextStream&& Other) noexcept;
 
 		NEXUS_FRAMEWORK_API bool IsAtTheEnd() override;
 		NEXUS_FRAMEWORK_API void Cache() override;
@@ -50,7 +60,12 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API BinaryStream(StringView Path);
+		NEXUS_FRAMEWORK_API BinaryStream(const BinaryStream& Other) = delete;
+		NEXUS_FRAMEWORK_API BinaryStream(BinaryStream&& Other) noexcept;
 		NEXUS_FRAMEWORK_API virtual ~BinaryStream();
+
+		NEXUS_FRAMEWORK_API BinaryStream& operator=(const BinaryStream& Other) = delete;
+		NEXUS_FRAMEWORK_API BinaryStream& operator=(BinaryStream&& Other) noexcept;
 
 		NEXUS_FRAMEWORK_API bool IsAtTheEnd() override;
 		NEXUS_FRAMEWORK_API void Cache() override;

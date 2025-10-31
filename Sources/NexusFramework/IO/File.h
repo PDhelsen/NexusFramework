@@ -16,8 +16,12 @@ namespace NxFr
 		};
 
 		NEXUS_FRAMEWORK_API File(StringView Path);
+		NEXUS_FRAMEWORK_API File(const File& Other) = delete;
+		NEXUS_FRAMEWORK_API File(File&& Other) noexcept;
 		NEXUS_FRAMEWORK_API ~File();
 
+		NEXUS_FRAMEWORK_API File& operator=(const File& Other) = delete;
+		NEXUS_FRAMEWORK_API File& operator=(File&& Other) noexcept;
 		NEXUS_FRAMEWORK_API explicit operator bool() const;
 		NEXUS_FRAMEWORK_API bool operator ==(const File& Other) const;
 		NEXUS_FRAMEWORK_API bool operator !=(const File& Other) const;

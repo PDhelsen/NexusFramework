@@ -8,8 +8,26 @@ namespace NxFr
 	{
 	}
 
+	Stream::Stream(Stream&& Other) noexcept
+		: Handle(Move(Other.Handle)), FileMode(File::Mode::Read)
+	{
+	}
+
 	Stream::~Stream()
 	{
+	}
+
+	Stream& Stream::operator=(Stream&& Other) noexcept
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Handle = Move(Other.Handle);
+		FileMode = Other.FileMode;
+
+		return *this;
 	}
 
 	void Stream::Open(File::Mode Mode, bool CreateIfDontExist)
@@ -38,9 +56,29 @@ namespace NxFr
 	{
 	}
 
+	TextStream::TextStream(TextStream&& Other) noexcept
+		: Stream(Move(Other)), Buffer(Move(Other.Buffer)), Cursor(Other.Cursor)
+	{
+	}
+
 	TextStream::~TextStream()
 	{
 			
+	}
+
+	TextStream& TextStream::operator=(TextStream&& Other) noexcept
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Stream::operator=(Move(Other));
+		Buffer = Move(Other.Buffer);
+		Cursor = Other.Cursor;
+
+
+		return *this;
 	}
 
 	bool TextStream::IsAtTheEnd()
@@ -79,8 +117,28 @@ namespace NxFr
 	{
 	}
 
+	BinaryStream::BinaryStream(BinaryStream&& Other) noexcept
+		: Stream(Move(Other)), Buffer(Move(Other.Buffer)), Cursor(Other.Cursor)
+	{
+	}
+
 	BinaryStream::~BinaryStream()
 	{
+	}
+
+	BinaryStream& BinaryStream::operator=(BinaryStream&& Other) noexcept
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Stream::operator=(Move(Other));
+		Buffer = Move(Other.Buffer);
+		Cursor = Other.Cursor;
+
+
+		return *this;
 	}
 
 	bool BinaryStream::IsAtTheEnd()

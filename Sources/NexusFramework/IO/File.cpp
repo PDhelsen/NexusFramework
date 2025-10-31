@@ -25,9 +25,31 @@ namespace NxFr
 		Refresh();
 	}
 
+	File::File(File&& Other) noexcept
+		: Path(Other.Path), Exist(Other.Exist), Handle(Other.Handle)
+	{
+		Other.Handle = nullptr;
+	}
+
 	File::~File()
 	{
 		NEXUS_ASSERT(!Handle, Default, "Delete file while it is still open: %s", Path.C());
+	}
+
+	File& File::operator=(File&& Other) noexcept
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Path = Other.Path;
+		Exist = Other.Exist;
+		Handle = Other.Handle;
+
+		Other.Handle = nullptr;
+
+		return *this;
 	}
 
 	File::operator bool() const

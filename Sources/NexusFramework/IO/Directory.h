@@ -13,8 +13,12 @@ namespace NxFr
 		using I = List<String>::I;
 
 		NEXUS_FRAMEWORK_API Directory(StringView Path);
+		NEXUS_FRAMEWORK_API Directory(const Directory& Other) = delete;
+		NEXUS_FRAMEWORK_API Directory(Directory&& Other) noexcept;
 		NEXUS_FRAMEWORK_API ~Directory();
 
+		NEXUS_FRAMEWORK_API Directory& operator=(const Directory& Other) = delete;
+		NEXUS_FRAMEWORK_API Directory& operator=(Directory&& Other) noexcept;
 		NEXUS_FRAMEWORK_API explicit operator bool() const;
 		NEXUS_FRAMEWORK_API bool operator ==(const Directory& Other) const;
 		NEXUS_FRAMEWORK_API bool operator !=(const Directory& Other) const;

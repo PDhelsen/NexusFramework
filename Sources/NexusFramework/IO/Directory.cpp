@@ -13,8 +13,27 @@ namespace NxFr
 		Refresh();
 	}
 
+	Directory::Directory(Directory&& Other) noexcept
+		: Path(Other.Path.C()), Exist(Other.Exist), Content(Other.Content)
+	{
+	}
+
 	Directory::~Directory()
 	{
+	}
+
+	Directory& Directory::operator=(Directory&& Other) noexcept
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Path = Other.Path;
+		Exist = Other.Exist;
+		Content = Other.Content;
+
+		return *this;
 	}
 
 	Directory::operator bool() const
