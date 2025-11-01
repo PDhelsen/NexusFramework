@@ -37,11 +37,11 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Open(Mode OpenMode, bool CreateIfDontExist = false);
 		NEXUS_FRAMEWORK_API void Close();
 
-		NEXUS_FRAMEWORK_API uint64 GetSize();
+		NEXUS_FRAMEWORK_API uint64 GetSize() const;
 		NEXUS_FRAMEWORK_API void WriteByte(BufferView Data);
-		NEXUS_FRAMEWORK_API Buffer ReadByte();
+		NEXUS_FRAMEWORK_API Buffer ReadByte() const;
 		NEXUS_FRAMEWORK_API void WriteText(StringView Text);
-		NEXUS_FRAMEWORK_API String ReadText();
+		NEXUS_FRAMEWORK_API String ReadText() const;
 
 		StringView GetPath() const { return Path; }
 		bool Exists() const { return Exist; }

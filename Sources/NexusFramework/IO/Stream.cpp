@@ -4,12 +4,12 @@
 namespace NxFr
 {
 	Stream::Stream(StringView Path)
-		: Handle(Path), FileMode(File::Mode::Read)
+		: Handle(Path), FileMode(File::Mode::Read), Cursor(0)
 	{
 	}
 
 	Stream::Stream(Stream&& Other) noexcept
-		: Handle(Move(Other.Handle)), FileMode(File::Mode::Read)
+		: Handle(Move(Other.Handle)), FileMode(File::Mode::Read), Cursor(Other.Cursor)
 	{
 	}
 
@@ -26,12 +26,14 @@ namespace NxFr
 
 		Handle = Move(Other.Handle);
 		FileMode = Other.FileMode;
+		Cursor = Other.Cursor;
 
 		return *this;
 	}
 
 	void Stream::Open(File::Mode Mode, bool CreateIfDontExist)
 	{
+		Cursor = 0;
 		FileMode = Mode;
 		Handle.Open(Mode, CreateIfDontExist);
 
@@ -52,12 +54,12 @@ namespace NxFr
 	}
 
 	TextStream::TextStream(StringView Path)
-		: Stream(Path), Buffer(BlockSize), Cursor()
+		: Stream(Path), Buffer(BlockSize)
 	{
 	}
 
 	TextStream::TextStream(TextStream&& Other) noexcept
-		: Stream(Move(Other)), Buffer(Move(Other.Buffer)), Cursor(Other.Cursor)
+		: Stream(Move(Other)), Buffer(Move(Other.Buffer))
 	{
 	}
 
@@ -75,21 +77,13 @@ namespace NxFr
 
 		Stream::operator=(Move(Other));
 		Buffer = Move(Other.Buffer);
-		Cursor = Other.Cursor;
-
 
 		return *this;
-	}
-
-	bool TextStream::IsAtTheEnd()
-	{
-		return Cursor == Buffer.GetCount();
 	}
 
 	void TextStream::Cache()
 	{
 		Buffer = Handle.ReadText();
-		Cursor = 0;
 	}
 
 	void TextStream::Flush()
@@ -98,7 +92,21 @@ namespace NxFr
 		Buffer.Clear();
 	}
 
-	StringView TextStream::Read()
+	StringView TextStream::ReadAll()
+	{
+		StringView View = Buffer.Substring(Cursor, Buffer.GetCount() - Cursor);
+		Cursor = Buffer.GetCount();
+		return View;
+	}
+
+	StringView TextStream::ReadBlock(uint64 Size)
+	{
+		StringView Substring = Buffer.Substring(Cursor, Size);
+		Cursor = Math::Min(Cursor + Size + 1, Buffer.GetCount());
+		return Substring;
+	}
+
+	StringView TextStream::ReadLine()
 	{
 		StringView Substring = Buffer.Substring(Cursor, Buffer.GetCount() - Cursor);
 		Substring = StringUtility::Split(Substring, StringUtility::NewLine);
@@ -106,19 +114,33 @@ namespace NxFr
 		return Substring;
 	}
 
-	void TextStream::Write(StringView Data)
+	void TextStream::WriteAll(StringView Data)
+	{
+		Buffer.Clear();
+		Buffer.Append(Data);
+		Cursor = Buffer.GetCount();
+	}
+
+	void TextStream::WriteBlock(StringView Data)
+	{
+		Buffer.Append(Data);
+		Cursor += Data.GetCount();
+	}
+
+	void TextStream::WriteLine(StringView Data)
 	{
 		Buffer.Append(Data);
 		Buffer.Append(StringUtility::NewLine);
+		Cursor += Data.GetCount() + StringUtility::NewLine.GetCount();
 	}
 
 	BinaryStream::BinaryStream(StringView Path)
-		: Stream(Path), Buffer(BlockSize), Cursor()
+		: Stream(Path), Buffer(BlockSize)
 	{
 	}
 
 	BinaryStream::BinaryStream(BinaryStream&& Other) noexcept
-		: Stream(Move(Other)), Buffer(Move(Other.Buffer)), Cursor(Other.Cursor)
+		: Stream(Move(Other)), Buffer(Move(Other.Buffer))
 	{
 	}
 
@@ -135,21 +157,13 @@ namespace NxFr
 
 		Stream::operator=(Move(Other));
 		Buffer = Move(Other.Buffer);
-		Cursor = Other.Cursor;
-
 
 		return *this;
-	}
-
-	bool BinaryStream::IsAtTheEnd()
-	{
-		return Cursor == Buffer.GetCount();
 	}
 
 	void BinaryStream::Cache()
 	{
 		Buffer = Handle.ReadByte();
-		Cursor = 0;
 	}
 
 	void BinaryStream::Flush()
@@ -158,16 +172,35 @@ namespace NxFr
 		Buffer.Clear();
 	}
 
-	BufferView BinaryStream::Read(uint64 Size)
+	BufferView BinaryStream::ReadAll()
+	{
+		BufferView View = Buffer.Get(Cursor, Buffer.GetCount() - Cursor);
+		Cursor = Buffer.GetCount();
+		return View;
+	}
+
+	BufferView BinaryStream::ReadBlock(uint64 Size)
 	{
 		BufferView View = Buffer.Get(Size, Cursor);
 		Cursor += Size;
 		return View;
 	}
 
-	void BinaryStream::Write(BufferView Data)
+	void BinaryStream::WriteAll(BufferView Data)
 	{
-		if (Cursor + Data.GetCount() >= Buffer.GetCount())
+		if (Data.GetCount() > Buffer.GetCount())
+		{
+			Buffer.Resize(Data.GetCount());
+		}
+
+		Buffer.Clear();
+		Buffer.Set(Data.GetPtr(), Data.GetCount());
+		Cursor += Data.GetCount();
+	}
+
+	void BinaryStream::WriteBlock(BufferView Data)
+	{
+		if (Cursor + Data.GetCount() > Buffer.GetCount())
 		{
 			uint64 Size = Math::Max(BlockSize, Data.GetCount());
 			Buffer.Grow(Size);

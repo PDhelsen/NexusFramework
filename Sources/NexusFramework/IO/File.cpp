@@ -207,13 +207,11 @@ namespace NxFr
 		NEXUS_ASSERT(Exist && !Handle, Default, "Failed to close file: %s", Path.C());
 	}
 
-	uint64 File::GetSize()
+	uint64 File::GetSize() const
 	{
 		NEXUS_ASSERT(Exist && Handle, Default, "Failed to query file size: %s", Path.C());
 
-		uint64 Size = Platform::GetInstance()->FileSize(Handle);
-
-		return Size;
+		return Platform::GetInstance()->FileSize(Handle);
 	}
 
 	void File::WriteByte(BufferView Data)
@@ -223,13 +221,11 @@ namespace NxFr
 		Platform::GetInstance()->FileWriteByte(Handle, Data);
 	}
 
-	Buffer File::ReadByte()
+	Buffer File::ReadByte() const
 	{
 		NEXUS_ASSERT(Exist && Handle, Default, "Failed to read file: %s", Path.C());
 
-		Buffer Data = Platform::GetInstance()->FileReadByte(Handle);
-
-		return Data;
+		return Platform::GetInstance()->FileReadByte(Handle);
 	}
 
 	void File::WriteText(StringView Text)
@@ -239,12 +235,10 @@ namespace NxFr
 		Platform::GetInstance()->FileWriteText(Handle, Text);
 	}
 
-	String File::ReadText()
+	String File::ReadText() const
 	{
 		NEXUS_ASSERT(Exist && Handle, Default, "Failed to read file: %s", Path.C());
 
-		String Text = Platform::GetInstance()->FileReadText(Handle);
-
-		return Text;
+		return Platform::GetInstance()->FileReadText(Handle);
 	}
 }

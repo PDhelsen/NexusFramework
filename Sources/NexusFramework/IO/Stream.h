@@ -1,3 +1,5 @@
+#pragma once
+
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/IO/File.h"
 
@@ -19,9 +21,13 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Open(File::Mode Mode, bool CreateIfDontExist = true);
 		NEXUS_FRAMEWORK_API void Close();
 
-		NEXUS_FRAMEWORK_API virtual bool IsAtTheEnd() = 0;
 		NEXUS_FRAMEWORK_API virtual void Cache() = 0;
 		NEXUS_FRAMEWORK_API virtual void Flush() = 0;
+
+		NEXUS_FRAMEWORK_API virtual uint64 GetSize() const = 0;
+		NEXUS_FRAMEWORK_API virtual uint64 GetCursor() const { return Cursor; }
+		NEXUS_FRAMEWORK_API virtual void SetCursor(uint64 Position) { Cursor = Position; }
+		NEXUS_FRAMEWORK_API virtual bool IsAtTheEnd() const { return Cursor == GetSize(); }
 
 		NEXUS_FRAMEWORK_API StringView GetPath() const { return Handle.GetPath(); }
 		NEXUS_FRAMEWORK_API const File& GetFile() const { return Handle; }
@@ -31,6 +37,7 @@ namespace NxFr
 	protected:
 		File Handle;
 		File::Mode FileMode;
+		uint64 Cursor;
 	};
 
 	class TextStream : public Stream
@@ -44,16 +51,20 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API TextStream& operator=(const TextStream& Other) = delete;
 		NEXUS_FRAMEWORK_API TextStream& operator=(TextStream&& Other) noexcept;
 
-		NEXUS_FRAMEWORK_API bool IsAtTheEnd() override;
 		NEXUS_FRAMEWORK_API void Cache() override;
 		NEXUS_FRAMEWORK_API void Flush() override;
 
-		NEXUS_FRAMEWORK_API StringView Read();
-		NEXUS_FRAMEWORK_API void Write(StringView Data);
+		NEXUS_FRAMEWORK_API StringView ReadAll();
+		NEXUS_FRAMEWORK_API StringView ReadBlock(uint64 Size);
+		NEXUS_FRAMEWORK_API StringView ReadLine();
+		NEXUS_FRAMEWORK_API void WriteAll(StringView Data);
+		NEXUS_FRAMEWORK_API void WriteBlock(StringView Data);
+		NEXUS_FRAMEWORK_API void WriteLine(StringView Data);
+
+		NEXUS_FRAMEWORK_API uint64 GetSize() const { return Buffer.GetCount(); };
 
 	private:
 		String Buffer;
-		uint64 Cursor;
 	};
 
 	class BinaryStream : public Stream
@@ -67,15 +78,17 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API BinaryStream& operator=(const BinaryStream& Other) = delete;
 		NEXUS_FRAMEWORK_API BinaryStream& operator=(BinaryStream&& Other) noexcept;
 
-		NEXUS_FRAMEWORK_API bool IsAtTheEnd() override;
 		NEXUS_FRAMEWORK_API void Cache() override;
 		NEXUS_FRAMEWORK_API void Flush() override;
 
-		NEXUS_FRAMEWORK_API BufferView Read(uint64 Size);
-		NEXUS_FRAMEWORK_API void Write(BufferView Data);
+		NEXUS_FRAMEWORK_API BufferView ReadAll();
+		NEXUS_FRAMEWORK_API BufferView ReadBlock(uint64 Size);
+		NEXUS_FRAMEWORK_API void WriteAll(BufferView Data);
+		NEXUS_FRAMEWORK_API void WriteBlock(BufferView Data);
+
+		NEXUS_FRAMEWORK_API uint64 GetSize() const { return Buffer.GetCount(); };
 
 	private:
 		Buffer Buffer;
-		uint64 Cursor;
 	};
 }

@@ -217,17 +217,17 @@ namespace NxTs
 		NxFr::TextStream File(Working);
 
 		File.Open(NxFr::File::Mode::Write);
-		File.Write(Line);
-		File.Write(Line);
-		File.Write(Line);
+		File.WriteLine(Line);
+		File.WriteLine(Line);
+		File.WriteLine(Line);
 		File.Close();
 
 		File.Open(NxFr::File::Mode::Read);
-		NxFr::StringView Content1 = File.Read();
+		NxFr::StringView Content1 = File.ReadLine();
 		ASSERT_EQ(Content1, Line);
-		NxFr::StringView Content2 = File.Read();
+		NxFr::StringView Content2 = File.ReadLine();
 		ASSERT_EQ(Content2, Line);
-		NxFr::StringView Content3 = File.Read();
+		NxFr::StringView Content3 = File.ReadLine();
 		ASSERT_EQ(Content3, Line);
 		ASSERT_EQ(File.IsAtTheEnd(), true);
 		File.Close();
@@ -242,21 +242,21 @@ namespace NxTs
 		NxFr::BinaryStream File(Working);
 
 		File.Open(NxFr::File::Mode::Write);
-		File.Write(View);
-		File.Write(View);
-		File.Write(View);
+		File.WriteBlock(View);
+		File.WriteBlock(View);
+		File.WriteBlock(View);
 		File.Close();
 
 		File.Open(NxFr::File::Mode::Read);
-		NxFr::BufferView Content1 = File.Read(sizeof(Data));
+		NxFr::BufferView Content1 = File.ReadBlock(sizeof(Data));
 		ASSERT_EQ(*Content1.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content1.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content1.GetPtr<uint64>(72), 19);
-		NxFr::BufferView Content2 = File.Read(sizeof(Data));
+		NxFr::BufferView Content2 = File.ReadBlock(sizeof(Data));
 		ASSERT_EQ(*Content2.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content2.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content2.GetPtr<uint64>(72), 19);
-		NxFr::BufferView Content3 = File.Read(sizeof(Data));
+		NxFr::BufferView Content3 = File.ReadBlock(sizeof(Data));
 		ASSERT_EQ(*Content3.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(72), 19);
