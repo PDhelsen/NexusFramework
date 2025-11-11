@@ -306,6 +306,16 @@ namespace NxFr
 		return StringUtility::Split(Path, SeparatorExtension, 1);
 	}
 
+	StringView Path::GetPathWithoutExtension(StringView Path)
+	{
+		if (!Path::IsFile(Path))
+		{
+			return StringView();
+		}
+
+		return StringUtility::Split(Path, SeparatorExtension, 0);
+	}
+
 	List<StringView> Path::Split(StringView Path)
 	{
 		return StringUtility::SplitAll(Path, SeparatorDirectory);
@@ -476,6 +486,11 @@ namespace NxFr
 	StringView Path::GetExtension() const
 	{
 		return Path::GetExtension(Data);
+	}
+
+	StringView Path::GetPathWithoutExtension() const
+	{
+		return Path::GetPathWithoutExtension(Data);
 	}
 
 	List<StringView> Path::Split() const

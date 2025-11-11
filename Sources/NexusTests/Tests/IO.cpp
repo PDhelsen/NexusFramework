@@ -26,6 +26,7 @@ namespace NxTs
 		TestsFiles.Append("UnitTestSubFile", UnitTestSubFile);
 		TestsFiles.Append("UnitTestDirectoryName", "UnitTest");
 		TestsFiles.Append("UnitTestFileName", "UnitTest.txt");
+		TestsFiles.Append("UnitTestNoExtension", UnitTestDirectory + "UnitTest");
 		return TestsFiles;
 	}
 
@@ -59,6 +60,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Path::GetFileName(TestsFiles["UnitTestFile"]), "UnitTest");
 		ASSERT_EQ(NxFr::Path::GetFileName(TestsFiles["UnitTestFile"], true), TestsFiles["UnitTestFileName"]);
 		ASSERT_EQ(NxFr::Path::GetExtension(TestsFiles["UnitTestFile"]), "txt");
+		ASSERT_EQ(NxFr::Path::GetPathWithoutExtension(TestsFiles["UnitTestFile"]), TestsFiles["UnitTestNoExtension"]);
 
 		ASSERT_EQ(NxFr::Path::ChangeFileName(TestsFiles["UnitTestFile"], "Modified.txt"), TestsFiles["UnitTestDirectory"] + "Modified.txt");
 		ASSERT_EQ(NxFr::Path::ChangeDirectoryPath(TestsFiles["UnitTestSubFile"], TestsFiles["UnitTestDirectory"]), TestsFiles["UnitTestFile"]);

@@ -61,6 +61,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static StringView GetParent(StringView Path);
 		NEXUS_FRAMEWORK_API static StringView GetFileName(StringView Path, bool Extension = false);
 		NEXUS_FRAMEWORK_API static StringView GetExtension(StringView Path);
+		NEXUS_FRAMEWORK_API static StringView GetPathWithoutExtension(StringView Path);
 		NEXUS_FRAMEWORK_API static List<StringView> Split(StringView Path);
 
 		NEXUS_FRAMEWORK_API Path(StringView Path);
@@ -100,6 +101,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API StringView GetParent() const;
 		NEXUS_FRAMEWORK_API StringView GetFileName(bool Extension = false) const;
 		NEXUS_FRAMEWORK_API StringView GetExtension() const;
+		NEXUS_FRAMEWORK_API StringView GetPathWithoutExtension() const;
 		NEXUS_FRAMEWORK_API List<StringView> Split() const;
 
 		NEXUS_FRAMEWORK_API const char* C() const { return Data.C(); }
