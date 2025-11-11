@@ -19,6 +19,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void WriteFile(bool Clear = false);
 		NEXUS_FRAMEWORK_API void AppendFile(bool AppendHeader = false);
 
+		NEXUS_FRAMEWORK_API void AppendHeader(StringView Text);
 		NEXUS_FRAMEWORK_API void AppendData(StringView Text);
 		NEXUS_FRAMEWORK_API void AppendSeparator();
 		NEXUS_FRAMEWORK_API void AppendNewLine();

@@ -50,6 +50,12 @@ namespace NxFr
 		Data.Clear();
 	}
 
+	void Csv::AppendHeader(StringView Text)
+	{
+		Header += Text;
+		Header += Separator;
+	}
+
 	void Csv::AppendData(StringView Text)
 	{
 		Data += Text;
