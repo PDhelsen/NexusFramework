@@ -70,6 +70,11 @@ namespace NxFr
 		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
 	}
 
+	uint64 PlatformWindows::GetProcessId() const
+	{
+		return GetCurrentProcessId();
+	}
+
 	Platform::MemoryInfo PlatformWindows::GetMemoryInfo() const
 	{
 		PROCESS_MEMORY_COUNTERS Info;

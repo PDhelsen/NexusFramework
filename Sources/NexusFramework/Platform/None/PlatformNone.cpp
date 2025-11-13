@@ -26,6 +26,11 @@ namespace NxFr
 		return 0.0;
     }
 
+	uint64 PlatformNone::GetProcessId() const
+	{
+		return 0;
+	}
+
 	Platform::MemoryInfo PlatformNone::GetMemoryInfo() const
 	{
 		return (MemoryInfo)0;
