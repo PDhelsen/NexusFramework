@@ -64,12 +64,19 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static StringView GetPathWithoutExtension(StringView Path);
 		NEXUS_FRAMEWORK_API static List<StringView> Split(StringView Path);
 
-		NEXUS_FRAMEWORK_API Path(StringView Path);
+		NEXUS_FRAMEWORK_API Path(StringView Path = "");
+		NEXUS_FRAMEWORK_API Path(const Path& Other);
+		NEXUS_FRAMEWORK_API Path(Path&& Other) noexcept;
 		NEXUS_FRAMEWORK_API ~Path();
 		NEXUS_FRAMEWORK_API static Path ConvertStringToPath(String&& Temp);
 
 		NEXUS_FRAMEWORK_API explicit operator bool () const;
 		NEXUS_FRAMEWORK_API operator StringView () const;
+
+		NEXUS_FRAMEWORK_API Path& operator=(StringView Path);
+		NEXUS_FRAMEWORK_API Path& operator=(const String& Path);
+		NEXUS_FRAMEWORK_API Path& operator=(const Path& Other);
+		NEXUS_FRAMEWORK_API Path& operator=(Path&& Other) noexcept;
 
 		NEXUS_FRAMEWORK_API Path& operator +=(const Path& Other);
 		NEXUS_FRAMEWORK_API Path& operator +=(StringView Other);

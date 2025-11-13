@@ -330,6 +330,16 @@ namespace NxFr
 	{
 	}
 
+	Path::Path(const Path& Other)
+		: Data(Other.Data)
+	{
+	}
+
+	Path::Path(Path&& Other) noexcept
+		: Data(Move(Other.Data))
+	{
+	}
+
 	Path::~Path()
 	{
 	}
@@ -349,6 +359,50 @@ namespace NxFr
 	Path::operator StringView() const
 	{
 		return Data;
+	}
+
+	Path& Path::operator=(StringView Path)
+	{
+		if (Data == Path)
+		{
+			return *this;
+		}
+
+		Data = Path;
+		return *this;
+	}
+
+	Path& Path::operator=(const String& Path)
+	{
+		if (Data == Path)
+		{
+			return *this;
+		}
+
+		Data = Path;
+		return *this;
+	}
+
+	Path& Path::operator=(const Path& Other)
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Data = Other.Data;
+		return *this;
+	}
+
+	Path& Path::operator=(Path&& Other) noexcept
+	{
+		if (this == &Other)
+		{
+			return *this;
+		}
+
+		Data = Move(Other.Data);
+		return *this;
 	}
 
 	Path& Path::operator+=(const Path& Other)
