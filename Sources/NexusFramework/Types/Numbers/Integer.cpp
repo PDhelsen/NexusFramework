@@ -8,17 +8,21 @@ namespace NxFr
 {
 	namespace Integer
 	{
+		static GUID GlobalSeed = 0;
+
 		GUID GenerateGuid()
 		{
-			return GenerateGuid(Time::GetTimeSinceEpoch(), Platform::GetInstance()->GetProcessId());
+			return GenerateGuid(Time::GetTimeSinceEpoch(), Platform::GetInstance()->GetProcessId(), GlobalSeed);
 		}
 
-		GUID GenerateGuid(uint64 Time, uint64 ProcessId)
+		GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 Seed)
 		{
 			Hasher Instance;
+			Instance.Accumulate(Seed);
 			Instance.Accumulate(Time);
 			Instance.Accumulate(ProcessId);
-			return Instance.Hash();
+			GlobalSeed = Instance.Hash();
+			return GlobalSeed;
 		}
 	}
 }
