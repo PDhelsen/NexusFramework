@@ -35,6 +35,8 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API static String ChangeFileName(StringView Path, StringView File);
 		NEXUS_FRAMEWORK_API static void ChangeFileName(String& Path, StringView File);
+		NEXUS_FRAMEWORK_API static String ChangeDirectoryName(StringView Path, StringView Directory);
+		NEXUS_FRAMEWORK_API static void ChangeDirectoryName(String& Path, StringView Directory);
 		NEXUS_FRAMEWORK_API static String ChangeDirectoryPath(StringView Path, StringView Directory);
 		NEXUS_FRAMEWORK_API static void ChangeDirectoryPath(String& Path, StringView Directory);
 		NEXUS_FRAMEWORK_API static String ChangeExtension(StringView Path, StringView Extension);
@@ -88,6 +90,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Path& Previous(uint64 Count = 1);
 
 		NEXUS_FRAMEWORK_API Path& ChangeFileName(StringView File);
+		NEXUS_FRAMEWORK_API Path& ChangeDirectoryName(StringView Directory);
 		NEXUS_FRAMEWORK_API Path& ChangeDirectoryPath(StringView Directory);
 		NEXUS_FRAMEWORK_API Path& ChangeExtension(StringView Extension);
 		NEXUS_FRAMEWORK_API Path& ConvertAbsoluteToRelative(StringView Root);

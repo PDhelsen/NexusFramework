@@ -28,7 +28,7 @@ namespace NxFr
 
 	void Path::Combine(String& Base, StringView Element)
 	{
-		if (!StringUtility::End(Base, SeparatorDirectory))
+		if (!StringUtility::End(Base, SeparatorDirectory) && !Base.IsEmpty())
 		{
 			Base += SeparatorDirectory;
 		}
@@ -69,6 +69,19 @@ namespace NxFr
 	{
 		StringView Substring = Path::GetFileName(Path, true);
 		Path.Assign(Substring, File);
+	}
+
+	String Path::ChangeDirectoryName(StringView Path, StringView Directory)
+	{
+		String Result = Path;
+		Path::ChangeDirectoryName(Result, Directory);
+		return Result;
+	}
+
+	void Path::ChangeDirectoryName(String& Path, StringView Directory)
+	{
+		StringView Substring = Path::GetDirectoryName(Path);
+		Path.Assign(Substring, Directory);
 	}
 
 	String Path::ChangeDirectoryPath(StringView Path, StringView Directory)
@@ -254,6 +267,11 @@ namespace NxFr
 
 	bool Path::HasExtension(StringView Path, StringView Extension)
 	{
+		if (Extension.IsEmpty())
+		{
+			return StringUtility::Contains(Path, SeparatorExtension);
+		}
+
 		return StringUtility::End(Path, Extension);
 	}
 
@@ -270,18 +288,30 @@ namespace NxFr
 		}
 
 		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
+		if (Parts.IsEmpty())
+		{
+			return StringUtility::Empty;
+		}
 		return Path.Substring(0, Path.GetCount() - Parts.Last().GetCount());
 	}
 
 	StringView Path::GetDirectoryName(StringView Path)
 	{
 		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
+		if (Parts.IsEmpty())
+		{
+			return StringUtility::Empty;
+		}
 		return IsDirectory(Path) ? Parts.Last() : Parts.Get(Parts.GetCount() - 2);
 	}
 
 	StringView Path::GetParent(StringView Path)
 	{
 		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
+		if (Parts.IsEmpty())
+		{
+			return StringUtility::Empty;
+		}
 		return Path.Substring(0, Path.GetCount() - Parts.Last().GetCount() - Path::IsDirectory(Path));
 	}
 
@@ -293,12 +323,16 @@ namespace NxFr
 		}
 
 		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
+		if (Parts.IsEmpty())
+		{
+			return StringUtility::Empty;
+		}
 		return Extension ? Parts.Last() : StringUtility::Split(Parts.Last(), SeparatorExtension);
 	}
 
 	StringView Path::GetExtension(StringView Path)
 	{
-		if (!Path::IsFile(Path))
+		if (!Path::IsFile(Path) || !Path::HasExtension(Path, ""))
 		{
 			return StringView();
 		}
@@ -310,7 +344,7 @@ namespace NxFr
 	{
 		if (!Path::IsFile(Path))
 		{
-			return StringView();
+			return Path;
 		}
 
 		return StringUtility::Split(Path, SeparatorExtension, 0);
@@ -438,6 +472,12 @@ namespace NxFr
 	Path& Path::ChangeFileName(StringView File)
 	{
 		Path::ChangeFileName(Data, File);
+		return *this;
+	}
+
+	Path& Path::ChangeDirectoryName(StringView Directory)
+	{
+		Path::ChangeDirectoryName(Data, Directory);
 		return *this;
 	}
 
