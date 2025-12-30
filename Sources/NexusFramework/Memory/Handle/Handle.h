@@ -17,15 +17,21 @@ namespace NxFr
 		template<typename U>
 		Handle(const Handle<U>& Other) : Pointer(Other.Pointer) {}
 
-		inline operator T*() { return GetRedirectedPointer(); }
-		inline operator const T*() const { return GetRedirectedPointer(); }
+		inline explicit operator bool() const { return IsValid(); }
 
+		inline explicit operator T*() { return GetRedirectedPointer(); }
+		inline explicit operator const T*() const { return GetRedirectedPointer(); }
 		inline T* operator->() { return GetRedirectedPointer(); }
 		inline const T* operator->() const { return GetRedirectedPointer(); }
+
 		inline bool operator==(const Handle<T>& Other) const { return Pointer == Other.Pointer; }
 		inline bool operator!=(const Handle<T>& Other) const { return Pointer != Other.Pointer; }
+		inline bool operator<(const Handle<T>& Other) const { return GetRedirectedPointer() < Other.GetRedirectedPointer(); }
+		inline bool operator<=(const Handle<T>& Other) const { return GetRedirectedPointer() <= Other.GetRedirectedPointer(); }
+		inline bool operator>(const Handle<T>& Other) const { return GetRedirectedPointer() > Other.GetRedirectedPointer(); }
+		inline bool operator>=(const Handle<T>& Other) const { return GetRedirectedPointer() >= Other.GetRedirectedPointer(); }
 
-		inline bool IsValid() { return Pointer != nullptr; }
+		inline bool IsValid() const { return Pointer != nullptr && GetRedirectedPointer() != nullptr; }
 		inline T* GetRedirectedPointer()
 		{
 			uint64* Address = reinterpret_cast<uint64*>(Pointer);
