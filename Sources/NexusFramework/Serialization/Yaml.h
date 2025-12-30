@@ -16,5 +16,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void SerializeFile(const YAML::Emitter& Data, StringView Path);
 		NEXUS_FRAMEWORK_API YAML::Node Deserialize(StringView Data);
 		NEXUS_FRAMEWORK_API YAML::Node DeserializeFile(StringView Path);
+
+		NEXUS_FRAMEWORK_API YAML::Node EmitterToNode(const YAML::Emitter& Data);
 	}
 }

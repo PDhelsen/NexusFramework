@@ -44,5 +44,10 @@ namespace NxFr
 		{
 			return YAML::LoadFile(Path.C());
 		}
+
+		YAML::Node EmitterToNode(const YAML::Emitter& Data)
+		{
+			return YAML::Load(Data.c_str());
+		}
 	}
 }
