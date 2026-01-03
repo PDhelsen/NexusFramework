@@ -321,6 +321,8 @@ namespace NxFr
 	inline const Matrix<4, 4, float> Matrix<4, 4, float>::Zero = Matrix<4, 4, float>();
 	inline const Matrix<4, 4, float> Matrix<4, 4, float>::Identity = MatrixUtility::Identity<4, 4, float>();
 
+	inline Quaternion operator*(const Matrix<4, 4, float>& A, Quaternion B) { return A.GetRotation() * B; }
+
 #pragma endregion
 
 #pragma region MatrixUtility
