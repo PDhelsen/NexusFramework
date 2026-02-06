@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NexusFramework/Memory/Handle/Handle.h"
+
 namespace NxFr
 {
 	using NullPtr = decltype(nullptr);
@@ -17,6 +19,17 @@ namespace NxFr
 	struct IsSameType<T, T>
 	{
 		static const bool Value = true;
+	};
+
+	template<typename Derived, typename Base>
+	class InheritFrom
+	{
+	private:
+		static uint8   Test(Base*);
+		static uint32  Test(...);
+
+	public:
+		static constexpr bool Value = sizeof(Test(static_cast<Derived*>(nullptr))) == sizeof(char);
 	};
 
 	template<bool B, typename T = void>
@@ -55,6 +68,20 @@ namespace NxFr
 	};
 
 	template<typename T>
+	struct IsHandle
+	{
+		using Type = T;
+		static constexpr bool Value = false;
+	};
+
+	template<typename T>
+	struct IsHandle<NxFr::Handle<T>>
+	{
+		using Type = T;
+		static constexpr bool Value = true;
+	};
+
+	template<typename T>
 	struct IsPointer
 	{
 		static bool Check()
@@ -70,6 +97,24 @@ namespace NxFr
 		{
 			return true;
 		}
+	};
+
+	template<typename T>
+	struct RemovePointer
+	{
+		using Type = T;
+	};
+
+	template<typename T>
+	struct RemovePointer<T*>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
+	struct RemovePointer<Handle<T>>
+	{
+		using Type = T;
 	};
 
 	template<typename T> 
