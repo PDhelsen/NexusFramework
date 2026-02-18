@@ -100,6 +100,34 @@ namespace NxFr
 			return Result;
 		}
 
+		template<typename K, typename T>
+		static Array<K> ToArrayKeys(const Dictionary<K, T>& Container)
+		{
+			uint64 Index = 0;
+			Array<K> Result = Array<K>(Container.GetCount());
+
+			for (const auto& It : Container)
+			{
+				Result.AssignConstruct(Index++, It.Key);
+			}
+
+			return Result;
+		}
+
+		template<typename K, typename T>
+		static Array<T> ToArrayValues(const Dictionary<K, T>& Container)
+		{
+			uint64 Index = 0;
+			Array<T> Result = Array<T>(Container.GetCount());
+
+			for (const auto& It : Container)
+			{
+				Result.AssignConstruct(Index++, It.Value);
+			}
+
+			return Result;
+		}
+
 		template<typename T, class H = Hashing::Default>
 		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)
 		{
