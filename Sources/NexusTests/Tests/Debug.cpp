@@ -17,7 +17,7 @@ namespace NxTs
 	{
 		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
-		NxFr::Platform::GetInstance()->Sleep(Count);
+		NxFr::Thread::Sleep(Count);
 	}
 
 	void Function1(uint64 Count, NxFr::Instruments* Instruments)

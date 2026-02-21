@@ -17,7 +17,91 @@ namespace NxFr
 		return nullptr;
 	}
 
-	void PlatformNone::Sleep(uint64 Milliseconds) const
+	uint64 PlatformNone::ThreadId() const
+	{
+		return 0;
+	}
+
+	void PlatformNone::ThreadYield() const
+	{
+	}
+
+	void PlatformNone::ThreadSleep(uint64 Milliseconds) const
+	{
+	}
+
+	void* PlatformNone::ThreadCreate(Thread* Instance) const
+	{
+		return nullptr;
+	}
+
+	void PlatformNone::ThreadDestroy(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadJoin(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadDetach(void* Handle) const
+	{
+	}
+
+	void* PlatformNone::ThreadMutexCreate() const
+	{
+		return nullptr;
+	}
+
+	void PlatformNone::ThreadMutexDestroy(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadMutexLock(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadMutexUnlock(void* Handle) const
+	{
+	}
+
+	void* PlatformNone::ThreadConditionCreate() const
+	{
+		return nullptr;
+	}
+
+	void PlatformNone::ThreadConditionDestroy(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadConditionWait(void* Handle, void* Target) const
+	{
+	}
+
+	void PlatformNone::ThreadConditionSignal(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadConditionBroadcast(void* Handle) const
+	{
+	}
+
+	void PlatformNone::ThreadAtomicIncrement(volatile uint64* Instance) const
+	{
+	}
+
+	void PlatformNone::ThreadAtomicDecrement(volatile uint64* Instance) const
+	{
+	}
+
+	void PlatformNone::ThreadAtomicAdd(volatile uint64* Instance, uint64 Value) const
+	{
+	}
+
+	void PlatformNone::ThreadAtomicLoad(volatile uint64* Instance) const
+	{
+	}
+
+	void PlatformNone::ThreadAtomicStore(volatile uint64* Instance, uint64 Value) const
 	{
 	}
 

@@ -1,0 +1,23 @@
+#pragma once
+
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Functions/Delegate.h"
+#include "NexusFramework/Threading/Mutex.h"
+
+namespace NxFr
+{
+	struct ConditionVariable
+	{
+	public:
+		NEXUS_FRAMEWORK_API ConditionVariable();
+		NEXUS_FRAMEWORK_API ~ConditionVariable();
+
+		NEXUS_FRAMEWORK_API void Wait(Mutex& Target, const Delegate<bool()>& Predicate);
+		NEXUS_FRAMEWORK_API void Wait(Mutex& Target);
+		NEXUS_FRAMEWORK_API void Signal();
+		NEXUS_FRAMEWORK_API void Broadcast();
+
+	private:
+		void* Handle;
+	};
+}

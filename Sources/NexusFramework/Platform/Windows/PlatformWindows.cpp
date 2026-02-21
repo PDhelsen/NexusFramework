@@ -15,6 +15,13 @@ namespace NxFr
 
 	static String ConvertPath(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
 
+	static unsigned long ThreadCallback(void* Args)
+	{
+		Thread* Instance = static_cast<Thread*>(Args);
+		Instance->Run();
+		return 0;
+	}
+
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
 		if (Dlls.ContainsKey(DllName))
@@ -58,9 +65,116 @@ namespace NxFr
 		return Function;
 	}
 
-	void PlatformWindows::Sleep(uint64 Milliseconds) const
+	uint64 PlatformWindows::ThreadId() const
 	{
-		::Sleep((DWORD)Milliseconds);
+		return GetCurrentThreadId();
+	}
+
+	void PlatformWindows::ThreadYield() const
+	{
+		SwitchToThread();
+	}
+
+	void PlatformWindows::ThreadSleep(uint64 Milliseconds) const
+	{
+		Sleep((DWORD)Milliseconds);
+	}
+
+	void* PlatformWindows::ThreadCreate(Thread* Instance) const
+	{
+		HANDLE Handle = CreateThread(NULL, 0, &ThreadCallback, Instance, 0, NULL);
+		NEXUS_ASSERT(Handle, Default, "Failed to create thread");
+		return Handle;
+	}
+
+	void PlatformWindows::ThreadDestroy(void* Handle) const
+	{
+		CloseHandle(Handle);
+	}
+
+	void PlatformWindows::ThreadJoin(void* Handle) const
+	{
+		WaitForSingleObject(Handle, INFINITE);
+	}
+
+	void PlatformWindows::ThreadDetach(void* Handle) const
+	{
+		CloseHandle(Handle);
+	}
+
+	void* PlatformWindows::ThreadMutexCreate() const
+	{
+		CRITICAL_SECTION* Section = (CRITICAL_SECTION*)HeapAlloc(GetProcessHeap(), 0, sizeof(CRITICAL_SECTION));
+		InitializeCriticalSection(Section);
+		return Section;
+	}
+
+	void PlatformWindows::ThreadMutexDestroy(void* Handle) const
+	{
+		DeleteCriticalSection((CRITICAL_SECTION*)Handle);
+		HeapFree(GetProcessHeap(), 0, Handle);
+	}
+
+	void PlatformWindows::ThreadMutexLock(void* Handle) const
+	{
+		EnterCriticalSection((CRITICAL_SECTION*)Handle);
+	}
+
+	void PlatformWindows::ThreadMutexUnlock(void* Handle) const
+	{
+		LeaveCriticalSection((CRITICAL_SECTION*)Handle);
+	}
+
+	void* PlatformWindows::ThreadConditionCreate() const
+	{
+		CONDITION_VARIABLE* Variable = (CONDITION_VARIABLE*)HeapAlloc(GetProcessHeap(), 0, sizeof(CONDITION_VARIABLE));
+		InitializeConditionVariable(Variable);
+		return Variable;
+	}
+
+	void PlatformWindows::ThreadConditionDestroy(void* Handle) const
+	{
+		HeapFree(GetProcessHeap(), 0, Handle);
+	}
+
+	void PlatformWindows::ThreadConditionWait(void* Handle, void* Target) const
+	{
+		SleepConditionVariableCS((CONDITION_VARIABLE*)Handle, (CRITICAL_SECTION*)Target, INFINITE);
+	}
+
+	void PlatformWindows::ThreadConditionSignal(void* Handle) const
+	{
+		WakeConditionVariable((CONDITION_VARIABLE*)Handle);
+	}
+
+	void PlatformWindows::ThreadConditionBroadcast(void* Handle) const
+	{
+		WakeAllConditionVariable((CONDITION_VARIABLE*)Handle);
+	}
+
+	void PlatformWindows::ThreadAtomicIncrement(volatile uint64* Instance) const
+	{
+		InterlockedIncrement(Instance);
+	}
+
+	void PlatformWindows::ThreadAtomicDecrement(volatile uint64* Instance) const
+	{
+		InterlockedDecrement(Instance);
+	}
+
+	void PlatformWindows::ThreadAtomicAdd(volatile uint64* Instance, uint64 Value) const
+	{
+		InterlockedAdd((volatile LONG*)Instance, Value);
+	}
+
+	void PlatformWindows::ThreadAtomicLoad(volatile uint64* Instance) const
+	{
+		InterlockedCompareExchange(Instance, 0, 0);
+	}
+
+	void PlatformWindows::ThreadAtomicStore(volatile uint64* Instance, uint64 Value) const
+	{
+		InterlockedExchange(Instance, Value);
 	}
 
 	double PlatformWindows::GetProcessorTimer(double Unit) const

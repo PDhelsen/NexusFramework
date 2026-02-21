@@ -14,7 +14,28 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void UnloadDll(StringView DllName) override;
 		NEXUS_FRAMEWORK_API void* GetFromDll(StringView DllName, StringView FunctionName) override;
 
-		NEXUS_FRAMEWORK_API void Sleep(uint64 Milliseconds) const override;
+		NEXUS_FRAMEWORK_API uint64 ThreadId() const override;
+		NEXUS_FRAMEWORK_API void ThreadYield() const override;
+		NEXUS_FRAMEWORK_API void ThreadSleep(uint64 Milliseconds) const override;
+		NEXUS_FRAMEWORK_API void* ThreadCreate(Thread* Instance) const override;
+		NEXUS_FRAMEWORK_API void ThreadDestroy(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadJoin(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadDetach(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void* ThreadMutexCreate() const override;
+		NEXUS_FRAMEWORK_API void ThreadMutexDestroy(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadMutexLock(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadMutexUnlock(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void* ThreadConditionCreate() const override;
+		NEXUS_FRAMEWORK_API void ThreadConditionDestroy(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadConditionWait(void* Handle, void* Target) const override;
+		NEXUS_FRAMEWORK_API void ThreadConditionSignal(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadConditionBroadcast(void* Handle) const override;
+		NEXUS_FRAMEWORK_API void ThreadAtomicIncrement(volatile uint64* Instance) const override;
+		NEXUS_FRAMEWORK_API void ThreadAtomicDecrement(volatile uint64* Instance) const override;
+		NEXUS_FRAMEWORK_API void ThreadAtomicAdd(volatile uint64* Instance, uint64 Value) const override;
+		NEXUS_FRAMEWORK_API void ThreadAtomicLoad(volatile uint64* Instance) const override;
+		NEXUS_FRAMEWORK_API void ThreadAtomicStore(volatile uint64* Instance, uint64 Value) const override;
+
 		NEXUS_FRAMEWORK_API double GetProcessorTimer(double Unit = 1.0) const override;
 		NEXUS_FRAMEWORK_API uint64 GetProcessId() const override;
 

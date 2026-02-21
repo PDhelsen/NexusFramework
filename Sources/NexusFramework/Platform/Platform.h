@@ -8,6 +8,7 @@
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Threading/Thread.h"
 
 namespace NxFr
 {
@@ -49,7 +50,28 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void* GetFromDll(StringView DllName, StringView FunctionName) = 0;
 		NEXUS_FRAMEWORK_API virtual void ClearDll();
 
-		NEXUS_FRAMEWORK_API virtual void Sleep(uint64 Milliseconds) const = 0;
+		NEXUS_FRAMEWORK_API virtual uint64 ThreadId() const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadYield() const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadSleep(uint64 Milliseconds) const = 0;
+		NEXUS_FRAMEWORK_API virtual void* ThreadCreate(Thread* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadDestroy(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadJoin(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadDetach(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void* ThreadMutexCreate() const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadMutexDestroy(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadMutexLock(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadMutexUnlock(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void* ThreadConditionCreate() const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadConditionDestroy(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadConditionWait(void* Handle, void* Target) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadConditionSignal(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadConditionBroadcast(void* Handle) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadAtomicIncrement(volatile uint64* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadAtomicDecrement(volatile uint64* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadAtomicAdd(volatile uint64* Instance, uint64 Value) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadAtomicLoad(volatile uint64* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadAtomicStore(volatile uint64* Instance, uint64 Value) const = 0;
+
 		NEXUS_FRAMEWORK_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 		NEXUS_FRAMEWORK_API virtual uint64 GetProcessId() const = 0;
 
