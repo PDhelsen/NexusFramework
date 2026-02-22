@@ -13,17 +13,18 @@ namespace NxFr
 		Platform::GetInstance()->ThreadConditionDestroy(Handle);
 	}
 
-	void ConditionVariable::Wait(Mutex& Target, const Delegate<bool()>& Predicate)
+	void ConditionVariable::Wait(Mutex& Guard, const Delegate<bool()>& Predicate)
 	{
+		Lock Context(Guard);
 		while (!Predicate.Invoke())
 		{
-			Wait(Target);
+			Wait(Guard);
 		}
 	}
 
-	void ConditionVariable::Wait(Mutex& Target)
+	void ConditionVariable::Wait(Mutex& Guard)
 	{
-		Platform::GetInstance()->ThreadConditionWait(Handle, Target.Handle);
+		Platform::GetInstance()->ThreadConditionWait(Handle, Guard.Handle);
 	}
 
 	void ConditionVariable::Signal()

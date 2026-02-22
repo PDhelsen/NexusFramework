@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Threading/Atomic.h"
 
 namespace NxFr
 {
@@ -16,17 +17,18 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Unlock();
 
 	private:
+		mutable Atomic State;
 		void* Handle;
 	};
 
 	struct Lock
 	{
 	public:
-		NEXUS_FRAMEWORK_API Lock(Mutex& Target);
+		NEXUS_FRAMEWORK_API Lock(Mutex& Guard);
 		NEXUS_FRAMEWORK_API ~Lock();
 
 	private:
-		Mutex& Target;
+		Mutex& Guard;
 	};
 }
 

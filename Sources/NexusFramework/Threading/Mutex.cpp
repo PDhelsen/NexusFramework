@@ -15,22 +15,34 @@ namespace NxFr
 
 	void Mutex::Lock()
 	{
+		if (State.Is())
+		{
+			return;
+		}
+
+		State.Store(true);
 		Platform::GetInstance()->ThreadMutexLock(Handle);
 	}
 
 	void Mutex::Unlock()
 	{
+		if (!State.Is())
+		{
+			return;
+		}
+
 		Platform::GetInstance()->ThreadMutexUnlock(Handle);
+		State.Store(false);
 	}
 
-	Lock::Lock(Mutex& Target)
-		: Target(Target)
+	Lock::Lock(Mutex& Guard)
+		: Guard(Guard)
 	{
-		Target.Lock();
+		Guard.Lock();
 	}
 
 	Lock::~Lock()
 	{
-		Target.Unlock();
+		Guard.Unlock();
 	}
 }

@@ -12,8 +12,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API ConditionVariable();
 		NEXUS_FRAMEWORK_API ~ConditionVariable();
 
-		NEXUS_FRAMEWORK_API void Wait(Mutex& Target, const Delegate<bool()>& Predicate);
-		NEXUS_FRAMEWORK_API void Wait(Mutex& Target);
+		NEXUS_FRAMEWORK_API void Wait(Mutex& Guard, const Delegate<bool()>& Predicate);
+		NEXUS_FRAMEWORK_API void Wait(Mutex& Guard);
 		NEXUS_FRAMEWORK_API void Signal();
 		NEXUS_FRAMEWORK_API void Broadcast();
 

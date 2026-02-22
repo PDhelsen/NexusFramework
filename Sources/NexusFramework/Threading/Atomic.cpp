@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Threading/Atomic.h"
+#include "Fence.h"
 
 namespace NxFr
 {
@@ -30,19 +31,22 @@ namespace NxFr
 		return Is();
 	}
 
-	void Atomic::Add(uint64 Target)
+	uint64 Atomic::Add(uint64 Target)
 	{
 		Platform::GetInstance()->ThreadAtomicAdd(&Value, Target);
+		return Value;
 	}
 
-	void Atomic::Increment()
+	uint64 Atomic::Increment()
 	{
 		Platform::GetInstance()->ThreadAtomicIncrement(&Value);
+		return Value;
 	}
 
-	void Atomic::Decrement()
+	uint64 Atomic::Decrement()
 	{
 		Platform::GetInstance()->ThreadAtomicDecrement(&Value);
+		return Value;
 	}
 
 	uint64 Atomic::Load()
@@ -57,13 +61,15 @@ namespace NxFr
 		return Value != 0;
 	}
 
-	void Atomic::Store(uint64 Target)
+	uint64 Atomic::Store(uint64 Target)
 	{
 		Platform::GetInstance()->ThreadAtomicStore(&Value, Target);
+		return Value;
 	}
 
-	void Atomic::Store(bool Target)
+	bool Atomic::Store(bool Target)
 	{
 		Platform::GetInstance()->ThreadAtomicStore(&Value, Target ? 1 : 0);
+		return Value != 0;
 	}
 }

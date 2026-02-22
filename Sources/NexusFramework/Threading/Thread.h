@@ -39,7 +39,7 @@ namespace NxFr
 
 	private:
 		NxFr::Delegate<void()> Function;
-		void* Handle;
 		mutable Atomic State;
+		void* Handle;
 	};
 }
