@@ -45,7 +45,11 @@ namespace NxFr
 
 	uint64 Atomic::Decrement()
 	{
-		Platform::GetInstance()->ThreadAtomicDecrement(&Value);
+		if (Is())
+		{
+			Platform::GetInstance()->ThreadAtomicDecrement(&Value);
+		}
+
 		return Value;
 	}
 
@@ -57,7 +61,7 @@ namespace NxFr
 
 	bool Atomic::Is()
 	{
-		Platform::GetInstance()->ThreadAtomicLoad(&Value);
+		Load();
 		return Value != 0;
 	}
 
@@ -69,7 +73,7 @@ namespace NxFr
 
 	bool Atomic::Store(bool Target)
 	{
-		Platform::GetInstance()->ThreadAtomicStore(&Value, Target ? 1 : 0);
+		Store(Target ? 1ull : 0ull);
 		return Value != 0;
 	}
 }

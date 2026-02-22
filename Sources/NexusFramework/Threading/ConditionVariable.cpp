@@ -15,7 +15,6 @@ namespace NxFr
 
 	void ConditionVariable::Wait(Mutex& Guard, const Delegate<bool()>& Predicate)
 	{
-		Lock Context(Guard);
 		while (!Predicate.Invoke())
 		{
 			Wait(Guard);
