@@ -39,6 +39,7 @@ workspace (Framework)
 
 	characterset "Unicode"
     flags { "MultiProcessorCompile" }
+    staticruntime "off"
 
 	filter "action:vs*"
         toolset "msc"

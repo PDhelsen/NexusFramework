@@ -6,6 +6,7 @@
 #include "NexusFramework/IO/Path.h"
 
 #include <windows.h>
+#include <process.h>
 #include <sys/stat.h>
 #include <psapi.h>
 
@@ -75,7 +76,7 @@ namespace NxFr
 
 	void* PlatformWindows::ThreadCreate(Thread* Instance) const
 	{
-		HANDLE Handle = CreateThread(NULL, 0, [](void* Ptr) { Platform::ThreadRun(static_cast<Thread*>(Ptr)); return 0ul; }, Instance, 0, NULL);
+		HANDLE Handle = (HANDLE)_beginthreadex(NULL, 0, [](void* Ptr) { Platform::ThreadRun(static_cast<Thread*>(Ptr)); return uint32(0); }, Instance, 0, NULL);
 		NEXUS_ASSERT(Handle, Default, "Failed to create thread");
 		return Handle;
 	}
