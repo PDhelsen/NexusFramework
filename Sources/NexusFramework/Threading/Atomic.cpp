@@ -9,71 +9,42 @@ namespace NxFr
 	{
 	}
 
-	Atomic::Atomic(bool Value)
-		: Value(Value ? 1 : 0)
-	{
-	}
-	Atomic::Atomic(uint64 Value)
+	Atomic::Atomic(int64 Value)
 		: Value(Value)
 	{
 	}
+
 	Atomic::~Atomic()
 	{
 	}
 
-	Atomic::operator uint64()
+	int64 Atomic::Add(int64 Target)
 	{
-		return Load();
+		return Platform::GetInstance()->ThreadAtomicAdd(&Value, Target);
 	}
 
-	Atomic::operator bool()
+	int64 Atomic::Increment()
 	{
-		return Is();
+		return Platform::GetInstance()->ThreadAtomicIncrement(&Value);
 	}
 
-	uint64 Atomic::Add(uint64 Target)
+	int64 Atomic::Decrement()
 	{
-		Platform::GetInstance()->ThreadAtomicAdd(&Value, Target);
-		return Value;
+		return Platform::GetInstance()->ThreadAtomicDecrement(&Value);
 	}
 
-	uint64 Atomic::Increment()
+	int64 Atomic::Load()
 	{
-		Platform::GetInstance()->ThreadAtomicIncrement(&Value);
-		return Value;
+		return Platform::GetInstance()->ThreadAtomicLoad(&Value);
 	}
 
-	uint64 Atomic::Decrement()
-	{
-		if (Is())
-		{
-			Platform::GetInstance()->ThreadAtomicDecrement(&Value);
-		}
-
-		return Value;
-	}
-
-	uint64 Atomic::Load()
-	{
-		Platform::GetInstance()->ThreadAtomicLoad(&Value);
-		return Value;
-	}
-
-	bool Atomic::Is()
-	{
-		Load();
-		return Value != 0;
-	}
-
-	uint64 Atomic::Store(uint64 Target)
+	void Atomic::Store(int64 Target)
 	{
 		Platform::GetInstance()->ThreadAtomicStore(&Value, Target);
-		return Value;
 	}
 
-	bool Atomic::Store(bool Target)
+	bool Atomic::CompareExchange(int64 Target, int64 Expected)
 	{
-		Store(Target ? 1ull : 0ull);
-		return Value != 0;
+		return Platform::GetInstance()->ThreadAtomicCompareExchange(&Value, Target, Expected);
 	}
 }

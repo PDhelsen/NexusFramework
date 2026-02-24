@@ -10,7 +10,12 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API ConditionVariable();
+		NEXUS_FRAMEWORK_API ConditionVariable(const ConditionVariable& Other) = delete;
+		NEXUS_FRAMEWORK_API ConditionVariable(ConditionVariable&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~ConditionVariable();
+
+		NEXUS_FRAMEWORK_API ConditionVariable& operator=(const ConditionVariable& Other) = delete;
+		NEXUS_FRAMEWORK_API ConditionVariable& operator=(ConditionVariable&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API void Wait(Mutex& Guard, const Delegate<bool()>& Predicate);
 		NEXUS_FRAMEWORK_API void Wait(Mutex& Guard);

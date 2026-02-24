@@ -9,23 +9,23 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API Atomic();
-		NEXUS_FRAMEWORK_API Atomic(bool Value);
-		NEXUS_FRAMEWORK_API Atomic(uint64 Value);
+		NEXUS_FRAMEWORK_API Atomic(int64 Value);
+		NEXUS_FRAMEWORK_API Atomic(const Atomic& Other) = delete;
+		NEXUS_FRAMEWORK_API Atomic(Atomic&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~Atomic();
 
-		NEXUS_FRAMEWORK_API operator uint64();
-		NEXUS_FRAMEWORK_API operator bool();
+		NEXUS_FRAMEWORK_API Atomic& operator=(const Atomic&) = delete;
+		NEXUS_FRAMEWORK_API Atomic& operator=(Atomic&& Other) noexcept = delete;
 
-		NEXUS_FRAMEWORK_API uint64 Add(uint64 Target);
-		NEXUS_FRAMEWORK_API uint64 Increment();
-		NEXUS_FRAMEWORK_API uint64 Decrement();
-		NEXUS_FRAMEWORK_API uint64 Load();
-		NEXUS_FRAMEWORK_API bool Is();
-		NEXUS_FRAMEWORK_API uint64 Store(uint64 Target);
-		NEXUS_FRAMEWORK_API bool Store(bool Target);
+		NEXUS_FRAMEWORK_API int64 Add(int64 Target);
+		NEXUS_FRAMEWORK_API int64 Increment();
+		NEXUS_FRAMEWORK_API int64 Decrement();
+		NEXUS_FRAMEWORK_API int64 Load();
+		NEXUS_FRAMEWORK_API void Store(int64 Target);
+		NEXUS_FRAMEWORK_API bool CompareExchange(int64 Target, int64 Expected);
 
 	private:
-		volatile uint64 Value;
+		int64 Value;
 	};
 }
 

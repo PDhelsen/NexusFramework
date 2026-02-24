@@ -78,6 +78,7 @@
 #include "NexusFramework/Threading/Mutex.h"
 #include "NexusFramework/Threading/ConditionVariable.h"
 #include "NexusFramework/Threading/Atomic.h"
+#include "NexusFramework/Threading/Fence.h"
 
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"

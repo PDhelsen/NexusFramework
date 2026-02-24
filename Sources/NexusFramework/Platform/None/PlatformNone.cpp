@@ -85,24 +85,33 @@ namespace NxFr
 	{
 	}
 
-	void PlatformNone::ThreadAtomicIncrement(volatile uint64* Instance) const
+	int64 PlatformNone::ThreadAtomicIncrement(volatile int64* Instance) const
+	{
+		return 0;
+	}
+
+	int64 PlatformNone::ThreadAtomicDecrement(volatile int64* Instance) const
+	{
+		return 0;
+	}
+
+	int64 PlatformNone::ThreadAtomicAdd(volatile int64* Instance, int64 Value) const
+	{
+		return 0;
+	}
+
+	int64 PlatformNone::ThreadAtomicLoad(volatile int64* Instance) const
+	{
+		return 0;
+	}
+
+	void PlatformNone::ThreadAtomicStore(volatile int64* Instance, int64 Value) const
 	{
 	}
 
-	void PlatformNone::ThreadAtomicDecrement(volatile uint64* Instance) const
+	bool PlatformNone::ThreadAtomicCompareExchange(volatile int64* Instance, int64 Value, int64 Expected) const
 	{
-	}
-
-	void PlatformNone::ThreadAtomicAdd(volatile uint64* Instance, uint64 Value) const
-	{
-	}
-
-	void PlatformNone::ThreadAtomicLoad(volatile uint64* Instance) const
-	{
-	}
-
-	void PlatformNone::ThreadAtomicStore(volatile uint64* Instance, uint64 Value) const
-	{
+		return false;
 	}
 
 	double PlatformNone::GetProcessorTimer(double Unit) const

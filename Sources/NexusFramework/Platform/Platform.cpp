@@ -23,4 +23,9 @@ namespace NxFr
 			UnloadDll(Name);
 		}
 	}
+
+	void Platform::ThreadRun(Thread* Instance)
+	{
+		Instance->RunOnThread();
+	}
 }

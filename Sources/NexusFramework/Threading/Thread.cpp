@@ -3,7 +3,7 @@
 
 namespace NxFr
 {
-	uint64 Thread::GetId()
+	uint64 Thread::ThreadId()
 	{
 		return Platform::GetInstance()->ThreadId();
 	}
@@ -18,69 +18,86 @@ namespace NxFr
 		Platform::GetInstance()->ThreadSleep(Milliseconds);
 	}
 
-	Thread::Thread(const NxFr::Delegate<void()>& Function, bool AutoStart)
-		: Function(Function), Handle(nullptr), State()
+	Thread::Thread(const NxFr::Delegate<void()>& Function)
+		: Function(Function), Handle(nullptr), State(), Id()
 	{
-		if (AutoStart)
-		{
-			Start();
-		}
 	}
 
 	Thread::~Thread()
 	{
-		if (IsRunning())
-		{
-			if (!IsDetached())
-			{
-				Join();
-			}
+		NEXUS_ASSERT(!IsRunning(), Default, "Thread is still running")
 
-			Stop();
-		}
-	}
-
-	void Thread::Start()
-	{
-		NEXUS_ASSERT(State.Load() == (uint64)Status::Uninitialized, Default, "Thread has already started");
-		Handle = Platform::GetInstance()->ThreadCreate(this);
-	}
-
-	void Thread::Stop()
-	{
-		NEXUS_ASSERT(State.Load() == (uint64)Status::Finished, Default, "Thread is still running");
 		Platform::GetInstance()->ThreadDestroy(Handle);
 	}
 
 	void Thread::Run()
 	{
-		NEXUS_ASSERT(State.Load() == (uint64)Status::Uninitialized, Default, "Thread is already running");
-		State.Store((uint64)Status::Running);
+		NEXUS_ASSERT(!HasStarted(), Default, "Thread is already running");
+
+		if (SetState(Status::Running))
+		{
+			Handle = Platform::GetInstance()->ThreadCreate(this);
+		}
+	}
+
+	void Thread::RunOnThread()
+	{
+		Id.Store(ThreadId());
 		Function.Invoke();
-		State.Store((uint64)Status::Finished);
+		SetState(Status::Finished);
 	}
 
 	void Thread::Join()
 	{
-		if (IsFinished())
-		{
-			return;
-		}
+		NEXUS_ASSERT(IsRunning() || IsFinished(), Default, "Thread is not running");
+		NEXUS_ASSERT(!IsDetached(), Default, "Thread is already detached");
 
-		NEXUS_ASSERT(State.Load() == (uint64)Status::Running, Default, "Thread is not running");
-		State.Store((uint64)Status::Joined);
-		Platform::GetInstance()->ThreadJoin(Handle);
+		if (SetState(Status::Joined))
+		{
+			Platform::GetInstance()->ThreadJoin(Handle);
+		}
 	}
 
 	void Thread::Detach()
 	{
-		if (IsFinished())
-		{
-			return;
-		}
+		NEXUS_ASSERT(IsRunning() || IsFinished(), Default, "Thread is not running");
+		NEXUS_ASSERT(!IsJoining(), Default, "Thread is already joining");
 
-		NEXUS_ASSERT(State.Load() == (uint64)Status::Running, Default, "Thread is not running");
-		State.Store((uint64)Status::Detached);
-		Platform::GetInstance()->ThreadDetach(Handle);
+		if (SetState(Status::Detached))
+		{
+			Platform::GetInstance()->ThreadDetach(Handle);
+		}
+	}
+
+	bool Thread::SetState(Status Target)
+	{
+		int64 Expected;
+		int64 Desired;
+
+		do
+		{
+			Expected = State.Load();
+
+			if (Integer::CheckFlag(Expected, (int64)Target))
+			{
+				return false;
+			}
+
+			if (Target == Status::Running || Target == Status::Finished)
+			{
+				Desired = (Expected & ~((int64)Status::Running | (int64)Status::Finished)) |
+					(int64)Target |
+					(int64)(Integer::CheckFlag(Expected, (int64)Status::Detached) ? Status::Detached : Status::Uninitialized) |
+					(int64)(Integer::CheckFlag(Expected, (int64)Status::Joined) ? Status::Joined : Status::Uninitialized);
+			}
+			else if (Target == Status::Detached || Target == Status::Joined)
+			{
+				Desired = (Expected & ((int64)Status::Running | (int64)Status::Finished)) |
+					(int64)Target;
+			}
+
+		} while (!State.CompareExchange(Desired, Expected));
+
+		return true;
 	}
 }

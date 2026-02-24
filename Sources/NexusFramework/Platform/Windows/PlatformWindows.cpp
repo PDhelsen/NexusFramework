@@ -15,13 +15,6 @@ namespace NxFr
 
 	static String ConvertPath(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
 
-	static unsigned long ThreadCallback(void* Args)
-	{
-		Thread* Instance = static_cast<Thread*>(Args);
-		Instance->Run();
-		return 0;
-	}
-
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
 		if (Dlls.ContainsKey(DllName))
@@ -82,7 +75,7 @@ namespace NxFr
 
 	void* PlatformWindows::ThreadCreate(Thread* Instance) const
 	{
-		HANDLE Handle = CreateThread(NULL, 0, &ThreadCallback, Instance, 0, NULL);
+		HANDLE Handle = CreateThread(NULL, 0, [](void* Ptr) { Platform::ThreadRun(static_cast<Thread*>(Ptr)); return 0ul; }, Instance, 0, NULL);
 		NEXUS_ASSERT(Handle, Default, "Failed to create thread");
 		return Handle;
 	}
@@ -99,7 +92,7 @@ namespace NxFr
 
 	void PlatformWindows::ThreadDetach(void* Handle) const
 	{
-		CloseHandle(Handle);
+		//CloseHandle(Handle);
 	}
 
 	void* PlatformWindows::ThreadMutexCreate() const
@@ -152,29 +145,34 @@ namespace NxFr
 		WakeAllConditionVariable((CONDITION_VARIABLE*)Handle);
 	}
 
-	void PlatformWindows::ThreadAtomicIncrement(volatile uint64* Instance) const
+	int64 PlatformWindows::ThreadAtomicIncrement(volatile int64* Instance) const
 	{
-		InterlockedIncrement(Instance);
+		return _InterlockedIncrement64(Instance);
 	}
 
-	void PlatformWindows::ThreadAtomicDecrement(volatile uint64* Instance) const
+	int64 PlatformWindows::ThreadAtomicDecrement(volatile int64* Instance) const
 	{
-		InterlockedDecrement(Instance);
+		return _InterlockedDecrement64(Instance);
 	}
 
-	void PlatformWindows::ThreadAtomicAdd(volatile uint64* Instance, uint64 Value) const
+	int64 PlatformWindows::ThreadAtomicAdd(volatile int64* Instance, int64 Value) const
 	{
-		InterlockedAdd((volatile LONG*)Instance, Value);
+		return _InterlockedExchangeAdd64(Instance, Value) + Value;
 	}
 
-	void PlatformWindows::ThreadAtomicLoad(volatile uint64* Instance) const
+	int64 PlatformWindows::ThreadAtomicLoad(volatile int64* Instance) const
 	{
-		InterlockedCompareExchange(Instance, 0, 0);
+		return _InterlockedCompareExchange64(Instance, 0, 0);
 	}
 
-	void PlatformWindows::ThreadAtomicStore(volatile uint64* Instance, uint64 Value) const
+	void PlatformWindows::ThreadAtomicStore(volatile int64* Instance, int64 Value) const
 	{
-		InterlockedExchange(Instance, Value);
+		_InterlockedExchange64(Instance, Value);
+	}
+
+	bool PlatformWindows::ThreadAtomicCompareExchange(volatile int64* Instance, int64 Value, int64 Expected) const
+	{
+		return _InterlockedCompareExchange64(Instance, Value, Expected) == Expected;
 	}
 
 	double PlatformWindows::GetProcessorTimer(double Unit) const
