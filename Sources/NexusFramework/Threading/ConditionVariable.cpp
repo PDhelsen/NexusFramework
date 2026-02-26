@@ -23,7 +23,9 @@ namespace NxFr
 
 	void ConditionVariable::Wait(Mutex& Guard)
 	{
+		Guard.Owner.Store(0);
 		Platform::GetInstance()->ThreadConditionWait(Handle, Guard.Handle);
+		Guard.Owner.Store(Thread::ThreadId());
 	}
 
 	void ConditionVariable::Signal()
