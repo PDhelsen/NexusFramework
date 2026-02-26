@@ -33,12 +33,12 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void ThreadConditionWait(void* Handle, void* Target) const override;
 		NEXUS_FRAMEWORK_API void ThreadConditionSignal(void* Handle) const override;
 		NEXUS_FRAMEWORK_API void ThreadConditionBroadcast(void* Handle) const override;
-		NEXUS_FRAMEWORK_API int64 ThreadAtomicIncrement(volatile int64* Instance) const override;
-		NEXUS_FRAMEWORK_API int64 ThreadAtomicDecrement(volatile int64* Instance) const override;
-		NEXUS_FRAMEWORK_API int64 ThreadAtomicAdd(volatile int64* Instance, int64 Value) const override;
-		NEXUS_FRAMEWORK_API int64 ThreadAtomicLoad(volatile int64* Instance) const override;
-		NEXUS_FRAMEWORK_API void ThreadAtomicStore(volatile int64* Instance, int64 Value) const override;
-		NEXUS_FRAMEWORK_API bool ThreadAtomicCompareExchange(volatile int64* Instance, int64 Value, int64 Expected) const override;
+		NEXUS_FRAMEWORK_API int64 ThreadAtomicIncrement(int64* Instance) const override;
+		NEXUS_FRAMEWORK_API int64 ThreadAtomicDecrement(int64* Instance) const override;
+		NEXUS_FRAMEWORK_API int64 ThreadAtomicAdd(int64* Instance, int64 Value) const override;
+		NEXUS_FRAMEWORK_API int64 ThreadAtomicLoad(int64* Instance) const override;
+		NEXUS_FRAMEWORK_API void ThreadAtomicStore(int64* Instance, int64 Value) const override;
+		NEXUS_FRAMEWORK_API bool ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const override;
 
 		NEXUS_FRAMEWORK_API double GetProcessorTimer(double Unit = 1.0) const override;
 		NEXUS_FRAMEWORK_API uint64 GetProcessId() const override;

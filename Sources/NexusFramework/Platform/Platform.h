@@ -66,12 +66,12 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void ThreadConditionWait(void* Handle, void* Target) const = 0;
 		NEXUS_FRAMEWORK_API virtual void ThreadConditionSignal(void* Handle) const = 0;
 		NEXUS_FRAMEWORK_API virtual void ThreadConditionBroadcast(void* Handle) const = 0;
-		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicIncrement(volatile int64* Instance) const = 0;
-		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicDecrement(volatile int64* Instance) const = 0;
-		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicAdd(volatile int64* Instance, int64 Value) const = 0;
-		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicLoad(volatile int64* Instance) const = 0;
-		NEXUS_FRAMEWORK_API virtual void ThreadAtomicStore(volatile int64* Instance, int64 Value) const = 0;
-		NEXUS_FRAMEWORK_API virtual bool ThreadAtomicCompareExchange(volatile int64* Instance, int64 Value, int64 Expected) const = 0;
+		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicIncrement(int64* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicDecrement(int64* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicAdd(int64* Instance, int64 Value) const = 0;
+		NEXUS_FRAMEWORK_API virtual int64 ThreadAtomicLoad(int64* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadAtomicStore(int64* Instance, int64 Value) const = 0;
+		NEXUS_FRAMEWORK_API virtual bool ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const = 0;
 
 		NEXUS_FRAMEWORK_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 		NEXUS_FRAMEWORK_API virtual uint64 GetProcessId() const = 0;

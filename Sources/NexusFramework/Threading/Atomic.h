@@ -25,7 +25,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool CompareExchange(int64 Target, int64 Expected);
 
 	private:
-		int64 Value;
+		alignas(8) int64 Value;
 	};
 }
 

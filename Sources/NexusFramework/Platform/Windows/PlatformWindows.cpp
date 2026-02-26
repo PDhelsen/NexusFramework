@@ -146,32 +146,32 @@ namespace NxFr
 		WakeAllConditionVariable((CONDITION_VARIABLE*)Handle);
 	}
 
-	int64 PlatformWindows::ThreadAtomicIncrement(volatile int64* Instance) const
+	int64 PlatformWindows::ThreadAtomicIncrement(int64* Instance) const
 	{
 		return _InterlockedIncrement64(Instance);
 	}
 
-	int64 PlatformWindows::ThreadAtomicDecrement(volatile int64* Instance) const
+	int64 PlatformWindows::ThreadAtomicDecrement(int64* Instance) const
 	{
 		return _InterlockedDecrement64(Instance);
 	}
 
-	int64 PlatformWindows::ThreadAtomicAdd(volatile int64* Instance, int64 Value) const
+	int64 PlatformWindows::ThreadAtomicAdd(int64* Instance, int64 Value) const
 	{
 		return _InterlockedExchangeAdd64(Instance, Value) + Value;
 	}
 
-	int64 PlatformWindows::ThreadAtomicLoad(volatile int64* Instance) const
+	int64 PlatformWindows::ThreadAtomicLoad(int64* Instance) const
 	{
 		return _InterlockedCompareExchange64(Instance, 0, 0);
 	}
 
-	void PlatformWindows::ThreadAtomicStore(volatile int64* Instance, int64 Value) const
+	void PlatformWindows::ThreadAtomicStore(int64* Instance, int64 Value) const
 	{
 		_InterlockedExchange64(Instance, Value);
 	}
 
-	bool PlatformWindows::ThreadAtomicCompareExchange(volatile int64* Instance, int64 Value, int64 Expected) const
+	bool PlatformWindows::ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const
 	{
 		return _InterlockedCompareExchange64(Instance, Value, Expected) == Expected;
 	}

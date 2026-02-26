@@ -85,31 +85,31 @@ namespace NxFr
 	{
 	}
 
-	int64 PlatformNone::ThreadAtomicIncrement(volatile int64* Instance) const
+	int64 PlatformNone::ThreadAtomicIncrement(int64* Instance) const
 	{
 		return 0;
 	}
 
-	int64 PlatformNone::ThreadAtomicDecrement(volatile int64* Instance) const
+	int64 PlatformNone::ThreadAtomicDecrement(int64* Instance) const
 	{
 		return 0;
 	}
 
-	int64 PlatformNone::ThreadAtomicAdd(volatile int64* Instance, int64 Value) const
+	int64 PlatformNone::ThreadAtomicAdd(int64* Instance, int64 Value) const
 	{
 		return 0;
 	}
 
-	int64 PlatformNone::ThreadAtomicLoad(volatile int64* Instance) const
+	int64 PlatformNone::ThreadAtomicLoad(int64* Instance) const
 	{
 		return 0;
 	}
 
-	void PlatformNone::ThreadAtomicStore(volatile int64* Instance, int64 Value) const
+	void PlatformNone::ThreadAtomicStore(int64* Instance, int64 Value) const
 	{
 	}
 
-	bool PlatformNone::ThreadAtomicCompareExchange(volatile int64* Instance, int64 Value, int64 Expected) const
+	bool PlatformNone::ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const
 	{
 		return false;
 	}
