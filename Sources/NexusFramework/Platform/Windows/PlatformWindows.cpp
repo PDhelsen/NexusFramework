@@ -2,6 +2,7 @@
 #include "NexusFramework/Platform/Windows/PlatformWindows.h"
 
 #include "NexusFramework/External/StandardLibrary.h"
+#include "NexusFramework/External/Intrinsics.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/IO/Path.h"
 
@@ -148,32 +149,32 @@ namespace NxFr
 
 	int64 PlatformWindows::ThreadAtomicIncrement(int64* Instance) const
 	{
-		return _InterlockedIncrement64(Instance);
+		return NEXUS_THREAD_INTERLOCKED_INCREMENT(Instance);
 	}
 
 	int64 PlatformWindows::ThreadAtomicDecrement(int64* Instance) const
 	{
-		return _InterlockedDecrement64(Instance);
+		return NEXUS_THREAD_INTERLOCKED_DECREMENT(Instance);
 	}
 
 	int64 PlatformWindows::ThreadAtomicAdd(int64* Instance, int64 Value) const
 	{
-		return _InterlockedExchangeAdd64(Instance, Value) + Value;
+		return NEXUS_THREAD_INTERLOCKED_ADD(Instance, Value) + Value;
 	}
 
 	int64 PlatformWindows::ThreadAtomicLoad(int64* Instance) const
 	{
-		return _InterlockedCompareExchange64(Instance, 0, 0);
+		return NEXUS_THREAD_INTERLOCKED_COMPAREEXCHANGE(Instance, 0, 0);
 	}
 
 	void PlatformWindows::ThreadAtomicStore(int64* Instance, int64 Value) const
 	{
-		_InterlockedExchange64(Instance, Value);
+		NEXUS_THREAD_INTERLOCKED_EXCHANGE(Instance, Value);
 	}
 
 	bool PlatformWindows::ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const
 	{
-		return _InterlockedCompareExchange64(Instance, Value, Expected) == Expected;
+		return NEXUS_THREAD_INTERLOCKED_COMPAREEXCHANGE(Instance, Value, Expected) == Expected;
 	}
 
 	double PlatformWindows::GetProcessorTimer(double Unit) const

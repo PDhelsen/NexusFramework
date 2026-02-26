@@ -15,6 +15,13 @@
 														unsigned char Result = _BitScanForward(&Index, (unsigned long)Mask);
 	#define NEXUS_BITSCANBACKWARD(Mask, Index, Result)	unsigned long Index;\
 														unsigned char Result = _BitScanReverse(&Index, (unsigned long)Mask);
+
+	#define NEXUS_THREAD_INTERLOCKED_INCREMENT _InterlockedIncrement64
+	#define NEXUS_THREAD_INTERLOCKED_DECREMENT _InterlockedDecrement64
+	#define NEXUS_THREAD_INTERLOCKED_ADD _InterlockedExchangeAdd64
+	#define NEXUS_THREAD_INTERLOCKED_EXCHANGE _InterlockedExchange64
+	#define NEXUS_THREAD_INTERLOCKED_COMPAREEXCHANGE _InterlockedCompareExchange64
+
 #else
 	#error "Compiler is not suppored"
 #endif
