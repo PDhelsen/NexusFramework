@@ -33,7 +33,7 @@ namespace NxFr
 
 	private:
 		NxFr::Array<Thread*> Threads;
-		NxFr::List<Task> Tasks;
+		NxFr::Queue<Task> Tasks;
 		Atomic Work;
 		Atomic Running;
 

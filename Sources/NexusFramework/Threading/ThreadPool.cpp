@@ -75,8 +75,8 @@ namespace NxFr
 					return;
 				}
 
-				Instance = Tasks.First();
-				Tasks.Remove(0);
+				Instance = Tasks.Get();
+				Tasks.Remove();
 
 				Work.Increment();
 			}
