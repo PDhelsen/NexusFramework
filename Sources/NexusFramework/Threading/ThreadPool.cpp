@@ -3,6 +3,61 @@
 
 namespace NxFr
 {
+	ThreadPool::Task::Task(const NxFr::Delegate<void()>& Function)
+		: Function(Function), Completed(), RefCount(), Guard(), Notification()
+	{
+		Completed.Store(0);
+		RefCount.Store(2);
+	}
+
+	void ThreadPool::Task::Release()
+	{
+		if (RefCount.Decrement() == 0)
+		{
+			delete this;
+		}
+	}
+
+	ThreadPool::TaskHandle::TaskHandle(Task* State)
+		: State(State)
+	{
+	}
+
+	ThreadPool::TaskHandle::TaskHandle(TaskHandle&& Other) noexcept
+		: State(Other.State)
+	{
+		Other.State = nullptr;
+	}
+
+	ThreadPool::TaskHandle::~TaskHandle()
+	{
+		if (State)
+		{
+			State->Release();
+		}
+	}
+
+	void ThreadPool::TaskHandle::Wait()
+	{
+		if (!State)
+		{
+			return;
+		}
+
+		Lock GuardLock(State->Guard);
+		State->Notification.Wait(State->Guard, [&]() { return State->Completed.Load(); });
+	}
+
+	bool ThreadPool::TaskHandle::IsDone() const
+	{
+		if (!State)
+		{
+			return true;
+		}
+
+		return State->Completed.Load();
+	}
+
 	ThreadPool::ThreadPool(uint64 Size)
 		: Threads(Size), Tasks(), Work(), Running(), Guard(), Notification()
 	{
@@ -31,12 +86,16 @@ namespace NxFr
 		}
 	}
 
-	void ThreadPool::Submit(Task Work)
+	ThreadPool::TaskHandle ThreadPool::Submit(const NxFr::Delegate<void()>& Work)
 	{
-		Lock GuardLock(Guard);
-
-		Tasks.Append(Work);
+		Task* State = new Task(Work);
+		{
+			Lock GuardLock(Guard);
+			Tasks.Append(State);
+		}
 		Notification.Signal();
+
+		return TaskHandle(State);
 	}
 
 	void ThreadPool::Wait()
@@ -64,7 +123,7 @@ namespace NxFr
 	{
 		while (true)
 		{
-			Task Instance;
+			Task* Instance;
 
 			{
 				Lock GuardLock(Guard);
@@ -81,7 +140,13 @@ namespace NxFr
 				Work.Increment();
 			}
 
-			Instance.Invoke();
+			Instance->Function.Invoke();
+			{
+				Lock GuardLock(Instance->Guard);
+				Instance->Completed.Store(1);
+			}
+			Instance->Notification.Broadcast();
+			Instance->Release();
 
 			{
 				Lock GuardLock(Guard);
