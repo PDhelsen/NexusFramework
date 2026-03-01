@@ -17,7 +17,7 @@ namespace NxFr
 			return MainThread;
 		}
 
-		uint64 RecommendedThreadCount()
+		uint64 MaxThreadCount()
 		{
 			return Math::Max(1llu, Platform::GetInstance()->GetProcessorCount() - 1);
 		}
@@ -25,7 +25,7 @@ namespace NxFr
 		void Dispatch(uint64 Count, Delegate<void(uint64)> Function)
 		{
 			uint64 Test = MainThreadId();
-			uint64 ThreadCount = Math::Min(RecommendedThreadCount(), Count);
+			uint64 ThreadCount = Math::Min(MaxThreadCount(), Count);
 			ThreadPool Pool(ThreadCount);
 
 			for (uint64 Index = 0; Index < Count; ++Index)
@@ -42,7 +42,7 @@ namespace NxFr
 		void Dispatch(uint64 Count, uint64 Size, const Delegate<void(uint64)>& Function)
 		{
 			uint64 GroupCount = Math::Ceil((float)Count / (float)Size);
-			uint64 ThreadCount = Math::Min(RecommendedThreadCount(), GroupCount);
+			uint64 ThreadCount = Math::Min(MaxThreadCount(), GroupCount);
 			ThreadPool Pool(ThreadCount);
 
 			for (uint64 Index = 0; Index < GroupCount; ++Index)
