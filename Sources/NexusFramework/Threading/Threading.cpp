@@ -5,6 +5,18 @@ namespace NxFr
 {
 	namespace Threading
 	{
+		static uint64 MainThread = Thread::ThreadId();
+
+		bool IsMainThread()
+		{
+			return MainThreadId() == Thread::ThreadId();
+		}
+
+		uint64 MainThreadId()
+		{
+			return MainThread;
+		}
+
 		uint64 RecommendedThreadCount()
 		{
 			return Math::Max(1llu, Platform::GetInstance()->GetProcessorCount() - 1);
@@ -12,6 +24,7 @@ namespace NxFr
 
 		void Dispatch(uint64 Count, Delegate<void(uint64)> Function)
 		{
+			uint64 Test = MainThreadId();
 			uint64 ThreadCount = Math::Min(RecommendedThreadCount(), Count);
 			ThreadPool Pool(ThreadCount);
 

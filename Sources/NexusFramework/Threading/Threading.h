@@ -8,7 +8,10 @@ namespace NxFr
 {
 	namespace Threading
 	{
+		NEXUS_FRAMEWORK_API bool IsMainThread();
+		NEXUS_FRAMEWORK_API uint64 MainThreadId();
 		NEXUS_FRAMEWORK_API uint64 RecommendedThreadCount();
+
 		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, Delegate<void(uint64)> Function);
 		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, uint64 Size, const Delegate<void(uint64)>& Function);
 	}
