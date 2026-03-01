@@ -221,8 +221,8 @@ namespace NxFr
 			uint64 Size = sizeof(RemoveReference<F>::Type);
 			if (Size > SmallFunctionSize)
 			{
-				AllocatorContext Context(Alloc);
-				Data.Large.Function = new Wrapper<F>(Forward<F>(Func));
+				Data.Large.Function = Memory::Allocate(Size + 8, Alloc);
+				new (Data.Large.Function) Wrapper<F>(Forward<F>(Func));
 				Sbo = false;
 			}
 			else
@@ -268,8 +268,8 @@ namespace NxFr
 		{
 			if (!Sbo)
 			{
-				AllocatorContext Context(Alloc);
-				delete Data.Large.Function;
+				Memory::Destruct(Data.Large.Function);
+				Memory::Free(Data.Large.Function, Alloc);
 			}
 
 			Memory::MemSet(&Data, 0, sizeof(Data));

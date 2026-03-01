@@ -1,0 +1,51 @@
+#include "NexusFramework/Core/NexusFrameworkPch.h"
+#include "NexusFramework/Threading/Threading.h"
+
+namespace NxFr
+{
+	namespace Threading
+	{
+		uint64 RecommendedThreadCount()
+		{
+			return Math::Max(1llu, Platform::GetInstance()->GetProcessorCount() - 1);
+		}
+
+		void Dispatch(uint64 Count, Delegate<void(uint64)> Function)
+		{
+			uint64 ThreadCount = Math::Min(RecommendedThreadCount(), Count);
+			ThreadPool Pool(ThreadCount);
+
+			for (uint64 Index = 0; Index < Count; ++Index)
+			{
+				Pool.Submit([=]()
+				{
+					Function.Invoke(Index);
+				});
+			}
+
+			Pool.Wait();
+		}
+
+		void Dispatch(uint64 Count, uint64 Size, const Delegate<void(uint64)>& Function)
+		{
+			uint64 GroupCount = Math::Ceil((float)Count / (float)Size);
+			uint64 ThreadCount = Math::Min(RecommendedThreadCount(), GroupCount);
+			ThreadPool Pool(ThreadCount);
+
+			for (uint64 Index = 0; Index < GroupCount; ++Index)
+			{
+				Pool.Submit([=]()
+				{
+					uint64 Begin = Index * Size;
+					uint64 End = Math::Min(Begin + Size, Count);
+					for (uint64 It = Begin; It < End; ++It)
+					{
+						Function(It);
+					}
+				});
+			}
+
+			Pool.Wait();
+		}
+	}
+}
