@@ -27,7 +27,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API Thread(const NxFr::Delegate<void()>& Function);
 		NEXUS_FRAMEWORK_API Thread(const Thread& Other) = delete;
-		NEXUS_FRAMEWORK_API Thread(Thread&& Other) = default;
+		NEXUS_FRAMEWORK_API Thread(Thread&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~Thread();
 
 		NEXUS_FRAMEWORK_API void Run();
