@@ -75,6 +75,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
 		NEXUS_FRAMEWORK_API virtual uint64 GetProcessId() const = 0;
+		NEXUS_FRAMEWORK_API virtual uint64 GetProcessorCount() const = 0;
 
 		NEXUS_FRAMEWORK_API virtual MemoryInfo GetMemoryInfo() const = 0;
 

@@ -124,6 +124,11 @@ namespace NxFr
 		return 0;
 	}
 
+	uint64 PlatformNone::GetProcessorCount() const
+	{
+		return 1;
+	}
+
 	Platform::MemoryInfo PlatformNone::GetMemoryInfo() const
 	{
 		return (MemoryInfo)0;

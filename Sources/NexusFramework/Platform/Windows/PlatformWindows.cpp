@@ -13,8 +13,8 @@
 
 namespace NxFr
 {
+	static SYSTEM_INFO SysInfos;
 	static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
-
 	static String ConvertPath(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
 
 	void* PlatformWindows::LoadDll(StringView DllName)
@@ -187,6 +187,11 @@ namespace NxFr
 	uint64 PlatformWindows::GetProcessId() const
 	{
 		return GetCurrentProcessId();
+	}
+
+	uint64 PlatformWindows::GetProcessorCount() const
+	{
+		return SysInfos.dwNumberOfProcessors;
 	}
 
 	Platform::MemoryInfo PlatformWindows::GetMemoryInfo() const
@@ -532,6 +537,7 @@ namespace NxFr
 	{
 		InitializeTerminal();
 		InitializePerformanceTimer();
+		GetSystemInfo(&SysInfos);
 	}
 
 	PlatformWindows::~PlatformWindows()

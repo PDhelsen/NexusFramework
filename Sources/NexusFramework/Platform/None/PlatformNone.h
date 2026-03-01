@@ -39,6 +39,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API double GetProcessorTimer(double Unit = 1.0) const override;
 		NEXUS_FRAMEWORK_API uint64 GetProcessId() const override;
+		NEXUS_FRAMEWORK_API uint64 GetProcessorCount() const override;
 
 		NEXUS_FRAMEWORK_API MemoryInfo GetMemoryInfo() const override;
 
