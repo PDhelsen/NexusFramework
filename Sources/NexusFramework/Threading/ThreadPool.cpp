@@ -40,7 +40,7 @@ namespace NxFr
 
 	void ThreadPool::Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work)
 	{
-		uint64 Batch = Math::Ceil((float)Count / (float)Group);
+		uint64 Batch = (Count + Group - 1) / Group;
 		for (uint64 Index = 0; Index < Batch; ++Index)
 		{
 			Submit([=]()
