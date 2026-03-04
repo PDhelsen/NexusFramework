@@ -13,41 +13,10 @@ namespace NxFr
 {
 	class ThreadPool
 	{
-		struct Task
-		{
-		public:
-			Task(const NxFr::Delegate<void()>& Function);
-			void Release();
-
-		public:
-			NxFr::Delegate<void()> Function;
-			Atomic Completed;
-
-			Atomic RefCount;
-			Mutex Guard;
-			ConditionVariable Notification;
-		};
-
 	public:
-		struct TaskHandle
-		{
-			friend class ThreadPool;
+		NEXUS_FRAMEWORK_API static uint64 MaxThreadCount();
 
-		public:
-			NEXUS_FRAMEWORK_API TaskHandle(const TaskHandle& Other) = delete;
-			NEXUS_FRAMEWORK_API TaskHandle(TaskHandle&& Other) noexcept;
-			NEXUS_FRAMEWORK_API ~TaskHandle();
-
-			NEXUS_FRAMEWORK_API void Wait();
-			NEXUS_FRAMEWORK_API bool IsDone() const;
-
-		private:
-			NEXUS_FRAMEWORK_API TaskHandle(Task* State);
-
-			Task* State;
-		};
-
-		NEXUS_FRAMEWORK_API ThreadPool(uint64 Size);
+		NEXUS_FRAMEWORK_API ThreadPool(uint64 Size = 0);
 		NEXUS_FRAMEWORK_API ThreadPool(const ThreadPool& Other) = delete;
 		NEXUS_FRAMEWORK_API ThreadPool(ThreadPool&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~ThreadPool();
@@ -55,7 +24,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API ThreadPool& operator=(const ThreadPool& Other) = delete;
 		NEXUS_FRAMEWORK_API ThreadPool& operator=(ThreadPool&& Other) noexcept = delete;
 
-		NEXUS_FRAMEWORK_API TaskHandle Submit(const NxFr::Delegate<void()>& Work);
+		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work);
+		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work);
+		NEXUS_FRAMEWORK_API void Submit(NxFr::Delegate<void()> Work);
 		NEXUS_FRAMEWORK_API void Wait();
 
 		NEXUS_FRAMEWORK_API bool HasWorkPending();
@@ -66,7 +37,7 @@ namespace NxFr
 
 	private:
 		Array<Thread*> Threads;
-		Queue<Task*> Tasks;
+		Queue<NxFr::Delegate<void()>> Tasks;
 		Atomic Work;
 		Atomic Running;
 

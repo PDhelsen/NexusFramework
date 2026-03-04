@@ -3,64 +3,16 @@
 
 namespace NxFr
 {
-	ThreadPool::Task::Task(const NxFr::Delegate<void()>& Function)
-		: Function(Function), Completed(), RefCount(), Guard(), Notification()
+	uint64 ThreadPool::MaxThreadCount()
 	{
-		Completed.Store(0);
-		RefCount.Store(2);
-	}
-
-	void ThreadPool::Task::Release()
-	{
-		if (RefCount.Decrement() == 0)
-		{
-			delete this;
-		}
-	}
-
-	ThreadPool::TaskHandle::TaskHandle(Task* State)
-		: State(State)
-	{
-	}
-
-	ThreadPool::TaskHandle::TaskHandle(TaskHandle&& Other) noexcept
-		: State(Other.State)
-	{
-		Other.State = nullptr;
-	}
-
-	ThreadPool::TaskHandle::~TaskHandle()
-	{
-		if (State)
-		{
-			State->Release();
-		}
-	}
-
-	void ThreadPool::TaskHandle::Wait()
-	{
-		if (!State)
-		{
-			return;
-		}
-
-		Lock GuardLock(State->Guard);
-		State->Notification.Wait(State->Guard, [&]() { return State->Completed.Load(); });
-	}
-
-	bool ThreadPool::TaskHandle::IsDone() const
-	{
-		if (!State)
-		{
-			return true;
-		}
-
-		return State->Completed.Load();
+		return Math::Max(1llu, Platform::GetInstance()->GetProcessorCount() - 1);
 	}
 
 	ThreadPool::ThreadPool(uint64 Size)
-		: Threads(Size), Tasks(), Work(), Running(), Guard(), Notification()
+		: Threads(), Tasks(), Work(), Running(), Guard(), Notification()
 	{
+
+		Threads = Size != 0 ? Size : MaxThreadCount();
 		Running.Store(1);
 
 		for (uint64 Index = 0; Index < Threads.GetCount(); ++Index)
@@ -86,16 +38,40 @@ namespace NxFr
 		}
 	}
 
-	ThreadPool::TaskHandle ThreadPool::Submit(const NxFr::Delegate<void()>& Work)
+	void ThreadPool::Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work)
 	{
-		Task* State = new Task(Work);
+		uint64 Batch = Math::Ceil((float)Count / (float)Group);
+		for (uint64 Index = 0; Index < Batch; ++Index)
 		{
-			Lock GuardLock(Guard);
-			Tasks.Append(State);
+			Submit([=]()
+			{
+				uint64 Begin = Index * Group;
+				uint64 End = Math::Min(Begin + Group, Count);
+				for (uint64 It = Begin; It < End; ++It)
+				{
+					Work(It);
+				}
+			});
 		}
-		Notification.Signal();
+	}
 
-		return TaskHandle(State);
+	void ThreadPool::Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work)
+	{
+		for (uint64 Index = 0; Index < Count; ++Index)
+		{
+			Submit([=]()
+			{
+				Work(Index);
+			});
+		}
+	}
+
+	void ThreadPool::Submit(NxFr::Delegate<void()> Work)
+	{
+		Lock GuardLock(Guard);
+
+		Tasks.Append(Work);
+		Notification.Signal();
 	}
 
 	void ThreadPool::Wait()
@@ -123,7 +99,7 @@ namespace NxFr
 	{
 		while (true)
 		{
-			Task* Instance;
+			NxFr::Delegate<void()> Instance(nullptr);
 
 			{
 				Lock GuardLock(Guard);
@@ -140,13 +116,7 @@ namespace NxFr
 				Work.Increment();
 			}
 
-			Instance->Function.Invoke();
-			{
-				Lock GuardLock(Instance->Guard);
-				Instance->Completed.Store(1);
-			}
-			Instance->Notification.Broadcast();
-			Instance->Release();
+			Instance();
 
 			{
 				Lock GuardLock(Guard);

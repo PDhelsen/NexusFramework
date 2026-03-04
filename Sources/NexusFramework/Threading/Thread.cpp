@@ -3,9 +3,21 @@
 
 namespace NxFr
 {
+	static uint64 MainThread = Thread::ThreadId();
+
 	uint64 Thread::ThreadId()
 	{
 		return Platform::GetInstance()->ThreadId();
+	}
+
+	uint64 Thread::MainThreadId()
+	{
+		return MainThread;
+	}
+
+	bool Thread::IsMainThread()
+	{
+		return MainThreadId() == Thread::ThreadId();
 	}
 
 	void Thread::Yield()

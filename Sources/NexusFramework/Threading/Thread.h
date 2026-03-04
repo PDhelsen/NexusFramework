@@ -22,6 +22,9 @@ namespace NxFr
 
 	public:
 		NEXUS_FRAMEWORK_API static uint64 ThreadId();
+		NEXUS_FRAMEWORK_API static uint64 MainThreadId();
+		NEXUS_FRAMEWORK_API static bool IsMainThread();
+
 		NEXUS_FRAMEWORK_API static void Yield();
 		NEXUS_FRAMEWORK_API static void Sleep(uint64 Milliseconds);
 

@@ -80,7 +80,6 @@
 #include "NexusFramework/Threading/Atomic.h"
 #include "NexusFramework/Threading/Fence.h"
 #include "NexusFramework/Threading/ThreadPool.h"
-#include "NexusFramework/Threading/Threading.h"
 
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"
