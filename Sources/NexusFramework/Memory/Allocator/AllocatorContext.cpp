@@ -3,7 +3,7 @@
 
 namespace NxFr
 {
-	static Stack<Allocator*>& GetAllocators() { static Stack<Allocator*> Allocators(nullptr); return Allocators; }
+	static Stack<Allocator*>& GetAllocators() { static thread_local Stack<Allocator*> Allocators(nullptr); return Allocators; }
 
 	Allocator* AllocatorContext::Get()
 	{

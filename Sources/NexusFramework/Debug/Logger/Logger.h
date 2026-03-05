@@ -4,6 +4,7 @@
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/IO/File.h"
+#include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
 {
@@ -47,6 +48,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
 		NEXUS_FRAMEWORK_API void PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
 		NEXUS_FRAMEWORK_API void Print(LoggerVerbosity Verbosity, StringId Channel, StringView Message, bool Flushing);
+		NEXUS_FRAMEWORK_API Mutex& GetLock() override;
 
 		void OpenFile(StringView Path);
 		void CloseFile();
@@ -64,5 +66,7 @@ namespace NxFr
 		Platform* Target;
 		File Handle;
 		Event<LoggerVerbosity, StringId, StringView> Callback;
+
+		Mutex Guard;
 	};
 }

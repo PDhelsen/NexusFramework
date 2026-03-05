@@ -8,6 +8,7 @@
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/IO/File.h"
+#include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
 {
@@ -134,6 +135,8 @@ namespace NxFr
 		bool Initialized;
 		bool Recording;
 		bool Locked;
+
+		Mutex Guard;
 	};
 
 	template<typename T>

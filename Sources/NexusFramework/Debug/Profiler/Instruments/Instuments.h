@@ -7,6 +7,7 @@
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/IO/File.h"
 #include "NexusFramework/Time/Stopwatch.h"
+#include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
 {
@@ -57,6 +58,8 @@ namespace NxFr
 		File Handle;
 		String Buffer;
 		bool Recording;
+
+		Mutex Guard;
 	};
 }
 

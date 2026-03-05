@@ -45,6 +45,7 @@ namespace NxFr
 	void MemoryTracker::RecordAllocation(void* Pointer, uint64 Size)
 	{
 		UntrackedScope Untracked;
+		Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Pointer, Default, "Null pointer");
 		NEXUS_ASSERT(Amount < Integer::MaxUI64 - Size, Default, "Allocation Amount will overflow");
@@ -66,6 +67,7 @@ namespace NxFr
 	void MemoryTracker::RecordDeallocation(void* Pointer)
 	{
 		UntrackedScope Untracked;
+		Lock LockGuard(Guard);
 
 		if (!Pointer)
 		{

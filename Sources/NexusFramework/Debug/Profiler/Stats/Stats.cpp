@@ -325,6 +325,8 @@ namespace NxFr
 			return;
 		}
 
+		::NxFr::Lock LockGuard(Guard);
+
 		NEXUS_ASSERT(!(Type == StatType::Label && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Check && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Decimal && Mode == StatMode::Cnt), Default, "Combination not supported");
@@ -350,6 +352,8 @@ namespace NxFr
 			return;
 		}
 
+		::NxFr::Lock LockGuard(Guard);
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Label, Default, "Invalid record call");
@@ -368,6 +372,8 @@ namespace NxFr
 		{
 			return;
 		}
+
+		::NxFr::Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
@@ -388,6 +394,8 @@ namespace NxFr
 			return;
 		}
 
+		::NxFr::Lock LockGuard(Guard);
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Integer, Default, "Invalid record call");
@@ -406,6 +414,8 @@ namespace NxFr
 		{
 			return;
 		}
+
+		::NxFr::Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
@@ -426,6 +436,8 @@ namespace NxFr
 			return;
 		}
 
+		::NxFr::Lock LockGuard(Guard);
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Decimal, Default, "Invalid record call");
@@ -445,6 +457,8 @@ namespace NxFr
 			return;
 		}
 
+		::NxFr::Lock LockGuard(Guard);
+
 		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::DecimalPrecision, Default, "Invalid record call");
@@ -463,6 +477,8 @@ namespace NxFr
 		{
 			return;
 		}
+
+		::NxFr::Lock LockGuard(Guard);
 
 		String& Comments = GetStat(StatsHeader::CommentId).Value.Label;
 		Comments += Comment;

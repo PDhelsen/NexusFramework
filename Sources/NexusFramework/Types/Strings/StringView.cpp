@@ -3,7 +3,7 @@
 
 namespace NxFr
 {
-	static String Buffer;
+	static String& GetLocalBuffer() { static thread_local String LocalBuffer(64, nullptr); return LocalBuffer; }
 
 	StringView::StringView()
 		: Data(""), Count(0)
@@ -38,6 +38,7 @@ namespace NxFr
 
 	const char* StringView::CString() const
 	{
+		String& Buffer = GetLocalBuffer();
 		Buffer.Clear();
 		Buffer += *this;
 		return Buffer.C();

@@ -10,6 +10,7 @@
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 #include "NexusFramework/Types/Strings/StringTemplate.h"
+#include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
 {
@@ -62,11 +63,14 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual String* ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
 		NEXUS_FRAMEWORK_API virtual String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
 		NEXUS_FRAMEWORK_API virtual void PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
+		NEXUS_FRAMEWORK_API virtual Mutex& GetLock() = 0;
 	};
 
 	template<typename... Args>
 	void Log::LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
+		Lock LockGuard(GetLock());
+
 		String* MessageBuffer = ShouldPrintMessage(Verbosity, Channel, Message);
 		if (!MessageBuffer)
 		{

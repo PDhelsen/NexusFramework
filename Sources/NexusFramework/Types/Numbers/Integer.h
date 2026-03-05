@@ -58,6 +58,6 @@ namespace NxFr
 		constexpr uint64 MaxUI64 = ULLONG_MAX;
 
 		NEXUS_FRAMEWORK_API GUID GenerateGuid();
-		NEXUS_FRAMEWORK_API GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 Seed = 0);
+		NEXUS_FRAMEWORK_API GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 ThreadId, uint64 Seed = 0);
 	}
 }

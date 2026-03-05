@@ -28,7 +28,7 @@ namespace NxFr
 	}
 
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle(""), Callback()
+		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle(""), Callback(), Guard()
 	{
 		OpenFile(Path);
 	}
@@ -231,6 +231,11 @@ namespace NxFr
 		{
 			Callback.Invoke(Verbosity, Channel, Message);
 		}
+	}
+
+	Mutex& Logger::GetLock()
+	{
+		return Guard;
 	}
 
 	void Logger::OpenFile(StringView Path)

@@ -3,11 +3,12 @@
 
 namespace NxFr
 {
-	static uint64 MainThread = Thread::ThreadId();
+	static uint64 MainThread = Platform::GetInstance()->ThreadId();
+	static thread_local uint64 CurrentThread = Platform::GetInstance()->ThreadId();
 
 	uint64 Thread::ThreadId()
 	{
-		return Platform::GetInstance()->ThreadId();
+		return CurrentThread;
 	}
 
 	uint64 Thread::MainThreadId()
@@ -17,7 +18,7 @@ namespace NxFr
 
 	bool Thread::IsMainThread()
 	{
-		return MainThreadId() == Thread::ThreadId();
+		return ThreadId() == MainThreadId();
 	}
 
 	void Thread::Yield()

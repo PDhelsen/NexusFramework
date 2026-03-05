@@ -1,14 +1,17 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Types/Strings/StringId.h"
+#include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
 {
+	static Mutex& GetLock() { static Mutex Guard; return Guard; }
 	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(97, nullptr); return StringsTable; }
 
 	GUID StringId::InternString(StringView Text)
 	{
-		Dictionary<GUID, String>& StringsTable = GetStringsTable();
+		Lock Guard(GetLock());
 
+		Dictionary<GUID, String>& StringsTable = GetStringsTable();
 		GUID Id = !Text.IsEmpty() ? Hash<>::HashObject(Text) : 0;
 		if (!StringsTable.ContainsKey(Id))
 		{
@@ -19,6 +22,8 @@ namespace NxFr
 
 	const String& StringId::LookupString(GUID Id)
 	{
+		Lock Guard(GetLock());
+
 		Dictionary<GUID, String>& StringsTable = GetStringsTable();
 		String* Value = StringsTable.TryGet(Id);
 		return Value != nullptr ? *Value : StringId::Unknown;

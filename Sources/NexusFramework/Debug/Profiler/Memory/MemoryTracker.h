@@ -3,6 +3,7 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
 {
@@ -40,6 +41,8 @@ namespace NxFr
 		Dictionary<void*, uint64> Alloctions;
 		uint64 Amount;
 		uint64 Count;
+
+		Mutex Guard;
 	};
 }
 

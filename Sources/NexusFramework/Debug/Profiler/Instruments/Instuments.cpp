@@ -49,6 +49,7 @@ namespace NxFr
 			return;
 		}
 
+		Lock LockGuard(Guard);
 		RecordMarker(Data);
 	}
 
