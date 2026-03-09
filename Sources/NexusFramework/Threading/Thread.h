@@ -51,8 +51,8 @@ namespace NxFr
 
 	private:
 		NxFr::Delegate<void()> Function;
-		mutable Atomic State;
-		mutable Atomic Id;
+		Atomic State;
+		Atomic Id;
 		void* Handle;
 	};
 }

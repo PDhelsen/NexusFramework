@@ -33,7 +33,7 @@ namespace NxFr
 		return Platform::GetInstance()->ThreadAtomicDecrement(&Value);
 	}
 
-	int64 Atomic::Load()
+	int64 Atomic::Load() const
 	{
 		return Platform::GetInstance()->ThreadAtomicLoad(&Value);
 	}
