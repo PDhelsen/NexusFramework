@@ -124,9 +124,10 @@ namespace NxTs
 
 		ASSERT_EQ(NxFr::StringUtility::Contains(Test1, "Hello"), true);
 		ASSERT_EQ(NxFr::StringUtility::Contains(Test1, "Wd", NxFr::StringUtility::SearchMode::Characters), true);
-		ASSERT_EQ(NxFr::StringUtility::Find(Test1, "ll").IsEmpty(), false);
+		ASSERT_EQ(NxFr::StringUtility::Find(Test1, "ll"), "llo World");
 		ASSERT_EQ(NxFr::StringUtility::Find(Test1, "l", 1, NxFr::StringUtility::SearchMode::Characters).IsEmpty(), false);
-		ASSERT_EQ(NxFr::StringUtility::Split(Test1, "ll").IsEmpty(), false);
+		ASSERT_EQ(NxFr::StringUtility::Split(Test1, "ll"), "He");
+		ASSERT_EQ(NxFr::StringUtility::Split(Test1, "He"), "");
 		ASSERT_EQ(NxFr::StringUtility::Split(Test1, "l", 2, NxFr::StringUtility::SearchMode::Characters).IsEmpty(), false);
 
 		NxFr::String Test2 = NxFr::String("Hello World 1 Hello World 2 Hello World 3 Hello World 4");
