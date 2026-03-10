@@ -4,6 +4,7 @@
 		<SolutionSettings>
 			<Settings>
 				<PathExtension>../../artifacts</PathExtension>
+				<AdditionalTestExecutionParam>--gtest_output=xml:Results/</AdditionalTestExecutionParam>	
 			</Settings>
 		</SolutionSettings>
 		<ProjectSettings/>
