@@ -5,28 +5,31 @@
 namespace NxFr
 {
 	static Mutex& GetLock() { static Mutex Guard; return Guard; }
-	static Dictionary<GUID, String>& GetStringsTable() { static Dictionary<GUID, String> StringsTable(97, nullptr); return StringsTable; }
+	static Dictionary<GUID, StringView>& GetStringsTable() { static Dictionary<GUID, StringView> StringsTable(97, nullptr); return StringsTable; }
+	static Dequeue<String>& GetStrings() { static Dequeue<String> Strings(nullptr); return Strings; }
 
 	GUID StringId::InternString(StringView Text)
 	{
 		Lock Guard(GetLock());
 
-		Dictionary<GUID, String>& StringsTable = GetStringsTable();
+		Dictionary<GUID, StringView>& Table = GetStringsTable();
 		GUID Id = !Text.IsEmpty() ? Hash<>::HashObject(Text) : 0;
-		if (!StringsTable.ContainsKey(Id))
+		if (!Table.ContainsKey(Id))
 		{
-			StringsTable.Append(Id, Text);
+			Dequeue<String>& Instances = GetStrings();
+			String& Instance = Instances.AppendBack(Text);
+			Table.Append(Id, Instance);
 		}
 		return Id;
 	}
 
-	const String& StringId::LookupString(GUID Id)
+	StringView StringId::LookupString(GUID Id)
 	{
 		Lock Guard(GetLock());
 
-		Dictionary<GUID, String>& StringsTable = GetStringsTable();
-		String* Value = StringsTable.TryGet(Id);
-		return Value != nullptr ? *Value : StringId::Unknown;
+		Dictionary<GUID, StringView>& Table = GetStringsTable();
+		StringView* Value = Table.TryGet(Id);
+		return Value != nullptr ? *Value : StringView(StringUtility::Unknown);
 	}
 
 	StringId::StringId()
@@ -99,7 +102,7 @@ namespace NxFr
 		return Id;
 	}
 
-	const String& StringId::GetString() const
+	StringView StringId::GetString() const
 	{
 		return LookupString(Id);
 	}

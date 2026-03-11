@@ -103,7 +103,7 @@ namespace NxTs
 		Test3 = Test2;
 
 		NxFr::StringId Test4 = 0;
-		ASSERT_EQ(Test4, NxFr::StringId::Unknown);
+		ASSERT_EQ(Test4, NxFr::StringUtility::Unknown);
 		ASSERT_EQ(Test4.GetId(), 0);
 	}
 

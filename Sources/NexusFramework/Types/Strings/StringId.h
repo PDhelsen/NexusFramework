@@ -11,10 +11,8 @@ namespace NxFr
 	struct StringId
 	{
 	public:
-		inline static const String Unknown = "Unknown";
-
 		NEXUS_FRAMEWORK_API static GUID InternString(StringView Text);
-		NEXUS_FRAMEWORK_API static const String& LookupString(GUID Id);
+		NEXUS_FRAMEWORK_API static StringView LookupString(GUID Id);
 
 		NEXUS_FRAMEWORK_API StringId();
 		NEXUS_FRAMEWORK_API StringId(GUID Id);
@@ -33,7 +31,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool operator>=(const StringId& Other) const;
 
 		NEXUS_FRAMEWORK_API GUID GetId() const;
-		NEXUS_FRAMEWORK_API const String& GetString() const;
+		NEXUS_FRAMEWORK_API StringView GetString() const;
 
 		NEXUS_FRAMEWORK_API const char* C() const { return LookupString(Id).C(); }
 		NEXUS_FRAMEWORK_API bool IsValid() const { return Id != 0; }

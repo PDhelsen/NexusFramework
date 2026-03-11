@@ -3,6 +3,7 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringCApi.h"
 
@@ -29,6 +30,8 @@ namespace NxFr
 		inline static const char NewLineChar = StringCApi::NewLineChar;
 		inline static const String NewLine = StringCApi::NewLine;
 		inline static const String Empty = "";
+		inline static const String Unknown = "Unknown";
+		inline static const StringId Id = 0;
 
 	private:
 		static const uint8 GuessFormatingSize = 8;
