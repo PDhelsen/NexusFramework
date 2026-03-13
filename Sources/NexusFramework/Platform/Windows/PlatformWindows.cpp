@@ -209,7 +209,18 @@ namespace NxFr
 
 	void PlatformWindows::WaitForUserToCloseTerminal() const
 	{
-		uint32 c = getchar();
+		WriteToTerminal("\nPress Enter to close ...");
+
+		int8 Value;
+		DWORD Read;
+		while (true)
+		{
+			ReadConsoleA(TerminalIn, &Value, 1, &Read, NULL);
+			if (Value == '\r')
+			{
+				break;
+			}
+		}
 	}
 
 	String PlatformWindows::ReadFromTerminal() const
