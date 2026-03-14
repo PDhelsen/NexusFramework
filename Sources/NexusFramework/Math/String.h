@@ -199,7 +199,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Axis: (%f, %f, %f) - Angle: %f";
+			return "Axis: (%.2f, %f.2, %.2f) - Angle: %.2f";
 		}
 
 		static void ToString(const AxisAngle& Data, String& Result, StringView Format = "")
@@ -237,17 +237,17 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "(%f, %f, %f, %f)";
+			return Pretty ? "(%.2f, %.2f, %.2f, %.2f)" : "(%f, %f, %f, %f)";
 		}
 
 		static void ToString(const Quaternion& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Quaternion>(Format), Data.x, Data.y, Data.z, Data.w);
+			Result.Format(StringUtility::ConvertionFormat<Quaternion>(Format, true), Data.x, Data.y, Data.z, Data.w);
 		}
 
 		static void FromString(StringView Data, Quaternion& Result, StringView Format = "")
 		{
-			StringUtility::Scan(Data, StringUtility::ConvertionFormat<Quaternion>(Format), &Result.x, &Result.y, &Result.z, &Result.w);
+			StringUtility::Scan(Data, StringUtility::ConvertionFormat<Quaternion>(Format, false), &Result.x, &Result.y, &Result.z, &Result.w);
 		}
 	};
 
@@ -256,7 +256,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Origin: (%f, %f, %f) - Direction: (%f, %f, %f)";
+			return "Origin: (%.2f, %.2f, %.2f) - Direction: (%.2f, %.2f, %.2f)";
 		}
 
 		static void ToString(const Ray& Data, String& Result, StringView Format = "")
@@ -275,7 +275,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Normal: (%f, %f, %f) - Distance: %f";
+			return "Normal: (%.2f, %.2f, %.2f) - Distance: %.2f";
 		}
 
 		static void ToString(const Plane& Data, String& Result, StringView Format = "")
@@ -294,7 +294,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "A: (%f, %f, %f) - B: (%f, %f, %f) - C: (%f, %f, %f)";
+			return "A: (%.2f, %.2f, %.2f) - B: (%.2f, %.2f, %.2f) - C: (%.2f, %.2f, %.2f)";
 		}
 
 		static void ToString(const Triangle& Data, String& Result, StringView Format = "")
@@ -313,7 +313,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Center: (%f, %f) - Extents: (%f, %f)";
+			return "Center: (%.2f, %.2f) - Extents: (%.2f, %.2f)";
 		}
 
 		static void ToString(const Rectangle& Data, String& Result, StringView Format = "")
@@ -332,7 +332,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Center: (%f, %f) - Radius: %f";
+			return "Center: (%.2f, %.2f) - Radius: %.2f";
 		}
 
 		static void ToString(const Circle& Data, String& Result, StringView Format = "")
@@ -351,7 +351,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Center: (%f, %f, %f) - Extents: (%f, %f, %f)";
+			return "Center: (%.2f, %.2f, %.2f) - Extents: (%.2f, %.2f, %.2f)";
 		}
 
 		static void ToString(const Box& Data, String& Result, StringView Format = "")
@@ -370,7 +370,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Center: (%f, %f, %f) - Orientation: (%f, %f, %f, %f) - Extents: (%f, %f, %f)";
+			return "Center: (%.2f, %.2f, %.2f) - Orientation: (%.2f, %.2f, %.2f, %.2f) - Extents: (%.2f, %.2f, %.2f)";
 		}
 
 		static void ToString(const Cube& Data, String& Result, StringView Format = "")
@@ -389,7 +389,7 @@ namespace NxFr
 	{
 		static StringView GetFormat(bool Pretty)
 		{
-			return "Center: (%f, %f, %f) - Radius: %f";
+			return "Center: (%.2f, %.2f, %.2f) - Radius: %.2f";
 		}
 
 		static void ToString(const Sphere& Data, String& Result, StringView Format = "")

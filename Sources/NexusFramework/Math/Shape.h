@@ -719,6 +719,50 @@ namespace NxFr
 			return !(ShapeMax.x < OtherMin.x || ShapeMin.x > OtherMax.x || ShapeMax.y < OtherMin.y || ShapeMin.y > OtherMax.y || ShapeMax.z < OtherMin.z || ShapeMin.z > OtherMax.z);
 		}
 
+		inline bool Overlap(const Cube& Shape, const Cube& Other)
+		{
+			Matrix<4, 4, float> MatrixA = Matrix<4, 4, float>::Rotate(Shape.Orientation);
+			Matrix<4, 4, float> MatrixB = Matrix<4, 4, float>::Rotate(Other.Orientation);
+			Vector<3, float> AxisA[3] = { MatrixA.GetColumn(0), MatrixA.GetColumn(1), MatrixA.GetColumn(2) };
+			Vector<3, float> AxisB[3] = { MatrixB.GetColumn(0), MatrixB.GetColumn(1), MatrixB.GetColumn(2) };
+			Vector<3, float> Distance = Other.Center - Shape.Center;
+
+			Vector<3, float> Axises[15] = {
+				AxisA[0], AxisA[1], AxisA[2],
+				AxisB[0], AxisB[1], AxisB[2],
+				VectorUtility::Cross(AxisA[0], AxisB[0]), VectorUtility::Cross(AxisA[0], AxisB[1]), VectorUtility::Cross(AxisA[0], AxisB[2]),
+				VectorUtility::Cross(AxisA[1], AxisB[0]), VectorUtility::Cross(AxisA[1], AxisB[1]), VectorUtility::Cross(AxisA[1], AxisB[2]),
+				VectorUtility::Cross(AxisA[2], AxisB[0]), VectorUtility::Cross(AxisA[2], AxisB[1]), VectorUtility::Cross(AxisA[2], AxisB[2]),
+			};
+
+			for (uint64 Index = 0; Index < 15; ++Index)
+			{
+				Vector<3, float> Axis = Axises[Index];
+
+				if (VectorUtility::SqrMagnitude(Axis) < Decimal::EpsilonF)
+				{
+					continue;
+				}
+				Axis = VectorUtility::Normalize(Axis);
+
+				float RadiusA =
+					Shape.Extents.x * Math::Abs(VectorUtility::Dot(Axis, AxisA[0])) +
+					Shape.Extents.y * Math::Abs(VectorUtility::Dot(Axis, AxisA[1])) +
+					Shape.Extents.z * Math::Abs(VectorUtility::Dot(Axis, AxisA[2]));
+				float RadiusB =
+					Other.Extents.x * Math::Abs(VectorUtility::Dot(Axis, AxisB[0])) +
+					Other.Extents.y * Math::Abs(VectorUtility::Dot(Axis, AxisB[1])) +
+					Other.Extents.z * Math::Abs(VectorUtility::Dot(Axis, AxisB[2]));
+
+				if (Math::Abs(VectorUtility::Dot(Distance, Axis)) > RadiusA + RadiusB)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		inline bool Overlap(const Sphere& Shape, const Sphere& Other)
 		{
 			float RadiusSum = Shape.Radius + Other.Radius;
@@ -832,6 +876,100 @@ namespace NxFr
 			return Intersect(Shape, Other, Entry, Exit);
 		}
 
+		inline bool Intersect(const Rectangle& Shape, const Ray& Other, Vector<2, float>& Entry, Vector<2, float>& Exit)
+		{
+			Vector<2, float> Min = Shape.GetBottomLeft();
+			Vector<2, float> Max = Shape.GetTopRight();
+
+			float EntryDistance = -Decimal::MaxF;
+			float ExitDistance = Decimal::MaxF;
+
+			if (Math::Equals(Other.Direction.x, 0.0f) && (Other.Origin.x < Min.x || Other.Origin.x > Max.x))
+			{
+				return false;
+			}
+			float Rec = 1.0f / Other.Direction.x;
+			EntryDistance = Math::Max(EntryDistance, ((Rec >= 0.0f ? Min.x : Max.x) - Other.Origin.x) * Rec);
+			ExitDistance = Math::Min(ExitDistance, ((Rec >= 0.0f ? Max.x : Min.x) - Other.Origin.x) * Rec);
+			if (EntryDistance > ExitDistance)
+			{
+				return false;
+			}
+
+			if (Math::Equals(Other.Direction.y, 0.0f) && (Other.Origin.y < Min.y || Other.Origin.y > Max.y))
+			{
+				return false;
+			}
+			Rec = 1.0f / Other.Direction.y;
+			EntryDistance = Math::Max(EntryDistance, ((Rec >= 0.0f ? Min.y : Max.y) - Other.Origin.y) * Rec);
+			ExitDistance = Math::Min(ExitDistance, ((Rec >= 0.0f ? Max.y : Min.y) - Other.Origin.y) * Rec);
+			if (EntryDistance > ExitDistance)
+			{
+				return false;
+			}
+
+			Entry = Position(Other, EntryDistance);
+			Exit = Position(Other, ExitDistance);
+			return ExitDistance >= 0.0f;
+		}
+
+		inline bool Intersect(const Rectangle& Shape, const Ray& Other)
+		{
+			Vector<2, float> Entry, Exit;
+			return Intersect(Shape, Other, Entry, Exit);
+		}
+
+		inline bool Intersect(const Circle& Shape, const Ray& Other, Vector<2, float>& Entry, Vector<2, float>& Exit)
+		{
+			Vector<2, float> Origin = Other.Origin;
+			Vector<2, float> Direction = Other.Direction;
+			Vector<2, float> Offset = Shape.Center - Origin;
+
+			float A = VectorUtility::SqrMagnitude(Direction);
+			float B = -2.0f * VectorUtility::Dot(Direction, Offset);
+			float C = VectorUtility::SqrMagnitude(Offset) - Math::Square(Shape.Radius);
+
+			float Discriminant = B * B - 4.0f * A * C;
+			if (Discriminant < 0.0f)
+			{
+				return false;
+			}
+
+			float SqrtDiscriminant = Math::Sqrt(Discriminant);
+			float Inv2A = 1.0f / (2.0f * A);
+
+			float EntryDistance = (B - SqrtDiscriminant) * Inv2A;
+			float ExitDistance = (B + SqrtDiscriminant) * Inv2A;
+
+			if (EntryDistance > ExitDistance)
+			{
+				float Temp = EntryDistance;
+				EntryDistance = ExitDistance;
+				ExitDistance = Temp;
+			}
+
+			if (ExitDistance < 0.0f)
+			{
+				return false;
+			}
+
+			if (EntryDistance < 0.0f)
+			{
+				EntryDistance = 0.0f;
+			}
+
+			Entry = Origin + Direction * EntryDistance;
+			Exit = Origin + Direction * ExitDistance;
+
+			return true;
+		}
+
+		inline bool Intersect(const Circle& Shape, const Ray& Other)
+		{
+			Vector<2, float> Entry, Exit;
+			return Intersect(Shape, Other, Entry, Exit);
+		}
+
 		inline bool Intersect(const Box& Shape, const Ray& Other, Vector<3, float>& Entry, Vector<3, float>& Exit)
 		{
 			Vector<3, float> Min = Shape.GetMin();
@@ -927,7 +1065,6 @@ namespace NxFr
 
 			return true;
 		}
-
 
 		inline bool Intersect(const Box& Shape, const Plane& Other)
 		{
