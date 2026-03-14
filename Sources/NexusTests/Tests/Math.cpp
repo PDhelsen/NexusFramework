@@ -428,11 +428,14 @@ namespace NxTs
 		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Rectangle, NxFr::Rectangle(NxFr::Vector2f::Right, NxFr::Vector2f::One)), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Circle, NxFr::Circle(NxFr::Vector2f::Right, 1.0f)), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Box, NxFr::Box(NxFr::Vector3f::Right, NxFr::Vector3f::One)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Cube, NxFr::Cube(NxFr::Vector3f::Right, NxFr::Vector3f::One)), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Overlap(Sphere, NxFr::Sphere(NxFr::Vector3f::Right, 1.0f)), true);
 
 		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Plane, Ray), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Triangle, Ray), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Triangle, NxFr::Plane(NxFr::Vector3f::Up, -0.5f)), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Rectangle, Ray), true);
+		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Circle, Ray), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Box, Ray), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Box, Plane), true);
 		ASSERT_EQ(NxFr::ShapeUtility::Intersect(Cube, Ray), true);
