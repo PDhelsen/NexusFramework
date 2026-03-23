@@ -52,6 +52,8 @@ namespace NxFr
 		uint64 GetCount() const { return Content.GetCount(); }
 
 	private:
+		void SetPath(StringView Value);
+
 		String Path;
 		bool Exist;
 		List<String> Content;

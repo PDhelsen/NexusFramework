@@ -5,239 +5,309 @@
 
 namespace NxFr
 {
-	Path Path::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path)
-	{
-		return Path::ConvertStringToPath(Platform::GetInstance()->OpenFileDialog(Title, Extension, Name, Path));
-	}
+#pragma region Info
 
-	Path Path::GetWorkingDirectory()
+	Path::Info::Info(NxFr::StringView Data)
+		: Path(Data), Depth(0),
+		Drive(), Folder(), Name(), Extension()
 	{
-		return Path::ConvertStringToPath(Platform::GetInstance()->GetWorkingDirectory());
-	}
+		const char* Pointer = Path.C();
 
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Static
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	String Path::Combine(StringView Base, StringView Element)
-	{
-		String Result = Base;
-		Path::Combine(Result, Element);
-		return Result;
-	}
-
-	void Path::Combine(String& Base, StringView Element)
-	{
-		if (!StringUtility::End(Base, SeparatorDirectory) && !Base.IsEmpty())
+		bool StartBySeparatorDrive = StringCApi::Compare(Path.C(), SeparatorFolder.C(), SeparatorFolder.GetCount()) == 0;
+		if (StartBySeparatorDrive)
 		{
-			Base += SeparatorDirectory;
-		}
-		Base += Element;
-		if (!StringUtility::End(Element, SeparatorDirectory) && !IsFile(Element))
-		{
-			Base += SeparatorDirectory;
-		}
-	}
-
-	String Path::Previous(StringView Path, uint64 Count)
-	{
-		String Result = Path;
-		Path::Previous(Result, Count);
-		return Result;
-	}
-
-	void Path::Previous(String& Path, uint64 Count)
-	{
-		if (Count == 0)
-		{
-			return;
+			Pointer += SeparatorFolder.GetCount();
 		}
 
-		List<StringView> Split = StringUtility::SplitAll(Path, SeparatorDirectory);
-		StringView Last = Split.Get(Split.GetCount() - 1 - Count);
-		Path.Terminate(Last.C() - Path.C() + Last.GetCount() + 1);
-	}
-
-	String Path::ChangeFileName(StringView Path, StringView File)
-	{
-		String Result = Path;
-		Path::ChangeFileName(Result, File);
-		return Result;
-	}
-
-	void Path::ChangeFileName(String& Path, StringView File)
-	{
-		StringView Substring = Path::GetFileName(Path, true);
-		Path.Assign(Substring, File);
-	}
-
-	String Path::ChangeDirectoryName(StringView Path, StringView Directory)
-	{
-		String Result = Path;
-		Path::ChangeDirectoryName(Result, Directory);
-		return Result;
-	}
-
-	void Path::ChangeDirectoryName(String& Path, StringView Directory)
-	{
-		StringView Substring = Path::GetDirectoryName(Path);
-		Path.Assign(Substring, Directory);
-	}
-
-	String Path::ChangeDirectoryPath(StringView Path, StringView Directory)
-	{
-		String Result = Path;
-		Path::ChangeDirectoryPath(Result, Directory);
-		return Result;
-	}
-
-	void Path::ChangeDirectoryPath(String& Path, StringView Directory)
-	{
-		StringView Substring = Path::GetDirectoryPath(Path);
-		Path.Assign(Substring, Directory);
-	}
-
-	String Path::ChangeExtension(StringView Path, StringView Extension)
-	{
-		String Result = Path;
-		Path::ChangeExtension(Result, Extension);
-		return Result;
-	}
-
-	void Path::ChangeExtension(String& Path, StringView Extension)
-	{
-		StringView Substring = Path::GetExtension(Path);
-		Path.Assign(Substring, Extension);
-	}
-
-	String Path::ConvertAbsoluteToRelative(StringView Path, StringView Root)
-	{
-		if (!Path::IsDirectory(Root))
+		while (*Pointer != StringCApi::NullChar)
 		{
-			return StringUtility::Empty;
-		}
-
-		String Result = Path;
-		Path::ConvertAbsoluteToRelative(Result, Root);
-		return Result;
-	}
-
-	void Path::ConvertAbsoluteToRelative(String& Path, StringView Root)
-	{
-		if (!Path::IsDirectory(Root))
-		{
-			return;
-		}
-
-		StringView Common = StringUtility::Common(Path, Root);
-		StringView Remaining = Root.Substring(Common.GetCount(), Root.GetCount() - Common.GetCount());
-		List<StringView> Directories = StringUtility::SplitAll(Remaining, SeparatorDirectory);
-		String ToReplaceWith = String(Directories.GetCount() * 3);
-		for (auto& It : Directories)
-		{
-			ToReplaceWith += SeparatorPrevious;
-			ToReplaceWith += SeparatorDirectory;
-		}
-
-		Path.Assign(Common, ToReplaceWith);
-	}
-
-	String Path::ConvertRelativeToAbsolute(StringView Path, StringView Root)
-	{
-		if (!Path::IsDirectory(Root))
-		{
-			return StringUtility::Empty;
-		}
-
-		String Result = Root + Path;
-		Path::Resolve(Result);
-		return Result;
-	}
-
-	void Path::ConvertRelativeToAbsolute(String& Path, StringView Root)
-	{
-		if (!Path::IsDirectory(Root))
-		{
-			return;
-		}
-
-		Path = Root + Path;
-		Path::Resolve(Path);
-	}
-
-	String Path::Resolve(StringView Path)
-	{
-		String Result = Path;
-		Path::Resolve(Result);
-		return Result;
-	}
-
-	void Path::Resolve(String& Path)
-	{
-		List<StringView> Directories = StringUtility::SplitAll(Path, SeparatorDirectory);
-		int64 Index = -1;
-		uint64 Count = 0;
-
-		uint64 Iter = 0;
-		for (auto& It : Directories)
-		{
-			if (It == SeparatorPrevious)
+			if (StringCApi::Compare(Pointer, SeparatorPrevious.C(), SeparatorPrevious.GetCount()) == 0)
 			{
-				if (Index == -1)
-				{
-					Index = Iter;
-				}
-				Count++;
-			}
-			Iter++;
-		}
+				Depth--;
 
-		if (Index != -1)
-		{
-			StringView First = Directories[Index - Count];
-			StringView Last = Directories[Index + Count - 1];
-			StringView ToRemove = StringView(First.C(), (Last.C() + Last.GetCount() - First.C() + 1));
-			Path.Remove(ToRemove);
+				Pointer += SeparatorPrevious.GetCount();
+				continue;
+			}
+			else if (StringCApi::Compare(Pointer, SeparatorDrive.C(), SeparatorDrive.GetCount()) == 0)
+			{
+				NEXUS_ASSERT(Drive.IsEmpty(), Default, "Two drive separator has been found. That is not supported");
+
+				uint64 Position = Pointer - Path.C();
+				Drive = Path.Substring(0, Position);
+
+				Pointer += SeparatorDrive.GetCount();
+				continue;
+			}
+			else if (StringCApi::Compare(Pointer, SeparatorFolder.C(), SeparatorFolder.GetCount()) == 0)
+			{
+				uint64 Position = Pointer - Path.C();
+				uint64 Offset = !Drive.IsEmpty() ? Drive.GetCount() + SeparatorDrive.GetCount() : StartBySeparatorDrive ? 1 : 0;
+				Folder = Path.Substring(Offset, Position >= Offset ? Position - Offset : 0);
+				Name = StringUtility::Empty;
+				Depth++;
+
+				Pointer += SeparatorFolder.GetCount();
+				continue;
+			}
+			else if (StringCApi::Compare(Pointer, SeparatorExtension.C(), SeparatorExtension.GetCount()) == 0)
+			{
+				NEXUS_ASSERT(Extension.IsEmpty(), Default, "Two extension separators has been found. That is not supported");
+
+				uint64 Position = Pointer - Path.C();
+				uint64 Offset = SeparatorExtension.GetCount();
+				Name = Path.Substring(Name.C() - Path.C(), Pointer - Name.C());
+				Extension = Path.Substring(Position + Offset, Path.GetCount() - (Position + Offset));
+
+				break;
+			}
+			else if (Name.IsEmpty())
+			{
+				Name = Pointer;
+			}
+
+			Pointer++;
 		}
+	}
+
+	bool Path::Info::Has(bool HasDrive, bool HasFolder, bool HasName, bool HasExtension) const
+	{
+		bool Result = true;
+		if (HasDrive)
+		{
+			Result &= !Drive.IsEmpty();
+		}
+		if (HasFolder)
+		{
+			Result &= !Folder.IsEmpty();
+		}
+		if (HasName)
+		{
+			Result &= !Name.IsEmpty();
+		}
+		if (HasExtension)
+		{
+			Result &= !Extension.IsEmpty();
+		}
+		return Result;
+	}
+
+	StringView Path::Info::Get(bool GetDrive, bool GetFolder, bool GetName, bool GetExtension) const
+	{
+		uint64 Offset = 0;
+		uint64 Count = 0;
+		if (GetDrive && !Drive.IsEmpty())
+		{
+			Offset = 0;
+			Count = Drive.GetCount();
+		}
+		if (GetFolder && !Folder.IsEmpty())
+		{
+			Offset = Count != 0 ? Offset : Folder.C() - Path.C();
+			Count = (Folder.C() + Folder.GetCount()) - (Path.C() + Offset);
+		}
+		if (GetName && !Name.IsEmpty())
+		{
+			Offset = Count != 0 ? Offset : Name.C() - Path.C();
+			Count = (Name.C() + Name.GetCount()) - (Path.C() + Offset);
+		}
+		if (GetExtension && !Extension.IsEmpty())
+		{
+			Offset = Count != 0 ? Offset : Extension.C() - Path.C();
+			Count = (Extension.C() + Extension.GetCount()) - (Path.C() + Offset);
+		}
+		return StringView(Path.C(), Offset, Count);
+	}
+
+	void Path::Info::Change(StringView ChangeDrive, StringView ChangeFolder, StringView ChangeName, StringView ChangeExtension, String& Buffer) const
+	{
+		Buffer.Clear();
+		if (!Drive.IsEmpty() || !ChangeDrive.IsEmpty())
+		{
+			Buffer += !ChangeDrive.IsEmpty() ? ChangeDrive : Drive;
+			Buffer += SeparatorDrive;
+		}
+		if (!Folder.IsEmpty() || !ChangeFolder.IsEmpty())
+		{
+			Buffer += !ChangeFolder.IsEmpty() ? ChangeFolder : Folder;
+			Buffer += SeparatorFolder;
+		}
+		if (!Name.IsEmpty() || !ChangeName.IsEmpty())
+		{
+			Buffer += !ChangeName.IsEmpty() ? ChangeName : Name;
+		}
+		if (!Extension.IsEmpty() || !ChangeExtension.IsEmpty())
+		{
+			Buffer += SeparatorExtension;
+			Buffer += !ChangeExtension.IsEmpty() ? ChangeExtension : Extension;
+		}
+	}
+
+	List<StringView> Path::Info::Split() const
+	{
+		List<StringView> Result;
+		if (!Drive.IsEmpty())
+		{
+			Result.Append(Drive);
+		}
+		if (!Folder.IsEmpty())
+		{
+			const char* Pointer = Folder.C();
+			const char* Start = Pointer;
+			uint64 Count = Folder.GetCount();
+
+			while (Count-- > 0)
+			{
+				if (StringCApi::Compare(Pointer, SeparatorFolder.C(), SeparatorFolder.GetCount()) == 0)
+				{
+					Result.Append(StringView(Folder.C(), Start - Folder.C(), Pointer - Start));
+				}
+			}
+			Result.Append(StringView(Folder.C(), Start - Folder.C(), Pointer - Start));
+		}
+		if (!Name.IsEmpty())
+		{
+			Result.Append(Name);
+		}
+		if (!Extension.IsEmpty())
+		{
+			Result.Append(Extension);
+		}
+		return Result;
+	}
+
+#pragma endregion
+
+#pragma region Platform
+
+	void Path::ShowInExplorer(NxFr::StringView Path)
+	{
+		Platform::GetInstance()->OpenExplorer(Path);
+	}
+
+	String Path::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path)
+	{
+		return Normalize(Platform::GetInstance()->OpenFileDialog(Title, Extension, Name, Path));
+	}
+
+	String Path::GetWorkingDirectory()
+	{
+		return Normalize(Platform::GetInstance()->GetWorkingDirectory() + Path::SeparatorFolder);
+	}
+
+#pragma endregion
+
+#pragma region Computation
+
+	String Path::Join(StringView Path, StringView Element)
+	{
+		String Result = Path;
+		if (!Path.IsEmpty() && !StringUtility::End(Path, SeparatorFolder))
+		{
+			Result += SeparatorFolder;
+		}
+		Result += Element;
+		return Result;
 	}
 
 	String Path::Normalize(StringView Path)
 	{
 		String Result = Path;
-		Path::Normalize(Result);
+		Result = StringUtility::Replace(Result, "\\", SeparatorFolder);
+		Result = StringUtility::Replace(Result, "//", SeparatorFolder);
 		return Result;
 	}
 
-	void Path::Normalize(String& Path)
+	String Path::Resolve(StringView Path)
 	{
-		if (Path.IsEmpty())
+		const char* Pointer = Path.C();
+		const char* Start = Pointer;
+		List<StringView> Parts;
+
+		while (*Pointer != StringCApi::NullChar)
 		{
-			return;
+			if (StringCApi::Compare(Pointer, SeparatorFolder.C(), SeparatorFolder.GetCount()) == 0)
+			{
+				StringView Part = StringView(Start, Pointer - Start);
+				if (Part == SeparatorPrevious)
+				{
+					if (!Parts.IsEmpty())
+					{
+						Parts.RemoveLast();
+						Parts.RemoveLast();
+					}
+				}
+				else
+				{
+					if (!Parts.IsEmpty())
+					{
+						Parts.Append(SeparatorFolder);
+					}
+					Parts.Append(Part);
+				}
+
+				Pointer++;
+				Start = Pointer;
+			}
+			else
+			{
+				Pointer++;
+			}
 		}
 
-		if (!Path::IsFile(Path) && !StringUtility::End(Path, SeparatorDirectory))
+		if (Pointer != Start)
 		{
-			Path += SeparatorDirectory;
+			StringView Part = StringView(Start, Pointer - Start);
+			if (!Parts.IsEmpty())
+			{
+				Parts.Append(SeparatorFolder);
+			}
+			Parts.Append(Part);
 		}
 
-
-		Path.Assign("\\", SeparatorDirectory);
-		Path.Assign("//", SeparatorDirectory);
+		String Result = Path.GetCount();
+		for (auto& It : Parts)
+		{
+			Result += It;
+		}
+		return Result;
 	}
 
-	Path::Type Path::GetType(StringView Path)
+	String Path::MakeRelative(StringView Path, StringView Root)
 	{
-		if (StringUtility::End(Path, SeparatorDirectory))
+		List<StringView> PartsPath = StringUtility::SplitAll(Path, SeparatorFolder);
+		List<StringView> PartsRoot = StringUtility::SplitAll(Root, SeparatorFolder);
+
+		uint64 Index = 0;
+		while (Index < PartsPath.GetCount() && Index < PartsRoot.GetCount() && PartsPath[Index] == PartsRoot[Index])
 		{
-			return Type::Directory;
+			Index++;
 		}
 
-		if (StringUtility::Contains(Path, SeparatorExtension) && !StringUtility::Contains(Path, SeparatorPrevious))
+		String Result;
+		for (uint64 I = Index; I < PartsRoot.GetCount(); ++I)
 		{
-			return Type::File;
+			if (!Result.IsEmpty())
+			{
+				Result += SeparatorFolder;
+			}
+			Result += SeparatorPrevious;
 		}
+		for (uint64 I = Index; I < PartsPath.GetCount(); ++I)
+		{
+			if (!Result.IsEmpty())
+			{
+				Result += SeparatorFolder;
+			}
+			Result += PartsPath[I];
+		}
+		return Result;
+	}
 
-		return Type::Invalid;
+	String Path::MakeAbsolute(StringView Path, StringView Root)
+	{
+		String Result = Join(Root, Path);
+		Result = Resolve(Result);
+		return Result;
 	}
 
 	bool Path::Exist(StringView Path)
@@ -245,464 +315,161 @@ namespace NxFr
 		return Platform::GetInstance()->GetPathType(Path) != Platform::PathType::None;
 	}
 
-	bool Path::IsFile(StringView Path)
-	{
-		return Path::GetType(Path) == Type::File;
-	}
+#pragma endregion
 
-	bool Path::IsDirectory(StringView Path)
-	{
-		return Path::GetType(Path) == Type::Directory;
-	}
+#pragma region Infos
 
 	bool Path::IsAbsolute(StringView Path)
 	{
-		return StringUtility::Contains(Path, SeparatorDrive);
+		Info Infos(Path);
+		return !Infos.Drive.IsEmpty();
 	}
 
 	bool Path::IsRelative(StringView Path)
 	{
-		return !Path::IsAbsolute(Path);
+		Info Infos(Path);
+		return Infos.Drive.IsEmpty();
 	}
 
-	bool Path::HasExtension(StringView Path, StringView Extension)
+	bool Path::IsSubdirectory(StringView Path, StringView Root)
 	{
-		if (Extension.IsEmpty())
-		{
-			return StringUtility::Contains(Path, SeparatorExtension);
-		}
+		Info InfosPath(Path);
+		Info InfosRoot(Root);
+		return InfosPath.Drive == InfosRoot.Drive && StringUtility::Start(InfosPath.Folder, InfosRoot.Folder);
+	}
 
-		return StringUtility::End(Path, Extension);
+	bool Path::IsDirectory(StringView Path)
+	{
+		Info Infos(Path);
+		return Infos.Name.IsEmpty() && Infos.Extension.IsEmpty();
+	}
+
+	bool Path::IsFile(StringView Path)
+	{
+		Info Infos(Path);
+		return !Infos.Name.IsEmpty() && !Infos.Extension.IsEmpty();
+	}
+
+	bool Path::Has(StringView Path, bool HasDrive, bool HasFolder, bool HasName, bool HasExtension)
+	{
+		return Info(Path).Has(HasDrive, HasFolder, HasName, HasExtension);
+	}
+
+	bool Path::HasDrive(StringView Path)
+	{
+		return Info(Path).Has(true, false, false, false);
+	}
+
+	bool Path::HasFolder(StringView Path)
+	{
+		return Info(Path).Has(false, true, false, false);
+	}
+
+	bool Path::HasName(StringView Path)
+	{
+		return Info(Path).Has(false, false, true, false);
+	}
+
+	bool Path::HasExtension(StringView Path)
+	{
+		return Info(Path).Has(false, false, false, true);
+	}
+
+	StringView Path::Get(StringView Path, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension)
+	{
+		return Info(Path).Get(GetDrive, GetFolder, GetName, GetExtension);
 	}
 
 	StringView Path::GetDrive(StringView Path)
 	{
-		return StringUtility::Split(Path, SeparatorDrive);
+		return Info(Path).Get(true, false, false, false);
 	}
 
-	StringView Path::GetDirectoryPath(StringView Path)
+	StringView Path::GetFolder(StringView Path)
 	{
-		if (Path::IsDirectory(Path))
-		{
-			return Path;
-		}
-
-		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
-		if (Parts.IsEmpty())
-		{
-			return StringUtility::Empty;
-		}
-		return Path.Substring(0, Path.GetCount() - Parts.Last().GetCount());
+		return Info(Path).Get(false, true, false, false);
 	}
 
-	StringView Path::GetDirectoryName(StringView Path)
+	StringView Path::GetName(StringView Path)
 	{
-		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
-		if (Parts.IsEmpty())
-		{
-			return StringUtility::Empty;
-		}
-		return IsDirectory(Path) ? Parts.Last() : Parts.Get(Parts.GetCount() - 2);
-	}
-
-	StringView Path::GetParent(StringView Path)
-	{
-		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
-		if (Parts.IsEmpty())
-		{
-			return StringUtility::Empty;
-		}
-		return Path.Substring(0, Path.GetCount() - Parts.Last().GetCount() - Path::IsDirectory(Path));
-	}
-
-	StringView Path::GetFileName(StringView Path, bool Extension)
-	{
-		if (!Path::IsFile(Path))
-		{
-			return StringView();
-		}
-
-		List<StringView> Parts = StringUtility::SplitAll(Path, SeparatorDirectory);
-		if (Parts.IsEmpty())
-		{
-			return StringUtility::Empty;
-		}
-		return Extension ? Parts.Last() : StringUtility::Split(Parts.Last(), SeparatorExtension);
+		return Info(Path).Get(false, false, true, false);
 	}
 
 	StringView Path::GetExtension(StringView Path)
 	{
-		if (!Path::IsFile(Path) || !Path::HasExtension(Path, ""))
-		{
-			return StringView();
-		}
+		return Info(Path).Get(false, false, false, true);
+	}
 
-		return StringUtility::Split(Path, SeparatorExtension, 1);
+	StringView Path::GetDriveAndFolder(StringView Path)
+	{
+		return Info(Path).Get(true, true, false, false);
+	}
+
+	StringView Path::GetFolderAndName(StringView Path)
+	{
+		return Info(Path).Get(false, true, true, false);
+	}
+
+	StringView Path::GetNameAndExtension(StringView Path)
+	{
+		return Info(Path).Get(false, false, true, true);
+	}
+
+	StringView Path::GetPathWithoutDrive(StringView Path)
+	{
+		return Info(Path).Get(false, true, true, true);
 	}
 
 	StringView Path::GetPathWithoutExtension(StringView Path)
 	{
-		if (!Path::IsFile(Path))
-		{
-			return Path;
-		}
+		return Info(Path).Get(true, true, true, false);
+	}
 
-		return StringUtility::Split(Path, SeparatorExtension, 0);
+	String Path::Change(StringView Path, StringView ChangeDrive, StringView ChangeFolder, StringView ChangeName, StringView ChangeExtension)
+	{
+		String Result;
+		Info(Path).Change(ChangeDrive, ChangeFolder, ChangeName, ChangeExtension, Result);
+		return Result;
+	}
+
+	String Path::ChangeDrive(StringView Path, StringView Drive)
+	{
+		String Result;
+		Info(Path).Change(Drive, "", "", "", Result);
+		return Result;
+	}
+
+	String Path::ChangeFolder(StringView Path, StringView Folder)
+	{
+		String Result;
+		Info(Path).Change("", Folder, "", "", Result);
+		return Result;
+	}
+
+	String Path::ChangeName(StringView Path, StringView Name)
+	{
+		String Result;
+		Info(Path).Change("", "", Name, "", Result);
+		return Result;
+	}
+
+	String Path::ChangeExtension(StringView Path, StringView Extension)
+	{
+		String Result;
+		Info(Path).Change("", "", "", Extension, Result);
+		return Result;
 	}
 
 	List<StringView> Path::Split(StringView Path)
 	{
-		return StringUtility::SplitAll(Path, SeparatorDirectory);
+		return Info(Path).Split();
 	}
 
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Instance
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	Path::Path(StringView Path)
-		: Data(Path.C(), Path.GetCount())
+	int64 Path::Depth(StringView Path)
 	{
+		return Info(Path).Depth;
 	}
 
-	Path::Path(const Path& Other)
-		: Data(Other.Data)
-	{
-	}
+#pragma endregion
 
-	Path::Path(Path&& Other) noexcept
-		: Data(Move(Other.Data))
-	{
-	}
-
-	Path::~Path()
-	{
-	}
-
-	Path Path::ConvertStringToPath(String&& Temp)
-	{
-		Path Result("");
-		Result.Data = Move(Temp);
-		return Result;
-	}
-
-	Path::operator bool() const
-	{
-		return IsValid();
-	}
-
-	Path::operator StringView() const
-	{
-		return Data;
-	}
-
-	Path& Path::operator=(StringView Path)
-	{
-		if (Data == Path)
-		{
-			return *this;
-		}
-
-		Data = Path;
-		return *this;
-	}
-
-	Path& Path::operator=(const String& Path)
-	{
-		if (Data == Path)
-		{
-			return *this;
-		}
-
-		Data = Path;
-		return *this;
-	}
-
-	Path& Path::operator=(const Path& Other)
-	{
-		if (this == &Other)
-		{
-			return *this;
-		}
-
-		Data = Other.Data;
-		return *this;
-	}
-
-	Path& Path::operator=(Path&& Other) noexcept
-	{
-		if (this == &Other)
-		{
-			return *this;
-		}
-
-		Data = Move(Other.Data);
-		return *this;
-	}
-
-	Path& Path::operator+=(const Path& Other)
-	{
-		Join(Other);
-		return *this;
-	}
-
-	Path& Path::operator+=(StringView Other)
-	{
-		Join(Other);
-		return *this;
-	}
-
-	Path& Path::operator-=(uint64 Count)
-	{
-		Previous(Count);
-		return *this;
-	}
-
-	Path& Path::Join(StringView Element)
-	{
-		Path::Combine(Data, Element);
-		return *this;
-	}
-
-	Path& Path::Previous(uint64 Count)
-	{
-		Path::Previous(Data, Count);
-		return *this;
-	}
-
-	Path& Path::ChangeFileName(StringView File)
-	{
-		Path::ChangeFileName(Data, File);
-		return *this;
-	}
-
-	Path& Path::ChangeDirectoryName(StringView Directory)
-	{
-		Path::ChangeDirectoryName(Data, Directory);
-		return *this;
-	}
-
-	Path& Path::ChangeDirectoryPath(StringView Directory)
-	{
-		Path::ChangeDirectoryPath(Data, Directory);
-		return *this;
-	}
-
-	Path& Path::ChangeExtension(StringView Extension)
-	{
-		Path::ChangeExtension(Data, Extension);
-		return *this;
-	}
-
-	Path& Path::ConvertAbsoluteToRelative(StringView Root)
-	{
-		Path::ConvertAbsoluteToRelative(Data, Root);
-		return *this;
-	}
-
-	Path& Path::ConvertRelativeToAbsolute(StringView Root)
-	{
-		Path::ConvertRelativeToAbsolute(Data, Root);
-		return *this;
-	}
-
-	Path& Path::Resolve()
-	{
-		Path::Resolve(Data);
-		return *this;
-	}
-
-	Path& Path::Normalize()
-	{
-		Path::Normalize(Data);
-		return *this;
-	}
-
-	Path::Type Path::GetType() const
-	{
-		return Path::GetType(Data);
-	}
-
-	bool Path::Exist() const
-	{
-		return Path::Exist(Data);
-	}
-
-	bool Path::IsFile() const
-	{
-		return Path::IsFile(Data);
-	}
-
-	bool Path::IsDirectory() const
-	{
-		return Path::IsDirectory(Data);
-	}
-
-	bool Path::IsAbsolute() const
-	{
-		return Path::IsAbsolute(Data);
-	}
-
-	bool Path::IsRelative() const
-	{
-		return Path::IsRelative(Data);
-	}
-
-	bool Path::HasExtension(StringView Extension) const
-	{
-		return Path::HasExtension(Data, Extension);
-	}
-
-	StringView Path::GetDrive() const
-	{
-		return Path::GetDrive(Data);
-	}
-
-	StringView Path::GetDirectoryPath() const
-	{
-		return Path::GetDirectoryPath(Data);
-	}
-
-	StringView Path::GetDirectoryName() const
-	{
-		return Path::GetDirectoryName(Data);
-	}
-
-	StringView Path::GetParent() const
-	{
-		return Path::GetParent(Data);
-	}
-
-	StringView Path::GetFileName(bool Extension) const
-	{
-		return Path::GetFileName(Data, Extension);
-	}
-
-	StringView Path::GetExtension() const
-	{
-		return Path::GetExtension(Data);
-	}
-
-	StringView Path::GetPathWithoutExtension() const
-	{
-		return Path::GetPathWithoutExtension(Data);
-	}
-
-	List<StringView> Path::Split() const
-	{
-		return Path::Split(Data);
-	}
-
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Operator
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-	Path operator+(const Path& A, const Path& B)
-	{
-		return Path::ConvertStringToPath(Path::Combine(A, B));
-	}
-
-	Path operator+(const Path& A, StringView B)
-	{
-		return Path::ConvertStringToPath(Path::Combine(A, B));
-	}
-
-	Path operator+(StringView A, const Path& B)
-	{
-		return Path::ConvertStringToPath(Path::Combine(A, B));
-	}
-
-	Path operator-(const Path& A, uint64 Count)
-	{
-		return Path::ConvertStringToPath(Path::Previous(A, Count));
-	}
-
-	bool operator==(const Path& A, const Path& B)
-	{
-		return A.Data == B.Data;
-	}
-
-	bool operator==(const Path& A, StringView B)
-	{
-		return A.Data == B;
-	}
-
-	bool operator==(StringView A, const Path& B)
-	{
-		return A == B.Data;
-	}
-
-	bool operator!=(const Path& A, const Path& B)
-	{
-		return A.Data != B.Data;
-	}
-
-	bool operator!=(const Path& A, StringView B)
-	{
-		return A.Data != B;
-	}
-
-	bool operator!=(StringView A, const Path& B)
-	{
-		return A != B.Data;
-	}
-
-	bool operator<(const Path& A, const Path& B)
-	{
-		return A.Data < B.Data;
-	}
-
-	bool operator<(const Path& A, StringView B)
-	{
-		return A.Data < B;
-	}
-
-	bool operator<(StringView A, const Path& B)
-	{
-		return A < B.Data;
-	}
-
-	bool operator<=(const Path& A, const Path& B)
-	{
-		return A.Data <= B.Data;
-	}
-
-	bool operator<=(const Path& A, StringView B)
-	{
-		return A.Data <= B;
-	}
-
-	bool operator<=(StringView A, const Path& B)
-	{
-		return A <= B.Data;
-	}
-
-	bool operator>(const Path& A, const Path& B)
-	{
-		return A.Data > B.Data;
-	}
-
-	bool operator>(const Path& A, StringView B)
-	{
-		return A.Data > B;
-	}
-
-	bool operator>(StringView A, const Path& B)
-	{
-		return A > B.Data;
-	}
-
-	bool operator>=(const Path& A, const Path& B)
-	{
-		return A.Data >= B.Data;
-	}
-
-	bool operator>=(const Path& A, StringView B)
-	{
-		return A.Data >= B;
-	}
-
-	bool operator>=(StringView A, const Path& B)
-	{
-		return A >= B.Data;
-	}
 }

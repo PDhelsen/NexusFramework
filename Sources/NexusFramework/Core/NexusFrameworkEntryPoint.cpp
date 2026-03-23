@@ -9,32 +9,32 @@
 
 namespace NxFr
 {
-	static Path GetDebugPath()
+	static String GetDebugPath()
 	{
-		Path DebugPath = Paths::Saved + "debug";
+		String DebugPath = Path::Combine(Paths::Saved, "debug");
 		Directory(DebugPath).Create();
 		return DebugPath;
 	}
 
-	static void CreateLogger(const Path& Folder)
+	static void CreateLogger(StringView Folder)
 	{
-		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Folder + "logs.txt");
+		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Path::Combine(Folder, "logs.txt"));
 		Logs->AddChannel(LoggerChannel::Default, true);
 		Logs->AddChannel(LoggerChannel::Verbose, false);
 		Globals::Logs = Logs;
 	}
 
-	static void CreateStats(const Path& Folder)
+	static void CreateStats(StringView Folder)
 	{
-		Stats* Statistiques = new Stats(Folder + "stats.csv");
+		Stats* Statistiques = new Stats(Path::Combine(Folder, "stats.csv"));
 		Statistiques->Initialize();
 		Statistiques->StartRecording();
 		Globals::Statistiques = Statistiques;
 	}
 
-	static void CreateIntruments(const Path& Folder)
+	static void CreateIntruments(StringView Folder)
 	{
-		Instruments* Instrumentor = Instruments::Create(Folder + "instruments.json", false);
+		Instruments* Instrumentor = Instruments::Create(Path::Combine(Folder, "instruments.json"), false);
 		Instrumentor->StartRecording();
 		Globals::Instrumentor = Instrumentor;
 	}
@@ -70,7 +70,7 @@ namespace NxFr
 		AllocatorContext Context(nullptr);
 
 		Paths::SetupPathsAndFolders();
-		Path DebugPath = GetDebugPath();
+		String DebugPath = GetDebugPath();
 
 		CreateLogger(DebugPath);
 		CreateStats(DebugPath);

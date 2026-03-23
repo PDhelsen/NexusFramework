@@ -84,6 +84,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void WriteToTerminal(StringView Message) const = 0;
 		NEXUS_FRAMEWORK_API virtual void WriteToDebugger(StringView Message) const = 0;
 
+		NEXUS_FRAMEWORK_API virtual void OpenExplorer(StringView Path) const = 0;
 		NEXUS_FRAMEWORK_API virtual PathType GetPathType(StringView Path) const = 0;
 		NEXUS_FRAMEWORK_API virtual String OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const = 0;
 		NEXUS_FRAMEWORK_API virtual String GetWorkingDirectory() const = 0;

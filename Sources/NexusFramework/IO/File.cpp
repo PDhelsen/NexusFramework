@@ -20,8 +20,9 @@ namespace NxFr
 	}
 
 	File::File(StringView Path)
-		: Path(Path), Exist(false), Handle(nullptr)
+		: Path(), Exist(false), Handle(nullptr)
 	{
+		SetPath(Path);
 		Refresh();
 	}
 
@@ -80,8 +81,8 @@ namespace NxFr
 			return *this;
 		}
 
-		NxFr::Path Parent = Path::GetParent(Path);
-		if (Parent.IsValid() && !Parent.Exist())
+		NxFr::String Parent = Path::GetFolder(Path);
+		if (!Parent.IsEmpty() && !Path::Exist(Parent))
 		{
 			Directory(Parent).EnsureParent().Create();
 		}
@@ -127,7 +128,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exist && !Handle && Path != Target && !Path::Exist(Target), Default, "Failed to move file: %s", Path.C());
 
 		Platform::GetInstance()->FileMove(Path, Target, Override);
-		Path = Target;
+		SetPath(Target);
 		Refresh();
 
 		NEXUS_ASSERT(Exist && !Handle, Default, "Failed to move file: %s", Path.C());
@@ -240,5 +241,11 @@ namespace NxFr
 		NEXUS_ASSERT(Exist && Handle, Default, "Failed to read file: %s", Path.C());
 
 		return Platform::GetInstance()->FileReadText(Handle);
+	}
+
+	void File::SetPath(StringView Value)
+	{
+		Path = Value;
+		Path = Path::Normalize(Path);
 	}
 }

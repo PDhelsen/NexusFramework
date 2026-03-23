@@ -8,8 +8,9 @@
 namespace NxFr
 {
 	Directory::Directory(StringView Path)
-		: Path(Path.C(), Path.GetCount()), Exist(false), Content()
+		: Path(), Exist(false), Content()
 	{
+		SetPath(Path);
 		Refresh();
 	}
 
@@ -69,8 +70,8 @@ namespace NxFr
 			return *this;
 		}
 
-		NxFr::Path Parent = Path::GetParent(Path);
-		if (Parent.IsValid() && !Parent.Exist())
+		NxFr::String Parent = Path::GetFolder(Path);
+		if (!Parent.IsEmpty() && !Path::Exist(Parent))
 		{
 			Directory(Parent).EnsureParent().Create();
 		}
@@ -103,7 +104,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), Default, "Failed to move directory: %s", Path.C());
 
 		Platform::GetInstance()->DirectoryMove(Path, Target, Override);
-		Path = Target;
+		SetPath(Target);
 		Refresh();
 
 		NEXUS_ASSERT(Exist, Default, "Failed to move directory: %s", Path.C());
@@ -249,5 +250,13 @@ namespace NxFr
 				SubDirectory.GetDirectories(Result, Recursive);
 			}
 		}
+	}
+
+
+	void Directory::SetPath(StringView Value)
+	{
+		Path = Value;
+		Path += Path::SeparatorFolder;
+		Path = Path::Normalize(Path);
 	}
 }

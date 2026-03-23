@@ -12,9 +12,8 @@ namespace NxTs
 	{
 		NxFr::Platform* Platform = NxFr::Platform::GetInstance();
 
-		NxFr::Path WorkingDir = NxFr::Path::GetWorkingDirectory();
-		NxFr::Path UpdatedWorkingDir = WorkingDir + "../";
-		UpdatedWorkingDir.Resolve();
+		NxFr::String WorkingDir = NxFr::Path::GetWorkingDirectory();
+		NxFr::String  UpdatedWorkingDir = NxFr::Path::Resolve(NxFr::Path::Combine(WorkingDir, "../"));
 
 		Platform->SetWorkingDirectory(UpdatedWorkingDir);
 		ASSERT_EQ(Platform->GetWorkingDirectory(), UpdatedWorkingDir);

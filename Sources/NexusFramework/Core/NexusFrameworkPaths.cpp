@@ -7,35 +7,35 @@ namespace NxFr
 {
 	namespace Paths
 	{
-		Path Root = Path("");
+		String Root = "";
 
-		Path Assets = Path("");
-		Path Configs = Path("");
-		Path Libraries = Path("");
-		Path Resources = Path("");
-		Path Scripts = Path("");
-		Path Sources = Path("");
+		String Assets = "";
+		String Configs = "";
+		String Libraries = "";
+		String Resources = "";
+		String Scripts = "";
+		String Sources = "";
 
-		Path Builds = Path("");
-		Path Cooked = Path("");
-		Path Saved = Path("");
-		Path Temp = Path("");
+		String Builds = "";
+		String Cooked = "";
+		String Saved = "";
+		String Temp = "";
 
 		void SetupPathsAndFolders()
 		{
 			Root = Path::GetWorkingDirectory();
 
-			Assets = Root + "Assets";
-			Configs = Root + "Configs";
-			Libraries = Root + "Libraries";
-			Resources = Root + "Resources";
-			Scripts = Root + "Scripts";
-			Sources = Root + "Sources";
+			Assets = Path::Combine(Root, "Assets");
+			Configs = Path::Combine(Root, "Configs");
+			Libraries = Path::Combine(Root, "Libraries");
+			Resources = Path::Combine(Root, "Resources");
+			Scripts = Path::Combine(Root, "Scripts");
+			Sources = Path::Combine(Root, "Sources");
 
-			Builds = Root + "builds";
-			Cooked = Root + "cooked";
-			Saved = Root + "saved";
-			Temp = Root + "temp";
+			Builds = Path::Combine(Root, "builds");
+			Cooked = Path::Combine(Root, "cooked");
+			Saved = Path::Combine(Root, "saved");
+			Temp = Path::Combine(Root, "temp");
 
 			Directory(Paths::Cooked).Create();
 			Directory(Paths::Saved).Create();

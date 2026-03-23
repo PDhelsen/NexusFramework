@@ -7,6 +7,7 @@
 #include "NexusFramework/IO/Path.h"
 
 #include <windows.h>
+#include <shellapi.h>
 #include <process.h>
 #include <sys/stat.h>
 #include <psapi.h>
@@ -15,7 +16,8 @@ namespace NxFr
 {
 	static SYSTEM_INFO SysInfos;
 	static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
-	static String ConvertPath(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
+	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
+	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, "\\", "/"); }
 
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
@@ -278,6 +280,11 @@ namespace NxFr
 		OutputDebugStringA(Message.C());
 	}
 
+	void PlatformWindows::OpenExplorer(StringView Path) const
+	{
+		ShellExecuteA(nullptr, "open", "explorer.exe", Path.C(), nullptr, SW_SHOWNORMAL);
+	}
+
 	Platform::PathType PlatformWindows::GetPathType(StringView Path) const
 	{
 		struct _stati64 Buffer;
@@ -304,7 +311,7 @@ namespace NxFr
 	String PlatformWindows::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const
 	{
 		String File = Name + "." + Extension;
-		String Directory = ConvertPath(Path);
+		String Directory = ConvertPathToWindows(Path);
 
 		Buffer& LocalBuffer = GetLocalBuffer();
 		LocalBuffer.Clear();
@@ -322,7 +329,7 @@ namespace NxFr
 		OpenFileName.Flags = OFN_NOVALIDATE;
 
 		bool Success = GetSaveFileNameA(&OpenFileName);
-		return Success ? Path::Normalize(LocalBuffer.GetPtr<char>()) : StringUtility::Empty;
+		return Success ? ConvertPathToNexus(LocalBuffer.GetPtr<char>()) : StringUtility::Empty;
 	}
 
 	String PlatformWindows::GetWorkingDirectory() const
@@ -331,7 +338,7 @@ namespace NxFr
 
 		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetCount(), LocalBuffer.GetPtr<char>());
 		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetCount(), Default, "BufferLogs overflowed when getting the current working directory");
-		return Path::Normalize(StringView(LocalBuffer.GetPtr<char>(), Length));
+		return ConvertPathToNexus(StringView(LocalBuffer.GetPtr<char>(), Length));
 	}
 
 	void PlatformWindows::SetWorkingDirectory(StringView Path) const
@@ -380,6 +387,7 @@ namespace NxFr
 			}
 
 			StringView Name = Data.cFileName;
+			bool IsDirectory = (Data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
 			if (Name == "." || Name == "..")
 			{
 				continue;
@@ -388,7 +396,8 @@ namespace NxFr
 			Temp.Clear();
 			Temp += Path;
 			Temp += Name;
-			Path::Normalize(Temp);
+			Temp += IsDirectory ? Path::SeparatorFolder : StringUtility::Empty;
+			Temp = ConvertPathToNexus(Temp);
 
 			Result.Append(Temp);
 

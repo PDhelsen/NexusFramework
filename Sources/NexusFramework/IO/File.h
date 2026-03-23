@@ -48,6 +48,8 @@ namespace NxFr
 		bool IsOpened() const { return Handle != nullptr; }
 
 	private:
+		void SetPath(StringView Value);
+
 		String Path;
 		bool Exist;
 		void* Handle;

@@ -7,18 +7,18 @@ namespace NxFr
 {
 	namespace Paths
 	{
-		NEXUS_FRAMEWORK_API extern Path Root;
+		NEXUS_FRAMEWORK_API extern String Root;
 
-		NEXUS_FRAMEWORK_API extern Path Assets;
-		NEXUS_FRAMEWORK_API extern Path Configs;
-		NEXUS_FRAMEWORK_API extern Path Libraries;
-		NEXUS_FRAMEWORK_API extern Path Resources;
-		NEXUS_FRAMEWORK_API extern Path Scripts;
-		NEXUS_FRAMEWORK_API extern Path Sources;
+		NEXUS_FRAMEWORK_API extern String Assets;
+		NEXUS_FRAMEWORK_API extern String Configs;
+		NEXUS_FRAMEWORK_API extern String Libraries;
+		NEXUS_FRAMEWORK_API extern String Resources;
+		NEXUS_FRAMEWORK_API extern String Scripts;
+		NEXUS_FRAMEWORK_API extern String Sources;
 
-		NEXUS_FRAMEWORK_API extern Path Builds;
-		NEXUS_FRAMEWORK_API extern Path Cooked;
-		NEXUS_FRAMEWORK_API extern Path Saved;
+		NEXUS_FRAMEWORK_API extern String Builds;
+		NEXUS_FRAMEWORK_API extern String Cooked;
+		NEXUS_FRAMEWORK_API extern String Saved;
 
 		NEXUS_FRAMEWORK_API extern void SetupPathsAndFolders();
 		NEXUS_FRAMEWORK_API extern void CleanupFolders();

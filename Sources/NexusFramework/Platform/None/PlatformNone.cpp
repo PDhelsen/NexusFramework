@@ -151,6 +151,10 @@ namespace NxFr
     {
     }
 
+	void PlatformNone::OpenExplorer(StringView Path) const
+	{
+	}
+
 	Platform::PathType PlatformNone::GetPathType(StringView Path) const
 	{
 		return PathType::None;

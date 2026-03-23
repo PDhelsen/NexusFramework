@@ -37,7 +37,7 @@ namespace NxTs
 
 	TEST(Debug, Logger)
 	{
-		NxFr::Path Path = NxFr::Path::GetWorkingDirectory() + "Logs.txt";
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "Logs.txt");
 
 		{
 			NxFr::Logger Logger = NxFr::Logger(false, NxFr::LoggerVerbosity::All, NxFr::LoggerOutput::All, Path);
@@ -77,7 +77,7 @@ namespace NxTs
 
 	TEST(Debug, Stats)
 	{
-		NxFr::Path Path = NxFr::Path::GetWorkingDirectory() + "Stats.csv";
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "Stats.csv");
 
 		{
 			NxFr::Stats Stats(Path);
@@ -142,7 +142,7 @@ namespace NxTs
 
 	TEST(Debug, Instruments)
 	{
-		NxFr::Path Path = NxFr::Path::GetWorkingDirectory() + "Instruments.json";
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "Instruments.json");
 
 		{
 			NxFr::Instruments* Instruments = NxFr::Instruments::Create(Path);
