@@ -317,7 +317,7 @@ namespace NxFr
 
 #pragma endregion
 
-#pragma region Manipulation
+#pragma region Query
 
 	bool Path::IsAbsolute(StringView Path)
 	{
@@ -492,11 +492,44 @@ namespace NxFr
 		return Result;
 	}
 
-	String Path::MakeRelative(StringView Path, StringView Root)
+#pragma endregion
+
+#pragma region Manipulation
+
+	String Path::Join(StringView Path, StringView Element)
 	{
 		String Result = Path;
-		Relativize_Impl(Result, Root);
+		Join(Result, Element);
 		return Result;
+	}
+
+	void Path::Join(String& Path, StringView Element)
+	{
+		Join_Impl(Path, Element);
+	}
+
+	String Path::Normalize(StringView Path)
+	{
+		String Result = Path;
+		Normalize(Result);
+		return Result;
+	}
+
+	void Path::Normalize(String& Path)
+	{
+		Normalize_Impl(Path);
+	}
+
+	String Path::Resolve(StringView Path)
+	{
+		String Result = Path;
+		Resolve(Result);
+		return Result;
+	}
+
+	void Path::Resolve(String& Path)
+	{
+		Resolve_Impl(Path);
 	}
 
 	String Path::MakeAbsolute(StringView Path, StringView Root)
@@ -507,25 +540,22 @@ namespace NxFr
 		return Result;
 	}
 
-	String Path::Resolve(StringView Path)
+	void Path::MakeAbsolute(String& Path, StringView Root)
+	{
+		Path = Join(Root, Path);
+		Resolve_Impl(Path);
+	}
+
+	String Path::MakeRelative(StringView Path, StringView Root)
 	{
 		String Result = Path;
-		Resolve_Impl(Result);
+		MakeRelative(Result, Root);
 		return Result;
 	}
 
-	String Path::Normalize(StringView Path)
+	void Path::MakeRelative(String& Path, StringView Root)
 	{
-		String Result = Path;
-		Normalize_Impl(Result);
-		return Result;
-	}
-
-	String Path::Join(StringView Path, StringView Element)
-	{
-		String Result = Path;
-		Join_Impl(Result, Element);
-		return Result;
+		Relativize_Impl(Path, Root);
 	}
 
 #pragma endregion

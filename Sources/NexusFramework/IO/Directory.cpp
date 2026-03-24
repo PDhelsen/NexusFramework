@@ -257,6 +257,6 @@ namespace NxFr
 	{
 		Path = Value;
 		Path += Path::SeparatorFolder;
-		Path = Path::Normalize(Path);
+		Path::Normalize(Path);
 	}
 }

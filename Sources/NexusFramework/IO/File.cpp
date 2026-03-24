@@ -246,6 +246,6 @@ namespace NxFr
 	void File::SetPath(StringView Value)
 	{
 		Path = Value;
-		Path = Path::Normalize(Path);
+		Path::Normalize(Path);
 	}
 }

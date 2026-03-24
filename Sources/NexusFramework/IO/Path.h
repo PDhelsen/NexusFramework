@@ -66,16 +66,21 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static String ChangeFolder(StringView Path, StringView Folder);
 		NEXUS_FRAMEWORK_API static String ChangeName(StringView Path, StringView Name);
 		NEXUS_FRAMEWORK_API static String ChangeExtension(StringView Path, StringView Extension);
-		NEXUS_FRAMEWORK_API static String MakeRelative(StringView Path, StringView Root);
-		NEXUS_FRAMEWORK_API static String MakeAbsolute(StringView Path, StringView Root);
-		NEXUS_FRAMEWORK_API static String Resolve(StringView Path);
-		NEXUS_FRAMEWORK_API static String Normalize(StringView Path);
-		NEXUS_FRAMEWORK_API static String Join(StringView Path, StringView Element);
 
 		template<typename T>
 		static String Combine(const Collection<T>& Elements);
 		template<typename... Args>
 		static String Combine(Args&&... args);
+		NEXUS_FRAMEWORK_API static String Join(StringView Path, StringView Element);
+		NEXUS_FRAMEWORK_API static void Join(String& Path, StringView Element);
+		NEXUS_FRAMEWORK_API static String Normalize(StringView Path);
+		NEXUS_FRAMEWORK_API static void Normalize(String& Path);
+		NEXUS_FRAMEWORK_API static String Resolve(StringView Path);
+		NEXUS_FRAMEWORK_API static void Resolve(String& Path);
+		NEXUS_FRAMEWORK_API static String MakeAbsolute(StringView Path, StringView Root);
+		NEXUS_FRAMEWORK_API static void MakeAbsolute(String& Path, StringView Root);
+		NEXUS_FRAMEWORK_API static String MakeRelative(StringView Path, StringView Root);
+		NEXUS_FRAMEWORK_API static void MakeRelative(String& Path, StringView Root);
 	};
 
 	template<typename T>
@@ -84,7 +89,7 @@ namespace NxFr
 		String Result;
 		for (auto& It = Elements.Current(); It != Elements.End(); ++It)
 		{
-			Result = Join(Result, It);
+			Join(Result, It);
 		}
 		return Result;
 	}
@@ -93,7 +98,7 @@ namespace NxFr
 	inline String Path::Combine(Args&&... args)
 	{
 		String Result;
-		((Result = Join(Result, Forward<Args>(args))), ...);
+		(Join(Result, Forward<Args>(args)), ...);
 		return Result;
 	}
 }
