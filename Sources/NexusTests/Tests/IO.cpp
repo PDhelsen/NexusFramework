@@ -22,10 +22,10 @@ namespace NxTs
 		ASSERT_EQ(Infos2.Extension, "");
 		ASSERT_EQ(Infos2.Depth, 3);
 
-		NxFr::Path::Info Infos3 = NxFr::Path::Parse("/Root/Folder/SubFolder/");
+		NxFr::Path::Info Infos3 = NxFr::Path::Parse("/Root/Folder/SubFolder/Name/");
 		ASSERT_EQ(Infos3.Drive, "");
 		ASSERT_EQ(Infos3.Folder, "Root/Folder/SubFolder");
-		ASSERT_EQ(Infos3.Name, "");
+		ASSERT_EQ(Infos3.Name, "Name");
 		ASSERT_EQ(Infos3.Extension, "");
 		ASSERT_EQ(Infos3.Depth, 3);
 
@@ -50,17 +50,14 @@ namespace NxTs
 		ASSERT_EQ(Infos6.Extension, "");
 		ASSERT_EQ(Infos6.Depth, 3);
 
-		ASSERT_EQ(NxFr::Path::Combine("D:", "Root", "Folder/SubFolder", "Name.extension"), "D:/Root/Folder/SubFolder/Name.extension");
-		ASSERT_EQ(NxFr::Path::Join("Root", "Folder/SubFolder"), "Root/Folder/SubFolder");
-		ASSERT_EQ(NxFr::Path::Normalize("D:\\Root\\Folder//SubFolder\\Name.extension"), "D:/Root/Folder/SubFolder/Name.extension");
-		ASSERT_EQ(NxFr::Path::Resolve("D:/Root/Folder/../SubFolder/Name"), "D:/Root/SubFolder/Name");
-		ASSERT_EQ(NxFr::Path::Resolve("D:/Root/Folder/../SubFolder/Name/"), "D:/Root/SubFolder/Name/");
-		ASSERT_EQ(NxFr::Path::Resolve("D:/Root/Folder/../SubFolder/Name.extension"), "D:/Root/SubFolder/Name.extension");
-		ASSERT_EQ(NxFr::Path::Resolve("../Root/Folder/../SubFolder/Name"), "Root/SubFolder/Name");
-		ASSERT_EQ(NxFr::Path::MakeRelative("D:/Root/Folder/SubFolder/Name.extension", "D:/Root/Folder/"), "SubFolder/Name.extension");
-		ASSERT_EQ(NxFr::Path::MakeRelative("D:/Root/Other/SubFolder/Name.extension", "D:/Root/Folder"), "../Other/SubFolder/Name.extension");
-		ASSERT_EQ(NxFr::Path::MakeAbsolute("SubFolder/Name.extension", "D:/Root/Folder"), "D:/Root/Folder/SubFolder/Name.extension");
-		ASSERT_EQ(NxFr::Path::MakeAbsolute("../Other/SubFolder/Name.extension", "D:/Root/Folder"), "D:/Root/Other/SubFolder/Name.extension");
+		NxFr::Path::Info Infos7 = NxFr::Path::Parse("/Name/");
+		ASSERT_EQ(Infos7.Drive, "");
+		ASSERT_EQ(Infos7.Folder, "");
+		ASSERT_EQ(Infos7.Name, "Name");
+		ASSERT_EQ(Infos7.Extension, "");
+		ASSERT_EQ(Infos7.Depth, 0);
+
+
 		ASSERT_EQ(NxFr::Path::Exist(NxFr::Path::GetWorkingDirectory()), true);
 
 		ASSERT_EQ(NxFr::Path::IsAbsolute("D:/Root/Folder/SubFolder/Name.extension"), true);
@@ -81,12 +78,24 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Path::GetNameAndExtension("D:/Root/Folder/SubFolder/Name.extension"), "Name.extension");
 		ASSERT_EQ(NxFr::Path::GetPathWithoutDrive("D:/Root/Folder/SubFolder/Name.extension"), "Root/Folder/SubFolder/Name.extension");
 		ASSERT_EQ(NxFr::Path::GetPathWithoutExtension("D:/Root/Folder/SubFolder/Name.extension"), "D:/Root/Folder/SubFolder/Name");
+		ASSERT_EQ(NxFr::Path::Split("D:/Root/Folder/SubFolder/Name.extension").IsEmpty(), false);
+		ASSERT_EQ(NxFr::Path::Depth("D:/Root/Folder/SubFolder/Name.extension"), 3);
 		ASSERT_EQ(NxFr::Path::ChangeDrive("D:/Root/Folder/SubFolder/Name.extension", "E"), "E:/Root/Folder/SubFolder/Name.extension");
 		ASSERT_EQ(NxFr::Path::ChangeFolder("D:/Root/Folder/SubFolder/Name.extension", "Other"), "D:/Other/Name.extension");
 		ASSERT_EQ(NxFr::Path::ChangeName("D:/Root/Folder/SubFolder/Name.extension", "Other"), "D:/Root/Folder/SubFolder/Other.extension");
 		ASSERT_EQ(NxFr::Path::ChangeExtension("D:/Root/Folder/SubFolder/Name.extension", "other"), "D:/Root/Folder/SubFolder/Name.other");
-		ASSERT_EQ(NxFr::Path::Split("D:/Root/Folder/SubFolder/Name.extension").IsEmpty(), false);
-		ASSERT_EQ(NxFr::Path::Depth("D:/Root/Folder/SubFolder/Name.extension"), 3);
+
+		ASSERT_EQ(NxFr::Path::Combine("D:", "Root", "Folder/SubFolder", "Name.extension"), "D:/Root/Folder/SubFolder/Name.extension");
+		ASSERT_EQ(NxFr::Path::Join("Root", "Folder/SubFolder"), "Root/Folder/SubFolder");
+		ASSERT_EQ(NxFr::Path::Normalize("D:\\Root\\Folder//SubFolder\\Name.extension"), "D:/Root/Folder/SubFolder/Name.extension");
+		ASSERT_EQ(NxFr::Path::Resolve("D:/Root/Folder/../SubFolder/Name"), "D:/Root/SubFolder/Name");
+		ASSERT_EQ(NxFr::Path::Resolve("D:/Root/Folder/../SubFolder/Name/"), "D:/Root/SubFolder/Name/");
+		ASSERT_EQ(NxFr::Path::Resolve("D:/Root/Folder/../SubFolder/Name.extension"), "D:/Root/SubFolder/Name.extension");
+		ASSERT_EQ(NxFr::Path::Resolve("../Root/Folder/../SubFolder/Name"), "Root/SubFolder/Name");
+		ASSERT_EQ(NxFr::Path::MakeRelative("D:/Root/Folder/SubFolder/Name.extension", "D:/Root/Folder/"), "SubFolder/Name.extension");
+		ASSERT_EQ(NxFr::Path::MakeRelative("D:/Root/Other/SubFolder/Name.extension", "D:/Root/Folder"), "../Other/SubFolder/Name.extension");
+		ASSERT_EQ(NxFr::Path::MakeAbsolute("SubFolder/Name.extension", "D:/Root/Folder"), "D:/Root/Folder/SubFolder/Name.extension");
+		ASSERT_EQ(NxFr::Path::MakeAbsolute("../Other/SubFolder/Name.extension", "D:/Root/Folder"), "D:/Root/Other/SubFolder/Name.extension");
 	}
 
 	TEST(IO, Directory)

@@ -12,15 +12,26 @@ namespace NxFr
 		Path::Info Infos;
 
 		Infos.Path = Path.C();
-		const char* Pointer = Path.C();
+		if (Infos.Path.IsEmpty())
+		{
+			return Infos;
+		}
 
-		bool StartBySeparatorDrive = StringCApi::Compare(Path.C(), Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
+		const char* Pointer = Infos.Path.C();
+		const char* End = Infos.Path.C() + Infos.Path.GetCount();
+
+		bool StartBySeparatorDrive = StringCApi::Compare(Pointer, Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
+		bool EndBySeparartorDrive = StringCApi::Compare(End - Path::SeparatorFolder.GetCount(), Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
 		if (StartBySeparatorDrive)
 		{
 			Pointer += Path::SeparatorFolder.GetCount();
 		}
+		if (EndBySeparartorDrive)
+		{
+			End -= Path::SeparatorFolder.GetCount();
+		}
 
-		while (*Pointer != StringCApi::NullChar)
+		while (Pointer != End)
 		{
 			if (StringCApi::Compare(Pointer, Path::SeparatorPrevious.C(), Path::SeparatorPrevious.GetCount()) == 0)
 			{
@@ -33,18 +44,19 @@ namespace NxFr
 			{
 				NEXUS_ASSERT(Infos.Drive.IsEmpty(), Default, "Two drive separator has been found. That is not supported");
 
-				uint64 Position = Pointer - Path.C();
-				Infos.Drive = Path.Substring(0, Position);
+				uint64 Position = Pointer - Infos.Path.C();
+				Infos.Drive = Infos.Path.Substring(0, Position);
 
 				Pointer += Path::SeparatorDrive.GetCount();
 				continue;
 			}
 			else if (StringCApi::Compare(Pointer, Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0)
 			{
-				uint64 Position = Pointer - Path.C();
-				uint64 Offset = !Infos.Drive.IsEmpty() ? Infos.Drive.GetCount() + Path::SeparatorDrive.GetCount() : StartBySeparatorDrive ? 1 : 0;
-				Infos.Folder = Path.Substring(Offset, Position >= Offset ? Position - Offset : 0);
-				Infos.Name = StringUtility::Empty;
+				uint64 Position = Pointer - Infos.Path.C();
+				uint64 OffsetFolder = !Infos.Drive.IsEmpty() ? Infos.Drive.GetCount() + Path::SeparatorDrive.GetCount() : StartBySeparatorDrive ? 1 : 0;
+				uint64 OffsetName = Path::SeparatorFolder.GetCount();
+				Infos.Folder = Infos.Path.Substring(OffsetFolder, Position - OffsetFolder);
+				Infos.Name = Infos.Path.Substring(Position + OffsetName, End - (Pointer + OffsetName));
 				Infos.Depth++;
 
 				Pointer += Path::SeparatorFolder.GetCount();
@@ -54,16 +66,17 @@ namespace NxFr
 			{
 				NEXUS_ASSERT(Infos.Extension.IsEmpty(), Default, "Two extension separators has been found. That is not supported");
 
-				uint64 Position = Pointer - Path.C();
+				uint64 Position = Pointer - Infos.Path.C();
 				uint64 Offset = Path::SeparatorExtension.GetCount();
-				Infos.Name = Path.Substring(Infos.Name.C() - Path.C(), Pointer - Infos.Name.C());
-				Infos.Extension = Path.Substring(Position + Offset, Path.GetCount() - (Position + Offset));
+				Infos.Name = Infos.Path.Substring(Infos.Name.C() - Infos.Path.C(), Pointer - Infos.Name.C());
+				Infos.Extension = Infos.Path.Substring(Position + Offset, End - (Pointer + Offset));
 
 				break;
 			}
 			else if (Infos.Name.IsEmpty())
 			{
-				Infos.Name = Pointer;
+				uint64 Position = Pointer - Infos.Path.C();
+				Infos.Name = Infos.Path.Substring(Position, End - Pointer);
 			}
 
 			Pointer++;
@@ -156,14 +169,19 @@ namespace NxFr
 		{
 			const char* Pointer = Infos.Folder.C();
 			const char* Start = Pointer;
-			uint64 Count = Infos.Folder.GetCount();
+			uint64 Count = 0;
 
-			while (Count-- > 0)
+			while (Count++ < Infos.Folder.GetCount())
 			{
 				if (StringCApi::Compare(Pointer, Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0)
 				{
 					Result.Append(StringView(Infos.Folder.C(), Start - Infos.Folder.C(), Pointer - Start));
+					Pointer++;
+					Start = Pointer;
+					continue;
 				}
+
+				Pointer++;
 			}
 			Result.Append(StringView(Infos.Folder.C(), Start - Infos.Folder.C(), Pointer - Start));
 		}
@@ -340,14 +358,13 @@ namespace NxFr
 
 	bool Path::IsDirectory(StringView Path)
 	{
-		Path::Info Infos = Parse_Impl(Path);
-		return Infos.Name.IsEmpty() && Infos.Extension.IsEmpty();
+		return StringUtility::End(Path, SeparatorFolder);
 	}
 
 	bool Path::IsFile(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return !Infos.Name.IsEmpty() && !Infos.Extension.IsEmpty();
+		return !Infos.Extension.IsEmpty();
 	}
 
 	bool Path::Has(StringView Path, bool HasDrive, bool HasFolder, bool HasName, bool HasExtension)
