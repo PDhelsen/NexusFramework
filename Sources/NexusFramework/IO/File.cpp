@@ -76,17 +76,7 @@ namespace NxFr
 
 	File& File::EnsureParent()
 	{
-		if (Exist)
-		{
-			return *this;
-		}
-
-		NxFr::String Parent = Path::GetFolder(Path);
-		if (!Parent.IsEmpty() && !Path::Exist(Parent))
-		{
-			Directory(Parent).EnsureParent().Create();
-		}
-
+		Path::EnsureParent(Path);
 		return *this;
 	}
 
@@ -107,6 +97,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(!Exist && !Handle, Default, "Failed to create file: %s", Path.C());
 
+		Path::EnsureParent(Path);
 		Handle = Platform::GetInstance()->FileCreate(Path, KeepOpen);
 		Refresh();
 
@@ -127,6 +118,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exist && !Handle && Path != Target && !Path::Exist(Target), Default, "Failed to move file: %s", Path.C());
 
+		Path::EnsureParent(Target);
 		Platform::GetInstance()->FileMove(Path, Target, Override);
 		SetPath(Target);
 		Refresh();
@@ -148,6 +140,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exist && !Handle && Path != Target && !Path::Exist(Target), Default, "Failed to copy file: %s", Path.C());
 
+		Path::EnsureParent(Target);
 		Platform::GetInstance()->FileCopy(Path, Target, Override);
 		Refresh();
 

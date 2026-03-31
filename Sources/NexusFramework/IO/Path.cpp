@@ -2,6 +2,7 @@
 #include "NexusFramework/IO/Path.h"
 
 #include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/IO/Directory.h"
 
 namespace NxFr
 {
@@ -326,6 +327,18 @@ namespace NxFr
 	bool Path::Exist(StringView Path)
 	{
 		return Platform::GetInstance()->GetPathType(Path) != Platform::PathType::None;
+	}
+
+	void Path::EnsureParent(StringView Path)
+	{
+		NxFr::String Parent = Path::GetFolder(Path);
+		if (Parent.IsEmpty() || Exist(Path))
+		{
+			return;
+		}
+
+		EnsureParent(Parent);
+		Directory(Parent).Create();
 	}
 
 	Path::Info Path::Parse(StringView Path)

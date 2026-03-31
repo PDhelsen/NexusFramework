@@ -37,6 +37,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static String OpenFileDialog(NxFr::StringView Title = "", NxFr::StringView Extension = "", NxFr::StringView Name = "", NxFr::StringView Path = "");
 		NEXUS_FRAMEWORK_API static String GetWorkingDirectory();
 		NEXUS_FRAMEWORK_API static bool Exist(StringView Path);
+		NEXUS_FRAMEWORK_API static void EnsureParent(StringView Path);
 		NEXUS_FRAMEWORK_API static Info Parse(StringView Path);
 
 		NEXUS_FRAMEWORK_API static bool IsAbsolute(StringView Path);

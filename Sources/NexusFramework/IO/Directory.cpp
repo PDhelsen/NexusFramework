@@ -65,17 +65,7 @@ namespace NxFr
 
 	Directory& Directory::EnsureParent()
 	{
-		if (Exist)
-		{
-			return *this;
-		}
-
-		NxFr::String Parent = Path::GetFolder(Path);
-		if (!Parent.IsEmpty() && !Path::Exist(Parent))
-		{
-			Directory(Parent).EnsureParent().Create();
-		}
-
+		Path::EnsureParent(Path);
 		return *this;
 	}
 
@@ -88,6 +78,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(!Exist, Default, "Failed to create directory: %s", Path.C());
 
+		Path::EnsureParent(Path);
 		Platform::GetInstance()->DirectoryCreate(Path);
 		Refresh();
 
@@ -103,6 +94,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), Default, "Failed to move directory: %s", Path.C());
 
+		Path::EnsureParent(Target);
 		Platform::GetInstance()->DirectoryMove(Path, Target, Override);
 		SetPath(Target);
 		Refresh();
@@ -119,6 +111,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exist && Path != Target && !Path::Exist(Target), Default, "Failed to copy directory: %s", Path.C());
 
+		Path::EnsureParent(Target);
 		Platform::GetInstance()->DirectoryCreate(Target);
 
 		for (auto& It : Content)
