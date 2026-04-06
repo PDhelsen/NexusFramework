@@ -87,4 +87,14 @@ namespace NxFr
 		OffsetScope CursorOffset(*this, Offset);
 		WriteByte(Pointer, Size);
 	}
+
+	const Iterator::IteratorPointer RBS::Begin() const
+	{
+		return Data.Begin();
+	}
+
+	const Iterator::IteratorPointer RBS::End() const
+	{
+		return Data.End();
+	}
 }

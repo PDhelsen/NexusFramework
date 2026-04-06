@@ -52,6 +52,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void WriteByte(const void* Pointer, uint64 Size);
 		NEXUS_FRAMEWORK_API void WriteByte(const void* Pointer, uint64 Size, uint64 Offset);
 
+		NEXUS_FRAMEWORK_API const Iterator::IteratorPointer Begin() const;
+		NEXUS_FRAMEWORK_API const Iterator::IteratorPointer End() const;
+
 		NEXUS_FRAMEWORK_API uint64 GetCursor() const { return Cursor; }
 		NEXUS_FRAMEWORK_API void SetCursor(uint64 Offset) { Cursor = Offset; }
 
