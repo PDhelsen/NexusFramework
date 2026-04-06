@@ -7,6 +7,108 @@ namespace NxFr
 {
 	namespace Iterator
 	{
+		class IteratorPointer
+		{
+		public:
+			IteratorPointer(void* Pointer, uint64 Offset)
+				: Data(Pointer), Offset(Offset)
+			{
+
+			}
+
+			IteratorPointer& operator++()
+			{
+				Iterate();
+				return *this;
+			}
+
+			IteratorPointer operator++(int32)
+			{
+				IteratorPointer Temp = *this;
+				++(*this);
+				return Temp;
+			}
+
+			IteratorPointer& operator--()
+			{
+				Reverse();
+				return *this;
+			}
+
+			IteratorPointer operator--(int32)
+			{
+				IteratorPointer Temp = *this;
+				--(*this);
+				return Temp;
+			}
+
+			void* operator->()
+			{
+				return Get();
+			}
+
+			const void* operator->() const
+			{
+				return Get();
+			}
+
+			bool operator==(const IteratorPointer& Other) const
+			{
+				return Equals(Other);
+			}
+
+			bool operator!=(const IteratorPointer& Other) const
+			{
+				return !Equals(Other);
+			}
+
+			bool Equals(const IteratorPointer& Other) const
+			{
+				return Data == Other.Data && Offset == Other.Offset;
+			}
+
+			void* Get()
+			{
+				return reinterpret_cast<void*>(reinterpret_cast<uint64>(Data) + Offset);
+			}
+
+			const void* Get() const
+			{
+				return reinterpret_cast<const void*>(reinterpret_cast<uint64>(Data) + Offset);
+			}
+
+			uint64 Id() const
+			{
+				return Offset;
+			}
+
+			void Iterate()
+			{
+				++Offset;
+			}
+
+			void Reverse()
+			{
+				--Offset;
+			}
+
+			IteratorPointer& Next()
+			{
+				Iterate();
+				return *this;
+			}
+
+			IteratorPointer& Previous()
+			{
+				Reverse();
+				return *this;
+			}
+
+		private:
+			void* Data;
+			uint64 Offset;
+		};
+
 		template<typename T>
 		class IteratorBlock
 		{

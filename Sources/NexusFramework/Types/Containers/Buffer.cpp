@@ -127,6 +127,80 @@ namespace NxFr
 		Reallocate(Size);
 	}
 
+	Buffer::I Buffer::GetIterator(uint64 Offset)
+	{
+		return GetIteratorOffset(Offset);
+	}
+
+	const Buffer::I Buffer::GetIterator(uint64 Offset) const
+	{
+		return GetIteratorOffset(Offset);
+	}
+
+	Buffer::I Buffer::begin()
+	{
+		return Begin();
+	}
+
+	Buffer::I Buffer::Begin()
+	{
+		return GetIteratorOffset(0);
+	}
+
+	const Buffer::I Buffer::begin() const
+	{
+		return Begin();
+	}
+
+	const Buffer::I Buffer::Begin() const
+	{
+		return GetIteratorOffset(0);
+	}
+
+	Buffer::I Buffer::BeginReverse()
+	{
+		return --End();
+	}
+
+	const Buffer::I Buffer::BeginReverse() const
+	{
+		auto It = End();
+		--It;
+		return It;
+	}
+
+	Buffer::I Buffer::end()
+	{
+		return End();
+	}
+
+	Buffer::I Buffer::End()
+	{
+		return GetIteratorOffset(Count);
+	}
+
+	const Buffer::I Buffer::end() const
+	{
+		return End();
+	}
+
+	const Buffer::I Buffer::End() const
+	{
+		return GetIteratorOffset(Count);
+	}
+
+	Buffer::I Buffer::EndReverse()
+	{
+		return --Begin();
+	}
+
+	const Buffer::I Buffer::EndReverse() const
+	{
+		auto It = Begin();
+		--It;
+		return It;
+	}
+
 	void Buffer::Allocate(uint64 Size)
 	{
 		ValidateCount(Size);
@@ -159,6 +233,16 @@ namespace NxFr
 		Count = Size > 1 ? Size : 1;
 	}
 
+	Buffer::I Buffer::GetIteratorOffset(uint64 Offset)
+	{
+		return I(Data, Offset);
+	}
+
+	const Buffer::I Buffer::GetIteratorOffset(uint64 Offset) const
+	{
+		return I(Data, Offset);
+	}
+
 	BufferView::BufferView()
 		: Data(nullptr), Count(0)
 	{
@@ -177,5 +261,89 @@ namespace NxFr
 	BufferView::BufferView(const BufferView& Other)
 		: Data(Other.GetPtr()), Count(Other.GetCount())
 	{
+	}
+
+	BufferView::I BufferView::GetIterator(uint64 Offset)
+	{
+		return GetIteratorOffset(Offset);
+	}
+
+	const BufferView::I BufferView::GetIterator(uint64 Offset) const
+	{
+		return GetIteratorOffset(Offset);
+	}
+
+	BufferView::I BufferView::begin()
+	{
+		return Begin();
+	}
+
+	BufferView::I BufferView::Begin()
+	{
+		return GetIteratorOffset(0);
+	}
+
+	const BufferView::I BufferView::begin() const
+	{
+		return Begin();
+	}
+
+	const BufferView::I BufferView::Begin() const
+	{
+		return GetIteratorOffset(0);
+	}
+
+	BufferView::I BufferView::BeginReverse()
+	{
+		return --End();
+	}
+
+	const BufferView::I BufferView::BeginReverse() const
+	{
+		auto It = End();
+		--It;
+		return It;
+	}
+
+	BufferView::I BufferView::end()
+	{
+		return End();
+	}
+
+	BufferView::I BufferView::End()
+	{
+		return GetIteratorOffset(Count);
+	}
+
+	const BufferView::I BufferView::end() const
+	{
+		return End();
+	}
+
+	const BufferView::I BufferView::End() const
+	{
+		return GetIteratorOffset(Count);
+	}
+
+	BufferView::I BufferView::EndReverse()
+	{
+		return --Begin();
+	}
+
+	const BufferView::I BufferView::EndReverse() const
+	{
+		auto It = Begin();
+		--It;
+		return It;
+	}
+
+	BufferView::I BufferView::GetIteratorOffset(uint64 Offset)
+	{
+		return I(Data, Offset);
+	}
+
+	const BufferView::I BufferView::GetIteratorOffset(uint64 Offset) const
+	{
+		return I(Data, Offset);
 	}
 }

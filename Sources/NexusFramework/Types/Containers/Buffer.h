@@ -5,6 +5,7 @@
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Debug/Logger/Log.h"
+#include "NexusFramework/Types/Containers/Iterator.h"
 
 namespace NxFr
 {
@@ -13,6 +14,8 @@ namespace NxFr
 	class Buffer
 	{
 	public:
+		using I = Iterator::IteratorPointer;
+
 		NEXUS_FRAMEWORK_API Buffer(uint64 Size = 0, Allocator* Allctr = AllocatorContext::Get());
 		NEXUS_FRAMEWORK_API Buffer(const Buffer& Other);
 		NEXUS_FRAMEWORK_API Buffer(Buffer&& Other) noexcept;
@@ -34,6 +37,21 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Grow(uint64 Size);
 		NEXUS_FRAMEWORK_API void Resize(uint64 Size);
 
+		NEXUS_FRAMEWORK_API I GetIterator(uint64 Offset);
+		NEXUS_FRAMEWORK_API const I GetIterator(uint64 Offset) const;
+		NEXUS_FRAMEWORK_API I begin();
+		NEXUS_FRAMEWORK_API I Begin();
+		NEXUS_FRAMEWORK_API const I begin() const;
+		NEXUS_FRAMEWORK_API const I Begin() const;
+		NEXUS_FRAMEWORK_API I BeginReverse();
+		NEXUS_FRAMEWORK_API const I BeginReverse() const;
+		NEXUS_FRAMEWORK_API I end();
+		NEXUS_FRAMEWORK_API I End();
+		NEXUS_FRAMEWORK_API const I end() const;
+		NEXUS_FRAMEWORK_API const I End() const;
+		NEXUS_FRAMEWORK_API I EndReverse();
+		NEXUS_FRAMEWORK_API const I EndReverse() const;
+
 		template<typename T>
 		T* GetPtr(uint64 Offset = 0) const { return static_cast<T*>(GetPtr(Offset)); }
 		NEXUS_FRAMEWORK_API void* GetPtr(uint64 Offset = 0) const { return (Byte*)Data + Offset; }
@@ -46,6 +64,8 @@ namespace NxFr
 		void Clear(uint64 Size, uint64 Offset);
 		void Copy(const void* Source, uint64 Size, uint64 OffsetBuffer, uint64 OffsetSource);
 		void ValidateCount(uint64 Size);
+		I GetIteratorOffset(uint64 Offset);
+		const I GetIteratorOffset(uint64 Offset) const;
 
 		Allocator* Alloc;
 		uint64 Count;
@@ -55,10 +75,27 @@ namespace NxFr
 	struct BufferView
 	{
 	public:
+		using I = Iterator::IteratorPointer;
+
 		NEXUS_FRAMEWORK_API BufferView();
 		NEXUS_FRAMEWORK_API BufferView(void* Ptr, uint64 Size);
 		NEXUS_FRAMEWORK_API BufferView(const Buffer& Other);
 		NEXUS_FRAMEWORK_API BufferView(const BufferView& Other);
+
+		NEXUS_FRAMEWORK_API I GetIterator(uint64 Offset);
+		NEXUS_FRAMEWORK_API const I GetIterator(uint64 Offset) const;
+		NEXUS_FRAMEWORK_API I begin();
+		NEXUS_FRAMEWORK_API I Begin();
+		NEXUS_FRAMEWORK_API const I begin() const;
+		NEXUS_FRAMEWORK_API const I Begin() const;
+		NEXUS_FRAMEWORK_API I BeginReverse();
+		NEXUS_FRAMEWORK_API const I BeginReverse() const;
+		NEXUS_FRAMEWORK_API I end();
+		NEXUS_FRAMEWORK_API I End();
+		NEXUS_FRAMEWORK_API const I end() const;
+		NEXUS_FRAMEWORK_API const I End() const;
+		NEXUS_FRAMEWORK_API I EndReverse();
+		NEXUS_FRAMEWORK_API const I EndReverse() const;
 
 		template<typename T>
 		T* GetPtr(uint64 Offset = 0) const { return static_cast<T*>(GetPtr(Offset)); }
@@ -66,6 +103,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Count; }
 
 	private:
+		I GetIteratorOffset(uint64 Offset);
+		const I GetIteratorOffset(uint64 Offset) const;
+
 		void* Data;
 		uint64 Count;
 	};
