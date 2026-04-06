@@ -186,22 +186,22 @@ namespace NxFr
 		ValidateNullTermination();
 	}
 
-	Iterator::StringCharacter String::Begin() const
+	const Iterator::StringCharacter String::Begin() const
 	{
 		return Iterator::StringCharacter(*this, 0);
 	}
 
-	Iterator::StringToken String::Begin(StringView Token) const
+	const Iterator::StringToken String::Begin(StringView Token) const
 	{
 		return Iterator::StringToken(Token, *this, 0);
 	}
 
-	Iterator::StringCharacter String::End() const
+	const Iterator::StringCharacter String::End() const
 	{
 		return Iterator::StringCharacter(*this, GetCount());
 	}
 
-	Iterator::StringToken String::End(StringView Token) const
+	const Iterator::StringToken String::End(StringView Token) const
 	{
 		return Iterator::StringToken(Token, *this, GetCount());
 	}

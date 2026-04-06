@@ -31,6 +31,26 @@ namespace NxFr
 	{
 	}
 
+	const Iterator::StringCharacter StringView::Begin() const
+	{
+		return Iterator::StringCharacter(*this, 0);
+	}
+
+	const Iterator::StringToken StringView::Begin(StringView Token) const
+	{
+		return Iterator::StringToken(Token, *this, 0);
+	}
+
+	const Iterator::StringCharacter StringView::End() const
+	{
+		return Iterator::StringCharacter(*this, GetCount());
+	}
+
+	const Iterator::StringToken StringView::End(StringView Token) const
+	{
+		return Iterator::StringToken(Token, *this, GetCount());
+	}
+
 	StringView StringView::Substring(uint64 Offset, uint64 Size) const
 	{
 		return StringView(C(), Offset, Size);

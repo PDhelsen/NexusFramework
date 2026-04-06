@@ -64,10 +64,10 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Reserve(uint64 Size);
 		NEXUS_FRAMEWORK_API void Validate();
 
-		NEXUS_FRAMEWORK_API Iterator::StringCharacter Begin() const;
-		NEXUS_FRAMEWORK_API Iterator::StringToken Begin(StringView Token) const;
-		NEXUS_FRAMEWORK_API Iterator::StringCharacter End() const;
-		NEXUS_FRAMEWORK_API Iterator::StringToken End(StringView Token) const;
+		NEXUS_FRAMEWORK_API const Iterator::StringCharacter Begin() const;
+		NEXUS_FRAMEWORK_API const Iterator::StringToken Begin(StringView Token) const;
+		NEXUS_FRAMEWORK_API const Iterator::StringCharacter End() const;
+		NEXUS_FRAMEWORK_API const Iterator::StringToken End(StringView Token) const;
 
 		NEXUS_FRAMEWORK_API StringView Substring(uint64 Offset, uint64 Size) const;
 		NEXUS_FRAMEWORK_API char* Characters();

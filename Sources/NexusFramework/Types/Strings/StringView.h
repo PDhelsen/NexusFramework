@@ -17,6 +17,11 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API StringView(const char* Text, uint64 Offset, uint64 Size);
 		NEXUS_FRAMEWORK_API StringView(const String& Text);
 
+		NEXUS_FRAMEWORK_API const Iterator::StringCharacter Begin() const;
+		NEXUS_FRAMEWORK_API const Iterator::StringToken Begin(StringView Token) const;
+		NEXUS_FRAMEWORK_API const Iterator::StringCharacter End() const;
+		NEXUS_FRAMEWORK_API const Iterator::StringToken End(StringView Token) const;
+
 		NEXUS_FRAMEWORK_API StringView Substring(uint64 Offset, uint64 Size) const;
 		NEXUS_FRAMEWORK_API const char* CString() const;
 
