@@ -246,4 +246,21 @@ namespace NxTs
 			ItSecond++;
 		}
 	}
+
+	TEST(String, Iterator)
+	{
+		NxFr::String Data = NxFr::String("This is a test text for testing the iterator");
+
+		for (NxFr::Iterator::StringCharacter It = Data.Begin(); It != Data.End(); ++It)
+		{
+			auto test = It.GetRemainder();
+			NEXUS_LOG(Info, Default, "%s", It.Get().C());
+		}
+
+		for (NxFr::Iterator::StringToken It = Data.Begin(" "); It != Data.End(" "); ++It)
+		{
+			auto test = It.GetRemainder();
+			NEXUS_LOG(Info, Default, "%s", It.Get().C());
+		}
+	}
 }
