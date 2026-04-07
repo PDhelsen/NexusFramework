@@ -311,39 +311,29 @@ namespace NxTs
 
 	TEST(Serialization, Csv)
 	{
-		auto Path = NxFr::Path::GetWorkingDirectory() + "Csv.csv";
-
-		NxFr::Csv Csv(Path);
-
-		Csv.SetHeader("Header1;Header2;Header3");
-		Csv.SetData("Data11;Data12;Data13");
-		Csv.AppendSeparator();
-		Csv.AppendNewLine();
-		Csv.AppendData("Data21;Data22;Data23");
-		Csv.AppendSeparator();
-		Csv.AppendNewLine();
-		Csv.AppendData("Data31;Data32;Data33");
-		Csv.AppendSeparator();
-		Csv.AppendNewLine();
-
-		ASSERT_EQ(Csv.GetHeader(), "Header1;Header2;Header3");
-		ASSERT_EQ(Csv.GetData(), "Data11;Data12;Data13;\nData21;Data22;Data23;\nData31;Data32;Data33;\n");
-
-		Csv.SetHeader(1, "Header4");
-		ASSERT_EQ(Csv.GetHeader(1), "Header4");
-		Csv.SetData(1, 1, "Data44");
-		ASSERT_EQ(Csv.GetData(1, 1), "Data44");
-
-		Csv.WriteFile(true);
-
-		Csv.AppendLine("Data41;Data42;Data43");
-		Csv.AppendFile();
-
-		Csv.ReadFile();
+		NxFr::Csv Csv;
+		Csv.AppendLine();
+		Csv.AppendHeader("Header1");
+		Csv.AppendHeader("Header2");
+		Csv.AppendHeader("Header3");
+		Csv.AppendLine();
+		Csv.AppendCell("Data11");
+		Csv.AppendCell("Data12");
+		Csv.AppendCell("Data13");
+		Csv.AppendLine();
+		Csv.AppendCell("Data21");
+		Csv.AppendCell("Data22");
+		Csv.AppendCell("Data23");
+		Csv.AppendLine();
+		Csv.AppendCell("Data31");
+		Csv.AppendCell("Data32");
+		Csv.AppendCell("Data33");
+		
+		ASSERT_EQ(Csv.GetHeaderCount(), 3);
 		ASSERT_EQ(Csv.GetLinesCount(), 4);
 		ASSERT_EQ(Csv.GetCellsCount(), 12);
 
-		NxFr::File(Path).Delete();
+		NxFr::String Text = NxFr::Csv::Serialize(Csv);
 	}
 
 	TEST(Serialization, Dictionary)

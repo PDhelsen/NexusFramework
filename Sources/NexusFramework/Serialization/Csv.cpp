@@ -3,196 +3,194 @@
 
 namespace NxFr
 {
-	Csv::Csv(NxFr::StringView Path)
-		: Handle(Path), Header(128), Data(1024)
+	String Csv::Serialize(const Csv& Data)
+	{
+		String Text = 1024;
+		for (auto& Line : Data.Data)
+		{
+			for (auto& Cell : Line)
+			{
+				Text.Append(Cell);
+				Text.Append(Separator);
+			}
+			Text.Append(StringUtility::NewLine);
+		}
+		return Text;
+	}
+
+	void Csv::SerializeFile(const Csv& Data, StringView Path)
+	{
+		File F = File(Path);
+		F.Create();
+		F.Open(File::Mode::Write);
+		F.WriteText(Serialize(Data));
+		F.Close();
+	}
+
+	Csv Csv::Deserialize(StringView Text)
+	{
+		Csv Data;
+		for (auto Line = Text.Begin(StringUtility::NewLine); Line != Text.End(StringUtility::NewLine); ++Line)
+		{
+			Data.AppendLine();
+			for (auto Cell = Line.Get().Begin(Separator); Cell != Line.Get().End(Separator); ++Cell)
+			{
+				Data.AppendCell(Cell.Get());
+			}
+		}
+
+		return Data;
+	}
+
+	Csv Csv::DeserializeFile(StringView Path)
+	{
+		File F = File(Path);
+		F.Open(File::Mode::Read);
+		String Text = F.ReadText();
+		F.Close();
+
+		return Deserialize(Text);
+	}
+
+	Csv::Csv()
+		: Data()
 	{
 	}
 
 	Csv::~Csv()
 	{
+		Clear();
 	}
 
-	void Csv::ReadFile()
+	void Csv::Clear()
 	{
-		Handle.Open(File::Mode::Read, false);
-		Data = Handle.ReadText();
-		Handle.Close();
-
-		Header = StringUtility::Split(Data, StringUtility::NewLine);
-		Data.Remove(Header + StringUtility::NewLine);
-	}
-
-	void Csv::WriteFile(bool Clear)
-	{
-		Handle.Open(File::Mode::Write, true);
-		Handle.WriteText(Header);
-		Handle.WriteText(StringUtility::NewLine);
-		Handle.WriteText(Data);
-		Handle.Close();
-
-		if (Clear)
+		for (auto D : Data)
 		{
-			Data.Clear();
+			D.Clear();
 		}
-	}
-
-	void Csv::AppendFile(bool AppendHeader)
-	{
-		Handle.Open(File::Mode::Append, true);
-		if (AppendHeader)
-		{
-			Handle.WriteText(Header);
-			Handle.WriteText(StringUtility::NewLine);
-		}
-		Handle.WriteText(Data);
-		Handle.Close();
 
 		Data.Clear();
 	}
 
 	void Csv::AppendHeader(StringView Text)
 	{
-		Header += Text;
-		Header += Separator;
+		Data.First().Append(Text);
 	}
 
-	void Csv::AppendData(StringView Text)
+	void Csv::AppendLine()
 	{
-		Data += Text;
+		Data.AppendConstruct();
 	}
 
-	void Csv::AppendSeparator()
+	void Csv::AppendLine(const Collection<StringView>& Text)
 	{
-		Data += Separator;
-	}
-
-	void Csv::AppendNewLine()
-	{
-		Data += StringUtility::NewLine;
+		List<String>& Line = Data.AppendConstruct();
+		for (auto& It = Text.Reset(); It != Text.End(); ++It)
+		{
+			Line.Append(*It);
+		}
 	}
 
 	void Csv::AppendCell(StringView Text)
 	{
-		AppendData(Text);
-		AppendSeparator();
+		List<String>& Line = Data.Last();
+		Line.Append(Text);
 	}
 
 	void Csv::AppendCells(const Collection<StringView>& Text)
 	{
+		List<String>& Line = Data.Last();
 		for (auto& It = Text.Reset(); It != Text.End(); ++It)
 		{
-			AppendCell(*It);
+			Line.Append(*It);
 		}
 	}
 
-	void Csv::AppendLine(StringView Text)
+	String& Csv::GetHeader(uint64 Column)
 	{
-		AppendData(Text);
-		AppendSeparator();
-		AppendNewLine();
+		NEXUS_ASSERT(Data.First().IsValidIndex(Column), Default, "Column %d doesn't exist");
+
+		return Data.First().Get(Column);
 	}
 
-	void Csv::AppendLines(const Collection<StringView>& Text)
+	void Csv::SetHeader(uint64 Column, StringView Text)
 	{
+		NEXUS_ASSERT(Data.First().IsValidIndex(Column), Default, "Column %d doesn't exist");
+
+		Data.First().Get(Column) = Text;
+	}
+
+	uint64 Csv::GetHeaderCount() const
+	{
+		return Data.First().GetCount();
+	}
+
+	List<String>& Csv::GetLine(uint64 Row)
+	{
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+
+		return Data.Get(Row);
+	}
+
+	void Csv::SetLine(uint64 Row, const Collection<StringView>& Text)
+	{
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+
+		List<String>& Line = GetLine(Row);
+		Line.Clear();
 		for (auto& It = Text.Reset(); It != Text.End(); ++It)
 		{
-			AppendLine(*It);
+			Line.Append(*It);
 		}
-	}
-
-	StringView Csv::GetHeader() const
-	{
-		return Header;
-	}
-
-	StringView Csv::GetHeader(uint64 Index) const
-	{
-		return StringUtility::Split(Header, Separator, Index);
-	}
-
-	void Csv::SetHeader(StringView Text)
-	{
-		Header = Text;
-	}
-
-	void Csv::SetHeader(uint64 Index, StringView Text)
-	{
-		List<StringView> Cells = StringUtility::SplitAll(Header, Separator);
-		Cells[Index] = Text;
-		Header = StringUtility::Join(Cells, Separator);
-	}
-
-	StringView Csv::GetData() const
-	{
-		return Data;
-	}
-
-	StringView Csv::GetData(uint64 Row) const
-	{
-		return StringUtility::Split(Data, StringUtility::NewLine, Row);
-	}
-
-	StringView Csv::GetData(uint64 Row, uint64 Column) const
-	{
-		StringView R = StringUtility::Split(Data, StringUtility::NewLine, Row);
-		return StringUtility::Split(R, Separator, Column);
-	}
-
-	void Csv::SetData(StringView Text)
-	{
-		Data = Text;
-	}
-
-	void Csv::SetData(uint64 Row, StringView Text)
-	{
-		List<StringView> Lines = StringUtility::SplitAll(Data, StringUtility::NewLine);
-		Lines[Row] = Text;
-		Data = StringUtility::Join(Lines, StringUtility::NewLine);
-	}
-
-	void Csv::SetData(uint64 Row, uint64 Column, StringView Text)
-	{
-		List<StringView> Lines = StringUtility::SplitAll(Data, StringUtility::NewLine);
-		List<StringView> Cells = StringUtility::SplitAll(Lines[Row], Separator);
-		Cells[Column] = Text;
-		String Temp = StringUtility::Join(Cells, Separator);
-		Lines[Row] = Temp;
-		Data = StringUtility::Join(Lines, StringUtility::NewLine);
-	}
-
-	List<StringView> Csv::GetLines() const
-	{
-		return StringUtility::SplitAll(Data, StringUtility::NewLine);
 	}
 
 	uint64 Csv::GetLinesCount() const
 	{
-		return GetLines().GetCount();
+		return Data.GetCount();
 	}
 
-	List<StringView> Csv::GetCells() const
+	String& Csv::GetCell(uint64 Row, uint64 Column)
 	{
-		List<StringView> Cells = StringUtility::SplitAll(Data, Separator);
-		if (Cells.Last() == StringUtility::NewLine)
-		{
-			Cells.RemoveLast();
-		}
-		for (uint64 Index = 0; Index < Cells.GetCount(); ++Index)
-		{
-			if (StringUtility::Start(Cells[Index], StringUtility::NewLine))
-			{
-				Cells[Index] = Cells[Index].Substring(1, Cells[Index].GetCount() - 1);
-			}
-			if (StringUtility::End(Cells[Index], StringUtility::NewLine))
-			{
-				Cells[Index] = Cells[Index].Substring(0, Cells[Index].GetCount() - 1);
-			}
-		}
-		return Cells;
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+		NEXUS_ASSERT(Data.Get(Row).IsValidIndex(Column), Default, "Column %d doesn't exist");
+
+		return Data.Get(Row).Get(Column);
+	}
+
+	void Csv::SetCell(uint64 Row, uint64 Column, StringView Text)
+	{
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+		NEXUS_ASSERT(Data.Get(Row).IsValidIndex(Column), Default, "Column %d doesn't exist");
+
+		Data.Get(Row).Get(Column) = Text;
 	}
 
 	uint64 Csv::GetCellsCount() const
 	{
-		return GetCells().GetCount();
+		return GetHeaderCount() * GetLinesCount();
+	}
+
+	const List<List<String>>::I Csv::Begin() const
+	{
+		return Data.Begin();
+	}
+
+	const List<String>::I Csv::Begin(uint64 Row) const
+	{
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+
+		return Data.Get(Row).Begin();
+	}
+
+	const List<List<String>>::I Csv::End() const
+	{
+		return Data.End();
+	}
+
+	const List<String>::I Csv::End(uint64 Row) const
+	{
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+
+		return Data.Get(Row).End();
 	}
 }
