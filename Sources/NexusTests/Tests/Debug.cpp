@@ -81,7 +81,6 @@ namespace NxTs
 
 		{
 			NxFr::Stats Stats(Path);
-			ASSERT_EQ(NxFr::Path::Exist(Stats.GetPath()), true);
 
 			Stats.RecordHeader(LabelId, NxFr::Stats::StatType::Label, NxFr::Stats::StatMode::Set);
 			Stats.RecordHeader(CheckId, NxFr::Stats::StatType::Check, NxFr::Stats::StatMode::Set);

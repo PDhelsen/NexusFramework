@@ -7,7 +7,7 @@
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
-#include "NexusFramework/IO/File.h"
+#include "NexusFramework/IO/Stream.h"
 #include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
@@ -113,24 +113,20 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
 		NEXUS_FRAMEWORK_API void GetAllCurrentStats(Dictionary<StringId, const Stat*>& Result) const;
 
-		StringView GetPath() const { return Handle.GetPath(); }
 		uint64 GetCount() const { return Data.GetCount(); }
 		bool IsInitialized() const { return Initialized; }
 		bool IsRecording() const { return Recording; }
 		bool IsLocked() const { return Locked; }
 
 	private:
-		NEXUS_FRAMEWORK_API void WriteLine();
 		NEXUS_FRAMEWORK_API Stat& GetStat(StringId Id);
 		NEXUS_FRAMEWORK_API const Stat& GetStat(StringId Id) const;
 
 		Dictionary<StringId, uint64> Headers;
 		List<Stat> Data;
 
-		String BufferLine;
-		String BufferCell;
-
-		File Handle;
+		TextStream Stream;
+		String Buffer;
 
 		bool Initialized;
 		bool Recording;

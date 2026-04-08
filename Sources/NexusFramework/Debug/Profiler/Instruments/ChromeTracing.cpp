@@ -5,20 +5,30 @@
 
 namespace NxFr
 {
-	ChromeTracing::ChromeTracing(StringView Path, bool Start)
-		: Instruments(Path, Start)
+	ChromeTracing::ChromeTracing(StringView Path, bool AutoStart, bool AutoFlush)
+		: Instruments(AutoStart, AutoFlush), Stream(Path), Buffer(256)
 	{
+		Stream.GetFile().Delete();
+		Stream.Open(File::Mode::Append);
+
 		WriteHeader();
 	}
 
 	ChromeTracing::~ChromeTracing()
 	{
 		WriteFooter();
+
+		Stream.Close();
 	}
 
 	void ChromeTracing::RecordMarker(const Marker& Data)
 	{
 		WriteMarker(Data);
+	}
+
+	void ChromeTracing::FlushMarkers()
+	{
+		Stream.Flush();
 	}
 
 	void ChromeTracing::WriteMarker(const Marker& Data)
@@ -32,24 +42,16 @@ namespace NxFr
 			Data.GetWatch().GetStartTime(Time::SecondToMicro)
 		);
 
-		Write();
+		Stream.WriteBlock(Buffer);
 	}
 
 	void ChromeTracing::WriteHeader()
 	{
-		Buffer += "{\"otherData\": {},\"traceEvents\":[{}";
-		Write();
+		Stream.WriteBlock("{\"otherData\": {},\"traceEvents\":[{}");
 	}
 
 	void ChromeTracing::WriteFooter()
 	{
-		Buffer += "]}";
-		Write();
-	}
-
-	void ChromeTracing::Write()
-	{
-		Handle.WriteText(Buffer);
-		Buffer.Clear();
+		Stream.WriteBlock("]}");
 	}
 }

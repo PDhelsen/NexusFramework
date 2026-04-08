@@ -27,11 +27,11 @@ namespace NxFr
 		}
 	}
 
-	Instruments* Instruments::Create(StringView Path, bool Start, Instruments::Tools Tool)
+	Instruments* Instruments::Create(StringView Path, bool AutoStart, bool AutoFlush, Instruments::Tools Tool)
 	{
 		switch (Tool)
 		{
-		case NxFr::Instruments::Tools::ChromeTracing: return new ChromeTracing(Path, Start);
+		case NxFr::Instruments::Tools::ChromeTracing: return new ChromeTracing(Path, AutoStart, AutoFlush);
 		}
 
 		return nullptr;
@@ -51,6 +51,15 @@ namespace NxFr
 
 		Lock LockGuard(Guard);
 		RecordMarker(Data);
+		if (AutoFlush)
+		{
+			FlushMarkers();
+		}
+	}
+
+	void Instruments::Flush()
+	{
+		FlushMarkers();
 	}
 
 	void Instruments::StartRecording()
@@ -75,16 +84,13 @@ namespace NxFr
 		Recording = false;
 	}
 
-	Instruments::Instruments(StringView Path, bool Start)
-		: Handle(Path), Buffer(256), Recording(Start)
+	Instruments::Instruments(bool AutoStart, bool AutoFlush)
+		: Recording(AutoStart), AutoFlush(AutoFlush)
 	{
-		Handle.Delete();
-		Handle.Create();
-		Handle.Open(File::Mode::Append);
+		
 	}
 
 	Instruments::~Instruments()
 	{
-		Handle.Close();
 	}
 }

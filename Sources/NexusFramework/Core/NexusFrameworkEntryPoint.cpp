@@ -34,7 +34,7 @@ namespace NxFr
 
 	static void CreateIntruments(StringView Folder)
 	{
-		Instruments* Instrumentor = Instruments::Create(Path::Combine(Folder, "instruments.json"), false);
+		Instruments* Instrumentor = Instruments::Create(Path::Combine(Folder, "instruments.json"), false, true);
 		Instrumentor->StartRecording();
 		Globals::Instrumentor = Instrumentor;
 	}

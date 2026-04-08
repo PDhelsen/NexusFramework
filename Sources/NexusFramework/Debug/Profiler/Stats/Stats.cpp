@@ -6,6 +6,8 @@
 
 namespace NxFr
 {
+#pragma region Static
+
 	static const String Separator = ";";
 
 	namespace StatsHeader
@@ -19,9 +21,9 @@ namespace NxFr
 		return Globals::Statistiques;
 	}
 
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// StatValue
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Stat
 
 	Stats::StatValue::StatValue()
 		: UnsignedInteger(0)
@@ -33,10 +35,6 @@ namespace NxFr
 	{
 		Memory::MemSet(this, 0, sizeof(StatValue));
 	}
-
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Stat
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 	Stats::Stat::Stat(StatType Type, StatMode Mode)
 		: Type(Type), Mode(Mode), Tick(0)
@@ -223,23 +221,22 @@ namespace NxFr
 		}
 	};
 
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
-	// Stats
-	// -------------------------------------------------------------------------------------------------------------------------------------------------------------
+#pragma endregion
+
+#pragma region Stats
 
 	Stats::Stats(StringView Path)
-		: Headers(), Data(), Handle(Path), BufferLine(1024), BufferCell(), Initialized(false), Recording(false), Locked(false)
+		: Headers(), Data(), Stream(Path), Buffer(1024), Initialized(false), Recording(false), Locked(false)
 	{
-		Handle.Delete();
-		Handle.Create();
-		Handle.Open(File::Mode::Append);
+		Stream.GetFile().Delete();
+		Stream.Open(File::Mode::Append);
 
 		RecordHeader(StatsHeader::TickId, StatType::UnsignedInteger, StatMode::Cnt);
 	}
 
 	Stats::~Stats()
 	{
-		Handle.Close();
+		Stream.Close();
 	}
 
 	void Stats::Initialize()
@@ -252,10 +249,8 @@ namespace NxFr
 
 		RecordHeader(StatsHeader::CommentId, StatType::Label, StatMode::Set);
 
-		WriteLine();
-
-		GetStat(StatsHeader::CommentId).RecordLabel("");
-		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
+		Stream.WriteLine("");
+		Stream.Flush();
 
 		Initialized = true;
 	}
@@ -281,15 +276,14 @@ namespace NxFr
 
 		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			StringConverter<Stats::Stat>::ToString(Data[Index], BufferCell);
+			StringConverter<Stats::Stat>::ToString(Data[Index], Buffer);
 
-			BufferLine += BufferCell;
-			BufferLine += Separator;
-
-			BufferCell.Clear();
+			Stream.WriteBlock(Buffer);
+			Stream.WriteBlock(Separator);
 		}
 
-		WriteLine();
+		Stream.WriteLine("");
+		Stream.Flush();
 
 		GetStat(StatsHeader::CommentId).RecordLabel("");
 		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
@@ -313,8 +307,6 @@ namespace NxFr
 		{
 			Data[Index].Reset();
 		}
-
-		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
 	}
 
 	void Stats::RecordHeader(StringId Name, StatType Type, StatMode Mode)
@@ -335,8 +327,8 @@ namespace NxFr
 		Headers.Append(Name, Data.GetCount());
 		Data.Append(Stat(Type, Mode));
 
-		BufferLine += Name;
-		BufferLine += Separator;
+		Stream.WriteBlock(Name);
+		Stream.WriteBlock(Separator);
 	}
 
 	void Stats::RecordStatLabel(StringId Id, StringView Value)
@@ -596,13 +588,6 @@ namespace NxFr
 		}
 	}
 
-	void Stats::WriteLine()
-	{
-		BufferLine += StringUtility::NewLine;
-		Handle.WriteText(BufferLine);
-		BufferLine.Clear();
-	}
-
 	Stats::Stat& Stats::GetStat(StringId Id)
 	{
 		return Data[Headers[Id]];
@@ -612,4 +597,7 @@ namespace NxFr
 	{
 		return Data[Headers[Id]];
 	}
+
+#pragma endregion
+
 }
