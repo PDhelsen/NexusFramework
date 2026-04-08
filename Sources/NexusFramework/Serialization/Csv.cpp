@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Serialization/Csv.h"
+#include "NexusFramework/IO/Stream.h"
 
 namespace NxFr
 {
@@ -20,11 +21,10 @@ namespace NxFr
 
 	void Csv::SerializeFile(const Csv& Data, StringView Path)
 	{
-		File F = File(Path);
-		F.Create();
-		F.Open(File::Mode::Write);
-		F.WriteText(Serialize(Data));
-		F.Close();
+		TextStream Stream(Path);
+		Stream.Open(File::Mode::Write);
+		Stream.WriteAll(Serialize(Data));
+		Stream.Close();
 	}
 
 	Csv Csv::Deserialize(StringView Text)
@@ -44,10 +44,10 @@ namespace NxFr
 
 	Csv Csv::DeserializeFile(StringView Path)
 	{
-		File F = File(Path);
-		F.Open(File::Mode::Read);
-		String Text = F.ReadText();
-		F.Close();
+		TextStream Stream(Path);
+		Stream.Open(File::Mode::Read);
+		String Text = Stream.ReadAll();
+		Stream.Close();
 
 		return Deserialize(Text);
 	}

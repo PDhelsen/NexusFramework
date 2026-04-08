@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Serialization/Yaml.h"
+#include "NexusFramework/IO/Stream.h"
 
 namespace NxFr
 {
@@ -28,11 +29,10 @@ namespace NxFr
 
 		void SerializeFile(const YAML::Emitter& Data, StringView Path)
 		{
-			File F = File(Path);
-			F.Create();
-			F.Open(File::Mode::Write);
-			F.WriteText(Data.c_str());
-			F.Close();
+			TextStream Stream(Path);
+			Stream.Open(File::Mode::Write);
+			Stream.WriteAll(Serialize(Data));
+			Stream.Close();
 		}
 
 		YAML::Node Deserialize(StringView Data)

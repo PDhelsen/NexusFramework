@@ -28,7 +28,7 @@ namespace NxFr
 
 		enum class FileMode
 		{
-			Read, Write, Append
+			None, Read, Write, Append
 		};
 
 		struct MemoryInfo

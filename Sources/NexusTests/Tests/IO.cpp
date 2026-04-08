@@ -201,23 +201,23 @@ namespace NxTs
 	TEST(IO, TextStream)
 	{
 		NxFr::String Working = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "UnitTest.txt");
-		NxFr::TextStream File(Working);
+		NxFr::TextStream Stream(Working);
 
-		File.Open(NxFr::File::Mode::Write);
-		File.WriteLine(Line);
-		File.WriteLine(Line);
-		File.WriteLine(Line);
-		File.Close();
+		Stream.Open(NxFr::File::Mode::Write);
+		Stream.WriteLine(Line);
+		Stream.WriteLine(Line);
+		Stream.WriteLine(Line);
+		Stream.Close();
 
-		File.Open(NxFr::File::Mode::Read);
-		NxFr::StringView Content1 = File.ReadLine();
+		Stream.Open(NxFr::File::Mode::Read);
+		NxFr::StringView Content1 = Stream.ReadLine();
 		ASSERT_EQ(Content1, Line);
-		NxFr::StringView Content2 = File.ReadLine();
+		NxFr::StringView Content2 = Stream.ReadLine();
 		ASSERT_EQ(Content2, Line);
-		NxFr::StringView Content3 = File.ReadLine();
+		NxFr::StringView Content3 = Stream.ReadLine();
 		ASSERT_EQ(Content3, Line);
-		ASSERT_EQ(File.IsAtTheEnd(), true);
-		File.Close();
+		ASSERT_EQ(Stream.IsAtTheEnd(), true);
+		Stream.Close();
 
 		NxFr::File(Working).Delete();
 	}
@@ -226,28 +226,28 @@ namespace NxTs
 	{
 		NxFr::String Working = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "UnitTest.txt");
 		NxFr::BufferView View = NxFr::BufferView(Data, sizeof(Data));
-		NxFr::BinaryStream File(Working);
+		NxFr::BinaryStream Stream(Working);
 
-		File.Open(NxFr::File::Mode::Write);
-		File.WriteBlock(View);
-		File.WriteBlock(View);
-		File.WriteBlock(View);
-		File.Close();
+		Stream.Open(NxFr::File::Mode::Write);
+		Stream.WriteBlock(View);
+		Stream.WriteBlock(View);
+		Stream.WriteBlock(View);
+		Stream.Close();
 
-		File.Open(NxFr::File::Mode::Read);
-		NxFr::BufferView Content1 = File.ReadBlock(sizeof(Data));
+		Stream.Open(NxFr::File::Mode::Read);
+		NxFr::BufferView Content1 = Stream.ReadBlock(sizeof(Data));
 		ASSERT_EQ(*Content1.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content1.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content1.GetPtr<uint64>(72), 19);
-		NxFr::BufferView Content2 = File.ReadBlock(sizeof(Data));
+		NxFr::BufferView Content2 = Stream.ReadBlock(sizeof(Data));
 		ASSERT_EQ(*Content2.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content2.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content2.GetPtr<uint64>(72), 19);
-		NxFr::BufferView Content3 = File.ReadBlock(sizeof(Data));
+		NxFr::BufferView Content3 = Stream.ReadBlock(sizeof(Data));
 		ASSERT_EQ(*Content3.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(72), 19);
-		File.Close();
+		Stream.Close();
 
 		NxFr::File(Working).Delete();
 	}

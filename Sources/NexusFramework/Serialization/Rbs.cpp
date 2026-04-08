@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Serialization/Rbs.h"
+#include "NexusFramework/IO/Stream.h"
 
 namespace NxFr
 {
@@ -21,11 +22,10 @@ namespace NxFr
 
 	void RBS::SerializeFile(const RBS& Data, StringView Path)
 	{
-		File F = File(Path);
-		F.Create();
-		F.Open(File::Mode::Write);
-		F.WriteByte(Data.Data);
-		F.Close();
+		BinaryStream Stream(Path);
+		Stream.Open(File::Mode::Write);
+		Stream.WriteAll(Serialize(Data));
+		Stream.Close();
 	}
 
 	RBS RBS::Deserialize(BufferView Data)
@@ -35,12 +35,12 @@ namespace NxFr
 
 	RBS RBS::DeserializeFile(StringView Path)
 	{
-		File F = File(Path);
-		F.Open(File::Mode::Read);
-		Buffer Data = F.ReadByte();
-		F.Close();
+		BinaryStream Stream(Path);
+		Stream.Open(File::Mode::Read);
+		BufferView Data = Stream.ReadAll();
+		Stream.Close();
 
-		return RBS(Move(Data));
+		return Deserialize(Data);
 	}
 
 	RBS::RBS()

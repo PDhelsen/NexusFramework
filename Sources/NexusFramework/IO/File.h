@@ -12,7 +12,7 @@ namespace NxFr
 	public:
 		enum class Mode
 		{
-			Read, Write, Append
+			None, Read, Write, Append
 		};
 
 		NEXUS_FRAMEWORK_API File(StringView Path);
@@ -45,6 +45,7 @@ namespace NxFr
 
 		StringView GetPath() const { return Path; }
 		bool Exists() const { return Exist; }
+		File::Mode GetMode() const { return FileMode; }
 		bool IsOpened() const { return Handle != nullptr; }
 
 	private:
@@ -52,6 +53,8 @@ namespace NxFr
 
 		String Path;
 		bool Exist;
+		Mode FileMode;
 		void* Handle;
+
 	};
 }

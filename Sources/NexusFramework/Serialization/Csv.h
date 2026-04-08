@@ -3,7 +3,6 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Containers/Collection.h"
-#include "NexusFramework/IO/File.h"
 
 namespace NxFr
 {

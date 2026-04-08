@@ -4,12 +4,12 @@
 namespace NxFr
 {
 	Stream::Stream(StringView Path)
-		: Handle(Path), FileMode(File::Mode::Read), Cursor(0)
+		: Handle(Path), Cursor(0)
 	{
 	}
 
 	Stream::Stream(Stream&& Other) noexcept
-		: Handle(Move(Other.Handle)), FileMode(File::Mode::Read), Cursor(Other.Cursor)
+		: Handle(Move(Other.Handle)), Cursor(Other.Cursor)
 	{
 	}
 
@@ -25,7 +25,6 @@ namespace NxFr
 		}
 
 		Handle = Move(Other.Handle);
-		FileMode = Other.FileMode;
 		Cursor = Other.Cursor;
 
 		return *this;
@@ -34,10 +33,9 @@ namespace NxFr
 	void Stream::Open(File::Mode Mode, bool CreateIfDontExist)
 	{
 		Cursor = 0;
-		FileMode = Mode;
 		Handle.Open(Mode, CreateIfDontExist);
 
-		if (FileMode == File::Mode::Read)
+		if (Handle.GetMode() == File::Mode::Read)
 		{
 			Cache();
 		}
@@ -45,7 +43,7 @@ namespace NxFr
 
 	void Stream::Close()
 	{
-		if (FileMode == File::Mode::Write || FileMode == File::Mode::Append)
+		if (Handle.GetMode() == File::Mode::Write || Handle.GetMode() == File::Mode::Append)
 		{
 			Flush();
 		}
@@ -65,7 +63,6 @@ namespace NxFr
 
 	TextStream::~TextStream()
 	{
-			
 	}
 
 	TextStream& TextStream::operator=(TextStream&& Other) noexcept
@@ -102,15 +99,15 @@ namespace NxFr
 	StringView TextStream::ReadBlock(uint64 Size)
 	{
 		StringView Substring = Buffer.Substring(Cursor, Size);
-		Cursor = Math::Min(Cursor + Size + 1, Buffer.GetCount());
+		Cursor = Math::Min(Cursor + Size, Buffer.GetCount());
 		return Substring;
 	}
 
 	StringView TextStream::ReadLine()
 	{
-		StringView Substring = Buffer.Substring(Cursor, Buffer.GetCount() - Cursor);
-		Substring = StringUtility::Split(Substring, StringUtility::NewLine);
-		Cursor = Math::Min(Cursor + Substring.GetCount() + 1, Buffer.GetCount());
+		Iterator::StringToken Iterator = Iterator::StringToken(StringUtility::NewLine, Buffer, Cursor);
+		StringView Substring = Iterator.Get();
+		Cursor = Math::Min((++Iterator).Id(), Buffer.GetCount());
 		return Substring;
 	}
 
@@ -182,7 +179,7 @@ namespace NxFr
 	BufferView BinaryStream::ReadBlock(uint64 Size)
 	{
 		BufferView View = Buffer.Get(Size, Cursor);
-		Cursor += Size;
+		Cursor = Math::Min(Cursor + Size, Buffer.GetCount());
 		return View;
 	}
 
@@ -195,15 +192,14 @@ namespace NxFr
 
 		Buffer.Clear();
 		Buffer.Set(Data.GetPtr(), Data.GetCount());
-		Cursor += Data.GetCount();
+		Cursor = Data.GetCount();
 	}
 
 	void BinaryStream::WriteBlock(BufferView Data)
 	{
 		if (Cursor + Data.GetCount() > Buffer.GetCount())
 		{
-			uint64 Size = Math::Max(BlockSize, Data.GetCount());
-			Buffer.Grow(Size);
+			Buffer.Grow(Math::Max(BlockSize, Data.GetCount()));
 		}
 
 		Buffer.Set(Data.GetPtr(), Data.GetCount(), Cursor);
