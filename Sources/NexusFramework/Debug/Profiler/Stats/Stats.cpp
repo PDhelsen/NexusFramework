@@ -228,8 +228,7 @@ namespace NxFr
 	Stats::Stats(StringView Path)
 		: Headers(), Data(), Stream(Path), Buffer(1024), Initialized(false), Recording(false), Locked(false)
 	{
-		Stream.GetFile().Delete();
-		Stream.Open(File::Mode::Append);
+		Stream.Open(File::Mode::Write);
 
 		RecordHeader(StatsHeader::TickId, StatType::UnsignedInteger, StatMode::Cnt);
 	}

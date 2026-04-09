@@ -8,8 +8,7 @@ namespace NxFr
 	ChromeTracing::ChromeTracing(StringView Path, bool AutoStart, bool AutoFlush)
 		: Instruments(AutoStart, AutoFlush), Stream(Path), Buffer(256)
 	{
-		Stream.GetFile().Delete();
-		Stream.Open(File::Mode::Append);
+		Stream.Open(File::Mode::Write);
 
 		WriteHeader();
 	}

@@ -28,7 +28,7 @@ namespace NxFr
 	}
 
 	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Handle(""), Callback(), Guard()
+		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Stream(""), Callback(), Guard()
 	{
 		OpenFile(Path);
 	}
@@ -122,7 +122,7 @@ namespace NxFr
 	void Logger::SetOutput(LoggerOutput Output, bool State, StringView Path)
 	{
 		if ((CheckOutput(LoggerOutput::File) && !Enum::CheckFlag(Output, LoggerOutput::File))
-		|| (CheckOutput(LoggerOutput::File) && Enum::CheckFlag(Output, LoggerOutput::File) && Handle.GetPath() != Path))
+		|| (CheckOutput(LoggerOutput::File) && Enum::CheckFlag(Output, LoggerOutput::File) && Stream.GetPath() != Path))
 		{
 			CloseFile();
 		}
@@ -225,7 +225,7 @@ namespace NxFr
 		}
 		if (CheckOutput(LoggerOutput::File) && Write)
 		{
-			Handle.WriteText(Message);
+			Stream.WriteBlock(Message);
 		}
 		if (CheckOutput(LoggerOutput::Callback) && !Flushing)
 		{
@@ -244,10 +244,8 @@ namespace NxFr
 
 		if (CheckOutput(LoggerOutput::File))
 		{
-			Handle = File(Path);
-			Handle.Delete();
-			Handle.Create();
-			Handle.Open(File::Mode::Append);
+			Stream = TextStream(Path);
+			Stream.Open(File::Mode::Write);
 		}
 	}
 
@@ -255,7 +253,7 @@ namespace NxFr
 	{
 		if (CheckOutput(LoggerOutput::File))
 		{
-			Handle.Close();
+			Stream.Close();
 		}
 	}
 }

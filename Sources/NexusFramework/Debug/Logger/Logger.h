@@ -3,7 +3,7 @@
 #include "NexusFramework/Debug/Logger/Log.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Platform/Platform.h"
-#include "NexusFramework/IO/File.h"
+#include "NexusFramework/IO/Stream.h"
 #include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr
@@ -64,7 +64,7 @@ namespace NxFr
 		String BufferLogs;
 
 		Platform* Target;
-		File Handle;
+		TextStream Stream;
 		Event<LoggerVerbosity, StringId, StringView> Callback;
 
 		Mutex Guard;
