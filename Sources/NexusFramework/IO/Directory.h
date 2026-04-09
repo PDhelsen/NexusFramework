@@ -23,8 +23,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool operator ==(const Directory& Other) const;
 		NEXUS_FRAMEWORK_API bool operator !=(const Directory& Other) const;
 
-		NEXUS_FRAMEWORK_API Directory& Refresh();
-		NEXUS_FRAMEWORK_API Directory& EnsureParent();
+		NEXUS_FRAMEWORK_API bool Exists() const;
+		NEXUS_FRAMEWORK_API void EnsureParent();
 
 		NEXUS_FRAMEWORK_API void Create();
 		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false);
@@ -38,24 +38,12 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API List<String> GetDirectories(bool Recursive = false) const;
 		NEXUS_FRAMEWORK_API void GetDirectories(List<String>& Result, bool Recursive = false) const;
 
-		I begin() { return Begin(); }
-		I Begin() { return Content.Begin(); }
-		const I begin() const { return Begin(); }
-		const I Begin() const { return Content.Begin(); }
-		I end() { return End(); }
-		I End() { return Content.End(); }
-		const I end() const { return End(); }
-		const I End() const { return Content.End(); }
-
 		StringView GetPath() const { return Path; }
-		bool Exists() const { return Exist; }
-		uint64 GetCount() const { return Content.GetCount(); }
 
 	private:
 		void SetPath(StringView Value);
+		void GetContent(List<String>& Result, bool Recursive, bool GetFile, bool GetDirectory) const;
 
 		String Path;
-		bool Exist;
-		List<String> Content;
 	};
 }

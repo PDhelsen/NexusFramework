@@ -287,25 +287,18 @@ namespace NxFr
 
 	Platform::PathType PlatformWindows::GetPathType(StringView Path) const
 	{
-		struct _stati64 Buffer;
-
-		if (_stati64(Path.C(), &Buffer) == 0)
+		WIN32_FILE_ATTRIBUTE_DATA Data;
+		if (!GetFileAttributesExA(Path.C(), GetFileExInfoStandard, &Data))
 		{
-			if (Buffer.st_mode & _S_IFREG)
-			{
-				return PathType::File;
-			}
-			else if (Buffer.st_mode & _S_IFDIR)
-			{
-				return PathType::Directory;
-			}
-			else
-			{
-				return PathType::Other;
-			}
+			return PathType::None;
 		}
 
-		return PathType::None;
+		if (Data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+		{
+			return PathType::Directory;
+		}
+
+		return PathType::File;
 	}
 
 	String PlatformWindows::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const

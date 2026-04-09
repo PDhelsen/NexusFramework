@@ -105,11 +105,10 @@ namespace NxTs
 
 		ASSERT_EQ(Directory.GetPath(), Working);
 		ASSERT_EQ(Directory.Exists(), true);
-		ASSERT_EQ(Directory.GetCount() > 0, true);
+		ASSERT_EQ(Directory.GetContent().GetCount() > 0, true);
 
 		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
 		ASSERT_EQ(Directory.GetFiles(true).GetCount() > 0, true);
-		//ASSERT_EQ(Directory.GetDirectories(true).GetCount() == 0, true);
 
 		NxFr::Directory SubDirectory = NxFr::Directory(NxFr::Path::Combine(Working, "Test"));
 

@@ -26,8 +26,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API bool operator ==(const File& Other) const;
 		NEXUS_FRAMEWORK_API bool operator !=(const File& Other) const;
 
-		NEXUS_FRAMEWORK_API File& Refresh();
-		NEXUS_FRAMEWORK_API File& EnsureParent();
+		NEXUS_FRAMEWORK_API bool Exists() const;
+		NEXUS_FRAMEWORK_API void EnsureParent();
 
 		NEXUS_FRAMEWORK_API void Create(bool KeepOpen = false);
 		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false, bool CloseIfOpen = false);
@@ -44,7 +44,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API String ReadText() const;
 
 		StringView GetPath() const { return Path; }
-		bool Exists() const { return Exist; }
 		File::Mode GetMode() const { return FileMode; }
 		bool IsOpened() const { return Handle != nullptr; }
 
@@ -52,7 +51,6 @@ namespace NxFr
 		void SetPath(StringView Value);
 
 		String Path;
-		bool Exist;
 		Mode FileMode;
 		void* Handle;
 
