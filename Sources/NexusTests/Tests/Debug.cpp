@@ -40,7 +40,7 @@ namespace NxTs
 		NxFr::String Path = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "Logs.txt");
 
 		{
-			NxFr::Logger Logger = NxFr::Logger(false, NxFr::LoggerVerbosity::All, NxFr::LoggerOutput::All, Path);
+			NxFr::Logger Logger = NxFr::Logger(NxFr::LoggerVerbosity::All, NxFr::LoggerOutput::All, Path, true);
 
 			Logger.AddChannel(Channel, false);
 			ASSERT_EQ(Logger.HasChannel(Channel), true);

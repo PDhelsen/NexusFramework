@@ -143,7 +143,7 @@ namespace NxFr
 		return StringUtility::Empty;
 	}
 
-    void PlatformNone::WriteToTerminal(StringView Message) const
+    void PlatformNone::WriteToTerminal(StringView Message, TerminalColor Color) const
     {
     }
 

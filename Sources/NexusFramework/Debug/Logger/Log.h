@@ -60,32 +60,15 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Log() = default;
 		NEXUS_FRAMEWORK_API ~Log() = default;
 
-		NEXUS_FRAMEWORK_API virtual String* ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
-		NEXUS_FRAMEWORK_API virtual String* FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
-		NEXUS_FRAMEWORK_API virtual void PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
-		NEXUS_FRAMEWORK_API virtual Mutex& GetLock() = 0;
+		NEXUS_FRAMEWORK_API virtual String& GetBuffer() = 0;
+		NEXUS_FRAMEWORK_API virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
 	};
 
 	template<typename... Args>
 	void Log::LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 	{
-		Lock LockGuard(GetLock());
-
-		String* MessageBuffer = ShouldPrintMessage(Verbosity, Channel, Message);
-		if (!MessageBuffer)
-		{
-			return;
-		}
-
-		MessageBuffer->Format(Message, args...);
-
-		String* FormatBuffer = FormatMessage(Verbosity, Channel, *MessageBuffer);
-		if (!FormatBuffer)
-		{
-			return;
-		}
-
-		PrintMessage(Verbosity, Channel, *FormatBuffer);
+		GetBuffer().Format(Message, args...);
+		PrintLog(Verbosity, Channel, Message);
 	}
 }
 

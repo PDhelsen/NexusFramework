@@ -19,6 +19,22 @@ namespace NxFr
 	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
 	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, "\\", "/"); }
 
+	static StringView TerminalColorToPrefix(Platform::TerminalColor Color)
+	{
+		switch (Color)
+		{
+		case NxFr::Platform::TerminalColor::Black: return "\033[30m";
+		case NxFr::Platform::TerminalColor::Red: return "\033[31m";
+		case NxFr::Platform::TerminalColor::Green: return "\033[32m";
+		case NxFr::Platform::TerminalColor::Blue: return "\033[34m";
+		case NxFr::Platform::TerminalColor::Yellow: return "\033[33m";
+		case NxFr::Platform::TerminalColor::Cyan: return "\033[36m";
+		case NxFr::Platform::TerminalColor::Magenta: return "\033[35m";
+		case NxFr::Platform::TerminalColor::White: return "\033[37m";
+		case NxFr::Platform::TerminalColor::None: return "\033[m";
+		}
+	}
+
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
 		if (Dlls.ContainsKey(DllName))
@@ -270,9 +286,11 @@ namespace NxFr
 		return StringUtility::Empty;
 	}
 
-	void PlatformWindows::WriteToTerminal(StringView Message) const
+	void PlatformWindows::WriteToTerminal(StringView Message, TerminalColor Color) const
 	{
+		printf(TerminalColorToPrefix(Color).C());
 		printf(Message.C());
+		printf(TerminalColorToPrefix(TerminalColor::None).C());
 	}
 
 	void PlatformWindows::WriteToDebugger(StringView Message) const

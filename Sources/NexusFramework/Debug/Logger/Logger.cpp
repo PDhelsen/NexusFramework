@@ -17,6 +17,32 @@ namespace NxFr
 		const StringId Verbose = "Verbose"_Sid;
 	}
 
+	static Platform::TerminalColor VerbosityToTerminalColor(LoggerVerbosity Verbosity)
+	{
+		switch (Verbosity)
+		{
+		case NxFr::LoggerVerbosity::Fatal:
+			return Platform::TerminalColor::Magenta;
+		case NxFr::LoggerVerbosity::Error:
+			return Platform::TerminalColor::Red;
+		case NxFr::LoggerVerbosity::Warning:
+			return Platform::TerminalColor::Yellow;
+		case NxFr::LoggerVerbosity::Info:
+			return Platform::TerminalColor::White;
+
+		case NxFr::LoggerVerbosity::None:
+		case NxFr::LoggerVerbosity::All:
+		case NxFr::LoggerVerbosity::COUNT:
+		default:
+			return Platform::TerminalColor::None;
+		}
+	}
+
+	Logger::LogData::LogData(LoggerVerbosity Verbosity, StringId Channel)
+		: Message(64), Channel(Channel), Verbosity(Verbosity)
+	{
+	}
+
 	Log* Log::GetInstance()
 	{
 		return Globals::Logs;
@@ -27,8 +53,10 @@ namespace NxFr
 		return Globals::Logs;
 	}
 
-	Logger::Logger(bool FlushOnLog, LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path)
-		: Channels(), VerbosityMask(Verbosity), Outputs(Output), FlushOnLog(FlushOnLog), BufferMessage(256), BufferFormat(256), BufferLogs(4096), Target(Platform::GetInstance()), Stream(""), Callback(), Guard()
+	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path, bool AutoFlush)
+		: Logs(), Channels(), VerbosityMask(Verbosity), Outputs(Output),
+		Target(Platform::GetInstance()), Stream(""), Callback(),
+		AutoFlush(AutoFlush), Guard()
 	{
 		OpenFile(Path);
 	}
@@ -41,15 +69,14 @@ namespace NxFr
 
 	void Logger::Flush()
 	{
-		Print(LoggerVerbosity::None, 0, BufferLogs, true);
-		BufferLogs.Clear();
+		Lock LockGuard(Guard);
+		FlushLogs();
 	}
 
 	void Logger::AddChannel(StringId Channel, bool State /*true*/)
 	{
 		if (HasChannel(Channel))
 		{
-			NEXUS_LOG(Warning, Default, "Already has channel : %s", Channel.C());
 			return;
 		}
 
@@ -60,7 +87,6 @@ namespace NxFr
 	{
 		if (!HasChannel(Channel))
 		{
-			NEXUS_LOG(Error, Default, "Doesn't have channel : %s", Channel.C());
 			return;
 		}
 
@@ -84,7 +110,6 @@ namespace NxFr
 	{
 		if (!HasChannel(Channel))
 		{
-			NEXUS_LOG(Error, Default, "Doesn't have channel : %s", Channel.C());
 			return false;
 		}
 
@@ -145,115 +170,91 @@ namespace NxFr
 		this->Callback -= Callback;
 	}
 
-	bool Logger::IsFlushingOnLog() const
+	bool Logger::GetAutoFlush() const
 	{
-		return FlushOnLog;
+		return AutoFlush;
 	}
 
-	void Logger::SetFlushOnLog(bool State)
+	void Logger::SetAutoFlush(bool State)
 	{
-		if (FlushOnLog == State)
+		if (AutoFlush == State)
 		{
 			return;
 		}
 
-		if (!FlushOnLog)
+		if (!AutoFlush)
 		{
 			Flush();
 		}
 
-		FlushOnLog = State;
+		AutoFlush = State;
 	}
 
-	String* Logger::ShouldPrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
+	String& Logger::GetBuffer()
 	{
-		BufferMessage.Clear();
-		bool ShouldPrint = !Message.IsEmpty() && CheckVerbosity(Verbosity) && CheckChannel(Channel);
-		return ShouldPrint ? &BufferMessage : nullptr;
+		static thread_local String Buffer(64, nullptr);
+		return Buffer;
 	}
 
-	String* Logger::FormatMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
+	void Logger::PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
+		if (!CheckVerbosity(Verbosity) || !CheckChannel(Channel) || Message.IsEmpty())
+		{
+			return;
+		}
+
 		String VerbosityLabel = StringUtility::ToString(Verbosity);
-
+		bool IsFatal = Enum::CheckFlag(Verbosity, LoggerVerbosity::Fatal);
 		Timestamp Stamp = Time::Now();
 		int8 Hours = Stamp.Hours;
 		int8 Minutes = Stamp.Minutes;
 		int8 Seconds = Stamp.Seconds;
 
-		BufferFormat.Clear();
-		BufferFormat.Format(Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), Message.C(), StringUtility::NewLine.C());
-		return &BufferFormat;
-	}
+		LogData Data(Verbosity, Channel);
+		Data.Message.Format(Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), GetBuffer().C(), StringUtility::NewLine.C());
 
-	void Logger::PrintMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
-	{
-		Print(Verbosity, Channel, Message, false);
-
-		if (Enum::CheckFlag(Verbosity, LoggerVerbosity::Fatal))
+		Lock LockGuard(Guard);
+		Logs.Append(Move(Data));
+		if (AutoFlush || IsFatal)
 		{
-			Flush();
+			FlushLogs();
 		}
 	}
 
-	void Logger::Print(LoggerVerbosity Verbosity, StringId Channel, StringView Message, bool Flushing)
+	void Logger::FlushLogs()
 	{
-		if (Message.IsEmpty())
+		for (auto& Data : Logs)
 		{
-			return;
-		}
-
-		bool Write = FlushOnLog || Flushing;
-
-		if (!Write)
-		{
-			if (BufferLogs.GetCapacity() - BufferLogs.GetCount() < Message.GetCount())
+			if (CheckOutput(LoggerOutput::Console))
 			{
-				Flush();
+				Target->WriteToTerminal(Data.Message, VerbosityToTerminalColor(Data.Verbosity));
 			}
-			
-			BufferLogs += Message;
+			if (CheckOutput(LoggerOutput::IDE))
+			{
+				Target->WriteToDebugger(Data.Message);
+			}
+			if (CheckOutput(LoggerOutput::File))
+			{
+				Stream.WriteBlock(Data.Message);
+			}
+			if (CheckOutput(LoggerOutput::Callback))
+			{
+				Callback.Invoke(Data.Verbosity, Data.Channel, Data.Message);
+			}
 		}
 
-		if (CheckOutput(LoggerOutput::Console) && Write)
-		{
-			Target->WriteToTerminal(Message);
-		}
-		if (CheckOutput(LoggerOutput::IDE) && Write)
-		{
-			Target->WriteToDebugger(Message);
-		}
-		if (CheckOutput(LoggerOutput::File) && Write)
-		{
-			Stream.WriteBlock(Message);
-		}
-		if (CheckOutput(LoggerOutput::Callback) && !Flushing)
-		{
-			Callback.Invoke(Verbosity, Channel, Message);
-		}
-	}
-
-	Mutex& Logger::GetLock()
-	{
-		return Guard;
+		Stream.Flush();
+		Logs.Clear();
 	}
 
 	void Logger::OpenFile(StringView Path)
 	{
-		NEXUS_ASSERT(!Enum::CheckFlag(Outputs, LoggerOutput::File) || Path != StringUtility::Empty, Default, "Path has to be specified in order to write log. LoggerOutput::File is enabled");
-
-		if (CheckOutput(LoggerOutput::File))
-		{
-			Stream = TextStream(Path);
-			Stream.Open(File::Mode::Write);
-		}
+		Stream = TextStream(Path);
+		Stream.Open(File::Mode::Write);
 	}
 
 	void Logger::CloseFile()
 	{
-		if (CheckOutput(LoggerOutput::File))
-		{
-			Stream.Close();
-		}
+		Stream.Close();
 	}
 }

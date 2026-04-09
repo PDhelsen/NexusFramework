@@ -18,7 +18,7 @@ namespace NxFr
 
 	static void CreateLogger(StringView Folder)
 	{
-		Logger* Logs = new Logger(true, LoggerVerbosity::All, LoggerOutput::All, Path::Combine(Folder, "logs.txt"));
+		Logger* Logs = new Logger(LoggerVerbosity::All, LoggerOutput::All, Path::Combine(Folder, "logs.txt"), true);
 		Logs->AddChannel(LoggerChannel::Default, true);
 		Logs->AddChannel(LoggerChannel::Verbose, false);
 		Globals::Logs = Logs;

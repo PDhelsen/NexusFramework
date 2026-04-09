@@ -21,6 +21,11 @@ namespace NxFr
 	class Platform
 	{
 	public:
+		enum class TerminalColor : uint8
+		{
+			None, Black, Red, Green, Blue, Yellow, Cyan, Magenta, White
+		};
+
 		enum class PathType : uint32
 		{
 			None, File, Directory, Other
@@ -81,7 +86,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API virtual void WaitForUserToCloseTerminal() const = 0;
 		NEXUS_FRAMEWORK_API virtual String ReadFromTerminal() const = 0;
-		NEXUS_FRAMEWORK_API virtual void WriteToTerminal(StringView Message) const = 0;
+		NEXUS_FRAMEWORK_API virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
 		NEXUS_FRAMEWORK_API virtual void WriteToDebugger(StringView Message) const = 0;
 
 		NEXUS_FRAMEWORK_API virtual void OpenExplorer(StringView Path) const = 0;
