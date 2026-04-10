@@ -26,7 +26,7 @@ namespace NxFr
 		template<typename T>
 		bool BelongToManager(Handle<T> Handle);
 
-		NEXUS_FRAMEWORK_API Dictionary<void*, Handle<uint8>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
+		NEXUS_FRAMEWORK_API Dictionary<void*, Handle<void>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
 		bool IsEmpty() const { return Buffer.GetCount() == 0; }
 		uint64 GetCount() const { return Buffer.GetCount(); }
@@ -88,14 +88,14 @@ namespace NxFr
 	namespace Memory
 	{
 		template<typename T, typename ...Args>
-		::NxFr::Handle<T> Create(HandleManager* Manager, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
+		Handle<T> Create(HandleManager* Manager, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
 		{
 			T* Pointer = Create<T>(Allocator, args...);
 			return Manager->AcquireHandle<T>(Pointer);
 		}
 
 		template<typename T>
-		void Destroy(HandleManager* Manager, ::NxFr::Handle<T> Handle, Allocator* Allocator = AllocatorContext::Get())
+		void Destroy(HandleManager* Manager, Handle<T> Handle, Allocator* Allocator = AllocatorContext::Get())
 		{
 			Destroy(Handle.GetRedirectedPointer(), Allocator);
 			Manager->ReleaseHandle<T>(Handle);

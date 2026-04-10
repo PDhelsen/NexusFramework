@@ -250,7 +250,7 @@ namespace NxFr
 	{
 		NEXUS_LOG(Info, Verbose, "Starting defragmentation (Current amount : %d)", UsedAmount());
 
-		Dictionary<void*, Handle<uint8>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
+		Dictionary<void*, Handle<void>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
 		bool All = Time <= 0.0f && Count == 0;
 		Stopwatch Watch = Stopwatch(true);
@@ -285,7 +285,7 @@ namespace NxFr
 			else
 			{
 				// Check if next data is stored in an Handle and so can be moved in memory
-				uint8* Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot->Next));
+				void* Data = GetHeapSlotMemory(Slot->Next);
 				auto It = Handles.FindKey(Data);
 				if (It == Handles.End())
 				{
@@ -294,14 +294,14 @@ namespace NxFr
 				}
 
 				// Get slot info
-				Handle<uint8>& Handle = It->Value;
+				Handle<void>& Handle = It->Value;
 				uint64 SlotSize = GetHeapSlotSize(Slot);
 				uint64 NextSize = GetHeapSlotSize(Slot->Next);
 				HeapSlot* NextNext = Slot->Next->Next;
 
 				// Move data
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
-				Data = reinterpret_cast<uint8*>(GetHeapSlotMemory(Slot));
+				Data = GetHeapSlotMemory(Slot);
 				Manager->UpdateHandle(Handle, Data);
 				NEXUS_LOG(Info, Verbose, "Moved from %p to %p", Slot->Next, Slot);
 

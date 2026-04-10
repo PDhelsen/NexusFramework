@@ -24,8 +24,10 @@ namespace NxFr
 		inline T* operator->() { return GetRedirectedPointer(); }
 		inline const T* operator->() const { return GetRedirectedPointer(); }
 
-		inline bool operator==(const Handle<T>& Other) const { return Pointer == Other.Pointer; }
-		inline bool operator!=(const Handle<T>& Other) const { return Pointer != Other.Pointer; }
+		inline bool operator==(T* Other) const { return GetRedirectedPointer() == Other; }
+		inline bool operator!=(T* Other) const { return GetRedirectedPointer() != Other; }
+		inline bool operator==(const Handle<T>& Other) const { return GetRedirectedPointer() == Other.GetRedirectedPointer(); }
+		inline bool operator!=(const Handle<T>& Other) const { return GetRedirectedPointer() != Other.GetRedirectedPointer(); }
 		inline bool operator<(const Handle<T>& Other) const { return GetRedirectedPointer() < Other.GetRedirectedPointer(); }
 		inline bool operator<=(const Handle<T>& Other) const { return GetRedirectedPointer() <= Other.GetRedirectedPointer(); }
 		inline bool operator>(const Handle<T>& Other) const { return GetRedirectedPointer() > Other.GetRedirectedPointer(); }

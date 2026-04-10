@@ -58,8 +58,6 @@ namespace NxFr
 
 	void MemoryTracker::RecordReallocation(void* Pointer, void* Reallocated, uint64 Size)
 	{
-		UntrackedScope Untracked;
-
 		RecordDeallocation(Pointer);
 		RecordAllocation(Reallocated, Size);
 	}

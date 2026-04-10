@@ -55,16 +55,16 @@ namespace NxFr
 		return &Buffer.Begin().Get() <= Address && Address < &Buffer.End().Get();
 	}
 
-	Dictionary<void*, Handle<uint8>> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
+	Dictionary<void*, Handle<void>> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
 	{
-		Dictionary<void*, Handle<uint8>> Handles;
+		Dictionary<void*, Handle<void>> Handles;
 
 		for (auto It = Buffer.Begin(); It != Buffer.End(); ++It)
 		{
 			void* Data = reinterpret_cast<void*>(*It);
 			if (Memory::IsPointerInRange(Data, Pointer, Offset))
 			{
-				Handle<uint8> Handle;
+				Handle<void> Handle;
 				Handle.Pointer = &It.Get();
 
 				Handles.Append(Data, Handle);
