@@ -48,13 +48,19 @@ namespace NxFr
 
 		void Unregister(const F& Func)
 		{
-			typename List<F>::I Iter = Functions.Find(Func);
-			if (Iter == Functions.End())
+			uint64 Index = 0;
+			for (; Index < Functions.GetCount(); ++Index)
 			{
-				return;
+				if (Functions[Index] == Func)
+				{
+					break;
+				}
 			}
 
-			Functions.Remove(Iter.Id());
+			if (Index < Functions.GetCount())
+			{
+				Functions.Remove(Index);
+			}
 		}
 
 		template<typename... Args>

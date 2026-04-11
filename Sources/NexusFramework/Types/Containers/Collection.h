@@ -130,9 +130,41 @@ namespace NxFr
 		Iterator& Current() const { return *IteratorCurrent; }
 		const Iterator& Begin() const { return *IteratorBegin; }
 		const Iterator& End() const { return *IteratorEnd; }
+
+		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
+		bool Contains(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate) const
+		{
+			return GetIteratorValue(Predicate) != End();
+		}
+
+		Iterator& Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
+		Iterator& Find(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate)
+		{
+			return GetIteratorValue(Predicate);
+		}
+
+		const Iterator& Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
+		const Iterator& Find(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate) const
+		{
+			return GetIteratorValue(Predicate);
+		}
+
 		uint64 GetCount() const { return Count; }
 
 	private:
+		Iterator& GetIteratorValue(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate) const
+		{
+			for (Iterator& It = Reset(); It != End(); ++It)
+			{
+				if (Predicate(It.Get()))
+				{
+					return It;
+				}
+			}
+
+			return End();
+		}
+
 		Allocator* Alloc;
 		Iterator* IteratorCurrent;
 		const Iterator* IteratorBegin;

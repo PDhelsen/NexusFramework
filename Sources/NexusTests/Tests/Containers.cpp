@@ -226,9 +226,9 @@ namespace NxTs
 
 		ContainerTest ToFind1 = ContainerTest(5);
 		ContainerTest ToFind2 = ContainerTest(100);
-		ASSERT_EQ(Test.Contains(ToFind1), true);
+		ASSERT_EQ(Test.Contains([&](const ContainerTest& Element) { return Element == ToFind1; }), true);
 		ASSERT_EQ(Test.Contains(ToFind2), false);
-		ASSERT_EQ(Test.Find(ToFind1)->Integer, ToFind1.Integer);
+		ASSERT_EQ(Test.Find([&](const ContainerTest& Element) { return Element == ToFind1; })->Integer, ToFind1.Integer);
 		ASSERT_EQ(Test.Find(ToFind2), Test.End());
 	}
 
@@ -1172,7 +1172,7 @@ namespace NxTs
 		ContainerTest& Test5 = TestPreAllocated.Acquire();
 
 		Test4.Integer = 5;
-		auto ItPreAllocated = TestPreAllocated.Find(5);
+		auto ItPreAllocated = TestPreAllocated.Find([](const ContainerTest& Element) { return Element.Integer == 5; });
 		ASSERT_EQ(ItPreAllocated->Integer, 5);
 
 		TestPreAllocated.Recycle(Test4);
@@ -1213,7 +1213,7 @@ namespace NxTs
 		ContainerTest& Test13 = TestOnDemand.Acquire();
 
 		Test12.Integer = 5;
-		auto ItOnDemand = TestOnDemand.Find(5);
+		auto ItOnDemand = TestOnDemand.Find([](const ContainerTest& Element) { return Element.Integer == 5; });
 		ASSERT_EQ(ItOnDemand->Integer, 5);
 
 		TestOnDemand.Recycle(Test11);
@@ -1342,13 +1342,13 @@ namespace NxTs
 
 		NxFr::Set<NxFr::String> Set = NxFr::Set<NxFr::String>();
 		Set.Append(Data);
-		Set.Append(Text);
+		Set.TryAppend(Text);
 		Set.Remove(Data);
 
 		NxFr::Dictionary<NxFr::String, NxFr::String> Dictionary = NxFr::Dictionary<NxFr::String, NxFr::String>();
 		Dictionary.Append("Key 1", Data);
 		Dictionary.Append("Key 2", Text);
-		Dictionary.AppendConstruct("Key 3", "Hello World");
+		Dictionary.AppendConstruct(Data, "Hello World");
 		Dictionary.Remove("Key 1");
 
 		NxFr::Tree<NxFr::String> Tree = NxFr::Tree<NxFr::String>();

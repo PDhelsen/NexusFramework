@@ -525,19 +525,22 @@ namespace NxFr
 			GetItem(GetNode(B)) = Move(Temp);
 		}
 
-		bool Contains(const T& Other) const
+		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
+		bool Contains(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
-			return GetIteratorValue(Other) != End();
+			return GetIteratorValue(Predicate) != End();
 		}
 
-		I Find(const T& Other)
+		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
+		I Find(const Iterator::IteratorPredicate<T>& Predicate)
 		{
-			return GetIteratorValue(Other);
+			return GetIteratorValue(Predicate);
 		}
 
-		const I Find(const T& Other) const
+		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
+		const I Find(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
-			return GetIteratorValue(Other);
+			return GetIteratorValue(Predicate);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -717,11 +720,11 @@ namespace NxFr
 			return I(const_cast<N*>(Instance));
 		}
 
-		I GetIteratorValue(const T& Value) const
+		I GetIteratorValue(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{
-				if (*It == Value)
+				if (Predicate(*It))
 				{
 					return It;
 				}

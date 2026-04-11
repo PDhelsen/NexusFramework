@@ -145,34 +145,20 @@ namespace NxFr
 
 		const T& Append(const T& Value)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (Index < Capacity && !Data[Index].IsFree())
-			{
-				return Data[Index].Value;
-			}
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
-
+			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Value);
 			return Data[Index].Value;
 		}
 
 		const T& Append(T&& Value)
 		{
+			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (Index < Capacity && !Data[Index].IsFree())
-			{
-				return Data[Index].Value;
-			}
-			if (Resize(++Count))
-			{
-				Index = GetIndex(Hash);
-			}
-			
+			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Move(Value));
 			return Data[Index].Value;
 		}
@@ -180,23 +166,48 @@ namespace NxFr
 		template<typename C>
 		const T& AppendRange(const C& Value)
 		{
+			Resize(GetCount() + Value.GetCount());
+
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(*It);
 				uint64 Index = GetIndex(Hash);
-				if (Index < Capacity && !Data[Index].IsFree())
-				{
-					return Data[Index].Value;
-				}
-				if (Resize(++Count))
-				{
-					Index = GetIndex(Hash);
-				}
+				NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Value already present in Dictionary");
 				Construct(Index, Hash, *It);
 			}
 
 			uint64 Hash = GetHash(*Value.Begin());
 			uint64 Index = GetIndex(Hash);
+			return Data[Index].Value;
+		}
+
+		const T& TryAppend(const T& Value)
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			if (Index >= Capacity || Data[Index].IsFree())
+			{
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
+				}
+				Construct(Index, Hash, Value);
+			}
+			return Data[Index].Value;
+		}
+
+		const T& TryAppend(T&& Value)
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			if (Index >= Capacity || Data[Index].IsFree())
+			{
+				if (Resize(++Count))
+				{
+					Index = GetIndex(Hash);
+				}
+				Construct(Index, Hash, Move(Value));
+			}
 			return Data[Index].Value;
 		}
 
@@ -207,6 +218,20 @@ namespace NxFr
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
 			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
+			Destruct(Index);
+			Resize(--Count);
+		}
+
+		void TryRemove(const Q& Value)
+		{
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			if (Index >= Capacity || Data[Index].IsFree())
+			{
+				return;
+			}
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -257,14 +282,16 @@ namespace NxFr
 			Reallocate(Size);
 		}
 
-		bool Contains(const Q& Other) const
+		bool Contains(const T& Other) const { return GetIteratorValue(Other) != End(); }
+		bool Contains(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
-			return GetIteratorValue(Other) != End();
+			return GetIteratorValue(Predicate) != End();
 		}
 
-		const I Find(const Q& Other) const
+		const I Find(const T& Other) const { return GetIteratorValue(Other); }
+		const I Find(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
-			return GetIteratorValue(Other);
+			return GetIteratorValue(Predicate);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -416,6 +443,19 @@ namespace NxFr
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
 			return Index < Capacity && !Data[Index].IsFree() ? I(Data, Index, Capacity) : End();
+		}
+
+		I GetIteratorValue(const Iterator::IteratorPredicate<Q>& Predicate) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (Predicate(*It))
+				{
+					return It;
+				}
+			}
+
+			return End();
 		}
 
 		bool Resize(uint64 Size)

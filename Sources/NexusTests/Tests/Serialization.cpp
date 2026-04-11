@@ -304,7 +304,7 @@ namespace NxTs
 		ASSERT_EQ(RbsDeserialization.ReadObject<SerializationTest>(), YamlTestReference);
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Array<NxFr::String>>()[4], "Fifth");
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::List<NxFr::String>>()[4], "Fifth");
-		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Set<NxFr::String>>().Contains("Fifth"), true);
+		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Set<NxFr::String>>().Contains([](const NxFr::String& Element) { return Element == "Fifth"; }), true);
 		auto Dict = RbsDeserialization.ReadObject<NxFr::Dictionary<NxFr::String, uint64>>();
 		ASSERT_EQ(Dict["Fifth"], 5);
 	}

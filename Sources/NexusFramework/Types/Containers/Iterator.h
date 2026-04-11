@@ -1,12 +1,16 @@
 #pragma once
 
 #include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Containers/Node.h"
 
 namespace NxFr
 {
 	namespace Iterator
 	{
+		template<typename T>
+		using IteratorPredicate = Delegate<bool(const T&)>;
+
 		class IteratorPointer
 		{
 		public:

@@ -547,35 +547,22 @@ namespace NxFr
 			return Data.End();
 		}
 
-		bool Contains(const T& Other) const
+		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
+		bool Contains(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
-			return Find(Other) != End();
+			return GetIteratorValue(Predicate) != End();
 		}
 
-		I Find(const T& Other)
+		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
+		I Find(const Iterator::IteratorPredicate<T>& Predicate)
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (*It == Other)
-				{
-					return It;
-				}
-			}
-
-			return End();
+			return GetIteratorValue(Predicate);
 		}
 
-		const I Find(const T& Other) const
+		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
+		const I Find(const Iterator::IteratorPredicate<T>& Predicate) const
 		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (*It == Other)
-				{
-					return It;
-				}
-			}
-
-			return End();
+			return GetIteratorValue(Predicate);
 		}
 
 		uint64 GetCapacity() const { return Data.GetCapacity(); }
@@ -583,6 +570,19 @@ namespace NxFr
 		uint64 GetUnused() const { return Data.GetUnused(); }
 
 	private:
+		I GetIteratorValue(const Iterator::IteratorPredicate<T>& Predicate) const
+		{
+			for (I It = Begin(); It != End(); ++It)
+			{
+				if (Predicate(*It))
+				{
+					return It;
+				}
+			}
+
+			return End();
+		}
+
 		P Data;
 	};
 }
