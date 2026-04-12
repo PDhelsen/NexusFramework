@@ -1,72 +1,134 @@
 #pragma once
 
-#include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Misc/Iterator.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 
 namespace NxFr
 {
 	namespace Iterator
 	{
-		struct StringCharacter
+		struct StringCharacter : public Iterator<StringView, StringCharacter>
 		{
 		public:
-			NEXUS_FRAMEWORK_API StringCharacter(StringView Text, uint64 Offset = 0);
-			NEXUS_FRAMEWORK_API ~StringCharacter();
+			StringCharacter(StringView Text, uint64 Offset = 0)
+				: Data(Text), Cursor(Data.C(), Offset, Data.GetCount() - Offset)
+			{
+			}
 
-			NEXUS_FRAMEWORK_API StringCharacter& operator++();
-			NEXUS_FRAMEWORK_API StringCharacter operator++(int32);
-			NEXUS_FRAMEWORK_API StringCharacter& operator--();
-			NEXUS_FRAMEWORK_API StringCharacter operator--(int32);
+			void Increment()
+			{
+				if (Cursor.C() >= Data.C() + Data.GetCount())
+				{
+					return;
+				}
 
-			NEXUS_FRAMEWORK_API StringView operator->() const;
-			NEXUS_FRAMEWORK_API StringView operator*() const;
+				uint64 Position = Cursor.C() - Data.C();
+				Position++;
+				Cursor = Data.Substring(Position, Data.GetCount() - Position);
+			}
 
-			NEXUS_FRAMEWORK_API bool operator==(const StringCharacter& Other);
-			NEXUS_FRAMEWORK_API bool operator!=(const StringCharacter& Other);
-			NEXUS_FRAMEWORK_API bool Equals(const StringCharacter& Other) const;
+			void Decrement()
+			{
+				if (Cursor.C() <= Data.C())
+				{
+					return;
+				}
 
-			NEXUS_FRAMEWORK_API StringView GetRemainder() const;
-			NEXUS_FRAMEWORK_API StringView Get() const;
-			NEXUS_FRAMEWORK_API uint64 Id() const;
-			NEXUS_FRAMEWORK_API void Iterate();
-			NEXUS_FRAMEWORK_API void Reverse();
+				uint64 Position = Cursor.C() - Data.C();
+				Position--;
+				Cursor = Data.Substring(Position, Data.GetCount() - Position);
+			}
 
-			NEXUS_FRAMEWORK_API StringCharacter& Next();
-			NEXUS_FRAMEWORK_API StringCharacter& Previous();
+			StringView& Get()
+			{
+				return Cursor;
+			}
+
+			const StringView& Get() const
+			{
+				return Cursor;
+			}
+
+			uint64 Id() const
+			{
+				return Cursor.C() - Data.C();
+			}
+
+			bool Equals(const StringCharacter& Other) const
+			{
+				return Data == Other.Data && Cursor == Other.Cursor;
+			}
 
 		private:
 			StringView Data;
-			uint64 Cursor;
+			StringView Cursor;
 		};
 
-		struct StringToken
+		struct StringToken : public Iterator<StringView, StringToken>
 		{
 		public:
-			NEXUS_FRAMEWORK_API StringToken(StringView Token, StringView Text, uint64 Offset = 0);
-			NEXUS_FRAMEWORK_API ~StringToken();
+			StringToken(StringView Token, StringView Text, uint64 Offset = 0)
+				: Token(Token), Data(Text), Cursor(Data.C(), Offset, 0)
+			{
+				Increment();
+			}
 
-			NEXUS_FRAMEWORK_API StringToken& operator++();
-			NEXUS_FRAMEWORK_API StringToken operator++(int32);
-			NEXUS_FRAMEWORK_API StringToken& operator--();
-			NEXUS_FRAMEWORK_API StringToken operator--(int32);
+			void Increment()
+			{
+				const char* Start = Cursor.C() + (Cursor.GetCount() != 0 ? Cursor.GetCount() + Token.GetCount() : 0);
+				const char* End = Data.C() + Data.GetCount();
 
-			NEXUS_FRAMEWORK_API StringView operator->() const;
-			NEXUS_FRAMEWORK_API StringView operator*() const;
+				const char* Pointer = Start;
+				while (StringCApi::Compare(Pointer, Token.C(), Token.GetCount()) != 0 && Pointer < End)
+				{
+					++Pointer;
+				}
 
-			NEXUS_FRAMEWORK_API bool operator==(const StringToken& Other);
-			NEXUS_FRAMEWORK_API bool operator!=(const StringToken& Other);
-			NEXUS_FRAMEWORK_API bool Equals(const StringToken& Other) const;
+				Cursor = StringView(Start, Pointer - Start);
+			}
 
-			NEXUS_FRAMEWORK_API StringView GetToken() const;
-			NEXUS_FRAMEWORK_API StringView GetRemainder() const;
-			NEXUS_FRAMEWORK_API StringView Get() const;
-			NEXUS_FRAMEWORK_API uint64 Id() const;
-			NEXUS_FRAMEWORK_API void Iterate();
-			NEXUS_FRAMEWORK_API void Reverse();
+			void Decrement()
+			{
+				const char* Start = Cursor.C() - (Token.GetCount() + 1);
+				const char* End = Data.C();
 
-			NEXUS_FRAMEWORK_API StringToken& Next();
-			NEXUS_FRAMEWORK_API StringToken& Previous();
+				const char* Pointer = Start;
+				while (StringCApi::Compare(Pointer, Token.C(), Token.GetCount()) != 0 && Pointer > End)
+				{
+					--Pointer;
+				}
+
+				if (Pointer > End)
+				{
+					Pointer += Token.GetCount();
+				}
+				if (Start > End)
+				{
+					Start++;
+				}
+
+				Cursor = StringView(Pointer, Start - Pointer);
+			}
+
+			StringView& Get()
+			{
+				return Cursor;
+			}
+
+			const StringView& Get() const
+			{
+				return Cursor;
+			}
+
+			uint64 Id() const
+			{
+				return Cursor.C() - Data.C();
+			}
+
+			bool Equals(const StringToken& Other) const
+			{
+				return Token == Other.Token && Data == Other.Data && Cursor == Other.Cursor;
+			}
 
 		private:
 			StringView Token;

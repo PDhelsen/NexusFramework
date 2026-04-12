@@ -159,7 +159,9 @@ namespace NxFr
 
 	Buffer::I Buffer::BeginReverse()
 	{
-		return --End();
+		auto It = End();
+		--It;
+		return It;
 	}
 
 	const Buffer::I Buffer::BeginReverse() const
@@ -191,7 +193,9 @@ namespace NxFr
 
 	Buffer::I Buffer::EndReverse()
 	{
-		return --Begin();
+		auto It = Begin();
+		--It;
+		return It;
 	}
 
 	const Buffer::I Buffer::EndReverse() const
@@ -295,7 +299,9 @@ namespace NxFr
 
 	BufferView::I BufferView::BeginReverse()
 	{
-		return --End();
+		auto It = End();
+		--It;
+		return It;
 	}
 
 	const BufferView::I BufferView::BeginReverse() const
@@ -327,7 +333,9 @@ namespace NxFr
 
 	BufferView::I BufferView::EndReverse()
 	{
-		return --Begin();
+		auto It = Begin();
+		--It;
+		return It;
 	}
 
 	const BufferView::I BufferView::EndReverse() const

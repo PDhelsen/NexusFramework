@@ -1,17 +1,14 @@
 #pragma once
 
-#include "NexusFramework/Types/Numbers/Integer.h"
-#include "NexusFramework/Types/Functions/Delegate.h"
+#include "NexusFramework/Misc/Iterator.h"
+#include "NexusFramework/Debug/Logger/Log.h"
 #include "NexusFramework/Types/Containers/Node.h"
 
 namespace NxFr
 {
 	namespace Iterator
 	{
-		template<typename T>
-		using IteratorPredicate = Delegate<bool(const T&)>;
-
-		class IteratorPointer
+		class IteratorPointer : public Iterator<uint8, IteratorPointer>
 		{
 		public:
 			IteratorPointer(void* Pointer, uint64 Offset)
@@ -20,65 +17,24 @@ namespace NxFr
 
 			}
 
-			IteratorPointer& operator++()
+			void Increment()
 			{
-				Iterate();
-				return *this;
+				++Offset;
 			}
 
-			IteratorPointer operator++(int32)
+			void Decrement()
 			{
-				IteratorPointer Temp = *this;
-				++(*this);
-				return Temp;
+				--Offset;
 			}
 
-			IteratorPointer& operator--()
+			uint8& Get()
 			{
-				Reverse();
-				return *this;
+				return *reinterpret_cast<uint8*>(reinterpret_cast<uint64>(Data) + Offset);
 			}
 
-			IteratorPointer operator--(int32)
+			const uint8& Get() const
 			{
-				IteratorPointer Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			void* operator->()
-			{
-				return Get();
-			}
-
-			const void* operator->() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorPointer& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorPointer& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorPointer& Other) const
-			{
-				return Data == Other.Data && Offset == Other.Offset;
-			}
-
-			void* Get()
-			{
-				return reinterpret_cast<void*>(reinterpret_cast<uint64>(Data) + Offset);
-			}
-
-			const void* Get() const
-			{
-				return reinterpret_cast<const void*>(reinterpret_cast<uint64>(Data) + Offset);
+				return *reinterpret_cast<uint8*>(reinterpret_cast<uint64>(Data) + Offset);
 			}
 
 			uint64 Id() const
@@ -86,26 +42,9 @@ namespace NxFr
 				return Offset;
 			}
 
-			void Iterate()
+			bool Equals(const IteratorPointer& Other) const
 			{
-				++Offset;
-			}
-
-			void Reverse()
-			{
-				--Offset;
-			}
-
-			IteratorPointer& Next()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorPointer& Previous()
-			{
-				Reverse();
-				return *this;
+				return Data == Other.Data && Offset == Other.Offset;
 			}
 
 		private:
@@ -114,7 +53,7 @@ namespace NxFr
 		};
 
 		template<typename T>
-		class IteratorBlock
+		class IteratorBlock : public Iterator<T, IteratorBlock<T>>
 		{
 		public:
 			IteratorBlock(T* Pointer, uint64 Idx)
@@ -123,65 +62,14 @@ namespace NxFr
 
 			}
 
-			IteratorBlock<T>& operator++()
+			void Increment()
 			{
-				Iterate();
-				return *this;
+				++Index;
 			}
 
-			IteratorBlock<T> operator++(int32)
+			void Decrement()
 			{
-				IteratorBlock<T> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			IteratorBlock<T>& operator--()
-			{
-				Reverse();
-				return *this;
-			}
-
-			IteratorBlock<T> operator--(int32)
-			{
-				IteratorBlock<T> Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*() 
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorBlock<T>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorBlock<T>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorBlock<T>& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
+				--Index;
 			}
 
 			T& Get()
@@ -199,26 +87,9 @@ namespace NxFr
 				return Index;
 			}
 
-			void Iterate()
+			bool Equals(const IteratorBlock<T>& Other) const
 			{
-				++Index;
-			}
-
-			void Reverse()
-			{
-				--Index;
-			}
-
-			IteratorBlock<T>& Next()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorBlock<T>& Previous()
-			{
-				Reverse();
-				return *this;
+				return Data == Other.Data && Index == Other.Index;
 			}
 
 		private:
@@ -227,7 +98,7 @@ namespace NxFr
 		};
 
 		template<typename T, uint64 BS>
-		class IteratorBucket
+		class IteratorBucket : public Iterator<T, IteratorBucket<T, BS>>
 		{
 		public:
 			inline static const uint64 BucketSize = BS;
@@ -238,68 +109,33 @@ namespace NxFr
 
 			}
 
-			IteratorBucket<T, BS>& operator++()
+			void Increment()
 			{
-				Iterate();
-				return *this;
+				if (DataIndex == BucketSize - 1)
+				{
+					++BucketIndex;
+					DataIndex = 0;
+				}
+				else
+				{
+					++DataIndex;
+				}
 			}
 
-			IteratorBucket<T, BS> operator++(int32)
+			void Decrement()
 			{
-				IteratorBucket<T, BS> Temp = *this;
-				++(*this);
-				return Temp;
+				if (DataIndex == 0)
+				{
+					--BucketIndex;
+					DataIndex = BucketSize - 1;
+				}
+				else
+				{
+					--DataIndex;
+				}
 			}
 
-			IteratorBucket<T, BS>& operator--()
-			{
-				Reverse();
-				return *this;
-			}
-
-			IteratorBucket<T, BS> operator--(int32)
-			{
-				IteratorBucket<T, BS> Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*()
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorBucket<T, BS>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorBucket<T, BS>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorBucket<T, BS>& Other) const
-			{
-				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
-			}
-
-			T& Get() 
+			T& Get()
 			{
 				return Data[BucketIndex][DataIndex];
 			}
@@ -314,42 +150,9 @@ namespace NxFr
 				return BucketIndex * BucketSize + DataIndex - Offset;
 			}
 
-			void Iterate()
+			bool Equals(const IteratorBucket<T, BS>& Other) const
 			{
-				if (DataIndex == BucketSize - 1)
-				{
-					++BucketIndex;
-					DataIndex = 0;
-				}
-				else
-				{
-					++DataIndex;
-				}
-			}
-
-			void Reverse()
-			{
-				if (DataIndex == 0)
-				{
-					--BucketIndex;
-					DataIndex = BucketSize - 1;
-				}
-				else
-				{
-					--DataIndex;
-				}
-			}
-
-			IteratorBucket<T, BS>& Next()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorBucket<T, BS>& Previous()
-			{
-				Reverse();
-				return *this;
+				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
 
 		private:
@@ -360,7 +163,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorHashmap
+		class IteratorHashmap : public Iterator<T, IteratorHashmap<T, N>>
 		{
 		public:
 			IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
@@ -368,74 +171,11 @@ namespace NxFr
 			{
 				if (Data[Index].IsFree() && Index < Capacity)
 				{
-					Iterate();
+					Increment();
 				}
 			}
 
-			IteratorHashmap<T, N>& operator++()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorHashmap<T, N> operator++(int32)
-			{
-				IteratorHashmap<T, N> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*() 
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorHashmap<T, N>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorHashmap<T, N>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorHashmap<T, N>& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
-			}
-
-			T& Get() 
-			{
-				return Data[Index].Value;
-			}
-
-			const T& Get() const
-			{
-				return Data[Index].Value;
-			}
-
-			uint64 Id() const
-			{
-				return Index;
-			}
-
-			void Iterate()
+			void Increment()
 			{
 				do
 				{
@@ -443,77 +183,9 @@ namespace NxFr
 				} while (Data[Index].IsFree() && Index < Capacity);
 			}
 
-			IteratorHashmap<T, N>& Next()
+			void Decrement()
 			{
-				Iterate();
-				return *this;
-			}
-
-		private:
-			N* Data;
-			uint64 Index;
-			uint64 Capacity;
-		};
-
-		template<typename T, typename N>
-		class IteratorPreAllocated
-		{
-		public:
-			IteratorPreAllocated(N* Pointer, uint64 Idx, uint64 Cpct)
-				: Data(Pointer), Index(Idx), Capacity(Cpct)
-			{
-				if (Data[Index].Next != nullptr && Index < Capacity)
-				{
-					Iterate();
-				}
-			}
-
-			IteratorPreAllocated<T, N>& operator++()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorPreAllocated<T, N> operator++(int32)
-			{
-				IteratorPreAllocated<T, N> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*()
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorPreAllocated<T, N>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorPreAllocated<T, N>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorPreAllocated<T, N>& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
+				NEXUS_ASSERT(false, Default, "IteratorHashmap doesn't support moving backward");
 			}
 
 			T& Get()
@@ -531,20 +203,10 @@ namespace NxFr
 				return Index;
 			}
 
-			void Iterate()
+			bool Equals(const IteratorHashmap<T, N>& Other) const
 			{
-				do
-				{
-					++Index;
-				} while (Data[Index].Next != nullptr && Index < Capacity);
+				return Data == Other.Data && Index == Other.Index;
 			}
-
-			IteratorPreAllocated<T, N>& Next()
-			{
-				Iterate();
-				return *this;
-			}
-
 
 		private:
 			N* Data;
@@ -553,7 +215,59 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorNodeSimple
+		class IteratorPreAllocated : public Iterator<T, IteratorPreAllocated<T, N>>
+		{
+		public:
+			IteratorPreAllocated(N* Pointer, uint64 Idx, uint64 Cpct)
+				: Data(Pointer), Index(Idx), Capacity(Cpct)
+			{
+				if (Data[Index].Next != nullptr && Index < Capacity)
+				{
+					Increment();
+				}
+			}
+
+			void Increment()
+			{
+				do
+				{
+					++Index;
+				} while (Data[Index].Next != nullptr && Index < Capacity);
+			}
+
+			void Decrement()
+			{
+				NEXUS_ASSERT(false, Default, "IteratorPreAllocated doesn't support moving backward");
+			}
+
+			T& Get()
+			{
+				return Data[Index].Value;
+			}
+
+			const T& Get() const
+			{
+				return Data[Index].Value;
+			}
+
+			uint64 Id() const
+			{
+				return Index;
+			}
+
+			bool Equals(const IteratorPreAllocated<T, N>& Other) const
+			{
+				return Data == Other.Data && Index == Other.Index;
+			}
+
+		private:
+			N* Data;
+			uint64 Index;
+			uint64 Capacity;
+		};
+
+		template<typename T, typename N>
+		class IteratorNodeSimple : public Iterator<T, IteratorNodeSimple<T, N>>
 		{
 		public:
 			IteratorNodeSimple(N* Pointer)
@@ -562,52 +276,17 @@ namespace NxFr
 
 			}
 
-			IteratorNodeSimple<T, N>& operator++()
+			void Increment()
 			{
-				Iterate();
-				return *this;
+				if (Current)
+				{
+					Current = Current->Next;
+				}
 			}
 
-			IteratorNodeSimple<T, N> operator++(int32)
+			void Decrement()
 			{
-				IteratorNodeSimple<T, N> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*()
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorNodeSimple<T, N>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorNodeSimple<T, N>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorNodeSimple<T, N>& Other) const
-			{
-				return Current == Other.Current;
+				NEXUS_ASSERT(false, Default, "IteratorNodeSimple doesn't support moving backward");
 			}
 
 			T& Get()
@@ -620,28 +299,15 @@ namespace NxFr
 				return Current->Value;
 			}
 
-			T* Id()
+			uint64 Id() const
 			{
-				return &Current->Value;
+				NEXUS_ASSERT(false, Default, "IteratorNodeSimple doesn't support query the id");
+				return -1;
 			}
 
-			const T* Id() const
+			bool Equals(const IteratorNodeSimple<T, N>& Other) const
 			{
-				return &Current->Value;
-			}
-
-			void Iterate()
-			{
-				if (Current)
-				{
-					Current = Current->Next;
-				}
-			}
-
-			IteratorNodeSimple<T, N>& Next()
-			{
-				Iterate();
-				return *this;
+				return Current == Other.Current;
 			}
 
 		private:
@@ -649,7 +315,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorNodeDouble
+		class IteratorNodeDouble : public Iterator<T, IteratorNodeDouble<T, N>>
 		{
 		public:
 			IteratorNodeDouble(N* Pointer)
@@ -658,88 +324,7 @@ namespace NxFr
 
 			}
 
-			IteratorNodeDouble<T, N>& operator++()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorNodeDouble<T, N> operator++(int32)
-			{
-				IteratorNodeDouble<T, N> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			IteratorNodeDouble<T, N>& operator--()
-			{
-				Reverse();
-				return *this;
-			}
-
-			IteratorNodeDouble<T, N> operator--(int32)
-			{
-				IteratorNodeDouble<T, N> Temp = *this;
-				--(*this);
-				return Temp;
-			}
-
-			T* operator->() 
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*() 
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorNodeDouble<T, N>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorNodeDouble<T, N>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorNodeDouble<T, N>& Other) const
-			{
-				return Current == Other.Current;
-			}
-
-			T& Get() 
-			{
-				return Current->Value;
-			}
-
-			const T& Get() const
-			{
-				return Current->Value;
-			}
-
-			T* Id() 
-			{
-				return &Current->Value;
-			}
-
-			const T* Id() const
-			{
-				return &Current->Value;
-			}
-
-			void Iterate()
+			void Increment()
 			{
 				if (Current)
 				{
@@ -747,85 +332,12 @@ namespace NxFr
 				}
 			}
 
-			void Reverse()
+			void Decrement()
 			{
 				if (Current)
 				{
 					Current = Current->Prev;
 				}
-			}
-
-			IteratorNodeDouble<T, N>& Next()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorNodeDouble<T, N>& Previous()
-			{
-				Reverse();
-				return *this;
-			}
-
-		private:
-			N* Current;
-		};
-
-		template<typename T, typename N>
-		class IteratorNodeTree
-		{
-		public:
-			IteratorNodeTree(N* Pointer)
-				: Current(Pointer)
-			{
-			}
-
-			IteratorNodeTree<T, N>& operator++()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorNodeTree<T, N> operator++(int32)
-			{
-				IteratorNodeTree<T, N> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*()
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorNodeTree<T, N>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorNodeTree<T, N>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorNodeTree<T, N>& Other) const
-			{
-				return Current == Other.Current;
 			}
 
 			T& Get()
@@ -838,17 +350,31 @@ namespace NxFr
 				return Current->Value;
 			}
 
-			T* Id()
+			uint64 Id() const
 			{
-				return &Current->Value;
+				NEXUS_ASSERT(false, Default, "IteratorNodeDouble doesn't support query the id");
+				return -1;
 			}
 
-			const T* Id() const
+			bool Equals(const IteratorNodeDouble<T, N>& Other) const
 			{
-				return &Current->Value;
+				return Current == Other.Current;
 			}
 
-			void Iterate()
+		private:
+			N* Current;
+		};
+
+		template<typename T, typename N>
+		class IteratorNodeTree : public Iterator<T, IteratorNodeTree<T, N>>
+		{
+		public:
+			IteratorNodeTree(N* Pointer)
+				: Current(Pointer)
+			{
+			}
+
+			void Increment()
 			{
 				if (Current && Current->Child)
 				{
@@ -873,99 +399,9 @@ namespace NxFr
 				}
 			}
 
-			IteratorNodeTree<T, N>& Next()
+			void Decrement()
 			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorNodeTree<T, N>& Parent()
-			{
-				if (Current)
-				{
-					Current = Current->Parent;
-				}
-				return *this;
-			}
-
-			IteratorNodeTree<T, N>& Sibling()
-			{
-				if (Current)
-				{
-					Current = Current->Sibling;
-				}
-				return *this;
-			}
-
-			IteratorNodeTree<T, N>& Child()
-			{
-				if (Current)
-				{
-					Current = Current->Child;
-				}
-				return *this;
-			}
-
-		private:
-			N* Current;
-		};
-
-		template<typename T, typename N>
-		class IteratorNodeGraph
-		{
-		public:
-			IteratorNodeGraph(N* Pointer)
-				: Current(Pointer)
-			{
-
-			}
-
-			IteratorNodeGraph<T, N>& operator++()
-			{
-				Iterate();
-				return *this;
-			}
-
-			IteratorNodeGraph<T, N> operator++(int32)
-			{
-				IteratorNodeGraph<T, N> Temp = *this;
-				++(*this);
-				return Temp;
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			T& operator*()
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			bool operator==(const IteratorNodeGraph<T, N>& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorNodeGraph<T, N>& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			bool Equals(const IteratorNodeGraph<T, N>& Other) const
-			{
-				return Current == Other.Current;
+				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support moving backward");
 			}
 
 			T& Get()
@@ -978,17 +414,32 @@ namespace NxFr
 				return Current->Value;
 			}
 
-			T* Id()
+			uint64 Id() const
 			{
-				return &Current->Value;
+				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
+				return -1;
 			}
 
-			const T* Id() const
+			bool Equals(const IteratorNodeTree<T, N>& Other) const
 			{
-				return &Current->Value;
+				return Current == Other.Current;
 			}
 
-			void Iterate()
+		private:
+			N* Current;
+		};
+
+		template<typename T, typename N>
+		class IteratorNodeGraph : public Iterator<T, IteratorNodeGraph<T, N>>
+		{
+		public:
+			IteratorNodeGraph(N* Pointer)
+				: Current(Pointer)
+			{
+
+			}
+
+			void Increment()
 			{
 				if (Current)
 				{
@@ -996,41 +447,30 @@ namespace NxFr
 				}
 			}
 
-			IteratorNodeGraph<T, N>& Next()
+			void Decrement()
 			{
-				Iterate();
-				return *this;
+				NEXUS_ASSERT(false, Default, "IteratorNodeGraph doesn't support moving backward");
 			}
 
-			IteratorNodeGraph<T, N>& Connections(Node::NodeGraphConnectionType Type, uint64 Index)
+			T& Get()
 			{
-				uint64 Idx = 0;
-				Node::NodeGraphConnection<T>* Connect = Current->Connection;
-				while (Connect)
-				{
-					if (Connect->Type == Type)
-					{
-						if (Idx == Index)
-						{
-							break;
-						}
+				return Current->Value;
+			}
 
-						++Idx;
-					}
+			const T& Get() const
+			{
+				return Current->Value;
+			}
 
-					Connect = Connect->Next;
-				}
+			uint64 Id() const
+			{
+				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
+				return -1;
+			}
 
-				if (Connect)
-				{
-					Current = Connect->Target;
-				}
-				else
-				{
-					Current = nullptr;
-				}
-
-				return *this;
+			bool Equals(const IteratorNodeGraph<T, N>& Other) const
+			{
+				return Current == Other.Current;
 			}
 
 		private:

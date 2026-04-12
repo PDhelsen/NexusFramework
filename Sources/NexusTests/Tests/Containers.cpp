@@ -953,9 +953,6 @@ namespace NxTs
 		ASSERT_EQ(Test.IsChild(&Index1, &Index8), true);
 
 		ASSERT_EQ(Test.GetIterator(&Index5)->Integer, Index5.Integer);
-		ASSERT_EQ(Test.GetIterator(&Index8).Parent()->Integer, Index1.Integer);
-		ASSERT_EQ(Test.GetIterator(&Index1).Sibling()->Integer, Index5.Integer);
-		ASSERT_EQ(Test.GetIterator(&Index1).Child()->Integer, Index8.Integer);
 		ASSERT_EQ(Test.Begin()->Integer, Root.Integer);
 		ASSERT_EQ(Test.End(), nullptr);
 
@@ -1033,7 +1030,6 @@ namespace NxTs
 		ASSERT_EQ(Test.IsConnected(&Index3, &Index1, NxFr::Graph<ContainerTest>::CT::From), false);
 
 		ASSERT_EQ(Test.GetIterator(&Index1)->Integer, Index1.Integer);
-		ASSERT_EQ(Test.GetIterator(&Index1).Connections(NxFr::Graph<ContainerTest>::CT::To, 0)->Integer, Index2.Integer);
 		ASSERT_EQ(Test.Begin()->Integer, Test.Get().Integer);
 		ASSERT_EQ(Test.End(), nullptr);
 

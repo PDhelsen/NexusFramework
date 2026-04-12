@@ -253,13 +253,11 @@ namespace NxTs
 
 		for (NxFr::Iterator::StringCharacter It = Data.Begin(); It != Data.End(); ++It)
 		{
-			auto test = It.GetRemainder();
 			NEXUS_LOG(Info, Default, "%s", It.Get().C());
 		}
 
 		for (NxFr::Iterator::StringToken It = Data.Begin(" "); It != Data.End(" "); ++It)
 		{
-			auto test = It.GetRemainder();
 			NEXUS_LOG(Info, Default, "%s", It.Get().C());
 		}
 	}
