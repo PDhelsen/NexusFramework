@@ -31,8 +31,9 @@ namespace NxFr
 		case NxFr::Platform::TerminalColor::Cyan: return "\033[36m";
 		case NxFr::Platform::TerminalColor::Magenta: return "\033[35m";
 		case NxFr::Platform::TerminalColor::White: return "\033[37m";
-		case NxFr::Platform::TerminalColor::None: return "\033[m";
 		}
+
+		return "\033[m";
 	}
 
 	void* PlatformWindows::LoadDll(StringView DllName)
