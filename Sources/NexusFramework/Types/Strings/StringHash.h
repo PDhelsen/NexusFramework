@@ -22,6 +22,11 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, const char* Data)
 			{
+				if (StringCApi::Length(Data) == 0)
+				{
+					return 0;
+				}
+
 				HashProcess<const char*, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
@@ -38,6 +43,11 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, const String& Data)
 			{
+				if (Data.IsEmpty())
+				{
+					return 0;
+				}
+
 				HashProcess<String, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
@@ -54,6 +64,11 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, const StringView& Data)
 			{
+				if (Data.IsEmpty())
+				{
+					return 0;
+				}
+
 				HashProcess<StringView, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
@@ -65,7 +80,7 @@ namespace NxFr
 		public:
 			static void Accumulate(HashStrategy<H>& State, const StringId& Data)
 			{
-				HashProcess<StringView, H>::Accumulate(State, Data);
+				HashProcess<uint64, H>::Accumulate(State, Data.GetId());
 			}
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, const StringId& Data)

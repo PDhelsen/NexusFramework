@@ -202,12 +202,21 @@ namespace NxTs
 		ASSERT_NE(NxFr::Hash<>::HashObject(float(1.0f)), 0);
 		ASSERT_NE(NxFr::Hash<>::HashObject(double(2.0f)), 0);
 
-		ASSERT_EQ(NxFr::Hash<>::HashObject(bool(1)), 1);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(false), -1);
+		ASSERT_EQ(NxFr::Hash<>::HashObject(true), 1);
+		ASSERT_EQ(NxFr::Hash<>::HashObject(false), 0);
 
 		HashTest Data = { .A = 10, .B = 15, .C = 20 };
 		ASSERT_NE(NxFr::Hash<>::HashObject(&Data), 0);
 
-		ASSERT_EQ(NxFr::Hash<>::HashObject(0), uint64(-1));
+		ASSERT_EQ(NxFr::Hash<>::HashObject(0), 0);
+		ASSERT_EQ(NxFr::Hash<>::HashObject(0.0f), 0);
+
+		HashTest* Pointer = new HashTest();
+		const HashTest* ConstPointer = new HashTest();
+		ASSERT_EQ(NxFr::Hash<>::HashObject<>(nullptr), 0);
+		ASSERT_EQ(NxFr::Hash<>::HashObject<>(Pointer), reinterpret_cast<uint64>(Pointer));
+		ASSERT_EQ(NxFr::Hash<>::HashObject<>(ConstPointer), reinterpret_cast<uint64>(ConstPointer));
+		delete Pointer;
+		delete ConstPointer;
 	}
 }

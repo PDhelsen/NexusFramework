@@ -20,7 +20,7 @@ namespace NxFr
 
 		XxHash32& XxHash32::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
+			NEXUS_ASSERT(Data, Default, "Invalid Data");
 
 			Size += Length;
 			const uint8* Pointer = reinterpret_cast<const uint8*>(Data);
@@ -165,7 +165,7 @@ namespace NxFr
 
 		XxHash64& XxHash64::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
+			NEXUS_ASSERT(Data, Default, "Invalid Data");
 
 			Size += Length;
 			const uint8* Pointer = reinterpret_cast<const uint8*>(Data);
@@ -322,7 +322,7 @@ namespace NxFr
 
 		Murmur32& Murmur32::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
+			NEXUS_ASSERT(Data, Default, "Invalid Data");
 
 			Size += Length;
 
@@ -406,7 +406,7 @@ namespace NxFr
 
 		Fnv164& Fnv164::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
+			NEXUS_ASSERT(Data, Default, "Invalid Data");
 
 			Size += Length;
 
@@ -450,7 +450,7 @@ namespace NxFr
 
 		Fnv1a64& Fnv1a64::Accumulate(const void* Data, uint64 Length)
 		{
-			NEXUS_ASSERT(Data && Length > 0, Default, "Invalid Data");
+			NEXUS_ASSERT(Data, Default, "Invalid Data");
 
 			Size += Length;
 

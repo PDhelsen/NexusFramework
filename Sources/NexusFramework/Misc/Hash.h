@@ -221,7 +221,7 @@ namespace NxFr
 			H State;
 		};
 
-		template<typename T = void*, typename H = Hashing::Default>
+		template<typename T, typename H = Hashing::Default>
 		class HashProcess
 		{
 		public:
@@ -323,7 +323,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, bool Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data ? 1 : 0;
 			}
 		};
 
@@ -338,7 +338,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, char Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -353,7 +353,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int8 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -368,7 +368,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int16 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -383,7 +383,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int32 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -398,7 +398,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, int64 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -413,7 +413,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint8 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -428,7 +428,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint16 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -443,7 +443,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint32 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -458,7 +458,7 @@ namespace NxFr
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, uint64 Data)
 			{
-				return HashAlgorithm<typename H::HashLength>::Finalize(Data);
+				return Data;
 			}
 		};
 
@@ -466,13 +466,18 @@ namespace NxFr
 		class HashProcess<float, H>
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, const float& Data)
+			static void Accumulate(HashStrategy<H>& State, float Data)
 			{
 				State.Accumulate(&Data, sizeof(float));
 			}
 
-			static typename H::HashLength Hash(HashStrategy<H>& State, const float& Data)
+			static typename H::HashLength Hash(HashStrategy<H>& State, float Data)
 			{
+				if (Data == 0.0f)
+				{
+					return 0;
+				}
+
 				HashProcess<float, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
@@ -482,31 +487,50 @@ namespace NxFr
 		class HashProcess<double, H>
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, const double& Data)
+			static void Accumulate(HashStrategy<H>& State, double Data)
 			{
 				State.Accumulate(&Data, sizeof(double));
 			}
 
-			static typename H::HashLength Hash(HashStrategy<H>& State, const double& Data)
+			static typename H::HashLength Hash(HashStrategy<H>& State, double Data)
 			{
+				if (Data == 0.0)
+				{
+					return 0;
+				}
+
 				HashProcess<double, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
 		};
 
-		template<typename H>
-		class HashProcess<void*, H>
+		template<typename T, typename H>
+		class HashProcess<T*, H>
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, void* Data)
+			static void Accumulate(HashStrategy<H>& State, const T* Data)
 			{
 				State.Accumulate(&Data, sizeof(void*));
 			}
 
-			static typename H::HashLength Hash(HashStrategy<H>& State, void* Data)
+			static typename H::HashLength Hash(HashStrategy<H>& State, const T* Data)
 			{
-				typename H::HashLength Reinterpreted = reinterpret_cast<typename H::HashLength>(Data);
-				return HashAlgorithm<typename H::HashLength>::Finalize(Reinterpreted);
+				return reinterpret_cast<uint64>(Data);
+			}
+		};
+
+		template<typename H>
+		class HashProcess<nullptr_t, H>
+		{
+		public:
+			static void Accumulate(HashStrategy<H>& State, const nullptr_t* Data)
+			{
+				State.Accumulate(uint64(0), sizeof(uint64));
+			}
+
+			static typename H::HashLength Hash(HashStrategy<H>& State, const nullptr_t* Data)
+			{
+				return 0;
 			}
 		};
 	}
