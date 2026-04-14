@@ -243,18 +243,32 @@ namespace NxFr
 			}
 		}
 
-		Stream.Flush();
+		if (Stream.IsOpened())
+		{
+			Stream.Flush();
+		}
+
 		Logs.Clear();
 	}
 
 	void Logger::OpenFile(StringView Path)
 	{
+		if (Path.IsEmpty())
+		{
+			return;
+		}
+
 		Stream = TextStream(Path);
 		Stream.Open(File::Mode::Write);
 	}
 
 	void Logger::CloseFile()
 	{
+		if (!Stream.IsOpened())
+		{
+			return;
+		}
+
 		Stream.Close();
 	}
 }
