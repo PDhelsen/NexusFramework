@@ -172,12 +172,8 @@ namespace NxTs
 		ASSERT_EQ(Hash1, Fnv1a64Small);
 		ASSERT_EQ(Hash2, Fnv1a64Long);
 
-		uint64 Test3 = 123456789;
-		uint64 Hash3 = NxFr::Hash<>::HashObject(123456789);
 		HashTest Test4 = { .A = 10, .B = 15, .C = 20 };
 		uint64 Hash4 = NxFr::Hash<>::HashObject(Test4);
-
-		ASSERT_EQ(Hash3, Test3);
 
 		uint64 Hash5 = NxFr::Hash<>::Combine(Hash1, Hash2);
 
@@ -186,37 +182,5 @@ namespace NxTs
 
 		ASSERT_EQ(Hash6, XxHash32Small);
 		ASSERT_EQ(Hash7, XxHash32Long);
-	}
-
-	TEST(Hash, NativeType)
-	{
-		ASSERT_EQ(NxFr::Hash<>::HashObject(int8(8)), 8);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(int16(16)), 16);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(int32(32)), 32);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(int64(64)), 64);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(uint8(8)), 8);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(uint16(16)), 16);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(uint32(32)), 32);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(uint64(64)), 64);
-
-		ASSERT_NE(NxFr::Hash<>::HashObject(float(1.0f)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(double(2.0f)), 0);
-
-		ASSERT_EQ(NxFr::Hash<>::HashObject(true), 1);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(false), 0);
-
-		HashTest Data = { .A = 10, .B = 15, .C = 20 };
-		ASSERT_NE(NxFr::Hash<>::HashObject(&Data), 0);
-
-		ASSERT_EQ(NxFr::Hash<>::HashObject(0), 0);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(0.0f), 0);
-
-		HashTest* Pointer = new HashTest();
-		const HashTest* ConstPointer = new HashTest();
-		ASSERT_EQ(NxFr::Hash<>::HashObject<>(nullptr), 0);
-		ASSERT_EQ(NxFr::Hash<>::HashObject<>(Pointer), reinterpret_cast<uint64>(Pointer));
-		ASSERT_EQ(NxFr::Hash<>::HashObject<>(ConstPointer), reinterpret_cast<uint64>(ConstPointer));
-		delete Pointer;
-		delete ConstPointer;
 	}
 }

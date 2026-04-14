@@ -13,7 +13,7 @@ namespace NxFr
 		Lock Guard(GetLock());
 
 		Dictionary<GUID, StringView>& Table = GetStringsTable();
-		GUID Id = !Text.IsEmpty() ? Hash<>::HashObject(Text) : 0;
+		GUID Id = Hash<>::HashObject(Text);
 		if (!Table.ContainsKey(Id))
 		{
 			Dequeue<String>& Instances = GetStrings();

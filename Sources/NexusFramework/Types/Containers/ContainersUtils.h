@@ -136,7 +136,7 @@ namespace NxFr
 				uint64 Hash = Base.GetHash(*It);
 				uint64 Index = Base.GetIndex(Hash);
 
-				if (Index < Base.Capacity  && !Base.Data[Index].IsFree())
+				if (Index < Base.Capacity  && !Base.Data[Index].Free)
 				{
 					continue;
 				}
@@ -157,7 +157,7 @@ namespace NxFr
 				uint64 Hash = Base.GetHash(*It);
 				uint64 Index = Base.GetIndex(Hash);
 
-				if (Base.Data[Index].IsFree())
+				if (Base.Data[Index].Free)
 				{
 					continue;
 				}
@@ -175,7 +175,7 @@ namespace NxFr
 				uint64 Hash = Other.GetHash(*It);
 				uint64 Index = Other.GetIndex(Hash);
 
-				if (!Other.Data[Index].IsFree())
+				if (!Other.Data[Index].Free)
 				{
 					continue;
 				}

@@ -169,7 +169,7 @@ namespace NxFr
 			IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
 				: Data(Pointer), Index(Idx), Capacity(Cpct)
 			{
-				if (Data[Index].IsFree() && Index < Capacity)
+				if (Data[Index].Free && Index < Capacity)
 				{
 					Increment();
 				}
@@ -180,7 +180,7 @@ namespace NxFr
 				do
 				{
 					++Index;
-				} while (Data[Index].IsFree() && Index < Capacity);
+				} while (Data[Index].Free && Index < Capacity);
 			}
 
 			void Decrement()

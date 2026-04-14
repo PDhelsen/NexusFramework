@@ -67,14 +67,14 @@ namespace NxFr
 			Result = Remains(Result, Pointer, Stop);
 			Result = Avalanche(Result);
 
-			return Finalize(Result);
+			return Result;
 		}
 
 		XxHash32::HashLength XxHash32::Combine(HashLength HashA, HashLength HashB) const
 		{
 			HashLength HashCombined = HashA;
 			HashCombined ^= HashB + 0x9e3779b9 + (HashCombined << 6) + (HashCombined >> 2);
-			return Finalize(HashCombined);
+			return HashCombined;
 		}
 
 		const uint8* XxHash32::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
@@ -213,14 +213,14 @@ namespace NxFr
 			Result = Remains(Result, Pointer, Stop);
 			Result = Avalanche(Result);
 
-			return Finalize(Result);
+			return Result;
 		}
 
 		XxHash64::HashLength XxHash64::Combine(HashLength HashA, HashLength HashB) const
 		{
 			HashLength HashCombined = HashA;
 			HashCombined ^= HashB + 0x9e3779b97f4a7c15 + (HashCombined << 6) + (HashCombined >> 2);
-			return Finalize(HashCombined);
+			return HashCombined;
 		}
 
 		const uint8* XxHash64::CopyIntoBuffer(uint8* Buffer, const uint8* Pointer, uint8 Length, uint8& BufferIndex)
@@ -369,14 +369,14 @@ namespace NxFr
 			HashLength Result = Accumulator;
 			Result ^= Size;
 			Result = Avalanche(Result);
-			return Finalize(Result);
+			return Result;
 		}
 
 		Murmur32::HashLength Murmur32::Combine(HashLength HashA, HashLength HashB) const
 		{
 			HashLength HashCombined = HashA;
 			HashCombined ^= HashB + 0x9e3779b9 + (HashCombined << 6) + (HashCombined >> 2);
-			return Finalize(HashCombined);
+			return HashCombined;
 		}
 
 		Murmur32::HashLength Murmur32::RotateLeft(HashLength Value, uint8 Bits)
@@ -422,20 +422,20 @@ namespace NxFr
 
 		Fnv164::HashLength Fnv164::Hash() const
 		{
-			return Finalize(Accumulator);
+			return Accumulator;
 		}
 
 		Fnv164::HashLength Fnv164::Combine(HashLength HashA, HashLength HashB) const
 		{
-			HashLength CombinedHash = Basis;
+			HashLength HashCombined = Basis;
 
-			CombinedHash *= Prime;
-			CombinedHash ^= HashA;
+			HashCombined *= Prime;
+			HashCombined ^= HashA;
 
-			CombinedHash *= Prime;
-			CombinedHash ^= HashB;
+			HashCombined *= Prime;
+			HashCombined ^= HashB;
 
-			return Finalize(CombinedHash);
+			return HashCombined;
 		}
 
 #pragma endregion
@@ -466,20 +466,20 @@ namespace NxFr
 
 		Fnv1a64::HashLength Fnv1a64::Hash() const
 		{
-			return Finalize(Accumulator);
+			return Accumulator;
 		}
 
 		Fnv1a64::HashLength Fnv1a64::Combine(HashLength HashA, HashLength HashB) const
 		{
-			HashLength CombinedHash = Basis;
+			HashLength HashCombined = Basis;
 
-			CombinedHash ^= HashA;
-			CombinedHash *= Prime;
+			HashCombined ^= HashA;
+			HashCombined *= Prime;
 
-			CombinedHash ^= HashB;
-			CombinedHash *= Prime;
+			HashCombined ^= HashB;
+			HashCombined *= Prime;
 
-			return Finalize(CombinedHash);
+			return HashCombined;
 		}
 
 #pragma endregion

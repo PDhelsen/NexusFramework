@@ -148,7 +148,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Value already present in Dictionary");
+			NEXUS_ASSERT(Index < Capacity && Data[Index].Free, Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Value);
 			return Data[Index].Value;
 		}
@@ -158,7 +158,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Value already present in Dictionary");
+			NEXUS_ASSERT(Index < Capacity && Data[Index].Free, Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Move(Value));
 			return Data[Index].Value;
 		}
@@ -172,7 +172,7 @@ namespace NxFr
 			{
 				uint64 Hash = GetHash(*It);
 				uint64 Index = GetIndex(Hash);
-				NEXUS_ASSERT(Index < Capacity && Data[Index].IsFree(), Default, "Value already present in Dictionary");
+				NEXUS_ASSERT(Index < Capacity && Data[Index].Free, Default, "Value already present in Dictionary");
 				Construct(Index, Hash, *It);
 			}
 
@@ -185,7 +185,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (Index >= Capacity || Data[Index].IsFree())
+			if (Index >= Capacity || Data[Index].Free)
 			{
 				if (Resize(++Count))
 				{
@@ -200,7 +200,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (Index >= Capacity || Data[Index].IsFree())
+			if (Index >= Capacity || Data[Index].Free)
 			{
 				if (Resize(++Count))
 				{
@@ -217,7 +217,7 @@ namespace NxFr
 
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && !Data[Index].IsFree(), Default, "Failed to find key");
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].Free, Default, "Failed to find key");
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -228,7 +228,7 @@ namespace NxFr
 
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			if (Index >= Capacity || Data[Index].IsFree())
+			if (Index >= Capacity || Data[Index].Free)
 			{
 				return;
 			}
@@ -306,8 +306,7 @@ namespace NxFr
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
-				Data[Index].Hash = 0;
-				Data[Index].Tombstone = TB::NotTombstone;
+				Data[Index].Clear();
 			}
 		}
 
@@ -321,7 +320,7 @@ namespace NxFr
 			for (uint64 OldIndex = 0; OldIndex < Length; ++OldIndex)
 			{
 				N& Instance = Temp[OldIndex];
-				if (Instance.IsFree())
+				if (Instance.Free)
 				{
 					continue;
 				}
@@ -344,22 +343,17 @@ namespace NxFr
 		void Construct(uint64 Index, uint64 Hash, Args&&... args)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(Instance.IsFree(), Default, "Construct on an already occupied slot");
+			NEXUS_ASSERT(Instance.Free, Default, "Construct on an already occupied slot");
 			Memory::Construct<T>(&Instance.Value, args...);
-			Instance.Hash = Hash;
-			if (Data[Index].Tombstone == TB::IsTombstone)
-			{
-				Data[Index].Tombstone = TB::WasTombstone;
-			}
+			Instance.Update(Hash);
 		}
 
 		void Destruct(uint64 Index)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(!Instance.IsFree(), Default, "Destruct on a free slot");
+			NEXUS_ASSERT(!Instance.Free, Default, "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
-			Instance.Hash = 0;
-			Instance.Tombstone = TB::IsTombstone;
+			Instance.Update();
 		}
 
 		void DestructRange(uint64 Index, uint64 Size)
@@ -367,18 +361,17 @@ namespace NxFr
 			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
 				N& Instance = Data[Index + Offset];
-				if (!Instance.IsFree())
+				if (!Instance.Free)
 				{
 					Memory::Destruct(&Instance.Value);
-					Instance.Hash = 0;
-					Instance.Tombstone = TB::IsTombstone;
+					Instance.Update();
 				}
 			}
 		}
 
 		void Copy(uint64 Index, N& Instance)
 		{
-			if (!Instance.IsFree())
+			if (!Instance.Free)
 			{
 				Construct(Index, Instance.Hash, Instance.Value);
 			}
@@ -403,7 +396,7 @@ namespace NxFr
 			{
 				N& Instance = Data[Index];
 
-				if (Instance.IsFree())
+				if (Instance.Free)
 				{
 					if (Instance.Tombstone == TB::NotTombstone)
 					{
@@ -442,7 +435,7 @@ namespace NxFr
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			return Index < Capacity && !Data[Index].IsFree() ? I(Data, Index, Capacity) : End();
+			return Index < Capacity && !Data[Index].Free ? I(Data, Index, Capacity) : End();
 		}
 
 		I GetIteratorValue(const Iterator::IteratorPredicate<Q>& Predicate) const
