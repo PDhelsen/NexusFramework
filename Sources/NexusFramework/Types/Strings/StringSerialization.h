@@ -8,8 +8,6 @@
 
 namespace NxFr
 {
-	// TODO: Support specialization for string literal
-
 	template<>
 	struct RBSConverter<const char*>
 	{
@@ -22,6 +20,27 @@ namespace NxFr
 		}
 
 		static void Encode(RBS& Rbs, const char* Object)
+		{
+			uint64 Size = StringCApi::Length(Object);
+
+			Rbs.WriteObject(Size);
+			Rbs.WriteData(Object, StringCApi::Length(Object));
+			Rbs.WriteObject(StringCApi::NullChar);
+		}
+	};
+
+	template<size_t N>
+	struct RBSConverter<char[N]>
+	{
+		static const char* Decode(RBS& Rbs)
+		{
+			uint64 Size = Rbs.ReadObject<uint64>();
+			const char* Text = Rbs.ReadData<char>(Size);
+			Rbs.ReadByte(sizeof(StringCApi::NullChar));
+			return Text;
+		}
+
+		static void Encode(RBS& Rbs, const char(&Object)[N])
 		{
 			uint64 Size = StringCApi::Length(Object);
 

@@ -63,3 +63,11 @@ namespace NxFr
 		}
 	};
 }
+
+#define NEXUS_DELETE(Ptr) \
+delete Ptr;\
+Ptr = nullptr;
+
+#define NEXUS_DELETE_ARRAY(Ptr) \
+delete[] Ptr;\
+Ptr = nullptr;

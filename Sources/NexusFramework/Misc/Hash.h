@@ -2,6 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {
@@ -283,7 +284,7 @@ namespace NxFr
 		static typename H::HashLength HashObject(const T& Data, typename H::HashLength Seed = 0)
 		{
 			Hashing::HashStrategy<H> State(Seed);
-			return Hashing::HashProcess<T, H>::Hash(State, Data);
+			return Hashing::HashProcess<typename RemoveReference<T>::Type, H>::Hash(State, Data);
 		}
 
 		static typename H::HashLength HashData(const void* Data, uint64 Length, typename H::HashLength Seed = 0)

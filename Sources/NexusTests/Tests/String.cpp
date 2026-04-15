@@ -223,6 +223,8 @@ namespace NxTs
 
 		NxFr::StringId StringId = NxFr::StringId(String2);
 		ASSERT_EQ(NxFr::Hash<>::HashObject(StringId), StringId.GetId());
+		const char* StringLitteral = "Hello World";
+		ASSERT_EQ(NxFr::Hash<>::HashObject(StringLitteral), NxFr::Hash<>::HashObject("Hello World"));
 
 		NxFr::Array<NxFr::String> Array = NxFr::Array<NxFr::String>(10);
 		Array.AssignConstruct(0, NxFr::String("ABEG"));

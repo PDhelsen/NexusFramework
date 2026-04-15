@@ -9,8 +9,6 @@ namespace NxFr
 {
 	namespace Hashing
 	{
-		// TODO: Support specialization for string literal
-
 		template<typename H>
 		class HashProcess<const char*, H>
 		{
@@ -21,6 +19,22 @@ namespace NxFr
 			}
 
 			static typename H::HashLength Hash(HashStrategy<H>& State, const char* Data)
+			{
+				HashProcess<const char*, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
+
+		template<size_t N, typename H>
+		class HashProcess<char[N], H>
+		{
+		public:
+			static void Accumulate(HashStrategy<H>& State, const char(&Data)[N])
+			{
+				HashProcess<const char*, H>::Accumulate(State, Data);
+			}
+
+			static typename H::HashLength Hash(HashStrategy<H>& State, const char(&Data)[N])
 			{
 				HashProcess<const char*, H>::Accumulate(State, Data);
 				return State.Hash();
