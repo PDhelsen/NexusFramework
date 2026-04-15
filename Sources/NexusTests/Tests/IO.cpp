@@ -1,4 +1,5 @@
 #include "NexusTests/Core/NexusTests.h"
+#include "NexusFramework/Core/NexusFrameworkPaths.h"
 
 namespace NxTs
 {
@@ -100,44 +101,43 @@ namespace NxTs
 
 	TEST(IO, Directory)
 	{
-		NxFr::String Working = NxFr::Path::GetWorkingDirectory();
-		NxFr::Directory Directory = NxFr::Directory(Working);
+		NxFr::String Path = NxFr::Paths::Temp;
+		NxFr::Directory Directory = NxFr::Directory(Path);
 
-		ASSERT_EQ(Directory.GetPath(), Working);
+		ASSERT_EQ(Directory.GetPath(), Path + "/");
 		ASSERT_EQ(Directory.Exists(), true);
-		ASSERT_EQ(Directory.GetContent().GetCount() > 0, true);
 
-		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
-		ASSERT_EQ(Directory.GetFiles(true).GetCount() > 0, true);
-
-		NxFr::Directory SubDirectory = NxFr::Directory(NxFr::Path::Combine(Working, "Test"));
+		NxFr::Directory SubDirectory = NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory"));
 
 		SubDirectory.Create();
 		ASSERT_EQ(SubDirectory.Exists(), true);
 
-		NxFr::Directory(NxFr::Path::Combine(Working, "Test", "Test1")).Create();
-		NxFr::Directory(NxFr::Path::Combine(Working, "Test", "Test2")).Create();
-		NxFr::Directory(NxFr::Path::Combine(Working, "Test", "Test3")).Create();
+		NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory", "Test1")).Create();
+		NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory", "Test2")).Create();
+		NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory", "Test3")).Create();
 
-		SubDirectory.Move(NxFr::Path::Combine(Working, "UnitTest"));
+		SubDirectory.Move(NxFr::Path::Combine(Path, "Io_Directory_Moved"));
 		ASSERT_EQ(SubDirectory.Exists(), true);
 
 		SubDirectory.Delete();
 		ASSERT_EQ(SubDirectory.Exists(), false);
+
+		ASSERT_EQ(Directory.GetContent().GetCount() > 0, true);
+		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
 	}
 
 	TEST(IO, File)
 	{
-		NxFr::String Working = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "UnitTest.txt");
-		NxFr::File File = NxFr::File(Working);
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_File.txt");
+		NxFr::File File = NxFr::File(Path);
 
-		ASSERT_EQ(File.GetPath(), Working);
+		ASSERT_EQ(File.GetPath(), Path);
 		ASSERT_EQ(File.Exists(), false);
 
 		File.Create();
 		ASSERT_EQ(File.Exists(), true);
 
-		File.Move(NxFr::Path::ChangeName(Working, "UnitTestRenamed"));
+		File.Move(NxFr::Path::ChangeName(Path, "Io_File_Renamed"));
 		ASSERT_EQ(File.Exists(), true);
 
 		File.Open(NxFr::File::Mode::Write);
@@ -167,8 +167,8 @@ namespace NxTs
 
 	TEST(IO, Text)
 	{
-		NxFr::String Working = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "UnitTest.txt");
-		NxFr::File File = NxFr::File(Working);
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "IoText.txt");
+		NxFr::File File = NxFr::File(Path);
 
 		File.Create();
 
@@ -193,14 +193,12 @@ namespace NxTs
 		NxFr::String Content2 = File.ReadText();
 		ASSERT_EQ(Content2, Text + Text + Text + Text);
 		File.Close();
-
-		File.Delete();
 	}
 
 	TEST(IO, TextStream)
 	{
-		NxFr::String Working = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "UnitTest.txt");
-		NxFr::TextStream Stream(Working);
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_TextStream.txt");
+		NxFr::TextStream Stream(Path);
 
 		Stream.Open(NxFr::File::Mode::Write);
 		Stream.WriteLine(Line);
@@ -217,15 +215,13 @@ namespace NxTs
 		ASSERT_EQ(Content3, Line);
 		ASSERT_EQ(Stream.IsAtTheEnd(), true);
 		Stream.Close();
-
-		NxFr::File(Working).Delete();
 	}
 
 	TEST(IO, BinaryStream)
 	{
-		NxFr::String Working = NxFr::Path::Combine(NxFr::Path::GetWorkingDirectory(), "UnitTest.txt");
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_BinaryStream.bin");
 		NxFr::BufferView View = NxFr::BufferView(Data, sizeof(Data));
-		NxFr::BinaryStream Stream(Working);
+		NxFr::BinaryStream Stream(Path);
 
 		Stream.Open(NxFr::File::Mode::Write);
 		Stream.WriteBlock(View);
@@ -247,7 +243,5 @@ namespace NxTs
 		ASSERT_EQ(*Content3.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(72), 19);
 		Stream.Close();
-
-		NxFr::File(Working).Delete();
 	}
 }

@@ -19,6 +19,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API extern String Builds;
 		NEXUS_FRAMEWORK_API extern String Cooked;
 		NEXUS_FRAMEWORK_API extern String Saved;
+		NEXUS_FRAMEWORK_API extern String Temp;
 
 		NEXUS_FRAMEWORK_API extern void SetupPathsAndFolders();
 		NEXUS_FRAMEWORK_API extern void CleanupFolders();

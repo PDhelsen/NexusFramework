@@ -255,12 +255,12 @@ namespace NxTs
 
 		for (NxFr::Iterator::StringCharacter It = Data.Begin(); It != Data.End(); ++It)
 		{
-			NEXUS_LOG(Info, Default, "%s", It.Get().C());
+			ASSERT_EQ(It.Get().IsEmpty(), false);
 		}
 
 		for (NxFr::Iterator::StringToken It = Data.Begin(" "); It != Data.End(" "); ++It)
 		{
-			NEXUS_LOG(Info, Default, "%s", It.Get().C());
+			ASSERT_EQ(It.Get().IsEmpty(), false);
 		}
 	}
 }
