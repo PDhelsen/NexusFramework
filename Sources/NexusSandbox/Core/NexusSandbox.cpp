@@ -14,7 +14,7 @@ namespace NxSb
 
 int main(int argc, char* argv[])
 {
-	NxFr::Initialize();
+	NxFr::Initialize(argc, argv);
 
 	NxSb::HelloWorld();
 	NxFr::Platform::GetInstance()->WaitForUserToCloseTerminal();

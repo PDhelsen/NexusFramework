@@ -7,7 +7,7 @@ namespace NxTs
 {
 	void Environment::SetUp()
 	{
-		NxFr::Initialize();
+		NxFr::Initialize(0, nullptr);
 	}
 
 	void Environment::TearDown()

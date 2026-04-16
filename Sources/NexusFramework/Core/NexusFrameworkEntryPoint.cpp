@@ -1,6 +1,7 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Core/NexusFrameworkEntryPoint.h"
 
+#include "NexusFramework/Misc/Arguments.h"
 #include "NexusFramework/IO/Path.h"
 #include "NexusFramework/IO/Directory.h"
 
@@ -65,9 +66,11 @@ namespace NxFr
 		Instruments::Destroy(Instrumentor);
 	}
 
-	void Initialize()
+	void Initialize(uint64 ArgC, char* ArgV[])
 	{
 		AllocatorContext Context(nullptr);
+
+		Arguments::Parse(ArgC, ArgV);
 
 		Paths::SetupPathsAndFolders();
 		String DebugPath = GetDebugPath();

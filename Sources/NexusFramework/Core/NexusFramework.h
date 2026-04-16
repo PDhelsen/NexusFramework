@@ -49,6 +49,7 @@
 #include "NexusFramework/Misc/Hash.h"
 #include "NexusFramework/Misc/Sort.h"
 #include "NexusFramework/Misc/Color.h"
+#include "NexusFramework/Misc/Arguments.h"
 
 #include "NexusFramework/Platform/Platform.h"
 
@@ -84,5 +85,3 @@
 
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"
-
-#include "NexusFramework/Application/Arguments.h"
