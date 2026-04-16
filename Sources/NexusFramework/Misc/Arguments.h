@@ -25,7 +25,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API void Parse(uint64 ArgC, char* ArgV[]);
 
-		NEXUS_FRAMEWORK_API void Parse(const Collection<StringView>& Args, Array<StringView>& Arguments, List<StringView>& Positionals, Dictionary<StringView, StringView>& Named);
-		NEXUS_FRAMEWORK_API void Parse(StringView Command, Array<StringView>& Arguments, List<StringView>& Positionals, Dictionary<StringView, StringView>& Named);
+		NEXUS_FRAMEWORK_API void Parse(const Collection<StringView>& Args, Array<String>& Arguments, List<String>& Positionals, Dictionary<String, String>& Named);
+		NEXUS_FRAMEWORK_API void Parse(StringView Command, Array<String>& Arguments, List<String>& Positionals, Dictionary<String, String>& Named);
 	}
 }

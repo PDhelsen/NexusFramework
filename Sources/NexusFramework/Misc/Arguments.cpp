@@ -6,24 +6,27 @@ namespace NxFr
 	namespace Arguments
 	{
 		static const String Separator = " ";
-		static const String FlagTrue = "true";
+		static const String NamedFlag = "--";
+		static const String FlagValue = "true";
+		static const String NamedKey = "-";
+		static const String NamedSeparator = "=";
 
 		static Array<String> Arguments;
 		static List<String> Positionals;
 		static Dictionary<String, String> Named;
 
-		static void Parse(uint64 Index, StringView Arg, Array<String>& Arguments, List<String>& Position, Dictionary<String, String>& Name)
+		static void Parse(uint64 Index, StringView Arg, Array<String>& Arguments, List<String>& Positionals, Dictionary<String, String>& Named)
 		{
 			Arguments[Index] = Arg;
 
-			if (StringUtility::Start(Arg, "--"))
+			if (StringUtility::Start(Arg, NamedFlag))
 			{
 				Arg = Arg.Substring(2, Arg.GetCount() - 2);
-				Named.Append(Arg, FlagTrue);
+				Named.Append(Arg, FlagValue);
 			}
-			else if (StringUtility::Start(Arg, "-"))
+			else if (StringUtility::Start(Arg, NamedKey))
 			{
-				uint64 Equal = StringUtility::Find(Arg, "=").C() - Arg.C();
+				uint64 Equal = StringUtility::Find(Arg, NamedSeparator).C() - Arg.C();
 
 				StringView Key = Arg.Substring(1, Equal - 1);
 				StringView Value = Arg.Substring(Equal + 1, Arg.GetCount() - (Equal + 1));
@@ -127,9 +130,10 @@ namespace NxFr
 			Named.Clear();
 			Named.Reserve(Count);
 
+			uint64 Index = 0;
 			for (auto It = Command.Begin(Separator); It != Command.End(Separator); ++It)
 			{
-				Parse(It.Id(), *It, Arguments, Positionals, Named);
+				Parse(Index++, *It, Arguments, Positionals, Named);
 			}
 		}
 	}
