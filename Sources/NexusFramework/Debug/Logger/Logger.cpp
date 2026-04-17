@@ -1,11 +1,8 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Debug/Logger/Logger.h"
 
-#include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Time/Timestamp.h"
-#include "NexusFramework/IO/Path.h"
-#include "NexusFramework/IO/File.h"
 
 #include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
@@ -58,13 +55,13 @@ namespace NxFr
 		Target(Platform::GetInstance()), Stream(""), Callback(),
 		AutoFlush(AutoFlush), Guard()
 	{
-		OpenFile(Path);
+		SetOutput(LoggerOutput::File, !Path.IsEmpty(), Path);
 	}
 
 	Logger::~Logger()
 	{
 		Flush();
-		CloseFile();
+		SetOutput(LoggerOutput::File, false);
 	}
 
 	void Logger::Flush()
@@ -73,7 +70,17 @@ namespace NxFr
 		FlushLogs();
 	}
 
-	void Logger::AddChannel(StringId Channel, bool State /*true*/)
+	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
+	{
+		return Enum::CheckFlag(VerbosityMask, Verbosity);
+	}
+
+	void Logger::SetVerbosity(LoggerVerbosity Verbosity, bool State)
+	{
+		VerbosityMask = Enum::SetFlag(VerbosityMask, Verbosity, State);
+	}
+
+	void Logger::AddChannel(StringId Channel, bool State)
 	{
 		if (HasChannel(Channel))
 		{
@@ -90,7 +97,7 @@ namespace NxFr
 			return;
 		}
 
-		Channels.Get(Channel) = State;
+		Channels[Channel] = State;
 	}
 
 	void Logger::SetAllChannels(bool State)
@@ -113,7 +120,7 @@ namespace NxFr
 			return false;
 		}
 
-		return Channels.Get(Channel);
+		return Channels[Channel];
 	}
 
 	Array<StringId> Logger::GetChannels() const
@@ -129,16 +136,6 @@ namespace NxFr
 		return Labels;
 	}
 
-	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
-	{
-		return Enum::CheckFlag(VerbosityMask, Verbosity);
-	}
-
-	void Logger::SetVerbosity(LoggerVerbosity Verbosity, bool State)
-	{
-		VerbosityMask = Enum::SetFlag(VerbosityMask, Verbosity, State);
-	}
-
 	bool Logger::CheckOutput(LoggerOutput Output) const
 	{
 		return Enum::CheckFlag(Outputs, Output);
@@ -146,17 +143,23 @@ namespace NxFr
 
 	void Logger::SetOutput(LoggerOutput Output, bool State, StringView Path)
 	{
-		if ((CheckOutput(LoggerOutput::File) && !Enum::CheckFlag(Output, LoggerOutput::File))
-		|| (CheckOutput(LoggerOutput::File) && Enum::CheckFlag(Output, LoggerOutput::File) && Stream.GetPath() != Path))
+		if ((CheckOutput(LoggerOutput::File) && !Enum::CheckFlag(Output, LoggerOutput::File)) || (CheckOutput(LoggerOutput::File) && Enum::CheckFlag(Output, LoggerOutput::File) && Stream.GetPath() != Path))
 		{
-			CloseFile();
+			if (Stream.IsOpened())
+			{
+				Stream.Close();
+			}
 		}
 
 		Outputs = Enum::SetFlag(Outputs, Output, State);
 
 		if (CheckOutput(LoggerOutput::File))
 		{
-			OpenFile(Path);
+			if (!Path.IsEmpty())
+			{
+				Stream = TextStream(Path);
+				Stream.Open(File::Mode::Write);
+			}
 		}
 	}
 
@@ -249,26 +252,5 @@ namespace NxFr
 		}
 
 		Logs.Clear();
-	}
-
-	void Logger::OpenFile(StringView Path)
-	{
-		if (Path.IsEmpty())
-		{
-			return;
-		}
-
-		Stream = TextStream(Path);
-		Stream.Open(File::Mode::Write);
-	}
-
-	void Logger::CloseFile()
-	{
-		if (!Stream.IsOpened())
-		{
-			return;
-		}
-
-		Stream.Close();
 	}
 }

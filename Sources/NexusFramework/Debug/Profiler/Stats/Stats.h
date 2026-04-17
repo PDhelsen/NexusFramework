@@ -23,7 +23,7 @@ namespace NxFr
 	public:
 		enum class StatType
 		{
-			Label, Check, Integer, UnsignedInteger, Decimal, DecimalPrecision
+			Label, Check, Integer, Decimal
 		};
 
 		enum class StatMode
@@ -31,57 +31,48 @@ namespace NxFr
 			Set, Cnt, Add, Avg, Min, Max
 		};
 
+	private:
 		union StatValue
 		{
 			String Label;
 			int64 Integer;
-			uint64 UnsignedInteger;
 			float Decimal;
-			double DecimalPrecise;
 			bool State;
 
-			NEXUS_FRAMEWORK_API StatValue();
-			NEXUS_FRAMEWORK_API ~StatValue();
+			StatValue();
+			~StatValue();
 		};
 
 		struct Stat
 		{
 			friend class Stats;
 
-		public:
-			NEXUS_FRAMEWORK_API Stat(StatType Type, StatMode Mode);
-			NEXUS_FRAMEWORK_API Stat(const Stat& Other);
-			NEXUS_FRAMEWORK_API Stat(Stat&& Other) noexcept;
-			NEXUS_FRAMEWORK_API ~Stat();
+			Stat(StatType Type, StatMode Mode);
+			~Stat();
 
-			NEXUS_FRAMEWORK_API Stat& operator=(const Stat& Other);
-			NEXUS_FRAMEWORK_API Stat& operator=(Stat&& Other) noexcept;
+			void Reset();
 
-			template<typename T>
-			T GetValue() const;
-			StatType GetType() const { return Type; }
-			StatMode GetMode() const { return Mode; }
-
-		private:
-			NEXUS_FRAMEWORK_API void Reset();
-
-			NEXUS_FRAMEWORK_API void RecordLabel(StringView Statistique);
-			NEXUS_FRAMEWORK_API void RecordCheck(bool Statistique);
-			NEXUS_FRAMEWORK_API void RecordInteger(int64 Statistique);
-			NEXUS_FRAMEWORK_API void RecordUnsignedInteger(uint64 Statistique);
-			NEXUS_FRAMEWORK_API void RecordDecimal(float Statistique);
-			NEXUS_FRAMEWORK_API void RecordDecimalPrecision(double Statistique);
+			void RecordLabel(StringView Statistique);
+			void RecordCheck(bool Statistique);
+			void RecordInteger(int64 Statistique);
+			void RecordDecimal(float Statistique);
 
 			template<typename T>
 			T Compute(T Current, T New) const;
 			template<typename T>
 			T Finalize(T Current) const;
 
+			template<typename T> T GetValue() const { return (T)0; }
+			StatType GetType() const { return Type; }
+			StatMode GetMode() const { return Mode; }
+
 			StatValue Value;
 			StatType Type;
 			StatMode Mode;
 			uint64 Tick;
 		};
+
+		friend struct StringConverter<Stat>;
 
 	public:
 		NEXUS_FRAMEWORK_API static Stats* GetInstance();
@@ -97,9 +88,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void RecordStatLabel(StringId Id, StringView Value);
 		NEXUS_FRAMEWORK_API void RecordStatCheck(StringId Id, bool Value);
 		NEXUS_FRAMEWORK_API void RecordStatInteger(StringId Id, int64 Value);
-		NEXUS_FRAMEWORK_API void RecordStatUnsignedInteger(StringId Id, uint64 Value);
 		NEXUS_FRAMEWORK_API void RecordStatDecimal(StringId Id, float Value);
-		NEXUS_FRAMEWORK_API void RecordStatDecimalPrecision(StringId Id, double Value);
 		NEXUS_FRAMEWORK_API void RecordComment(StringView Comment);
 
 		NEXUS_FRAMEWORK_API void Lock();
@@ -107,11 +96,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void StartRecording();
 		NEXUS_FRAMEWORK_API void StopRecording();
 
-		template<typename T>
-		T GetCurrentStatValue(StringId Id) const;
-		NEXUS_FRAMEWORK_API const Stat* GetCurrentStat(StringId Id) const;
-		NEXUS_FRAMEWORK_API Dictionary<StringId, const Stat*> GetAllCurrentStats() const;
-		NEXUS_FRAMEWORK_API void GetAllCurrentStats(Dictionary<StringId, const Stat*>& Result) const;
+		const Dictionary<StringId, uint64>& GetStats() const { return Headers; }
+		template<typename T> T GetValue(StringId Id) const { return GetStat(Id).GetValue<T>(); }
 
 		uint64 GetCount() const { return Data.GetCount(); }
 		bool IsInitialized() const { return Initialized; }
@@ -122,6 +108,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Stat& GetStat(StringId Id);
 		NEXUS_FRAMEWORK_API const Stat& GetStat(StringId Id) const;
 
+	private:
 		Dictionary<StringId, uint64> Headers;
 		List<Stat> Data;
 
@@ -135,14 +122,8 @@ namespace NxFr
 		Mutex Guard;
 	};
 
-	template<typename T>
-	inline T Stats::Stat::GetValue() const
-	{
-		return 0;
-	}
-
 	template<>
-	inline const String& Stats::Stat::GetValue() const
+	inline StringView Stats::Stat::GetValue() const
 	{
 		return Value.Label;
 	}
@@ -160,21 +141,9 @@ namespace NxFr
 	}
 
 	template<>
-	inline uint64 Stats::Stat::GetValue() const
-	{
-		return Finalize(Value.UnsignedInteger);
-	}
-
-	template<>
 	inline float Stats::Stat::GetValue() const
 	{
 		return Finalize(Value.Decimal);
-	}
-
-	template<>
-	inline double Stats::Stat::GetValue() const
-	{
-		return Finalize(Value.DecimalPrecise);
 	}
 
 	template<typename T>
@@ -203,12 +172,6 @@ namespace NxFr
 
 		return Current;
 	}
-
-	template<typename T>
-	inline T Stats::GetCurrentStatValue(StringId Id) const
-	{
-		return GetCurrentStat(Id)->GetValue<T>();
-	}
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
@@ -216,39 +179,27 @@ namespace NxFr
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(Id, Value); }
 	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(Id, Value); }
 	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(Id, Value); }
-	#define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatUnsignedInteger(Id, Value); }
 	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(Id, Value); }
-	#define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimalPrecision(Id, Value); }
-	#define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCount(Id, Value); }
 	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(Id, Value); }
 
 	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Stats::GetInstance(), Id, Type, Mode)
 	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
 	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
 	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_UNSIGNEDINTEGER(Id, Value) NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
 	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_DECIMALPRECISION(Id, Value) NEXUS_STAT_DECIMALPRECISION_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
-	#define NEXUS_STAT_COUNT(Id, Value) NEXUS_STAT_COUNT_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
 	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxFr::Stats::GetInstance(), Id, Value)
 #elif NEXUS_DISTRIB
 	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode)
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_UNSIGNEDINTEGER_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_DECIMALPRECISION_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_COUNT_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value)
 
 	#define NEXUS_STAT_HEADER(Id, Type, Mode)
 	#define NEXUS_STAT_LABEL(Id, Value)
 	#define NEXUS_STAT_CHECK(Id, Value)
 	#define NEXUS_STAT_INTEGER(Id, Value)
-	#define NEXUS_STAT_UNSIGNEDINTEGER(Id, Value)
 	#define NEXUS_STAT_DECIMAL(Id, Value)
-	#define NEXUS_STAT_DECIMALPRECISION(Id, Value)
-	#define NEXUS_STAT_COUNT(Id, Value)
 	#define NEXUS_STAT_COMMENT(Id, Value)
 #endif

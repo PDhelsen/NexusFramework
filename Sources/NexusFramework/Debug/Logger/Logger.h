@@ -1,7 +1,11 @@
 #pragma once
 
 #include "NexusFramework/Debug/Logger/Log.h"
+#include "NexusFramework/Types/Containers/Array.h"
+#include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Types/Functions/Delegate.h"
+#include "NexusFramework/Types/Functions/Event.h"
 #include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/IO/Stream.h"
 #include "NexusFramework/Threading/Mutex.h"
@@ -35,15 +39,15 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API void Flush();
 
+		NEXUS_FRAMEWORK_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
+		NEXUS_FRAMEWORK_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
+
 		NEXUS_FRAMEWORK_API void AddChannel(StringId Channel, bool State = true);
 		NEXUS_FRAMEWORK_API void SetChannel(StringId Channel, bool State);
 		NEXUS_FRAMEWORK_API void SetAllChannels(bool State);
 		NEXUS_FRAMEWORK_API bool HasChannel(StringId Channel) const;
 		NEXUS_FRAMEWORK_API bool CheckChannel(StringId Channel) const;
 		NEXUS_FRAMEWORK_API Array<StringId> GetChannels() const;
-
-		NEXUS_FRAMEWORK_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
-		NEXUS_FRAMEWORK_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
 		NEXUS_FRAMEWORK_API bool CheckOutput(LoggerOutput Output) const;
 		NEXUS_FRAMEWORK_API void SetOutput(LoggerOutput Output, bool State, StringView Path = "");
@@ -56,10 +60,7 @@ namespace NxFr
 	protected:
 		NEXUS_FRAMEWORK_API String& GetBuffer() override;
 		NEXUS_FRAMEWORK_API void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
-		NEXUS_FRAMEWORK_API void FlushLogs();
-
-		NEXUS_FRAMEWORK_API void OpenFile(StringView Path);
-		NEXUS_FRAMEWORK_API void CloseFile();
+		NEXUS_FRAMEWORK_API void FlushLogs() override;
 
 	private:
 		List<LogData> Logs;

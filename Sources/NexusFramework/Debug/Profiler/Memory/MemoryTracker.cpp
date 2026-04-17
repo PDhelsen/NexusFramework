@@ -3,7 +3,7 @@
 
 namespace NxFr
 {
-	bool Track = true;
+	static bool Track = true;
 
 	MemoryTracker::UntrackedScope::UntrackedScope()
 		: State(Track)
@@ -75,6 +75,7 @@ namespace NxFr
 		uint64* Allocation = Alloctions.TryGet(Pointer);
 		if (!Allocation)
 		{
+			NEXUS_LOG(Warning, Verbose, "Untracked allocation %p", Pointer);
 			return;
 		}
 
@@ -88,7 +89,7 @@ namespace NxFr
 	}
 
 	MemoryTracker::MemoryTracker()
-		: Alloctions(Dictionary<void*, uint64>::DefaultSize, nullptr), Amount(0), Count(0)
+		: Alloctions(97, nullptr), Amount(0), Count(0)
 	{
 	}
 

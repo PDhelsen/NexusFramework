@@ -26,73 +26,25 @@ namespace NxFr
 #pragma region Stat
 
 	Stats::StatValue::StatValue()
-		: UnsignedInteger(0)
+		 : Integer(0)
 	{
 		Memory::MemSet(this, 0, sizeof(StatValue));
 	}
-
+	
 	Stats::StatValue::~StatValue()
 	{
 		Memory::MemSet(this, 0, sizeof(StatValue));
 	}
 
 	Stats::Stat::Stat(StatType Type, StatMode Mode)
-		: Type(Type), Mode(Mode), Tick(0)
+		: Value(), Type(Type), Mode(Mode), Tick(0)
 	{
 		switch (Type)
 		{
 		case NxFr::Stats::StatType::Label: new (&Value.Label) String(32); break;
 		case NxFr::Stats::StatType::Check: Value.State = false; break;
 		case NxFr::Stats::StatType::Integer: Value.Integer = 0; break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = 0; break;
 		case NxFr::Stats::StatType::Decimal: Value.Decimal = 0.0f; break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = 0.0; break;
-		}
-
-		Reset();
-	}
-
-	Stats::Stat::Stat(const Stat& Other)
-	{
-		Type = Other.Type;
-		Mode = Other.Mode;
-		Tick = Other.Tick;
-
-		if (Type == StatType::Label)
-		{
-			new (&Value.Label) String();
-		}
-
-		switch (Type)
-		{
-		case NxFr::Stats::StatType::Label: Value.Label = Other.Value.Label; break;
-		case NxFr::Stats::StatType::Check: Value.State = Other.Value.State; break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = Other.Value.Integer; break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Other.Value.UnsignedInteger; break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = Other.Value.Decimal; break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Other.Value.DecimalPrecise; break;
-		}
-	}
-
-	Stats::Stat::Stat(Stat&& Other) noexcept
-	{
-		Type = Other.Type;
-		Mode = Other.Mode;
-		Tick = Other.Tick;
-
-		if (Type == StatType::Label)
-		{
-			new (&Value.Label) String();
-		}
-
-		switch (Type)
-		{
-		case NxFr::Stats::StatType::Label: Value.Label = Move(Other.Value.Label); break;
-		case NxFr::Stats::StatType::Check: Value.State = Move(Other.Value.State); break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = Move(Other.Value.Integer); break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Move(Other.Value.UnsignedInteger); break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = Move(Other.Value.Decimal); break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Move(Other.Value.DecimalPrecise); break;
 		}
 	}
 
@@ -104,104 +56,39 @@ namespace NxFr
 		}
 	}
 
-	Stats::Stat& Stats::Stat::operator=(const Stat& Other)
-	{
-		if (this == &Other)
-		{
-			return *this;
-		}
-
-		Type = Other.Type;
-		Mode = Other.Mode;
-		Tick = Other.Tick;
-
-		switch (Type)
-		{
-		case NxFr::Stats::StatType::Label: Value.Label = Other.Value.Label; break;
-		case NxFr::Stats::StatType::Check: Value.State = Other.Value.State; break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = Other.Value.Integer; break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Other.Value.UnsignedInteger; break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = Other.Value.Decimal; break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Other.Value.DecimalPrecise; break;
-		}
-
-		return *this;
-	}
-
-	Stats::Stat& Stats::Stat::operator=(Stat&& Other) noexcept
-	{
-		if (this == &Other)
-		{
-			return *this;
-		}
-
-		Type = Other.Type;
-		Mode = Other.Mode;
-		Tick = Other.Tick;
-
-		switch (Type)
-		{
-		case NxFr::Stats::StatType::Label: Value.Label = Move(Other.Value.Label); break;
-		case NxFr::Stats::StatType::Check: Value.State = Move(Other.Value.State); break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = Move(Other.Value.Integer); break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Move(Other.Value.UnsignedInteger); break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = Move(Other.Value.Decimal); break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Move(Other.Value.DecimalPrecise); break;
-		}
-
-		return *this;
-	}
-
 	void Stats::Stat::Reset()
 	{
 		Tick = 0;
-
 		switch (Type)
 		{
 		case NxFr::Stats::StatType::Label: Value.Label.Clear(); break;
 		case NxFr::Stats::StatType::Check: Value.State = false; break;
 		case NxFr::Stats::StatType::Integer: Value.Integer = Mode == StatMode::Min ? Integer::MaxI64 : Mode == StatMode::Max ? Integer::MinI64 : 0; break;
-		case NxFr::Stats::StatType::UnsignedInteger: Value.UnsignedInteger = Mode == StatMode::Min ? Integer::MaxUI64 : Mode == StatMode::Max ? Integer::MinUI64 : 0u; break;
 		case NxFr::Stats::StatType::Decimal: Value.Decimal = Mode == StatMode::Min ? Decimal::MaxF : Mode == StatMode::Max ? Decimal::MinF : 0.0f; break;
-		case NxFr::Stats::StatType::DecimalPrecision: Value.DecimalPrecise = Mode == StatMode::Min ? Decimal::MaxD : Mode == StatMode::Max ? Decimal::MinD : 0.0; break;
 		}
 	}
 
 	void Stats::Stat::RecordLabel(StringView Statistique)
 	{
-		Tick++;
 		Value.Label.Clear();
 		Value.Label += Statistique;
 	}
 
 	void Stats::Stat::RecordCheck(bool Statistique)
 	{
-		Tick++;
 		Value.State = Statistique;
 	}
 
 	void Stats::Stat::RecordInteger(int64 Statistique)
 	{
+		Tick++;
 		Value.Integer = Compute(Value.Integer, Statistique);
-		Tick++;
-	}
-
-	void Stats::Stat::RecordUnsignedInteger(uint64 Statistique)
-	{
-		Tick++;
-		Value.UnsignedInteger = Compute(Value.UnsignedInteger, Statistique);
 	}
 
 	void Stats::Stat::RecordDecimal(float Statistique)
 	{
 		Tick++;
 		Value.Decimal = Compute(Value.Decimal, Statistique);
-	}
-
-	void Stats::Stat::RecordDecimalPrecision(double Statistique)
-	{
-		Tick++;
-		Value.DecimalPrecise = Compute(Value.DecimalPrecise, Statistique);
 	}
 
 	template<>
@@ -211,12 +98,10 @@ namespace NxFr
 		{
 			switch (Data.GetType())
 			{
-			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValue<const String&>(), Result); break;
+			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValue<StringView>(), Result); break;
 			case NxFr::Stats::StatType::Check: StringConverter<bool>::ToString(Data.GetValue<bool>(), Result); break;
 			case NxFr::Stats::StatType::Integer: StringConverter<int64>::ToString(Data.GetValue<int64>(), Result); break;
-			case NxFr::Stats::StatType::UnsignedInteger: StringConverter<uint64>::ToString(Data.GetValue<uint64>(), Result); break;
 			case NxFr::Stats::StatType::Decimal: StringConverter<float>::ToString(Data.GetValue<float>(), Result); break;
-			case NxFr::Stats::StatType::DecimalPrecision: StringConverter<double>::ToString(Data.GetValue<double>(), Result); break;
 			}
 		}
 	};
@@ -226,11 +111,11 @@ namespace NxFr
 #pragma region Stats
 
 	Stats::Stats(StringView Path)
-		: Headers(), Data(), Stream(Path), Buffer(1024), Initialized(false), Recording(false), Locked(false)
+		: Headers(), Data(), Stream(Path), Buffer(1024), Initialized(false), Recording(false), Locked(false), Guard()
 	{
 		Stream.Open(File::Mode::Write);
 
-		RecordHeader(StatsHeader::TickId, StatType::UnsignedInteger, StatMode::Cnt);
+		RecordHeader(StatsHeader::TickId, StatType::Integer, StatMode::Cnt);
 	}
 
 	Stats::~Stats()
@@ -285,7 +170,7 @@ namespace NxFr
 		Stream.Flush();
 
 		GetStat(StatsHeader::CommentId).RecordLabel("");
-		GetStat(StatsHeader::TickId).RecordUnsignedInteger(0);
+		GetStat(StatsHeader::TickId).RecordInteger(0);
 	}
 
 	void Stats::Reset()
@@ -321,10 +206,9 @@ namespace NxFr
 		NEXUS_ASSERT(!(Type == StatType::Label && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Check && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Decimal && Mode == StatMode::Cnt), Default, "Combination not supported");
-		NEXUS_ASSERT(!(Type == StatType::DecimalPrecision && Mode == StatMode::Cnt), Default, "Combination not supported");
 
 		Headers.Append(Name, Data.GetCount());
-		Data.Append(Stat(Type, Mode));
+		Data.AppendConstruct(Type, Mode);
 
 		Stream.WriteBlock(Name);
 		Stream.WriteBlock(Separator);
@@ -393,27 +277,6 @@ namespace NxFr
 		Statistique.RecordInteger(Value);
 	}
 
-	void Stats::RecordStatUnsignedInteger(StringId Id, uint64 Value)
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (!Recording)
-		{
-			return;
-		}
-
-		::NxFr::Lock LockGuard(Guard);
-
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
-		NEXUS_ASSERT(Statistique.Type == StatType::UnsignedInteger, Default, "Invalid record call");
-		Statistique.RecordUnsignedInteger(Value);
-	}
-
 	void Stats::RecordStatDecimal(StringId Id, float Value)
 	{
 		if (!Initialized)
@@ -433,27 +296,6 @@ namespace NxFr
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Decimal, Default, "Invalid record call");
 		Statistique.RecordDecimal(Value);
-	}
-
-	void Stats::RecordStatDecimalPrecision(StringId Id, double Value)
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (!Recording)
-		{
-			return;
-		}
-
-		::NxFr::Lock LockGuard(Guard);
-
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
-		NEXUS_ASSERT(Statistique.Type == StatType::DecimalPrecision, Default, "Invalid record call");
-		Statistique.RecordDecimalPrecision(Value);
 	}
 
 	void Stats::RecordComment(StringView Comment)
@@ -542,49 +384,6 @@ namespace NxFr
 		}
 
 		Recording = false;
-	}
-
-	const Stats::Stat* Stats::GetCurrentStat(StringId Id) const
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return nullptr;
-		}
-
-		return &GetStat(Id);
-	}
-
-	Dictionary<StringId, const Stats::Stat*> Stats::GetAllCurrentStats() const
-	{
-		Dictionary<StringId, const Stats::Stat*> Result;
-		Result.Reserve(Data.GetCount());
-		GetAllCurrentStats(Result);
-		return Result;
-	}
-
-	void Stats::GetAllCurrentStats(Dictionary<StringId, const Stat*>& Result) const
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (Result.IsEmpty())
-		{
-			for (auto& [Header, Index] : Headers)
-			{
-				Result.Append(Header, &Data[Index]);
-			}
-		}
-		else
-		{
-			for (auto& [Header, Target] : Result)
-			{
-				Result[Header] = &Data[Headers[Header]];
-			}
-		}
 	}
 
 	Stats::Stat& Stats::GetStat(StringId Id)

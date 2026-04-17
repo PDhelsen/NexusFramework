@@ -4,13 +4,12 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Numbers/Enum.h"
-#include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
 #include "NexusFramework/Types/Strings/StringTemplate.h"
-#include "NexusFramework/Threading/Mutex.h"
+#include "NexusFramework/Math/Math.h"
 
 namespace NxFr
 {
@@ -62,6 +61,8 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API virtual String& GetBuffer() = 0;
 		NEXUS_FRAMEWORK_API virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
+		NEXUS_FRAMEWORK_API virtual void FlushLogs() = 0;
+
 	};
 
 	template<typename... Args>

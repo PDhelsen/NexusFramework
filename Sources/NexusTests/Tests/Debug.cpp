@@ -3,49 +3,18 @@
 
 namespace NxTs
 {
-	NxFr::StringId Channel = "Test"_Sid;
-
-	NxFr::StringId LabelId = "Label"_Sid;
-	NxFr::StringId CheckId = "Check"_Sid;
-	NxFr::StringId SetId = "Set"_Sid;
-	NxFr::StringId MinId = "Min"_Sid;
-	NxFr::StringId MaxId = "Max"_Sid;
-	NxFr::StringId AvgId = "Avg"_Sid;
-	NxFr::StringId CntId = "Cnt"_Sid;
-	NxFr::StringId AddId = "Add"_Sid;
-
-	void Dummy(uint64 Count, NxFr::Instruments* Instruments)
-	{
-		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
-
-		NxFr::Thread::Sleep(Count);
-	}
-
-	void Function1(uint64 Count, NxFr::Instruments* Instruments)
-	{
-		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
-
-		Dummy(Count, Instruments);
-	}
-
-	void Function2(uint64 Count, NxFr::Instruments* Instruments)
-	{
-		NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
-
-		Dummy(Count, Instruments);
-		Function1(Count * 2, Instruments);
-	}
-
 	TEST(Debug, Logger)
 	{
 		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Debug_Logs.txt");
+		NxFr::StringId ChannelId = "Test"_Sid;
+
 		NxFr::Logger Logger = NxFr::Logger(NxFr::LoggerVerbosity::All, NxFr::LoggerOutput::All, Path, true);
 
-		Logger.AddChannel(Channel, false);
-		ASSERT_EQ(Logger.HasChannel(Channel), true);
-		ASSERT_EQ(Logger.CheckChannel(Channel), false);
-		Logger.SetChannel(Channel, true);
-		ASSERT_EQ(Logger.CheckChannel(Channel), true);
+		Logger.AddChannel(ChannelId, false);
+		ASSERT_EQ(Logger.HasChannel(ChannelId), true);
+		ASSERT_EQ(Logger.CheckChannel(ChannelId), false);
+		Logger.SetChannel(ChannelId, true);
+		ASSERT_EQ(Logger.CheckChannel(ChannelId), true);
 
 		ASSERT_EQ(Logger.CheckVerbosity(NxFr::LoggerVerbosity::All), true);
 		Logger.SetVerbosity(NxFr::LoggerVerbosity::All, false);
@@ -63,24 +32,33 @@ namespace NxTs
 		Logger.SetVerbosity(NxFr::LoggerVerbosity::All, false);
 		Logger.SetVerbosity(NxFr::LoggerVerbosity::All, true);
 
-		Logger.LogMessage(NxFr::LoggerVerbosity::Info, Channel, "Test");
-		Logger.LogMessage(NxFr::LoggerVerbosity::Warning, Channel, "Test: %d", 10);
-		Logger.LogMessage(NxFr::LoggerVerbosity::Error, Channel, "Test: %f", 10.0f);
-		Logger.LogMessage(NxFr::LoggerVerbosity::Fatal, Channel, "Test: %s", "Hello World");
+		Logger.LogMessage(NxFr::LoggerVerbosity::Info,		ChannelId, "Test");
+		Logger.LogMessage(NxFr::LoggerVerbosity::Warning,	ChannelId, "Test: %d", 10);
+		Logger.LogMessage(NxFr::LoggerVerbosity::Error,		ChannelId, "Test: %f", 10.0f);
+		Logger.LogMessage(NxFr::LoggerVerbosity::Fatal,		ChannelId, "Test: %s", "Hello World");
 	}
 
 	TEST(Debug, Stats)
 	{
 		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Debug_Stats.csv");
+		NxFr::StringId LabelId = "Label"_Sid;
+		NxFr::StringId CheckId = "Check"_Sid;
+		NxFr::StringId SetId = "Set"_Sid;
+		NxFr::StringId MinId = "Min"_Sid;
+		NxFr::StringId MaxId = "Max"_Sid;
+		NxFr::StringId AvgId = "Avg"_Sid;
+		NxFr::StringId CntId = "Cnt"_Sid;
+		NxFr::StringId AddId = "Add"_Sid;
+
 		NxFr::Stats Stats(Path);
 
 		Stats.RecordHeader(LabelId, NxFr::Stats::StatType::Label, NxFr::Stats::StatMode::Set);
 		Stats.RecordHeader(CheckId, NxFr::Stats::StatType::Check, NxFr::Stats::StatMode::Set);
 		Stats.RecordHeader(SetId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Set);
-		Stats.RecordHeader(MinId, NxFr::Stats::StatType::UnsignedInteger, NxFr::Stats::StatMode::Min);
+		Stats.RecordHeader(MinId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Min);
 		Stats.RecordHeader(MaxId, NxFr::Stats::StatType::Decimal, NxFr::Stats::StatMode::Max);
-		Stats.RecordHeader(AvgId, NxFr::Stats::StatType::DecimalPrecision, NxFr::Stats::StatMode::Avg);
-		Stats.RecordHeader(CntId, NxFr::Stats::StatType::UnsignedInteger, NxFr::Stats::StatMode::Cnt);
+		Stats.RecordHeader(AvgId, NxFr::Stats::StatType::Decimal, NxFr::Stats::StatMode::Avg);
+		Stats.RecordHeader(CntId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Cnt);
 		Stats.RecordHeader(AddId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Add);
 
 		Stats.Initialize();
@@ -98,10 +76,10 @@ namespace NxTs
 			Stats.RecordStatLabel(LabelId, NxFr::StringView("Test"));
 			Stats.RecordStatCheck(CheckId, Iteration % 2);
 			Stats.RecordStatInteger(SetId, Iteration);
-			Stats.RecordStatUnsignedInteger(MinId, Iteration);
+			Stats.RecordStatInteger(MinId, Iteration);
 			Stats.RecordStatDecimal(MaxId, (float)Iteration);
-			Stats.RecordStatDecimalPrecision(AvgId, (double)Iteration);
-			Stats.RecordStatUnsignedInteger(CntId, 0);
+			Stats.RecordStatDecimal(AvgId, (double)Iteration);
+			Stats.RecordStatInteger(CntId, 0);
 			Stats.RecordStatInteger(AddId, 2);
 
 			Stats.RecordComment(NxFr::StringUtility::Format("Iteration: %d", Iteration));
@@ -110,33 +88,40 @@ namespace NxTs
 			Stats.Unlock();
 			ASSERT_EQ(!Stats.IsLocked(), true);
 
-			ASSERT_EQ(Stats.GetCurrentStatValue<int64>(SetId), Iteration);
+			ASSERT_EQ(Stats.GetValue<int64>(SetId), Iteration);
 
 			Stats.Flush();
 			if (Iteration == 3)
 			{
 				Stats.Reset();
+				ASSERT_EQ(Stats.GetValue<int64>(NxFr::StatsHeader::TickId), 0);
 			}
 		}
 
 		Stats.StopRecording();
 		ASSERT_EQ(!Stats.IsRecording(), true);
 
-		auto All = Stats.GetAllCurrentStats();
+		const NxFr::Dictionary<NxFr::StringId, uint64>& All = Stats.GetStats();
 		ASSERT_EQ(All.GetCount(), Stats.GetCount());
 	}
 
 	TEST(Debug, Instruments)
 	{
 		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Debug_Instruments.json");
+		NxFr::Delegate<void(uint64, NxFr::Instruments*)> Dummy = [](uint64 Count, NxFr::Instruments* Instruments)
+		{
+			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
+			NxFr::Thread::Sleep(Count);
+		};
+
 		NxFr::Instruments* Instruments = NxFr::Instruments::Create(Path);
 		Instruments->StartRecording();
 
 		{
 			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
-			Function1(5, Instruments);
-			Function2(10, Instruments);
+			Dummy(5, Instruments);
+			Dummy(10, Instruments);
 		}
 
 		Instruments->StopRecording();
