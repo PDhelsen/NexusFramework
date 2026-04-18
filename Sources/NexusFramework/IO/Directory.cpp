@@ -13,24 +13,8 @@ namespace NxFr
 		SetPath(Path);
 	}
 
-	Directory::Directory(Directory&& Other) noexcept
-		: Path(Other.Path.C())
-	{
-	}
-
 	Directory::~Directory()
 	{
-	}
-
-	Directory& Directory::operator=(Directory&& Other) noexcept
-	{
-		if (this == &Other)
-		{
-			return *this;
-		}
-
-		Path = Other.Path;
-		return *this;
 	}
 
 	Directory::operator bool() const
@@ -53,7 +37,7 @@ namespace NxFr
 		return Path::Exist(Path);
 	}
 
-	void Directory::EnsureParent()
+	void Directory::EnsureParent() const
 	{
 		Path::EnsureParent(Path);
 	}
@@ -101,7 +85,8 @@ namespace NxFr
 		Path::EnsureParent(Target);
 		Platform::GetInstance()->DirectoryCreate(Target);
 
-		List<String> Content = Platform::GetInstance()->DirectoryContent(Path);
+		List<String> Content = List<String>();
+		GetContent(Content);
 		for (auto& It : Content)
 		{
 			if (Path::IsDirectory(It))
@@ -129,7 +114,8 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exists(), Default, "Failed to delete directory: %s", Path.C());
 
-		List<String> Content = Platform::GetInstance()->DirectoryContent(Path);
+		List<String> Content = List<String>();
+		GetContent(Content);
 		for (auto& It : Content)
 		{
 			if (Path::IsDirectory(It))
@@ -154,48 +140,48 @@ namespace NxFr
 	{
 		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
-		List<String> Result = List<String>();
-		GetContent(Result, Recursive);
-		return Result;
+		List<String> Content = List<String>();
+		GetContent(Content, Recursive);
+		return Content;
 	}
 
-	void Directory::GetContent(List<String>& Result, bool Recursive) const
+	void Directory::GetContent(List<String>& Content, bool Recursive) const
 	{
 		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
-		GetContent(Result, Recursive, true, true);
+		GetContent(Content, Recursive, true, true);
 	}
 
 	List<String> Directory::GetFiles(bool Recursive) const
 	{
 		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
-		List<String> Result = List<String>();
-		GetFiles(Result, Recursive);
-		return Result;
+		List<String> Content = List<String>();
+		GetFiles(Content, Recursive);
+		return Content;
 	}
 
-	void Directory::GetFiles(List<String>& Result, bool Recursive) const
+	void Directory::GetFiles(List<String>& Content, bool Recursive) const
 	{
 		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
-		GetContent(Result, Recursive, true, false);
+		GetContent(Content, Recursive, true, false);
 	}
 
 	List<String> Directory::GetDirectories(bool Recursive) const
 	{
 		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
-		List<String> Result = List<String>();
-		GetDirectories(Result, Recursive);
-		return Result;
+		List<String> Content = List<String>();
+		GetDirectories(Content, Recursive);
+		return Content;
 	}
 
-	void Directory::GetDirectories(List<String>& Result, bool Recursive) const
+	void Directory::GetDirectories(List<String>& Content, bool Recursive) const
 	{
 		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
-		GetContent(Result, Recursive, false, true);
+		GetContent(Content, Recursive, false, true);
 	}
 
 	void Directory::SetPath(StringView Value)

@@ -3,28 +3,21 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Types/Strings/StringView.h"
 
 namespace NxFr
 {
 	class Directory
 	{
 	public:
-		using I = List<String>::I;
-
 		NEXUS_FRAMEWORK_API Directory(StringView Path);
-		NEXUS_FRAMEWORK_API Directory(const Directory& Other) = delete;
-		NEXUS_FRAMEWORK_API Directory(Directory&& Other) noexcept;
 		NEXUS_FRAMEWORK_API ~Directory();
 
-		NEXUS_FRAMEWORK_API Directory& operator=(const Directory& Other) = delete;
-		NEXUS_FRAMEWORK_API Directory& operator=(Directory&& Other) noexcept;
 		NEXUS_FRAMEWORK_API explicit operator bool() const;
 		NEXUS_FRAMEWORK_API bool operator ==(const Directory& Other) const;
 		NEXUS_FRAMEWORK_API bool operator !=(const Directory& Other) const;
 
 		NEXUS_FRAMEWORK_API bool Exists() const;
-		NEXUS_FRAMEWORK_API void EnsureParent();
+		NEXUS_FRAMEWORK_API void EnsureParent() const;
 
 		NEXUS_FRAMEWORK_API void Create();
 		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false);

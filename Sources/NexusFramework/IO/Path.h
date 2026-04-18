@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numbers/Integer.h"
 #include "NexusFramework/Types/Containers/Collection.h"
 #include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Types/Strings/StringView.h"
 
 namespace NxFr
 {

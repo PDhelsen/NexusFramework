@@ -3,7 +3,6 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Containers/Buffer.h"
 #include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Types/Strings/StringView.h"
 
 namespace NxFr
 {
@@ -16,18 +15,14 @@ namespace NxFr
 		};
 
 		NEXUS_FRAMEWORK_API File(StringView Path);
-		NEXUS_FRAMEWORK_API File(const File& Other) = delete;
-		NEXUS_FRAMEWORK_API File(File&& Other) noexcept;
 		NEXUS_FRAMEWORK_API ~File();
 
-		NEXUS_FRAMEWORK_API File& operator=(const File& Other) = delete;
-		NEXUS_FRAMEWORK_API File& operator=(File&& Other) noexcept;
 		NEXUS_FRAMEWORK_API explicit operator bool() const;
 		NEXUS_FRAMEWORK_API bool operator ==(const File& Other) const;
 		NEXUS_FRAMEWORK_API bool operator !=(const File& Other) const;
 
 		NEXUS_FRAMEWORK_API bool Exists() const;
-		NEXUS_FRAMEWORK_API void EnsureParent();
+		NEXUS_FRAMEWORK_API void EnsureParent() const;
 
 		NEXUS_FRAMEWORK_API void Create(bool KeepOpen = false);
 		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false, bool CloseIfOpen = false);

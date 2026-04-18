@@ -29,8 +29,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void SetCursor(uint64 Position) { Cursor = Position; }
 		NEXUS_FRAMEWORK_API virtual bool IsAtTheEnd() const { return Cursor == GetSize(); }
 
-		NEXUS_FRAMEWORK_API File& GetFile() { return Handle; }
 		NEXUS_FRAMEWORK_API StringView GetPath() const { return Handle.GetPath(); }
+		NEXUS_FRAMEWORK_API File::Mode GetMode() const { return Handle.GetMode(); }
 		NEXUS_FRAMEWORK_API bool IsOpened() const { return Handle.IsOpened(); }
 
 	protected:

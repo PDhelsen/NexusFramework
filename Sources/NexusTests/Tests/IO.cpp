@@ -3,11 +3,7 @@
 
 namespace NxTs
 {
-	uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
-	NxFr::String Text = "This was written by code.\n";
-	NxFr::String Line = "This was written by code.";
-
-	TEST(IO, Path)
+	TEST(IO, Path_Parse)
 	{
 		NxFr::Path::Info Infos1 = NxFr::Path::Parse("D:/Root/Folder/SubFolder/Name.extension");
 		ASSERT_EQ(Infos1.Drive, "D");
@@ -57,8 +53,10 @@ namespace NxTs
 		ASSERT_EQ(Infos7.Name, "Name");
 		ASSERT_EQ(Infos7.Extension, "");
 		ASSERT_EQ(Infos7.Depth, 0);
+	}
 
-
+	TEST(IO, Path_Utility)
+	{
 		ASSERT_EQ(NxFr::Path::Exist(NxFr::Path::GetWorkingDirectory()), true);
 
 		ASSERT_EQ(NxFr::Path::IsAbsolute("D:/Root/Folder/SubFolder/Name.extension"), true);
@@ -102,35 +100,34 @@ namespace NxTs
 	TEST(IO, Directory)
 	{
 		NxFr::String Path = NxFr::Paths::Temp;
-		NxFr::Directory Directory = NxFr::Directory(Path);
 
+		NxFr::Directory Directory = NxFr::Directory(Path);
 		ASSERT_EQ(Directory.GetPath(), Path + "/");
 		ASSERT_EQ(Directory.Exists(), true);
 
 		NxFr::Directory SubDirectory = NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory"));
-
 		SubDirectory.Create();
 		ASSERT_EQ(SubDirectory.Exists(), true);
 
-		NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory", "Test1")).Create();
-		NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory", "Test2")).Create();
-		NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory", "Test3")).Create();
+		NxFr::Directory(NxFr::Path::Combine(SubDirectory.GetPath(), "Test1")).Create();
+		NxFr::Directory(NxFr::Path::Combine(SubDirectory.GetPath(), "Test2")).Create();
+		NxFr::Directory(NxFr::Path::Combine(SubDirectory.GetPath(), "Test3")).Create();
+		ASSERT_EQ(Directory.GetContent().GetCount() > 0, true);
+		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
 
 		SubDirectory.Move(NxFr::Path::Combine(Path, "Io_Directory_Moved"));
 		ASSERT_EQ(SubDirectory.Exists(), true);
 
 		SubDirectory.Delete();
 		ASSERT_EQ(SubDirectory.Exists(), false);
-
-		ASSERT_EQ(Directory.GetContent().GetCount() > 0, true);
-		ASSERT_EQ(Directory.GetContent(true).GetCount() > 0, true);
 	}
 
-	TEST(IO, File)
+	TEST(IO, File_Binary)
 	{
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_File.txt");
-		NxFr::File File = NxFr::File(Path);
+		uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_File.bin");
 
+		NxFr::File File = NxFr::File(Path);
 		ASSERT_EQ(File.GetPath(), Path);
 		ASSERT_EQ(File.Exists(), false);
 
@@ -165,12 +162,17 @@ namespace NxTs
 		ASSERT_EQ(File.Exists(), false);
 	}
 
-	TEST(IO, Text)
+	TEST(IO, File_Text)
 	{
+		NxFr::String Text = "This was written by code.\n";
 		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "IoText.txt");
+
 		NxFr::File File = NxFr::File(Path);
+		ASSERT_EQ(File.GetPath(), Path);
+		ASSERT_EQ(File.Exists(), false);
 
 		File.Create();
+		ASSERT_EQ(File.Exists(), true);
 
 		File.Open(NxFr::File::Mode::Write);
 		File.WriteText(Text);
@@ -195,32 +197,12 @@ namespace NxTs
 		File.Close();
 	}
 
-	TEST(IO, TextStream)
+	TEST(IO, Stream_Binary)
 	{
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_TextStream.txt");
-		NxFr::TextStream Stream(Path);
-
-		Stream.Open(NxFr::File::Mode::Write);
-		Stream.WriteLine(Line);
-		Stream.WriteLine(Line);
-		Stream.WriteLine(Line);
-		Stream.Close();
-
-		Stream.Open(NxFr::File::Mode::Read);
-		NxFr::StringView Content1 = Stream.ReadLine();
-		ASSERT_EQ(Content1, Line);
-		NxFr::StringView Content2 = Stream.ReadLine();
-		ASSERT_EQ(Content2, Line);
-		NxFr::StringView Content3 = Stream.ReadLine();
-		ASSERT_EQ(Content3, Line);
-		ASSERT_EQ(Stream.IsAtTheEnd(), true);
-		Stream.Close();
-	}
-
-	TEST(IO, BinaryStream)
-	{
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_BinaryStream.bin");
+		uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
 		NxFr::BufferView View = NxFr::BufferView(Data, sizeof(Data));
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_BinaryStream.bin");
+
 		NxFr::BinaryStream Stream(Path);
 
 		Stream.Open(NxFr::File::Mode::Write);
@@ -242,6 +224,30 @@ namespace NxTs
 		ASSERT_EQ(*Content3.GetPtr<uint64>(0), 10);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(16), 12);
 		ASSERT_EQ(*Content3.GetPtr<uint64>(72), 19);
+		Stream.Close();
+	}
+
+	TEST(IO, Stream_Text)
+	{
+		NxFr::String Text = "This was written by code.";
+		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_TextStream.txt");
+
+		NxFr::TextStream Stream(Path);
+
+		Stream.Open(NxFr::File::Mode::Write);
+		Stream.WriteLine(Text);
+		Stream.WriteLine(Text);
+		Stream.WriteLine(Text);
+		Stream.Close();
+
+		Stream.Open(NxFr::File::Mode::Read);
+		NxFr::StringView Content1 = Stream.ReadLine();
+		ASSERT_EQ(Content1, Text);
+		NxFr::StringView Content2 = Stream.ReadLine();
+		ASSERT_EQ(Content2, Text);
+		NxFr::StringView Content3 = Stream.ReadLine();
+		ASSERT_EQ(Content3, Text);
+		ASSERT_EQ(Stream.IsAtTheEnd(), true);
 		Stream.Close();
 	}
 }

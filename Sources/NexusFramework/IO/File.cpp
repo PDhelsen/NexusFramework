@@ -26,31 +26,9 @@ namespace NxFr
 		SetPath(Path);
 	}
 
-	File::File(File&& Other) noexcept
-		: Path(Other.Path), FileMode(Other.FileMode), Handle(Other.Handle)
-	{
-		Other.Handle = nullptr;
-	}
-
 	File::~File()
 	{
 		NEXUS_ASSERT(!Handle, Default, "Delete file while it is still open: %s", Path.C());
-	}
-
-	File& File::operator=(File&& Other) noexcept
-	{
-		if (this == &Other)
-		{
-			return *this;
-		}
-
-		Path = Other.Path;
-		FileMode = Other.FileMode;
-		Handle = Other.Handle;
-
-		Other.Handle = nullptr;
-
-		return *this;
 	}
 
 	File::operator bool() const
@@ -73,7 +51,7 @@ namespace NxFr
 		return Path::Exist(Path);
 	}
 
-	void File::EnsureParent()
+	void File::EnsureParent() const
 	{
 		Path::EnsureParent(Path);
 	}
