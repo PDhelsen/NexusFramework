@@ -48,6 +48,5 @@ namespace NxFr
 		String Path;
 		Mode FileMode;
 		void* Handle;
-
 	};
 }
