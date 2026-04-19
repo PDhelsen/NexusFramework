@@ -30,6 +30,23 @@ namespace NxFr
 		};
 
 		template<typename H>
+		class HashProcess<AxisAngle, H>
+		{
+		public:
+			static void Accumulate(HashStrategy<H>& State, const AxisAngle& Data)
+			{
+				HashProcess<Vector<3, float>, H>::Accumulate(State, Data.Axis);
+				HashProcess<float, H>::Accumulate(State, Data.Angle);
+			}
+
+			static typename H::HashLength Hash(HashStrategy<H>& State, const AxisAngle& Data)
+			{
+				HashProcess<AxisAngle, H>::Accumulate(State, Data);
+				return State.Hash();
+			}
+		};
+
+		template<typename H>
 		class HashProcess<Euler, H>
 		{
 		public:
@@ -43,23 +60,6 @@ namespace NxFr
 			static typename H::HashLength Hash(HashStrategy<H>& State, const Euler& Data)
 			{
 				HashProcess<Euler, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-
-		template<typename H>
-		class HashProcess<AxisAngle, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const AxisAngle& Data)
-			{
-				HashProcess<Vector<3, float>, H>::Accumulate(State, Data.Axis);
-				HashProcess<float, H>::Accumulate(State, Data.Angle);
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const AxisAngle& Data)
-			{
-				HashProcess<AxisAngle, H>::Accumulate(State, Data);
 				return State.Hash();
 			}
 		};

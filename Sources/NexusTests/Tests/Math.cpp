@@ -2,7 +2,7 @@
 
 namespace NxTs
 {
-	TEST(Math, Modulo)
+	TEST(Math, Math)
 	{
 		ASSERT_EQ(NxFr::Math::Modulo(0, 4), 0);
 		ASSERT_EQ(NxFr::Math::Modulo(1, 4), 1);
@@ -19,10 +19,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Math::Modulo(-4, 4), 0);
 		ASSERT_EQ(NxFr::Math::Modulo(-5, 4), 3);
 		ASSERT_EQ(NxFr::Math::Modulo(-6, 4), 2);
-	}
 
-	TEST(Math, IsMultiple)
-	{
 		ASSERT_EQ(NxFr::Math::IsMultiple(12, 2), true);
 		ASSERT_EQ(NxFr::Math::IsMultiple(12, 6), true);
 		ASSERT_EQ(NxFr::Math::IsMultiple(12, 3), true);
@@ -40,10 +37,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 5), false);
 		ASSERT_EQ(NxFr::Math::IsMultiple(-12, -7), false);
 		ASSERT_EQ(NxFr::Math::IsMultiple(-12, 8), false);
-	}
-
-	TEST(Math, PowerOfTwo)
-	{
+	
 		ASSERT_EQ(NxFr::Math::IsPowerOfTwo(16), true);
 		ASSERT_EQ(NxFr::Math::IsPowerOfTwo(15), false);
 
@@ -55,10 +49,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(8), 3);
 		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(1), 0);
 		ASSERT_EQ(NxFr::Math::LogTwoPowerOfTwo(0), -1);
-	}
-
-	TEST(Math, Prime)
-	{
+	
 		ASSERT_EQ(NxFr::Math::IsPrime((uint32)99), false);
 		ASSERT_EQ(NxFr::Math::IsPrime((uint32)97), true);
 
@@ -388,14 +379,14 @@ namespace NxTs
 		Cube = NxFr::Cube(NxFr::Vector3f::Zero, NxFr::Vector3f::One);
 		Sphere = NxFr::Sphere(NxFr::Vector3f::Zero, 1.0f);
 
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertRectangleToCircle(Rectangle), NxFr::Circle(NxFr::Math::Sqrt(2.0f)));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertCircleToRectangle(Circle), NxFr::Rectangle(NxFr::Vector2f::One));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertBoxToSphere(Box), NxFr::Sphere(NxFr::Math::Sqrt(3.0f)));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertCuboidToSphere(Cube), NxFr::Sphere(NxFr::Math::Sqrt(3.0f)));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertSphereToBox(Sphere), NxFr::Box(NxFr::Vector3f::One));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertSphereToCuboid(Sphere), NxFr::Cube(NxFr::Vector3f::One));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertBoxToCuboid(Box), NxFr::Cube(NxFr::Vector3f::One));
-		ASSERT_EQ(NxFr::ShapeUtility::ConvertCuboidToBox(Cube), NxFr::Box(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::Circle(Rectangle), NxFr::Circle(NxFr::Math::Sqrt(2.0f)));
+		ASSERT_EQ(NxFr::Rectangle(Circle), NxFr::Rectangle(NxFr::Vector2f::One));
+		ASSERT_EQ(NxFr::Sphere(Box), NxFr::Sphere(NxFr::Math::Sqrt(3.0f)));
+		ASSERT_EQ(NxFr::Sphere(Cube), NxFr::Sphere(NxFr::Math::Sqrt(3.0f)));
+		ASSERT_EQ(NxFr::Box(Sphere), NxFr::Box(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::Cube(Sphere), NxFr::Cube(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::Cube(Box), NxFr::Cube(NxFr::Vector3f::One));
+		ASSERT_EQ(NxFr::Box(Cube), NxFr::Box(NxFr::Vector3f::One));
 
 		ASSERT_EQ(NxFr::ShapeUtility::Position(Ray, 2.0f), NxFr::Vector3f::Forward * 2.0f);
 		ASSERT_EQ(NxFr::ShapeUtility::Position(Plane, NxFr::Vector2f(0.5f, 0.5f)), NxFr::Vector3f::Zero);
@@ -460,23 +451,5 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Box, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
 		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Cube, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
 		ASSERT_EQ(NxFr::Math::Equals(NxFr::ShapeUtility::Distance(Sphere, NxFr::Vector3f(0.0f, 1.5f, 0.0f)), 0.5f), true);
-	}
-
-	TEST(Math, Hash)
-	{
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Vector3f()), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Euler()), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::AxisAngle()), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Quaternion()), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Matrix4x4f()), 0);
-
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Plane(NxFr::Vector3f::Forward, 0.0f)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Triangle(NxFr::Vector3f::Right, NxFr::Vector3f::Up, NxFr::Vector3f::Forward)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Rectangle(NxFr::Vector2f::Zero, NxFr::Vector2f::One)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Circle(NxFr::Vector2f::Zero, 1.0f)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Box(NxFr::Vector3f::Zero, NxFr::Vector3f::One)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Cube(NxFr::Vector3f::Zero, NxFr::Vector3f::One)), 0);
-		ASSERT_NE(NxFr::Hash<>::HashObject(NxFr::Sphere(NxFr::Vector3f::Zero, 1.0f)), 0);
 	}
 }

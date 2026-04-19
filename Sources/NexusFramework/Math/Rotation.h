@@ -51,10 +51,10 @@ namespace NxFr
 		{
 		}
 
+		operator Vector<4, float>() const { return Vector<4, float>(Axis.x, Axis.y, Axis.z, Angle); }
+
 		bool operator==(AxisAngle Other) const { return Axis == Other.Axis && Math::Equals(Angle, Other.Angle); }
 		bool operator!=(AxisAngle Other) const { return !(*this == Other); }
-
-		void Normalize() { Axis = VectorUtility::Normalize(Axis); }
 
 	public:
 		Vector<3, float> Axis;
@@ -203,7 +203,8 @@ namespace NxFr
 			return Euler(Pitch * Math::Degree, Yaw * Math::Degree, Roll * Math::Degree);
 		}
 
-		Quaternion& operator=(Quaternion Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
+		operator Vector<4, float>() const { return Vector<4, float>(x, y, z, w); }
+
 		bool operator==(Quaternion Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
 		bool operator!=(Quaternion Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
