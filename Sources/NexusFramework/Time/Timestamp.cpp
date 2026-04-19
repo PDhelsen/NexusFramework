@@ -20,6 +20,11 @@ namespace NxFr
 		NEXUS_ASSERT(Seconds >= 0 && Seconds < 60, Default, "Invalid Seconds");
 	}
 
+	Timestamp::operator bool() const
+	{
+		return IsValid();
+	}
+
 	Timestamp& Timestamp::operator+=(const Timespan& Other)
 	{
 		Seconds += Other.Seconds;
@@ -142,11 +147,6 @@ namespace NxFr
 		YearDay = -1;
 
 		return *this;
-	}
-
-	Timestamp::operator bool() const
-	{
-		return IsValid();
 	}
 
 	StringView Timestamp::GetWeekDay() const

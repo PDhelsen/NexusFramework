@@ -23,8 +23,10 @@ namespace NxFr
 		constexpr double HrsToSecond = 60.0 * 60;
 		constexpr double DayToSecond = 60.0 * 60 * 24;
 
-		NEXUS_FRAMEWORK_API int64 GetTimeSinceEpoch();
 		NEXUS_FRAMEWORK_API Timestamp Now();
+		NEXUS_FRAMEWORK_API int64 TimeSinceEpoch();
+		NEXUS_FRAMEWORK_API uint64 ProcessorTick();
+		NEXUS_FRAMEWORK_API double Convert(double Value, double Unit = 1.0);
 
 		NEXUS_FRAMEWORK_API StringView GetWeekDay(int32 Day);
 		NEXUS_FRAMEWORK_API StringView GetMonth(int32 Month);

@@ -1,7 +1,7 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Time/Stopwatch.h"
 
-#include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/Time/Time.h"
 
 namespace NxFr
 {
@@ -26,7 +26,7 @@ namespace NxFr
 			return;
 		}
 
-		StartTimer = Now();
+		StartTimer = Time::ProcessorTick();
 		ElapsedTime = 0.0;
 		Started = true;
 		Paused = false;
@@ -46,10 +46,10 @@ namespace NxFr
 			return 0.0;
 		}
 
-		ElapsedTime += Now() - StartTimer;
+		ElapsedTime += Time::ProcessorTick() - StartTimer;
 		Paused = true;
 
-		return GetElapsedTime(Unit);
+		return Time::Convert(ElapsedTime, Unit);
 	}
 
 	void Stopwatch::Resume()
@@ -78,11 +78,11 @@ namespace NxFr
 			return 0.0;
 		}
 
-		ElapsedTime += Paused ? 0 : Now() - StartTimer;
+		ElapsedTime += Paused ? 0 : Time::ProcessorTick() - StartTimer;
 		Started = false;
 		Paused = false;
 
-		return GetElapsedTime(Unit);
+		return Time::Convert(ElapsedTime, Unit);
 	}
 
 	void Stopwatch::Reset()
@@ -98,33 +98,23 @@ namespace NxFr
 		Paused = false;
 	}
 
-	double Stopwatch::Peek(double Unit)
+	double Stopwatch::Peek(double Unit) const
 	{
-		if (Paused)
+		if (!Paused)
 		{
-			return GetElapsedTime(Unit);
+			return Time::Convert(Time::ProcessorTick() - StartTimer, Unit);
 		}
 
-		return Convert(Now() - StartTimer, Unit);
+		return Time::Convert(ElapsedTime, Unit);
 	}
 
 	double Stopwatch::GetStartTime(double Unit) const
 	{
-		return Convert(StartTimer, Unit);
+		return Time::Convert(StartTimer, Unit);
 	}
 
 	double Stopwatch::GetElapsedTime(double Unit) const
 	{
-		return Convert(ElapsedTime, Unit);
-	}
-
-	double Stopwatch::Convert(double Time, double Unit)
-	{
-		return Time * Unit;
-	}
-
-	double Stopwatch::Now()
-	{
-		return Platform::GetInstance()->GetProcessorTimer();
+		return Time::Convert(ElapsedTime, Unit);
 	}
 }

@@ -15,9 +15,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Timestamp();
 		NEXUS_FRAMEWORK_API Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd = -1, int32 Yd = -1, bool St = false);
 
+		NEXUS_FRAMEWORK_API operator bool() const;
 		NEXUS_FRAMEWORK_API Timestamp& operator+=(const Timespan& Other);
 		NEXUS_FRAMEWORK_API Timestamp& operator-=(const Timespan& Other);
-		NEXUS_FRAMEWORK_API explicit operator bool() const;
 
 		NEXUS_FRAMEWORK_API StringView GetWeekDay() const;
 		NEXUS_FRAMEWORK_API StringView GetMonth() const;

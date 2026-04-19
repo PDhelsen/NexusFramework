@@ -14,6 +14,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Timespan();
 		NEXUS_FRAMEWORK_API Timespan(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S);
 
+		NEXUS_FRAMEWORK_API operator bool() const;
 		NEXUS_FRAMEWORK_API Timespan& operator+=(const Timespan& Other);
 		NEXUS_FRAMEWORK_API Timespan& operator-=(const Timespan& Other);
 

@@ -4,7 +4,7 @@
 
 namespace NxFr
 {
-	class Stopwatch
+	struct Stopwatch
 	{
 	public:
 		NEXUS_FRAMEWORK_API Stopwatch(bool AutoStart = false);
@@ -15,7 +15,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void Resume();
 		NEXUS_FRAMEWORK_API double Stop(double Unit = 1.0);
 		NEXUS_FRAMEWORK_API void Reset();
-		NEXUS_FRAMEWORK_API double Peek(double Unit = 1.0);
+		NEXUS_FRAMEWORK_API double Peek(double Unit = 1.0) const;
 
 		NEXUS_FRAMEWORK_API double GetStartTime(double Unit = 1.0) const;
 		NEXUS_FRAMEWORK_API double GetElapsedTime(double Unit = 1.0) const;
@@ -24,9 +24,6 @@ namespace NxFr
 		bool IsPaused() const { return Paused; }
 
 	private:
-		static inline double Convert(double Time, double Unit = 1.0);
-		static inline double Now();
-
 		double StartTimer;
 		double ElapsedTime;
 		bool Started;

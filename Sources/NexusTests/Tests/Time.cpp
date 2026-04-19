@@ -54,4 +54,17 @@ namespace NxTs
 		NxFr::Timestamp Test7 = NxFr::Timestamp(2025, 1, 5, 23, 55, 00) - NxFr::Timespan(0, 1, 15, 0, 0, 0);
 		ASSERT_EQ(Test7, NxFr::Timestamp(2024, 11, 21, 23, 55, 00));
 	}
+
+	TEST(Time, Stopwatch)
+	{
+		NxFr::Stopwatch Stopwatch(true);
+
+		NxFr::Thread::Sleep(1000);
+		double Peek = Stopwatch.Peek(NxFr::Time::SecondToMilli);
+		ASSERT_EQ(Peek >= 1000, true);
+
+		NxFr::Thread::Sleep(1000);
+		double ElapsedTime = Stopwatch.Stop(NxFr::Time::SecondToMilli);
+		ASSERT_EQ(ElapsedTime >= 1000 && ElapsedTime >= Peek, true);
+	}
 }

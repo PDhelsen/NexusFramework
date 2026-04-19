@@ -2,14 +2,15 @@
 #include "NexusFramework/Time/Time.h"
 
 #include "NexusFramework/External/StandardLibrary.h"
+#include "NexusFramework/Platform/Platform.h"
 
 namespace NxFr
 {
 #pragma region Constant
 
-	static Array<String> WeekDaysNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
-	static Array<String> MonthsNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
-	static Array<int32> DayPerMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+	static const Array<String> WeekDaysNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+	static const Array<String> MonthsNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+	static const Array<int32> DayPerMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 	static Buffer& GetLocalBuffer() { static thread_local Buffer LocalBuffer(64, nullptr); return LocalBuffer; }
 
 #pragma endregion
@@ -60,19 +61,29 @@ namespace NxFr
 
 	namespace Time
 	{
-		int64 GetTimeSinceEpoch()
+		Timestamp Now()
+		{
+			int64 Time = TimeSinceEpoch();
+			localtime_s(&TimeInfo.TM, &Time);
+			ConvertFromCLibToNexus();
+			return TimeInfo.Stamp;
+		}
+
+		int64 TimeSinceEpoch()
 		{
 			int64 Time;
 			time(&Time);
 			return Time;
 		}
 
-		Timestamp Now()
+		uint64 ProcessorTick()
 		{
-			int64 Time = GetTimeSinceEpoch();
-			localtime_s(&TimeInfo.TM, &Time);
-			ConvertFromCLibToNexus();
-			return TimeInfo.Stamp;
+			return Platform::GetInstance()->GetProcessorTimer();
+		}
+
+		double Convert(double Value, double Unit)
+		{
+			return Value * Unit;
 		}
 
 		StringView GetWeekDay(int32 Day)

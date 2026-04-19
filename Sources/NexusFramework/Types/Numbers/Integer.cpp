@@ -13,7 +13,7 @@ namespace NxFr
 
 		GUID GenerateGuid()
 		{
-			return GenerateGuid(Time::GetTimeSinceEpoch(), Platform::GetInstance()->GetProcessId(), Thread::ThreadId(), GlobalSeed);
+			return GenerateGuid(Time::TimeSinceEpoch(), Platform::GetInstance()->GetProcessId(), Thread::ThreadId(), GlobalSeed);
 		}
 
 		GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 ThreadId, uint64 Seed)

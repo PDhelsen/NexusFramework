@@ -20,6 +20,11 @@ namespace NxFr
 		NEXUS_ASSERT(Seconds >= 0, Default, "Invalid Seconds");
 	}
 
+	Timespan::operator bool() const
+	{
+		return IsValid();
+	}
+
 	Timespan& Timespan::operator+=(const Timespan& Other)
 	{
 		Seconds += Other.Seconds;
