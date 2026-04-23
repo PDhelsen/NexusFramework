@@ -54,6 +54,9 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API sRGB(Bits Other);
 			NEXUS_FRAMEWORK_API sRGB(Hsv Other);
 
+			NEXUS_FRAMEWORK_API operator Vector3f() const;
+			NEXUS_FRAMEWORK_API operator Vector4f() const;
+
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 			NEXUS_FRAMEWORK_API float ToGrayscale() const;
@@ -120,6 +123,9 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Linear(sRGB Other);
 			NEXUS_FRAMEWORK_API Linear(Bits Other);
 			NEXUS_FRAMEWORK_API Linear(Hsv Other);
+
+			NEXUS_FRAMEWORK_API operator Vector3f() const;
+			NEXUS_FRAMEWORK_API operator Vector4f() const;
 
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
@@ -188,6 +194,9 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Bits(Linear Other);
 			NEXUS_FRAMEWORK_API Bits(Hsv Other);
 
+			NEXUS_FRAMEWORK_API operator Vector3f() const;
+			NEXUS_FRAMEWORK_API operator Vector4f() const;
+
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
 			NEXUS_FRAMEWORK_API float ToGrayscale() const;
@@ -254,6 +263,9 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Hsv(sRGB Other);
 			NEXUS_FRAMEWORK_API Hsv(Linear Other);
 			NEXUS_FRAMEWORK_API Hsv(Bits Other);
+
+			NEXUS_FRAMEWORK_API operator Vector3f() const;
+			NEXUS_FRAMEWORK_API operator Vector4f() const;
 
 			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
 			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;

@@ -47,7 +47,7 @@ namespace NxFr
 		static const Vector<D, T> One;
 
 		Vector() { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = 0; }
-		template<typename P> explicit Vector(P V) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = V; }
+		explicit Vector(T V) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = V; }
 		template<uint8 S, typename P> Vector(Vector<S, P> Other) {}
 		~Vector() {}
 
@@ -106,8 +106,8 @@ namespace NxFr
 		static const Vector<2, T> Up;
 
 		Vector() : x(0), y(0) {}
-		template<typename P> explicit Vector(P V) : x(V), y(V) {}
-		template<typename P> explicit Vector(P X, P Y) : x(X), y(Y) {}
+		explicit Vector(T V) : x(V), y(V) {}
+		explicit Vector(T X, T Y) : x(X), y(Y) {}
 		template<typename P> Vector(Vector<2, P> Other) : x(Other.x), y(Other.y) {}
 		template<typename P> Vector(Vector<3, P> Other) : x(Other.x), y(Other.y) {}
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y) {}
@@ -172,9 +172,9 @@ namespace NxFr
 		static const Vector<3, T> Forward;
 
 		Vector() : x(0), y(0), z(0) {}
-		template<typename P> explicit Vector(P V) : x(V), y(V), z(V) {}
-		template<typename P> explicit Vector(P X, P Y) : x(X), y(Y), z(0) {}
-		template<typename P> explicit Vector(P X, P Y, P Z) : x(X), y(Y), z(Z) {}
+		explicit Vector(T V) : x(V), y(V), z(V) {}
+		explicit Vector(T X, T Y) : x(X), y(Y), z(0) {}
+		explicit Vector(T X, T Y, T Z) : x(X), y(Y), z(Z) {}
 		template<typename P> explicit Vector(Vector<2, P> Other) : x(Other.x), y(Other.y), z(0) {}
 		template<typename P> Vector(Vector<3, P> Other) : x(Other.x), y(Other.y), z(Other.z) {}
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y), z(Other.z) {}
@@ -241,10 +241,10 @@ namespace NxFr
 		static const Vector<4, T> Fourth;
 
 		Vector() : x(0), y(0), z(0), w(0) {}
-		template<typename P> explicit Vector(P V) : x(V), y(V), z(V), w(V) {}
-		template<typename P> explicit Vector(P X, P Y) : x(X), y(Y), z(0), w(0) {}
-		template<typename P> explicit Vector(P X, P Y, P Z) : x(X), y(Y), z(Z), w(0) {}
-		template<typename P> explicit Vector(P X, P Y, P Z, P W) : x(X), y(Y), z(Z), w(W) {}
+		explicit Vector(T V) : x(V), y(V), z(V), w(V) {}
+		explicit Vector(T X, T Y) : x(X), y(Y), z(0), w(0) {}
+		explicit Vector(T X, T Y, T Z) : x(X), y(Y), z(Z), w(0) {}
+		explicit Vector(T X, T Y, T Z, T W) : x(X), y(Y), z(Z), w(W) {}
 		template<typename P> Vector(Vector<2, P> Other) : x(Other.x), y(Other.y), z(0), w(0) {}
 		template<typename P> Vector(Vector<3, P> Other) : x(Other.x), y(Other.y), z(Other.z), w(0) {}
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y), z(Other.z), w(Other.w) {}

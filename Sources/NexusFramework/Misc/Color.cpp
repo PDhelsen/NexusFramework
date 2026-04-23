@@ -33,6 +33,9 @@ namespace NxFr
 		sRGB::sRGB(Bits Other) { *this = Utility::TosRGB(Other); }
 		sRGB::sRGB(Hsv Other) { *this = Utility::TosRGB(Other); }
 
+		sRGB::operator Vector3f() const { return Utility::ToVector3f(*this); }
+		sRGB::operator Vector4f() const { return Utility::ToVector4f(*this); }
+
 		Vector3f sRGB::ToVector3f() const { return Utility::ToVector3f(*this); }
 		Vector4f sRGB::ToVector4f() const { return Utility::ToVector4f(*this); }
 		float sRGB::ToGrayscale() const { return Utility::ToGrayscale(*this); }
@@ -93,6 +96,9 @@ namespace NxFr
 		Linear::Linear(sRGB Other) { *this = Utility::ToLinear(Other); }
 		Linear::Linear(Bits Other) { *this = Utility::ToLinear(Utility::TosRGB(Other)); }
 		Linear::Linear(Hsv Other) { *this = Utility::ToLinear(Utility::TosRGB(Other)); }
+
+		Linear::operator Vector3f() const { return Utility::ToVector3f(*this); }
+		Linear::operator Vector4f() const { return Utility::ToVector4f(*this); }
 
 		Vector3f Linear::ToVector3f() const { return Utility::ToVector3f(*this); }
 		Vector4f Linear::ToVector4f() const { return Utility::ToVector4f(*this); }
@@ -155,6 +161,9 @@ namespace NxFr
 		Bits::Bits(Linear Other) { *this = Utility::ToBits(Utility::TosRGB(Other)); }
 		Bits::Bits(Hsv Other) { *this = Utility::ToBits(Utility::TosRGB(Other)); }
 
+		Bits::operator Vector3f() const { return Utility::ToVector3f(*this); }
+		Bits::operator Vector4f() const { return Utility::ToVector4f(*this); }
+
 		Vector3f Bits::ToVector3f() const { return Utility::ToVector3f(*this); }
 		Vector4f Bits::ToVector4f() const { return Utility::ToVector4f(*this); }
 		float Bits::ToGrayscale() const { return Utility::ToGrayscale(*this); }
@@ -215,6 +224,9 @@ namespace NxFr
 		Hsv::Hsv(sRGB Other) { *this = Utility::ToHsv(Other); }
 		Hsv::Hsv(Linear Other) { *this = Utility::ToHsv(Utility::TosRGB(Other)); }
 		Hsv::Hsv(Bits Other) { *this = Utility::ToHsv(Utility::TosRGB(Other)); }
+
+		Hsv::operator Vector3f() const { return Utility::ToVector3f(*this); }
+		Hsv::operator Vector4f() const { return Utility::ToVector4f(*this); }
 
 		Vector3f Hsv::ToVector3f() const { return Utility::ToVector3f(*this); }
 		Vector4f Hsv::ToVector4f() const { return Utility::ToVector4f(*this); }
