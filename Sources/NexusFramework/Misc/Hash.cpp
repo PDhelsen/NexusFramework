@@ -58,7 +58,7 @@ namespace NxFr
 			return *this;
 		}
 
-		XxHash32::HashLength XxHash32::Hash() const
+		XxHash32::HashLength XxHash32::Finalize() const
 		{
 			const uint8* Pointer = Buffer;
 			const uint8* Stop = Pointer + BufferSize;
@@ -203,7 +203,7 @@ namespace NxFr
 			return *this;
 		}
 
-		XxHash64::HashLength XxHash64::Hash() const
+		XxHash64::HashLength XxHash64::Finalize() const
 		{
 			// Process remaining data
 			const uint8* Pointer = Buffer;
@@ -364,7 +364,7 @@ namespace NxFr
 			return *this;
 		}
 
-		Murmur32::HashLength Murmur32::Hash() const
+		Murmur32::HashLength Murmur32::Finalize() const
 		{
 			HashLength Result = Accumulator;
 			Result ^= Size;
@@ -420,7 +420,7 @@ namespace NxFr
 			return *this;
 		}
 
-		Fnv164::HashLength Fnv164::Hash() const
+		Fnv164::HashLength Fnv164::Finalize() const
 		{
 			return Accumulator;
 		}
@@ -464,7 +464,7 @@ namespace NxFr
 			return *this;
 		}
 
-		Fnv1a64::HashLength Fnv1a64::Hash() const
+		Fnv1a64::HashLength Fnv1a64::Finalize() const
 		{
 			return Accumulator;
 		}

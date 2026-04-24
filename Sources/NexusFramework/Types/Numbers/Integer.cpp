@@ -18,12 +18,12 @@ namespace NxFr
 
 		GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 ThreadId, uint64 Seed)
 		{
-			Hasher Instance;
+			Hash Instance;
 			Instance.Accumulate(Seed);
 			Instance.Accumulate(Time);
 			Instance.Accumulate(ProcessId);
 			Instance.Accumulate(ThreadId);
-			GlobalSeed = Instance.Hash();
+			GlobalSeed = Instance.Finalize();
 			return GlobalSeed;
 		}
 	}

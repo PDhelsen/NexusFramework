@@ -447,21 +447,15 @@ namespace NxFr
 	namespace Hashing
 	{
 		template<typename H>
-		class HashProcess<Color, H>
+		class Hasher<Color, H>
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, const Color& Data)
+			static void Accumulate(Hash<H>& State, const Color& Data)
 			{
-				HashProcess<Color::Type, H>::Accumulate(State, Data.r);
-				HashProcess<Color::Type, H>::Accumulate(State, Data.g);
-				HashProcess<Color::Type, H>::Accumulate(State, Data.b);
-				HashProcess<Color::Type, H>::Accumulate(State, Data.a);
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const Color& Data)
-			{
-				HashProcess<Color, H>::Accumulate(State, Data);
-				return State.Hash();
+				State.Accumulate(Data.r);
+				State.Accumulate(Data.g);
+				State.Accumulate(Data.b);
+				State.Accumulate(Data.a);
 			}
 		};
 	}

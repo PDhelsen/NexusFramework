@@ -117,20 +117,14 @@ namespace NxFr
 	namespace Hashing
 	{
 		template<typename H>
-		class HashProcess<NxTs::ContainerTest, H>
+		class Hasher<NxTs::ContainerTest, H>
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
+			static void Accumulate(Hash<H>& State, const NxTs::ContainerTest& Data)
 			{
-				State.Accumulate(&Data.Integer, sizeof(uint64))
-					.Accumulate(&Data.Float, sizeof(float))
-					.Accumulate(&Data.Boolean, sizeof(bool));
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const NxTs::ContainerTest& Data)
-			{
-				HashProcess<NxTs::ContainerTest, H>::Accumulate(State, Data);
-				return State.Hash();
+				State.Accumulate(Data.Integer);
+				State.Accumulate(Data.Float);
+				State.Accumulate(Data.Boolean);
 			}
 		};
 	}

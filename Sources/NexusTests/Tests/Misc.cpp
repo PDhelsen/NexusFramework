@@ -39,4 +39,15 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Colors::Bits(127, 127, 127), NxFr::Color(0.5f, 0.5f, 0.5f));
 		ASSERT_EQ(NxFr::Colors::Hsv(0.3333f, 1.0f, 1.0f), NxFr::Color(0.0f, 1.0f, 0.0f));
 	}
+
+	TEST(Misc, Hash)
+	{
+		const NxFr::String Text = "This is a test text for testing the Hash function";
+
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::XxHash32>::HashObject(Text), 0x3ba1b2d6);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::XxHash64>::HashObject(Text), 0xc5eeeb390253f739);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Murmur32>::HashObject(Text), 0x1da26dd2);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv164>::HashObject(Text), 0x0DB54C1C1610EA87);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv1a64>::HashObject(Text), 0x77F122B9F752AACB);
+	}
 }

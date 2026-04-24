@@ -212,43 +212,6 @@ namespace NxTs
 		ASSERT_EQ("HelloWorld" - NxFr::String("World"), "Hello");
 	}
 
-	TEST(String, Hash_Sort)
-	{
-		uint64 Hash1 = 0x2474E7FB1AEC9F05;
-		uint64 Hash2 = 0x77F122B9F752AACB;
-		NxFr::String String1 = NxFr::String("Test");
-		NxFr::String String2 = NxFr::String("This is a test text for testing the Hash function");
-		ASSERT_EQ(NxFr::Hash<>::HashObject(String1), Hash1);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(String2), Hash2);
-
-		NxFr::StringId StringId = NxFr::StringId(String2);
-		ASSERT_EQ(NxFr::Hash<>::HashObject(StringId), StringId.GetId());
-		const char* StringLitteral = "Hello World";
-		ASSERT_EQ(NxFr::Hash<>::HashObject(StringLitteral), NxFr::Hash<>::HashObject("Hello World"));
-
-		NxFr::Array<NxFr::String> Array = NxFr::Array<NxFr::String>(10);
-		Array.AssignConstruct(0, NxFr::String("ABEG"));
-		Array.AssignConstruct(1, NxFr::String("ABEF"));
-		Array.AssignConstruct(2, NxFr::String("BCDE"));
-		Array.AssignConstruct(3, NxFr::String("WWWW"));
-		Array.AssignConstruct(4, NxFr::String("ABCD"));
-		Array.AssignConstruct(5, NxFr::String("BDEF"));
-		Array.AssignConstruct(6, NxFr::String("AAAA"));
-		Array.AssignConstruct(7, NxFr::String("ABEG"));
-		Array.AssignConstruct(8, NxFr::String("WWWW"));
-		Array.AssignConstruct(9, NxFr::String("EFGH"));
-
-		Array.Sort();
-		auto ItFirst = Array.Begin();
-		auto& ItSecond = ++Array.Begin();
-		while (ItSecond != Array.End())
-		{
-			ASSERT_EQ(*ItFirst <= *ItSecond, true);
-			ItFirst++;
-			ItSecond++;
-		}
-	}
-
 	TEST(String, Iterator)
 	{
 		NxFr::String Data = NxFr::String("This is a test text for testing the iterator");

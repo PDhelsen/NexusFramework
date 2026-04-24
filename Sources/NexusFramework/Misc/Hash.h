@@ -9,6 +9,9 @@ namespace NxFr
 
 #pragma region Hash Algorithm
 
+	template<typename H>
+	struct Hash;
+
 	namespace Hashing
 	{
 		using Default = class Fnv1a64;
@@ -22,8 +25,7 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API HashAlgorithm(HashLength Seed) {};
 
 			NEXUS_FRAMEWORK_API virtual HashAlgorithm& Accumulate(const void* Data, uint64 Length) = 0;
-			NEXUS_FRAMEWORK_API virtual HashLength Hash() const = 0;
-
+			NEXUS_FRAMEWORK_API virtual HashLength Finalize() const = 0;
 			NEXUS_FRAMEWORK_API virtual HashLength Combine(HashLength HashA, HashLength HashB) const = 0;
 
 			NEXUS_FRAMEWORK_API virtual uint64 GetSize() const = 0;
@@ -36,8 +38,7 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API XxHash32(HashLength Seed = 0);
 
 			NEXUS_FRAMEWORK_API XxHash32& Accumulate(const void* Data, uint64 Length) override;
-			NEXUS_FRAMEWORK_API HashLength Hash() const override;
-
+			NEXUS_FRAMEWORK_API HashLength Finalize() const override;
 			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
 			NEXUS_FRAMEWORK_API uint64 GetSize() const override { return Size; }
@@ -73,8 +74,7 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API XxHash64(HashLength Seed = 0);
 
 			NEXUS_FRAMEWORK_API XxHash64& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Hash() const;
-
+			NEXUS_FRAMEWORK_API HashLength Finalize() const;
 			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
 			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
@@ -111,8 +111,7 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Murmur32(HashLength Seed = 0);
 
 			NEXUS_FRAMEWORK_API Murmur32& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Hash() const;
-
+			NEXUS_FRAMEWORK_API HashLength Finalize() const;
 			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
 			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
@@ -139,8 +138,7 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Fnv164(HashLength Seed = 0);
 
 			NEXUS_FRAMEWORK_API Fnv164& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Hash() const;
-
+			NEXUS_FRAMEWORK_API HashLength Finalize() const;
 			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
 			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
@@ -161,8 +159,7 @@ namespace NxFr
 			NEXUS_FRAMEWORK_API Fnv1a64(HashLength Seed = 0);
 
 			NEXUS_FRAMEWORK_API Fnv1a64& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Hash() const;
-
+			NEXUS_FRAMEWORK_API HashLength Finalize() const;
 			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
 			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
@@ -180,88 +177,89 @@ namespace NxFr
 
 #pragma endregion
 
-#pragma region Hash Back-end
+#pragma region Hash Template Specialization
 
 	namespace Hashing
 	{
-		template<typename H = Hashing::Default>
-		struct HashStrategy
-		{
-		public:
-			HashStrategy(typename H::HashLength Seed = 0)
-				: State(Seed)
-			{
-			}
-
-			HashStrategy<H>& Accumulate(const void* Data, uint64 Length)
-			{
-				State.Accumulate(Data, Length);
-				return *this;
-			}
-
-			typename H::HashLength Hash() const
-			{
-				return State.Hash();
-			}
-
-			typename H::HashLength Combine(typename H::HashLength A, typename H::HashLength B) const
-			{
-				return State.Combine(A, B);
-			}
-
-			uint64 GetSize() const { return State.GetSize(); };
-			uint64 GetSeed() const { return State.GetSeed(); };
-
-		private:
-			H State;
-		};
-
 		template<typename T, typename H = Hashing::Default>
-		class HashProcess
+		struct Hasher
 		{
 		public:
-			static void Accumulate(HashStrategy<H>& State, const T& Data)
+			static void Accumulate(Hash<H>& State, const T& Data)
 			{
 				State.Accumulate(&Data, sizeof(T));
 			}
+		};
 
-			static typename H::HashLength Hash(HashStrategy<H>& State, const T& Data)
+		template<typename T, typename H>
+		class Hasher<T*, H>
+		{
+		public:
+			static void Accumulate(Hash<H>& State, const T* Data)
 			{
-				HashProcess<T, H>::Accumulate(State, Data);
-				return State.Hash();
+				State.Accumulate(reinterpret_cast<uint64>(Data));
+			}
+		};
+
+		template<typename H>
+		class Hasher<nullptr_t, H>
+		{
+		public:
+			static void Accumulate(Hash<H>& State, const nullptr_t* Data)
+			{
+				State.Accumulate((uint64)0);
 			}
 		};
 	}
 
 #pragma endregion
 
-#pragma region Hash Front-end
-
 	template<typename H = Hashing::Default>
-	struct Hasher
+	struct Hash
 	{
 	public:
-		Hasher(typename H::HashLength Seed = 0)
+		template<typename T>
+		static typename H::HashLength HashObject(const T& Data, typename H::HashLength Seed = 0)
+		{
+			Hash<H> Instance(Seed);
+			Instance.Accumulate(Data);
+			return Instance.Finalize();
+		}
+		
+		static typename H::HashLength HashData(const void* Data, uint64 Length, typename H::HashLength Seed = 0)
+		{
+			Hash<H> Instance(Seed);
+			Instance.Accumulate(Data, Length);
+			return Instance.Finalize();
+		}
+		
+		static typename H::HashLength CombineHashes(typename H::HashLength HashA, typename H::HashLength HashB, typename H::HashLength Seed = 0)
+		{
+			Hash<H> Instance(Seed);
+			return Instance.Combine(HashA, HashB);
+		}
+
+		Hash(typename H::HashLength Seed = 0)
 			: State(Seed)
 		{
 		}
 
 		template<typename T>
-		Hasher<H>& Accumulate(const T& Data)
+		Hash<H>& Accumulate(const T& Data)
 		{
-			Hashing::HashProcess<T, H>::Accumulate(State, Data);
+			Hashing::Hasher<T, H>::Accumulate(*this, Data);
 			return *this;
 		}
 
-		Hasher<H>& Accumulate(const void* Data, uint64 Length)
+		Hash<H>& Accumulate(const void* Data, uint64 Length)
 		{
 			State.Accumulate(Data, Length);
 			return *this;
 		}
 
-		typename H::HashLength Hash() const
+		typename H::HashLength Finalize() const
 		{
-			return State.Hash();
+			return State.Finalize();
 		}
 
 		typename H::HashLength Combine(typename H::HashLength A, typename H::HashLength B) const
@@ -269,77 +267,11 @@ namespace NxFr
 			return State.Combine(A, B);
 		}
 
-		uint64 GetSize() const { return State.GetSize(); };
-		uint64 GetSeed() const { return State.GetSeed(); };
+		typename H::HashLength GetSize() const { return State.GetSize(); };
+		typename H::HashLength GetSeed() const { return State.GetSeed(); };
 
 	private:
-		Hashing::HashStrategy<H> State;
+		H State;
 	};
-
-	template<typename H = Hashing::Default>
-	class Hash
-	{
-	public:
-		template<typename T>
-		static typename H::HashLength HashObject(const T& Data, typename H::HashLength Seed = 0)
-		{
-			Hashing::HashStrategy<H> State(Seed);
-			return Hashing::HashProcess<typename RemoveReference<T>::Type, H>::Hash(State, Data);
-		}
-
-		static typename H::HashLength HashData(const void* Data, uint64 Length, typename H::HashLength Seed = 0)
-		{
-			Hashing::HashStrategy<H> State(Seed);
-			State.Accumulate(Data, Length);
-			return State.Hash();
-		}
-
-		static typename H::HashLength Combine(typename H::HashLength HashA, typename H::HashLength HashB, typename H::HashLength Seed = 0)
-		{
-			Hashing::HashStrategy<H> State(Seed);
-			return State.Combine(HashA, HashB);
-		}
-	};
-
-#pragma endregion
-
-#pragma region Hash Template Specialization
-
-	namespace Hashing
-	{
-		template<typename T, typename H>
-		class HashProcess<T*, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const T* Data)
-			{
-				HashProcess<uint64, H>::Accumulate(State, reinterpret_cast<uint64>(Data));
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const T* Data)
-			{
-				HashProcess<T*, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-
-		template<typename H>
-		class HashProcess<nullptr_t, H>
-		{
-		public:
-			static void Accumulate(HashStrategy<H>& State, const nullptr_t* Data)
-			{
-				HashProcess<uint64, H>::Accumulate(State, 0);
-			}
-
-			static typename H::HashLength Hash(HashStrategy<H>& State, const nullptr_t* Data)
-			{
-				HashProcess<nullptr_t, H>::Accumulate(State, Data);
-				return State.Hash();
-			}
-		};
-	}
-
-#pragma endregion
 
 }
