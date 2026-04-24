@@ -685,11 +685,18 @@ namespace NxFr
 			DataHead = Current;
 		}
 
-		template<typename S = Sorting::DefaultLinkBased>
+		template<typename S = Sorting::DefaultLinked<T, N>>
 		void Sort(Sorting::CompareFunction<T> Function = nullptr)
 		{
-			Sort::SortLinkBased<T, S, N>(&DataHead, Function);
-			Node::FixupNode<N>(DataHead, &DataTail);
+			Sort::SortNodes<T, N, S>(
+				&DataHead,
+				[](N* Node, N* Value) { Node->Next = Value; },
+				[](N* Node) {return Node->Next; },
+				[](N* Node) {return Node->Value; },
+				Function
+			);
+
+			DataTail = Node::RelinkBackward<N>(DataHead);
 		}
 
 		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }

@@ -50,4 +50,56 @@ namespace NxTs
 		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv164>::HashObject(Text), 0x0DB54C1C1610EA87);
 		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv1a64>::HashObject(Text), 0x77F122B9F752AACB);
 	}
+
+	TEST(Misc, Sort)
+	{
+		auto Comparaison = [](const uint64& A, const uint64& B)
+		{
+			return A >= B;
+		};
+
+		NxFr::Array<uint64> MergeSort = { 9, 6, 4, 8, 3, 1, 2, 7, 0, 5 };
+		NxFr::Sort::SortCollection<uint64, NxFr::Array<uint64>, NxFr::Sorting::MergeSortIndexed<uint64>>(MergeSort, MergeSort.GetCount());
+		for (uint64 Index = 1; Index < MergeSort.GetCount(); Index++)
+		{
+			ASSERT_EQ(MergeSort[Index - 1] <= MergeSort[Index], true);
+		}
+
+		NxFr::Array<uint64> QuickSort = { 9, 6, 4, 8, 3, 1, 2, 7, 0, 5 };
+		NxFr::Sort::SortCollection<uint64, NxFr::Array<uint64>, NxFr::Sorting::QuickSort<uint64>>(QuickSort, QuickSort.GetCount(), Comparaison);
+		for (uint64 Index = 1; Index < QuickSort.GetCount(); Index++)
+		{
+			ASSERT_EQ(QuickSort[Index - 1] >= QuickSort[Index], true);
+		}
+
+		NxFr::Array<uint64> HeapSort = { 9, 6, 4, 8, 3, 1, 2, 7, 0, 5 };
+		NxFr::Sort::SortCollection<uint64, NxFr::Array<uint64>, NxFr::Sorting::HeapSort<uint64>>(HeapSort, HeapSort.GetCount(), Comparaison);
+		for (uint64 Index = 1; Index < HeapSort.GetCount(); Index++)
+		{
+			ASSERT_EQ(HeapSort[Index - 1] >= HeapSort[Index], true);
+		}
+
+		NxFr::Node::NodeSimple<uint64> Node1; Node1.Value = 1;
+		NxFr::Node::NodeSimple<uint64> Node2; Node2.Value = 2;
+		NxFr::Node::NodeSimple<uint64> Node3; Node3.Value = 3;
+		NxFr::Node::NodeSimple<uint64> Node4; Node4.Value = 4;
+		NxFr::Node::NodeSimple<uint64> Node5; Node5.Value = 5;
+		Node1.Next = &Node5;
+		Node5.Next = &Node3;
+		Node3.Next = &Node2;
+		Node2.Next = &Node4;
+		Node4.Next = nullptr;
+
+		NxFr::Sorting::MergeSortLinked<uint64, NxFr::Node::NodeSimple<uint64>> MergeSortLinked(
+			[](NxFr::Node::NodeSimple<uint64>* Node, NxFr::Node::NodeSimple<uint64>* Value) { Node->Next = Value; },
+			[](NxFr::Node::NodeSimple<uint64>* Node) {return Node->Next; },
+			[](NxFr::Node::NodeSimple<uint64>* Node) {return Node->Value; }
+		);
+		NxFr::Node::NodeSimple<uint64>* Node = MergeSortLinked.Sort(&Node1);
+		while (Node && Node->Next)
+		{
+			ASSERT_EQ(Node->Value < Node->Next->Value, true);
+			Node = Node->Next;
+		}
+	}
 }

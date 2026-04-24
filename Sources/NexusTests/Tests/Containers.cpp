@@ -208,7 +208,7 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
-		Test.Sort<NxFr::Sorting::MergeSort>();
+		Test.Sort<NxFr::Sorting::HeapSort<ContainerTest>>();
 		auto ItFirst = Test.Begin();
 		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
@@ -341,7 +341,7 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
-		Test.Sort<NxFr::Sorting::QuickSort>();
+		Test.Sort<NxFr::Sorting::QuickSort<ContainerTest>>();
 		auto ItFirst = Test.Begin();
 		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())
@@ -463,7 +463,7 @@ namespace NxTs
 		ASSERT_EQ(Test.First().Integer, Last.Integer);
 		ASSERT_EQ(Test.Last().Integer, First.Integer);
 
-		Test.Sort<NxFr::Sorting::HeapSort>();
+		Test.Sort();
 		auto ItFirst = Test.Begin();
 		auto& ItSecond = ++Test.Begin();
 		while (ItSecond != Test.End())

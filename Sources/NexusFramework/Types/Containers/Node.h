@@ -120,10 +120,11 @@ namespace NxFr
 		}
 
 		template<typename N>
-		static void FixupNode(N* Head, N** Tail)
+		static N* RelinkBackward(N* Head)
 		{
 			N* Current = Head;
 			Current->Prev = nullptr;
+
 			while (Current != nullptr)
 			{
 				N* Prev = Current;
@@ -136,9 +137,11 @@ namespace NxFr
 				else
 				{
 					Prev->Next = nullptr;
-					*Tail = Prev;
+					return Prev;
 				}
 			}
+
+			return nullptr;
 		}
 	}
 

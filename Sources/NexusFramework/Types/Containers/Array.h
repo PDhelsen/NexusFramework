@@ -345,10 +345,10 @@ namespace NxFr
 			}
 		}
 
-		template<typename S = Sorting::DefaultIndexBased>
+		template<typename S = Sorting::DefaultIndexed<T>>
 		void Sort(Sorting::CompareFunction<T> Function = nullptr)
 		{
-			Sort::SortIndexBased<T, S, Array<T, L>>(*this, Count, Function);
+			Sort::SortCollection<T, Array<T, L>, S>(*this, Count, Function);
 		}
 
 		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }

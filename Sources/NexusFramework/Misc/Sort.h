@@ -8,70 +8,49 @@ namespace NxFr
 {
 	namespace Sorting
 	{
-		using DefaultIndexBased = class HeapSort;
-		using DefaultLinkBased = class MergeSort;
+		template<typename T>
+		class HeapSort;
+		template<typename T, typename N>
+		class MergeSortLinked;
 
 		template<typename T>
-		using CompareFunction = const Delegate<bool(const T&, const T&)>&;
+		using DefaultIndexed = HeapSort<T>;
+		template<typename T, typename N>
+		using DefaultLinked = MergeSortLinked<T, N>;
 
-		class SortingAlgorithm
+		template<typename T>
+		using CompareFunction = Delegate<bool(const T&, const T&)>;
+
+		template<typename T>
+		static bool CompareDefault(const T& A, const T& B)
 		{
-		protected:
-			template<typename T>
-			static bool Compare(const T& A, const T& B, CompareFunction<T> Comparison = nullptr)
-			{
-				return Comparison != nullptr ? Comparison(A, B) : CompareDefault(A, B);
-			}
+			return A <= B;
+		}
 
-		private:
-			template<typename T>
-			static bool CompareDefault(const T& A, const T& B)
-			{
-				return A <= B;
-			}
-		};
+		template<typename T>
+		static bool Compare(const T& A, const T& B, const CompareFunction<T>& Comparison = nullptr)
+		{
+			return !Comparison.IsNull() ? Comparison(A, B) : CompareDefault(A, B);
+		}
 
-		class MergeSort : public SortingAlgorithm
+		template<typename T>
+		class MergeSortIndexed
 		{
 		public:
-			template<typename T, typename C>
-			static void SortIndexBased(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
+			MergeSortIndexed(const CompareFunction<T>& Comparison = nullptr)
+				: Comparison(Comparison)
 			{
-				Sort(Data, Count, Comparison);
 			}
 
-			template<typename T, typename N>
-			static N* SortLinkBased(N* Data, CompareFunction<T> Comparison = nullptr)
-			{
-				return Sort(Data, Comparison);
-			}
-
-		private:
-			template<typename T, typename C>
-			static void Sort(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			void Sort(C& Data, uint64 Count) const
 			{
 				C Copy = Data;
-				Split(Data, Copy, 0, Count, Comparison);
+				Split(Data, Copy, 0, Count);
 			}
 
-			template<typename T, typename N>
-			static N* Sort(N* Head, CompareFunction<T> Comparison = nullptr)
-			{
-				if (!Head || !Head->Next)
-				{
-					return Head;
-				}
-
-				N* Next = Split(Head, Comparison);
-
-				Head = Sort(Head, Comparison);
-				Next = Sort(Next, Comparison);
-
-				return Merge(Head, Next, Comparison);
-			}
-
-			template<typename T, typename C>
-			static void Split(C& Copy, C& Data, uint64 Start, uint64 End, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			void Split(C& Copy, C& Data, uint64 Start, uint64 End) const
 			{
 				if (End - Start <= 1)
 				{
@@ -80,42 +59,22 @@ namespace NxFr
 
 				uint64 Middle = (Start + End) / 2;
 
-				Split(Data, Copy, Start, Middle, Comparison);
-				Split(Data, Copy, Middle, End, Comparison);
+				Split(Data, Copy, Start, Middle);
+				Split(Data, Copy, Middle, End);
 
-				Merge(Copy, Data, Start, End, Middle, Comparison);
+				Merge(Copy, Data, Start, End, Middle);
 			}
 
-			template<typename T, typename N>
-			static N* Split(N* Head, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			void Merge(C& Copy, C& Data, uint64 Start, uint64 End, uint64 Middle) const
 			{
-				N* Fast = Head;
-				N* Slow = Head;
-
-				while (!Fast && !Fast->Next)
-				{
-					Fast = Fast->Next->Next;
-					if (Fast != nullptr)
-					{
-						Slow = Slow->Next;
-					}
-				}
-
-				N* Temp = Slow->Next;
-				Slow->Next = nullptr;
-				return Temp;
-			}
-
-			template<typename T, typename C>
-			static void Merge(C& Copy, C& Data, uint64 Start, uint64 End, uint64 Middle, CompareFunction<T> Comparison = nullptr)
-			{
-				uint64 I = Start, J = Middle;
+				uint64 C = Start, J = Middle;
 				for (uint64 K = Start; K < End; ++K)
 				{
-					if (I < Middle && (J >= End || Compare(Data[I], Data[J], Comparison)))
+					if (C < Middle && (J >= End || Compare(Data[C], Data[J], Comparison)))
 					{
-						Copy[K] = Data[I];
-						++I;
+						Copy[K] = Data[C];
+						++C;
 					}
 					else
 					{
@@ -125,8 +84,57 @@ namespace NxFr
 				}
 			}
 
-			template<typename T, typename N>
-			static N* Merge(N* Head, N* Next, CompareFunction<T> Comparison = nullptr)
+		private:
+			CompareFunction<T> Comparison;
+		};
+
+		template<typename T, typename N>
+		class MergeSortLinked
+		{
+		public:
+			MergeSortLinked(const Delegate<void(N*, N*)>& SetNext, const Delegate<N*(N*)>& GetNext, const Delegate<const T&(N*)>& GetValue, const CompareFunction<T>& Comparison = nullptr)
+				: SetNext(SetNext), GetNext(GetNext), GetValue(), Comparison(Comparison)
+			{
+			}
+
+			template<typename N>
+			N* Sort(N* Head) const
+			{
+				if (!Head || !GetNext(Head))
+				{
+					return Head;
+				}
+
+				N* Next = Split(Head);
+
+				Head = Sort(Head);
+				Next = Sort(Next);
+
+				return Merge(Head, Next);
+			}
+
+			template<typename N>
+			N* Split(N* Head) const
+			{
+				N* Fast = Head;
+				N* Slow = Head;
+
+				while (!Fast && !GetNext(Fast))
+				{
+					Fast = GetNext(GetNext(Fast));
+					if (Fast != nullptr)
+					{
+						Slow = GetNext(Slow);
+					}
+				}
+
+				N* Temp = GetNext(Slow);
+				SetNext(Slow, nullptr);
+				return Temp;
+			}
+
+			template<typename N>
+			N* Merge(N* Head, N* Next) const
 			{
 				if (!Head)
 				{
@@ -140,55 +148,60 @@ namespace NxFr
 
 				if (Compare(Head->Value, Next->Value, Comparison))
 				{
-					Head->Next = Merge(Head->Next, Next, Comparison);
+					SetNext(Head, Merge(GetNext(Head), Next));
 					return Head;
 				}
 				else
 				{
-					Next->Next = Merge(Head, Next->Next, Comparison);
+					SetNext(Next, Merge(Head, GetNext(Next)));
 					return Next;
 				}
 			}
-		};
-
-		class QuickSort : public SortingAlgorithm
-		{
-		public:
-			template<typename T, typename C>
-			static void SortIndexBased(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
-			{
-				Sort(Data, Count, Comparison);
-			}
 
 		private:
-			template<typename T, typename C>
-			static void Sort(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
+			Delegate<void(N*, N*)> SetNext;
+			Delegate<N*(N*)> GetNext;
+			Delegate<const T&(N*)> GetValue;
+			CompareFunction<T> Comparison;
+		};
+
+		template<typename T>
+		class QuickSort
+		{
+		public:
+			QuickSort(const CompareFunction<T>& Comparison = nullptr)
+				: Comparison(Comparison)
 			{
-				Split(Data, 0, Count - 1, Comparison);
 			}
 
-			template<typename T, typename C>
-			static void Split(C& Data, uint64 Start, uint64 End, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			void Sort(C& Data, uint64 Count) const
+			{
+				Split(Data, 0, Count - 1);
+			}
+
+			template<typename C>
+			void Split(C& Data, uint64 Start, uint64 End) const
 			{
 				if (Start >= End || End - Start < 1)
 				{
 					return;
 				}
 
-				uint64 Pivot = FindPivot(Data, Start, End, Comparison);
+				uint64 Pivot = FindPivot(Data, Start, End);
 
 				if (Pivot > 0)
 				{
-					Split(Data, Start, Pivot - 1, Comparison);
+					Split(Data, Start, Pivot - 1);
 				}
 				if (Pivot < End)
 				{
-					Split(Data, Pivot + 1, End, Comparison);
+					Split(Data, Pivot + 1, End);
 				}
 			}
 
-			template<typename T, typename C>
-			static uint64 FindPivot(C& Data, uint64 Start, uint64 End, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			uint64 FindPivot(C& Data, uint64 Start, uint64 End) const
 			{
 				uint64 Current = Start;
 				uint64 Pivot = End;
@@ -201,7 +214,7 @@ namespace NxFr
 					}
 					else
 					{
-						Swap<T>(Data, Current, Pivot);
+						Swap(Data, Current, Pivot);
 						--Pivot;
 					}
 				}
@@ -209,8 +222,8 @@ namespace NxFr
 				return Pivot;
 			}
 
-			template<typename T, typename C>
-			static void Swap(C& Data, uint64 Current, uint64 Pivot)
+			template<typename C>
+			void Swap(C& Data, uint64 Current, uint64 Pivot) const
 			{
 				T Temp = Data[Current];
 
@@ -226,34 +239,30 @@ namespace NxFr
 					Data[Pivot] = Temp;
 				}
 			}
-		};
-
-		class HeapSort : public SortingAlgorithm
-		{
-		public:
-			template<typename T, typename C>
-			static void SortIndexBased(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
-			{
-				Sort(Data, Count, Comparison);
-			}
-
-			template<typename T, typename C>
-			static void Heapify(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
-			{
-				Heap(Data, Count, Comparison);
-			}
 
 		private:
-			template<typename T, typename C>
-			static void Sort(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
+			CompareFunction<T> Comparison;
+		};
+
+		template<typename T>
+		class HeapSort
+		{
+		public:
+			HeapSort(const CompareFunction<T>& Comparison = nullptr)
+				: Comparison(Comparison)
 			{
-				Heap(Data, Count, Comparison);
+			}
+
+			template<typename C>
+			void Sort(C& Data, uint64 Count) const
+			{
+				Heap(Data, Count);
 
 				uint64 Index = Count - 1;
 				while (true)
 				{
-					Swap<T>(Data, Index);
-					Swap(Data, Index, 0, Comparison);
+					Swap(Data, Index);
+					Swap(Data, Index, 0);
 
 					if (Index > 0)
 					{
@@ -266,13 +275,13 @@ namespace NxFr
 				}
 			}
 
-			template<typename T, typename C>
-			static void Heap(C& Data, uint64 Count, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			void Heap(C& Data, uint64 Count) const
 			{
 				uint64 Root = Count / 2 - 1;
 				while (true)
 				{
-					Swap(Data, Count, Root, Comparison);
+					Swap(Data, Count, Root);
 
 					if (Root > 0)
 					{
@@ -285,8 +294,8 @@ namespace NxFr
 				}
 			}
 
-			template<typename T, typename C>
-			static void Swap(C& Data, uint64 Count, uint64 Root, CompareFunction<T> Comparison = nullptr)
+			template<typename C>
+			void Swap(C& Data, uint64 Count, uint64 Root) const
 			{
 				uint64 Largest = Root;
 				uint64 Left = 2 * Root + 1;
@@ -308,38 +317,48 @@ namespace NxFr
 					Data[Root] = Data[Largest];
 					Data[Largest] = Temp;
 
-					Swap(Data, Count, Largest, Comparison);
+					Swap(Data, Count, Largest);
 				}
 			}
 
-			template<typename T, typename C>
-			static void Swap(C& Data, uint64 Index)
+			template<typename C>
+			void Swap(C& Data, uint64 Index) const
 			{
 				T Temp = Data[0];
 				Data[0] = Data[Index];
 				Data[Index] = Temp;
 			}
+
+		private:
+			CompareFunction<T> Comparison;
 		};
 	}
 
 	class Sort
 	{
 	public:
-		template<typename T, typename S = Sorting::DefaultIndexBased, typename C>
-		static void SortIndexBased(C& Data, uint64 Count, Sorting::CompareFunction<T> Comparison = nullptr)
+		template<typename T, typename C, typename S = Sorting::DefaultIndexed<T>>
+		static void SortCollection(C& Data, uint64 Count, const Sorting::CompareFunction<T>& Comparison = nullptr)
 		{
 			if (Count <= 1)
 			{
 				return;
 			}
 
-			S::SortIndexBased(Data, Count, Comparison);
+			S Sorter(Comparison);
+			Sorter.Sort(Data, Count);
 		}
 
-		template<typename T, typename S = Sorting::DefaultLinkBased, typename N>
-		static void SortLinkBased(N** Data, Sorting::CompareFunction<T> Comparison = nullptr)
+		template<typename T, typename N, typename S = Sorting::DefaultLinked<T, N>>
+		static void SortNodes(N** Data, const Delegate<void(N*, N*)>& SetNext, const Delegate<N*(N*)>& GetNext, const Delegate<const T&(N*)>& GetValue, const Sorting::CompareFunction<T>& Comparison = nullptr)
 		{
-			*Data = S::SortLinkBased(*Data, Comparison);
+			if (!Data)
+			{
+				return;
+			}
+
+			S Sorter(SetNext, GetNext, GetValue, Comparison);
+			*Data = Sorter.Sort(*Data);
 		}
 	};
 }
