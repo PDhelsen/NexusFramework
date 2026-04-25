@@ -81,11 +81,11 @@ namespace NxFr
 			Clear();
 		}
 
-		template<typename F, typename EnableIf<!IsSameType<typename RemoveReference<F>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
+		template<typename F, typename EnableIf<!IsSameType<typename DecayReference<F>::Type, typename DecayReference<Delegate>::Type>::Value, bool>::Type E = true>
 		Delegate(F&& Func, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
-			if constexpr (IsSameType<typename RemoveReference<F>::Type, NullPtr>::Value)
+			if constexpr (IsSameType<typename DecayReference<F>::Type, NullPtr>::Value)
 			{
 				Clear();
 			}
@@ -95,14 +95,14 @@ namespace NxFr
 			}
 		}
 
-		template<typename T, typename F, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
+		template<typename T, typename F, typename EnableIf<!IsSameType<typename DecayReference<T>::Type, typename DecayReference<Delegate>::Type>::Value, bool>::Type E = true>
 		Delegate(T* Object, F&& Func, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
 			Bind(Object, Forward<F>(Func));
 		}
 
-		template<typename T, typename EnableIf<!IsSameType<typename RemoveReference<T>::Type, typename RemoveReference<Delegate>::Type>::Value, bool>::Type E = true>
+		template<typename T, typename EnableIf<!IsSameType<typename DecayReference<T>::Type, typename DecayReference<Delegate>::Type>::Value, bool>::Type E = true>
 		Delegate(T& Object, Allocator* Allctr = AllocatorContext::Get())
 			: Alloc(Allctr), Sbo(true), Comparable(false)
 		{
@@ -187,7 +187,7 @@ namespace NxFr
 		template<typename F>
 		void Bind(F&& Func)
 		{
-			Store(Forward<F>(Func), !IsLambda<typename RemoveReference<F>::Type>::Value);
+			Store(Forward<F>(Func), !IsLambda<typename DecayReference<F>::Type>::Value);
 		}
 
 		template<typename T>
@@ -218,7 +218,7 @@ namespace NxFr
 		template<typename F>
 		void Allocate(F&& Func, bool CanCompare)
 		{
-			uint64 Size = sizeof(RemoveReference<F>::Type);
+			uint64 Size = sizeof(DecayReference<F>::Type);
 			if (Size > SmallFunctionSize)
 			{
 				AllocatorContext Context(Alloc);

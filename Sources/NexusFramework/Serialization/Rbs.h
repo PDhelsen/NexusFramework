@@ -78,7 +78,7 @@ namespace NxFr
 	template<typename T>
 	inline T RBS::ReadObject()
 	{
-		return RBSConverter<typename RemoveReference<T>::Type>::Decode(*this);
+		return RBSConverter<T>::Decode(*this);
 	}
 
 	template<typename T>
@@ -91,7 +91,7 @@ namespace NxFr
 	template<typename T>
 	inline void RBS::WriteObject(const T& Object)
 	{
-		RBSConverter<typename RemoveReference<T>::Type>::Encode(*this, Object);
+		RBSConverter<T>::Encode(*this, Object);
 	}
 
 	template<typename T>
