@@ -11,7 +11,6 @@ namespace NxFr
 	ThreadPool::ThreadPool(uint64 Size)
 		: Threads(), Tasks(), Work(), Running(), Guard(), Notification()
 	{
-
 		Threads = Size != 0 ? Size : MaxThreadCount();
 		Running.Store(1);
 

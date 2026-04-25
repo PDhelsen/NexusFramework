@@ -24,7 +24,7 @@ namespace NxFr
 	void Mutex::Unlock()
 	{
 		NEXUS_ASSERT(Owner.Load() == Thread::ThreadId(), Default, "Mutex is locked by another thread");
-		Owner.Store(0ull);
+		Owner.Store(0);
 		Platform::GetInstance()->ThreadMutexUnlock(Handle);
 	}
 
