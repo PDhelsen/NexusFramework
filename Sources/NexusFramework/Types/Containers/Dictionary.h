@@ -478,31 +478,31 @@ namespace NxFr
 		}
 
 		bool ContainsKey(const Q& Other) const { return GetIteratorKey(Other) != End(); }
-		bool ContainsKey(const Iterator::IteratorPredicate<Q>& Predicate) const
+		bool ContainsKey(const Iterator::Predicate<Q>& Predicate) const
 		{
 			return GetIteratorKey(Predicate) != End();
 		}
 
 		bool ContainsValue(const T& Other) const { return ContainsValue([&](const T& Element) { return Element == Other; }); }
-		bool ContainsValue(const Iterator::IteratorPredicate<T>& Predicate) const
+		bool ContainsValue(const Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate) != End();
 		}
 
 		const I FindKey(const Q& Other) const { return GetIteratorKey(Other); }
-		const I FindKey(const Iterator::IteratorPredicate<Q>& Predicate) const
+		const I FindKey(const Iterator::Predicate<Q>& Predicate) const
 		{
 			return GetIteratorKey(Predicate);
 		}
 
 		I FindValue(const T& Other) { return FindValue([&](const T& Element) { return Element == Other; }); }
-		I FindValue(const Iterator::IteratorPredicate<T>& Predicate)
+		I FindValue(const Iterator::Predicate<T>& Predicate)
 		{
 			return GetIteratorValue(Predicate);
 		}
 
 		const I FindValue(const T& Other) const { return FindValue([&](const T& Element) { return Element == Other; }); }
-		const I FindValue(const Iterator::IteratorPredicate<T>& Predicate) const
+		const I FindValue(const Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate);
 		}
@@ -651,7 +651,7 @@ namespace NxFr
 			return Index < Capacity && !Data[Index].Free ? I(Data, Index, Capacity) : End();
 		}
 
-		I GetIteratorKey(const Iterator::IteratorPredicate<Q>& Predicate) const
+		I GetIteratorKey(const Iterator::Predicate<Q>& Predicate) const
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{
@@ -664,7 +664,7 @@ namespace NxFr
 			return End();
 		}
 
-		I GetIteratorValue(const Iterator::IteratorPredicate<T>& Predicate) const
+		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{

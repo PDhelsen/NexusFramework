@@ -9,7 +9,7 @@ namespace NxFr
 	namespace Iterator
 	{
 		template<typename T>
-		using IteratorPredicate = Delegate<bool(const T&)>;
+		using Predicate = Delegate<bool(const T&)>;
 
 		template<typename T, typename I>
 		struct Iterator

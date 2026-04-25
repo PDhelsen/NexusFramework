@@ -482,19 +482,19 @@ namespace NxFr
 		}
 
 		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::IteratorPredicate<T>& Predicate) const
+		bool Contains(const Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate) != End();
 		}
 
 		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::IteratorPredicate<T>& Predicate)
+		I Find(const Iterator::Predicate<T>& Predicate)
 		{
 			return GetIteratorValue(Predicate);
 		}
 
 		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::IteratorPredicate<T>& Predicate) const
+		const I Find(const Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate);
 		}
@@ -668,7 +668,7 @@ namespace NxFr
 			return I(const_cast<N*>(Instance));
 		}
 
-		I GetIteratorValue(const Iterator::IteratorPredicate<T>& Predicate) const
+		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{

@@ -132,19 +132,19 @@ namespace NxFr
 		const Iterator& End() const { return *IteratorEnd; }
 
 		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate) const
+		bool Contains(const ::NxFr::Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate) != End();
 		}
 
 		Iterator& Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		Iterator& Find(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate)
+		Iterator& Find(const ::NxFr::Iterator::Predicate<T>& Predicate)
 		{
 			return GetIteratorValue(Predicate);
 		}
 
 		const Iterator& Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const Iterator& Find(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate) const
+		const Iterator& Find(const ::NxFr::Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate);
 		}
@@ -152,7 +152,7 @@ namespace NxFr
 		uint64 GetCount() const { return Count; }
 
 	private:
-		Iterator& GetIteratorValue(const ::NxFr::Iterator::IteratorPredicate<T>& Predicate) const
+		Iterator& GetIteratorValue(const ::NxFr::Iterator::Predicate<T>& Predicate) const
 		{
 			for (Iterator& It = Reset(); It != End(); ++It)
 			{

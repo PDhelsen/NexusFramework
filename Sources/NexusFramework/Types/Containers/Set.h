@@ -283,13 +283,13 @@ namespace NxFr
 		}
 
 		bool Contains(const T& Other) const { return GetIteratorValue(Other) != End(); }
-		bool Contains(const Iterator::IteratorPredicate<T>& Predicate) const
+		bool Contains(const Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate) != End();
 		}
 
 		const I Find(const T& Other) const { return GetIteratorValue(Other); }
-		const I Find(const Iterator::IteratorPredicate<T>& Predicate) const
+		const I Find(const Iterator::Predicate<T>& Predicate) const
 		{
 			return GetIteratorValue(Predicate);
 		}
@@ -438,7 +438,7 @@ namespace NxFr
 			return Index < Capacity && !Data[Index].Free ? I(Data, Index, Capacity) : End();
 		}
 
-		I GetIteratorValue(const Iterator::IteratorPredicate<Q>& Predicate) const
+		I GetIteratorValue(const Iterator::Predicate<Q>& Predicate) const
 		{
 			for (I It = Begin(); It != End(); ++It)
 			{
