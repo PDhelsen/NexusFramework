@@ -6,6 +6,14 @@
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 
+#define NEXUS_DELETE(Ptr) \
+delete Ptr;\
+Ptr = nullptr;
+
+#define NEXUS_DELETE_ARRAY(Ptr) \
+delete[] Ptr;\
+Ptr = nullptr;
+
 namespace NxFr
 {
 	namespace Memory
@@ -63,11 +71,3 @@ namespace NxFr
 		}
 	};
 }
-
-#define NEXUS_DELETE(Ptr) \
-delete Ptr;\
-Ptr = nullptr;
-
-#define NEXUS_DELETE_ARRAY(Ptr) \
-delete[] Ptr;\
-Ptr = nullptr;
