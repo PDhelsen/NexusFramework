@@ -10,9 +10,6 @@ namespace NxFr
 		friend Platform;
 
 	public:
-		inline static const String NewLine = "\r\n";
-		inline static const String Backspace = "\b \b";
-
 		NEXUS_FRAMEWORK_API void* LoadDll(StringView DllName) override;
 		NEXUS_FRAMEWORK_API void UnloadDll(StringView DllName) override;
 		NEXUS_FRAMEWORK_API void* GetFromDll(StringView DllName, StringView FunctionName) override;

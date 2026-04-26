@@ -14,7 +14,10 @@
 
 namespace NxFr
 {
+	static const String NewLine = "\r\n";
+	static const String Backspace = "\b \b";
 	static SYSTEM_INFO SysInfos;
+
 	static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
 	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
 	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, "\\", "/"); }
@@ -34,6 +37,12 @@ namespace NxFr
 		}
 
 		return "\033[m";
+	}
+
+	static unsigned int ThreadCallback(void* Instance)
+	{
+		Platform::GetInstance()->ThreadRun(static_cast<Thread*>(Instance));
+		return 0;
 	}
 
 	void* PlatformWindows::LoadDll(StringView DllName)
@@ -96,7 +105,7 @@ namespace NxFr
 
 	void* PlatformWindows::ThreadCreate(Thread* Instance) const
 	{
-		HANDLE Handle = (HANDLE)_beginthreadex(NULL, 0, [](void* Ptr) { Platform::ThreadRun(static_cast<Thread*>(Ptr)); return uint32(0); }, Instance, 0, NULL);
+		HANDLE Handle = (HANDLE)_beginthreadex(NULL, 0, &ThreadCallback, Instance, 0, NULL);
 		NEXUS_ASSERT(Handle, Default, "Failed to create thread");
 		return Handle;
 	}
@@ -579,16 +588,13 @@ namespace NxFr
 	void PlatformWindows::InitializeTerminal()
 	{
 		TerminalOut = GetStdHandle(STD_OUTPUT_HANDLE);
-
 		DWORD TerminalOutMode = 0;
 		GetConsoleMode(TerminalOut, &TerminalOutMode);
 		TerminalOutMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
 		SetConsoleMode(TerminalOut, TerminalOutMode);
-
 		SetConsoleOutputCP(CP_UTF8);
 
 		TerminalIn = GetStdHandle(STD_INPUT_HANDLE);
-
 		DWORD TerminalInMode = 0;
 		GetConsoleMode(TerminalIn, &TerminalInMode);
 		TerminalInMode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);

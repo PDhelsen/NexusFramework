@@ -46,10 +46,10 @@ namespace NxFr
 		};
 
 		NEXUS_FRAMEWORK_API static Platform* GetInstance();
+		NEXUS_FRAMEWORK_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
 
 		template<typename R, typename... Args>
 		Delegate<R(Args...)> GetFunctionFromDll(StringView DllName, StringView FunctionName);
-
 		NEXUS_FRAMEWORK_API virtual void* LoadDll(StringView DllName) = 0;
 		NEXUS_FRAMEWORK_API virtual void UnloadDll(StringView DllName) = 0;
 		NEXUS_FRAMEWORK_API virtual void* GetFromDll(StringView DllName, StringView FunctionName) = 0;
@@ -59,6 +59,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void ThreadYield() const = 0;
 		NEXUS_FRAMEWORK_API virtual void ThreadSleep(uint64 Milliseconds) const = 0;
 		NEXUS_FRAMEWORK_API virtual void* ThreadCreate(Thread* Instance) const = 0;
+		NEXUS_FRAMEWORK_API virtual void ThreadRun(Thread* Instance) const;
 		NEXUS_FRAMEWORK_API virtual void ThreadDestroy(void* Handle) const = 0;
 		NEXUS_FRAMEWORK_API virtual void ThreadJoin(void* Handle) const = 0;
 		NEXUS_FRAMEWORK_API virtual void ThreadDetach(void* Handle) const = 0;
@@ -113,13 +114,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual void FileWriteText(void* File, StringView Text) const = 0;
 		NEXUS_FRAMEWORK_API virtual String FileReadText(void* File) const = 0;
 
-		NEXUS_FRAMEWORK_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
-
 	protected:
 		Platform() = default;
 		virtual ~Platform() = default;
-
-		static void ThreadRun(Thread* Instance);
 
 		Dictionary<String, void*> Dlls;
 	};

@@ -24,7 +24,7 @@ namespace NxFr
 		}
 	}
 
-	void Platform::ThreadRun(Thread* Instance)
+	void Platform::ThreadRun(Thread* Instance) const
 	{
 		Instance->RunOnThread();
 	}
