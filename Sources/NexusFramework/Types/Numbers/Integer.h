@@ -1,28 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Platform/PlatformInteger.h"
 #include "NexusFramework/External/StandardLibrary.h"
-
-using int8		= PlaftormInteger::int8;
-using int16		= PlaftormInteger::int16;
-using int32		= PlaftormInteger::int32;
-using int64		= PlaftormInteger::int64;
-
-using uint8		= PlaftormInteger::uint8;
-using uint16	= PlaftormInteger::uint16;
-using uint32	= PlaftormInteger::uint32;
-using uint64	= PlaftormInteger::uint64;
-
-#define NEXUS_BIT_CHECK_SET(Type)\
-inline bool CheckBit(Type Value, Type Offset) { return Value & (Type(1) << Offset); }\
-inline Type SetBit1(Type Value, Type Offset) { return Value |= Type(1) << Offset; }\
-inline Type SetBit0(Type Value, Type Offset) { return Value &= ~(Type(1) << Offset); }\
-inline Type SetBit(Type Value, Type Offset, bool State) { return State ? SetBit1(Value, Offset) : SetBit0(Value, Offset); }\
-inline bool CheckFlag(Type Value, Type Flag) { return Value & Flag; }\
-inline Type SetFlag1(Type Value, Type Flag) { return Value |= Flag; }\
-inline Type SetFlag0(Type Value, Type Flag) { return Value &= ~(Flag); }\
-inline Type SetFlag(Type Value, Type Flag, bool State) { return State ? SetFlag1(Value, Flag) : SetFlag0(Value, Flag); }\
 
 namespace NxFr
 {
@@ -31,31 +10,39 @@ namespace NxFr
 
 	namespace Integer
 	{
-		NEXUS_BIT_CHECK_SET(int8);
-		NEXUS_BIT_CHECK_SET(int16);
-		NEXUS_BIT_CHECK_SET(int32);
-		NEXUS_BIT_CHECK_SET(int64);
-		NEXUS_BIT_CHECK_SET(uint8);
-		NEXUS_BIT_CHECK_SET(uint16);
-		NEXUS_BIT_CHECK_SET(uint32);
-		NEXUS_BIT_CHECK_SET(uint64);
+		constexpr int8 MinI8 = NEXUS_INTERGER_MIN_I8;
+		constexpr int16 MinI16 = NEXUS_INTERGER_MIN_I16;
+		constexpr int32 MinI32 = NEXUS_INTERGER_MIN_I32;
+		constexpr int64 MinI64 = NEXUS_INTERGER_MIN_I64;
+		constexpr uint8 MinUI8 = NEXUS_INTERGER_MIN_UI8;
+		constexpr uint16 MinUI16 = NEXUS_INTERGER_MIN_UI16;
+		constexpr uint32 MinUI32 = NEXUS_INTERGER_MIN_UI32;
+		constexpr uint64 MinUI64 = NEXUS_INTERGER_MIN_UI64;
+		constexpr int8 MaxI8 = NEXUS_INTERGER_MAX_I8;
+		constexpr int16 MaxI16 = NEXUS_INTERGER_MAX_I16;
+		constexpr int32 MaxI32 = NEXUS_INTERGER_MAX_I32;
+		constexpr int64 MaxI64 = NEXUS_INTERGER_MAX_I64;
+		constexpr uint8 MaxUI8 = NEXUS_INTERGER_MAX_UI8;
+		constexpr uint16 MaxUI16 = NEXUS_INTERGER_MAX_UI16;
+		constexpr uint32 MaxUI32 = NEXUS_INTERGER_MAX_UI32;
+		constexpr uint64 MaxUI64 = NEXUS_INTERGER_MAX_UI64;
 
-		constexpr int8 MinI8 = CHAR_MIN;
-		constexpr int16 MinI16 = SHRT_MIN;
-		constexpr int32 MinI32 = INT_MIN;
-		constexpr int64 MinI64 = LLONG_MIN;
-		constexpr uint8 MinUI8 = 0;
-		constexpr uint16 MinUI16 = 0;
-		constexpr uint32 MinUI32 = 0;
-		constexpr uint64 MinUI64 = 0;
-		constexpr int8 MaxI8 = CHAR_MAX;
-		constexpr int16 MaxI16 = SHRT_MAX;
-		constexpr int32 MaxI32 = INT_MAX;
-		constexpr int64 MaxI64 = LLONG_MAX;
-		constexpr uint8 MaxUI8 = UCHAR_MAX;
-		constexpr uint16 MaxUI16 = USHRT_MAX;
-		constexpr uint32 MaxUI32 = UINT_MAX;
-		constexpr uint64 MaxUI64 = ULLONG_MAX;
+		template<typename T>
+		bool CheckBit(T Value, T Offset) { return Value & (T(1) << Offset); }
+		template<typename T>
+		T SetBit1(T Value, T Offset) { return Value |= T(1) << Offset; }
+		template<typename T>
+		T SetBit0(T Value, T Offset) { return Value &= ~(T(1) << Offset); }
+		template<typename T>
+		T SetBit(T Value, T Offset, bool State) { return State ? SetBit1(Value, Offset) : SetBit0(Value, Offset); }
+		template<typename T>
+		bool CheckFlag(T Value, T Flag) { return Value & Flag; }
+		template<typename T>
+		T SetFlag1(T Value, T Flag) { return Value |= Flag; }
+		template<typename T>
+		T SetFlag0(T Value, T Flag) { return Value &= ~(Flag); }
+		template<typename T>
+		T SetFlag(T Value, T Flag, bool State) { return State ? SetFlag1(Value, Flag) : SetFlag0(Value, Flag); }
 
 		NEXUS_FRAMEWORK_API GUID GenerateGuid();
 		NEXUS_FRAMEWORK_API GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 ThreadId, uint64 Seed = 0);
