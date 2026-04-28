@@ -1,8 +1,8 @@
 #pragma once
 
-#include "NexusFramework/Types/Numbers/Integer.h"
-#include "NexusFramework/Types/Numbers/Decimal.h"
-#include "NexusFramework/Types/Numbers/Enum.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
+#include "NexusFramework/Types/Numeric/Decimal.h"
+#include "NexusFramework/Types/Numeric/Enum.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringView.h"

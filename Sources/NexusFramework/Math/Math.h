@@ -3,8 +3,8 @@
 #include "NexusFramework/External/Intrinsics.h"
 #include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Types/Numbers/Integer.h"
-#include "NexusFramework/Types/Numbers/Decimal.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
+#include "NexusFramework/Types/Numeric/Decimal.h"
 
 namespace NxFr
 {

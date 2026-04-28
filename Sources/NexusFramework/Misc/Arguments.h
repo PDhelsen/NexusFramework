@@ -2,7 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 
-#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Containers/Array.h"

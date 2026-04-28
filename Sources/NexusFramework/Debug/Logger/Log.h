@@ -2,8 +2,8 @@
 
 #include "NexusFramework/External/Intrinsics.h"
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Types/Numbers/Integer.h"
-#include "NexusFramework/Types/Numbers/Enum.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
+#include "NexusFramework/Types/Numeric/Enum.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"

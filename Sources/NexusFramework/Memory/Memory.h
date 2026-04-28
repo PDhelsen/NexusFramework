@@ -2,7 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/External/StandardLibrary.h"
-#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NexusFramework/Types/Numbers/Integer.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Misc/Templates.h"
 

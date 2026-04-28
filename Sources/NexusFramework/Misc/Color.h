@@ -1,7 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Types/Numbers/Decimal.h"
+#include "NexusFramework/Types/Numeric/Decimal.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Math/Vector.h"
 #include "NexusFramework/Misc/Hash.h"
