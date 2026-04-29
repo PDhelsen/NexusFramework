@@ -1055,5 +1055,30 @@ namespace NxTs
 		NxFr::Dictionary<ContainerTest, NxFr::List<ContainerTest>> ContainerDictionary;
 		ContainerDictionary.Append(0, Container);
 		ASSERT_EQ(ContainerDictionary[0].GetCount(), Container.GetCount());
+
+		NxFr::Array<ContainerTest> IteratorReverseArray = { 0, 1, 2, 3, 4 };
+		uint64 Index = IteratorReverseArray.GetCount() - 1;
+		for (auto It = IteratorReverseArray.BeginReverse(); It != IteratorReverseArray.EndReverse(); --It)
+		{
+			It->Integer = Index--;
+		}
+		ASSERT_EQ(IteratorReverseArray.First().Integer, 0);
+		ASSERT_EQ(IteratorReverseArray.Last().Integer, IteratorReverseArray.GetCount() - 1);
+		NxFr::Dequeue<ContainerTest> IteratorReverseDequeue = { 0, 1, 2, 3, 4 };
+		Index = IteratorReverseDequeue.GetCount() - 1;
+		for (auto It = IteratorReverseDequeue.BeginReverse(); It != IteratorReverseDequeue.EndReverse(); --It)
+		{
+			It->Integer = Index--;
+		}
+		ASSERT_EQ(IteratorReverseDequeue.First().Integer, 0);
+		ASSERT_EQ(IteratorReverseDequeue.Last().Integer, IteratorReverseDequeue.GetCount() - 1);
+		NxFr::LinkedList<ContainerTest> IteratorReverseLinkedList = { 0, 1, 2, 3, 4 };
+		Index = IteratorReverseLinkedList.GetCount() - 1;
+		for (auto It = IteratorReverseLinkedList.BeginReverse(); It != IteratorReverseLinkedList.EndReverse(); --It)
+		{
+			It->Integer = Index--;
+		}
+		ASSERT_EQ(IteratorReverseLinkedList.First().Integer, 0);
+		ASSERT_EQ(IteratorReverseLinkedList.Last().Integer, IteratorReverseLinkedList.GetCount() - 1);
 	}
 }

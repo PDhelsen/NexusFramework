@@ -361,58 +361,66 @@ namespace NxFr
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			return GetIteratorIndex(Index);
+			return GetIt(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			return GetIteratorIndex(Index);
+			return GetIt(Index);
 		}
 
 		I begin() { return Begin(); }
 		I Begin() 
 		{
-			return GetIteratorIndex(0);
+			return GetIt(0);
 		}
 
 		const I begin() const { return Begin(); }
 		const I Begin() const
 		{
-			return GetIteratorIndex(0);
+			return GetIt(0);
 		}
 
-		I BeginReverse() 
+		I BeginReverse()
 		{
-			return --End();
+			I It = End();
+			--It;
+			return It;
 		}
 
 		const I BeginReverse() const
 		{
-			return --End();
+			I It = End();
+			--It;
+			return It;
 		}
 
 		I end() { return End(); }
 		I End() 
 		{
-			return GetIteratorIndex(Count);
+			return GetIt(Count);
 		}
 
 		const I end() const { return End(); }
 		const I End() const
 		{
-			return GetIteratorIndex(Count);
+			return GetIt(Count);
 		}
 
 		I EndReverse()
 		{
-			return --Begin();
+			I It = Begin();
+			--It;
+			return It;
 		}
 
 		const I EndReverse() const
 		{
-			return --Begin();
+			I It = Begin();
+			--It;
+			return It;
 		}
 
 		bool IsValidIndex(uint64 Index) const
@@ -480,12 +488,22 @@ namespace NxFr
 			Memory::MemMove(Start, End, sizeof(T) * (Count - Index - Size));
 		}
 
-		T& GetItem(uint64 Index) const
+		T& GetItem(uint64 Index)
 		{
 			return Data[Index];
 		}
 
-		I GetIteratorIndex(uint64 Index) const
+		const T& GetItem(uint64 Index) const
+		{
+			return Data[Index];
+		}
+
+		I GetIt(uint64 Index)
+		{
+			return I(Data, Index);
+		}
+
+		const I GetIt(uint64 Index) const
 		{
 			return I(Data, Index);
 		}

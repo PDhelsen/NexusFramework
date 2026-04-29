@@ -129,12 +129,12 @@ namespace NxFr
 
 	Buffer::I Buffer::GetIterator(uint64 Offset)
 	{
-		return GetIteratorOffset(Offset);
+		return GetIt(Offset);
 	}
 
 	const Buffer::I Buffer::GetIterator(uint64 Offset) const
 	{
-		return GetIteratorOffset(Offset);
+		return GetIt(Offset);
 	}
 
 	Buffer::I Buffer::begin()
@@ -144,7 +144,7 @@ namespace NxFr
 
 	Buffer::I Buffer::Begin()
 	{
-		return GetIteratorOffset(0);
+		return GetIt(0);
 	}
 
 	const Buffer::I Buffer::begin() const
@@ -154,19 +154,19 @@ namespace NxFr
 
 	const Buffer::I Buffer::Begin() const
 	{
-		return GetIteratorOffset(0);
+		return GetIt(0);
 	}
 
 	Buffer::I Buffer::BeginReverse()
 	{
-		auto It = End();
+		I It = End();
 		--It;
 		return It;
 	}
 
 	const Buffer::I Buffer::BeginReverse() const
 	{
-		auto It = End();
+		I It = End();
 		--It;
 		return It;
 	}
@@ -178,7 +178,7 @@ namespace NxFr
 
 	Buffer::I Buffer::End()
 	{
-		return GetIteratorOffset(Count);
+		return GetIt(Count);
 	}
 
 	const Buffer::I Buffer::end() const
@@ -188,19 +188,19 @@ namespace NxFr
 
 	const Buffer::I Buffer::End() const
 	{
-		return GetIteratorOffset(Count);
+		return GetIt(Count);
 	}
 
 	Buffer::I Buffer::EndReverse()
 	{
-		auto It = Begin();
+		I It = Begin();
 		--It;
 		return It;
 	}
 
 	const Buffer::I Buffer::EndReverse() const
 	{
-		auto It = Begin();
+		I It = Begin();
 		--It;
 		return It;
 	}
@@ -237,12 +237,12 @@ namespace NxFr
 		Count = Size > 1 ? Size : 1;
 	}
 
-	Buffer::I Buffer::GetIteratorOffset(uint64 Offset)
+	Buffer::I Buffer::GetIt(uint64 Offset)
 	{
 		return I(Data, Offset);
 	}
 
-	const Buffer::I Buffer::GetIteratorOffset(uint64 Offset) const
+	const Buffer::I Buffer::GetIt(uint64 Offset) const
 	{
 		return I(Data, Offset);
 	}
@@ -269,12 +269,12 @@ namespace NxFr
 
 	BufferView::I BufferView::GetIterator(uint64 Offset)
 	{
-		return GetIteratorOffset(Offset);
+		return GetIt(Offset);
 	}
 
 	const BufferView::I BufferView::GetIterator(uint64 Offset) const
 	{
-		return GetIteratorOffset(Offset);
+		return GetIt(Offset);
 	}
 
 	BufferView::I BufferView::begin()
@@ -284,7 +284,7 @@ namespace NxFr
 
 	BufferView::I BufferView::Begin()
 	{
-		return GetIteratorOffset(0);
+		return GetIt(0);
 	}
 
 	const BufferView::I BufferView::begin() const
@@ -294,19 +294,19 @@ namespace NxFr
 
 	const BufferView::I BufferView::Begin() const
 	{
-		return GetIteratorOffset(0);
+		return GetIt(0);
 	}
 
 	BufferView::I BufferView::BeginReverse()
 	{
-		auto It = End();
+		I It = End();
 		--It;
 		return It;
 	}
 
 	const BufferView::I BufferView::BeginReverse() const
 	{
-		auto It = End();
+		I It = End();
 		--It;
 		return It;
 	}
@@ -318,7 +318,7 @@ namespace NxFr
 
 	BufferView::I BufferView::End()
 	{
-		return GetIteratorOffset(Count);
+		return GetIt(Count);
 	}
 
 	const BufferView::I BufferView::end() const
@@ -328,29 +328,29 @@ namespace NxFr
 
 	const BufferView::I BufferView::End() const
 	{
-		return GetIteratorOffset(Count);
+		return GetIt(Count);
 	}
 
 	BufferView::I BufferView::EndReverse()
 	{
-		auto It = Begin();
+		I It = Begin();
 		--It;
 		return It;
 	}
 
 	const BufferView::I BufferView::EndReverse() const
 	{
-		auto It = Begin();
+		I It = Begin();
 		--It;
 		return It;
 	}
 
-	BufferView::I BufferView::GetIteratorOffset(uint64 Offset)
+	BufferView::I BufferView::GetIt(uint64 Offset)
 	{
 		return I(Data, Offset);
 	}
 
-	const BufferView::I BufferView::GetIteratorOffset(uint64 Offset) const
+	const BufferView::I BufferView::GetIt(uint64 Offset) const
 	{
 		return I(Data, Offset);
 	}

@@ -269,58 +269,66 @@ namespace NxFr
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			return GetIteratorIndex(Index);
+			return GetIt(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			return GetIteratorIndex(Index);
+			return GetIt(Index);
 		}
 
 		I begin() { return Begin(); }
 		I Begin() 
 		{
-			return GetIteratorIndex(0);
+			return GetIt(0);
 		}
 
 		const I begin() const { return Begin(); }
 		const I Begin() const
 		{
-			return GetIteratorIndex(0);
+			return GetIt(0);
 		}
 
 		I BeginReverse() 
 		{
-			return --End();
+			I It = End();
+			--It;
+			return It;
 		}
 
 		const I BeginReverse() const
 		{
-			return --End();
+			I It = End();
+			--It;
+			return It;
 		}
 
 		I end() { return End(); }
 		I End() 
 		{
-			return GetIteratorIndex(Count);
+			return GetIt(Count);
 		}
 
 		const I end() const { return End(); }
 		const I End() const
 		{
-			return GetIteratorIndex(Count);
+			return GetIt(Count);
 		}
 
 		I EndReverse()
 		{
-			return --Begin();
+			I It = Begin();
+			--It;
+			return It;
 		}
 
 		const I EndReverse() const
 		{
-			return --Begin();
+			I It = Begin();
+			--It;
+			return It;
 		}
 
 		bool IsValidIndex(uint64 Index) const
@@ -376,11 +384,6 @@ namespace NxFr
 			}
 		}
 
-		bool IsStackArray() const
-		{
-			return L == Count;
-		}
-
 		T* GetData()
 		{
 			return IsStackArray() ? Data.Stack : Data.Heap;
@@ -401,12 +404,12 @@ namespace NxFr
 			return GetData()[Index];
 		}
 
-		I GetIteratorIndex(uint64 Index)
+		I GetIt(uint64 Index)
 		{
 			return I(GetData(), Index);
 		}
 
-		const I GetIteratorIndex(uint64 Index) const
+		const I GetIt(uint64 Index) const
 		{
 			return I(const_cast<T*>(GetData()), Index);
 		}
@@ -414,6 +417,11 @@ namespace NxFr
 		void ValidateCapacity(uint64 Size)
 		{
 			Count = Size;
+		}
+
+		bool IsStackArray() const
+		{
+			return L == Count;
 		}
 
 		Allocator* Alloc;

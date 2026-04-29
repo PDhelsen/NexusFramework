@@ -124,25 +124,25 @@ namespace NxFr
 			I begin() { return Begin(); }
 			I Begin() 
 			{
-				return GetIteratorIndex(0);
+				return GetIt(0);
 			}
 
 			const I begin() const { return Begin(); }
 			const I Begin() const
 			{
-				return GetIteratorIndex(0);
+				return GetIt(0);
 			}
 
 			I end() { return End(); }
 			I End() 
 			{
-				return GetIteratorIndex(Capacity);
+				return GetIt(Capacity);
 			}
 
 			const I end() const { return End(); }
 			const I End() const
 			{
-				return GetIteratorIndex(Capacity);
+				return GetIt(Capacity);
 			}
 
 			uint64 GetCapacity() const { return Capacity; }
@@ -182,7 +182,12 @@ namespace NxFr
 				}
 			}
 
-			I GetIteratorIndex(uint64 Index) const
+			I GetIt(uint64 Index) 
+			{
+				return I(Data, Index, Capacity);
+			}
+
+			const I GetIt(uint64 Index) const
 			{
 				return I(Data, Index, Capacity);
 			}
@@ -372,25 +377,25 @@ namespace NxFr
 			I begin() { return Begin(); }
 			I Begin()
 			{
-				return GetIteratorNode(Data);
+				return GetIt(Data);
 			}
 
 			const I begin() const { return Begin(); }
 			const I Begin() const
 			{
-				return GetIteratorNode(Data);
+				return GetIt(Data);
 			}
 
 			I end() { return End(); }
 			I End()
 			{
-				return GetIteratorNode(nullptr);
+				return GetIt(nullptr);
 			}
 
 			const I end() const { return End(); }
 			const I End() const
 			{
-				return GetIteratorNode(nullptr);
+				return GetIt(nullptr);
 			}
 
 			uint64 GetCapacity() const { return Count + Unsused; }
@@ -438,12 +443,12 @@ namespace NxFr
 				return Node::GetNode<T, N>(Position);
 			}
 
-			I GetIteratorNode(N* Instance)
+			I GetIt(N* Instance)
 			{
 				return I(Instance);
 			}
 
-			const I GetIteratorNode(const N* Instance) const
+			const I GetIt(const N* Instance) const
 			{
 				return I(const_cast<N*>(Instance));
 			}

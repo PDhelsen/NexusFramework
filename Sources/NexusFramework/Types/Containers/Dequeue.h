@@ -345,60 +345,66 @@ namespace NxFr
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			return GetIteratorIndex(Index);
+			return GetIt(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			return GetIteratorIndex(Index);
+			return GetIt(Index);
 		}
 
 		I begin() { return Begin(); }
 		I Begin()
 		{
-			return GetIteratorIndex(0, IndexFront);
+			return GetIt(0);
 		}
 
 		const I begin() const { return Begin(); }
 		const I Begin() const
 		{
-			return GetIteratorIndex(0, IndexFront);
+			return GetIt(0);
 		}
 
-		I BeginReverse() 
+		I BeginReverse()
 		{
-			return --End();
+			I It = End();
+			--It;
+			return It;
 		}
 
 		const I BeginReverse() const
 		{
-			return --End();
+			I It = End();
+			--It;
+			return It;
 		}
 
 		I end() { return End(); }
 		I End()
 		{
-			I It = GetIteratorIndex(Buckets - 1, IndexBack);
-			return ++It;
+			return GetIt(Count);
 		}
 
 		const I end() const { return End(); }
 		const I End() const
 		{
-			I It = GetIteratorIndex(Buckets - 1, IndexBack);
-			return ++It;
+			return GetIt(Count);
 		}
 
-		I EndReverse() 
+		I EndReverse()
 		{
-			return --Begin();
+			I It = Begin();
+			--It;
+			return It;
 		}
 
 		const I EndReverse() const
 		{
-			return --Begin();
+			I It = Begin();
+			--It;
+			return It;
 		}
 
 		bool IsValidIndex(uint64 Index) const
@@ -563,27 +569,41 @@ namespace NxFr
 			DataIndex = Index % BucketSize;
 		}
 
-		T& GetItem(uint64 Index) const
+		T& GetItem(uint64 Index)
 		{
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			return Data[BucketIndex][DataIndex];
 		}
 
-		T& GetItem(uint64 BucketIndex, uint64 DataIndex) const
+		const T& GetItem(uint64 Index) const
+		{
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
+			return Data[BucketIndex][DataIndex];
+		}
+
+		T& GetItem(uint64 BucketIndex, uint64 DataIndex)
 		{
 			return Data[BucketIndex][DataIndex];
 		}
 
-		I GetIteratorIndex(uint64 Index) const
+		const T& GetItem(uint64 BucketIndex, uint64 DataIndex) const
+		{
+			return Data[BucketIndex][DataIndex];
+		}
+
+		I GetIt(uint64 Index)
 		{
 			uint64 BucketIndex, DataIndex;
 			GetIndex(Index, BucketIndex, DataIndex);
 			return I(Data, IndexFront, BucketIndex, DataIndex);
 		}
 
-		I GetIteratorIndex(uint64 BucketIndex, uint64 DataIndex) const
+		const I GetIt(uint64 Index) const
 		{
+			uint64 BucketIndex, DataIndex;
+			GetIndex(Index, BucketIndex, DataIndex);
 			return I(Data, IndexFront, BucketIndex, DataIndex);
 		}
 

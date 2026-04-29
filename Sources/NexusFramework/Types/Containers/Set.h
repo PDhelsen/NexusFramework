@@ -148,7 +148,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && Data[Index].Free, Default, "Value already present in Dictionary");
+			NEXUS_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Value);
 			return Data[Index].Value;
 		}
@@ -158,7 +158,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && Data[Index].Free, Default, "Value already present in Dictionary");
+			NEXUS_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Move(Value));
 			return Data[Index].Value;
 		}
@@ -172,7 +172,7 @@ namespace NxFr
 			{
 				uint64 Hash = GetHash(*It);
 				uint64 Index = GetIndex(Hash);
-				NEXUS_ASSERT(Index < Capacity && Data[Index].Free, Default, "Value already present in Dictionary");
+				NEXUS_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
 				Construct(Index, Hash, *It);
 			}
 
@@ -217,7 +217,7 @@ namespace NxFr
 
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && !Data[Index].Free, Default, "Failed to find key");
+			NEXUS_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -246,68 +246,64 @@ namespace NxFr
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
-			uint64 Hash = GetHash(Value);
-			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && !Data[Index].Free, Default, "Failed to find key");
-			return Data[Index].Value.Value;
+			T* Item = TryGetItem(Value);
+			NEXUS_ASSERT(Item, Default, "Failed to find key");
+			return *Item;
 		}
 
 		const T& Get(const Q& Value) const
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
-			uint64 Hash = GetHash(Value);
-			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(Index < Capacity && !Data[Index].Free, Default, "Failed to find key");
-			return Data[Index].Value.Value;
+			const T* Item = TryGetItem(Value);
+			NEXUS_ASSERT(Item, Default, "Failed to find key");
+			return *Item;
 		}
 
 		T* TryGet(const Q& Value)
 		{
-			uint64 Hash = GetHash(Value);
-			uint64 Index = GetIndex(Hash);
-			return Index < Capacity && !Data[Index].Free ? &Data[Index].Value.Value : nullptr;
+			T* Item = TryGetItem(Value);
+			return Item;
 		}
 
 		const T* TryGet(const Q& Value) const
 		{
-			uint64 Hash = GetHash(Value);
-			uint64 Index = GetIndex(Hash);
-			return Index < Capacity && !Data[Index].Free ? &Data[Index].Value.Value : nullptr;
+			const T* Item = TryGetItem(Value);
+			return Item;
 		}
 
 		I GetIterator(const Q& Value)
 		{
-			return GetIteratorValue(Value);
+			return TryGetIt(Value);
 		}
 
 		const I GetIterator(const Q& Value) const
 		{
-			return GetIteratorValue(Value);
+			return TryGetIt(Value);
 		}
 
 		I begin() { return Begin(); }
-		I Begin() 
+		I Begin()
 		{
-			return GetIteratorIndex(0);
+			return GetIt(0);
 		}
 
 		const I begin() const { return Begin(); }
 		const I Begin() const
 		{
-			return GetIteratorIndex(0);
+			return GetIt(0);
 		}
 
 		I end() { return End(); }
 		I End() 
 		{
-			return GetIteratorIndex(Capacity);
+			return GetIt(Capacity);
 		}
 
 		const I end() const { return End(); }
 		const I End() const
 		{
-			return GetIteratorIndex(Capacity);
+			return GetIt(Capacity);
 		}
 
 		void Reserve(uint64 Size)
@@ -443,21 +439,52 @@ namespace NxFr
 			return Tombstone != Capacity ? Tombstone : Capacity;
 		}
 
-		T& GetItem(uint64 Index) const
+		T& GetItem(uint64 Index)
 		{
 			return Data[Index].Value;
 		}
 
-		I GetIteratorIndex(uint64 Index) const
+		const T& GetItem(uint64 Index) const
+		{
+			return Data[Index].Value;
+		}
+
+		T* TryGetItem(const Q& Value)
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			return IsValidIndex(Index) ? &Data[Index].Value : nullptr;
+		}
+
+		const T* TryGetItem(const Q& Value) const
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			return IsValidIndex(Index) ? &Data[Index].Value : nullptr;
+		}
+
+		I GetIt(uint64 Index)
 		{
 			return I(Data, Index, Capacity);
 		}
 
-		I GetIteratorValue(const Q& Value) const
+		const I GetIt(uint64 Index) const
+		{
+			return I(Data, Index, Capacity);
+		}
+
+		I TryGetIt(const Q& Value)
 		{
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			return Index < Capacity && !Data[Index].Free ? I(Data, Index, Capacity) : End();
+			return IsValidIndex(Index) ? GetIt(Index) : End();
+		}
+
+		const I TryGetIt(const Q& Value) const
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			return IsValidIndex(Index) ? GetIt(Index) : End();
 		}
 
 		bool Resize(uint64 Size)
@@ -482,6 +509,16 @@ namespace NxFr
 		uint64 GrowPolicy() const
 		{
 			return Capacity * 2;
+		}
+
+		bool IsValidIndex(uint64 Index) const
+		{
+			return Index < Capacity && !Data[Index].Free;
+		}
+
+		bool IsFreeIndex(uint64 Index) const
+		{
+			return Index < Capacity && Data[Index].Free;
 		}
 
 		Allocator* Alloc;

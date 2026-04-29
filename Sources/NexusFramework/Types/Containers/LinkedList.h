@@ -602,56 +602,56 @@ namespace NxFr
 
 		I GetIterator(T* Position)
 		{
-			return GetIteratorNode(GetNode(Position));
+			return GetIt(GetNode(Position));
 		}
 
 		const I GetIterator(const T* Position) const
 		{
-			return GetIteratorNode(GetNode(Position));
+			return GetIt(GetNode(Position));
 		}
 
 		I begin() { return Begin(); }
 		I Begin() 
 		{
-			return GetIteratorNode(DataHead);
+			return GetIt(DataHead);
 		}
 
 		const I begin() const { return Begin(); }
 		const I Begin() const
 		{
-			return GetIteratorNode(DataHead);
+			return GetIt(DataHead);
 		}
 
-		I BeginReverse() 
+		I BeginReverse()
 		{
-			return GetIteratorNode(DataTail);
+			return GetIt(DataTail);
 		}
 
 		const I BeginReverse() const
 		{
-			return GetIteratorNode(DataTail);
+			return GetIt(DataTail);
 		}
 
 		I end() { return End(); }
 		I End()
 		{
-			return I(nullptr);
+			return GetIt(nullptr);
 		}
 
 		const I end() const { return End(); }
 		const I End() const
 		{
-			return I(nullptr);
+			return GetIt(nullptr);
 		}
 
-		I EndReverse() 
+		I EndReverse()
 		{
-			return I(nullptr);
+			return GetIt(nullptr);
 		}
 
 		const I EndReverse() const
 		{
-			return I(nullptr);
+			return GetIt(nullptr);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -804,12 +804,12 @@ namespace NxFr
 			return Instance->Value;
 		}
 
-		I GetIteratorNode(N* Instance)
+		I GetIt(N* Instance)
 		{
 			return I(Instance);
 		}
 
-		const I GetIteratorNode(const N* Instance) const
+		const I GetIt(const N* Instance) const
 		{
 			return I(const_cast<N*>(Instance));
 		}

@@ -66,8 +66,8 @@ namespace NxFr
 		void Clear(uint64 Size, uint64 Offset);
 		void Copy(const void* Source, uint64 Size, uint64 OffsetBuffer, uint64 OffsetSource);
 		void ValidateCount(uint64 Size);
-		I GetIteratorOffset(uint64 Offset);
-		const I GetIteratorOffset(uint64 Offset) const;
+		I GetIt(uint64 Offset);
+		const I GetIt(uint64 Offset) const;
 
 		Allocator* Alloc;
 		uint64 Count;
@@ -107,8 +107,8 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Count; }
 
 	private:
-		I GetIteratorOffset(uint64 Offset);
-		const I GetIteratorOffset(uint64 Offset) const;
+		I GetIt(uint64 Offset);
+		const I GetIt(uint64 Offset) const;
 
 		void* Data;
 		uint64 Count;
