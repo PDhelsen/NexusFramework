@@ -47,7 +47,7 @@ namespace NxFr
 
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
-		if (Dlls.ContainsKey(DllName))
+		if (ContainersUtils::ContainsKey<String, void*>(Dlls, DllName))
 		{
 			return Dlls[DllName];
 		}
@@ -65,7 +65,7 @@ namespace NxFr
 
 	void PlatformWindows::UnloadDll(StringView DllName)
 	{
-		if (!Dlls.ContainsKey(DllName))
+		if (!ContainersUtils::ContainsKey<String, void*>(Dlls, DllName))
 		{
 			return;
 		}

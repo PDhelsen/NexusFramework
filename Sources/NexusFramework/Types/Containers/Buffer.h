@@ -13,6 +13,8 @@ namespace NxFr
 
 	class Buffer
 	{
+		friend class ContainersUtils;
+
 	public:
 		using I = Iterator::IteratorPointer;
 
@@ -74,6 +76,8 @@ namespace NxFr
 
 	struct BufferView
 	{
+		friend class ContainersUtils;
+
 	public:
 		using I = Iterator::IteratorPointer;
 

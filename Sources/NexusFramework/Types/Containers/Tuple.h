@@ -7,6 +7,8 @@ namespace NxFr
 	template<typename T1, typename T2>
 	class Tuple
 	{
+		friend class ContainersUtils;
+
 	public:
 		Tuple(const T1& F, const T2& S)
 			: First(F), Second(S)
@@ -133,16 +135,6 @@ namespace NxFr
 		{
 			Memory::Destruct(&Second);
 			Memory::Construct(&Second, args...);
-		}
-
-		void Swap()
-		{
-			constexpr bool SameType = IsSameType<T1, T2>::Value;
-			NEXUS_ASSERT_STATIC(SameType, "Cannot swap if First and Second are not of the same type");
-
-			T1 Temp = Second;
-			Second = First;
-			First = Move(Temp);
 		}
 
 	private:

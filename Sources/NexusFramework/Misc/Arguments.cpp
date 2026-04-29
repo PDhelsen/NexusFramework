@@ -82,7 +82,7 @@ namespace NxFr
 
 		bool Has(StringView Key)
 		{
-			return Named.ContainsKey(Key);
+			return ContainersUtils::ContainsKey<String, String>(Named, Key);
 		}
 
 		void Parse(uint64 ArgC, char* ArgV[])

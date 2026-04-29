@@ -15,6 +15,8 @@ namespace NxFr
 	template<typename T, uint64 L = 0>
 	class Array
 	{
+		friend class ContainersUtils;
+
 	private:
 		union Buffer
 		{
@@ -326,49 +328,6 @@ namespace NxFr
 			return Index >= 0 && Index < Count;
 		}
 
-		void Swap(uint64 IndexA, uint64 IndexB)
-		{
-			NEXUS_ASSERT(IsValidIndex(IndexA), Default, "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(IndexB), Default, "Invalid Index");
-
-			T Temp = GetItem(IndexA);
-			GetItem(IndexA) = Move(GetItem(IndexB));
-			GetItem(IndexB) = Move(Temp);
-		}
-
-		void Reverse()
-		{
-			uint64 Half = Count / 2;
-			for (uint64 Front = 0, Back = Count - 1; Front < Half; ++Front, --Back)
-			{
-				Swap(Front, Back);
-			}
-		}
-
-		template<typename S = Sorting::DefaultIndexed<T>>
-		void Sort(Sorting::CompareFunction<T> Function = nullptr)
-		{
-			Sort::SortCollection<T, Array<T, L>, S>(*this, Count, Function);
-		}
-
-		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		uint64 GetCount() const { return Count; }
 
 	private:
@@ -450,19 +409,6 @@ namespace NxFr
 		const I GetIteratorIndex(uint64 Index) const
 		{
 			return I(const_cast<T*>(GetData()), Index);
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		void ValidateCapacity(uint64 Size)

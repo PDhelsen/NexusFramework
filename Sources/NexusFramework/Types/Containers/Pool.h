@@ -15,6 +15,8 @@ namespace NxFr
 		template<typename T>
 		class PreAllocated
 		{
+			friend class ContainersUtils;
+
 		public:
 			using N = Node::NodeSimple<T>;
 			using I = Iterator::IteratorPreAllocated<T, N>;
@@ -211,6 +213,8 @@ namespace NxFr
 		template<typename T>
 		class OnDemand
 		{
+			friend class ContainersUtils;
+
 		public:
 			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
@@ -455,6 +459,8 @@ namespace NxFr
 	template<typename T, typename P = Pooling::OnDemand<T>>
 	class Pool
 	{
+		friend class ContainersUtils;
+
 	public:
 		using I = typename P::I;
 
@@ -547,42 +553,11 @@ namespace NxFr
 			return Data.End();
 		}
 
-		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		uint64 GetCapacity() const { return Data.GetCapacity(); }
 		uint64 GetCount() const { return Data.GetCount(); }
 		uint64 GetUnused() const { return Data.GetUnused(); }
 
 	private:
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
-		}
-
 		P Data;
 	};
 }

@@ -76,7 +76,7 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const Set<T>& Object)
 		{
 			Array<T> Data = ContainersUtils::ToArray<T>(Object);
-			Data.Sort();
+			NxFr::ContainersUtils::Sort<T>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
 			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
@@ -105,7 +105,7 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const Dictionary<K, T>& Object)
 		{
 			Array<KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(Object);
-			Data.Sort();
+			NxFr::ContainersUtils::Sort<NxFr::KeyValuePair<K, T>>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
 			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
@@ -241,7 +241,7 @@ namespace YAML
 			}
 
 			NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
-			Data.Sort();
+			NxFr::ContainersUtils::Sort<T>(Data);
 
 			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
@@ -276,7 +276,7 @@ namespace YAML
 		}
 
 		NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
-		Data.Sort();
+		NxFr::ContainersUtils::Sort<T>(Data);
 
 		out << YAML::BeginSeq;
 		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
@@ -302,7 +302,7 @@ namespace YAML
 			}
 
 			NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(rhs);
-			Data.Sort();
+			NxFr::ContainersUtils::Sort<NxFr::KeyValuePair<K, T>>(Data);
 
 			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
@@ -337,7 +337,7 @@ namespace YAML
 		}
 
 		NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(rhs);
-		Data.Sort();
+		NxFr::ContainersUtils::Sort<NxFr::KeyValuePair<K, T>>(Data);
 
 		out << YAML::BeginMap;
 		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)

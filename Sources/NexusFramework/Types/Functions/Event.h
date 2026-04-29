@@ -48,18 +48,10 @@ namespace NxFr
 
 		void Unregister(const F& Func)
 		{
-			uint64 Index = 0;
-			for (; Index < Functions.GetCount(); ++Index)
+			auto It = ContainersUtils::Find(Functions, Func);
+			if (It != Functions.End())
 			{
-				if (Functions[Index] == Func)
-				{
-					break;
-				}
-			}
-
-			if (Index < Functions.GetCount())
-			{
-				Functions.Remove(Index);
+				Functions.Remove(It.Id());
 			}
 		}
 

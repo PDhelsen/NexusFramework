@@ -14,6 +14,8 @@ namespace NxFr
 	template<typename T>
 	class Graph
 	{
+		friend class ContainersUtils;
+
 	public:
 		using N = Node::NodeGraph<T>;
 		using C = NxFr::Node::NodeGraphConnection<T>;
@@ -38,14 +40,22 @@ namespace NxFr
 			Current = Other.Data;
 			while (Current)
 			{
-				I From = Find(Current->Value);
+				I From = Begin();
+				while (*From != Current->Value)
+				{
+					++From;
+				}
 
 				C* Link = Current->Connection;
 				while (Link)
 				{
 					if (Link->Type == CT::To)
 					{
-						I To = Find(Link->Target->Value);
+						I To = Begin();
+						while (*To != Link->Target->Value)
+						{
+							++To;
+						}
 						Connect(&(*From), &(*To));
 					}
 
@@ -87,14 +97,22 @@ namespace NxFr
 			Current = Other.Data;
 			while (Current)
 			{
-				I From = Find(Current->Value);
+				I From = Begin();
+				while (*From != Current->Value)
+				{
+					++From;
+				}
 
 				C* Link = Current->Connection;
 				while (Link)
 				{
 					if (Link->Type == CT::To)
 					{
-						I To = Find(Link->Target->Value);
+						I To = Begin();
+						while (*To != Link->Target->Value)
+						{
+							++To;
+						}
 						Connect(&(*From), &(*To));
 					}
 
@@ -470,35 +488,6 @@ namespace NxFr
 			return GetIteratorNode(nullptr);
 		}
 
-		void Swap(T* A, T* B)
-		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
-			NEXUS_ASSERT(A != nullptr, Default, "A is null");
-			NEXUS_ASSERT(B != nullptr, Default, "B is null");
-
-			T Temp = GetItem(GetNode(A));
-			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));
-			GetItem(GetNode(B)) = Move(Temp);
-		}
-
-		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		uint64 GetConnectionCount(T* Instance) const { return GetNode(Instance)->Count; }
@@ -666,19 +655,6 @@ namespace NxFr
 		const I GetIteratorNode(const N* Instance) const
 		{
 			return I(const_cast<N*>(Instance));
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		Allocator* Alloc;

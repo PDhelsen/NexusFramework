@@ -229,7 +229,7 @@ namespace NxFr
 
 		::NxFr::Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
+		NEXUS_ASSERT(ContainersUtils::ContainsKey(Headers, Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Label, Default, "Invalid record call");
 		Statistique.RecordLabel(Value);
@@ -250,7 +250,7 @@ namespace NxFr
 
 		::NxFr::Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
+		NEXUS_ASSERT(ContainersUtils::ContainsKey(Headers, Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Check, Default, "Invalid record call");
 		Statistique.RecordCheck(Value);
@@ -271,7 +271,7 @@ namespace NxFr
 
 		::NxFr::Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
+		NEXUS_ASSERT(ContainersUtils::ContainsKey(Headers, Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Integer, Default, "Invalid record call");
 		Statistique.RecordInteger(Value);
@@ -292,7 +292,7 @@ namespace NxFr
 
 		::NxFr::Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.ContainsKey(Id), Default, "Failed to find Id (%s)", Id.C());
+		NEXUS_ASSERT(ContainersUtils::ContainsKey(Headers, Id), Default, "Failed to find Id (%s)", Id.C());
 		auto& Statistique = GetStat(Id);
 		NEXUS_ASSERT(Statistique.Type == StatType::Decimal, Default, "Invalid record call");
 		Statistique.RecordDecimal(Value);

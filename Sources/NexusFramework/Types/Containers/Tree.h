@@ -14,6 +14,8 @@ namespace NxFr
 	template<typename T>
 	class Tree
 	{
+		friend class ContainersUtils;
+
 	public:
 		using N = Node::NodeTree<T>;
 		using I = Iterator::IteratorNodeTree<T, N>;
@@ -514,35 +516,6 @@ namespace NxFr
 			return GetIteratorNode(nullptr);
 		}
 
-		void Swap(T* A, T* B)
-		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Tree is empty");
-			NEXUS_ASSERT(A != nullptr, Default, "A is null");
-			NEXUS_ASSERT(B != nullptr, Default, "B is null");
-
-			T Temp = GetItem(GetNode(A));
-			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));
-			GetItem(GetNode(B)) = Move(Temp);
-		}
-
-		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		bool IsInitialized() const { Data != nullptr; }
@@ -718,19 +691,6 @@ namespace NxFr
 		const I GetIteratorNode(const N* Instance) const
 		{
 			return I(const_cast<N*>(Instance));
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		Allocator* Alloc;

@@ -15,6 +15,8 @@ namespace NxFr
 	template<typename T>
 	class List
 	{
+		friend class ContainersUtils;
+
 	public:
 		using I = Iterator::IteratorBlock<T>;
 
@@ -307,7 +309,7 @@ namespace NxFr
 		{
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
-			Swap(Index, Count - 1);
+			GetItem(Index) = GetItem(Count - 1);
 			RemoveLast();
 		}
 
@@ -424,49 +426,6 @@ namespace NxFr
 			Reallocate(Size);
 		}
 
-		void Swap(uint64 IndexA, uint64 IndexB)
-		{
-			NEXUS_ASSERT(IsValidIndex(IndexA), Default, "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(IndexB), Default, "Invalid Index");
-			
-			T Temp = GetItem(IndexA);
-			GetItem(IndexA) = Move(GetItem(IndexB));
-			GetItem(IndexB) = Move(Temp);
-		}
-
-		void Reverse()
-		{
-			uint64 Half = Count / 2;
-			for (uint64 Front = 0, Back = Count - 1; Front < Half; ++Front, --Back)
-			{
-				Swap(Front, Back);
-			}
-		}
-
-		template<typename S = Sorting::DefaultIndexed<T>>
-		void Sort(Sorting::CompareFunction<T> Function = nullptr)
-		{
-			Sort::SortCollection<T, List<T>, S>(*this, Count, Function);
-		}
-
-		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		uint64 GetCapacity() const { return Capacity; }
@@ -529,19 +488,6 @@ namespace NxFr
 		I GetIteratorIndex(uint64 Index) const
 		{
 			return I(Data, Index);
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		void Resize(uint64 Size)

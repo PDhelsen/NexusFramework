@@ -286,7 +286,7 @@ namespace NxFr
 			{
 				// Check if next data is stored in an Handle and so can be moved in memory
 				void* Data = GetHeapSlotMemory(Slot->Next);
-				auto It = Handles.FindKey(Data);
+				auto It = ContainersUtils::FindKey(Handles, Data);
 				if (It == Handles.End())
 				{
 					Slot = Slot->Next;

@@ -45,7 +45,7 @@ namespace NxFr
 	{
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 
-		auto It = Buffer.Find(Address);
+		auto It = ContainersUtils::Find(Buffer, Address);
 		return It == Buffer.End() ? nullptr : &It.Get();
 	}
 

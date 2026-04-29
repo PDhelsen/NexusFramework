@@ -17,6 +17,8 @@ namespace NxFr
 	template<typename K, typename T, class H = Hashing::Default>
 	class Dictionary
 	{
+		friend class ContainersUtils;
+
 	public:
 		using KV = KeyValuePair<const K, T>;
 		using N = Node::NodeHashmap<KV>;
@@ -468,45 +470,6 @@ namespace NxFr
 			Reallocate(Size);
 		}
 
-		void Swap(const K& A, const K& B)
-		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
-
-			T Temp = Get(A);
-			Get(A) = Move(Get(B));
-			Get(B) = Move(Temp);
-		}
-
-		bool ContainsKey(const Q& Other) const { return GetIteratorKey(Other) != End(); }
-		bool ContainsKey(const Iterator::Predicate<Q>& Predicate) const
-		{
-			return GetIteratorKey(Predicate) != End();
-		}
-
-		bool ContainsValue(const T& Other) const { return ContainsValue([&](const T& Element) { return Element == Other; }); }
-		bool ContainsValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		const I FindKey(const Q& Other) const { return GetIteratorKey(Other); }
-		const I FindKey(const Iterator::Predicate<Q>& Predicate) const
-		{
-			return GetIteratorKey(Predicate);
-		}
-
-		I FindValue(const T& Other) { return FindValue([&](const T& Element) { return Element == Other; }); }
-		I FindValue(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I FindValue(const T& Other) const { return FindValue([&](const T& Element) { return Element == Other; }); }
-		const I FindValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 		uint64 GetCapacity() const { return Capacity; }
@@ -649,32 +612,6 @@ namespace NxFr
 			uint64 Hash = GetHash(Key);
 			uint64 Index = GetIndex(Hash);
 			return Index < Capacity && !Data[Index].Free ? I(Data, Index, Capacity) : End();
-		}
-
-		I GetIteratorKey(const Iterator::Predicate<Q>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(It->Key))
-				{
-					return It;
-				}
-			}
-
-			return End();
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(It->Value))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		bool Resize(uint64 Size)

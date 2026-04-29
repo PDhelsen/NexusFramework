@@ -242,6 +242,40 @@ namespace NxFr
 			Resize(0);
 		}
 
+		T& Get(const Q& Value)
+		{
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].Free, Default, "Failed to find key");
+			return Data[Index].Value.Value;
+		}
+
+		const T& Get(const Q& Value) const
+		{
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			NEXUS_ASSERT(Index < Capacity && !Data[Index].Free, Default, "Failed to find key");
+			return Data[Index].Value.Value;
+		}
+
+		T* TryGet(const Q& Value)
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			return Index < Capacity && !Data[Index].Free ? &Data[Index].Value.Value : nullptr;
+		}
+
+		const T* TryGet(const Q& Value) const
+		{
+			uint64 Hash = GetHash(Value);
+			uint64 Index = GetIndex(Hash);
+			return Index < Capacity && !Data[Index].Free ? &Data[Index].Value.Value : nullptr;
+		}
+
 		I GetIterator(const Q& Value)
 		{
 			return GetIteratorValue(Value);
@@ -280,18 +314,6 @@ namespace NxFr
 		{
 			Size = Math::Max(Size, Count);
 			Reallocate(Size);
-		}
-
-		bool Contains(const T& Other) const { return GetIteratorValue(Other) != End(); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		const I Find(const T& Other) const { return GetIteratorValue(Other); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
 		}
 
 		bool IsEmpty() const { return Count == 0; }
@@ -436,19 +458,6 @@ namespace NxFr
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
 			return Index < Capacity && !Data[Index].Free ? I(Data, Index, Capacity) : End();
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<Q>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		bool Resize(uint64 Size)

@@ -15,6 +15,8 @@ namespace NxFr
 	template<typename T>
 	class LinkedList
 	{
+		friend class ContainersUtils;
+
 	public:
 		using N = Node::NodeDouble<T>;
 		using I = Iterator::IteratorNodeDouble<T, N>;
@@ -652,71 +654,6 @@ namespace NxFr
 			return I(nullptr);
 		}
 
-		void Swap(T* A, T* B)
-		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
-			NEXUS_ASSERT(A != nullptr, Default, "A is null");
-			NEXUS_ASSERT(B != nullptr, Default, "B is null");
-
-			T Temp = GetItem(GetNode(A));
-			GetItem(GetNode(A)) = Move(GetItem(GetNode(B)));
-			GetItem(GetNode(B)) = Move(Temp);
-		}
-
-		void Reverse()
-		{
-			DataTail = DataHead;
-
-			N* Current = DataHead;
-			N* Next = Current->Next;
-			Current->Next = nullptr;
-			Current->Prev = Next;
-
-			while (Next)
-			{
-				N* SecondNext = Next->Next;
-				Next->Next = Current;
-				Next->Prev = SecondNext;
-
-				Current = Next;
-				Next = SecondNext;
-			}
-
-			DataHead = Current;
-		}
-
-		template<typename S = Sorting::DefaultLinked<T, N>>
-		void Sort(Sorting::CompareFunction<T> Function = nullptr)
-		{
-			Sort::SortNodes<T, N, S>(
-				&DataHead,
-				[](N* Node, N* Value) { Node->Next = Value; },
-				[](N* Node) {return Node->Next; },
-				[](N* Node) {return Node->Value; },
-				Function
-			);
-
-			DataTail = Node::RelinkBackward<N>(DataHead);
-		}
-
-		bool Contains(const T& Other) const { return Contains([&](const T& Element) { return Element == Other; }); }
-		bool Contains(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate) != End();
-		}
-
-		I Find(const T& Other) { return Find([&](const T& Element) { return Element == Other; }); }
-		I Find(const Iterator::Predicate<T>& Predicate)
-		{
-			return GetIteratorValue(Predicate);
-		}
-
-		const I Find(const T& Other) const { return Find([&](const T& Element) { return Element == Other; }); }
-		const I Find(const Iterator::Predicate<T>& Predicate) const
-		{
-			return GetIteratorValue(Predicate);
-		}
-
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 
@@ -875,19 +812,6 @@ namespace NxFr
 		const I GetIteratorNode(const N* Instance) const
 		{
 			return I(const_cast<N*>(Instance));
-		}
-
-		I GetIteratorValue(const Iterator::Predicate<T>& Predicate) const
-		{
-			for (I It = Begin(); It != End(); ++It)
-			{
-				if (Predicate(*It))
-				{
-					return It;
-				}
-			}
-
-			return End();
 		}
 
 		Allocator* Alloc;
