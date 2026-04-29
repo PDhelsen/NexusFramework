@@ -471,7 +471,7 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
 			NEXUS_ASSERT(GetNode(Position) != DataTail, Default, "Cannot get next on Tail");
 
-			N* Instance = GetNode(Position);
+			const N* Instance = GetNode(Position);
 			return GetItem(Instance->Next);
 		}
 
@@ -493,7 +493,7 @@ namespace NxFr
 			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
 
-			N* Instance = GetNode(Position);
+			const N* Instance = GetNode(Position);
 			if (Instance == DataTail)
 			{
 				return nullptr;
@@ -517,7 +517,7 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
 			NEXUS_ASSERT(GetNode(Position) != DataHead, Default, "Cannot get prev on Head");
 
-			N* Instance = GetNode(Position);
+			const N* Instance = GetNode(Position);
 			return GetItem(Instance->Prev);
 		}
 
@@ -539,7 +539,7 @@ namespace NxFr
 			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
 			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
 
-			N* Instance = GetNode(Position);
+			const N* Instance = GetNode(Position);
 			if (Instance == DataHead)
 			{
 				return nullptr;
@@ -597,7 +597,7 @@ namespace NxFr
 			NEXUS_ASSERT(B != nullptr, Default, "B is null");
 			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
 			
-			return IsNext(A, B) || IsPrev(A, B);
+			return IsNext(A, B) || IsPrevious(A, B);
 		}
 
 		I GetIterator(T* Position)

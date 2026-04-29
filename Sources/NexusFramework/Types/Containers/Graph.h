@@ -347,9 +347,9 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			uint64 Idx = 0;
-			N* Instance = GetNode(Position);
+			const N* Instance = GetNode(Position);
 
-			C* Connect = Instance->Connection;
+			const C* Connect = Instance->Connection;
 			while (Connect)
 			{
 				if (Connect->Type == Type)
@@ -402,9 +402,9 @@ namespace NxFr
 			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			uint64 Idx = 0;
-			N* Instance = GetNode(Position);
+			const N* Instance = GetNode(Position);
 
-			C* Connect = Instance->Connection;
+			const C* Connect = Instance->Connection;
 			while (Connect)
 			{
 				if (Connect->Type == Type)
