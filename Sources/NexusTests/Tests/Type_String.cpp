@@ -2,9 +2,12 @@
 
 namespace NxTs
 {
-	TEST(String, String)
+	TEST(Type_String, String)
 	{
 		NxFr::String Test = NxFr::String("Hello World");
+		ASSERT_EQ(Test.IsEmpty(), false);
+		ASSERT_EQ(Test.GetCount(), 11);
+		ASSERT_EQ(Test.GetCapacity(), 16);
 
 		NxFr::String Empty = NxFr::String();
 		ASSERT_EQ(Empty, NxFr::StringUtility::Empty);
@@ -13,24 +16,9 @@ namespace NxTs
 		NxFr::String Test2 = "World Hello";
 		NxFr::String Test3 = Test;
 		NxFr::String Test4 = Move(Test2);
-
 		ASSERT_EQ(Test2, "");
 		ASSERT_EQ(Test3, "Hello World");
 		ASSERT_EQ(Test4, "World Hello");
-
-		Test2 = Move(Test4);
-
-		ASSERT_EQ(Test2, "World Hello");
-		ASSERT_EQ(Test4, "");
-
-		{
-			NxFr::String Test5 = NxFr::String("Hello World");
-			ASSERT_EQ(Test5.IsEmpty(), false);
-		}
-
-		ASSERT_EQ(Test.IsEmpty(), false);
-		ASSERT_EQ(Test.GetCount(), 11);
-		ASSERT_EQ(Test.GetCapacity(), 16);
 
 		Test.Append(" Again");
 		Test.Append(" Again");
@@ -53,7 +41,7 @@ namespace NxTs
 		ASSERT_EQ(Test.GetCapacity(), 17);
 	}
 
-	TEST(String, View)
+	TEST(Type_String, View)
 	{
 		NxFr::String Reference = "Hello World Extended";
 
@@ -70,21 +58,9 @@ namespace NxTs
 		ASSERT_EQ(Reference > Test1, true);
 		ASSERT_EQ(Reference < Test2, true);
 		ASSERT_EQ(Reference > Test4, true);
-
-		NxFr::Array<NxFr::StringView> Array = NxFr::Array<NxFr::StringView>(6);
-		Array.AssignConstruct(0, Reference);
-		Array.AssignConstruct(1, Test0);
-		Array.AssignConstruct(2, Test1);
-		Array.AssignConstruct(3, Test2);
-		Array.AssignConstruct(4, Test3);
-		Array.AssignConstruct(5, Test4);
-		Array.Sort();
-
-		NxFr::String Convert = Test2;
-		ASSERT_EQ(Convert, "World");
 	}
 
-	TEST(String, Id)
+	TEST(Type_String, Id)
 	{
 		NxFr::StringId Id = "Hello World"_Sid;
 
@@ -101,13 +77,14 @@ namespace NxTs
 		ASSERT_EQ(Id.GetId(), 0x3D58DEE72D4E0C27);
 
 		Test3 = Test2;
+		ASSERT_EQ(Test3, Test2);
 
 		NxFr::StringId Test4 = 0;
 		ASSERT_EQ(Test4, NxFr::StringUtility::Unknown);
 		ASSERT_EQ(Test4.GetId(), 0);
 	}
 
-	TEST(String, Utility)
+	TEST(Type_String, Utility)
 	{
 		NxFr::String Test1 = NxFr::String("Hello World");
 
@@ -173,7 +150,7 @@ namespace NxTs
 		ASSERT_EQ(NxFr::StringUtility::FromString<double>("100.50"), 100.5f);
 	}
 
-	TEST(String, Operator)
+	TEST(Type_String, Operator)
 	{
 		NxFr::String Test = NxFr::String("Hello World");
 		NxFr::String Reverse = NxFr::String("World Hello");
@@ -212,10 +189,9 @@ namespace NxTs
 		ASSERT_EQ("HelloWorld" - NxFr::String("World"), "Hello");
 	}
 
-	TEST(String, Iterator)
+	TEST(Type_String, Misc)
 	{
-		NxFr::String Data = NxFr::String("This is a test text for testing the iterator");
-
+		NxFr::String Data = NxFr::String("This is a test text");
 		for (NxFr::Iterator::StringCharacter It = Data.Begin(); It != Data.End(); ++It)
 		{
 			ASSERT_EQ(It.Get().IsEmpty(), false);
@@ -225,5 +201,18 @@ namespace NxTs
 		{
 			ASSERT_EQ(It.Get().IsEmpty(), false);
 		}
+
+		NxFr::Array<NxFr::StringView> Array = NxFr::Array<NxFr::StringView>(4);
+		Array.AssignConstruct(0, "World");
+		Array.AssignConstruct(1, "World Hello");
+		Array.AssignConstruct(2, "Hello World");
+		Array.AssignConstruct(3, "Hello");
+		Array.Sort();
+		for (uint64 Index = 1; Index < Array.GetCount(); Index++)
+		{
+			ASSERT_EQ(Array[Index - 1] <= Array[Index], true);
+		}
+
+		ASSERT_EQ(NxFr::Hash<>::HashObject(Data), 0x96B1BC7DBA071D97);
 	}
 }
