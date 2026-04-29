@@ -28,9 +28,9 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const Array<T>& Object)
 		{
 			Rbs.WriteObject(Object.GetCount());
-			for (uint64 Index = 0; Index < Object.GetCount(); ++Index)
+			for (const auto& It : Object)
 			{
-				Rbs.WriteObject(Object[Index]);
+				Rbs.WriteObject(It);
 			}
 		}
 	};
@@ -52,9 +52,108 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const List<T>& Object)
 		{
 			Rbs.WriteObject(Object.GetCount());
-			for (uint64 Index = 0; Index < Object.GetCount(); ++Index)
+			for (const auto& It : Object)
 			{
-				Rbs.WriteObject(Object[Index]);
+				Rbs.WriteObject(It);
+			}
+		}
+	};
+
+	template<typename T>
+	struct RBSConverter<Dequeue<T>>
+	{
+		static Dequeue<T> Decode(RBS& Rbs)
+		{
+			uint64 Size = Rbs.ReadObject<uint64>();
+			Dequeue<T> Result(Size);
+			for (uint64 Index = 0; Index < Size; ++Index)
+			{
+				Result.AppendBack(Rbs.ReadObject<T>());
+			}
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Dequeue<T>& Object)
+		{
+			Rbs.WriteObject(Object.GetCount());
+			for (const auto& It : Object)
+			{
+				Rbs.WriteObject(It);
+			}
+		}
+	};
+
+	template<typename T>
+	struct RBSConverter<Queue<T>>
+	{
+		static Queue<T> Decode(RBS& Rbs)
+		{
+			uint64 Size = Rbs.ReadObject<uint64>();
+			Queue<T> Result(Size);
+			for (uint64 Index = 0; Index < Size; ++Index)
+			{
+				Result.Append(Rbs.ReadObject<T>());
+			}
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Queue<T>& Object)
+		{
+			Rbs.WriteObject(Object.GetCount());
+			for (const auto& It : Object)
+			{
+				Rbs.WriteObject(It);
+			}
+		}
+	};
+
+	template<typename T>
+	struct RBSConverter<Stack<T>>
+	{
+		static Queue<T> Decode(RBS& Rbs)
+		{
+			uint64 Size = Rbs.ReadObject<uint64>();
+			Stack<T> Result(Size);
+			for (uint64 Index = 0; Index < Size; ++Index)
+			{
+				Result.Append(Rbs.ReadObject<T>());
+			}
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const Stack<T>& Object)
+		{
+			Array<T> Data = ContainersUtils::ToArray<T>(Object);
+			ContainersUtils::Reverse<T>(Data);
+
+			Rbs.WriteObject(Data.GetCount());
+			for (const auto& It : Data)
+			{
+				Rbs.WriteObject(It);
+			}
+		}
+	};
+
+	template<typename T>
+	struct RBSConverter<LinkedList<T>>
+	{
+		static LinkedList<T> Decode(RBS& Rbs)
+		{
+			uint64 Size = Rbs.ReadObject<uint64>();
+			LinkedList<T> Result(Size);
+			for (uint64 Index = 0; Index < Size; ++Index)
+			{
+				Result.AppendBack(Rbs.ReadObject<T>());
+			}
+			return Result;
+		}
+
+		static void Encode(RBS& Rbs, const LinkedList<T>& Object)
+		{
+			Rbs.WriteObject(Object.GetCount());
+			for (const auto& It : Object)
+			{
+				Rbs.WriteObject(It);
 			}
 		}
 	};
@@ -76,12 +175,12 @@ namespace NxFr
 		static void Encode(RBS& Rbs, const Set<T>& Object)
 		{
 			Array<T> Data = ContainersUtils::ToArray<T>(Object);
-			NxFr::ContainersUtils::Sort<T>(Data);
+			ContainersUtils::Sort<T>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
-			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
+			for (const auto& It : Data)
 			{
-				Rbs.WriteObject(Data[Index]);
+				Rbs.WriteObject(It);
 			}
 		}
 	};
@@ -104,14 +203,64 @@ namespace NxFr
 
 		static void Encode(RBS& Rbs, const Dictionary<K, T>& Object)
 		{
-			Array<KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(Object);
-			NxFr::ContainersUtils::Sort<NxFr::KeyValuePair<K, T>>(Data);
+			Array<KeyValuePair<K, T>> Data = ContainersUtils::ToArray<K, T>(Object);
+			ContainersUtils::Sort<KeyValuePair<K, T>>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
-			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
+			for (const auto& It : Data)
 			{
-				Rbs.WriteObject(Data[Index].Key);
-				Rbs.WriteObject(Data[Index].Value);
+				Rbs.WriteObject(It.Key);
+				Rbs.WriteObject(It.Value);
+			}
+		}
+	};
+
+	template<>
+	struct RBSConverter<BufferView>
+	{
+		static BufferView Decode(RBS& Rbs)
+		{
+			uint64 Size = Rbs.ReadObject<uint64>();
+			const void* Ptr = Rbs.ReadByte(Size);
+			return BufferView(Ptr, Size);
+		}
+
+		static void Encode(RBS& Rbs, const BufferView& Object)
+		{
+			Rbs.WriteObject(Object.GetCount());
+			Rbs.WriteByte(Object.GetPtr(), Object.GetCount());
+		}
+	};
+
+	template<typename T1, typename T2>
+	struct RBSConverter<Tuple<T1, T2>>
+	{
+		static Tuple<T1, T2> Decode(RBS& Rbs)
+		{
+			return Tuple<T1, T2>(Rbs.ReadObject<T1>(), Rbs.ReadObject<T2>());
+		}
+
+		static void Encode(RBS& Rbs, const Tuple<T1, T2>& Object)
+		{
+			Rbs.WriteObject(Object.GetFirst());
+			Rbs.WriteObject(Object.GetSecond());
+		}
+	};
+
+	template<typename T>
+	struct RBSConverter<Collection<T>>
+	{
+		static Array<T> Decode(RBS& Rbs)
+		{
+			NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
+		}
+
+		static void Encode(RBS& Rbs, const Collection<T>& Object)
+		{
+			Rbs.WriteObject(Object.GetCount());
+			for (const auto& It : Object)
+			{
+				Rbs.WriteObject(It);
 			}
 		}
 	};
@@ -132,9 +281,9 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
+			for (const auto& It : rhs)
 			{
-				node.push_back(rhs[Index]);
+				node.push_back(It);
 			}
 			return node;
 		}
@@ -164,9 +313,9 @@ namespace YAML
 		}
 
 		out << YAML::BeginSeq;
-		for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
+		for (const auto& It : rhs)
 		{
-			out << rhs[Index];
+			out << It;
 		}
 		out << YAML::EndSeq;
 
@@ -186,9 +335,9 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
+			for (const auto& It : rhs)
 			{
-				node.push_back(rhs[Index]);
+				node.push_back(It);
 			}
 			return node;
 		}
@@ -218,9 +367,231 @@ namespace YAML
 		}
 
 		out << YAML::BeginSeq;
-		for (uint64 Index = 0; Index < rhs.GetCount(); ++Index)
+		for (const auto& It : rhs)
 		{
-			out << rhs[Index];
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
+	template<typename T>
+	struct convert<NxFr::Dequeue<T>>
+	{
+		static Node encode(const NxFr::Dequeue<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (const auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
+		static bool decode(const Node& node, NxFr::Dequeue<T>& rhs)
+		{
+			if (!node.IsSequence())
+			{
+				return false;
+			}
+
+			rhs.Reserve(node.size());
+			for (uint64 Index = 0; Index < node.size(); ++Index)
+			{
+				rhs.AppendBack(node[Index].as<T>());
+			}
+			return true;
+		}
+	};
+
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Dequeue<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (const auto& It : rhs)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
+	template<typename T>
+	struct convert<NxFr::Queue<T>>
+	{
+		static Node encode(const NxFr::Queue<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (const auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
+		static bool decode(const Node& node, NxFr::Queue<T>& rhs)
+		{
+			if (!node.IsSequence())
+			{
+				return false;
+			}
+
+			rhs.Reserve(node.size());
+			for (uint64 Index = 0; Index < node.size(); ++Index)
+			{
+				rhs.Append(node[Index].as<T>());
+			}
+			return true;
+		}
+	};
+
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Queue<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (const auto& It : rhs)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
+	template<typename T>
+	struct convert<NxFr::Stack<T>>
+	{
+		static Node encode(const NxFr::Stack<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
+			NxFr::ContainersUtils::Reverse<T>(Data);
+
+			for (const auto& It : Data)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
+		static bool decode(const Node& node, NxFr::Stack<T>& rhs)
+		{
+			if (!node.IsSequence())
+			{
+				return false;
+			}
+
+			rhs.Reserve(node.size());
+			for (uint64 Index = 0; Index < node.size(); ++Index)
+			{
+				rhs.Append(node[Index].as<T>());
+			}
+			return true;
+		}
+	};
+
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Stack<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
+		NxFr::ContainersUtils::Reverse<T>(Data);
+
+		out << YAML::BeginSeq;
+		for (const auto& It : Data)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
+	template<typename T>
+	struct convert<NxFr::LinkedList<T>>
+	{
+		static Node encode(const NxFr::LinkedList<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (const auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
+		static bool decode(const Node& node, NxFr::LinkedList<T>& rhs)
+		{
+			if (!node.IsSequence())
+			{
+				return false;
+			}
+
+			rhs.Reserve(node.size());
+			for (uint64 Index = 0; Index < node.size(); ++Index)
+			{
+				rhs.AppendBack(node[Index].as<T>());
+			}
+			return true;
+		}
+	};
+
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::LinkedList<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (const auto& It : rhs)
+		{
+			out << It;
 		}
 		out << YAML::EndSeq;
 
@@ -243,9 +614,9 @@ namespace YAML
 			NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
 			NxFr::ContainersUtils::Sort<T>(Data);
 
-			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
+			for (const auto& It : Data)
 			{
-				node.push_back(Data[Index]);
+				node.push_back(It);
 			}
 
 			return node;
@@ -279,9 +650,9 @@ namespace YAML
 		NxFr::ContainersUtils::Sort<T>(Data);
 
 		out << YAML::BeginSeq;
-		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
+		for (const auto& It : Data)
 		{
-			out << Data[Index];
+			out << It;
 		}
 		out << YAML::EndSeq;
 
@@ -346,6 +717,92 @@ namespace YAML
 			out << YAML::Value << Data[Index].Value;
 		}
 		out << YAML::EndMap;
+
+		return out;
+	}
+
+	template<typename T1, typename T2>
+	struct convert<NxFr::Tuple<T1, T2>>
+	{
+		static Node encode(const NxFr::Tuple<T1, T2>& rhs)
+		{
+			Node node;
+
+			node.SetStyle(YAML::EmitterStyle::Flow);
+			node[0] = rhs.GetFirst();
+			node[1] = rhs.GetSecond();
+
+			return node;
+		}
+
+		static bool decode(const Node& node, NxFr::Tuple<T1, T2>& rhs)
+		{
+			if (!node.IsSequence())
+			{
+				return false;
+			}
+
+			rhs[0].SetFirst(node[0].as<T1>());
+			rhs[1].SetSecond(node[1].as<T2>());
+
+			return true;
+		}
+	};
+
+	template<typename T1, typename T2>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Tuple<T1, T2>& rhs)
+	{
+		out << YAML::Flow;
+
+		out << YAML::BeginSeq;
+		out << rhs.GetFirst();
+		out << rhs.GetSecond();
+		out << YAML::EndSeq;
+
+		return out;
+	}
+
+	template<typename T>
+	struct convert<NxFr::Collection<T>>
+	{
+		static Node encode(const NxFr::Collection<T>& rhs)
+		{
+			Node node;
+			node[0];
+
+			if (rhs.GetCount() < NxFr::Yaml::SmallSequence)
+			{
+				node.SetStyle(YAML::EmitterStyle::Flow);
+			}
+
+			for (const auto& It : rhs)
+			{
+				node.push_back(It);
+			}
+			return node;
+		}
+
+		static bool decode(const Node& node, NxFr::Collection<T>& rhs)
+		{
+			NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
+			return false;
+		}
+	};
+
+	template<typename T>
+	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Collection<T>& rhs)
+	{
+		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
+		{
+			out << YAML::Flow;
+		}
+
+		out << YAML::BeginSeq;
+		for (const auto& It : rhs)
+		{
+			out << It;
+		}
+		out << YAML::EndSeq;
 
 		return out;
 	}

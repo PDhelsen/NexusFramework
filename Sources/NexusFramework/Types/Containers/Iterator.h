@@ -8,7 +8,7 @@ namespace NxFr
 {
 	namespace Iterator
 	{
-		class IteratorPointer : public Iterator<uint8, IteratorPointer>
+		class IteratorPointer : public Iterator<Byte, IteratorPointer>
 		{
 		public:
 			IteratorPointer(void* Pointer, uint64 Offset)
@@ -27,12 +27,12 @@ namespace NxFr
 				--Offset;
 			}
 
-			uint8& Get()
+			Byte& Get()
 			{
 				return *reinterpret_cast<uint8*>(reinterpret_cast<uint64>(Data) + Offset);
 			}
 
-			const uint8& Get() const
+			const Byte& Get() const
 			{
 				return *reinterpret_cast<uint8*>(reinterpret_cast<uint64>(Data) + Offset);
 			}
@@ -151,6 +151,71 @@ namespace NxFr
 			}
 
 			bool Equals(const IteratorBucket<T, BS>& Other) const
+			{
+				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
+			}
+
+		private:
+			T** Data;
+			uint64 Offset;
+			uint64 BucketIndex;
+			uint64 DataIndex;
+		};
+
+		template<typename T, uint64 BS>
+		class IteratorStack : public Iterator<T, IteratorStack<T, BS>>
+		{
+		public:
+			inline static const uint64 BucketSize = BS;
+
+			IteratorStack(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
+				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
+			{
+
+			}
+
+			void Increment()
+			{
+				if (DataIndex == 0)
+				{
+					--BucketIndex;
+					DataIndex = BucketSize - 1;
+				}
+				else
+				{
+					--DataIndex;
+				}
+			}
+
+			void Decrement()
+			{
+				if (DataIndex == BucketSize - 1)
+				{
+					++BucketIndex;
+					DataIndex = 0;
+				}
+				else
+				{
+					++DataIndex;
+				}
+			}
+
+			T& Get()
+			{
+				return Data[BucketIndex][DataIndex];
+			}
+
+			const T& Get() const
+			{
+				return Data[BucketIndex][DataIndex];
+			}
+
+			uint64 Id() const
+			{
+				return BucketIndex * BucketSize + DataIndex - Offset;
+			}
+
+			bool Equals(const IteratorStack<T, BS>& Other) const
 			{
 				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}

@@ -11,9 +11,7 @@ namespace NxFr
 		template<typename T>
 		struct NodeGraphConnection;
 
-		// -------------------------------
-		// Nodes
-		// -------------------------------
+#pragma region Node
 
 		template<typename T>
 		struct NodeSimple
@@ -28,6 +26,25 @@ namespace NxFr
 			T Value;
 			NodeDouble<T>* Next;
 			NodeDouble<T>* Prev;
+		};
+
+		template<typename T>
+		struct NodeTree
+		{
+			T Value;
+			uint64 Count;
+			NodeTree<T>* Parent;
+			NodeTree<T>* Sibling;
+			NodeTree<T>* Child;
+		};
+
+		template<typename T>
+		struct NodeGraph
+		{
+			T Value;
+			uint64 Count;
+			NodeGraph<T>* Next;
+			NodeGraphConnection<T>* Connection;
 		};
 
 		template<typename T>
@@ -67,28 +84,9 @@ namespace NxFr
 			}
 		};
 
-		template<typename T>
-		struct NodeTree
-		{
-			T Value;
-			uint64 Count;
-			NodeTree<T>* Parent;
-			NodeTree<T>* Sibling;
-			NodeTree<T>* Child;
-		};
+#pragma endregion
 
-		template<typename T>
-		struct NodeGraph
-		{
-			T Value;
-			uint64 Count;
-			NodeGraph<T>* Next;
-			NodeGraphConnection<T>* Connection;
-		};
-
-		// -------------------------------
-		// Connections
-		// -------------------------------
+#pragma region Connection
 
 		enum class NodeGraphConnectionType : uint8
 		{
@@ -103,9 +101,9 @@ namespace NxFr
 			NodeGraphConnectionType Type;
 		};
 
-		// -------------------------------
-		// Utils
-		// -------------------------------
+#pragma endregion
+
+#pragma region Utility
 
 		template<typename T, typename N>
 		static N* GetNode(T* Value)
@@ -143,11 +141,12 @@ namespace NxFr
 
 			return nullptr;
 		}
+
+#pragma endregion
+
 	}
 
-	// -------------------------------
-	// Key - Value
-	// -------------------------------
+#pragma region KeyValue
 
 	template<typename K, typename T>
 	class KeyValuePair
@@ -254,4 +253,7 @@ namespace NxFr
 		K Key;
 		T Value;
 	};
+
+#pragma endregion
+
 }

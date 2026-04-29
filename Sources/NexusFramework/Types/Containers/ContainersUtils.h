@@ -23,6 +23,107 @@ namespace NxFr
 	{
 	public:
 		template<typename T, typename C>
+		static void Fill(C& Container, const T& Value)
+		{
+			for (auto& It : Container)
+			{
+				It = Value;
+			}
+		}
+		template<typename K, typename T>
+		static void Fill(Dictionary<K, T>& Container, const T& Value)
+		{
+			for (auto& It : Container)
+			{
+				It.Value = Value;
+			}
+		}
+
+		template<typename T>
+		static void Resize(Array<T>& Container, uint64 Size)
+		{
+			uint64 Count = Math::Min(Container.GetCount(), Size);
+			Array<T> Result = Array<T>(Size);
+
+			for (uint64 Index = 0; Index < Count; ++Index)
+			{
+				Result[Index] = Container[Index];
+			}
+
+			Container = Move(Result);
+		}
+		template<typename T>
+		static void Resize(List<T>& Container, uint64 Size)
+		{
+			if (Size > Container.GetCount())
+			{
+				uint64 Delta = Size - Container.GetCount();
+				while (Delta-- > 0)
+				{
+					Container.AppendConstruct();
+				}
+			}
+			else if (Size < Container.GetCount())
+			{
+				uint64 Delta = Container.GetCount() - Size;
+				Container.RemoveRange(Size, Delta);
+			}
+		}
+
+		template<typename T, typename C>
+		static Array<T> ToArray(const C& Container)
+		{
+			uint64 Index = 0;
+			Array<T> Result = Array<T>(Container.GetCount());
+
+			for (const auto& It : Container)
+			{
+				Result.AssignConstruct(Index++, It);
+			}
+
+			return Result;
+		}
+		template<typename K, typename T>
+		static Array<KeyValuePair<K, T>> ToArray(const Dictionary<K, T>& Container)
+		{
+			uint64 Index = 0;
+			Array<KeyValuePair<K, T>> Result = Array<KeyValuePair<K, T>>(Container.GetCount());
+
+			for (const auto& It : Container)
+			{
+				Result.AssignConstruct(Index++, It.Key, It.Value);
+			}
+
+			return Result;
+		}
+		template<typename K, typename T>
+		static Array<K> ToArrayKeys(const Dictionary<K, T>& Container)
+		{
+			uint64 Index = 0;
+			Array<K> Result = Array<K>(Container.GetCount());
+
+			for (const auto& It : Container)
+			{
+				Result.AssignConstruct(Index++, It.Key);
+			}
+
+			return Result;
+		}
+		template<typename K, typename T>
+		static Array<T> ToArrayValues(const Dictionary<K, T>& Container)
+		{
+			uint64 Index = 0;
+			Array<T> Result = Array<T>(Container.GetCount());
+
+			for (const auto& It : Container)
+			{
+				Result.AssignConstruct(Index++, It.Value);
+			}
+
+			return Result;
+		}
+
+		template<typename T, typename C>
 		static void Swap(C& Container, uint64 A, uint64 B)
 		{
 			T Temp = Container[A];
@@ -165,107 +266,6 @@ namespace NxFr
 		static typename Dictionary<K, T>::I FindKey(const Dictionary<K, T>& Container, const K& Other) { return WhereKey<K, T>(Container, [&](const K& Element) { return Element == Other; }); }
 		template<typename K, typename T>
 		static typename Dictionary<K, T>::I FindValue(const Dictionary<K, T>& Container, const T& Other) { return WhereValue<K, T>(Container, [&](const T& Element) { return Element == Other; }); }
-
-		template<typename T, typename C>
-		static void Fill(C& Container, const T& Value)
-		{
-			for (auto& It : Container)
-			{
-				It = Value;
-			}
-		}
-		template<typename K, typename T>
-		static void Fill(Dictionary<K, T>& Container, const T& Value)
-		{
-			for (auto& It : Container)
-			{
-				It.Value = Value;
-			}
-		}
-
-		template<typename T>
-		static void Resize(Array<T>& Container, uint64 Size)
-		{
-			uint64 Count = Math::Min(Container.GetCount(), Size);
-			Array<T> Result = Array<T>(Size);
-			
-			for (uint64 Index = 0; Index < Count; ++Index)
-			{
-				Result[Index] = Container[Index];
-			}
-
-			Container = Move(Result);
-		}
-		template<typename T>
-		static void Resize(List<T>& Container, uint64 Size)
-		{
-			if (Size > Container.GetCount())
-			{
-				uint64 Delta = Size - Container.GetCount();
-				while (Delta-- > 0)
-				{
-					Container.AppendConstruct();
-				}
-			}
-			else if(Size < Container.GetCount())
-			{
-				uint64 Delta = Container.GetCount() - Size;
-				Container.RemoveRange(Size, Delta);
-			}
-		}
-
-		template<typename T, typename C>
-		static Array<T> ToArray(const C& Container)
-		{
-			uint64 Index = 0;
-			Array<T> Result = Array<T>(Container.GetCount());
-
-			for (const auto& It : Container)
-			{
-				Result.AssignConstruct(Index++, It);
-			}
-
-			return Result;
-		}
-		template<typename K, typename T>
-		static Array<KeyValuePair<K, T>> ToArray(const Dictionary<K, T>& Container)
-		{
-			uint64 Index = 0;
-			Array<KeyValuePair<K, T>> Result = Array<KeyValuePair<K, T>>(Container.GetCount());
-
-			for (const auto& It : Container)
-			{
-				Result.AssignConstruct(Index++, It.Key, It.Value);
-			}
-
-			return Result;
-		}
-		template<typename K, typename T>
-		static Array<K> ToArrayKeys(const Dictionary<K, T>& Container)
-		{
-			uint64 Index = 0;
-			Array<K> Result = Array<K>(Container.GetCount());
-
-			for (const auto& It : Container)
-			{
-				Result.AssignConstruct(Index++, It.Key);
-			}
-
-			return Result;
-		}
-		template<typename K, typename T>
-		static Array<T> ToArrayValues(const Dictionary<K, T>& Container)
-		{
-			uint64 Index = 0;
-			Array<T> Result = Array<T>(Container.GetCount());
-
-			for (const auto& It : Container)
-			{
-				Result.AssignConstruct(Index++, It.Value);
-			}
-
-			return Result;
-		}
 
 		template<typename T, class H = Hashing::Default>
 		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)

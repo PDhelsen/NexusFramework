@@ -65,7 +65,7 @@ namespace NxFr
 
 	const void* RBS::ReadByte(uint64 Size)
 	{
-		void* Ptr = Data.Get(Size, Cursor).GetPtr();
+		void* Ptr = Data.GetPtr(Cursor);
 		Cursor += Size;
 		return Ptr;
 	}

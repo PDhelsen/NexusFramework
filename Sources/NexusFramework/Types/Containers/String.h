@@ -39,7 +39,6 @@ namespace NxFr
 		}
 	};
 
-
 	template<typename T>
 	struct StringConverter<List<T>>
 	{
@@ -177,41 +176,37 @@ namespace NxFr
 		}
 	};
 
-	template<typename T>
-	struct StringConverter<Tree<T>>
+	template<>
+	struct StringConverter<BufferView>
 	{
-		static void ToString(const Tree<T>& Data, String& Result, StringView Format = "")
+		static void ToString(const BufferView& Data, String& Result, StringView Format = "")
 		{
 			Result.Clear();
 			for (const auto& It : Data)
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				Result += StringUtility::ToString<uint8>(It, Format);
 			}
 		}
 
-		static void FromString(StringView Data, Tree<T>& Result, StringView Format = "")
+		static void FromString(StringView Data, BufferView& Result, StringView Format = "")
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Tree");
+			NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
 		}
 	};
 
-	template<typename T>
-	struct StringConverter<Graph<T>>
+	template<typename T1, typename T2>
+	struct StringConverter<Tuple<T1, T2>>
 	{
-		static void ToString(const Graph<T>& Data, String& Result, StringView Format = "")
+		static void ToString(const Tuple<T1, T2>& Data, String& Result, StringView Format = "")
 		{
 			Result.Clear();
-			for (const auto& It : Data)
-			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
-			}
+			Result += StringUtility::ToString<T1>(Data.GetFirst(), Format);
+			Result += StringUtility::ToString<T2>(Data.GetSecond(), Format);
 		}
 
-		static void FromString(StringView Data, Graph<T>& Result, StringView Format = "")
+		static void FromString(StringView Data, Tuple<T1, T2>& Result, StringView Format = "")
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Graph");
+			NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
 		}
 	};
 
@@ -231,22 +226,6 @@ namespace NxFr
 		static void FromString(StringView Data, Collection<T>& Result, StringView Format = "")
 		{
 			NEXUS_ASSERT(false, Default, "Unsupported FromString with Collection");
-		}
-	};
-
-	template<typename T1, typename T2>
-	struct StringConverter<Tuple<T1, T2>>
-	{
-		static void ToString(const Tuple<T1, T2>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			Result += StringUtility::ToString<T1>(Data.GetFirst(), Format);
-			Result += StringUtility::ToString<T2>(Data.GetSecond(), Format);
-		}
-
-		static void FromString(StringView Data, Tuple<T1, T2>& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
 		}
 	};
 }

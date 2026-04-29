@@ -412,8 +412,8 @@ namespace NxTs
 
 		ASSERT_EQ(Test.Get().Integer, 4);
 
-		ASSERT_EQ(Test.Begin()->Integer, 1);
-		ASSERT_EQ(Test.BeginReverse()->Integer, 4);
+		ASSERT_EQ(Test.Begin()->Integer, 4);
+		ASSERT_EQ(Test.BeginReverse()->Integer, 1);
 
 		uint64 Index = 0;
 		for (auto& It : Test)

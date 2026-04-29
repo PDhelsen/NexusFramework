@@ -17,7 +17,7 @@ namespace NxFr
 		friend class ContainersUtils;
 
 	public:
-		using I = Iterator::IteratorBucket<T, BS>;
+		using I = Iterator::IteratorStack<T, BS>;
 
 		inline static const uint64 BucketSize = BS;
 
@@ -224,13 +224,13 @@ namespace NxFr
 		I begin() { return Begin(); }
 		I Begin()
 		{
-			return GetIt(0);
+			return GetIt(Count - 1);
 		}
 
 		const I begin() const { return Begin(); }
 		const I Begin() const
 		{
-			return GetIt(0);
+			return GetIt(Count - 1);
 		}
 
 		I BeginReverse()
@@ -250,13 +250,17 @@ namespace NxFr
 		I end() { return End(); }
 		I End()
 		{
-			return GetIt(Count);
+			I It = GetIt(0);
+			++It;
+			return It;
 		}
 
 		const I end() const { return End(); }
 		const I End() const
 		{
-			return GetIt(Count);
+			I It = GetIt(0);
+			++It;
+			return It;
 		}
 
 		I EndReverse()
