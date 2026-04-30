@@ -8,7 +8,7 @@ namespace NxFr
 {
 	namespace Iterator
 	{
-		class IteratorPointer : public Iterator<Byte, IteratorPointer>
+		struct IteratorPointer : public Iterator<Byte, IteratorPointer>
 		{
 		public:
 			IteratorPointer(void* Pointer, uint64 Offset)
@@ -53,7 +53,7 @@ namespace NxFr
 		};
 
 		template<typename T>
-		class IteratorBlock : public Iterator<T, IteratorBlock<T>>
+		struct IteratorBlock : public Iterator<T, IteratorBlock<T>>
 		{
 		public:
 			IteratorBlock(T* Pointer, uint64 Idx)
@@ -98,7 +98,7 @@ namespace NxFr
 		};
 
 		template<typename T, uint64 BS>
-		class IteratorBucket : public Iterator<T, IteratorBucket<T, BS>>
+		struct IteratorBucket : public Iterator<T, IteratorBucket<T, BS>>
 		{
 		public:
 			inline static const uint64 BucketSize = BS;
@@ -163,7 +163,7 @@ namespace NxFr
 		};
 
 		template<typename T, uint64 BS>
-		class IteratorStack : public Iterator<T, IteratorStack<T, BS>>
+		struct IteratorStack : public Iterator<T, IteratorStack<T, BS>>
 		{
 		public:
 			inline static const uint64 BucketSize = BS;
@@ -228,7 +228,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorHashmap : public Iterator<T, IteratorHashmap<T, N>>
+		struct IteratorHashmap : public Iterator<T, IteratorHashmap<T, N>>
 		{
 		public:
 			IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
@@ -280,7 +280,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorPreAllocated : public Iterator<T, IteratorPreAllocated<T, N>>
+		struct IteratorPreAllocated : public Iterator<T, IteratorPreAllocated<T, N>>
 		{
 		public:
 			IteratorPreAllocated(N* Pointer, uint64 Idx, uint64 Cpct)
@@ -332,7 +332,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorNodeSimple : public Iterator<T, IteratorNodeSimple<T, N>>
+		struct IteratorNodeSimple : public Iterator<T, IteratorNodeSimple<T, N>>
 		{
 		public:
 			IteratorNodeSimple(N* Pointer)
@@ -380,7 +380,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorNodeDouble : public Iterator<T, IteratorNodeDouble<T, N>>
+		struct IteratorNodeDouble : public Iterator<T, IteratorNodeDouble<T, N>>
 		{
 		public:
 			IteratorNodeDouble(N* Pointer)
@@ -431,7 +431,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorNodeTree : public Iterator<T, IteratorNodeTree<T, N>>
+		struct IteratorNodeTree : public Iterator<T, IteratorNodeTree<T, N>>
 		{
 		public:
 			IteratorNodeTree(N* Pointer)
@@ -495,7 +495,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class IteratorNodeGraph : public Iterator<T, IteratorNodeGraph<T, N>>
+		struct IteratorNodeGraph : public Iterator<T, IteratorNodeGraph<T, N>>
 		{
 		public:
 			IteratorNodeGraph(N* Pointer)
