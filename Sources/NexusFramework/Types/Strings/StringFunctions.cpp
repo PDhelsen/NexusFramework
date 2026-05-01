@@ -133,7 +133,7 @@ namespace NxFr
 	String StringUtility::Join(const Collection<StringView>& Text, StringView Separator)
 	{
 		String Result;
-		for (auto& It = Text.Reset(); It != Text.End(); ++It)
+		for (auto It = Text.Begin(); It != Text.End(); ++It)
 		{
 			Result += *It;
 			if (!Separator.IsEmpty())

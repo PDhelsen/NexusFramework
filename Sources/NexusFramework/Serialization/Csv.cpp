@@ -85,7 +85,7 @@ namespace NxFr
 	void Csv::AppendLine(const Collection<StringView>& Text)
 	{
 		List<String>& Line = Data.AppendConstruct();
-		for (auto& It = Text.Reset(); It != Text.End(); ++It)
+		for (auto It = Text.Begin(); It != Text.End(); ++It)
 		{
 			Line.Append(*It);
 		}
@@ -100,7 +100,7 @@ namespace NxFr
 	void Csv::AppendCells(const Collection<StringView>& Text)
 	{
 		List<String>& Line = Data.Last();
-		for (auto& It = Text.Reset(); It != Text.End(); ++It)
+		for (auto It = Text.Begin(); It != Text.End(); ++It)
 		{
 			Line.Append(*It);
 		}
@@ -138,7 +138,7 @@ namespace NxFr
 
 		List<String>& Line = GetLine(Row);
 		Line.Clear();
-		for (auto& It = Text.Reset(); It != Text.End(); ++It)
+		for (auto It = Text.Begin(); It != Text.End(); ++It)
 		{
 			Line.Append(*It);
 		}

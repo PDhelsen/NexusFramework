@@ -940,12 +940,12 @@ namespace NxTs
 
 		uint64 Index = 0;
 		NxFr::Collection<ContainerTest> Test = Data;
-		for (auto& It = Test.Current(); It != Test.End(); ++It)
+		for (auto It = Test.Begin(); It != Test.End(); ++It)
 		{
 			ASSERT_EQ(It->Integer, ++Index);
 		}
 
-		auto& It = Test.Reset();
+		auto It = Test.Begin();
 		ASSERT_EQ((*It).Integer, 1);
 	}
 

@@ -87,7 +87,7 @@ namespace NxFr
 	inline String Path::Combine(const Collection<T>& Elements)
 	{
 		String Result;
-		for (auto& It = Elements.Current(); It != Elements.End(); ++It)
+		for (auto It = Elements.Begin(); It != Elements.End(); ++It)
 		{
 			Join(Result, It);
 		}

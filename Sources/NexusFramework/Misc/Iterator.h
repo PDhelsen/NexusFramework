@@ -112,7 +112,7 @@ namespace NxFr
 		};
 
 		template<typename T>
-		struct IteratorAbstract
+		struct IteratorAny
 		{
 		private:
 			struct Interface
@@ -124,77 +124,63 @@ namespace NxFr
 				virtual T& Get() = 0;
 				virtual const T& Get() const = 0;
 				virtual uint64 Id() const = 0;
-				virtual bool Equals(const Interface& Other) const = 0;
-				virtual void Copy(const Interface& Other) = 0;
+				virtual bool Equals(const Interface* Other) const = 0;
+				virtual Interface* Clone() const = 0;
 			};
 
 			template<typename T, typename I>
 			struct Wrapper : public Interface
 			{
 				Wrapper(I Iterator) : It(Iterator) {}
+				Wrapper(const Wrapper<T, I>& Other) : It(Other.It) {}
 				~Wrapper() = default;
 
-				void Increment() override
-				{
-					It.Increment();
-				}
-				void Decrement() override
-				{
-					It.Increment();
-				}
-				T& Get() override
-				{
-					return It.Get();
-				}
-				const T& Get() const override
-				{
-					return It.Get();
-				}
-				uint64 Id() const override
-				{
-					return It.Id();
-				}
-				bool Equals(const Interface& Other) const override
-				{
-					const Wrapper* Cast = dynamic_cast<const Wrapper*>(&Other);
-					NEXUS_ASSERT(Cast, Default, "Failed to cast");
-					return It.Equals(Cast->It);
-				}
-				void Copy(const Interface& Other) override
-				{
-					const Wrapper* Cast = dynamic_cast<const Wrapper*>(&Other);
-					NEXUS_ASSERT(Cast, Default, "Failed to cast");
-					It = Cast->It;
-				}
+				void Increment() override { It.Increment(); }
+				void Decrement() override { It.Increment(); }
+				T& Get() override { return It.Get(); }
+				const T& Get() const override { return It.Get(); }
+				uint64 Id() const override { return It.Id(); }
+				bool Equals(const Interface* Other) const override { return It.Equals(dynamic_cast<const Wrapper<T, I>*>(Other)->It); }
+				Interface* Clone() const override { return new Wrapper<T, I>(*this); }
 
 				I It;
 			};
 
 		public:
 			template<typename I>
-			IteratorAbstract(const I& Iterator, Allocator* Allctr = AllocatorContext::Get())
+			IteratorAny(const I& Iterator, Allocator* Allctr = AllocatorContext::Get())
 			{
 				It = new Wrapper<T, I>(Iterator);
 			}
 
-			IteratorAbstract(const IteratorAbstract& Other) = delete;
-			IteratorAbstract(IteratorAbstract&& Other) noexcept = delete;
+			IteratorAny(const IteratorAny& Other)
+			{
+				It = Other.It->Clone();
+			}
 
-			~IteratorAbstract()
+			~IteratorAny()
 			{
 				delete It;
 			}
 
-			IteratorAbstract& operator=(const IteratorAbstract& Other) = delete;
-			IteratorAbstract& operator=(IteratorAbstract&& Other) noexcept = delete;
+			IteratorAny& operator=(const IteratorAny& Other)
+			{
+				if (this == &Other)
+				{
+					return;
+				}
 
-			IteratorAbstract& operator++()
+				delete It;
+				It = Other.It->Clone();
+			}
+
+			IteratorAny& operator++()
 			{
 				Increment();
 				return *this;
 			}
 
-			IteratorAbstract& operator--()
+			IteratorAny& operator--()
 			{
 				Decrement();
 				return *this;
@@ -220,23 +206,23 @@ namespace NxFr
 				return &Get();
 			}
 
-			bool operator==(const IteratorAbstract& Other) const
+			bool operator==(const IteratorAny& Other) const
 			{
 				return Equals(Other);
 			}
 
-			bool operator!=(const IteratorAbstract& Other) const
+			bool operator!=(const IteratorAny& Other) const
 			{
 				return !Equals(Other);
 			}
 
-			IteratorAbstract& Next(uint64 Iteration = 1)
+			IteratorAny& Next(uint64 Iteration = 1)
 			{
 				Iterate(Iteration);
 				return *this;
 			}
 
-			IteratorAbstract& Previous(uint64 Iteration = 1)
+			IteratorAny& Previous(uint64 Iteration = 1)
 			{
 				Reverse(Iteration);
 				return *this;
@@ -283,14 +269,9 @@ namespace NxFr
 				return It->Id();
 			}
 
-			bool Equals(const IteratorAbstract& Other) const
+			bool Equals(const IteratorAny& Other) const
 			{
-				return It->Equals(*Other.It);
-			}
-
-			void Clone(const IteratorAbstract& Other)
-			{
-				It->Copy(*Other.It);
+				return It->Equals(Other.It);
 			}
 
 		private:

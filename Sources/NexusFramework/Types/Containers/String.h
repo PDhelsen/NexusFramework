@@ -216,7 +216,7 @@ namespace NxFr
 		static void ToString(const Collection<T>& Data, String& Result, StringView Format = "")
 		{
 			Result.Clear();
-			for (auto& It = Data.Current(); It != Data.End(); ++It)
+			for (auto It = Data.Begin(); It != Data.End(); ++It)
 			{
 				Result += StringUtility::ToString<T>(*It, Format);
 				Result += StringUtility::NewLine;

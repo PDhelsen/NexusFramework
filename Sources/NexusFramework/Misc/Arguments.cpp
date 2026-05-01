@@ -114,7 +114,7 @@ namespace NxFr
 			Named.Reserve(Count);
 
 			uint64 Index = 0;
-			for (auto& It = Args.Reset(); It != Args.End(); ++It)
+			for (auto It = Args.Begin(); It != Args.End(); ++It)
 			{
 				Parse(Index++, *It, Arguments, Positionals, Named);
 			}
