@@ -20,7 +20,7 @@ namespace NxTs
 
 		int64 Padding[3];
 
-		int8 Add(int8 B, int8 C)
+		int8 Add(int8 B, int8 C) const
 		{
 			return A + B + C;
 		}
@@ -41,9 +41,10 @@ namespace NxTs
 		}
 	};
 
-	TEST(Functions, Delegate)
+	TEST(Type_Function, Delegate)
 	{
 		DelegateTest Data { .A = 5 };
+		const DelegateTest ConstData{ .A = 5 };
 
 		NxFr::Delegate<int8(int8, int8)> Function(&Add);
 		int8 Result1 = Function(4, 5);
@@ -51,6 +52,10 @@ namespace NxTs
 
 		NxFr::Delegate<int8(int8, int8)> Object(&Data, &DelegateTest::Add);
 		int8 Result2 = Object(6, 0);
+		ASSERT_EQ(Result2, 11);
+
+		NxFr::Delegate<int8(int8, int8)> ConstObject(&ConstData, &DelegateTest::Add);
+		int8 ConstResult2 = ConstObject(6, 0);
 		ASSERT_EQ(Result2, 11);
 
 		NxFr::Delegate<int8(int8, int8)> Lambda([&](int8 A, int8 B)->int8 { return A + B; });
@@ -111,7 +116,7 @@ namespace NxTs
 		ASSERT_EQ(IsNull, false);
 	}
 
-	TEST(Functions, Event)
+	TEST(Type_Function, Event)
 	{
 		DelegateTest Data{ .A = 5 };
 

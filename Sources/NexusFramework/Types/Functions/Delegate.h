@@ -1,9 +1,8 @@
 #pragma once
 
-#include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Misc/Templates.h"
+#include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
 {
@@ -13,118 +12,101 @@ namespace NxFr
 	template<typename R, typename... Args>
 	class Delegate<R(Args...)>
 	{
-	private:
-		class Interface
-		{
-		public:
-			virtual ~Interface() = default;
+		using A = uint64;
+		using S = R(*)(void*, Args...);
+		using C = void(*)(const void*, void*);
+		using D = void(*)(void*);
+		using FF = R(*)(Args...);
+		template <typename T>
+		using FM = R(T::*)(Args...);
+		template <typename T>
+		using FCM = R(T::*)(Args...) const;
 
-			virtual R Invoke(Args... args) = 0;
-			virtual Interface* Clone(void* Pointer = nullptr) const = 0;
+		struct FFData
+		{
+			FF Pointer;
 		};
-
-		template<typename F>
-		class Wrapper : public Interface
+		template<typename T>
+		struct FMData
 		{
-		public:
-			Wrapper(F&& Func)
-				: Target(Move(Func))
-			{
-			}
-
-			R Invoke(Args... args) override
-			{
-				return Target(args...);
-			}
-
-			Interface* Clone(void* Pointer) const override
-			{
-				if (Pointer)
-				{
-					return new (Pointer) Wrapper(*this);
-				}
-				else
-				{
-					return new Wrapper(*this);
-				}
-			}
-
-		private:
-			Wrapper(const Wrapper& Other)
-				: Target(Other.Target)
-			{
-			}
-
-			F Target;
+			T* Instance;
+			FM<T> Member;
 		};
-
-		inline static const uint8 SmallFunctionSize = 16;
-		inline static const uint8 BufferSize = SmallFunctionSize + 8;
-
-		union Storage
+		template<typename T>
+		struct FCMData
 		{
-			struct
-			{
-				void* Function;
-			} Large;
-			struct
-			{
-				Byte Function[BufferSize];
-				uint64 Size;
-			} Small;
+			const T* Instance;
+			FCM<T> Member;
+		};
+		template<typename FC>
+		struct FCData
+		{
+			FC& Pointer;
 		};
 
 	public:
-		Delegate(Allocator* Allctr = AllocatorContext::Get())
-			: Alloc(Allctr), Sbo(true), Comparable(false)
+		Delegate()
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			Clear();
+			Reset();
 		}
 
-		template<typename F, typename EnableIf<!IsSameType<typename DecayReference<F>::Type, typename DecayReference<Delegate>::Type>::Value, bool>::Type E = true>
-		Delegate(F&& Func, Allocator* Allctr = AllocatorContext::Get())
-			: Alloc(Allctr), Sbo(true), Comparable(false)
+		Delegate(NullPtr)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			if constexpr (IsSameType<typename DecayReference<F>::Type, NullPtr>::Value)
-			{
-				Clear();
-			}
-			else
-			{
-				Bind(Forward<F>(Func));
-			}
+			Reset();
 		}
 
-		template<typename T, typename F, typename EnableIf<!IsSameType<typename DecayReference<T>::Type, typename DecayReference<Delegate>::Type>::Value, bool>::Type E = true>
-		Delegate(T* Object, F&& Func, Allocator* Allctr = AllocatorContext::Get())
-			: Alloc(Allctr), Sbo(true), Comparable(false)
+		Delegate(FF Func)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			Bind(Object, Forward<F>(Func));
+			Bind(Func);
 		}
 
-		template<typename T, typename EnableIf<!IsSameType<typename DecayReference<T>::Type, typename DecayReference<Delegate>::Type>::Value, bool>::Type E = true>
-		Delegate(T& Object, Allocator* Allctr = AllocatorContext::Get())
-			: Alloc(Allctr), Sbo(true), Comparable(false)
+		template<typename T>
+		Delegate(T* Target, FM<T> Method)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			Bind(Object);
+			Bind(Target, Method);
+		}
+
+		template<typename T>
+		Delegate(const T* Target, FCM<T> Method)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		{
+			Bind(Target, Method);
+		}
+
+		template<typename FC, typename = EnableIf<!IsSameType<typename Decay<FC>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FC>::Type, NullPtr>::Value>::Type>
+		Delegate(FC& Func)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		{
+			Bind(Func);
+		}
+
+		template<typename FL, typename = EnableIf<!IsSameType<typename Decay<FL>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FL>::Type, NullPtr>::Value>::Type>
+		Delegate(FL&& Func)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		{
+			Bind(Forward<FL>(Func));
 		}
 
 		Delegate(const Delegate<R(Args...)>& Other)
-			: Alloc(Other.Alloc), Sbo(Other.Sbo), Comparable(Other.Comparable)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			Clone(Other, true);
+			Copy(Other);
 		}
 
 		Delegate(Delegate<R(Args...)>&& Other) noexcept
-			: Alloc(Other.Alloc), Sbo(Other.Sbo), Comparable(Other.Comparable)
+			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			Clone(Other, false);
-			Other.Clear();
+			Copy(Other);
+			Other.Reset();
 		}
 
 		~Delegate()
 		{
-			Free();
+			Reset();
 		}
 
 		Delegate<R(Args...)>& operator=(const Delegate<R(Args...)>& Other)
@@ -134,8 +116,7 @@ namespace NxFr
 				return *this;
 			}
 
-			Clear();
-			Clone(Other, true);
+			Copy(Other);
 
 			return *this;
 		}
@@ -147,26 +128,15 @@ namespace NxFr
 				return *this;
 			}
 
-			Clear();
-			Clone(Other, false);
-			Other.Clear();
+			Copy(Other);
+			Other.Reset();
 
 			return *this;
 		}
 
 		bool operator==(const Delegate<R(Args...)>& Other) const
 		{
-			if (Sbo != Other.Sbo)
-			{
-				return false;
-			}
-
-			if (!Comparable || !Other.Comparable)
-			{
-				return false;
-			}
-
-			return Memory::MemCompare(GetFunction(), Other.GetFunction(), GetSize(), GetSize());
+			return Equals(Other);
 		}
 
 		bool operator!=(const Delegate<R(Args...)>& Other) const
@@ -176,7 +146,7 @@ namespace NxFr
 
 		R operator()(Args... args) const
 		{
-			return Invoke(args...);
+			return Invoke(Forward<Args>(args)...);
 		}
 
 		explicit operator bool() const
@@ -184,113 +154,150 @@ namespace NxFr
 			return !IsNull();
 		}
 
-		template<typename F>
-		void Bind(F&& Func)
+		void Bind(FF Func)
 		{
-			Store(Forward<F>(Func), !IsLambda<typename DecayReference<F>::Type>::Value);
+			Reset();
+			new (Buffer) FFData{ Func };
+			Function = [](void* Data, Args... args) -> R
+			{
+				FFData* Info = static_cast<FFData*>(Data);
+				return (*Info->Pointer)(Forward<Args>(args)...);
+			};
 		}
 
 		template<typename T>
-		void Bind(T& Object)
+		void Bind(T* Target, FM<T> Method)
 		{
-			Store([&](Args... args) { return Object(args...); }, true);
+			NEXUS_ASSERT_STATIC(sizeof(FMData<T>) <= BufferSize, "Member function too large for Delegate Buffer");
+
+			Reset();
+			new (Buffer) FMData<T>{ Target, Method };
+			Function = [](void* Data, Args... args) -> R
+			{
+				FMData<T>* Info = static_cast<FMData<T>*>(Data);
+				return (Info->Instance->*(Info->Member))(Forward<Args>(args)...);
+			};
 		}
 
-		template<typename T, typename F>
-		void Bind(T* Object, F&& Func)
+		template<typename T>
+		void Bind(const T* Target, FCM<T> Method)
 		{
-			Store([Object, Func](Args... args) { return (Object->*Func)(args...); }, true);
+			NEXUS_ASSERT_STATIC(sizeof(FCMData<T>) <= BufferSize, "Member function too large for Delegate Buffer");
+
+			Reset();
+			new (Buffer) FCMData<T>{ Target, Method };
+			Function = [](void* Data, Args... args) -> R
+			{
+				FCMData<T>* Info = static_cast<FCMData<T>*>(Data);
+				return (Info->Instance->*(Info->Member))(Forward<Args>(args)...);
+			};
+		}
+
+		template<typename FC, typename = EnableIf<!IsSameType<typename Decay<FC>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FC>::Type, NullPtr>::Value>::Type>
+		void Bind(FC& Func)
+		{
+			Reset();
+			new (Buffer) FCData<FC>{ Func };
+			Function = [](void* Data, Args... args) -> R
+			{
+				FCData<FC>* Info = static_cast<FCData<FC>*>(Data);
+				return (Info->Pointer)(Forward<Args>(args)...);
+			};
+		}
+
+		template<typename FL, typename = EnableIf<!IsSameType<typename Decay<FL>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FL>::Type, NullPtr>::Value>::Type>
+		void Bind(FL&& Func)
+		{
+#pragma warning(push)
+#pragma warning(disable : 4172)
+			using Lambda = typename Decay<FL>::Type;
+			NEXUS_ASSERT_STATIC(sizeof(Lambda) <= BufferSize, "Lambda too large for Delegate Buffer");
+
+			Reset();
+			new (Buffer) Lambda(Forward<FL>(Func));
+			Function = [](void* Data, Args... args) -> R
+			{
+				auto* Info = static_cast<Lambda*>(Data);
+				return (*Info)(Forward<Args>(args)...);
+
+			};
+			Copier = [](const void* Other, void* Instance)
+			{
+				new (Instance) Lambda(*static_cast<const Lambda*>(Other));
+			};
+			Destroyer = [](void* Data)
+			{
+				Lambda* Info = static_cast<Lambda*>(Data);
+				Info->~Lambda();
+			};
+#pragma warning(pop)
 		}
 
 		R Invoke(Args... args) const
 		{
-			return GetFunction()->Invoke(args...);
+			NEXUS_ASSERT(!IsNull(), Default, "Delegate is null");
+			return Function(Buffer, Forward<Args>(args)...);
 		}
 
-		void Clear()
+		bool Equals(const Delegate<R(Args...)>& Other) const
 		{
-			Free();
+			if (IsComplex() || Other.IsComplex())
+			{
+				return false;
+			}
+
+			return Function == Other.Function && Memory::MemCompare(Buffer, Other.Buffer, BufferSize);
 		}
 
-		bool IsNull() const { return !HasFunction(); }
+		bool IsNull() const
+		{
+			return Function == nullptr;
+		}
 
 	private:
-		template<typename F>
-		void Allocate(F&& Func, bool CanCompare)
+		void Reset()
 		{
-			uint64 Size = sizeof(DecayReference<F>::Type);
-			if (Size > SmallFunctionSize)
+			if (IsComplex())
 			{
-				AllocatorContext Context(Alloc);
-				Data.Large.Function = new Wrapper<F>(Forward<F>(Func));
-				Sbo = false;
+				Destroyer(Buffer);
+			}
+
+			Function = nullptr;
+			Copier = nullptr;
+			Destroyer = nullptr;
+
+			Memory::MemSet(Buffer, 0, BufferSize);
+		}
+
+		void Copy(const Delegate<R(Args...)>& Other)
+		{
+			Reset();
+
+			Function = Other.Function;
+			Copier = Other.Copier;
+			Destroyer = Other.Destroyer;
+
+			if (Other.IsComplex())
+			{
+				Copier(Other.Buffer, Buffer);
 			}
 			else
 			{
-				Data.Small.Size = Size + 8;
-				new (Data.Small.Function) Wrapper<F>(Forward<F>(Func));
-				Sbo = true;
+				Memory::MemCopy(Other.Buffer, Buffer, BufferSize);
 			}
-			Comparable = CanCompare;
 		}
 
-		void Clone(const Delegate<R(Args...)>& Other, bool Allocate)
+		bool IsComplex() const
 		{
-			if (Other.IsNull())
-			{
-				Clear();
-				return;
-			}
-
-			if (!Other.Sbo)
-			{
-				if (Allocate)
-				{
-					AllocatorContext Context(Alloc);
-					Data.Large.Function = Other.GetFunction()->Clone();
-				}
-				else
-				{
-					Data.Large.Function = Other.GetFunction();
-				}
-			}
-			else
-			{
-				Other.GetFunction()->Clone(Data.Small.Function);
-				Data.Small.Size = Other.Data.Small.Size;
-			}
-
-			Sbo = Other.Sbo;
-			Comparable = Other.Comparable;
+			return Copier != nullptr || Destroyer != nullptr;
 		}
 
-		void Free()
-		{
-			if (!Sbo)
-			{
-				AllocatorContext Context(Alloc);
-				delete Data.Large.Function;
-			}
+	private:
+		static constexpr uint64 BufferSize = 32;
 
-			Memory::MemSet(&Data, 0, sizeof(Data));
-			Sbo = true;
-			Comparable = true;
-		}
-
-		template<typename F>
-		void Store(F&& Func, bool IsLambda)
-		{
-			Free();
-			Allocate(Forward<F>(Func), IsLambda);
-		}
-
-		Interface* GetFunction() const { return (Interface*)(Sbo ? Data.Small.Function : Data.Large.Function); }
-		uint64 GetSize() const { return Sbo ? Data.Small.Size : 0; }
-		bool HasFunction() const { return Sbo ? Data.Small.Size != 0 : Data.Large.Function != nullptr; }
-
-		Storage Data;
-		Allocator* Alloc;
-		bool Sbo;
-		bool Comparable;
+		mutable alignas(Memory::DefaultAlignement) Byte Buffer[BufferSize];
+		S Function;
+		C Copier;
+		D Destroyer;
 	};
 }
