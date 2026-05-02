@@ -43,6 +43,10 @@ namespace NxFr
 		{
 			FC& Pointer;
 		};
+		struct FLData
+		{
+			void* Pointer;
+		};
 
 	public:
 		Delegate()
@@ -211,25 +215,48 @@ namespace NxFr
 #pragma warning(push)
 #pragma warning(disable : 4172)
 			using Lambda = typename Decay<FL>::Type;
-			NEXUS_ASSERT_STATIC(sizeof(Lambda) <= BufferSize, "Lambda too large for Delegate Buffer");
 
 			Reset();
-			new (Buffer) Lambda(Forward<FL>(Func));
-			Function = [](void* Data, Args... args) -> R
+			if constexpr (sizeof(Lambda) > BufferSize)
 			{
-				auto* Info = static_cast<Lambda*>(Data);
-				return (*Info)(Forward<Args>(args)...);
-
-			};
-			Copier = [](const void* Other, void* Instance)
+				Lambda* Info = new Lambda(Forward<FL>(Func));
+				new (Buffer) FLData{ Info };
+				Function = [](void* Data, Args... args) -> R
+				{
+					Lambda* Info = static_cast<Lambda*>(static_cast<FLData*>(Data)->Pointer);
+					return (*Info)(Forward<Args>(args)...);
+				};
+				Copier = [](const void* Data, void* Instance)
+				{
+					const Lambda* Info = static_cast<const Lambda*>(static_cast<const FLData*>(Data)->Pointer);
+					Lambda* Copy = new Lambda(*Info);
+					new (Instance) FLData{ Copy };
+				};
+				Destroyer = [](void* Data)
+				{
+					Lambda* Info = static_cast<Lambda*>(static_cast<FLData*>(Data)->Pointer);
+					delete Info;
+				};
+			}
+			else
 			{
-				new (Instance) Lambda(*static_cast<const Lambda*>(Other));
-			};
-			Destroyer = [](void* Data)
-			{
-				Lambda* Info = static_cast<Lambda*>(Data);
-				Info->~Lambda();
-			};
+				new (Buffer) Lambda(Forward<FL>(Func));
+				Function = [](void* Data, Args... args) -> R
+				{
+					auto* Info = static_cast<Lambda*>(Data);
+					return (*Info)(Forward<Args>(args)...);
+				};
+				Copier = [](const void* Other, void* Instance)
+				{
+					const Lambda* Info = static_cast<const Lambda*>(Other);
+					new (Instance) Lambda(*Info);
+				};
+				Destroyer = [](void* Data)
+				{
+					Lambda* Info = static_cast<Lambda*>(Data);
+					Info->~Lambda();
+				};
+			}
 #pragma warning(pop)
 		}
 
@@ -279,7 +306,7 @@ namespace NxFr
 
 			if (Other.IsComplex())
 			{
-				Copier(Other.Buffer, Buffer);
+				Other.Copier(Other.Buffer, Buffer);
 			}
 			else
 			{

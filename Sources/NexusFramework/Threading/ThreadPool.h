@@ -26,7 +26,7 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work);
 		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work);
-		NEXUS_FRAMEWORK_API void Submit(NxFr::Delegate<void()> Work);
+		NEXUS_FRAMEWORK_API void Submit(const NxFr::Delegate<void()>& Work);
 		NEXUS_FRAMEWORK_API void Wait();
 
 		NEXUS_FRAMEWORK_API bool HasWorkPending();

@@ -85,10 +85,10 @@ namespace NxTs
 		ASSERT_EQ(Result6, 30);
 		ASSERT_EQ(Copy.IsNull(), true);
 
-		NxFr::Delegate<int8(int8, int8)> Big([=](int8 A, int8 B)->int8 { return A + B + Data.A; });
+		NxFr::Delegate<int8(int8, int8)> Big([=](int8 A, int8 B)->int8 { return A + B + Data.A + ConstData.A; });
 		Data.A = 1;
 		int8 Result7 = Big(6, 6);
-		ASSERT_EQ(Result7, 22);
+		ASSERT_EQ(Result7, 27);
 
 		NxFr::Delegate<int8(int8, int8)> BigCopy = NxFr::Delegate<int8(int8, int8)>([=](int8 A, int8 B)->int8 { return A + B + Data.A + Data.A; });
 		Big = BigCopy;

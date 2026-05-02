@@ -50,6 +50,7 @@ namespace NxFr
 				{
 					Work(It);
 				}
+
 			});
 		}
 	}
@@ -65,7 +66,7 @@ namespace NxFr
 		}
 	}
 
-	void ThreadPool::Submit(NxFr::Delegate<void()> Work)
+	void ThreadPool::Submit(const NxFr::Delegate<void()>& Work)
 	{
 		Lock GuardLock(Guard);
 
