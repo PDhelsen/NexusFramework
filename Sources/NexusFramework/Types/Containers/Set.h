@@ -211,6 +211,26 @@ namespace NxFr
 			return Data[Index].Value;
 		}
 
+		template<typename C>
+		const T& TryAppendRange(const C& Value)
+		{
+			Resize(GetCount() + Value.GetCount());
+
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
+			{
+				uint64 Hash = GetHash(*It);
+				uint64 Index = GetIndex(Hash);
+				if (Index >= Capacity || Data[Index].Free)
+				{
+					Construct(Index, Hash, *It);
+				}
+			}
+
+			uint64 Hash = GetHash(*Value.Begin());
+			uint64 Index = GetIndex(Hash);
+			return Data[Index].Value;
+		}
+
 		void Remove(const Q& Value)
 		{
 			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
@@ -220,6 +240,19 @@ namespace NxFr
 			NEXUS_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
 			Destruct(Index);
 			Resize(--Count);
+		}
+
+		template<typename C>
+		void RemoveRange(const C& Value)
+		{
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
+			{
+				uint64 Hash = GetHash(*It);
+				uint64 Index = GetIndex(Hash);
+				NEXUS_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
+				Destruct(Index);
+				Resize(--Count);
+			}
 		}
 
 		void TryRemove(const Q& Value)
@@ -234,6 +267,22 @@ namespace NxFr
 			}
 			Destruct(Index);
 			Resize(--Count);
+		}
+
+		template<typename C>
+		void TryRemoveRange(const C& Value)
+		{
+			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
+			{
+				uint64 Hash = GetHash(*It);
+				uint64 Index = GetIndex(Hash);
+				if (Index >= Capacity || Data[Index].Free)
+				{
+					continue;
+				}
+				Destruct(Index);
+				Resize(--Count);
+			}
 		}
 
 		void Clear()

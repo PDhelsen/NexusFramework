@@ -23,7 +23,7 @@ namespace NxFr
 
 	bool RawAllocator::BelongToAllocator(void* Pointer) const
 	{
-		return ContainersUtils::Contains(Allocated, Pointer);
+		return Allocated.TryGet(Pointer) != nullptr;
 	}
 
 	void* RawAllocator::Allocate(uint64 Size, uint64 Alignement)

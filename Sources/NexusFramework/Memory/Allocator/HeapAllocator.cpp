@@ -286,15 +286,15 @@ namespace NxFr
 			{
 				// Check if next data is stored in an Handle and so can be moved in memory
 				void* Data = GetHeapSlotMemory(Slot->Next);
-				auto It = ContainersUtils::FindKey(Handles, Data);
-				if (It == Handles.End())
+				Handle<void>* Ptr = Handles.TryGet(Data);
+				if (Ptr == nullptr)
 				{
 					Slot = Slot->Next;
 					continue;
 				}
 
 				// Get slot info
-				Handle<void>& Handle = It->Value;
+				Handle<void>& Handle = *Ptr;
 				uint64 SlotSize = GetHeapSlotSize(Slot);
 				uint64 NextSize = GetHeapSlotSize(Slot->Next);
 				HeapSlot* NextNext = Slot->Next->Next;

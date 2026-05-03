@@ -47,9 +47,10 @@ namespace NxFr
 
 	void* PlatformWindows::LoadDll(StringView DllName)
 	{
-		if (ContainersUtils::ContainsKey<String, void*>(Dlls, DllName))
+		void** DllPtr = Dlls.TryGet(DllName);
+		if (DllPtr != nullptr)
 		{
-			return Dlls[DllName];
+			return *DllPtr;
 		}
 
 		HMODULE Dll = LoadLibraryA(DllName.C());
@@ -65,7 +66,8 @@ namespace NxFr
 
 	void PlatformWindows::UnloadDll(StringView DllName)
 	{
-		if (!ContainersUtils::ContainsKey<String, void*>(Dlls, DllName))
+		void** DllPtr = Dlls.TryGet(DllName);
+		if (DllPtr == nullptr)
 		{
 			return;
 		}

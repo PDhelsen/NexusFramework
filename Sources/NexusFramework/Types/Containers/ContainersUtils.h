@@ -133,9 +133,9 @@ namespace NxFr
 		template<typename T, typename C>
 		static void Swap(C& Container, T* A, T* B)
 		{
-			T Temp = Container.GetItem(Container.GetNode(A));
-			Container.GetItem(GetNode(A)) = Move(Container.GetItem(Container.GetNode(B)));
-			Container.GetItem(GetNode(B)) = Move(Temp);
+			T Temp = *A;
+			*A = Move(*B);
+			*B = Move(Temp);
 		}
 		template<typename T1, typename T2>
 		static void Swap(Tuple<T1, T2>& Container)
@@ -143,9 +143,9 @@ namespace NxFr
 			constexpr bool SameType = IsSameType<T1, T2>::Value;
 			NEXUS_ASSERT_STATIC(SameType, "Cannot swap if First and Second are not of the same type");
 
-			T1 Temp = Container.Second;
-			Container.Second = Container.First;
-			Container.First = Move(Temp);
+			T1 Temp = Container.GetSecond();
+			Container.SetSecond(Container.GetFirst());
+			Container.SetFirst(Move(Temp));
 		}
 
 		template<typename T, typename C, typename S = Sorting::DefaultIndexed<T>>
@@ -171,7 +171,7 @@ namespace NxFr
 		static void Reverse(C& Container)
 		{
 			uint64 Half = Container.GetCount() / 2;
-			for (uint64 Front = 0, Back = Container.Count - 1; Front < Half; ++Front, --Back)
+			for (uint64 Front = 0, Back = Container.GetCount() - 1; Front < Half; ++Front, --Back)
 			{
 				Swap<T, C>(Container, Front, Back);
 			}
@@ -267,60 +267,26 @@ namespace NxFr
 		template<typename K, typename T>
 		static typename Dictionary<K, T>::I FindValue(const Dictionary<K, T>& Container, const T& Other) { return WhereValue<K, T>(Container, [&](const T& Element) { return Element == Other; }); }
 
-		template<typename T, class H = Hashing::Default>
-		static void SetUnion(Set<T, H>& Base, const Set<T, H>& Other)
-		{
-			for (typename Set<T, H>::I It = Other.Begin(); It != Other.End(); ++It)
-			{
-				uint64 Hash = Base.GetHash(*It);
-				uint64 Index = Base.GetIndex(Hash);
-
-				if (Index < Base.Capacity  && !Base.Data[Index].Free)
-				{
-					continue;
-				}
-				if (Base.Resize(++Base.Count))
-				{
-					Index = Base.GetIndex(Hash);
-				}
-
-				Base.Construct(Index, Hash, *It);
-			}
-		}
-		template<typename T, class H = Hashing::Default>
-		static void SetDifference(Set<T, H>& Base, const Set<T, H>& Other)
-		{
-			for (typename Set<T, H>::I It = Other.Begin(); It != Other.End(); ++It)
-			{
-				uint64 Hash = Base.GetHash(*It);
-				uint64 Index = Base.GetIndex(Hash);
-
-				if (Base.Data[Index].Free)
-				{
-					continue;
-				}
-
-				Base.Destruct(Index);
-				Base.Resize(--Base.Count);
-			}
-		}
-		template<typename T, class H = Hashing::Default>
-		static void SetIntersection(Set<T, H>& Base, const Set<T, H>& Other)
+		template<typename T, typename C, class H = Hashing::Default>
+		static void Intersection(Set<T, H>& Base, const C& Other)
 		{
 			for (typename Set<T, H>::I It = Base.Begin(); It != Base.End(); ++It)
 			{
-				uint64 Hash = Other.GetHash(*It);
-				uint64 Index = Other.GetIndex(Hash);
-
-				if (!Other.Data[Index].Free)
+				if (!Contains(Other, *It))
 				{
-					continue;
+					Base.Remove(*It);
 				}
-
-				Hash = Base.GetHash(*It);
-				Index = Base.GetIndex(Hash);
-				Base.Destruct(Index);
-				Base.Resize(--Base.Count);
+			}
+		}
+		template<typename T, class H = Hashing::Default>
+		static void Intersection(Set<T, H>& Base, const Set<T, H>& Other)
+		{
+			for (typename Set<T, H>::I It = Base.Begin(); It != Base.End(); ++It)
+			{
+				if (Other.TryGet(*It) == nullptr)
+				{
+					Base.Remove(*It);
+				}
 			}
 		}
 	};

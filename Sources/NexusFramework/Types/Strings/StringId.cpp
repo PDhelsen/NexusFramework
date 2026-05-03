@@ -14,7 +14,7 @@ namespace NxFr
 
 		Dictionary<GUID, StringView>& Table = GetStringsTable();
 		GUID Id = Hash<>::HashObject(Text);
-		if (!ContainersUtils::ContainsKey(Table, Id))
+		if (Table.TryGet(Id) == nullptr)
 		{
 			Dequeue<String>& Instances = GetStrings();
 			String& Instance = Instances.AppendBack(Text);

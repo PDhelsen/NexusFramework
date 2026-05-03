@@ -110,7 +110,7 @@ namespace NxFr
 
 	bool Logger::HasChannel(StringId Channel) const
 	{
-		return ContainersUtils::ContainsKey<StringId, bool>(Channels, Channel);
+		return Channels.TryGet(Channel) != nullptr;
 	}
 
 	bool Logger::CheckChannel(StringId Channel) const

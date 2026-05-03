@@ -976,17 +976,9 @@ namespace NxTs
 		NxFr::ContainersUtils::Resize<ContainerTest>(Data, 10);
 		ASSERT_EQ(Data.GetCount(), 10);
 
-		NxFr::Set<ContainerTest> SetBase = { 1, 3, 5, 7, 9 };
+		NxFr::Set<ContainerTest> SetBase = { 1, 2, 3, 4, 5, 6, 7, 9 };
 		NxFr::Set<ContainerTest> SetOther = { 2, 4, 6, 8, 10 };
-		NxFr::ContainersUtils::SetUnion(SetBase, SetOther);
-		ASSERT_EQ(SetBase.GetCount(), 10);
-		NxFr::ContainersUtils::SetDifference(SetBase, SetOther);
-		ASSERT_EQ(SetBase.GetCount(), 5);
-		auto It = SetOther.Begin();
-		SetBase.Append(*It++);
-		SetBase.Append(*It++);
-		SetBase.Append(*It++);
-		NxFr::ContainersUtils::SetIntersection(SetBase, SetOther);
+		NxFr::ContainersUtils::Intersection(SetBase, SetOther);
 		ASSERT_EQ(SetBase.GetCount(), 3);
 
 		NxFr::Array<ContainerTest> ToArray = NxFr::ContainersUtils::ToArray<ContainerTest>(SetOther);
