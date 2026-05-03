@@ -1,54 +1,30 @@
 #include "NexusTests/Core/NexusTests.h"
+#include "NexusTests/Core/NexusTestsDummy.h"
 
 namespace NxTs
 {
-	class MemoryTest
-	{
-	public:
-		MemoryTest()
-		{
-			Value = 120;
-			Test = 15;
-		}
-
-		MemoryTest(const MemoryTest& Other)
-		{
-			Value = Other.Value;
-			Test = Other.Test;
-		}
-
-		~MemoryTest()
-		{
-			Value = -1;
-			Test = 0;
-		}
-
-		int32 Value;
-		int32 Test;
-	};
-
 	TEST(Memory, Allocation)
 	{
 		void* Pointer;
-		MemoryTest* Test;
+		Dummy* Test;
 
-		Test = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest) * 5);
+		Test = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy) * 5);
 		ASSERT_NE(Test, nullptr);
-		Test = (MemoryTest*)NxFr::Memory::Reallocate(Test, sizeof(MemoryTest) * 10);
+		Test = (Dummy*)NxFr::Memory::Reallocate(Test, sizeof(Dummy) * 10);
 		ASSERT_NE(Test, nullptr);
 		NxFr::Memory::Free(Test);
 
-		Pointer = NxFr::Memory::Allocate(sizeof(MemoryTest));
-		Test = NxFr::Memory::Construct<MemoryTest>(Pointer);
-		ASSERT_EQ(Test->Value, 120);
-		NxFr::Memory::Destruct<MemoryTest>(Test);
+		Pointer = NxFr::Memory::Allocate(sizeof(Dummy));
+		Test = NxFr::Memory::Construct<Dummy>(Pointer);
+		ASSERT_EQ(Test->Key, 0);
+		NxFr::Memory::Destruct<Dummy>(Test);
 		NxFr::Memory::Free(Test);
 
-		Test = NxFr::Memory::Create<MemoryTest>();
-		ASSERT_EQ(Test->Value, 120);
-		NxFr::Memory::Destroy<MemoryTest>(Test);
+		Test = NxFr::Memory::Create<Dummy>();
+		ASSERT_EQ(Test->Key, 0);
+		NxFr::Memory::Destroy<Dummy>(Test);
 
-		Test = new MemoryTest();
+		Test = new Dummy();
 		ASSERT_NE(Test, nullptr);
 		delete Test;
 	}
@@ -108,49 +84,42 @@ namespace NxTs
 
 	TEST(Memory, StackAllocator)
 	{
-		NxFr::StackAllocator* Allocator = new NxFr::StackAllocator(10 * (alignof(MemoryTest) + sizeof(MemoryTest)));
+		NxFr::StackAllocator* Allocator = new NxFr::StackAllocator(10 * (alignof(Dummy) + sizeof(Dummy)));
 		ASSERT_EQ(Allocator->UsedAmount(), 0);
 
-		MemoryTest* Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 12);
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test1->Key = 1;
+		ASSERT_EQ(Allocator->UsedAmount(), 56);
 
-		MemoryTest* Test2 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test2->Value = 2;
-		Test2->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 24);
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test2->Key = 2;
+		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
-		MemoryTest* Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 36);
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->UsedAmount(), 168);
 
-		MemoryTest* Test4 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test4->Value = 4;
-		Test4->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 48);
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test4->Key = 4;
+		ASSERT_EQ(Allocator->UsedAmount(), 224);
 
-		MemoryTest* Test5 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test5->Value = 5;
-		Test5->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 60);
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test5->Key = 5;
+		ASSERT_EQ(Allocator->UsedAmount(), 280);
 
 		NxFr::Memory::Free(Test3, Allocator);
-		ASSERT_EQ(Allocator->UsedAmount(), 24);
+		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
 		NxFr::Memory::Free(Test1, Allocator);
 		ASSERT_EQ(Allocator->UsedAmount(), 0);
 
-		Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 12);
+		Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test1->Key = 1;
+		ASSERT_EQ(Allocator->UsedAmount(), 56);
 
-		Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator, alignof(MemoryTest));
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 24);
+		Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator, alignof(Dummy));
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->UsedAmount(), 112);
 
 		Allocator->Clear();
 		ASSERT_EQ(Allocator->UsedAmount(), 0);
@@ -160,57 +129,50 @@ namespace NxTs
 
 	TEST(Memory, PoolAllocator)
 	{
-		NxFr::PoolAllocator* Allocator = new NxFr::PoolAllocator(10 * sizeof(MemoryTest), sizeof(MemoryTest));
+		NxFr::PoolAllocator* Allocator = new NxFr::PoolAllocator(10 * sizeof(Dummy), sizeof(Dummy));
 		ASSERT_EQ(Allocator->UsedAmount(), 0);
 		ASSERT_EQ(Allocator->SlotAvailable(), 10);
 
-		MemoryTest* Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 8);
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
+		ASSERT_EQ(Allocator->UsedAmount(), 48);
 		ASSERT_EQ(Allocator->SlotAvailable(), 9);
 
-		MemoryTest* Test2 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test2->Value = 2;
-		Test2->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 16);
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test2->Key = 2;
+		ASSERT_EQ(Allocator->UsedAmount(), 96);
 		ASSERT_EQ(Allocator->SlotAvailable(), 8);
 
-		MemoryTest* Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 24);
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->UsedAmount(), 144);
 		ASSERT_EQ(Allocator->SlotAvailable(), 7);
 
-		MemoryTest* Test4 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test4->Value = 4;
-		Test4->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 32);
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test4->Key = 4;
+		ASSERT_EQ(Allocator->UsedAmount(), 192);
 		ASSERT_EQ(Allocator->SlotAvailable(), 6);
 
-		MemoryTest* Test5 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test5->Value = 5;
-		Test5->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 40);
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test5->Key = 5;
+		ASSERT_EQ(Allocator->UsedAmount(), 240);
 		ASSERT_EQ(Allocator->SlotAvailable(), 5);
 
 		NxFr::Memory::Free(Test1, Allocator);
-		ASSERT_EQ(Allocator->UsedAmount(), 32);
+		ASSERT_EQ(Allocator->UsedAmount(), 192);
 		ASSERT_EQ(Allocator->SlotAvailable(), 6);
 
 		NxFr::Memory::Free(Test3, Allocator);
-		ASSERT_EQ(Allocator->UsedAmount(), 24);
+		ASSERT_EQ(Allocator->UsedAmount(), 144);
 		ASSERT_EQ(Allocator->SlotAvailable(), 7);
 
-		Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 32);
+		Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
+		ASSERT_EQ(Allocator->UsedAmount(), 192);
 
-		Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 40);
+		Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->UsedAmount(), 240);
 
 		Allocator->Clear();
 		ASSERT_EQ(Allocator->UsedAmount(), 0);
@@ -221,49 +183,42 @@ namespace NxTs
 
 	TEST(Memory, HeapAllocator)
 	{
-		NxFr::HeapAllocator* Allocator = new NxFr::HeapAllocator(10 * (16 + 16 + sizeof(MemoryTest)));
+		NxFr::HeapAllocator* Allocator = new NxFr::HeapAllocator(10 * (16 + 16 + sizeof(Dummy)));
 		ASSERT_EQ(Allocator->UsedAmount(), 16);
 
-		MemoryTest* Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 48);
-
-		MemoryTest* Test2 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test2->Value = 2;
-		Test2->Test = 0xffffffff;
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
 		ASSERT_EQ(Allocator->UsedAmount(), 80);
 
-		MemoryTest* Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 112);
-
-		MemoryTest* Test4 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test4->Value = 4;
-		Test4->Test = 0xffffffff;
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test2->Key = 2;
 		ASSERT_EQ(Allocator->UsedAmount(), 144);
 
-		MemoryTest* Test5 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test5->Value = 5;
-		Test5->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 176);
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->UsedAmount(), 208);
+
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test4->Key = 4;
+		ASSERT_EQ(Allocator->UsedAmount(), 272);
+
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test5->Key = 5;
+		ASSERT_EQ(Allocator->UsedAmount(), 336);
 
 		NxFr::Memory::Free(Test1, Allocator);
-		ASSERT_EQ(Allocator->UsedAmount(), 160);
+		ASSERT_EQ(Allocator->UsedAmount(), 288);
 
 		NxFr::Memory::Free(Test3, Allocator);
-		ASSERT_EQ(Allocator->UsedAmount(), 144);
+		ASSERT_EQ(Allocator->UsedAmount(), 240);
 
-		Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 160);
+		Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
+		ASSERT_EQ(Allocator->UsedAmount(), 288);
 
-		Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Allocator);
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		ASSERT_EQ(Allocator->UsedAmount(), 176);
+		Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->UsedAmount(), 336);
 
 		Allocator->Clear();
 		ASSERT_EQ(Allocator->UsedAmount(), 16);
@@ -278,10 +233,9 @@ namespace NxTs
 		{
 			NxFr::AllocatorContext Context(Allocator);
 
-			MemoryTest* Test = new MemoryTest();
-			Test->Value = 1;
-			Test->Test = 0xffffffff;
-			ASSERT_EQ(Allocator->UsedAmount(), 48);
+			Dummy* Test = new Dummy();
+			Test->Key = 1;
+			ASSERT_EQ(Allocator->UsedAmount(), 80);
 
 			delete Test;
 			ASSERT_EQ(Allocator->UsedAmount(), 16);
@@ -292,35 +246,31 @@ namespace NxTs
 
 	TEST(Memory, Handle)
 	{
-		MemoryTest* Test1 = new MemoryTest();
-		MemoryTest* Test2 = new MemoryTest();
+		Dummy* Test1 = new Dummy();
+		Dummy* Test2 = new Dummy();
 
 		NxFr::HandleManager Manager = NxFr::HandleManager(10);
 
-		NxFr::Handle<MemoryTest> Handle = Manager.AcquireHandle<MemoryTest>(Test1);
+		NxFr::Handle<Dummy> Handle = Manager.AcquireHandle<Dummy>(Test1);
 		ASSERT_EQ(Handle.IsValid(), true);
-		ASSERT_EQ(&Handle->Value, &Test1->Value);
-		ASSERT_EQ(Handle->Value, Test1->Value);
+		ASSERT_EQ(&Handle->Key, &Test1->Key);
+		ASSERT_EQ(Handle->Key, Test1->Key);
 
-		Handle->Value = 1;
-		Handle->Test = 0xffffffff;
-		ASSERT_EQ(Test1->Value, 1);
-		ASSERT_EQ(Test1->Test, 0xffffffff);
+		Handle->Key = 1;
+		ASSERT_EQ(Test1->Key, 1);
 
-		Manager.UpdateHandle<MemoryTest>(Handle, Test2);
+		Manager.UpdateHandle<Dummy>(Handle, Test2);
 		ASSERT_EQ(Handle.IsValid(), true);
-		ASSERT_EQ(&Handle->Value, &Test2->Value);
-		ASSERT_EQ(Handle->Value, Test2->Value);
+		ASSERT_EQ(&Handle->Key, &Test2->Key);
+		ASSERT_EQ(Handle->Key, Test2->Key);
 
-		Handle->Value = 2;
-		Handle->Test = 0xffffffff;
-		ASSERT_EQ(Test2->Value, 2);
-		ASSERT_EQ(Test2->Test, 0xffffffff);
+		Handle->Key = 2;
+		ASSERT_EQ(Test2->Key, 2);
 
 		ASSERT_EQ(Manager.BelongToManager(Handle), true);
-		ASSERT_EQ(Manager.BelongToManager(NxFr::Handle<MemoryTest>()), false);
+		ASSERT_EQ(Manager.BelongToManager(NxFr::Handle<Dummy>()), false);
 
-		Manager.ReleaseHandle<MemoryTest>(Handle);
+		Manager.ReleaseHandle<Dummy>(Handle);
 		ASSERT_EQ(Handle.IsValid(), false);
 
 		delete Test1;
@@ -334,40 +284,33 @@ namespace NxTs
 
 		Heap->Defragment(&Manager);
 
-		MemoryTest* Test1 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test1->Value = 1;
-		Test1->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle1 = Manager.AcquireHandle<MemoryTest>(Test1);
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test1->Key = 1;
+		NxFr::Handle<Dummy> Handle1 = Manager.AcquireHandle<Dummy>(Test1);
 
-		MemoryTest* Test2 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test2->Value = 2;
-		Test2->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle2 = Manager.AcquireHandle<MemoryTest>(Test2);
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test2->Key = 2;
+		NxFr::Handle<Dummy> Handle2 = Manager.AcquireHandle<Dummy>(Test2);
 
-		MemoryTest* Test3 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test3->Value = 3;
-		Test3->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle3 = Manager.AcquireHandle<MemoryTest>(Test3);
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test3->Key = 3;
+		NxFr::Handle<Dummy> Handle3 = Manager.AcquireHandle<Dummy>(Test3);
 
-		MemoryTest* Test4 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test4->Value = 4;
-		Test4->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle4 = Manager.AcquireHandle<MemoryTest>(Test4);
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test4->Key = 4;
+		NxFr::Handle<Dummy> Handle4 = Manager.AcquireHandle<Dummy>(Test4);
 
-		MemoryTest* Test5 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test5->Value = 5;
-		Test5->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle5 = Manager.AcquireHandle<MemoryTest>(Test5);
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test5->Key = 5;
+		NxFr::Handle<Dummy> Handle5 = Manager.AcquireHandle<Dummy>(Test5);
 
-		MemoryTest* Test6 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test6->Value = 6;
-		Test6->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle6 = Manager.AcquireHandle<MemoryTest>(Test6);
+		Dummy* Test6 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test6->Key = 6;
+		NxFr::Handle<Dummy> Handle6 = Manager.AcquireHandle<Dummy>(Test6);
 
-		MemoryTest* Test7 = (MemoryTest*)NxFr::Memory::Allocate(sizeof(MemoryTest), Heap);
-		Test7->Value = 7;
-		Test7->Test = 0xffffffff;
-		NxFr::Handle<MemoryTest> Handle7 = Manager.AcquireHandle<MemoryTest>(Test7);
+		Dummy* Test7 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
+		Test7->Key = 7;
+		NxFr::Handle<Dummy> Handle7 = Manager.AcquireHandle<Dummy>(Test7);
 
 		NxFr::Memory::Free(Manager.ReleaseHandle(Handle2), Heap);
 		NxFr::Memory::Free(Manager.ReleaseHandle(Handle4), Heap);
@@ -379,9 +322,9 @@ namespace NxTs
 		Heap->Defragment(&Manager);
 		uint64 EndAmount = Heap->UsedAmount();
 
-		ASSERT_EQ(Handle3->Value, 3);
-		ASSERT_EQ(Handle6->Value, 6);
-		ASSERT_EQ(Handle7->Value, 7);
+		ASSERT_EQ(Handle3->Key, 3);
+		ASSERT_EQ(Handle6->Key, 6);
+		ASSERT_EQ(Handle7->Key, 7);
 		ASSERT_EQ(StartAmount > EndAmount, true);
 
 		Manager.ReleaseHandle(Handle1);

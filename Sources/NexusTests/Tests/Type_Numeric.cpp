@@ -1,31 +1,5 @@
 #include "NexusTests/Core/NexusTests.h"
-
-namespace NxTs
-{
-	enum class TestEnum : uint8
-	{
-		Null,
-		First,
-		Second,
-		Third,
-		Fourth,
-	};
-
-
-	enum class TestFlag : uint8
-	{
-		None = 0,
-
-		First = 1 << 0,
-		Second = 1 << 1,
-		Third = 1 << 2,
-		Fourth = 1 << 3,
-	};
-}
-
-NEXUS_ENUM_STRING(NxTs::TestEnum, 5, "Null", "First", "Second", "Third", "Fourth")
-NEXUS_FLAG(NxTs::TestFlag, uint8)
-NEXUS_FLAG_STRING(NxTs::TestFlag, 4, "First", "Second", "Third", "Fourth")
+#include "NexusTests/Core/NexusTestsDummy.h"
 
 namespace NxTs
 {
@@ -50,42 +24,42 @@ namespace NxTs
 
 	TEST(Type_Numeric, Enum)
 	{
-		ASSERT_EQ(NxFr::StringUtility::ToString(TestEnum::Third), "Third");
-		ASSERT_EQ(NxFr::StringUtility::FromString<TestEnum>("Third"), TestEnum::Third);
+		ASSERT_EQ(NxFr::StringUtility::ToString(DummyEnum::Third), "Third");
+		ASSERT_EQ(NxFr::StringUtility::FromString<DummyEnum>("Third"), DummyEnum::Third);
 
-		TestFlag None = TestFlag::None;
-		TestFlag All = ~TestFlag::None;
+		DummyFlag None = DummyFlag::None;
+		DummyFlag All = ~DummyFlag::None;
 		ASSERT_EQ((uint8)None, 0);
 		ASSERT_EQ((uint8)All, 255);
-		TestFlag Flag = TestFlag::First;
+		DummyFlag Flag = DummyFlag::First;
 		ASSERT_EQ((uint8)Flag, 1);
-		Flag = ~TestFlag::First;
+		Flag = ~DummyFlag::First;
 		ASSERT_EQ((uint8)Flag, 254);
-		Flag = TestFlag::First | TestFlag::Fourth;
-		Flag |= TestFlag::Third;
+		Flag = DummyFlag::First | DummyFlag::Fourth;
+		Flag |= DummyFlag::Third;
 		ASSERT_EQ((uint8)Flag, 0b1101);
-		TestFlag Mask1 = TestFlag::First | TestFlag::Fourth;
-		TestFlag Mask2 = TestFlag::First | TestFlag::Third;
+		DummyFlag Mask1 = DummyFlag::First | DummyFlag::Fourth;
+		DummyFlag Mask2 = DummyFlag::First | DummyFlag::Third;
 		Flag = Mask1 ^ Mask2;
 		ASSERT_EQ((uint8)Flag, 0b1100);
-		Flag = TestFlag::First & TestFlag::Second;
+		Flag = DummyFlag::First & DummyFlag::Second;
 		ASSERT_EQ((uint8)Flag, 0);
-		Mask1 = TestFlag::First | TestFlag::Second;
-		Mask2 = TestFlag::Fourth | TestFlag::Second;
+		Mask1 = DummyFlag::First | DummyFlag::Second;
+		Mask2 = DummyFlag::Fourth | DummyFlag::Second;
 		Flag = Mask1 & Mask2;
 		ASSERT_EQ((uint8)Flag, 0b10);
-		Mask1 = TestFlag::First | TestFlag::Third;
-		Flag = ~TestFlag::None;
+		Mask1 = DummyFlag::First | DummyFlag::Third;
+		Flag = ~DummyFlag::None;
 		Flag &= Mask1;
 		ASSERT_EQ((uint8)Flag, 0b101);
 
-		Flag = TestFlag::First | TestFlag::Third;
-		ASSERT_EQ(NxFr::Enum::CheckFlag(Flag, TestFlag::Third), true);
-		ASSERT_EQ(NxFr::Enum::CheckFlag(Flag, TestFlag::Fourth), false);
-		Flag = TestFlag::First;
-		Flag = NxFr::Enum::SetFlag(Flag, TestFlag::Third, true);
+		Flag = DummyFlag::First | DummyFlag::Third;
+		ASSERT_EQ(NxFr::Enum::CheckFlag(Flag, DummyFlag::Third), true);
+		ASSERT_EQ(NxFr::Enum::CheckFlag(Flag, DummyFlag::Fourth), false);
+		Flag = DummyFlag::First;
+		Flag = NxFr::Enum::SetFlag(Flag, DummyFlag::Third, true);
 		ASSERT_EQ((uint8)Flag, 0b101);
-		Flag = NxFr::Enum::SetFlag(Flag, TestFlag::First, false);
+		Flag = NxFr::Enum::SetFlag(Flag, DummyFlag::First, false);
 		ASSERT_EQ((uint8)Flag, 0b100);
 	}
 }

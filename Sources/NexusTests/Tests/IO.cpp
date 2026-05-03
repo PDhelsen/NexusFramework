@@ -1,5 +1,5 @@
 #include "NexusTests/Core/NexusTests.h"
-#include "NexusFramework/Core/NexusFrameworkPaths.h"
+#include "NexusTests/Core/NexusTestsDummy.h"
 
 namespace NxTs
 {
@@ -99,10 +99,10 @@ namespace NxTs
 
 	TEST(IO, Directory)
 	{
-		NxFr::String Path = NxFr::Paths::Temp;
+		NxFr::String Path = Dummy::GeneratePath();
 
 		NxFr::Directory Directory = NxFr::Directory(Path);
-		ASSERT_EQ(Directory.GetPath(), Path + "/");
+		ASSERT_EQ(Directory.GetPath(), Path);
 		ASSERT_EQ(Directory.Exists(), true);
 
 		NxFr::Directory SubDirectory = NxFr::Directory(NxFr::Path::Combine(Path, "Io_Directory"));
@@ -124,8 +124,7 @@ namespace NxTs
 
 	TEST(IO, File_Binary)
 	{
-		uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_File.bin");
+		NxFr::String Path = Dummy::GeneratePath("Io_File.bin");
 
 		NxFr::File File = NxFr::File(Path);
 		ASSERT_EQ(File.GetPath(), Path);
@@ -139,22 +138,22 @@ namespace NxTs
 
 		File.Open(NxFr::File::Mode::Write);
 		ASSERT_EQ(File.IsOpened(), true);
-		File.WriteByte(NxFr::BufferView((NxFr::Byte*)Data, 8 * 10));
-		ASSERT_EQ(File.GetSize(), 8 * 10);
+		File.WriteByte(NxFr::BufferView(Dummy::GetData(), sizeof(NxFr::Byte) * 10));
+		ASSERT_EQ(File.GetSize(), sizeof(NxFr::Byte) * 10);
 		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
 
 		File.Open(NxFr::File::Mode::Read);
 		ASSERT_EQ(File.IsOpened(), true);
 		NxFr::Buffer Content = File.ReadByte();
-		ASSERT_EQ(((uint64*)Content.GetPtr())[5], 15);
+		ASSERT_EQ(((NxFr::Byte*)Content.GetPtr())[5], 15);
 		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
 
 		File.Open(NxFr::File::Mode::Append);
 		ASSERT_EQ(File.IsOpened(), true);
-		File.WriteByte(NxFr::BufferView((NxFr::Byte*)Data, 8 * 10));
-		ASSERT_EQ(File.GetSize(), 8 * 10 * 2);
+		File.WriteByte(NxFr::BufferView(Dummy::GetData(), sizeof(NxFr::Byte) * 10));
+		ASSERT_EQ(File.GetSize(), sizeof(NxFr::Byte) * 10 * 2);
 		File.Close();
 		ASSERT_EQ(File.IsOpened(), false);
 
@@ -164,8 +163,7 @@ namespace NxTs
 
 	TEST(IO, File_Text)
 	{
-		NxFr::String Text = "This was written by code.\n";
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "IoText.txt");
+		NxFr::String Path = Dummy::GeneratePath("IoText.txt");
 
 		NxFr::File File = NxFr::File(Path);
 		ASSERT_EQ(File.GetPath(), Path);
@@ -175,25 +173,25 @@ namespace NxTs
 		ASSERT_EQ(File.Exists(), true);
 
 		File.Open(NxFr::File::Mode::Write);
-		File.WriteText(Text);
+		File.WriteText(Dummy::GetText());
 		ASSERT_EQ(File.GetSize() > 0, true);
 		File.Close();
 
 		File.Open(NxFr::File::Mode::Read);
 		NxFr::String Content1 = File.ReadText();
-		ASSERT_EQ(Content1, Text);
+		ASSERT_EQ(Content1, Dummy::GetText());
 		File.Close();
 
 		File.Open(NxFr::File::Mode::Append);
-		File.WriteText(Text);
-		File.WriteText(Text);
-		File.WriteText(Text);
+		File.WriteText(Dummy::GetText());
+		File.WriteText(Dummy::GetText());
+		File.WriteText(Dummy::GetText());
 		ASSERT_EQ(File.GetSize() > 0, true);
 		File.Close();
 
 		File.Open(NxFr::File::Mode::Read);
 		NxFr::String Content2 = File.ReadText();
-		ASSERT_EQ(Content2, Text + Text + Text + Text);
+		ASSERT_EQ(Content2, Dummy::GetText() + Dummy::GetText() + Dummy::GetText() + Dummy::GetText());
 		File.Close();
 	}
 
@@ -201,7 +199,7 @@ namespace NxTs
 	{
 		uint64 Data[10] = { 10,11,12,13,14,15,16,17,18,19 };
 		NxFr::BufferView View = NxFr::BufferView(Data, sizeof(Data));
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_BinaryStream.bin");
+		NxFr::String Path = Dummy::GeneratePath("Io_BinaryStream.bin");
 
 		NxFr::BinaryStream Stream(Path);
 
@@ -229,24 +227,23 @@ namespace NxTs
 
 	TEST(IO, Stream_Text)
 	{
-		NxFr::String Text = "This was written by code.";
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Io_TextStream.txt");
+		NxFr::String Path = Dummy::GeneratePath("Io_TextStream.txt");
 
 		NxFr::TextStream Stream(Path);
 
 		Stream.Open(NxFr::File::Mode::Write);
-		Stream.WriteLine(Text);
-		Stream.WriteLine(Text);
-		Stream.WriteLine(Text);
+		Stream.WriteLine(Dummy::GetText());
+		Stream.WriteLine(Dummy::GetText());
+		Stream.WriteLine(Dummy::GetText());
 		Stream.Close();
 
 		Stream.Open(NxFr::File::Mode::Read);
 		NxFr::StringView Content1 = Stream.ReadLine();
-		ASSERT_EQ(Content1, Text);
+		ASSERT_EQ(Content1, Dummy::GetText());
 		NxFr::StringView Content2 = Stream.ReadLine();
-		ASSERT_EQ(Content2, Text);
+		ASSERT_EQ(Content2, Dummy::GetText());
 		NxFr::StringView Content3 = Stream.ReadLine();
-		ASSERT_EQ(Content3, Text);
+		ASSERT_EQ(Content3, Dummy::GetText());
 		ASSERT_EQ(Stream.IsAtTheEnd(), true);
 		Stream.Close();
 	}

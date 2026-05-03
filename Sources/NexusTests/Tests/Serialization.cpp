@@ -1,16 +1,17 @@
 #include "NexusTests/Core/NexusTests.h"
+#include "NexusTests/Core/NexusTestsDummy.h"
 
 namespace NxTs
 {
-	NxFr::String YamlData = R"(name: NexusProject
+	TEST(Serialization, Yaml)
+	{
+		NxFr::String YamlData = R"(name: NexusProject
 enabled: true
 version: 2
 value: 3.14
 object:
-  width: 1280
-  height: 720
-  fullscreen: false
-  title: Nexus
+  key: 55
+  value: Nexus UnitTest
 vector: [1, 2, 3, 4]
 euler: [1, 2, 3]
 axisangle: [1, 0, 0, 0]
@@ -35,85 +36,6 @@ nested:
 empty_list: []
 empty_map: {})";
 
-	struct SerializationTest
-	{
-		uint64 Width = 0;
-		uint64 Height = 0;
-		bool FullScreen = false;
-		NxFr::String Title = "";
-	};
-
-	bool operator==(const SerializationTest& A, const SerializationTest& B)
-	{
-		return A.Width == B.Width && A.Height == B.Height && A.FullScreen == B.FullScreen && A.Title == B.Title;
-	}
-	YAML::Emitter& operator<<(YAML::Emitter& out, const SerializationTest& rhs)
-	{
-		out << YAML::Key << "width" << YAML::Value << rhs.Width;
-		out << YAML::Key << "height" << YAML::Value << rhs.Height;
-		out << YAML::Key << "fullscreen" << YAML::Value << rhs.FullScreen;
-		out << YAML::Key << "title" << YAML::Value << rhs.Title.C();
-		return out;
-	}
-
-	static SerializationTest YamlTestReference = { 1280, 720, false, "Nexus" };
-}
-
-namespace YAML
-{
-	template<>
-	struct convert<NxTs::SerializationTest>
-	{
-		static Node encode(const NxTs::SerializationTest& rhs)
-		{
-			Node node;
-			node["width"] = rhs.Width;
-			node["height"] = rhs.Height;
-			node["fullscreen"] = rhs.FullScreen;
-			node["title"] = rhs.Title;
-			return node;
-		}
-
-		static bool decode(const Node& node, NxTs::SerializationTest& rhs)
-		{
-			rhs.Width = node["width"].as<uint64>();
-			rhs.Height = node["height"].as<uint64>();
-			rhs.FullScreen = node["fullscreen"].as<bool>();
-			rhs.Title = node["title"].as<NxFr::String>();
-			return true;
-		}
-	};
-}
-
-namespace NxFr
-{
-	template<>
-	struct RBSConverter<NxTs::SerializationTest>
-	{
-		static NxTs::SerializationTest Decode(RBS& Rbs)
-		{
-			NxTs::SerializationTest Test;
-			Test.Width = Rbs.ReadObject<uint64>();
-			Test.Height = Rbs.ReadObject<uint64>();
-			Test.FullScreen = Rbs.ReadObject<bool>();
-			Test.Title = Rbs.ReadObject<String>();
-			return Test;
-		}
-
-		static void Encode(RBS& Rbs, const NxTs::SerializationTest& Object)
-		{
-			Rbs.WriteObject(Object.Width);
-			Rbs.WriteObject(Object.Height);
-			Rbs.WriteObject(Object.FullScreen);
-			Rbs.WriteObject(Object.Title);
-		}
-	};
-}
-
-namespace NxTs
-{
-	TEST(Serialization, Yaml)
-	{
 		YAML::Node Deserialize = NxFr::Yaml::Deserialize(YamlData);
 
 		NxFr::String Name = Deserialize["name"].as<NxFr::String>();
@@ -124,8 +46,8 @@ namespace NxTs
 		ASSERT_EQ(Version, 2);
 		float Value = Deserialize["value"].as<float>();
 		ASSERT_EQ(Value, 3.14f);
-		SerializationTest Object = Deserialize["object"].as<SerializationTest>();
-		ASSERT_EQ(Object, YamlTestReference);
+		Dummy Object = Deserialize["object"].as<Dummy>();
+		ASSERT_EQ(Object, Dummy::GetReference());
 
 		NxFr::Vector4f Vector = Deserialize["vector"].as<NxFr::Vector4f>();
 		ASSERT_EQ(Vector, NxFr::Vector4f(1, 2, 3, 4));
@@ -280,7 +202,7 @@ namespace NxTs
 		RbsSerialization.WriteObject(Quaternion);
 		RbsSerialization.WriteObject(Matrix);
 		RbsSerialization.WriteObject(Ray);
-		RbsSerialization.WriteObject(YamlTestReference);
+		RbsSerialization.WriteObject(Dummy::GetReference());
 		RbsSerialization.WriteObject(Array);
 		RbsSerialization.WriteObject(List);
 		RbsSerialization.WriteObject(Set);
@@ -301,7 +223,7 @@ namespace NxTs
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Quaternion>(), Quaternion);
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Matrix4x4f>(), Matrix);
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Ray>(), Ray);
-		ASSERT_EQ(RbsDeserialization.ReadObject<SerializationTest>(), YamlTestReference);
+		ASSERT_EQ(RbsDeserialization.ReadObject<Dummy>(), Dummy::GetReference());
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Array<NxFr::String>>()[4], "Fifth");
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::List<NxFr::String>>()[4], "Fifth");
 		auto HashSet = RbsDeserialization.ReadObject<NxFr::Set<NxFr::String>>();

@@ -1,12 +1,12 @@
 #include "NexusTests/Core/NexusTests.h"
-#include "NexusFramework/Core/NexusFrameworkPaths.h"
+#include "NexusTests/Core/NexusTestsDummy.h"
 
 namespace NxTs
 {
 	TEST(Debug, Logger)
 	{
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Debug_Logs.txt");
-		NxFr::StringId ChannelId = "Test"_Sid;
+		NxFr::String Path = Dummy::GeneratePath("Debug_Logs.txt");
+		NxFr::StringId ChannelId = "Channel"_Sid;
 
 		NxFr::Logger Logger = NxFr::Logger(NxFr::LoggerVerbosity::All, NxFr::LoggerOutput::All, Path, true);
 
@@ -40,7 +40,7 @@ namespace NxTs
 
 	TEST(Debug, Stats)
 	{
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Debug_Stats.csv");
+		NxFr::String Path = Dummy::GeneratePath("Debug_Stats.csv");
 		NxFr::StringId LabelId = "Label"_Sid;
 		NxFr::StringId CheckId = "Check"_Sid;
 		NxFr::StringId SetId = "Set"_Sid;
@@ -107,7 +107,7 @@ namespace NxTs
 
 	TEST(Debug, Instruments)
 	{
-		NxFr::String Path = NxFr::Path::Combine(NxFr::Paths::Temp, "Debug_Instruments.json");
+		NxFr::String Path = Dummy::GeneratePath("Debug_Instruments.json");
 		NxFr::Delegate<void(uint64, NxFr::Instruments*)> Dummy = [](uint64 Count, NxFr::Instruments* Instruments)
 		{
 			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);

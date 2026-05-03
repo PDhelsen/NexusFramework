@@ -1,4 +1,5 @@
 #include "NexusTests/Core/NexusTests.h"
+#include "NexusTests/Core/NexusTestsDummy.h"
 
 namespace NxTs
 {
@@ -42,13 +43,11 @@ namespace NxTs
 
 	TEST(Misc, Hash)
 	{
-		const NxFr::String Text = "This is a test text for testing the Hash function";
-
-		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::XxHash32>::HashObject(Text), 0x3ba1b2d6);
-		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::XxHash64>::HashObject(Text), 0xc5eeeb390253f739);
-		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Murmur32>::HashObject(Text), 0x1da26dd2);
-		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv164>::HashObject(Text), 0x0DB54C1C1610EA87);
-		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv1a64>::HashObject(Text), 0x77F122B9F752AACB);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::XxHash32>::HashObject(Dummy::GetText()), 0x237D78AE);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::XxHash64>::HashObject(Dummy::GetText()), 0xDF598B12B511E2BF);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Murmur32>::HashObject(Dummy::GetText()), 0xA497CA32);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv164>::HashObject(Dummy::GetText()), 0x96F716A541384708);
+		ASSERT_EQ(NxFr::Hash<NxFr::Hashing::Fnv1a64>::HashObject(Dummy::GetText()), 0xF2BA71E0791C1F5A);
 	}
 
 	TEST(Misc, Sort)
