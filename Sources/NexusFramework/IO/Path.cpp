@@ -331,7 +331,7 @@ namespace NxFr
 
 	void Path::EnsureParent(StringView Path)
 	{
-		NxFr::String Parent = Path::GetFolder(Path);
+		NxFr::String Parent = Path::GetDriveAndFolder(Path);
 		if (Parent.IsEmpty() || Exist(Path))
 		{
 			return;
