@@ -80,12 +80,19 @@ namespace NxFr
 
 	void TextStream::Cache()
 	{
-		Buffer = Handle.ReadText();
+		Buffer.Clear();
+		if (IsOpened())
+		{
+			Buffer = Handle.ReadText();
+		}
 	}
 
 	void TextStream::Flush()
 	{
-		Handle.WriteText(Buffer);
+		if (IsOpened())
+		{
+			Handle.WriteText(Buffer);
+		}
 		Buffer.Clear();
 	}
 
@@ -160,12 +167,19 @@ namespace NxFr
 
 	void BinaryStream::Cache()
 	{
-		Buffer = Handle.ReadByte();
+		Buffer.Clear();
+		if (IsOpened())
+		{
+			Buffer = Handle.ReadByte();
+		}
 	}
 
 	void BinaryStream::Flush()
 	{
-		Handle.WriteByte(Buffer);
+		if (IsOpened())
+		{
+			Handle.WriteByte(Buffer);
+		}
 		Buffer.Clear();
 	}
 

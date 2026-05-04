@@ -84,6 +84,7 @@ namespace NxFr
 	{
 		if (HasChannel(Channel))
 		{
+			NEXUS_LOG(Error, Default, "Channel (%s) is already registered", Channel.C());
 			return;
 		}
 
@@ -94,6 +95,7 @@ namespace NxFr
 	{
 		if (!HasChannel(Channel))
 		{
+			NEXUS_LOG(Error, Default, "Channel (%s) is not registered", Channel.C());
 			return;
 		}
 
@@ -117,6 +119,7 @@ namespace NxFr
 	{
 		if (!HasChannel(Channel))
 		{
+			NEXUS_LOG(Error, Default, "Channel (%s) is not registered", Channel.C());
 			return false;
 		}
 
@@ -143,23 +146,17 @@ namespace NxFr
 
 	void Logger::SetOutput(LoggerOutput Output, bool State, StringView Path)
 	{
-		if ((CheckOutput(LoggerOutput::File) && !Enum::CheckFlag(Output, LoggerOutput::File)) || (CheckOutput(LoggerOutput::File) && Enum::CheckFlag(Output, LoggerOutput::File) && Stream.GetPath() != Path))
+		if (CheckOutput(LoggerOutput::File))
 		{
-			if (Stream.IsOpened())
-			{
-				Stream.Close();
-			}
+			Stream.Close();
 		}
 
 		Outputs = Enum::SetFlag(Outputs, Output, State);
 
 		if (CheckOutput(LoggerOutput::File))
 		{
-			if (!Path.IsEmpty())
-			{
-				Stream = TextStream(Path);
-				Stream.Open(File::Mode::Write);
-			}
+			Stream = TextStream(Path);
+			Stream.Open(File::Mode::Write);
 		}
 	}
 
@@ -180,16 +177,6 @@ namespace NxFr
 
 	void Logger::SetAutoFlush(bool State)
 	{
-		if (AutoFlush == State)
-		{
-			return;
-		}
-
-		if (!AutoFlush)
-		{
-			Flush();
-		}
-
 		AutoFlush = State;
 	}
 
@@ -246,7 +233,7 @@ namespace NxFr
 			}
 		}
 
-		if (Stream.IsOpened())
+		if (CheckOutput(LoggerOutput::File))
 		{
 			Stream.Flush();
 		}

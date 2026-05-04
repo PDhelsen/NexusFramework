@@ -399,6 +399,8 @@ namespace NxFr
 		template<typename C>
 		void RemoveRange(const C& Value)
 		{
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(*It);
@@ -412,6 +414,8 @@ namespace NxFr
 		template<typename CK, typename CT>
 		void RemoveRange(const Dictionary<CK, CT>& Value)
 		{
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+
 			for (typename Dictionary<CK, CT>::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->Key);

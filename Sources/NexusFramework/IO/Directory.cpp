@@ -44,6 +44,12 @@ namespace NxFr
 
 	void Directory::Create()
 	{
+		if (Path.IsEmpty())
+		{
+			NEXUS_LOG(Error, Default, "Impossible to create directory with empty path");
+			return;
+		}
+
 		if (Exists())
 		{
 			return;
@@ -59,8 +65,9 @@ namespace NxFr
 
 	void Directory::Move(StringView Target, bool Override)
 	{
-		if (Path == Target)
+		if (Path.IsEmpty() || Target.IsEmpty() || Path == Target)
 		{
+			NEXUS_LOG(Error, Default, "Impossible to move directory with empty path");
 			return;
 		}
 
@@ -75,8 +82,9 @@ namespace NxFr
 
 	void Directory::Copy(StringView Target, bool Override)
 	{
-		if (Path == Target)
+		if (Path.IsEmpty() || Target.IsEmpty() || Path == Target)
 		{
+			NEXUS_LOG(Error, Default, "Impossible to copy directory with empty path");
 			return;
 		}
 
@@ -107,6 +115,12 @@ namespace NxFr
 
 	void Directory::Delete()
 	{
+		if (Path.IsEmpty())
+		{
+			NEXUS_LOG(Error, Default, "Impossible to delete directory with empty path");
+			return;
+		}
+
 		if (!Exists())
 		{
 			return;

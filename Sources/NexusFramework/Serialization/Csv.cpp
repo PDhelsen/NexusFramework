@@ -108,14 +108,14 @@ namespace NxFr
 
 	String& Csv::GetHeader(uint64 Column)
 	{
-		NEXUS_ASSERT(Data.First().IsValidIndex(Column), Default, "Column %d doesn't exist");
+		NEXUS_ASSERT(Data.First().IsValidIndex(Column), Default, "Column %llu doesn't exist");
 
 		return Data.First().Get(Column);
 	}
 
 	void Csv::SetHeader(uint64 Column, StringView Text)
 	{
-		NEXUS_ASSERT(Data.First().IsValidIndex(Column), Default, "Column %d doesn't exist");
+		NEXUS_ASSERT(Data.First().IsValidIndex(Column), Default, "Column %llu doesn't exist");
 
 		Data.First().Get(Column) = Text;
 	}
@@ -127,14 +127,14 @@ namespace NxFr
 
 	List<String>& Csv::GetLine(uint64 Row)
 	{
-		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %llu doesn't exist");
 
 		return Data.Get(Row);
 	}
 
 	void Csv::SetLine(uint64 Row, const Collection<StringView>& Text)
 	{
-		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %llu doesn't exist");
 
 		List<String>& Line = GetLine(Row);
 		Line.Clear();
@@ -151,16 +151,16 @@ namespace NxFr
 
 	String& Csv::GetCell(uint64 Row, uint64 Column)
 	{
-		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
-		NEXUS_ASSERT(Data.Get(Row).IsValidIndex(Column), Default, "Column %d doesn't exist");
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %llu doesn't exist");
+		NEXUS_ASSERT(Data.Get(Row).IsValidIndex(Column), Default, "Column %llu doesn't exist");
 
 		return Data.Get(Row).Get(Column);
 	}
 
 	void Csv::SetCell(uint64 Row, uint64 Column, StringView Text)
 	{
-		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
-		NEXUS_ASSERT(Data.Get(Row).IsValidIndex(Column), Default, "Column %d doesn't exist");
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %llu doesn't exist");
+		NEXUS_ASSERT(Data.Get(Row).IsValidIndex(Column), Default, "Column %llu doesn't exist");
 
 		Data.Get(Row).Get(Column) = Text;
 	}
@@ -177,7 +177,7 @@ namespace NxFr
 
 	const List<String>::I Csv::Begin(uint64 Row) const
 	{
-		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %llu doesn't exist");
 
 		return Data.Get(Row).Begin();
 	}
@@ -189,7 +189,7 @@ namespace NxFr
 
 	const List<String>::I Csv::End(uint64 Row) const
 	{
-		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %d doesn't exist");
+		NEXUS_ASSERT(Data.IsValidIndex(Row), Default, "Row %llu doesn't exist");
 
 		return Data.Get(Row).End();
 	}

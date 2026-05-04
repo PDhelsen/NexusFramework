@@ -339,21 +339,29 @@ namespace NxFr
 
 		T& First() 
 		{
+			NEXUS_ASSERT(IsValidIndex(0), Default, "Invalid Index");
+
 			return GetItem(0);
 		}
 
 		const T& First() const
 		{
+			NEXUS_ASSERT(IsValidIndex(0), Default, "Invalid Index");
+
 			return GetItem(0);
 		}
 
 		T& Last() 
 		{
+			NEXUS_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
+
 			return GetItem(Count - 1);
 		}
 
 		const T& Last() const
 		{
+			NEXUS_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
+
 			return GetItem(Count - 1);
 		}
 
@@ -425,7 +433,7 @@ namespace NxFr
 
 		bool IsValidIndex(uint64 Index) const
 		{
-			return Index >= 0 && Index < Count;
+			return !IsEmpty() && Index >= 0 && Index < Count;
 		}
 
 		void Reserve(uint64 Size)

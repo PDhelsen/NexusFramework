@@ -70,9 +70,6 @@ namespace NxTs
 
 		for (uint64 Iteration = 1; Iteration <= 5; Iteration++)
 		{
-			Stats.Lock();
-			ASSERT_EQ(Stats.IsLocked(), true);
-
 			Stats.RecordStatLabel(LabelId, NxFr::StringView("Test"));
 			Stats.RecordStatCheck(CheckId, Iteration % 2);
 			Stats.RecordStatInteger(SetId, Iteration);
@@ -85,23 +82,20 @@ namespace NxTs
 			Stats.RecordComment(NxFr::StringUtility::Format("Iteration: %d", Iteration));
 			Stats.RecordComment(NxFr::StringUtility::Format("Iteration (Again): %d", Iteration));
 
-			Stats.Unlock();
-			ASSERT_EQ(!Stats.IsLocked(), true);
-
-			ASSERT_EQ(Stats.GetValue<int64>(SetId), Iteration);
+			ASSERT_EQ(Stats.GetStat(SetId).GetValue<int64>(), Iteration);
 
 			Stats.Flush();
 			if (Iteration == 3)
 			{
 				Stats.Reset();
-				ASSERT_EQ(Stats.GetValue<int64>(NxFr::StatsHeader::TickId), 0);
+				ASSERT_EQ(Stats.GetStat(NxFr::StatsHeader::TickId).GetValue<int64>(), 0);
 			}
 		}
 
 		Stats.StopRecording();
 		ASSERT_EQ(!Stats.IsRecording(), true);
 
-		const NxFr::Dictionary<NxFr::StringId, uint64>& All = Stats.GetStats();
+		NxFr::Dictionary<NxFr::StringId, const NxFr::Stats::Stat*> All = Stats.GetStats();
 		ASSERT_EQ(All.GetCount(), Stats.GetCount());
 	}
 

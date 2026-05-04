@@ -8,8 +8,8 @@ namespace NxFr
 {
 	void Memory::MemSet(void* Memory, uint8 Value, uint64 Size)
 	{
-		NEXUS_ASSERT(Memory != nullptr, Default, "Trying to set value (%d) to null address", Value);
-		NEXUS_ASSERT(Size > 0, Default, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Memory != nullptr, Default, "Trying to set value (%hhu) to null address", Value);
+		NEXUS_ASSERT(Size > 0, Default, "Invalid size (%llu)", Size);
 
 		memset(Memory, Value, Size);
 	}
@@ -18,7 +18,7 @@ namespace NxFr
 	{
 		NEXUS_ASSERT(Source != nullptr, Default, "Trying to copy memory from null address");
 		NEXUS_ASSERT(Destination != nullptr, Default, "Trying to copy memory to null address");
-		NEXUS_ASSERT(Size > 0, Default, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Size > 0, Default, "Invalid size (%llu)", Size);
 
 		memcpy(Destination, Source, Size);
 	}
@@ -27,7 +27,7 @@ namespace NxFr
 	{
 		NEXUS_ASSERT(Source != nullptr, Default, "Trying to move memory from null address");
 		NEXUS_ASSERT(Destination != nullptr, Default, "Trying to move memory to null address");
-		NEXUS_ASSERT(Size > 0, Default, "Invalid size (%d)", Size);
+		NEXUS_ASSERT(Size > 0, Default, "Invalid size (%llu)", Size);
 
 		memmove(Destination, Source, Size);
 	}

@@ -58,6 +58,12 @@ namespace NxFr
 
 	void File::Create(bool KeepOpen)
 	{
+		if (Path.IsEmpty())
+		{
+			NEXUS_LOG(Error, Default, "Impossible to create file with empty path");
+			return;
+		}
+
 		if (Exists())
 		{
 			if (KeepOpen)
@@ -82,8 +88,9 @@ namespace NxFr
 
 	void File::Move(StringView Target, bool Override, bool CloseIfOpen)
 	{
-		if (Path == Target)
+		if (Path.IsEmpty() || Target.IsEmpty() || Path == Target)
 		{
+			NEXUS_LOG(Error, Default, "Impossible to move file with empty path");
 			return;
 		}
 
@@ -104,8 +111,9 @@ namespace NxFr
 
 	void File::Copy(StringView Target, bool Override, bool CloseIfOpen)
 	{
-		if (Path == Target)
+		if (Path.IsEmpty() || Target.IsEmpty() || Path == Target)
 		{
+			NEXUS_LOG(Error, Default, "Impossible to copy file with empty path");
 			return;
 		}
 
@@ -125,6 +133,12 @@ namespace NxFr
 
 	void File::Delete(bool CloseIfOpen)
 	{
+		if (Path.IsEmpty())
+		{
+			NEXUS_LOG(Error, Default, "Impossible to delete file with empty path");
+			return;
+		}
+
 		if (!Exists())
 		{
 			return;
@@ -145,6 +159,12 @@ namespace NxFr
 
 	void File::Open(Mode OpenMode, bool CreateIfDontExist)
 	{
+		if (Path.IsEmpty())
+		{
+			NEXUS_LOG(Error, Default, "Impossible to open file with empty path");
+			return;
+		}
+
 		if (Handle)
 		{
 			return;
@@ -165,7 +185,13 @@ namespace NxFr
 
 	void File::Close()
 	{
-		if (!IsOpened())
+		if (Path.IsEmpty())
+		{
+			NEXUS_LOG(Error, Default, "Impossible to close file with empty path");
+			return;
+		}
+
+		if (!Handle)
 		{
 			return;
 		}

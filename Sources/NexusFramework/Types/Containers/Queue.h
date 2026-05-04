@@ -452,11 +452,6 @@ namespace NxFr
 			IndexBack = BucketSize - 1;
 		}
 
-		bool IsValidIndex(uint64 Index) const
-		{
-			return Index >= 0 && Index < Count;
-		}
-
 		void Swap(uint64 IndexA, uint64 IndexB)
 		{
 			T Temp = GetItem(IndexA);

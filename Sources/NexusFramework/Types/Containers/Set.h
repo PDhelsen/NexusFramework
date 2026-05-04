@@ -245,6 +245,8 @@ namespace NxFr
 		template<typename C>
 		void RemoveRange(const C& Value)
 		{
+			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(*It);
@@ -257,8 +259,6 @@ namespace NxFr
 
 		void TryRemove(const Q& Value)
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
-
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
 			if (Index >= Capacity || Data[Index].Free)

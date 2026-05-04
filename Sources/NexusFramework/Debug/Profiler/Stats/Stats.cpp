@@ -21,6 +21,21 @@ namespace NxFr
 		return Globals::Statistiques;
 	}
 
+	template<>
+	struct StringConverter<Stats::Stat>
+	{
+		static void ToString(const Stats::Stat& Data, String& Result, StringView Format = "")
+		{
+			switch (Data.GetType())
+			{
+			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValue<StringView>(), Result); break;
+			case NxFr::Stats::StatType::Check: StringConverter<bool>::ToString(Data.GetValue<bool>(), Result); break;
+			case NxFr::Stats::StatType::Integer: StringConverter<int64>::ToString(Data.GetValue<int64>(), Result); break;
+			case NxFr::Stats::StatType::Decimal: StringConverter<float>::ToString(Data.GetValue<float>(), Result); break;
+			}
+		}
+	};
+
 #pragma endregion
 
 #pragma region Stat
@@ -68,6 +83,31 @@ namespace NxFr
 		}
 	}
 
+	double Stats::Stat::Compute(double Current, double New) const
+	{
+		switch (Mode)
+		{
+		case NxFr::Stats::StatMode::Set: return New;
+		case NxFr::Stats::StatMode::Cnt: return ++Current;
+		case NxFr::Stats::StatMode::Add: return Current + New;
+		case NxFr::Stats::StatMode::Avg: return Current + New;
+		case NxFr::Stats::StatMode::Min: return Math::Min(Current, New);
+		case NxFr::Stats::StatMode::Max: return Math::Max(Current, New);
+		}
+
+		return New;
+	}
+
+	double Stats::Stat::Finalize(double Current) const
+	{
+		if (Mode == StatMode::Avg)
+		{
+			return Current / Tick;
+		}
+
+		return Current;
+	}
+
 	void Stats::Stat::RecordLabel(StringView Statistique)
 	{
 		Value.Label.Clear();
@@ -91,27 +131,12 @@ namespace NxFr
 		Value.Decimal = Compute(Value.Decimal, Statistique);
 	}
 
-	template<>
-	struct StringConverter<Stats::Stat>
-	{
-		static void ToString(const Stats::Stat& Data, String& Result, StringView Format = "")
-		{
-			switch (Data.GetType())
-			{
-			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValue<StringView>(), Result); break;
-			case NxFr::Stats::StatType::Check: StringConverter<bool>::ToString(Data.GetValue<bool>(), Result); break;
-			case NxFr::Stats::StatType::Integer: StringConverter<int64>::ToString(Data.GetValue<int64>(), Result); break;
-			case NxFr::Stats::StatType::Decimal: StringConverter<float>::ToString(Data.GetValue<float>(), Result); break;
-			}
-		}
-	};
-
 #pragma endregion
 
 #pragma region Stats
 
 	Stats::Stats(StringView Path)
-		: Headers(), Data(), Stream(Path), Buffer(1024), Initialized(false), Recording(false), Locked(false), Guard()
+		: Headers(), Data(), Stream(Path), Buffer(1024), Initialized(false), Recording(false), Guard()
 	{
 		Stream.Open(File::Mode::Write);
 
@@ -147,12 +172,6 @@ namespace NxFr
 			return;
 		}
 
-		if (Locked)
-		{
-			NEXUS_LOG(Error, Default, "Stats is locked");
-			return;
-		}
-
 		if (!Recording)
 		{
 			return;
@@ -169,8 +188,8 @@ namespace NxFr
 		Stream.WriteLine("");
 		Stream.Flush();
 
-		GetStat(StatsHeader::CommentId).RecordLabel("");
-		GetStat(StatsHeader::TickId).RecordInteger(0);
+		Data.First().RecordInteger(0);
+		Data.Last().RecordLabel("");
 	}
 
 	void Stats::Reset()
@@ -181,9 +200,8 @@ namespace NxFr
 			return;
 		}
 
-		if (Locked)
+		if (!Recording)
 		{
-			NEXUS_LOG(Error, Default, "Stats is locked");
 			return;
 		}
 
@@ -201,12 +219,11 @@ namespace NxFr
 			return;
 		}
 
-		::NxFr::Lock LockGuard(Guard);
-
 		NEXUS_ASSERT(!(Type == StatType::Label && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Check && Mode != StatMode::Set), Default, "Combination not supported");
 		NEXUS_ASSERT(!(Type == StatType::Decimal && Mode == StatMode::Cnt), Default, "Combination not supported");
 
+		Lock LockGuard(Guard);
 		Headers.Append(Name, Data.GetCount());
 		Data.AppendConstruct(Type, Mode);
 
@@ -227,10 +244,10 @@ namespace NxFr
 			return;
 		}
 
-		::NxFr::Lock LockGuard(Guard);
+		Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
+		Stat& Statistique = Data[Headers[Id]];
 		NEXUS_ASSERT(Statistique.Type == StatType::Label, Default, "Invalid record call");
 		Statistique.RecordLabel(Value);
 	}
@@ -248,10 +265,10 @@ namespace NxFr
 			return;
 		}
 
-		::NxFr::Lock LockGuard(Guard);
+		Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
+		Stat& Statistique = Data[Headers[Id]];
 		NEXUS_ASSERT(Statistique.Type == StatType::Check, Default, "Invalid record call");
 		Statistique.RecordCheck(Value);
 	}
@@ -269,10 +286,10 @@ namespace NxFr
 			return;
 		}
 
-		::NxFr::Lock LockGuard(Guard);
+		Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
+		Stat& Statistique = Data[Headers[Id]];
 		NEXUS_ASSERT(Statistique.Type == StatType::Integer, Default, "Invalid record call");
 		Statistique.RecordInteger(Value);
 	}
@@ -290,10 +307,10 @@ namespace NxFr
 			return;
 		}
 
-		::NxFr::Lock LockGuard(Guard);
+		Lock LockGuard(Guard);
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
-		auto& Statistique = GetStat(Id);
+		Stat& Statistique = Data[Headers[Id]];
 		NEXUS_ASSERT(Statistique.Type == StatType::Decimal, Default, "Invalid record call");
 		Statistique.RecordDecimal(Value);
 	}
@@ -311,45 +328,11 @@ namespace NxFr
 			return;
 		}
 
-		::NxFr::Lock LockGuard(Guard);
+		Lock LockGuard(Guard);
 
-		String& Comments = GetStat(StatsHeader::CommentId).Value.Label;
+		String& Comments = Data.Last().Value.Label;
 		Comments += Comment;
 		Comments += Separator;
-	}
-
-	void Stats::Lock()
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (Locked)
-		{
-			NEXUS_LOG(Warning, Default, "Stats is already locked");
-			return;
-		}
-
-		Locked = true;
-	}
-
-	void Stats::Unlock()
-	{
-		if (!Initialized)
-		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
-			return;
-		}
-
-		if (!Locked)
-		{
-			NEXUS_LOG(Warning, Default, "Stats is already unlocked");
-			return;
-		}
-
-		Locked = false;
 	}
 
 	void Stats::StartRecording()
@@ -386,9 +369,19 @@ namespace NxFr
 		Recording = false;
 	}
 
-	Stats::Stat& Stats::GetStat(StringId Id)
+	Array<StringId> Stats::GetHeaders() const
 	{
-		return Data[Headers[Id]];
+		return ContainersUtils::ToArrayKeys(Headers);
+	}
+
+	Dictionary<StringId, const Stats::Stat*> Stats::GetStats() const
+	{
+		Dictionary<StringId, const Stat*> Result(Headers.GetCount());
+		for (auto& Header : Headers)
+		{
+			Result.AppendConstruct(Header.Key, &Data[Header.Value]);
+		}
+		return Result;
 	}
 
 	const Stats::Stat& Stats::GetStat(StringId Id) const

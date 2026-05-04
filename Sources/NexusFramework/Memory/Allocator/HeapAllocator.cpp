@@ -248,8 +248,6 @@ namespace NxFr
 
 	void HeapAllocator::Defragment(HandleManager* Manager, float Time, uint64 Count)
 	{
-		NEXUS_LOG(Info, Verbose, "Starting defragmentation (Current amount : %d)", UsedAmount());
-
 		Dictionary<void*, Handle<void>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
 		bool All = Time <= 0.0f && Count == 0;
@@ -303,7 +301,6 @@ namespace NxFr
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = GetHeapSlotMemory(Slot);
 				Manager->UpdateHandle(Handle, Data);
-				NEXUS_LOG(Info, Verbose, "Moved from %p to %p", Slot->Next, Slot);
 
 				// Update HeapSlot
 				uint64 NewAddress = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot) + NextSize;
@@ -323,8 +320,5 @@ namespace NxFr
 		}
 
 		Watch.Stop();
-
-		NEXUS_LOG(Info, Verbose, "End defragmentation (Current amount : %d)", UsedAmount());
-		NEXUS_LOG(Info, Verbose, "Updated %d HeapSlot in %f ms", Iteration, Watch.GetElapsedTime(Time::SecondToMilli));
 	}
 }

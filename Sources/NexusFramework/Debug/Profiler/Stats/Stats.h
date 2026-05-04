@@ -31,48 +31,44 @@ namespace NxFr
 			Set, Cnt, Add, Avg, Min, Max
 		};
 
-	private:
 		union StatValue
 		{
+			NEXUS_FRAMEWORK_API StatValue();
+			NEXUS_FRAMEWORK_API ~StatValue();
+
 			String Label;
 			int64 Integer;
 			float Decimal;
 			bool State;
-
-			StatValue();
-			~StatValue();
 		};
 
 		struct Stat
 		{
 			friend class Stats;
 
-			Stat(StatType Type, StatMode Mode);
-			~Stat();
-
-			void Reset();
-
-			void RecordLabel(StringView Statistique);
-			void RecordCheck(bool Statistique);
-			void RecordInteger(int64 Statistique);
-			void RecordDecimal(float Statistique);
-
-			template<typename T>
-			T Compute(T Current, T New) const;
-			template<typename T>
-			T Finalize(T Current) const;
+		public:
+			NEXUS_FRAMEWORK_API Stat(StatType Type, StatMode Mode);
+			NEXUS_FRAMEWORK_API ~Stat();
 
 			template<typename T> T GetValue() const { return (T)0; }
 			StatType GetType() const { return Type; }
 			StatMode GetMode() const { return Mode; }
+
+		private:
+			NEXUS_FRAMEWORK_API void Reset();
+			NEXUS_FRAMEWORK_API double Compute(double Current, double New) const;
+			NEXUS_FRAMEWORK_API double Finalize(double Current) const;
+
+			NEXUS_FRAMEWORK_API void RecordLabel(StringView Statistique);
+			NEXUS_FRAMEWORK_API void RecordCheck(bool Statistique);
+			NEXUS_FRAMEWORK_API void RecordInteger(int64 Statistique);
+			NEXUS_FRAMEWORK_API void RecordDecimal(float Statistique);
 
 			StatValue Value;
 			StatType Type;
 			StatMode Mode;
 			uint64 Tick;
 		};
-
-		friend struct StringConverter<Stat>;
 
 	public:
 		NEXUS_FRAMEWORK_API static Stats* GetInstance();
@@ -91,22 +87,16 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void RecordStatDecimal(StringId Id, float Value);
 		NEXUS_FRAMEWORK_API void RecordComment(StringView Comment);
 
-		NEXUS_FRAMEWORK_API void Lock();
-		NEXUS_FRAMEWORK_API void Unlock();
 		NEXUS_FRAMEWORK_API void StartRecording();
 		NEXUS_FRAMEWORK_API void StopRecording();
 
-		const Dictionary<StringId, uint64>& GetStats() const { return Headers; }
-		template<typename T> T GetValue(StringId Id) const { return GetStat(Id).GetValue<T>(); }
+		NEXUS_FRAMEWORK_API Array<StringId> GetHeaders() const;
+		NEXUS_FRAMEWORK_API Dictionary<StringId, const Stat*> GetStats() const;
+		NEXUS_FRAMEWORK_API const Stat& GetStat(StringId Id) const;
 
 		uint64 GetCount() const { return Data.GetCount(); }
 		bool IsInitialized() const { return Initialized; }
 		bool IsRecording() const { return Recording; }
-		bool IsLocked() const { return Locked; }
-
-	private:
-		NEXUS_FRAMEWORK_API Stat& GetStat(StringId Id);
-		NEXUS_FRAMEWORK_API const Stat& GetStat(StringId Id) const;
 
 	private:
 		Dictionary<StringId, uint64> Headers;
@@ -117,7 +107,6 @@ namespace NxFr
 
 		bool Initialized;
 		bool Recording;
-		bool Locked;
 
 		Mutex Guard;
 	};
@@ -144,33 +133,6 @@ namespace NxFr
 	inline float Stats::Stat::GetValue() const
 	{
 		return Finalize(Value.Decimal);
-	}
-
-	template<typename T>
-	inline T Stats::Stat::Compute(T Current, T New) const
-	{
-		switch (Mode)
-		{
-		case NxFr::Stats::StatMode::Set: return New;
-		case NxFr::Stats::StatMode::Cnt: return ++Current;
-		case NxFr::Stats::StatMode::Add: return Current + New;
-		case NxFr::Stats::StatMode::Avg: return Current + New;
-		case NxFr::Stats::StatMode::Min: return Math::Min(Current, New);
-		case NxFr::Stats::StatMode::Max: return Math::Max(Current, New);
-		}
-
-		return New;
-	}
-
-	template<typename T>
-	inline T Stats::Stat::Finalize(T Current) const
-	{
-		if (Mode == StatMode::Avg)
-		{
-			return (T)(Current / (double)Tick);
-		}
-
-		return Current;
 	}
 }
 

@@ -456,11 +456,17 @@ namespace NxFr
 
 		I GetIterator(T* Position)
 		{
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+
 			return GetIt(GetNode(Position));
 		}
 
 		const I GetIterator(T* Position) const
 		{
+			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+
 			return GetIt(GetNode(Position));
 		}
 

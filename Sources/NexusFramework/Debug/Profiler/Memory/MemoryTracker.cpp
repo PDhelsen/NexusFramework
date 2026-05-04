@@ -64,18 +64,18 @@ namespace NxFr
 
 	void MemoryTracker::RecordDeallocation(void* Pointer)
 	{
-		UntrackedScope Untracked;
-		Lock LockGuard(Guard);
-
 		if (!Pointer)
 		{
 			return;
 		}
 
+		UntrackedScope Untracked;
+		Lock LockGuard(Guard);
+
 		uint64* Allocation = Alloctions.TryGet(Pointer);
 		if (!Allocation)
 		{
-			NEXUS_LOG(Warning, Verbose, "Untracked allocation %p", Pointer);
+			NEXUS_LOG(Info, Verbose, "Untracked allocation %p", Pointer);
 			return;
 		}
 

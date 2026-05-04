@@ -321,7 +321,7 @@ namespace NxFr
 
 	String Path::GetWorkingDirectory()
 	{
-		return Normalize(Platform::GetInstance()->GetWorkingDirectory() + Path::SeparatorFolder);
+		return Platform::GetInstance()->GetWorkingDirectory();
 	}
 
 	bool Path::Exist(StringView Path)
