@@ -8,7 +8,7 @@ namespace NxFr
 	class Stream
 	{
 	public:
-		const uint64 BlockSize = 1024;
+		inline static constexpr uint64 BlockSize = 1024;
 
 		NEXUS_FRAMEWORK_API Stream(StringView Path);
 		NEXUS_FRAMEWORK_API Stream(const Stream& Other) = delete;

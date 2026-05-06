@@ -5,6 +5,13 @@ namespace NxFr
 {
 	static String& GetLocalBuffer() { static thread_local String LocalBuffer(64, nullptr); return LocalBuffer; }
 
+	NxFr::StringView StringView::GetTempExactString(NxFr::StringView Substring)
+	{
+		String& Buffer = GetLocalBuffer();
+		Buffer = Substring;
+		return Buffer;
+	}
+
 	StringView::StringView()
 		: Data(""), Count(0)
 	{
@@ -56,11 +63,8 @@ namespace NxFr
 		return StringView(C(), Offset, Size);
 	}
 
-	const char* StringView::CString() const
+	String StringView::ExactString() const
 	{
-		String& Buffer = GetLocalBuffer();
-		Buffer.Clear();
-		Buffer += *this;
-		return Buffer.C();
+		return GetTempExactString(*this);
 	}
 }

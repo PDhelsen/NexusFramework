@@ -11,17 +11,17 @@ namespace NxFr
 {
 	namespace Time
 	{
-		constexpr double SecondToMicro = 1000000.0;
-		constexpr double SecondToMilli = 1000.0;
-		constexpr double SecondToMin = 1.0 / 60.0;
-		constexpr double SecondToHrs = (1.0 / 60.0) * (1.0 / 60.0);
-		constexpr double SecondToDay = (1.0 / 60.0) * (1.0 / 60.0) * (1.0 / 24);
+		inline constexpr double SecondToMicro = 1000000.0;
+		inline constexpr double SecondToMilli = 1000.0;
+		inline constexpr double SecondToMin = 1.0 / 60.0;
+		inline constexpr double SecondToHrs = (1.0 / 60.0) * (1.0 / 60.0);
+		inline constexpr double SecondToDay = (1.0 / 60.0) * (1.0 / 60.0) * (1.0 / 24);
 
-		constexpr double MicroToSecond = 0.000001;
-		constexpr double MilliToSecond = 0.001;
-		constexpr double MinToSecond = 60.0;
-		constexpr double HrsToSecond = 60.0 * 60;
-		constexpr double DayToSecond = 60.0 * 60 * 24;
+		inline constexpr double MicroToSecond = 0.000001;
+		inline constexpr double MilliToSecond = 0.001;
+		inline constexpr double MinToSecond = 60.0;
+		inline constexpr double HrsToSecond = 60.0 * 60;
+		inline constexpr double DayToSecond = 60.0 * 60 * 24;
 
 		NEXUS_FRAMEWORK_API Timestamp Now();
 		NEXUS_FRAMEWORK_API int64 TimeSinceEpoch();

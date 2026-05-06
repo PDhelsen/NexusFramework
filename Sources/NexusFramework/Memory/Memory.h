@@ -18,15 +18,15 @@ namespace NxFr
 {
 	namespace Memory
 	{
-		constexpr double ByteToKilo = 1024.0;
-		constexpr double ByteToMega = 1024.0 * 1024.0;
-		constexpr double ByteToGiga = 1024.0 * 1024.0 * 1024.0;
+		inline constexpr double ByteToKilo = 1024.0;
+		inline constexpr double ByteToMega = 1024.0 * 1024.0;
+		inline constexpr double ByteToGiga = 1024.0 * 1024.0 * 1024.0;
 
-		constexpr double KiloToByte = 1.0 / (1024.0);
-		constexpr double MegaToByte = 1.0 / (1024.0 * 1024.0);
-		constexpr double GigaToByte = 1.0 / (1024.0 * 1024.0 * 1024.0);
+		inline constexpr double KiloToByte = 1.0 / (1024.0);
+		inline constexpr double MegaToByte = 1.0 / (1024.0 * 1024.0);
+		inline constexpr double GigaToByte = 1.0 / (1024.0 * 1024.0 * 1024.0);
 
-		constexpr uint64 DefaultAlignement = 16;
+		inline constexpr uint64 DefaultAlignement = 16;
 
 		NEXUS_FRAMEWORK_API void MemSet(void* Memory, uint8 Value, uint64 Size);
 		NEXUS_FRAMEWORK_API void MemCopy(const void* Source, void* Destination, uint64 Size);

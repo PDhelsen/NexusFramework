@@ -6,7 +6,7 @@
 		template<>\
 		struct StringConverter<EnumType>\
 		{\
-			inline static StringView Names[Count] = { __VA_ARGS__ }; \
+			inline static const StringView Names[Count] = { __VA_ARGS__ }; \
 			static void ToString(const EnumType& Data, String& Result, StringView Format = "")\
 			{\
 				Result = Names[(uint64)Data];\
@@ -32,7 +32,7 @@
 		template<>\
 		struct StringConverter<EnumType>\
 		{\
-			inline static StringView Names[Count] = { __VA_ARGS__ }; \
+			inline static const StringView Names[Count] = { __VA_ARGS__ }; \
 			static void ToString(const EnumType& Data, String& Result, StringView Format = "")\
 			{\
 				uint64 Index = Enum::FlagIndex(Data);\

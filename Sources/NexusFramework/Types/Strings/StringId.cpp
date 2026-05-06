@@ -5,20 +5,20 @@
 namespace NxFr
 {
 	static Mutex& GetLock() { static Mutex Guard; return Guard; }
-	static Dictionary<GUID, StringView>& GetStringsTable() { static Dictionary<GUID, StringView> StringsTable(97, nullptr); return StringsTable; }
+	static Dictionary<GUID, StringView>& GetIds() { static Dictionary<GUID, StringView> Ids(97, nullptr); return Ids; }
 	static Dequeue<String>& GetStrings() { static Dequeue<String> Strings(nullptr); return Strings; }
 
 	GUID StringId::InternString(StringView Text)
 	{
 		Lock Guard(GetLock());
 
-		Dictionary<GUID, StringView>& Table = GetStringsTable();
+		Dictionary<GUID, StringView>& Ids = GetIds();
 		GUID Id = Hash<>::HashObject(Text);
-		if (Table.TryGet(Id) == nullptr)
+		if (Ids.TryGet(Id) == nullptr)
 		{
 			Dequeue<String>& Instances = GetStrings();
 			String& Instance = Instances.AppendBack(Text);
-			Table.Append(Id, Instance);
+			Ids.Append(Id, Instance);
 		}
 		return Id;
 	}
@@ -27,8 +27,8 @@ namespace NxFr
 	{
 		Lock Guard(GetLock());
 
-		Dictionary<GUID, StringView>& Table = GetStringsTable();
-		StringView* Value = Table.TryGet(Id);
+		Dictionary<GUID, StringView>& Ids = GetIds();
+		StringView* Value = Ids.TryGet(Id);
 		return Value != nullptr ? *Value : StringView(StringUtility::Unknown);
 	}
 

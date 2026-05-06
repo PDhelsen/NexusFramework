@@ -8,7 +8,7 @@ namespace NxFr
 {
 	namespace Yaml
 	{
-		const uint64 SmallSequence = 10;
+		inline constexpr uint64 SmallSequence = 10;
 
 		NEXUS_FRAMEWORK_API String Serialize(const YAML::Node& Data);
 		NEXUS_FRAMEWORK_API String Serialize(const YAML::Emitter& Data);

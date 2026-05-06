@@ -10,9 +10,9 @@ namespace NxFr
 {
 	namespace Math
 	{
-		constexpr float Pi = 3.14159f;
-		constexpr float Degree = 180.0f / Pi;
-		constexpr float Radians = Pi / 180.0f;
+		inline constexpr float Pi = 3.14159f;
+		inline constexpr float Degree = 180.0f / Pi;
+		inline constexpr float Radians = Pi / 180.0f;
 
 		template<typename T>
 		T Abs(T X)
