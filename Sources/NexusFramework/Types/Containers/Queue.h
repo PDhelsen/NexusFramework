@@ -452,13 +452,6 @@ namespace NxFr
 			IndexBack = BucketSize - 1;
 		}
 
-		void Swap(uint64 IndexA, uint64 IndexB)
-		{
-			T Temp = GetItem(IndexA);
-			GetItem(IndexA) = Move(GetItem(IndexB));
-			GetItem(IndexB) = Move(Temp);
-		}
-
 		Allocator* Alloc;
 		uint64 Buckets;
 		uint64 Count;

@@ -144,7 +144,7 @@ namespace NxFr
 			NEXUS_ASSERT_STATIC(SameType, "Cannot swap if First and Second are not of the same type");
 
 			T1 Temp = Container.GetSecond();
-			Container.SetSecond(Container.GetFirst());
+			Container.SetSecond(Move(Container.GetFirst()));
 			Container.SetFirst(Move(Temp));
 		}
 

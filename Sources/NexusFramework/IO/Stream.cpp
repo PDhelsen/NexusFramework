@@ -9,7 +9,7 @@ namespace NxFr
 	}
 
 	Stream::Stream(Stream&& Other) noexcept
-		: Handle(Move(Other.Handle)), Cursor(Other.Cursor)
+		: Handle(Move(Other.Handle)), Cursor(Move(Other.Cursor))
 	{
 	}
 
@@ -25,7 +25,7 @@ namespace NxFr
 		}
 
 		Handle = Move(Other.Handle);
-		Cursor = Other.Cursor;
+		Cursor = Move(Other.Cursor);
 
 		return *this;
 	}

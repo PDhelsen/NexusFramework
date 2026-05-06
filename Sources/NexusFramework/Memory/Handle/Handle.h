@@ -72,4 +72,10 @@ namespace NxFr
 	{
 		using Type = T;
 	};
+
+	template<typename T>
+	struct DecayReference<Handle<T>>
+	{
+		using Type = T;
+	};
 }
