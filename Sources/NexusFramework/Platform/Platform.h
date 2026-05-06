@@ -8,6 +8,7 @@
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Threading/Thread.h"
 
 namespace NxFr
@@ -115,6 +116,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual String FileReadText(void* File) const = 0;
 
 	protected:
+		NEXUS_NOCOPY_NOMOVE(, Platform)
 		Platform() = default;
 		virtual ~Platform() = default;
 

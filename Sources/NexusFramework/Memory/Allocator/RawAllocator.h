@@ -8,13 +8,9 @@ namespace NxFr
 	class RawAllocator : public Allocator
 	{
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, RawAllocator)
 		NEXUS_FRAMEWORK_API RawAllocator();
-		NEXUS_FRAMEWORK_API RawAllocator(const RawAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API RawAllocator(RawAllocator&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API virtual ~RawAllocator();
-
-		NEXUS_FRAMEWORK_API RawAllocator& operator=(const RawAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API RawAllocator& operator=(RawAllocator&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API void Clear() override;
 		NEXUS_FRAMEWORK_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;

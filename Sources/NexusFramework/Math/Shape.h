@@ -43,7 +43,6 @@ namespace NxFr
 		Ray() : Origin(), Direction(Vector<3, float>::One) { }
 		Ray(Vector<3, float> Direction) : Origin(Vector<3, float>::Zero), Direction(Direction) {}
 		Ray(Vector<3, float> Origin, Vector<3, float> Direction) : Origin(Origin), Direction(Direction) {}
-		~Ray() {}
 
 		bool operator==(const Ray& Other) const { return Origin == Other.Origin && Direction == Other.Direction; }
 		bool operator!=(const Ray& Other) const { return !(*this == Other); }
@@ -68,7 +67,6 @@ namespace NxFr
 		Plane(float Distance) : Normal(Vector<3, float>::Up), Distance(Distance) {}
 		Plane(Vector<3, float> Normal) : Normal(Normal), Distance(0.0f) {}
 		Plane(Vector<3, float> Normal, float Distance) : Normal(Normal), Distance(Distance) {}
-		~Plane() {}
 
 		bool operator==(const Plane& Other) const { return Normal == Other.Normal && Math::Equals(Distance, Other.Distance); }
 		bool operator!=(const Plane& Other) const { return !(*this == Other); }
@@ -91,7 +89,6 @@ namespace NxFr
 	public:
 		Triangle() : A(0), B(0), C(0) {}
 		Triangle(Vector<3, float> A, Vector<3, float> B, Vector<3, float> C) : A(A), B(B), C(C) {}
-		~Triangle() {}
 
 		bool operator==(const Triangle& Other) const { return A == Other.A && B == Other.B && C == Other.C; }
 		bool operator!=(const Triangle& Other) const { return !(*this == Other); }
@@ -121,7 +118,6 @@ namespace NxFr
 		Rectangle(Vector<2, float> Extents) : Center(Vector<2, float>::Zero), Extents(Extents) {}
 		Rectangle(Vector<2, float> Center, Vector<2, float> Extents) : Center(Center), Extents(Extents) {}
 		Rectangle(float X, float Y, float Width, float Height) : Center(X, Y), Extents(Width * 0.5f, Height * 0.5f) {}
-		~Rectangle() {}
 
 		bool operator==(const Rectangle& Other) const { return Center == Other.Center && Extents == Other.Extents; }
 		bool operator!=(const Rectangle& Other) const { return !(*this == Other); }
@@ -182,7 +178,6 @@ namespace NxFr
 		Circle(Vector<2, float> Center) : Center(Center), Radius(1.0f) {}
 		Circle(Vector<2, float> Center, float Radius) : Center(Center), Radius(Radius) {}
 		Circle(const Rectangle& Shape) : Center(Shape.Center), Radius(VectorUtility::Magnitude(Shape.Extents)) {}
-		~Circle() {}
 
 		operator Rectangle() const { return Rectangle(Center, Vector<2, float>::One * Radius); }
 
@@ -231,7 +226,6 @@ namespace NxFr
 		Box() : Center(Vector<3, float>::Zero), Extents(Vector<3, float>::One) { }
 		Box(Vector<3, float> Extents) : Center(Vector<3, float>::Zero), Extents(Extents) {}
 		Box(Vector<3, float> Center, Vector<3, float> Extents) : Center(Center), Extents(Extents) {}
-		~Box() {}
 
 		bool operator==(const Box& Other) const { return Center == Other.Center && Extents == Other.Extents; }
 		bool operator!=(const Box& Other) const { return !(*this == Other); }
@@ -278,7 +272,6 @@ namespace NxFr
 		Cube(Vector<3, float> Center, Vector<3, float> Extents) : Center(Center), Orientation(Quaternion::Identity), Extents(Extents) {}
 		Cube(Vector<3, float> Center, Quaternion Orientation, Vector<3, float> Extents) : Center(Center), Orientation(Orientation), Extents(Extents) {}
 		Cube(const Box& Shape) : Center(Shape.Center), Orientation(Quaternion::Identity), Extents(Shape.Extents) {}
-		~Cube() {}
 
 		operator Box() const
 		{
@@ -379,7 +372,6 @@ namespace NxFr
 		Sphere(Vector<3, float> Center, float Radius) : Center(Center), Radius(Radius) {}
 		Sphere(const Box& Shape) : Center(Shape.Center), Radius(VectorUtility::Magnitude(Shape.Extents)) {}
 		Sphere(const Cube& Shape) : Center(Shape.Center), Radius(VectorUtility::Magnitude(Shape.Orientation * Shape.Extents)) {}
-		~Sphere() {}
 
 		operator Box() const { return Box(Center, Vector<3, float>::One * Radius); }
 		operator Cube() const { return Cube(Center, Vector<3, float>::One * Radius);  }

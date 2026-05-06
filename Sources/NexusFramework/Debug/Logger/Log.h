@@ -56,9 +56,6 @@ namespace NxFr
 		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 
 	protected:
-		NEXUS_FRAMEWORK_API Log() = default;
-		NEXUS_FRAMEWORK_API ~Log() = default;
-
 		NEXUS_FRAMEWORK_API virtual String& GetBuffer() = 0;
 		NEXUS_FRAMEWORK_API virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
 		NEXUS_FRAMEWORK_API virtual void FlushLogs() = 0;

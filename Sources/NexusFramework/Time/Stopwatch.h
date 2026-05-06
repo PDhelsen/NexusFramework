@@ -8,7 +8,6 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API Stopwatch(bool AutoStart = false);
-		NEXUS_FRAMEWORK_API ~Stopwatch();
 
 		NEXUS_FRAMEWORK_API void Start();
 		NEXUS_FRAMEWORK_API double Pause(double Unit = 1.0);

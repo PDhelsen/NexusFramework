@@ -7,13 +7,9 @@ namespace NxFr
     class StackAllocator : public MemoryAllocator
     {
     public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, StackAllocator)
         NEXUS_FRAMEWORK_API StackAllocator(uint64 Size);
-		NEXUS_FRAMEWORK_API StackAllocator(const StackAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API StackAllocator(StackAllocator&& Other) noexcept = delete;
         NEXUS_FRAMEWORK_API virtual ~StackAllocator();
-
-		NEXUS_FRAMEWORK_API StackAllocator& operator=(const StackAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API StackAllocator& operator=(StackAllocator&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API void Clear() override;
 		NEXUS_FRAMEWORK_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;

@@ -2,6 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
+#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {
@@ -20,13 +21,9 @@ namespace NxFr
 		friend void Memory::Free(void*, Allocator*);
 
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Allocator)
 		NEXUS_FRAMEWORK_API Allocator(uint64 Size);
-		NEXUS_FRAMEWORK_API Allocator(const Allocator& Other) = delete;
-		NEXUS_FRAMEWORK_API Allocator(Allocator&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API virtual ~Allocator() = default;
-
-		NEXUS_FRAMEWORK_API Allocator& operator=(const Allocator& Other) = delete;
-		NEXUS_FRAMEWORK_API Allocator& operator=(Allocator&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API virtual void Clear() = 0;
 		NEXUS_FRAMEWORK_API virtual bool CanAllocate(uint64 Size, uint64 Alignement) const = 0;

@@ -10,6 +10,7 @@ namespace NxFr
 		friend struct ConditionVariable;
 
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Mutex)
 		NEXUS_FRAMEWORK_API Mutex();
 		NEXUS_FRAMEWORK_API ~Mutex();
 
@@ -24,13 +25,9 @@ namespace NxFr
 	struct Lock
 	{
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Lock)
 		NEXUS_FRAMEWORK_API Lock(Mutex& Guard);
-		NEXUS_FRAMEWORK_API Lock(const Lock& Other) = delete;
-		NEXUS_FRAMEWORK_API Lock(Lock&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~Lock();
-
-		NEXUS_FRAMEWORK_API Lock& operator=(const Lock& Other) = delete;
-		NEXUS_FRAMEWORK_API Lock& operator=(Lock&& Other) noexcept = delete;
 
 	private:
 		Mutex& Guard;

@@ -17,7 +17,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static Csv DeserializeFile(StringView Path);
 
 		NEXUS_FRAMEWORK_API Csv();
-		NEXUS_FRAMEWORK_API ~Csv();
+
 		NEXUS_FRAMEWORK_API void Clear();
 
 		NEXUS_FRAMEWORK_API void AppendHeader(StringView Text);

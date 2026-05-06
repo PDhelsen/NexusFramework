@@ -22,12 +22,29 @@ namespace NxFr
 			: IteratorBegin(Other.IteratorBegin), IteratorEnd(Other.IteratorEnd), Count(Other.Count)
 		{
 		}
+
+		Collection(Collection<T>&& Other) noexcept
+			: IteratorBegin(Other.IteratorBegin), IteratorEnd(Other.IteratorEnd), Count(Other.Count)
+		{
+		}
 		
 		~Collection()
 		{
 		}
 
 		Collection<T>& operator=(const Collection<T>& Other)
+		{
+			if (this == &Other)
+			{
+				return *this;
+			}
+
+			IteratorBegin = Other.IteratorBegin;
+			IteratorEnd = Other.IteratorEnd;
+			Count = Other.Count;
+		}
+
+		Collection<T>& operator=(Collection<T>&& Other)
 		{
 			if (this == &Other)
 			{

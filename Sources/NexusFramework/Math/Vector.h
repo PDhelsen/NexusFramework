@@ -49,7 +49,6 @@ namespace NxFr
 		Vector() { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = 0; }
 		explicit Vector(T V) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] = V; }
 		template<uint8 S, typename P> Vector(Vector<S, P> Other) {}
-		~Vector() {}
 
 		Vector<D, T>& operator=(Vector<D, T> Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
 		bool operator==(Vector<D, T> Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
@@ -111,7 +110,6 @@ namespace NxFr
 		template<typename P> Vector(Vector<2, P> Other) : x(Other.x), y(Other.y) {}
 		template<typename P> Vector(Vector<3, P> Other) : x(Other.x), y(Other.y) {}
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y) {}
-		~Vector() {}
 
 		Vector<2, T>& operator=(Vector<2, T> Other) { x = Other.x; y = Other.y; return *this; }
 		bool operator==(Vector<2, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y); }
@@ -178,7 +176,6 @@ namespace NxFr
 		template<typename P> explicit Vector(Vector<2, P> Other) : x(Other.x), y(Other.y), z(0) {}
 		template<typename P> Vector(Vector<3, P> Other) : x(Other.x), y(Other.y), z(Other.z) {}
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y), z(Other.z) {}
-		~Vector() {}
 
 		Vector<3, T>& operator=(Vector<3, T> Other) { x = Other.x; y = Other.y; z = Other.z; return *this; }
 		bool operator==(Vector<3, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
@@ -248,7 +245,6 @@ namespace NxFr
 		template<typename P> Vector(Vector<2, P> Other) : x(Other.x), y(Other.y), z(0), w(0) {}
 		template<typename P> Vector(Vector<3, P> Other) : x(Other.x), y(Other.y), z(Other.z), w(0) {}
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y), z(Other.z), w(Other.w) {}
-		~Vector() {}
 
 		Vector<4, T>& operator=(Vector<4, T> Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
 		bool operator==(Vector<4, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }

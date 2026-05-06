@@ -57,7 +57,6 @@ namespace NxFr
 
 		Matrix() { Memory::MemSet(&m[0], 0, Size); }
 		Matrix(const Matrix<R, C, T>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); }
-		~Matrix() { }
 
 		Matrix<R, C, T>& operator=(const Matrix<R, C, T>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
 		bool operator==(const Matrix<R, C, T>& Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
@@ -226,7 +225,6 @@ namespace NxFr
 
 		Matrix() { Memory::MemSet(&m[0], 0, Size); }
 		Matrix(const Matrix<4, 4, float>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); }
-		~Matrix() { }
 
 		Matrix<4, 4, float>& operator=(const Matrix<4, 4, float>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
 		bool operator==(const Matrix<4, 4, float>& Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }

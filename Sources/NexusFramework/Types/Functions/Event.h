@@ -17,10 +17,6 @@ namespace NxFr
 		{
 		}
 
-		~Event()
-		{
-		}
-
 		void operator()(Args... args) const
 		{
 			return Invoke(args...);

@@ -21,6 +21,7 @@ namespace NxFr
 			using N = Node::NodeSimple<T>;
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
+			NEXUS_NOCOPY_NOMOVE(, PreAllocated)
 			PreAllocated(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
 				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
@@ -29,17 +30,11 @@ namespace NxFr
 				ValidateDefaultState();
 			}
 
-			PreAllocated(const PreAllocated<T>& Other) = delete;
-			PreAllocated(PreAllocated<T>&& Other) noexcept = delete;
-
 			~PreAllocated()
 			{
 				DestructRange(0, Capacity);
 				Free();
 			}
-
-			PreAllocated<T>& operator=(const PreAllocated<T>& Other) = delete;
-			PreAllocated<T>& operator=(PreAllocated<T>&& Other) noexcept = delete;
 
 			bool operator==(const PreAllocated<T>& Other) const
 			{
@@ -224,22 +219,17 @@ namespace NxFr
 			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
+			NEXUS_NOCOPY_NOMOVE(, OnDemand)
 			OnDemand(Allocator* Allctr = AllocatorContext::Get())
 				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
 			}
-
-			OnDemand(const OnDemand<T>& Other) = delete;
-			OnDemand(OnDemand<T>&& Other) noexcept = delete;
 
 			~OnDemand()
 			{
 				Clear();
 				Free();
 			}
-
-			OnDemand<T>& operator=(const OnDemand<T>& Other) = delete;
-			OnDemand<T>& operator=(OnDemand<T>&& Other) noexcept = delete;
 
 			bool operator==(const OnDemand<T>& Other) const
 			{
@@ -469,6 +459,7 @@ namespace NxFr
 	public:
 		using I = typename P::I;
 
+		NEXUS_NOCOPY_NOMOVE(, Pool)
 		Pool(Allocator* Allctr = AllocatorContext::Get())
 			: Data(Allctr)
 		{
@@ -479,15 +470,9 @@ namespace NxFr
 		{
 		}
 
-		Pool(const Pool<T, P>& Other) = delete;
-		Pool(Pool<T, P>&& Other) noexcept = delete;
-
 		~Pool()
 		{
 		}
-
-		Pool<T, P>& operator=(const Pool<T, P>& Other) = delete;
-		Pool<T, P>& operator=(Pool<T, P>&& Other) noexcept = delete;
 
 		bool operator==(const Pool<T, P>& Other) const
 		{

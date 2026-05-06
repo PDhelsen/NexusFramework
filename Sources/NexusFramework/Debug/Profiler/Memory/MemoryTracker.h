@@ -13,6 +13,7 @@ namespace NxFr
 		struct UntrackedScope
 		{
 		public:
+			NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, UntrackedScope)
 			NEXUS_FRAMEWORK_API UntrackedScope();
 			NEXUS_FRAMEWORK_API ~UntrackedScope();
 
@@ -34,6 +35,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API uint64 GetAllocationCount() const { return Count; };
 
 	private:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, MemoryTracker)
 		NEXUS_FRAMEWORK_API MemoryTracker();
 		NEXUS_FRAMEWORK_API ~MemoryTracker();
 

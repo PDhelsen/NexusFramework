@@ -59,10 +59,6 @@ namespace NxFr
 	{
 	}
 
-	RBS::~RBS()
-	{
-	}
-
 	const void* RBS::ReadByte(uint64 Size)
 	{
 		void* Ptr = Data.GetPtr(Cursor);

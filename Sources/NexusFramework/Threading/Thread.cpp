@@ -36,6 +36,12 @@ namespace NxFr
 	{
 	}
 
+	Thread::Thread(Thread&& Other) noexcept
+		: Function(Move(Other.Function)), Handle(Other.Handle), State(Other.State.Load()), Id(Other.Id.Load())
+	{
+	}
+
+
 	Thread::~Thread()
 	{
 		NEXUS_ASSERT(!IsRunning(), Default, "Thread is still running")

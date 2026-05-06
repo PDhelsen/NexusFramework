@@ -28,9 +28,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static void Yield();
 		NEXUS_FRAMEWORK_API static void Sleep(uint64 Milliseconds);
 
+		NEXUS_NOCOPY(NEXUS_FRAMEWORK_API, Thread)
 		NEXUS_FRAMEWORK_API Thread(const NxFr::Delegate<void()>& Function);
-		NEXUS_FRAMEWORK_API Thread(const Thread& Other) = delete;
-		NEXUS_FRAMEWORK_API Thread(Thread&& Other) noexcept = delete;
+		NEXUS_FRAMEWORK_API Thread(Thread&& Other) noexcept;
 		NEXUS_FRAMEWORK_API ~Thread();
 
 		NEXUS_FRAMEWORK_API void Run();

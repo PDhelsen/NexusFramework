@@ -7,13 +7,9 @@ namespace NxFr
 	class MemoryAllocator : public Allocator
 	{
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, MemoryAllocator)
 		NEXUS_FRAMEWORK_API MemoryAllocator(uint64 Size);
-		NEXUS_FRAMEWORK_API MemoryAllocator(const MemoryAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API MemoryAllocator(MemoryAllocator&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API virtual ~MemoryAllocator();
-
-		NEXUS_FRAMEWORK_API MemoryAllocator& operator=(const MemoryAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API MemoryAllocator& operator=(MemoryAllocator&& Other) noexcept = delete;
 
 	protected:
 		NEXUS_FRAMEWORK_API void WipeoutMemory();

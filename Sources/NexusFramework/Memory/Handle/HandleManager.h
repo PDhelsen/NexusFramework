@@ -12,6 +12,7 @@ namespace NxFr
 	class HandleManager
 	{
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, HandleManager)
 		NEXUS_FRAMEWORK_API HandleManager(uint64 Size);
 		NEXUS_FRAMEWORK_API ~HandleManager();
 

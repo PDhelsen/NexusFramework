@@ -1,5 +1,15 @@
 #pragma once
 
+#define NEXUS_NOCOPY(DLL, T) \
+	DLL T(const T&) = delete;\
+	DLL T& operator=(const T&) = delete;
+#define NEXUS_NOMOVE(DLL, T) \
+	DLL T(T&&) noexcept = delete;\
+	DLL T& operator=(T&&) noexcept = delete;
+#define NEXUS_NOCOPY_NOMOVE(DLL, T)\
+	NEXUS_NOCOPY(DLL, T)\
+	NEXUS_NOMOVE(DLL, T)
+
 namespace NxFr
 {
 #pragma region Traits

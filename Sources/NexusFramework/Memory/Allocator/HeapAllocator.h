@@ -16,13 +16,9 @@ namespace NxFr
 		};
 
     public:
-        NEXUS_FRAMEWORK_API HeapAllocator(uint64 Size);
-		NEXUS_FRAMEWORK_API HeapAllocator(const HeapAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API HeapAllocator(HeapAllocator&& Other) noexcept = delete;
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, HeapAllocator)
+		NEXUS_FRAMEWORK_API HeapAllocator(uint64 Size);
         NEXUS_FRAMEWORK_API virtual ~HeapAllocator();
-
-		NEXUS_FRAMEWORK_API HeapAllocator& operator=(const HeapAllocator& Other) = delete;
-		NEXUS_FRAMEWORK_API HeapAllocator& operator=(HeapAllocator&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API void Clear() override;
 		NEXUS_FRAMEWORK_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;

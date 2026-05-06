@@ -8,14 +8,9 @@ namespace NxFr
 	struct Atomic
 	{
 	public:
-		NEXUS_FRAMEWORK_API Atomic();
-		NEXUS_FRAMEWORK_API Atomic(int64 Value);
-		NEXUS_FRAMEWORK_API Atomic(const Atomic& Other) = delete;
-		NEXUS_FRAMEWORK_API Atomic(Atomic&& Other) noexcept = delete;
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Atomic)
+		NEXUS_FRAMEWORK_API Atomic(int64 Value = 0);
 		NEXUS_FRAMEWORK_API ~Atomic();
-
-		NEXUS_FRAMEWORK_API Atomic& operator=(const Atomic&) = delete;
-		NEXUS_FRAMEWORK_API Atomic& operator=(Atomic&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API int64 Add(int64 Target);
 		NEXUS_FRAMEWORK_API int64 Increment();

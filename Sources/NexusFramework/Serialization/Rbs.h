@@ -11,6 +11,7 @@ namespace NxFr
 		struct OffsetScope
 		{
 		public:
+			NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, OffsetScope)
 			NEXUS_FRAMEWORK_API OffsetScope(RBS& Rbs, uint64 Offset);
 			NEXUS_FRAMEWORK_API ~OffsetScope();
 
@@ -27,7 +28,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API RBS();
 		NEXUS_FRAMEWORK_API RBS(BufferView View);
 		NEXUS_FRAMEWORK_API RBS(Buffer&& Data);
-		NEXUS_FRAMEWORK_API ~RBS();
 
 		template<typename T>
 		T ReadObject();

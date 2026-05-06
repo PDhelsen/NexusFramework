@@ -26,11 +26,6 @@ namespace NxFr
 		{
 		}
 
-		BufferView(const BufferView& Other)
-			: Data(Other.GetPtr()), Count(Other.GetCount())
-		{
-		}
-
 		const I GetIterator(uint64 Offset) const
 		{
 			return GetIt(Offset);

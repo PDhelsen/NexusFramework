@@ -57,11 +57,6 @@ namespace NxFr
 	{
 	}
 
-	Csv::~Csv()
-	{
-		Clear();
-	}
-
 	void Csv::Clear()
 	{
 		for (auto D : Data)

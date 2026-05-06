@@ -9,6 +9,7 @@ namespace NxFr
 	struct Fence
 	{
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Fence)
 		NEXUS_FRAMEWORK_API Fence(uint64 Value);
 		NEXUS_FRAMEWORK_API ~Fence();
 

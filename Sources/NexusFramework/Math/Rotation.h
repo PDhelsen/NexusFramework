@@ -42,15 +42,6 @@ namespace NxFr
 		{
 		}
 
-		AxisAngle(const AxisAngle& Other)
-			: Axis(Other.Axis), Angle(Other.Angle)
-		{
-		}
-
-		~AxisAngle()
-		{
-		}
-
 		operator Vector<4, float>() const { return Vector<4, float>(Axis.x, Axis.y, Axis.z, Angle); }
 
 		bool operator==(AxisAngle Other) const { return Axis == Other.Axis && Math::Equals(Angle, Other.Angle); }
@@ -82,15 +73,6 @@ namespace NxFr
 
 		Euler(Vector<3, float> Angles)
 			: x(Angles.x), y(Angles.y), z(Angles.z)
-		{
-		}
-
-		Euler(const Euler& Other)
-			: x(Other.x), y(Other.y), z(Other.z)
-		{
-		}
-
-		~Euler()
 		{
 		}
 
@@ -159,15 +141,6 @@ namespace NxFr
 
 		Quaternion(float X, float Y, float Z, float W)
 			: x(X), y(Y), z(Z), w(W)
-		{
-		}
-
-		Quaternion(const Quaternion& Other)
-			: x(Other.x), y(Other.y), z(Other.z), w(Other.w)
-		{
-		}
-
-		~Quaternion()
 		{
 		}
 

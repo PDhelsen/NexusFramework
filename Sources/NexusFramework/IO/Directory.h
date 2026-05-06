@@ -10,7 +10,6 @@ namespace NxFr
 	{
 	public:
 		NEXUS_FRAMEWORK_API Directory(StringView Path);
-		NEXUS_FRAMEWORK_API ~Directory();
 
 		NEXUS_FRAMEWORK_API explicit operator bool() const;
 		NEXUS_FRAMEWORK_API bool operator ==(const Directory& Other) const;

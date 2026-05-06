@@ -75,6 +75,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
 
 	protected:
+		NEXUS_NOCOPY_NOMOVE(, PlatformWindows)
 		PlatformWindows();
 		virtual ~PlatformWindows();
 

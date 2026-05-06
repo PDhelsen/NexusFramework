@@ -13,10 +13,6 @@ namespace NxFr
 		SetPath(Path);
 	}
 
-	Directory::~Directory()
-	{
-	}
-
 	Directory::operator bool() const
 	{
 		return Exists();

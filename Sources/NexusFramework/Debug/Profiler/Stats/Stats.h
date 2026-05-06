@@ -47,6 +47,7 @@ namespace NxFr
 			friend class Stats;
 
 		public:
+			NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Stat)
 			NEXUS_FRAMEWORK_API Stat(StatType Type, StatMode Mode);
 			NEXUS_FRAMEWORK_API ~Stat();
 
@@ -73,6 +74,7 @@ namespace NxFr
 	public:
 		NEXUS_FRAMEWORK_API static Stats* GetInstance();
 
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Stats)
 		NEXUS_FRAMEWORK_API Stats(StringView Path);
 		NEXUS_FRAMEWORK_API ~Stats();
 

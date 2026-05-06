@@ -4,11 +4,6 @@
 
 namespace NxFr
 {
-	Atomic::Atomic()
-		: Value(0)
-	{
-	}
-
 	Atomic::Atomic(int64 Value)
 		: Value(Value)
 	{

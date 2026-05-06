@@ -16,13 +16,9 @@ namespace NxFr
 	public:
 		NEXUS_FRAMEWORK_API static uint64 MaxThreadCount();
 
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, ThreadPool)
 		NEXUS_FRAMEWORK_API ThreadPool(uint64 Size = 0);
-		NEXUS_FRAMEWORK_API ThreadPool(const ThreadPool& Other) = delete;
-		NEXUS_FRAMEWORK_API ThreadPool(ThreadPool&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~ThreadPool();
-
-		NEXUS_FRAMEWORK_API ThreadPool& operator=(const ThreadPool& Other) = delete;
-		NEXUS_FRAMEWORK_API ThreadPool& operator=(ThreadPool&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work);
 		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work);

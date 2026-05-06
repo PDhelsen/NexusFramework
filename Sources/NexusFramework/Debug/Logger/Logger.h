@@ -29,13 +29,9 @@ namespace NxFr
 
 		NEXUS_FRAMEWORK_API static Logger* GetInstance();
 
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Logger)
 		NEXUS_FRAMEWORK_API Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "", bool AutoFlush = false);
-		NEXUS_FRAMEWORK_API Logger(const Logger& Other) = delete;
-		NEXUS_FRAMEWORK_API Logger(Logger&& Other) noexcept = delete;
 		NEXUS_FRAMEWORK_API ~Logger();
-
-		NEXUS_FRAMEWORK_API Logger& operator=(const Logger& Other) = delete;
-		NEXUS_FRAMEWORK_API Logger& operator=(Logger&& Other) noexcept = delete;
 
 		NEXUS_FRAMEWORK_API void Flush();
 

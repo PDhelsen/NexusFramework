@@ -51,6 +51,7 @@ namespace NxFr
 		void SetAutoFlush(bool Auto) { AutoFlush = true; }
 
 	protected:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Instruments)
 		NEXUS_FRAMEWORK_API Instruments(bool AutoStart = false, bool AutoFlush = false);
 		NEXUS_FRAMEWORK_API virtual ~Instruments();
 

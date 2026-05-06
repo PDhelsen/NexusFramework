@@ -75,6 +75,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API inline PlatformTarget GetTarget() override { return PlatformTarget::None; }
 
 	protected:
+		NEXUS_NOCOPY_NOMOVE(, PlatformNone)
 		PlatformNone();
 		virtual ~PlatformNone();
 	};

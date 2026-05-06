@@ -11,6 +11,7 @@ namespace NxFr
 		friend class Instruments;
 
 	protected:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, ChromeTracing)
 		NEXUS_FRAMEWORK_API ChromeTracing(StringView Path, bool AutoStart = false, bool AutoFlush = false);
 		NEXUS_FRAMEWORK_API virtual ~ChromeTracing();
 

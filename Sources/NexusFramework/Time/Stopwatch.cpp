@@ -14,10 +14,6 @@ namespace NxFr
 		}
 	}
 
-	Stopwatch::~Stopwatch()
-	{
-	}
-
 	void Stopwatch::Start()
 	{
 		if (Started)
