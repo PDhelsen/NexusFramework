@@ -23,12 +23,12 @@ namespace NxFr
 		String Saved;
 		String Temp;
 
-		Arguments* Args;
+		Arguments* Args = nullptr;
 
-		Logger* Logs;
-		Stats* Statistiques;
-		Instruments* Instrumentor;
-		MemoryTracker* Memory;
+		Logger* Logs = nullptr;
+		Stats* Statistiques = nullptr;
+		Instruments* Instrumentor = nullptr;
+		MemoryTracker* Memory = nullptr;
 
 		void ParseArgs(uint64 ArgC, char* ArgV[])
 		{
@@ -73,13 +73,14 @@ namespace NxFr
 
 		void CreateDebug(StringView Path)
 		{
-			Memory = MemoryTracker::Create();
+			Memory = new MemoryTracker();
+			Memory->StartRecording();
 
 			Logs = new Logger(LoggerVerbosity::All, LoggerOutput::All, Path::Combine(Path, "logs.txt"), true);
 			Logs->AddChannel(LoggerChannel::Default, true);
 			Logs->AddChannel(LoggerChannel::Verbose, false);
 
-			Instrumentor = Instruments::Create(Path::Combine(Path, "instruments.json"), false, true);
+			Instrumentor = new ChromeTracing(Path::Combine(Path, "instruments.json"), false, true);
 			Instrumentor->StartRecording();
 
 			Statistiques = new Stats(Path::Combine(Path, "stats.csv"));
@@ -90,16 +91,15 @@ namespace NxFr
 		void DestroyDebug()
 		{
 			Instrumentor->StopRecording();
-			Instruments::Destroy(Instrumentor);
-			Instrumentor = nullptr;
+			NEXUS_DELETE(Instrumentor);
 
 			Statistiques->StopRecording();
 			NEXUS_DELETE(Statistiques);
 
 			NEXUS_DELETE(Logs);
 
-			MemoryTracker::Destroy(Memory);
-			Memory = nullptr;
+			Memory->StopRecording();
+			NEXUS_DELETE(Memory);
 		}
 	}
 

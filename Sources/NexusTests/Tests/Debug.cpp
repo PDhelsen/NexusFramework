@@ -108,17 +108,16 @@ namespace NxTs
 			NxFr::Thread::Sleep(Count);
 		};
 
-		NxFr::Instruments* Instruments = NxFr::Instruments::Create(Path);
-		Instruments->StartRecording();
+		NxFr::ChromeTracing Instruments = NxFr::ChromeTracing(Path);
+		Instruments.StartRecording();
 
 		{
-			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
+			NxFr::Instruments::Marker Marker(__FUNCSIG__, &Instruments);
 
-			Dummy(5, Instruments);
-			Dummy(10, Instruments);
+			Dummy(5, &Instruments);
+			Dummy(10, &Instruments);
 		}
 
-		Instruments->StopRecording();
-		NxFr::Instruments::Destroy(Instruments);
+		Instruments.StopRecording();
 	}
 }

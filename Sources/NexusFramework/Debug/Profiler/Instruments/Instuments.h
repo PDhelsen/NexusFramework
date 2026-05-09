@@ -12,11 +12,6 @@ namespace NxFr
 	class Instruments
 	{
 	public:
-		enum class Tools
-		{
-			ChromeTracing
-		};
-
 		class Marker
 		{
 			friend class Instruments;
@@ -35,8 +30,9 @@ namespace NxFr
 		};
 
 	public:
-		NEXUS_FRAMEWORK_API static Instruments* Create(StringView Path, bool AutoStart = false, bool AutoFlush = false, Tools Tool = Tools::ChromeTracing);
-		NEXUS_FRAMEWORK_API static void Destroy(Instruments* Instance);
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Instruments)
+		NEXUS_FRAMEWORK_API Instruments(bool AutoStart = false, bool AutoFlush = false);
+		NEXUS_FRAMEWORK_API virtual ~Instruments();
 
 		NEXUS_FRAMEWORK_API void Record(const Marker& Data);
 		NEXUS_FRAMEWORK_API void Flush();
@@ -49,10 +45,6 @@ namespace NxFr
 		void SetAutoFlush(bool Auto) { AutoFlush = true; }
 
 	protected:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Instruments)
-		NEXUS_FRAMEWORK_API Instruments(bool AutoStart = false, bool AutoFlush = false);
-		NEXUS_FRAMEWORK_API virtual ~Instruments();
-
 		NEXUS_FRAMEWORK_API virtual void RecordMarker(const Marker& Data) = 0;
 		NEXUS_FRAMEWORK_API virtual void FlushMarkers() = 0;
 

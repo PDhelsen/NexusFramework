@@ -3,43 +3,24 @@
 
 namespace NxFr
 {
-	static bool Track = true;
-
-	MemoryTracker::UntrackedScope::UntrackedScope()
-		: State(Track)
+	MemoryTracker::MemoryTracker()
+		: Alloctions(97, nullptr), Amount(0), Count(0), Recording(false)
 	{
-		Track = false;
 	}
 
-	MemoryTracker::UntrackedScope::~UntrackedScope()
+	MemoryTracker::~MemoryTracker()
 	{
-		Track = State;
-	}
-
-	bool MemoryTracker::CanTrack()
-	{
-		return Track;
-	}
-
-	MemoryTracker* MemoryTracker::Create()
-	{
-		UntrackedScope Untracked;
-
-		MemoryTracker* Instance = new MemoryTracker();
-		return Instance;
-	}
-
-	void MemoryTracker::Destroy(MemoryTracker* Instance)
-	{
-		UntrackedScope Untracked;
-
-		delete Instance;
 	}
 
 	void MemoryTracker::RecordAllocation(void* Pointer, uint64 Size)
 	{
-		UntrackedScope Untracked;
+		if (!Recording)
+		{
+			return;
+		}
+
 		Lock LockGuard(Guard);
+		Recording = false;
 
 		NEXUS_ASSERT(Pointer, Default, "Null pointer");
 		NEXUS_ASSERT(Amount < Integer::MaxUI64 - Size, Default, "Allocation Amount will overflow");
@@ -48,6 +29,8 @@ namespace NxFr
 		Alloctions.AppendOrAssign(Pointer, Size);
 		Amount += Size;
 		Count++;
+
+		Recording = true;
 	}
 
 	void MemoryTracker::RecordReallocation(void* Pointer, void* Reallocated, uint64 Size)
@@ -58,13 +41,18 @@ namespace NxFr
 
 	void MemoryTracker::RecordDeallocation(void* Pointer)
 	{
+		if (!Recording)
+		{
+			return;
+		}
+
 		if (!Pointer)
 		{
 			return;
 		}
 
-		UntrackedScope Untracked;
 		Lock LockGuard(Guard);
+		Recording = false;
 
 		uint64* Allocation = Alloctions.TryGet(Pointer);
 		if (!Allocation)
@@ -80,14 +68,29 @@ namespace NxFr
 		Alloctions.Remove(Pointer);
 		Amount -= Size;
 		Count--;
+
+		Recording = true;
 	}
 
-	MemoryTracker::MemoryTracker()
-		: Alloctions(97, nullptr), Amount(0), Count(0)
+	void MemoryTracker::StartRecording()
 	{
+		if (Recording)
+		{
+			NEXUS_LOG(Warning, Default, "MemoryTracker is already recording");
+			return;
+		}
+
+		Recording = true;
 	}
 
-	MemoryTracker::~MemoryTracker()
+	void MemoryTracker::StopRecording()
 	{
+		if (!Recording)
+		{
+			NEXUS_LOG(Warning, Default, "MemoryTracker is not recording");
+			return;
+		}
+
+		Recording = false;
 	}
 }

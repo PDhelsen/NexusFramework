@@ -10,7 +10,9 @@ namespace NxFr
 	{
 		const StringId Default = "Default"_Sid;
 		const StringId Verbose = "Verbose"_Sid;
+
 	}
+	static String& GetLocalBuffer() { static thread_local String LocalBuffer(64, nullptr); return LocalBuffer; }
 
 	static Platform::TerminalColor VerbosityToTerminalColor(LoggerVerbosity Verbosity)
 	{
@@ -170,8 +172,7 @@ namespace NxFr
 
 	String& Logger::GetBuffer()
 	{
-		static thread_local String Buffer(64, nullptr);
-		return Buffer;
+		return GetLocalBuffer();
 	}
 
 	void Logger::PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message)

@@ -66,17 +66,20 @@ namespace NxFr
 		GetBuffer().Format(Message, args...);
 		PrintLog(Verbosity, Channel, Message);
 	}
-
-	namespace Globals
-	{
-		NEXUS_FRAMEWORK_API extern Log* GetLogger();
-	}
 }
 
 NEXUS_FLAG(NxFr::LoggerVerbosity, uint8)
 NEXUS_FLAG_STRING(NxFr::LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
 NEXUS_FLAG(NxFr::LoggerOutput, uint8)
 NEXUS_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
+
+namespace NxFr
+{
+	namespace Globals
+	{
+		NEXUS_FRAMEWORK_API extern Log* GetLogger();
+	}
+}
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
 #define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }

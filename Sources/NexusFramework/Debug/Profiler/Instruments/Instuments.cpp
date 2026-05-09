@@ -21,21 +21,6 @@ namespace NxFr
 		}
 	}
 
-	Instruments* Instruments::Create(StringView Path, bool AutoStart, bool AutoFlush, Instruments::Tools Tool)
-	{
-		switch (Tool)
-		{
-		case NxFr::Instruments::Tools::ChromeTracing: return new ChromeTracing(Path, AutoStart, AutoFlush);
-		}
-
-		return nullptr;
-	}
-
-	void Instruments::Destroy(Instruments* Instance)
-	{
-		delete Instance;
-	}
-
 	void Instruments::Record(const Marker& Data)
 	{
 		if (!Recording)
