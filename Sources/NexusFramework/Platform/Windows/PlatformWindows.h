@@ -7,9 +7,11 @@ namespace NxFr
 {
 	class PlatformWindows : public Platform
 	{
-		friend Platform;
-
 	public:
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, PlatformWindows)
+		PlatformWindows();
+		virtual ~PlatformWindows();
+
 		NEXUS_FRAMEWORK_API void* LoadDll(StringView DllName) override;
 		NEXUS_FRAMEWORK_API void UnloadDll(StringView DllName) override;
 		NEXUS_FRAMEWORK_API void* GetFromDll(StringView DllName, StringView FunctionName) override;
@@ -71,13 +73,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Buffer FileReadByte(void* File) const override;
 		NEXUS_FRAMEWORK_API void FileWriteText(void* File, StringView Text) const override;
 		NEXUS_FRAMEWORK_API String FileReadText(void* File) const override;
-
-		NEXUS_FRAMEWORK_API inline PlatformTarget GetTarget() override { return PlatformTarget::Windows; }
-
-	protected:
-		NEXUS_NOCOPY_NOMOVE(, PlatformWindows)
-		PlatformWindows();
-		virtual ~PlatformWindows();
 
 	private:
 		void InitializeTerminal();

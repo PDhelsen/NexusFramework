@@ -4,6 +4,8 @@
 #include "NexusFramework/IO/Path.h"
 #include "NexusFramework/IO/Directory.h"
 #include "NexusFramework/Misc/Arguments.h"
+#include "NexusFramework/Platform/Windows/PlatformWindows.h"
+#include "NexusFramework/Threading/Thread.h"
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"
 
@@ -24,11 +26,24 @@ namespace NxFr
 		String Temp;
 
 		Arguments* Args = nullptr;
+		Platform* PlatformTarget = nullptr;
+		uint64 MainThreadId = 0;
 
 		Logger* Logs = nullptr;
 		Stats* Statistiques = nullptr;
 		Instruments* Instrumentor = nullptr;
 		MemoryTracker* Memory = nullptr;
+
+		void CreatePlatform()
+		{
+#if NEXUS_WINDOWS
+			PlatformTarget = new PlatformWindows();
+			MainThreadId = Thread::ThreadId();
+#else
+			PlatformTarget = nullptr;
+			MainThreadId = 0;
+#endif
+		}
 
 		void ParseArgs(uint64 ArgC, char* ArgV[])
 		{
@@ -40,8 +55,8 @@ namespace NxFr
 		void ReleaseArgs()
 		{
 			NEXUS_DELETE(Args);
-
 		}
+
 		void SetupPathsAndFolders()
 		{
 			Root = Path::GetWorkingDirectory();
@@ -105,6 +120,7 @@ namespace NxFr
 
 	void Initialize(uint64 ArgC, char* ArgV[])
 	{
+		Globals::CreatePlatform();
 		Globals::ParseArgs(ArgC, ArgV);
 		Globals::SetupPathsAndFolders();
 		Globals::CreateDebug(Path::Combine(Globals::Saved, "debug"));

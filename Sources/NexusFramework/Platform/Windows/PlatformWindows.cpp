@@ -18,7 +18,8 @@ namespace NxFr
 	static const String Backspace = "\b \b";
 	static SYSTEM_INFO SysInfos;
 
-	static Buffer& GetLocalBuffer() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
+	static Buffer& GetLocalBufferByte() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
+	static String& GetLocalBufferString() { static String LocalBuffer(64, nullptr); return LocalBuffer; }
 	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
 	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, "\\", "/"); }
 
@@ -41,7 +42,7 @@ namespace NxFr
 
 	static unsigned int ThreadCallback(void* Instance)
 	{
-		Platform::GetInstance()->ThreadRun(static_cast<Thread*>(Instance));
+		Globals::PlatformTarget->ThreadRun(static_cast<Thread*>(Instance));
 		return 0;
 	}
 
@@ -255,7 +256,7 @@ namespace NxFr
 
 	String PlatformWindows::ReadFromTerminal() const
 	{
-		static String Buffer;
+		String& Buffer = GetLocalBufferString();
 
 		DWORD EventCount;
 		GetNumberOfConsoleInputEvents(TerminalIn, &EventCount);
@@ -336,7 +337,7 @@ namespace NxFr
 		String File = Name + "." + Extension;
 		String Directory = ConvertPathToWindows(Path);
 
-		Buffer& LocalBuffer = GetLocalBuffer();
+		Buffer& LocalBuffer = GetLocalBufferByte();
 		LocalBuffer.Clear();
 		LocalBuffer.Set(File.C(), File.GetCount());
 
@@ -357,7 +358,7 @@ namespace NxFr
 
 	String PlatformWindows::GetWorkingDirectory() const
 	{
-		Buffer& LocalBuffer = GetLocalBuffer();
+		Buffer& LocalBuffer = GetLocalBufferByte();
 
 		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetCount(), LocalBuffer.GetPtr<char>());
 		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetCount(), Default, "BufferLogs overflowed when getting the current working directory");

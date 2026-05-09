@@ -3,6 +3,7 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Misc/Arguments.h"
+#include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Profiler.h"
 
@@ -23,12 +24,15 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API extern String Temp;
 
 		NEXUS_FRAMEWORK_API extern Arguments* Args;
+		NEXUS_FRAMEWORK_API extern Platform* PlatformTarget;
+		NEXUS_FRAMEWORK_API extern uint64 MainThreadId;
 
 		NEXUS_FRAMEWORK_API extern Logger* Logs;
 		NEXUS_FRAMEWORK_API extern Stats* Statistiques;
 		NEXUS_FRAMEWORK_API extern Instruments* Instrumentor;
 		NEXUS_FRAMEWORK_API extern MemoryTracker* Memory;
 
+		NEXUS_FRAMEWORK_API void CreatePlatform();
 		NEXUS_FRAMEWORK_API void ParseArgs(uint64 ArgC, char* ArgV[]);
 		NEXUS_FRAMEWORK_API void ReleaseArgs();
 		NEXUS_FRAMEWORK_API void SetupPathsAndFolders();

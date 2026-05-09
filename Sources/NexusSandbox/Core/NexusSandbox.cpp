@@ -17,7 +17,7 @@ int main(int argc, char* argv[])
 	NxFr::Initialize(argc, argv);
 
 	NxSb::HelloWorld();
-	NxFr::Platform::GetInstance()->WaitForUserToCloseTerminal();
+	NxFr::Globals::PlatformTarget->WaitForUserToCloseTerminal();
 
 	NxFr::Shutdown();
 }

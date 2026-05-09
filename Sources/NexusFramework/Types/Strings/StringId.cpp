@@ -4,13 +4,17 @@
 
 namespace NxFr
 {
-	static Mutex& GetLock() { static Mutex Guard; return Guard; }
+	static Mutex* GetLock() { static Mutex Guard; return &Guard; }
 	static Dictionary<GUID, StringView>& GetIds() { static Dictionary<GUID, StringView> Ids(97, nullptr); return Ids; }
 	static Dequeue<String>& GetStrings() { static Dequeue<String> Strings(nullptr); return Strings; }
 
 	GUID StringId::InternString(StringView Text)
 	{
-		Lock Guard(GetLock());
+		Mutex* Guard = Globals::PlatformTarget ? GetLock() : nullptr;
+		if (Guard)
+		{
+			Guard->Lock();
+		}
 
 		Dictionary<GUID, StringView>& Ids = GetIds();
 		GUID Id = Hash<>::HashObject(Text);
@@ -20,16 +24,33 @@ namespace NxFr
 			String& Instance = Instances.AppendBack(Text);
 			Ids.Append(Id, Instance);
 		}
+
+		if (Guard)
+		{
+			Guard->Unlock();
+		}
+
 		return Id;
 	}
 
 	StringView StringId::LookupString(GUID Id)
 	{
-		Lock Guard(GetLock());
+		Mutex* Guard = Globals::PlatformTarget ? GetLock() : nullptr;
+		if (Guard)
+		{
+			Guard->Lock();
+		}
 
 		Dictionary<GUID, StringView>& Ids = GetIds();
 		StringView* Value = Ids.TryGet(Id);
-		return Value != nullptr ? *Value : StringView(StringUtility::Unknown);
+		StringView Result = Value != nullptr ? *Value : StringView(StringUtility::Unknown);
+
+		if (Guard)
+		{
+			Guard->Unlock();
+		}
+
+		return Result;
 	}
 
 	StringId::StringId()

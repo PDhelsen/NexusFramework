@@ -62,7 +62,7 @@ namespace NxFr
 			return;
 		}
 
-		StartTimer = Platform::GetInstance()->GetProcessorTimer();
+		StartTimer = Globals::PlatformTarget->GetProcessorTimer();
 		Paused = false;
 	}
 

@@ -5,7 +5,7 @@ namespace NxFr
 {
 	uint64 ThreadPool::MaxThreadCount()
 	{
-		return Math::Max(1llu, Platform::GetInstance()->GetProcessorCount() - 1);
+		return Math::Max(1llu, Globals::PlatformTarget->GetProcessorCount() - 1);
 	}
 
 	ThreadPool::ThreadPool(uint64 Size)

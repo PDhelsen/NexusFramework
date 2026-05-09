@@ -105,7 +105,7 @@ namespace NxFr
 		NEXUS_ASSERT(!Exists() && !Handle, Default, "Failed to create file: %s", Path.C());
 
 		Path::EnsureParent(Path);
-		Handle = Platform::GetInstance()->FileCreate(Path, KeepOpen);
+		Handle = Globals::PlatformTarget->FileCreate(Path, KeepOpen);
 		FileMode = File::Mode::Write;
 
 		NEXUS_ASSERT(Exists() && ((KeepOpen && Handle) || (!KeepOpen && !Handle)), Default, "Failed to create file: %s", Path.C());
@@ -127,7 +127,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exists() && !Handle && Path != Target && !Path::Exist(Target), Default, "Failed to move file: %s", Path.C());
 
 		Path::EnsureParent(Target);
-		Platform::GetInstance()->FileMove(Path, Target, Override);
+		Globals::PlatformTarget->FileMove(Path, Target, Override);
 		FileMode = File::Mode::None;
 		SetPath(Target);
 
@@ -150,7 +150,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exists() && !Handle && Path != Target && !Path::Exist(Target), Default, "Failed to copy file: %s", Path.C());
 
 		Path::EnsureParent(Target);
-		Platform::GetInstance()->FileCopy(Path, Target, Override);
+		Globals::PlatformTarget->FileCopy(Path, Target, Override);
 		FileMode = File::Mode::None;
 
 		NEXUS_ASSERT(Exists() && !Handle, Default, "Failed to copy file: %s", Path.C());
@@ -176,7 +176,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exists() && !Handle, Default, "Failed to delete file: %s", Path.C());
 
-		Platform::GetInstance()->FileDelete(Path);
+		Globals::PlatformTarget->FileDelete(Path);
 		FileMode = File::Mode::None;
 
 		NEXUS_ASSERT(!Exists() && !Handle, Default, "Failed to delete file: %s", Path.C());
@@ -202,7 +202,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exists() && !Handle, Default, "Failed to open file: %s", Path.C());
 
-		Handle = Platform::GetInstance()->FileOpen(Path, ConvertFileToPlatformMode(OpenMode));
+		Handle = Globals::PlatformTarget->FileOpen(Path, ConvertFileToPlatformMode(OpenMode));
 		FileMode = OpenMode;
 
 		NEXUS_ASSERT(Handle, Default, "Failed to open file: %s", Path.C());
@@ -223,7 +223,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Exists() && Handle, Default, "Failed to close file: %s", Path.C());
 
-		Platform::GetInstance()->FileClose(Handle);
+		Globals::PlatformTarget->FileClose(Handle);
 		FileMode = File::Mode::None;
 		Handle = nullptr;
 
@@ -234,35 +234,35 @@ namespace NxFr
 	{
 		NEXUS_ASSERT(Exists() && Handle, Default, "Failed to query file size: %s", Path.C());
 
-		return Platform::GetInstance()->FileSize(Handle);
+		return Globals::PlatformTarget->FileSize(Handle);
 	}
 
 	void File::WriteByte(BufferView Data)
 	{
 		NEXUS_ASSERT(Exists() && Handle && Data.GetPtr(), Default, "Failed to write file: %s", Path.C());
 
-		Platform::GetInstance()->FileWriteByte(Handle, Data);
+		Globals::PlatformTarget->FileWriteByte(Handle, Data);
 	}
 
 	Buffer File::ReadByte() const
 	{
 		NEXUS_ASSERT(Exists() && Handle, Default, "Failed to read file: %s", Path.C());
 
-		return Platform::GetInstance()->FileReadByte(Handle);
+		return Globals::PlatformTarget->FileReadByte(Handle);
 	}
 
 	void File::WriteText(StringView Text)
 	{
 		NEXUS_ASSERT(Exists() && Handle && Text.C(), Default, "Failed to write file: %s", Path.C());
 
-		Platform::GetInstance()->FileWriteText(Handle, Text);
+		Globals::PlatformTarget->FileWriteText(Handle, Text);
 	}
 
 	String File::ReadText() const
 	{
 		NEXUS_ASSERT(Exists() && Handle, Default, "Failed to read file: %s", Path.C());
 
-		return Platform::GetInstance()->FileReadText(Handle);
+		return Globals::PlatformTarget->FileReadText(Handle);
 	}
 
 	void File::SetPath(StringView Value)

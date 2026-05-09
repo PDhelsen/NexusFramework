@@ -15,31 +15,31 @@ namespace NxFr
 
 	int64 Atomic::Add(int64 Target)
 	{
-		return Platform::GetInstance()->ThreadAtomicAdd(&Value, Target);
+		return Globals::PlatformTarget->ThreadAtomicAdd(&Value, Target);
 	}
 
 	int64 Atomic::Increment()
 	{
-		return Platform::GetInstance()->ThreadAtomicIncrement(&Value);
+		return Globals::PlatformTarget->ThreadAtomicIncrement(&Value);
 	}
 
 	int64 Atomic::Decrement()
 	{
-		return Platform::GetInstance()->ThreadAtomicDecrement(&Value);
+		return Globals::PlatformTarget->ThreadAtomicDecrement(&Value);
 	}
 
 	int64 Atomic::Load() const
 	{
-		return Platform::GetInstance()->ThreadAtomicLoad(&Value);
+		return Globals::PlatformTarget->ThreadAtomicLoad(&Value);
 	}
 
 	void Atomic::Store(int64 Target)
 	{
-		Platform::GetInstance()->ThreadAtomicStore(&Value, Target);
+		Globals::PlatformTarget->ThreadAtomicStore(&Value, Target);
 	}
 
 	bool Atomic::CompareExchange(int64 Target, int64 Expected)
 	{
-		return Platform::GetInstance()->ThreadAtomicCompareExchange(&Value, Target, Expected);
+		return Globals::PlatformTarget->ThreadAtomicCompareExchange(&Value, Target, Expected);
 	}
 }

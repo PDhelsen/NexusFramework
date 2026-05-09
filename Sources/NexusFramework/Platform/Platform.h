@@ -13,12 +13,6 @@
 
 namespace NxFr
 {
-	enum class PlatformTarget : uint8
-	{
-		None,
-		Windows
-	};
-
 	class Platform
 	{
 	public:
@@ -46,8 +40,9 @@ namespace NxFr
 			uint64 PeakAllocated;
 		};
 
-		NEXUS_FRAMEWORK_API static Platform* GetInstance();
-		NEXUS_FRAMEWORK_API inline virtual PlatformTarget GetTarget() { return PlatformTarget::None; }
+		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Platform)
+		NEXUS_FRAMEWORK_API Platform();
+		NEXUS_FRAMEWORK_API virtual ~Platform();
 
 		template<typename R, typename... Args>
 		Delegate<R(Args...)> GetFunctionFromDll(StringView DllName, StringView FunctionName);
@@ -116,10 +111,6 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API virtual String FileReadText(void* File) const = 0;
 
 	protected:
-		NEXUS_NOCOPY_NOMOVE(, Platform)
-		Platform() = default;
-		virtual ~Platform() = default;
-
 		Dictionary<String, void*> Dlls;
 	};
 

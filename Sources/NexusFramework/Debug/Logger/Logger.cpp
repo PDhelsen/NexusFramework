@@ -42,7 +42,7 @@ namespace NxFr
 
 	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path, bool AutoFlush)
 		: Logs(), Channels(), VerbosityMask(Verbosity), Outputs(Output),
-		Target(Platform::GetInstance()), Stream(""), Callback(),
+		Target(Globals::PlatformTarget), Stream(""), Callback(),
 		AutoFlush(AutoFlush), Guard()
 	{
 		SetOutput(LoggerOutput::File, !Path.IsEmpty(), Path);

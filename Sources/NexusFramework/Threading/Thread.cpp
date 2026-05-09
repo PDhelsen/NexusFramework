@@ -3,32 +3,19 @@
 
 namespace NxFr
 {
-	static uint64 MainThread = Platform::GetInstance()->ThreadId();
-	static thread_local uint64 CurrentThread = Platform::GetInstance()->ThreadId();
-
 	uint64 Thread::ThreadId()
 	{
-		return CurrentThread;
-	}
-
-	uint64 Thread::MainThreadId()
-	{
-		return MainThread;
-	}
-
-	bool Thread::IsMainThread()
-	{
-		return ThreadId() == MainThreadId();
+		return Globals::PlatformTarget->ThreadId();
 	}
 
 	void Thread::Yield()
 	{
-		Platform::GetInstance()->ThreadYield();
+		Globals::PlatformTarget->ThreadYield();
 	}
 
 	void Thread::Sleep(uint64 Milliseconds)
 	{
-		Platform::GetInstance()->ThreadSleep(Milliseconds);
+		Globals::PlatformTarget->ThreadSleep(Milliseconds);
 	}
 
 	Thread::Thread(const NxFr::Delegate<void()>& Function)
@@ -46,7 +33,7 @@ namespace NxFr
 	{
 		NEXUS_ASSERT(!IsRunning(), Default, "Thread is still running")
 
-		Platform::GetInstance()->ThreadDestroy(Handle);
+		Globals::PlatformTarget->ThreadDestroy(Handle);
 	}
 
 	void Thread::Run()
@@ -55,7 +42,7 @@ namespace NxFr
 
 		if (SetState(Status::Running))
 		{
-			Handle = Platform::GetInstance()->ThreadCreate(this);
+			Handle = Globals::PlatformTarget->ThreadCreate(this);
 		}
 	}
 
@@ -73,7 +60,7 @@ namespace NxFr
 
 		if (SetState(Status::Joined))
 		{
-			Platform::GetInstance()->ThreadJoin(Handle);
+			Globals::PlatformTarget->ThreadJoin(Handle);
 		}
 	}
 
@@ -84,7 +71,7 @@ namespace NxFr
 
 		if (SetState(Status::Detached))
 		{
-			Platform::GetInstance()->ThreadDetach(Handle);
+			Globals::PlatformTarget->ThreadDetach(Handle);
 		}
 	}
 

@@ -54,7 +54,7 @@ namespace NxFr
 		NEXUS_ASSERT(!Exists(), Default, "Failed to create directory: %s", Path.C());
 
 		Path::EnsureParent(Path);
-		Platform::GetInstance()->DirectoryCreate(Path);
+		Globals::PlatformTarget->DirectoryCreate(Path);
 
 		NEXUS_ASSERT(Exists(), Default, "Failed to create directory: %s", Path.C());
 	}
@@ -70,7 +70,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exists() && Path != Target && !Path::Exist(Target), Default, "Failed to move directory: %s", Path.C());
 
 		Path::EnsureParent(Target);
-		Platform::GetInstance()->DirectoryMove(Path, Target, Override);
+		Globals::PlatformTarget->DirectoryMove(Path, Target, Override);
 		SetPath(Target);
 
 		NEXUS_ASSERT(Exists(), Default, "Failed to move directory: %s", Path.C());
@@ -87,7 +87,7 @@ namespace NxFr
 		NEXUS_ASSERT(Exists() && Path != Target && !Path::Exist(Target), Default, "Failed to copy directory: %s", Path.C());
 
 		Path::EnsureParent(Target);
-		Platform::GetInstance()->DirectoryCreate(Target);
+		Globals::PlatformTarget->DirectoryCreate(Target);
 
 		List<String> Content = List<String>();
 		GetContent(Content);
@@ -141,7 +141,7 @@ namespace NxFr
 			}
 		}
 
-		Platform::GetInstance()->DirectoryDelete(Path);
+		Globals::PlatformTarget->DirectoryDelete(Path);
 
 		NEXUS_ASSERT(!Exists(), Default, "Failed to delete directory: %s", Path.C());
 	}
@@ -203,7 +203,7 @@ namespace NxFr
 
 	void Directory::GetContent(List<String>& Result, bool Recursive, bool GetFile, bool GetDirectory) const
 	{
-		List<String> Content = Platform::GetInstance()->DirectoryContent(Path);
+		List<String> Content = Globals::PlatformTarget->DirectoryContent(Path);
 		for (auto& It : Content)
 		{
 			bool IsFile = Path::IsFile(It);

@@ -5,12 +5,12 @@ namespace NxFr
 {
 	ConditionVariable::ConditionVariable()
 	{
-		Handle = Platform::GetInstance()->ThreadConditionCreate();
+		Handle = Globals::PlatformTarget->ThreadConditionCreate();
 	}
 
 	ConditionVariable::~ConditionVariable()
 	{
-		Platform::GetInstance()->ThreadConditionDestroy(Handle);
+		Globals::PlatformTarget->ThreadConditionDestroy(Handle);
 	}
 
 	void ConditionVariable::Wait(Mutex& Guard, const Delegate<bool()>& Predicate)
@@ -24,17 +24,17 @@ namespace NxFr
 	void ConditionVariable::Wait(Mutex& Guard)
 	{
 		Guard.Owner.Store(0);
-		Platform::GetInstance()->ThreadConditionWait(Handle, Guard.Handle);
+		Globals::PlatformTarget->ThreadConditionWait(Handle, Guard.Handle);
 		Guard.Owner.Store(Thread::ThreadId());
 	}
 
 	void ConditionVariable::Signal()
 	{
-		Platform::GetInstance()->ThreadConditionSignal(Handle);
+		Globals::PlatformTarget->ThreadConditionSignal(Handle);
 	}
 
 	void ConditionVariable::Broadcast()
 	{
-		Platform::GetInstance()->ThreadConditionBroadcast(Handle);
+		Globals::PlatformTarget->ThreadConditionBroadcast(Handle);
 	}
 }

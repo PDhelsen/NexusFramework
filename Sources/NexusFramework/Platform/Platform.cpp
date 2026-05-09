@@ -1,19 +1,16 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Platform/Platform.h"
 
-#include "NexusFramework/Platform/None/PlatformNone.h"
 #include "NexusFramework/Platform/Windows/PlatformWindows.h"
 
 namespace NxFr
 {
-	Platform* Platform::GetInstance()
+	Platform::Platform()
 	{
-#if NEXUS_WINDOWS
-		static PlatformWindows Instance;
-#else
-		static PlatformNone Instance;
-#endif
-		return &Instance;
+	}
+
+	Platform::~Platform()
+	{
 	}
 
 	void Platform::ClearDll()

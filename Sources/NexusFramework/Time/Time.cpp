@@ -78,7 +78,7 @@ namespace NxFr
 
 		uint64 ProcessorTick()
 		{
-			return Platform::GetInstance()->GetProcessorTimer();
+			return Globals::PlatformTarget->GetProcessorTimer();
 		}
 
 		double Convert(double Value, double Unit)

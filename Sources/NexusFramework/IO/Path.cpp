@@ -311,22 +311,22 @@ namespace NxFr
 
 	void Path::ShowInExplorer(NxFr::StringView Path)
 	{
-		Platform::GetInstance()->OpenExplorer(Path);
+		Globals::PlatformTarget->OpenExplorer(Path);
 	}
 
 	String Path::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path)
 	{
-		return Normalize(Platform::GetInstance()->OpenFileDialog(Title, Extension, Name, Path));
+		return Normalize(Globals::PlatformTarget->OpenFileDialog(Title, Extension, Name, Path));
 	}
 
 	String Path::GetWorkingDirectory()
 	{
-		return Platform::GetInstance()->GetWorkingDirectory();
+		return Globals::PlatformTarget->GetWorkingDirectory();
 	}
 
 	bool Path::Exist(StringView Path)
 	{
-		return Platform::GetInstance()->GetPathType(Path) != Platform::PathType::None;
+		return Globals::PlatformTarget->GetPathType(Path) != Platform::PathType::None;
 	}
 
 	void Path::EnsureParent(StringView Path)

@@ -37,7 +37,7 @@ namespace NxFr
 			StringView(",{\"cat\":\"function\",\"dur\":%.3f,\"name\":\"%s\",\"ph\":\"X\",\"pid\":0,\"tid\":%d,\"ts\":%.3f}"),
 			Data.GetWatch().GetElapsedTime(Time::SecondToMicro),
 			Data.GetText().C(),
-			Thread::IsMainThread() ? 0 : Thread::ThreadId(),
+			Thread::ThreadId(),
 			Data.GetWatch().GetStartTime(Time::SecondToMicro)
 		);
 
