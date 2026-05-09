@@ -29,6 +29,12 @@ namespace NxFr
 		Allocators.Remove();
 	}
 
+	void AllocatorContext::Reset()
+	{
+		Stack<Allocator*>& Allocators = GetAllocators();
+		Allocators.Clear();
+	}
+
 	AllocatorContext::AllocatorContext(Allocator* Allocator)
 	{
 		AllocatorContext::Push(Allocator);

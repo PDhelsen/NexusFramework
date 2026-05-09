@@ -12,6 +12,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API static Allocator* Get();
 		NEXUS_FRAMEWORK_API static void Push(Allocator* Alloc);
 		NEXUS_FRAMEWORK_API static void Pop();
+		NEXUS_FRAMEWORK_API static void Reset();
 
 		NEXUS_FRAMEWORK_API AllocatorContext(Allocator* Allocator);
 		NEXUS_FRAMEWORK_API ~AllocatorContext();
