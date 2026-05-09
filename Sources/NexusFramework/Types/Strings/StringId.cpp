@@ -4,13 +4,13 @@
 
 namespace NxFr
 {
-	static Mutex* GetLock() { static Mutex Guard; return &Guard; }
+	static Mutex& GetLock() { static Mutex Guard; return Guard; }
 	static Dictionary<GUID, StringView>& GetIds() { static Dictionary<GUID, StringView> Ids(97, nullptr); return Ids; }
 	static Dequeue<String>& GetStrings() { static Dequeue<String> Strings(nullptr); return Strings; }
 
 	GUID StringId::InternString(StringView Text)
 	{
-		Mutex* Guard = Globals::PlatformTarget ? GetLock() : nullptr;
+		Mutex* Guard = Globals::PlatformTarget ? &GetLock() : nullptr;
 		if (Guard)
 		{
 			Guard->Lock();
@@ -35,7 +35,7 @@ namespace NxFr
 
 	StringView StringId::LookupString(GUID Id)
 	{
-		Mutex* Guard = Globals::PlatformTarget ? GetLock() : nullptr;
+		Mutex* Guard = Globals::PlatformTarget ? &GetLock() : nullptr;
 		if (Guard)
 		{
 			Guard->Lock();
