@@ -344,6 +344,7 @@ namespace NxFr
 			return Index >= 0 && Index < Count;
 		}
 
+		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 
 	private:

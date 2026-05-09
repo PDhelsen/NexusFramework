@@ -4,8 +4,6 @@
 #include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Time/Timestamp.h"
 
-#include "NexusFramework/Core/NexusFrameworkGlobals.h"
-
 namespace NxFr
 {
 	namespace LoggerChannel
@@ -38,16 +36,6 @@ namespace NxFr
 	Logger::LogData::LogData(LoggerVerbosity Verbosity, StringId Channel)
 		: Message(64), Channel(Channel), Verbosity(Verbosity)
 	{
-	}
-
-	Log* Log::GetInstance()
-	{
-		return Globals::Logs;
-	}
-
-	Logger* Logger::GetInstance()
-	{
-		return Globals::Logs;
 	}
 
 	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path, bool AutoFlush)

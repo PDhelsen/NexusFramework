@@ -2,7 +2,7 @@
 #include "NexusFramework/Memory/MemoryOperator.h"
 
 #include "NexusFramework/Core/NexusFramework.h"
-#include "NexusFramework/Core/NexusFrameworkEntryPoint.h"
+#include "NexusFramework/Core/NexusFrameworkCommon.h"
 
 namespace NxSb
 {

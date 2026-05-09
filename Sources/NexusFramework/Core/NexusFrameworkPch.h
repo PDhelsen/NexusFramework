@@ -31,4 +31,4 @@
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Functions/Event.h"
 
-#include "NexusFramework/Debug/Logger/Logger.h"
+#include "NexusFramework/Core/NexusFrameworkCommon.h"

@@ -50,8 +50,6 @@ namespace NxFr
 	class Log
 	{
 	public:
-		NEXUS_FRAMEWORK_API static Log* GetInstance();
-
 		template<typename... Args>
 		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 
@@ -68,6 +66,11 @@ namespace NxFr
 		GetBuffer().Format(Message, args...);
 		PrintLog(Verbosity, Channel, Message);
 	}
+
+	namespace Globals
+	{
+		NEXUS_FRAMEWORK_API extern Log* GetLogger();
+	}
 }
 
 NEXUS_FLAG(NxFr::LoggerVerbosity, uint8)
@@ -78,7 +81,7 @@ NEXUS_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 #if NEXUS_DEBUG || NEXUS_RELEASE
 #define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }
 
-#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxFr::Log::GetInstance(), Vbs, Chn, Msg, __VA_ARGS__)
+#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxFr::Globals::GetLogger(), Vbs, Chn, Msg, __VA_ARGS__)
 #elif NEXUS_DISTRIB
 #define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...)
 

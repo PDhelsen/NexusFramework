@@ -1,8 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Memory/Handle/HandleManager.h"
 
-#include "NexusFramework/Core/NexusFrameworkGlobals.h"
-
 namespace NxFr
 {
 	HandleManager::HandleManager(uint64 Size)

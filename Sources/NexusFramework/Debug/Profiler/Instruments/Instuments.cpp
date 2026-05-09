@@ -2,15 +2,9 @@
 #include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
 
 #include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
-#include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
 namespace NxFr
 {
-	Instruments* Instruments::GetInstance()
-	{
-		return Globals::Instrumentor;
-	}
-
 	Instruments::Marker::Marker(StringView Text, Instruments* Target)
 		: Text(Text), Target(Target)
 	{

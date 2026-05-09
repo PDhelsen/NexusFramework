@@ -16,12 +16,6 @@ namespace NxFr
 		Track = State;
 	}
 
-	MemoryTracker* MemoryTracker::GetInstance()
-	{
-		static MemoryTracker* Tracker = Create();
-		return Tracker;
-	}
-
 	bool MemoryTracker::CanTrack()
 	{
 		return Track;

@@ -1,7 +1,7 @@
 #include "NexusTests/Core/NexusTests.h"
 #include "NexusFramework/Memory/MemoryOperator.h"
 
-#include "NexusFramework/Core/NexusFrameworkEntryPoint.h"
+#include "NexusFramework/Core/NexusFrameworkCommon.h"
 
 namespace NxTs
 {

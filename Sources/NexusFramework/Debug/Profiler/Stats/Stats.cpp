@@ -2,7 +2,6 @@
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"
 
 #include "NexusFramework/External/StandardLibrary.h"
-#include "NexusFramework/Core/NexusFrameworkGlobals.h"
 
 namespace NxFr
 {
@@ -14,11 +13,6 @@ namespace NxFr
 	{
 		const StringId TickId = "Tick"_Sid;
 		const StringId CommentId = "Comments"_Sid;
-	}
-
-	Stats* Stats::GetInstance()
-	{
-		return Globals::Statistiques;
 	}
 
 	template<>

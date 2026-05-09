@@ -1,11 +1,11 @@
 #include "NexusTests/Core/NexusTestsDummy.h"
-#include "NexusFramework/Core/NexusFrameworkPaths.h"
+#include "NexusFramework/Core/NexusFrameworkCommon.h"
 
 namespace NxTs
 {
 	NxFr::String Dummy::GeneratePath(NxFr::StringView Path)
 	{
-		return NxFr::Path::Combine(NxFr::Paths::Temp, Path);
+		return NxFr::Path::Combine(NxFr::Globals::Temp, Path);
 	}
 
 	NxFr::StringView Dummy::GetText()

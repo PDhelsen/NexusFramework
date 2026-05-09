@@ -3,138 +3,150 @@
 
 namespace NxFr
 {
-	namespace Arguments
+	Arguments::Arguments()
+		: Args(0), Positionals(), Named()
 	{
-		static const String Separator = " ";
-		static const String NamedFlag = "--";
-		static const String FlagValue = "true";
-		static const String NamedKey = "-";
-		static const String NamedSeparator = "=";
+	}
 
-		static Array<String> Arguments;
-		static List<String> Positionals;
-		static Dictionary<String, String> Named;
+	Arguments::Arguments(const Arguments& Other)
+		: Args(0), Positionals(), Named()
+	{
+		ParseCollectionString(Other.Args);
+	}
 
-		static void Parse(uint64 Index, StringView Arg, Array<String>& Arguments, List<String>& Positionals, Dictionary<String, String>& Named)
+	Arguments::Arguments(Arguments&& Other) noexcept
+		: Args(Move(Other.Args)), Positionals(Move(Other.Positionals)), Named(Move(Other.Named))
+	{
+	}
+
+	Arguments::~Arguments()
+	{
+	}
+
+	Arguments& Arguments::operator=(const Arguments& Other)
+	{
+		if (this == &Other)
 		{
-			Arguments[Index] = Arg;
-
-			if (StringUtility::Start(Arg, NamedFlag))
-			{
-				Arg = Arg.Substring(2, Arg.GetCount() - 2);
-				Named.Append(Arg, FlagValue);
-			}
-			else if (StringUtility::Start(Arg, NamedKey))
-			{
-				uint64 Equal = StringUtility::Find(Arg, NamedSeparator).C() - Arg.C();
-
-				StringView Key = Arg.Substring(1, Equal - 1);
-				StringView Value = Arg.Substring(Equal + 1, Arg.GetCount() - (Equal + 1));
-
-				Named.Append(Key, Value);
-			}
-			else
-			{
-				Positionals.Append(Arg);
-			}
+			return *this;
 		}
 
-		const Array<String>& GetArguments()
+		ParseCollectionString(Other.Args);
+
+		return *this;
+	}
+
+	Arguments& Arguments::operator=(Arguments&& Other) noexcept
+	{
+		if (this == &Other)
 		{
-			return Arguments;
+			return *this;
 		}
 
-		const List<String>& GetPositionals()
+		Args = Move(Other.Args);
+		Positionals = Move(Other.Positionals);
+		Named = Move(Other.Named);
+
+		return *this;
+	}
+
+	void Arguments::Clear()
+	{
+		ContainersUtils::Resize<String>(Args, 0);
+		Positionals.Clear();
+		Named.Clear();
+	}
+
+	void Arguments::Print()
+	{
+		for (uint64 Index = 0; Index < Positionals.GetCount(); ++Index)
 		{
-			return Positionals;
+			NEXUS_LOG(Info, Default, "Positional %llu : %s", Index, Positionals[Index].C(true));
 		}
 
-		const Dictionary<String, String>& GetNamed()
+		for (auto& [Key, Value] : Named)
 		{
-			return Named;
+			NEXUS_LOG(Info, Default, "Named %s : %s", Key.C(true), Value.C(true));
 		}
+	}
 
-		StringView Get(uint64 Index, StringView Default)
+	void Arguments::ParseExe(uint64 ArgC, char* ArgV[])
+	{
+		uint64 Index = GetCount();
+		uint64 Count = ArgC;
+
+		Resize(Count);
+		for (uint64 It = 0; It < ArgC; ++It)
 		{
-			if (!Positionals.IsValidIndex(Index))
-			{
-				return Default;
-			}
-
-			return Positionals[Index];
+			ParseArg(Index++, ArgV[It]);
 		}
+	}
 
-		StringView Get(StringView Key, StringView Default)
+	void Arguments::ParseCommand(StringView Command)
+	{
+		uint64 Index = GetCount();
+		uint64 Count = StringUtility::SplitAll(Command, Separator).GetCount();
+
+		Resize(Count);
+		for (auto It = Command.Begin(Separator); It != Command.End(Separator); ++It)
 		{
-			String* Contain = Named.TryGet(Key);
-			if (Contain == nullptr)
-			{
-				return Default;
-			}
-
-			return *Contain;
+			ParseArg(Index++, *It);
 		}
+	}
 
-		bool Has(uint64 Index)
+	void Arguments::ParseCollectionString(const Collection<String>& Items)
+	{
+		uint64 Index = GetCount();
+		uint64 Count = Items.GetCount();
+
+		Resize(Count);
+		for (auto It = Items.Begin(); It != Items.End(); ++It)
 		{
-			return Positionals.IsValidIndex(Index);
+			ParseArg(Index++, *It);
 		}
+	}
 
-		bool Has(StringView Key)
+	void Arguments::ParseCollectionView(const Collection<StringView>& Items)
+	{
+		uint64 Index = GetCount();
+		uint64 Count = Items.GetCount();
+
+		Resize(Count);
+		for (auto It = Items.Begin(); It != Items.End(); ++It)
 		{
-			return Named.TryGet(Key) != nullptr;
+			ParseArg(Index++, *It);
 		}
+	}
 
-		void Parse(uint64 ArgC, char* ArgV[])
+	void Arguments::ParseArg(uint64 Index, StringView Arg)
+	{
+		Args[Index] = Arg;
+
+		if (StringUtility::Start(Arg, NamedFlag))
 		{
-			NEXUS_ASSERT(Arguments.GetCount() == 0, Default, "Arguments were already parsed");
-
-			Arguments = Array<String>(ArgC);
-			Positionals.Clear();
-			Positionals.Reserve(ArgC);
-			Named.Clear();
-			Named.Reserve(ArgC);
-
-			for (uint64 Index = 0; Index < ArgC; ++Index)
-			{
-				StringView Arg = ArgV[Index];
-				NEXUS_LOG(Info, Default, "Arg %llu : %s", Index, Arg.C());
-				Parse(Index, Arg, Arguments, Positionals, Named);
-			}
+			Arg = Arg.Substring(2, Arg.GetCount() - 2);
+			Named.Append(Arg, FlagValue);
 		}
-
-		void Parse(const Collection<StringView>& Args, Array<String>& Arguments, List<String>& Positionals, Dictionary<String, String>& Named)
+		else if (StringUtility::Start(Arg, NamedKey))
 		{
-			uint64 Count = Args.GetCount();
+			uint64 Equal = StringUtility::Find(Arg, NamedSeparator).C() - Arg.C();
 
-			Arguments = Array<String>(Count);
-			Positionals.Clear();
-			Positionals.Reserve(Count);
-			Named.Clear();
-			Named.Reserve(Count);
+			StringView Key = Arg.Substring(1, Equal - 1);
+			StringView Value = Arg.Substring(Equal + 1, Arg.GetCount() - (Equal + 1));
 
-			uint64 Index = 0;
-			for (auto It = Args.Begin(); It != Args.End(); ++It)
-			{
-				Parse(Index++, *It, Arguments, Positionals, Named);
-			}
+			Named.Append(Key, Value);
 		}
-
-		void Parse(StringView Command, Array<String>& Arguments, List<String>& Positionals, Dictionary<String, String>& Named)
+		else
 		{
-			uint64 Count = StringUtility::SplitAll(Command, Separator).GetCount();
-
-			Arguments = Array<String>(Count);
-			Positionals.Clear();
-			Positionals.Reserve(Count);
-			Named.Clear();
-			Named.Reserve(Count);
-
-			uint64 Index = 0;
-			for (auto It = Command.Begin(Separator); It != Command.End(Separator); ++It)
-			{
-				Parse(Index++, *It, Arguments, Positionals, Named);
-			}
+			Positionals.Append(Arg);
 		}
+	}
+
+	void Arguments::Resize(uint64 Grow)
+	{
+		uint64 Count = GetCount() + Grow;
+
+		ContainersUtils::Resize<String>(Args, Count);
+		Positionals.Reserve(Count);
+		Named.Reserve(Count);
 	}
 }

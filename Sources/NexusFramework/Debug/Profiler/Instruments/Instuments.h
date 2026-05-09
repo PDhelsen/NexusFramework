@@ -35,8 +35,6 @@ namespace NxFr
 		};
 
 	public:
-		NEXUS_FRAMEWORK_API static Instruments* GetInstance();
-
 		NEXUS_FRAMEWORK_API static Instruments* Create(StringView Path, bool AutoStart = false, bool AutoFlush = false, Tools Tool = Tools::ChromeTracing);
 		NEXUS_FRAMEWORK_API static void Destroy(Instruments* Instance);
 
@@ -70,9 +68,9 @@ namespace NxFr
 	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, Name) NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, NEXUS_LINE_NUMBER)
 	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance) NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, NEXUS_FUNCTION_SIGNATURE)
 
-	#define NEXUS_INSTUMENT_LINE(Name, Line) NEXUS_INSTUMENT_LINE_INSTANCE(::NxFr::Instruments::GetInstance(), Name, Line)
-	#define NEXUS_INSTUMENT_SCOPE(Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(::NxFr::Instruments::GetInstance(), Name)
-	#define NEXUS_INSTUMENT_FUNCTION() NEXUS_INSTUMENT_FUNCTION_INSTANCE(::NxFr::Instruments::GetInstance())
+	#define NEXUS_INSTUMENT_LINE(Name, Line) NEXUS_INSTUMENT_LINE_INSTANCE(::NxFr::Globals::Instrumentor, Name, Line)
+	#define NEXUS_INSTUMENT_SCOPE(Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(::NxFr::Globals::Instrumentor, Name)
+	#define NEXUS_INSTUMENT_FUNCTION() NEXUS_INSTUMENT_FUNCTION_INSTANCE(::NxFr::Globals::Instrumentor)
 #elif NEXUS_DISTRIB
 	#define NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, Instance)
 	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, Instance)

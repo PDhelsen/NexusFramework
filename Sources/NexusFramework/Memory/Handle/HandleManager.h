@@ -5,7 +5,6 @@
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
-#include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
 {

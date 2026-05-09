@@ -27,8 +27,6 @@ namespace NxFr
 	public:
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s%s";
 
-		NEXUS_FRAMEWORK_API static Logger* GetInstance();
-
 		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Logger)
 		NEXUS_FRAMEWORK_API Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "", bool AutoFlush = false);
 		NEXUS_FRAMEWORK_API ~Logger();
