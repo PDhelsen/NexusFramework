@@ -7,8 +7,6 @@ namespace NxFr
 {
 #pragma region Static
 
-	static const String Separator = ";";
-
 	namespace StatsHeader
 	{
 		const StringId TickId = "Tick"_Sid;

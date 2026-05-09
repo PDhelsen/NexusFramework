@@ -72,6 +72,8 @@ namespace NxFr
 		};
 
 	public:
+		inline static const String Separator = ";";
+
 		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Stats)
 		NEXUS_FRAMEWORK_API Stats(StringView Path);
 		NEXUS_FRAMEWORK_API ~Stats();
