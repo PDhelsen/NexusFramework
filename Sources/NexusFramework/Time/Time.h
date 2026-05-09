@@ -23,6 +23,10 @@ namespace NxFr
 		inline constexpr double HrsToSecond = 60.0 * 60;
 		inline constexpr double DayToSecond = 60.0 * 60 * 24;
 
+		inline const Array<String> WeekDaysNames = { "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday" };
+		inline const Array<String> MonthsNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
+		inline const Array<int32> DayPerMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+
 		NEXUS_FRAMEWORK_API Timestamp Now();
 		NEXUS_FRAMEWORK_API int64 TimeSinceEpoch();
 		NEXUS_FRAMEWORK_API uint64 ProcessorTick();
