@@ -16,8 +16,6 @@ namespace NxFr
 	template<typename T, class H = Hashing::Default>
 	class Set
 	{
-		friend class ContainersUtils;
-
 	public:
 		using N = Node::NodeHashmap<T>;
 		using I = Iterator::IteratorHashmap<const T, N>;

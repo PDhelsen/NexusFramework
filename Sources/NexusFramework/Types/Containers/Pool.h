@@ -15,8 +15,6 @@ namespace NxFr
 		template<typename T>
 		class PreAllocated
 		{
-			friend class ContainersUtils;
-
 		public:
 			using N = Node::NodeSimple<T>;
 			using I = Iterator::IteratorPreAllocated<T, N>;
@@ -213,8 +211,6 @@ namespace NxFr
 		template<typename T>
 		class OnDemand
 		{
-			friend class ContainersUtils;
-
 		public:
 			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
@@ -454,8 +450,6 @@ namespace NxFr
 	template<typename T, typename P = Pooling::OnDemand<T>>
 	class Pool
 	{
-		friend class ContainersUtils;
-
 	public:
 		using I = typename P::I;
 

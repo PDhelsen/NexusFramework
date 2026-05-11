@@ -15,8 +15,6 @@ namespace NxFr
 	template<typename T, uint64 L = 0>
 	class Array
 	{
-		friend class ContainersUtils;
-
 	private:
 		union Buffer
 		{

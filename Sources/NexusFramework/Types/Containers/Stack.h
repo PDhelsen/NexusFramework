@@ -14,8 +14,6 @@ namespace NxFr
 	template<typename T, uint64 BS = 10>
 	class Stack
 	{
-		friend class ContainersUtils;
-
 	public:
 		using I = Iterator::IteratorStack<T, BS>;
 

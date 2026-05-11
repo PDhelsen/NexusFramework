@@ -15,8 +15,6 @@ namespace NxFr
 	template<typename T>
 	class List
 	{
-		friend class ContainersUtils;
-
 	public:
 		using I = Iterator::IteratorBlock<T>;
 

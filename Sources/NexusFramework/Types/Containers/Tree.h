@@ -14,8 +14,6 @@ namespace NxFr
 	template<typename T>
 	class Tree
 	{
-		friend class ContainersUtils;
-
 	public:
 		using N = Node::NodeTree<T>;
 		using I = Iterator::IteratorNodeTree<T, N>;

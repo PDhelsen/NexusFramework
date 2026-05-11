@@ -15,8 +15,6 @@ namespace NxFr
 	template<typename T>
 	class LinkedList
 	{
-		friend class ContainersUtils;
-
 	public:
 		using N = Node::NodeDouble<T>;
 		using I = Iterator::IteratorNodeDouble<T, N>;
@@ -431,6 +429,16 @@ namespace NxFr
 				Destruct(Instance);
 				Free(Instance);
 			}
+		}
+
+		void Reorder(T* Start, T* End)
+		{
+			NEXUS_ASSERT(Start != nullptr, Default, "Start is null");
+			NEXUS_ASSERT(End != nullptr, Default, "End is null");
+			NEXUS_ASSERT(!IsEmpty(), Default, "LinkedList is empty");
+
+			DataHead = GetNode(Start);
+			DataTail = GetNode(End);
 		}
 
 		void Clear()

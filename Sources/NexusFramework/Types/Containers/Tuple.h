@@ -7,8 +7,6 @@ namespace NxFr
 	template<typename T1, typename T2>
 	class Tuple
 	{
-		friend class ContainersUtils;
-
 	public:
 		Tuple(const T1& F, const T2& S)
 			: First(F), Second(S)

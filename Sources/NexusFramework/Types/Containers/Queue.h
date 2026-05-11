@@ -14,8 +14,6 @@ namespace NxFr
 	template<typename T, uint64 BS = 10>
 	class Queue
 	{
-		friend class ContainersUtils;
-
 	public:
 		using I = Iterator::IteratorBucket<T, BS>;
 

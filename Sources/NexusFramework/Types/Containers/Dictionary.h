@@ -17,8 +17,6 @@ namespace NxFr
 	template<typename K, typename T, class H = Hashing::Default>
 	class Dictionary
 	{
-		friend class ContainersUtils;
-
 	public:
 		using KV = KeyValuePair<const K, T>;
 		using N = Node::NodeHashmap<KV>;

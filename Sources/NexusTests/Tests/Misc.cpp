@@ -75,23 +75,9 @@ namespace NxTs
 			ASSERT_EQ(HeapSort[Index - 1] >= HeapSort[Index], true);
 		}
 
-		NxFr::Node::NodeSimple<uint64> Node1; Node1.Value = 1;
-		NxFr::Node::NodeSimple<uint64> Node2; Node2.Value = 2;
-		NxFr::Node::NodeSimple<uint64> Node3; Node3.Value = 3;
-		NxFr::Node::NodeSimple<uint64> Node4; Node4.Value = 4;
-		NxFr::Node::NodeSimple<uint64> Node5; Node5.Value = 5;
-		Node1.Next = &Node5;
-		Node5.Next = &Node3;
-		Node3.Next = &Node2;
-		Node2.Next = &Node4;
-		Node4.Next = nullptr;
-
-		NxFr::Sorting::MergeSortLinked<uint64, NxFr::Node::NodeSimple<uint64>> MergeSortLinked(
-			[](NxFr::Node::NodeSimple<uint64>* Node, NxFr::Node::NodeSimple<uint64>* Value) { Node->Next = Value; },
-			[](NxFr::Node::NodeSimple<uint64>* Node) {return Node->Next; },
-			[](NxFr::Node::NodeSimple<uint64>* Node) {return Node->Value; }
-		);
-		NxFr::Node::NodeSimple<uint64>* Node = MergeSortLinked.Sort(&Node1);
+		NxFr::LinkedList<uint64> LinkedSort = { 9, 6, 4, 8, 3, 1, 2, 7, 0, 5 };
+		NxFr::ContainersUtils::Sort(LinkedSort);
+		NxFr::LinkedList<uint64>::N* Node = NxFr::Node::GetNode<uint64, NxFr::LinkedList<uint64>::N>(&LinkedSort.First());
 		while (Node && Node->Next)
 		{
 			ASSERT_EQ(Node->Value < Node->Next->Value, true);

@@ -14,8 +14,6 @@ namespace NxFr
 	template<typename T>
 	class Graph
 	{
-		friend class ContainersUtils;
-
 	public:
 		using N = Node::NodeGraph<T>;
 		using C = NxFr::Node::NodeGraphConnection<T>;

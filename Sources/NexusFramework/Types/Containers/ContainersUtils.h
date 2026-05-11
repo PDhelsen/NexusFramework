@@ -156,15 +156,19 @@ namespace NxFr
 		template<typename T, typename S = Sorting::DefaultLinked<T, typename LinkedList<T>::N>>
 		static void Sort(LinkedList<T>& Container, Sorting::CompareFunction<T> Function = nullptr)
 		{
+			typename LinkedList<T>::N* Start = Node::GetNode<T, typename LinkedList<T>::N>(&Container.First());
+			typename LinkedList<T>::N* End = Node::GetNode<T, typename LinkedList<T>::N>(&Container.Last());
+
 			Sort::SortNodes<T, typename LinkedList<T>::N, S>(
-				&Container.DataHead,
+				&Start,
 				[](typename LinkedList<T>::N* Node, typename LinkedList<T>::N* Value) { Node->Next = Value; },
-				[](typename LinkedList<T>::N* Node) {return Node->Next; },
-				[](typename LinkedList<T>::N* Node) {return Node->Value; },
+				[](typename LinkedList<T>::N* Node) { return Node->Next; },
+				[](typename LinkedList<T>::N* Node) { return Node->Value; },
 				Function
 			);
+			End = Node::RelinkBackward<typename LinkedList<T>::N>(Start);
 
-			Container.DataTail = Node::RelinkBackward<typename LinkedList<T>::N>(Container.DataHead);
+			Container.Reorder(&Start->Value, &End->Value);
 		}
 
 		template<typename T, typename C>
@@ -179,9 +183,10 @@ namespace NxFr
 		template<typename T>
 		static void Reverse(LinkedList<T>& Container)
 		{
-			Container.DataTail = Container.DataHead;
+			typename LinkedList<T>::N* Start = Node::GetNode<T, typename LinkedList<T>::N>(&Container.First());
+			typename LinkedList<T>::N* End = Node::GetNode<T, typename LinkedList<T>::N>(&Container.Last());
 
-			typename LinkedList<T>::N* Current = Container.DataHead;
+			typename LinkedList<T>::N* Current = Start;
 			typename LinkedList<T>::N* Next = Current->Next;
 			Current->Next = nullptr;
 			Current->Prev = Next;
@@ -196,7 +201,7 @@ namespace NxFr
 				Next = SecondNext;
 			}
 
-			Container.DataHead = Current;
+			Container.Reorder(&End->Value, &Start->Value);
 		}
 
 		template<typename T, typename C>
