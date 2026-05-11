@@ -1,6 +1,8 @@
 #include "NexusTests/Core/NexusTests.h"
 #include "NexusTests/Core/NexusTestsDummy.h"
 
+#include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
+
 namespace NxTs
 {
 	TEST(Debug, Logger)

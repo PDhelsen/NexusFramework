@@ -1,8 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
 
-#include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
-
 namespace NxFr
 {
 	Instruments::Marker::Marker(StringView Text, Instruments* Target)

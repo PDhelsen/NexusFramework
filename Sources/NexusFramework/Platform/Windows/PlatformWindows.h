@@ -73,13 +73,5 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Buffer FileReadByte(void* File) const override;
 		NEXUS_FRAMEWORK_API void FileWriteText(void* File, StringView Text) const override;
 		NEXUS_FRAMEWORK_API String FileReadText(void* File) const override;
-
-	private:
-		void InitializeTerminal();
-		void InitializePerformanceTimer();
-
-		void* TerminalOut;
-		void* TerminalIn;
-		double PerformanceFrequency;
 	};
 }

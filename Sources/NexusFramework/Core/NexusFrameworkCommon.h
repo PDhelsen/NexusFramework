@@ -5,7 +5,9 @@
 #include "NexusFramework/Misc/Arguments.h"
 #include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/Debug/Logger/Logger.h"
-#include "NexusFramework/Debug/Profiler/Profiler.h"
+#include "NexusFramework/Debug/Profiler/Stats/Stats.h"
+#include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
+#include "NexusFramework/Debug/Profiler/Memory/MemoryTracker.h"
 
 namespace NxFr
 {

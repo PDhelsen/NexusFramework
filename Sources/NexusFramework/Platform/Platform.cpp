@@ -1,8 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Platform/Platform.h"
 
-#include "NexusFramework/Platform/Windows/PlatformWindows.h"
-
 namespace NxFr
 {
 	Platform::Platform()

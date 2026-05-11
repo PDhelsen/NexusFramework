@@ -3,11 +3,9 @@
 
 #include "NexusFramework/IO/Path.h"
 #include "NexusFramework/IO/Directory.h"
-#include "NexusFramework/Misc/Arguments.h"
-#include "NexusFramework/Platform/Windows/PlatformWindows.h"
 #include "NexusFramework/Threading/Thread.h"
-#include "NexusFramework/Debug/Logger/Logger.h"
-#include "NexusFramework/Debug/Profiler/Profiler.h"
+#include "NexusFramework/Platform/Windows/PlatformWindows.h"
+#include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
 
 namespace NxFr
 {

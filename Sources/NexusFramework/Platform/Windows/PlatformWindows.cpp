@@ -6,22 +6,26 @@
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/IO/Path.h"
 
-#include <windows.h>
-#include <shellapi.h>
-#include <process.h>
-#include <sys/stat.h>
-#include <psapi.h>
+#include <windows.h> // Windows
+#include <process.h> // Thread
+#include <psapi.h> // Memory Info
 
 namespace NxFr
 {
 	static const String NewLine = "\r\n";
 	static const String Backspace = "\b \b";
+	static const String SeparatorFolder = "\\";
+
+	static HANDLE TerminalOut;
+	static HANDLE TerminalIn;
+	static LARGE_INTEGER PerformanceFrequency;
+	static double PerformancePeriod;
 	static SYSTEM_INFO SysInfos;
 
 	static Buffer& GetLocalBufferByte() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
 	static String& GetLocalBufferString() { static String LocalBuffer(64, nullptr); return LocalBuffer; }
-	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, "/", "\\"); }
-	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, "\\", "/"); }
+	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, Path::SeparatorFolder, SeparatorFolder); }
+	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, SeparatorFolder, Path::SeparatorFolder); }
 
 	static StringView TerminalColorToPrefix(Platform::TerminalColor Color)
 	{
@@ -44,6 +48,32 @@ namespace NxFr
 	{
 		Globals::PlatformTarget->ThreadRun(static_cast<Thread*>(Instance));
 		return 0;
+	}
+
+	PlatformWindows::PlatformWindows()
+	{
+		TerminalOut = GetStdHandle(STD_OUTPUT_HANDLE);
+		DWORD TerminalOutMode = 0;
+		GetConsoleMode(TerminalOut, &TerminalOutMode);
+		TerminalOutMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
+		SetConsoleMode(TerminalOut, TerminalOutMode);
+		SetConsoleOutputCP(CP_UTF8);
+
+		TerminalIn = GetStdHandle(STD_INPUT_HANDLE);
+		DWORD TerminalInMode = 0;
+		GetConsoleMode(TerminalIn, &TerminalInMode);
+		TerminalInMode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+		TerminalInMode |= ENABLE_PROCESSED_INPUT;
+		SetConsoleMode(TerminalIn, TerminalInMode);
+
+		QueryPerformanceFrequency(&PerformanceFrequency);
+		PerformancePeriod = 1.0 / (double)PerformanceFrequency.QuadPart;
+
+		GetSystemInfo(&SysInfos);
+	}
+
+	PlatformWindows::~PlatformWindows()
+	{
 	}
 
 	void* PlatformWindows::LoadDll(StringView DllName)
@@ -212,7 +242,7 @@ namespace NxFr
 	{
 		LARGE_INTEGER Counter;
 		QueryPerformanceCounter(&Counter);
-		return (double)Counter.QuadPart * Unit * PerformanceFrequency;
+		return (double)Counter.QuadPart * Unit * PerformancePeriod;
 	}
 
 	uint64 PlatformWindows::GetProcessId() const
@@ -574,41 +604,5 @@ namespace NxFr
 
 		Text.Assign(NewLine, StringUtility::NewLine);
 		return Text;
-	}
-
-	PlatformWindows::PlatformWindows()
-		: TerminalOut(nullptr), TerminalIn(nullptr), PerformanceFrequency(1.0)
-	{
-		InitializeTerminal();
-		InitializePerformanceTimer();
-		GetSystemInfo(&SysInfos);
-	}
-
-	PlatformWindows::~PlatformWindows()
-	{
-	}
-
-	void PlatformWindows::InitializeTerminal()
-	{
-		TerminalOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		DWORD TerminalOutMode = 0;
-		GetConsoleMode(TerminalOut, &TerminalOutMode);
-		TerminalOutMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING | DISABLE_NEWLINE_AUTO_RETURN;
-		SetConsoleMode(TerminalOut, TerminalOutMode);
-		SetConsoleOutputCP(CP_UTF8);
-
-		TerminalIn = GetStdHandle(STD_INPUT_HANDLE);
-		DWORD TerminalInMode = 0;
-		GetConsoleMode(TerminalIn, &TerminalInMode);
-		TerminalInMode &= ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
-		TerminalInMode |= ENABLE_PROCESSED_INPUT;
-		SetConsoleMode(TerminalIn, TerminalInMode);
-	}
-
-	void PlatformWindows::InitializePerformanceTimer()
-	{
-		LARGE_INTEGER Frequency;
-		QueryPerformanceFrequency(&Frequency);
-		PerformanceFrequency = 1.0 / (double)Frequency.QuadPart;
 	}
 }
