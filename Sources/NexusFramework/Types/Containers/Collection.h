@@ -3,6 +3,7 @@
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
+#include "NexusFramework/Misc/Iterator/IteratorAny.h"
 
 namespace NxFr
 {

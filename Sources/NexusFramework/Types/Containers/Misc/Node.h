@@ -3,7 +3,7 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Misc/Templates.h"
-#include "NexusFramework/Misc/Nodes/Nodes.h"
+#include "NexusFramework/Misc/Node/Node.h"
 
 namespace NxFr
 {

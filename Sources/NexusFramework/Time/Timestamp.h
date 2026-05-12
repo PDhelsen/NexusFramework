@@ -37,14 +37,6 @@ namespace NxFr
         bool DayLightSaving;
     };
 
-	template<>
-	struct NEXUS_FRAMEWORK_API StringConverter<Timestamp>
-	{
-		static StringView GetFormat(bool Pretty);
-		static void ToString(const Timestamp& Data, String& Result, StringView Format);
-		static void FromString(StringView Data, Timestamp& Result, StringView Format);
-	};
-
 	NEXUS_FRAMEWORK_API bool operator==(const Timestamp& A, const Timestamp& B);
 	NEXUS_FRAMEWORK_API bool operator!=(const Timestamp& A, const Timestamp& B);
 	NEXUS_FRAMEWORK_API bool operator<(const Timestamp& A, const Timestamp& B);

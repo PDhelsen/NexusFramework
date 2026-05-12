@@ -30,14 +30,6 @@ namespace NxFr
 		int32 Years;
 	};
 
-	template<>
-	struct NEXUS_FRAMEWORK_API StringConverter<Timespan>
-	{
-		static StringView GetFormat(bool Pretty);
-		static void ToString(const Timespan& Data, String& Result, StringView Format = "");
-		static void FromString(StringView Data, Timespan& Result, StringView Format = "");
-	};
-
 	NEXUS_FRAMEWORK_API bool operator==(const Timespan& A, const Timespan& B);
 	NEXUS_FRAMEWORK_API bool operator!=(const Timespan& A, const Timespan& B);
 	NEXUS_FRAMEWORK_API bool operator<(const Timespan& A, const Timespan& B);
