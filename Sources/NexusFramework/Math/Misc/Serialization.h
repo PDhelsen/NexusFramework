@@ -13,7 +13,7 @@ namespace NxFr
 	template<uint8 D, typename T>
 	struct RBSConverter<Vector<D, T>>
 	{
-		static Vector<D, T> Decode(RBS& Rbs)
+		static Vector<D, T> Decode(const RBS& Rbs)
 		{
 			Vector<D, T> Result;
 			for (uint8 I = 0; I < D; ++I)
@@ -35,7 +35,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Euler>
 	{
-		static Euler Decode(RBS& Rbs)
+		static Euler Decode(const RBS& Rbs)
 		{
 			Euler Result;
 			Result.x = Rbs.ReadObject<float>();
@@ -55,7 +55,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<AxisAngle>
 	{
-		static AxisAngle Decode(RBS& Rbs)
+		static AxisAngle Decode(const RBS& Rbs)
 		{
 			AxisAngle Result;
 			Result.Angle = Rbs.ReadObject<float>();
@@ -77,7 +77,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Quaternion>
 	{
-		static Quaternion Decode(RBS& Rbs)
+		static Quaternion Decode(const RBS& Rbs)
 		{
 			Quaternion Result;
 			Result.w = Rbs.ReadObject<float>();
@@ -99,7 +99,7 @@ namespace NxFr
 	template<uint8 R, uint8 C, typename T>
 	struct RBSConverter<Matrix<R, C, T>>
 	{
-		static Matrix<R, C, T> Decode(RBS& Rbs)
+		static Matrix<R, C, T> Decode(const RBS& Rbs)
 		{
 			Matrix<R, C, T> Result;
 			for (uint8 I = 0; I < Matrix<R, C, T>::Count; ++I)
@@ -121,7 +121,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Ray>
 	{
-		static Ray Decode(RBS& Rbs)
+		static Ray Decode(const RBS& Rbs)
 		{
 			Ray Result;
 			Result.Origin = Rbs.ReadObject<Vector3f>();
@@ -139,7 +139,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Plane>
 	{
-		static Plane Decode(RBS& Rbs)
+		static Plane Decode(const RBS& Rbs)
 		{
 			Plane Result;
 			Result.Normal = Rbs.ReadObject<Vector3f>();
@@ -157,7 +157,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Triangle>
 	{
-		static Triangle Decode(RBS& Rbs)
+		static Triangle Decode(const RBS& Rbs)
 		{
 			Triangle Result;
 			Result.A = Rbs.ReadObject<Vector3f>();
@@ -177,7 +177,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Rectangle>
 	{
-		static Rectangle Decode(RBS& Rbs)
+		static Rectangle Decode(const RBS& Rbs)
 		{
 			Rectangle Result;
 			Result.Center = Rbs.ReadObject<Vector2f>();
@@ -195,7 +195,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Circle>
 	{
-		static Circle Decode(RBS& Rbs)
+		static Circle Decode(const RBS& Rbs)
 		{
 			Circle Result;
 			Result.Center = Rbs.ReadObject<Vector2f>();
@@ -213,7 +213,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Box>
 	{
-		static Box Decode(RBS& Rbs)
+		static Box Decode(const RBS& Rbs)
 		{
 			Box Result;
 			Result.Center = Rbs.ReadObject<Vector3f>();
@@ -231,7 +231,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Cube>
 	{
-		static Cube Decode(RBS& Rbs)
+		static Cube Decode(const RBS& Rbs)
 		{
 			Cube Result;
 			Result.Center = Rbs.ReadObject<Vector3f>();
@@ -251,7 +251,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Sphere>
 	{
-		static Sphere Decode(RBS& Rbs)
+		static Sphere Decode(const RBS& Rbs)
 		{
 			Sphere Result;
 			Result.Center = Rbs.ReadObject<Vector3f>();

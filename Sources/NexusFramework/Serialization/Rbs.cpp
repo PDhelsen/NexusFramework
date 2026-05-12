@@ -4,17 +4,6 @@
 
 namespace NxFr
 {
-	RBS::OffsetScope::OffsetScope(RBS& Rbs, uint64 Offset)
-		: Rbs(Rbs), Cursor(Rbs.GetCursor())
-	{
-		Rbs.SetCursor(Offset);
-	}
-
-	RBS::OffsetScope::~OffsetScope()
-	{
-		Rbs.SetCursor(Cursor);
-	}
-
 	Buffer RBS::Serialize(const RBS& Data)
 	{
 		return Data.Data;
@@ -59,29 +48,17 @@ namespace NxFr
 	{
 	}
 
-	const void* RBS::ReadByte(uint64 Size)
+	const void* RBS::ReadByte(uint64 Size) const
 	{
-		void* Ptr = Data.GetPtr(Cursor);
+		const void* Ptr = Data.GetPtr(Cursor);
 		Cursor += Size;
 		return Ptr;
-	}
-
-	const void* RBS::ReadByte(uint64 Size, uint64 Offset)
-	{
-		OffsetScope CursorOffset(*this, Offset);
-		return ReadByte(Size);
 	}
 
 	void RBS::WriteByte(const void* Pointer, uint64 Size)
 	{
 		Data.Set(Pointer, Size, Cursor);
 		Cursor += Size;
-	}
-
-	void RBS::WriteByte(const void* Pointer, uint64 Size, uint64 Offset)
-	{
-		OffsetScope CursorOffset(*this, Offset);
-		WriteByte(Pointer, Size);
 	}
 
 	const Iterator::IteratorPointer RBS::Begin() const

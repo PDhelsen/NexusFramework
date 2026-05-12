@@ -54,14 +54,14 @@ namespace NxTs
 
 		NxFr::Stats Stats(Path);
 
-		Stats.RecordHeader(LabelId, NxFr::Stats::StatType::Label, NxFr::Stats::StatMode::Set);
-		Stats.RecordHeader(CheckId, NxFr::Stats::StatType::Check, NxFr::Stats::StatMode::Set);
-		Stats.RecordHeader(SetId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Set);
-		Stats.RecordHeader(MinId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Min);
-		Stats.RecordHeader(MaxId, NxFr::Stats::StatType::Decimal, NxFr::Stats::StatMode::Max);
-		Stats.RecordHeader(AvgId, NxFr::Stats::StatType::Decimal, NxFr::Stats::StatMode::Avg);
-		Stats.RecordHeader(CntId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Cnt);
-		Stats.RecordHeader(AddId, NxFr::Stats::StatType::Integer, NxFr::Stats::StatMode::Add);
+		Stats.RecordHeader(LabelId, NxFr::Stats::Type::Label, NxFr::Stats::Mode::Set);
+		Stats.RecordHeader(CheckId, NxFr::Stats::Type::Check, NxFr::Stats::Mode::Set);
+		Stats.RecordHeader(SetId, NxFr::Stats::Type::Integer, NxFr::Stats::Mode::Set);
+		Stats.RecordHeader(MinId, NxFr::Stats::Type::Integer, NxFr::Stats::Mode::Min);
+		Stats.RecordHeader(MaxId, NxFr::Stats::Type::Decimal, NxFr::Stats::Mode::Max);
+		Stats.RecordHeader(AvgId, NxFr::Stats::Type::Decimal, NxFr::Stats::Mode::Avg);
+		Stats.RecordHeader(CntId, NxFr::Stats::Type::Integer, NxFr::Stats::Mode::Cnt);
+		Stats.RecordHeader(AddId, NxFr::Stats::Type::Integer, NxFr::Stats::Mode::Add);
 
 		Stats.Initialize();
 		ASSERT_EQ(Stats.IsInitialized(), true);
@@ -114,7 +114,7 @@ namespace NxTs
 		Instruments.StartRecording();
 
 		{
-			NxFr::Instruments::Marker Marker(__FUNCSIG__, &Instruments);
+			NxFr::Instruments::Scope Marker(__FUNCSIG__, &Instruments);
 
 			Dummy(5, &Instruments);
 			Dummy(10, &Instruments);

@@ -3,13 +3,13 @@
 
 namespace NxFr
 {
-	Instruments::Marker::Marker(StringView Text, Instruments* Target)
+	Instruments::Scope::Scope(StringView Text, Instruments* Target)
 		: Text(Text), Target(Target)
 	{
 		Watch.Start();
 	}
 
-	Instruments::Marker::~Marker()
+	Instruments::Scope::~Scope()
 	{
 		Watch.Stop();
 
@@ -19,7 +19,7 @@ namespace NxFr
 		}
 	}
 
-	void Instruments::Record(const Marker& Data)
+	void Instruments::Record(const Scope& Data)
 	{
 		if (!Recording)
 		{

@@ -20,7 +20,7 @@ namespace NxFr
 		Stream.Close();
 	}
 
-	void ChromeTracing::RecordMarker(const Marker& Data)
+	void ChromeTracing::RecordMarker(const Scope& Data)
 	{
 		WriteMarker(Data);
 	}
@@ -30,7 +30,7 @@ namespace NxFr
 		Stream.Flush();
 	}
 
-	void ChromeTracing::WriteMarker(const Marker& Data)
+	void ChromeTracing::WriteMarker(const Scope& Data)
 	{
 		// Expect timing in micro second
 		StringUtility::Format(Buffer,

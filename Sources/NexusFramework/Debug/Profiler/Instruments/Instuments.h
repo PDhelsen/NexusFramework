@@ -12,13 +12,13 @@ namespace NxFr
 	class NEXUS_FRAMEWORK_API Instruments
 	{
 	public:
-		class NEXUS_FRAMEWORK_API Marker
+		class NEXUS_FRAMEWORK_API Scope
 		{
 			friend class Instruments;
 
 		public:
-			Marker(StringView Text, Instruments* Target);
-			~Marker();
+			Scope(StringView Text, Instruments* Target);
+			~Scope();
 
 			const Stopwatch& GetWatch() const { return Watch; }
 			StringView GetText() const { return Text; }
@@ -34,7 +34,7 @@ namespace NxFr
 		Instruments(bool AutoStart = false, bool AutoFlush = false);
 		virtual ~Instruments();
 
-		void Record(const Marker& Data);
+		void Record(const Scope& Data);
 		void Flush();
 
 		void StartRecording();
@@ -45,7 +45,7 @@ namespace NxFr
 		void SetAutoFlush(bool Auto) { AutoFlush = true; }
 
 	protected:
-		virtual void RecordMarker(const Marker& Data) = 0;
+		virtual void RecordMarker(const Scope& Data) = 0;
 		virtual void FlushMarkers() = 0;
 
 		bool Recording;
@@ -56,7 +56,7 @@ namespace NxFr
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) ::NxFr::Instruments::Marker Marker##Line(Name, Instance);
+	#define NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) ::NxFr::Instruments::Scope Marker##Line(Name, Instance);
 	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, Name) NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, NEXUS_LINE_NUMBER)
 	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance) NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, NEXUS_FUNCTION_SIGNATURE)
 

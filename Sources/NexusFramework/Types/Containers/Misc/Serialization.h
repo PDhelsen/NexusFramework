@@ -24,7 +24,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<Array<T>>
 	{
-		static Array<T> Decode(RBS& Rbs)
+		static Array<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			Array<T> Result(Size);
@@ -48,7 +48,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<List<T>>
 	{
-		static List<T> Decode(RBS& Rbs)
+		static List<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			List<T> Result(Size);
@@ -72,7 +72,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<Dequeue<T>>
 	{
-		static Dequeue<T> Decode(RBS& Rbs)
+		static Dequeue<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			Dequeue<T> Result(Size);
@@ -96,7 +96,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<Queue<T>>
 	{
-		static Queue<T> Decode(RBS& Rbs)
+		static Queue<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			Queue<T> Result(Size);
@@ -120,7 +120,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<Stack<T>>
 	{
-		static Queue<T> Decode(RBS& Rbs)
+		static Queue<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			Stack<T> Result(Size);
@@ -147,7 +147,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<LinkedList<T>>
 	{
-		static LinkedList<T> Decode(RBS& Rbs)
+		static LinkedList<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			LinkedList<T> Result(Size);
@@ -171,7 +171,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<Set<T>>
 	{
-		static Set<T> Decode(RBS& Rbs)
+		static Set<T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			Set<T> Result(Size);
@@ -198,7 +198,7 @@ namespace NxFr
 	template<typename K, typename T>
 	struct RBSConverter<Dictionary<K, T>>
 	{
-		static Dictionary<K, T> Decode(RBS& Rbs)
+		static Dictionary<K, T> Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			Dictionary<K, T> Result(Size);
@@ -228,7 +228,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<BufferView>
 	{
-		static BufferView Decode(RBS& Rbs)
+		static BufferView Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			const void* Ptr = Rbs.ReadByte(Size);
@@ -245,7 +245,7 @@ namespace NxFr
 	template<typename T1, typename T2>
 	struct RBSConverter<Tuple<T1, T2>>
 	{
-		static Tuple<T1, T2> Decode(RBS& Rbs)
+		static Tuple<T1, T2> Decode(const RBS& Rbs)
 		{
 			return Tuple<T1, T2>(Rbs.ReadObject<T1>(), Rbs.ReadObject<T2>());
 		}
@@ -260,7 +260,7 @@ namespace NxFr
 	template<typename T>
 	struct RBSConverter<Collection<T>>
 	{
-		static Array<T> Decode(RBS& Rbs)
+		static Array<T> Decode(const RBS& Rbs)
 		{
 			NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
 		}

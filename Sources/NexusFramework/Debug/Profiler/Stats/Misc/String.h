@@ -12,10 +12,10 @@ namespace NxFr
 		{
 			switch (Data.GetType())
 			{
-			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValueLabel(), Result); break;
-			case NxFr::Stats::StatType::Check: StringConverter<bool>::ToString(Data.GetValueCheck(), Result); break;
-			case NxFr::Stats::StatType::Integer: StringConverter<int64>::ToString(Data.GetValueInteger(), Result); break;
-			case NxFr::Stats::StatType::Decimal: StringConverter<float>::ToString(Data.GetValueDecimal(), Result); break;
+			case NxFr::Stats::Type::Label: StringConverter<String>::ToString(Data.GetValueLabel(), Result); break;
+			case NxFr::Stats::Type::Check: StringConverter<bool>::ToString(Data.GetValueCheck(), Result); break;
+			case NxFr::Stats::Type::Integer: StringConverter<int64>::ToString(Data.GetValueInteger(), Result); break;
+			case NxFr::Stats::Type::Decimal: StringConverter<float>::ToString(Data.GetValueDecimal(), Result); break;
 			}
 		}
 	};

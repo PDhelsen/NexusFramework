@@ -96,7 +96,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<NxTs::Dummy>
 	{
-		static NxTs::Dummy Decode(RBS& Rbs)
+		static NxTs::Dummy Decode(const RBS& Rbs)
 		{
 			NxTs::Dummy Instance;
 			Instance.Key = Rbs.ReadObject<uint64>();

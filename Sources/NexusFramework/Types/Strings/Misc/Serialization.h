@@ -14,7 +14,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<const char*>
 	{
-		static const char* Decode(RBS& Rbs)
+		static const char* Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			const char* Text = Rbs.ReadData<char>(Size);
@@ -35,7 +35,7 @@ namespace NxFr
 	template<size_t N>
 	struct RBSConverter<char[N]>
 	{
-		static const char* Decode(RBS& Rbs)
+		static const char* Decode(const RBS& Rbs)
 		{
 			uint64 Size = Rbs.ReadObject<uint64>();
 			const char* Text = Rbs.ReadData<char>(Size);
@@ -56,7 +56,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<String>
 	{
-		static String Decode(RBS& Rbs)
+		static String Decode(const RBS& Rbs)
 		{
 			return Rbs.ReadObject<const char*>();
 		}
@@ -70,7 +70,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<StringView>
 	{
-		static StringView Decode(RBS& Rbs)
+		static StringView Decode(const RBS& Rbs)
 		{
 			return Rbs.ReadObject<const char*>();
 		}
@@ -84,7 +84,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<StringId>
 	{
-		static StringId Decode(RBS& Rbs)
+		static StringId Decode(const RBS& Rbs)
 		{
 			return Rbs.ReadObject<StringView>();
 		}

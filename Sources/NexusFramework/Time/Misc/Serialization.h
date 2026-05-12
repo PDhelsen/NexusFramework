@@ -13,7 +13,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Timespan>
 	{
-		static Timespan Decode(RBS& Rbs)
+		static Timespan Decode(const RBS& Rbs)
 		{
 			Timespan Result;
 			Result.Seconds = Rbs.ReadObject<int32>();
@@ -39,7 +39,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Timestamp>
 	{
-		static Timestamp Decode(RBS& Rbs)
+		static Timestamp Decode(const RBS& Rbs)
 		{
 			Timestamp Result;
 			Result.Seconds = Rbs.ReadObject<int32>();
@@ -71,7 +71,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Stopwatch>
 	{
-		static Stopwatch Decode(RBS& Rbs)
+		static Stopwatch Decode(const RBS& Rbs)
 		{
 			NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
 			return Stopwatch();

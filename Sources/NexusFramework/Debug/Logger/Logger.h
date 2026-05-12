@@ -15,9 +15,9 @@ namespace NxFr
 	class NEXUS_FRAMEWORK_API Logger : public Log
 	{
 	private:
-		struct LogData
+		struct Info
 		{
-			LogData(LoggerVerbosity Verbosity, StringId Channel);
+			Info(LoggerVerbosity Verbosity, StringId Channel);
 
 			String Message;
 			StringId Channel;
@@ -57,7 +57,7 @@ namespace NxFr
 		void FlushLogs() override;
 
 	private:
-		List<LogData> Logs;
+		List<Info> Infos;
 		Dictionary<StringId, bool, Hashing::Default> Channels;
 		LoggerVerbosity VerbosityMask;
 		LoggerOutput Outputs;

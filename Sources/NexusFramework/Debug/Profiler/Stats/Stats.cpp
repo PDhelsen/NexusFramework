@@ -18,59 +18,59 @@ namespace NxFr
 
 #pragma region Stat
 
-	Stats::StatValue::StatValue()
+	Stats::Value::Value()
 		 : Integer(0)
 	{
-		Memory::MemSet(this, 0, sizeof(StatValue));
+		Memory::MemSet(this, 0, sizeof(Value));
 	}
 	
-	Stats::StatValue::~StatValue()
+	Stats::Value::~Value()
 	{
-		Memory::MemSet(this, 0, sizeof(StatValue));
+		Memory::MemSet(this, 0, sizeof(Value));
 	}
 
-	Stats::Stat::Stat(StatType Type, StatMode Mode)
-		: Value(), Type(Type), Mode(Mode), Tick(0)
+	Stats::Stat::Stat(Type StatType, Mode StatMode)
+		: StatValue(), StatType(StatType), StatMode(StatMode), StatTick(0)
 	{
-		switch (Type)
+		switch (StatType)
 		{
-		case NxFr::Stats::StatType::Label: new (&Value.Label) String(32); break;
-		case NxFr::Stats::StatType::Check: Value.State = false; break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = 0; break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = 0.0f; break;
+		case NxFr::Stats::Type::Label: new (&StatValue.Label) String(32); break;
+		case NxFr::Stats::Type::Check: StatValue.State = false; break;
+		case NxFr::Stats::Type::Integer: StatValue.Integer = 0; break;
+		case NxFr::Stats::Type::Decimal: StatValue.Decimal = 0.0f; break;
 		}
 	}
 
 	Stats::Stat::~Stat()
 	{
-		if (Type == StatType::Label)
+		if (StatType == Type::Label)
 		{
-			Value.Label.~String();
+			StatValue.Label.~String();
 		}
 	}
 
 	void Stats::Stat::Reset()
 	{
-		Tick = 0;
-		switch (Type)
+		StatTick = 0;
+		switch (StatType)
 		{
-		case NxFr::Stats::StatType::Label: Value.Label.Clear(); break;
-		case NxFr::Stats::StatType::Check: Value.State = false; break;
-		case NxFr::Stats::StatType::Integer: Value.Integer = Mode == StatMode::Min ? Integer::MaxI64 : Mode == StatMode::Max ? Integer::MinI64 : 0; break;
-		case NxFr::Stats::StatType::Decimal: Value.Decimal = Mode == StatMode::Min ? Decimal::MaxF : Mode == StatMode::Max ? Decimal::MinF : 0.0f; break;
+		case NxFr::Stats::Type::Label: StatValue.Label.Clear(); break;
+		case NxFr::Stats::Type::Check: StatValue.State = false; break;
+		case NxFr::Stats::Type::Integer: StatValue.Integer = StatMode == Mode::Min ? Integer::MaxI64 : StatMode == Mode::Max ? Integer::MinI64 : 0; break;
+		case NxFr::Stats::Type::Decimal: StatValue.Decimal = StatMode == Mode::Min ? Decimal::MaxF : StatMode == Mode::Max ? Decimal::MinF : 0.0f; break;
 		}
 	}
 
 	double Stats::Stat::Compute(double Current, double New) const
 	{
-		switch (Mode)
+		switch (StatMode)
 		{
-		case NxFr::Stats::StatMode::Set: return New;
-		case NxFr::Stats::StatMode::Cnt: return ++Current;
-		case NxFr::Stats::StatMode::Add: return Current + New;
-		case NxFr::Stats::StatMode::Avg: return Current + New;
-		case NxFr::Stats::StatMode::Min: return Math::Min(Current, New);
-		case NxFr::Stats::StatMode::Max: return Math::Max(Current, New);
+		case NxFr::Stats::Mode::Set: return New;
+		case NxFr::Stats::Mode::Cnt: return ++Current;
+		case NxFr::Stats::Mode::Add: return Current + New;
+		case NxFr::Stats::Mode::Avg: return Current + New;
+		case NxFr::Stats::Mode::Min: return Math::Min(Current, New);
+		case NxFr::Stats::Mode::Max: return Math::Max(Current, New);
 		}
 
 		return New;
@@ -78,9 +78,9 @@ namespace NxFr
 
 	double Stats::Stat::Finalize(double Current) const
 	{
-		if (Mode == StatMode::Avg)
+		if (StatMode == Mode::Avg)
 		{
-			return Current / Tick;
+			return Current / StatTick;
 		}
 
 		return Current;
@@ -88,25 +88,27 @@ namespace NxFr
 
 	void Stats::Stat::RecordLabel(StringView Statistique)
 	{
-		Value.Label.Clear();
-		Value.Label += Statistique;
+		StatValue.Label.Clear();
+		StatValue.Label += Statistique;
+		StatTick++;
 	}
 
 	void Stats::Stat::RecordCheck(bool Statistique)
 	{
-		Value.State = Statistique;
+		StatValue.State = Statistique;
+		StatTick++;
 	}
 
 	void Stats::Stat::RecordInteger(int64 Statistique)
 	{
-		Tick++;
-		Value.Integer = Compute(Value.Integer, Statistique);
+		StatValue.Integer = Compute(StatValue.Integer, Statistique);
+		StatTick++;
 	}
 
 	void Stats::Stat::RecordDecimal(float Statistique)
 	{
-		Tick++;
-		Value.Decimal = Compute(Value.Decimal, Statistique);
+		StatValue.Decimal = Compute(StatValue.Decimal, Statistique);
+		StatTick++;
 	}
 
 #pragma endregion
@@ -118,7 +120,7 @@ namespace NxFr
 	{
 		Stream.Open(File::Mode::Write);
 
-		RecordHeader(StatsHeader::TickId, StatType::Integer, StatMode::Cnt);
+		RecordHeader(StatsHeader::TickId, Type::Integer, Mode::Cnt);
 	}
 
 	Stats::~Stats()
@@ -134,7 +136,7 @@ namespace NxFr
 			return;
 		}
 
-		RecordHeader(StatsHeader::CommentId, StatType::Label, StatMode::Set);
+		RecordHeader(StatsHeader::CommentId, Type::Label, Mode::Set);
 
 		Stream.WriteLine("");
 		Stream.Flush();
@@ -189,7 +191,7 @@ namespace NxFr
 		}
 	}
 
-	void Stats::RecordHeader(StringId Name, StatType Type, StatMode Mode)
+	void Stats::RecordHeader(StringId Name, Type StatType, Mode StatMode)
 	{
 		if (Initialized)
 		{
@@ -197,13 +199,13 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(!(Type == StatType::Label && Mode != StatMode::Set), Default, "Combination not supported");
-		NEXUS_ASSERT(!(Type == StatType::Check && Mode != StatMode::Set), Default, "Combination not supported");
-		NEXUS_ASSERT(!(Type == StatType::Decimal && Mode == StatMode::Cnt), Default, "Combination not supported");
+		NEXUS_ASSERT(!(StatType == Type::Label && StatMode != Mode::Set), Default, "Combination not supported");
+		NEXUS_ASSERT(!(StatType == Type::Check && StatMode != Mode::Set), Default, "Combination not supported");
+		NEXUS_ASSERT(!(StatType == Type::Decimal && StatMode == Mode::Cnt), Default, "Combination not supported");
 
 		Lock LockGuard(Guard);
 		Headers.Append(Name, Data.GetCount());
-		Data.AppendConstruct(Type, Mode);
+		Data.AppendConstruct(StatType, StatMode);
 
 		Stream.WriteBlock(Name);
 		Stream.WriteBlock(Separator);
@@ -226,7 +228,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.Type == StatType::Label, Default, "Invalid record call");
+		NEXUS_ASSERT(Statistique.StatType == Type::Label, Default, "Invalid record call");
 		Statistique.RecordLabel(Value);
 	}
 
@@ -247,7 +249,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.Type == StatType::Check, Default, "Invalid record call");
+		NEXUS_ASSERT(Statistique.StatType == Type::Check, Default, "Invalid record call");
 		Statistique.RecordCheck(Value);
 	}
 
@@ -268,7 +270,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.Type == StatType::Integer, Default, "Invalid record call");
+		NEXUS_ASSERT(Statistique.StatType == Type::Integer, Default, "Invalid record call");
 		Statistique.RecordInteger(Value);
 	}
 
@@ -289,7 +291,7 @@ namespace NxFr
 
 		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.Type == StatType::Decimal, Default, "Invalid record call");
+		NEXUS_ASSERT(Statistique.StatType == Type::Decimal, Default, "Invalid record call");
 		Statistique.RecordDecimal(Value);
 	}
 
@@ -308,7 +310,7 @@ namespace NxFr
 
 		Lock LockGuard(Guard);
 
-		String& Comments = Data.Last().Value.Label;
+		String& Comments = Data.Last().StatValue.Label;
 		Comments += Comment;
 		Comments += Separator;
 	}

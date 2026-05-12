@@ -10,7 +10,7 @@ namespace NxFr
 	template<>
 	struct RBSConverter<Color>
 	{
-		static Color Decode(RBS& Rbs)
+		static Color Decode(const RBS& Rbs)
 		{
 			Color Result;
 			Result.r = Rbs.ReadObject<Color::Type>();

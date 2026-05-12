@@ -35,13 +35,13 @@ namespace NxFr
 		}
 	}
 
-	Logger::LogData::LogData(LoggerVerbosity Verbosity, StringId Channel)
+	Logger::Info::Info(LoggerVerbosity Verbosity, StringId Channel)
 		: Message(64), Channel(Channel), Verbosity(Verbosity)
 	{
 	}
 
 	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path, bool AutoFlush)
-		: Logs(), Channels(), VerbosityMask(Verbosity), Outputs(Output),
+		: Infos(), Channels(), VerbosityMask(Verbosity), Outputs(Output),
 		Target(Globals::PlatformTarget), Stream(""), Callback(),
 		AutoFlush(AutoFlush), Guard()
 	{
@@ -189,11 +189,11 @@ namespace NxFr
 		int8 Minutes = Stamp.Minutes;
 		int8 Seconds = Stamp.Seconds;
 
-		LogData Data(Verbosity, Channel);
+		Info Data(Verbosity, Channel);
 		StringUtility::Format(Data.Message, Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), GetBuffer().C(), StringUtility::NewLine.C());
 
 		Lock LockGuard(Guard);
-		Logs.Append(Move(Data));
+		Infos.Append(Move(Data));
 		if (AutoFlush || IsFatal)
 		{
 			FlushLogs();
@@ -202,7 +202,7 @@ namespace NxFr
 
 	void Logger::FlushLogs()
 	{
-		for (auto& Data : Logs)
+		for (auto& Data : Infos)
 		{
 			if (CheckOutput(LoggerOutput::Console))
 			{
@@ -227,6 +227,6 @@ namespace NxFr
 			Stream.Flush();
 		}
 
-		Logs.Clear();
+		Infos.Clear();
 	}
 }

@@ -14,11 +14,11 @@ namespace NxFr
 		virtual ~ChromeTracing();
 
 	protected:
-		void RecordMarker(const Marker& Data) override;
+		void RecordMarker(const Scope& Data) override;
 		void FlushMarkers() override;
 
 	private:
-		void WriteMarker(const Marker& Data);
+		void WriteMarker(const Scope& Data);
 		void WriteHeader();
 		void WriteFooter();
 

@@ -21,20 +21,20 @@ namespace NxFr
 	class NEXUS_FRAMEWORK_API Stats
 	{
 	public:
-		enum class StatType
+		enum class Type
 		{
 			Label, Check, Integer, Decimal
 		};
 
-		enum class StatMode
+		enum class Mode
 		{
 			Set, Cnt, Add, Avg, Min, Max
 		};
 
-		union NEXUS_FRAMEWORK_API StatValue
+		union NEXUS_FRAMEWORK_API Value
 		{
-			StatValue();
-			~StatValue();
+			Value();
+			~Value();
 
 			String Label;
 			int64 Integer;
@@ -48,15 +48,15 @@ namespace NxFr
 
 		public:
 			NEXUS_NOCOPY_NOMOVE(Stat)
-			Stat(StatType Type, StatMode Mode);
+			Stat(Type Type, Mode Mode);
 			~Stat();
 
-			StringView GetValueLabel() const { return Value.Label; }
-			bool GetValueCheck() const { return Value.State; }
-			int64 GetValueInteger() const { return Finalize(Value.Integer); }
-			float GetValueDecimal() const { return Finalize(Value.Decimal); }
-			StatType GetType() const { return Type; }
-			StatMode GetMode() const { return Mode; }
+			StringView GetValueLabel() const { return StatValue.Label; }
+			bool GetValueCheck() const { return StatValue.State; }
+			int64 GetValueInteger() const { return Finalize(StatValue.Integer); }
+			float GetValueDecimal() const { return Finalize(StatValue.Decimal); }
+			Type GetType() const { return StatType; }
+			Mode GetMode() const { return StatMode; }
 
 		private:
 			void Reset();
@@ -68,10 +68,10 @@ namespace NxFr
 			void RecordInteger(int64 Statistique);
 			void RecordDecimal(float Statistique);
 
-			StatValue Value;
-			StatType Type;
-			StatMode Mode;
-			uint64 Tick;
+			Value StatValue;
+			Type StatType;
+			Mode StatMode;
+			uint64 StatTick;
 		};
 
 	public:
@@ -85,7 +85,7 @@ namespace NxFr
 		void Flush();
 		void Reset();
 
-		void RecordHeader(StringId Name, StatType Type, StatMode Mode);
+		void RecordHeader(StringId Name, Type Type, Mode Mode);
 		void RecordStatLabel(StringId Id, StringView Value);
 		void RecordStatCheck(StringId Id, bool Value);
 		void RecordStatInteger(StringId Id, int64 Value);
@@ -118,7 +118,7 @@ namespace NxFr
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) if (Instance) { Instance->RecordHeader(Id, ::NxFr::Stats::StatType::Type, ::NxFr::Stats::StatMode::Mode); }
+	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) if (Instance) { Instance->RecordHeader(Id, ::NxFr::Stats::Type::Type, ::NxFr::Stats::Mode::Mode); }
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(Id, Value); }
 	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(Id, Value); }
 	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(Id, Value); }
