@@ -1,10 +1,13 @@
-#include "NexusFramework/Misc/Hash/Hash.h"
+#pragma once
+
+#include "NexusFramework/Serialization/Rbs.h"
+#include "NexusFramework/Serialization/Yaml.h"
+
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringCApi.h"
-#include "NexusFramework/Serialization/Rbs.h"
-#include "NexusFramework/Serialization/Yaml.h"
+
 
 namespace NxFr
 {

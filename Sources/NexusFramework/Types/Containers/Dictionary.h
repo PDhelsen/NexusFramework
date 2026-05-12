@@ -8,8 +8,8 @@
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Hash/Hash.h"
 #include "NexusFramework/Math/Math.h"
-#include "NexusFramework/Types/Containers/Node.h"
-#include "NexusFramework/Types/Containers/Iterator.h"
+#include "NexusFramework/Types/Containers/Misc/Node.h"
+#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr

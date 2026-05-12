@@ -7,7 +7,7 @@
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Sort/Sort.h"
-#include "NexusFramework/Types/Containers/Iterator.h"
+#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr

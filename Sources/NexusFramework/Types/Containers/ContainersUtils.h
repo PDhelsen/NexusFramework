@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NexusFramework/Types/Containers/Node.h"
-#include "NexusFramework/Types/Containers/Iterator.h"
+#include "NexusFramework/Types/Containers/Misc/Node.h"
+#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dequeue.h"

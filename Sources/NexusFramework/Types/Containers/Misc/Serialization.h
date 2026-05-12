@@ -1,13 +1,23 @@
 #pragma once
 
-#include "NexusFramework/Types/Containers/Array.h"
-#include "NexusFramework/Types/Containers/List.h"
-#include "NexusFramework/Types/Containers/Set.h"
-#include "NexusFramework/Types/Containers/Dictionary.h"
-#include "NexusFramework/Types/Containers/ContainersUtils.h"
-
 #include "NexusFramework/Serialization/Rbs.h"
 #include "NexusFramework/Serialization/Yaml.h"
+
+#include "NexusFramework/Types/Containers/Array.h"
+#include "NexusFramework/Types/Containers/List.h"
+#include "NexusFramework/Types/Containers/Dequeue.h"
+#include "NexusFramework/Types/Containers/Queue.h"
+#include "NexusFramework/Types/Containers/Stack.h"
+#include "NexusFramework/Types/Containers/Set.h"
+#include "NexusFramework/Types/Containers/Dictionary.h"
+#include "NexusFramework/Types/Containers/LinkedList.h"
+#include "NexusFramework/Types/Containers/Tree.h"
+#include "NexusFramework/Types/Containers/Graph.h"
+#include "NexusFramework/Types/Containers/Buffer.h"
+#include "NexusFramework/Types/Containers/Pool.h"
+#include "NexusFramework/Types/Containers/Tuple.h"
+#include "NexusFramework/Types/Containers/Collection.h"
+#include "NexusFramework/Types/Containers/ContainersUtils.h"
 
 namespace NxFr
 {

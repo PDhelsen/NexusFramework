@@ -2,7 +2,7 @@
 
 #include "NexusFramework/Misc/Iterator/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
-#include "NexusFramework/Types/Containers/Node.h"
+#include "NexusFramework/Types/Containers/Misc/Node.h"
 
 namespace NxFr
 {
