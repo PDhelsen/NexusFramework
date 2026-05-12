@@ -6,9 +6,6 @@
 
 namespace NxFr
 {
-
-#pragma region Hash Algorithm
-
 	template<typename H>
 	struct Hash;
 
@@ -175,10 +172,6 @@ namespace NxFr
 		};
 	}
 
-#pragma endregion
-
-#pragma region Hash Template Specialization
-
 	namespace Hashing
 	{
 		template<typename T, typename H = Hashing::Default>
@@ -192,7 +185,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename H>
-		class Hasher<T*, H>
+		struct Hasher<T*, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const T* Data)
@@ -202,7 +195,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<nullptr_t, H>
+		struct Hasher<nullptr_t, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const nullptr_t* Data)
@@ -212,34 +205,34 @@ namespace NxFr
 		};
 	}
 
-#pragma endregion
-
 	template<typename H = Hashing::Default>
 	struct Hash
 	{
 	public:
+		using HashLength = typename H::HashLength;
+
 		template<typename T>
-		static typename H::HashLength HashObject(const T& Data, typename H::HashLength Seed = 0)
+		static HashLength HashObject(const T& Data, HashLength Seed = 0)
 		{
 			Hash<H> Instance(Seed);
 			Instance.Accumulate(Data);
 			return Instance.Finalize();
 		}
 		
-		static typename H::HashLength HashData(const void* Data, uint64 Length, typename H::HashLength Seed = 0)
+		static HashLength HashData(const void* Data, uint64 Length, HashLength Seed = 0)
 		{
 			Hash<H> Instance(Seed);
 			Instance.Accumulate(Data, Length);
 			return Instance.Finalize();
 		}
 		
-		static typename H::HashLength CombineHashes(typename H::HashLength HashA, typename H::HashLength HashB, typename H::HashLength Seed = 0)
+		static HashLength CombineHashes(HashLength HashA, HashLength HashB, HashLength Seed = 0)
 		{
 			Hash<H> Instance(Seed);
 			return Instance.Combine(HashA, HashB);
 		}
 
-		Hash(typename H::HashLength Seed = 0)
+		Hash(HashLength Seed = 0)
 			: State(Seed)
 		{
 		}
@@ -257,21 +250,20 @@ namespace NxFr
 			return *this;
 		}
 
-		typename H::HashLength Finalize() const
+		HashLength Finalize() const
 		{
 			return State.Finalize();
 		}
 
-		typename H::HashLength Combine(typename H::HashLength A, typename H::HashLength B) const
+		HashLength Combine(HashLength A, HashLength B) const
 		{
 			return State.Combine(A, B);
 		}
 
-		typename H::HashLength GetSize() const { return State.GetSize(); };
-		typename H::HashLength GetSeed() const { return State.GetSeed(); };
+		HashLength GetSize() const { return State.GetSize(); };
+		HashLength GetSeed() const { return State.GetSeed(); };
 
 	private:
 		H State;
 	};
-
 }

@@ -112,7 +112,7 @@ namespace NxFr
 		};
 
 		template<typename T>
-		struct IteratorAny
+		struct IteratorAny : public Iterator<T, IteratorAny<T>>
 		{
 		private:
 			struct Interface
@@ -172,76 +172,6 @@ namespace NxFr
 
 				delete It;
 				It = Other.It->Clone();
-			}
-
-			IteratorAny& operator++()
-			{
-				Increment();
-				return *this;
-			}
-
-			IteratorAny& operator--()
-			{
-				Decrement();
-				return *this;
-			}
-
-			T& operator*()
-			{
-				return Get();
-			}
-
-			const T& operator*() const
-			{
-				return Get();
-			}
-
-			T* operator->()
-			{
-				return &Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Get();
-			}
-
-			bool operator==(const IteratorAny& Other) const
-			{
-				return Equals(Other);
-			}
-
-			bool operator!=(const IteratorAny& Other) const
-			{
-				return !Equals(Other);
-			}
-
-			IteratorAny& Next(uint64 Iteration = 1)
-			{
-				Iterate(Iteration);
-				return *this;
-			}
-
-			IteratorAny& Previous(uint64 Iteration = 1)
-			{
-				Reverse(Iteration);
-				return *this;
-			}
-
-			void Iterate(uint64 Iteration = 1)
-			{
-				while (Iteration-- > 0)
-				{
-					Increment();
-				}
-			}
-
-			void Reverse(uint64 Iteration = 1)
-			{
-				while (Iteration-- > 0)
-				{
-					Decrement();
-				}
 			}
 
 			void Increment()
