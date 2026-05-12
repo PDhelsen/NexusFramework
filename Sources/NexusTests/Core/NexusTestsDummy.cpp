@@ -5,7 +5,7 @@ namespace NxTs
 {
 	NxFr::String Dummy::GeneratePath(NxFr::StringView Path)
 	{
-		return NxFr::Path::Combine(NxFr::Globals::Temp, Path);
+		return NxFr::Path::Combine(NxFr::Globals::Paths::Temp, Path);
 	}
 
 	NxFr::StringView Dummy::GetText()

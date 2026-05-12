@@ -39,9 +39,9 @@ namespace NxFr
 	#define NEXUS_TRACKMEMORY_REALLOCATION_INSTANCE(Instance, Pointer, Reallocated, Size) if (Instance) { Instance->RecordReallocation(Pointer, Reallocated, Size); }
 	#define NEXUS_TRACKMEMORY_DEALLOCATION_INSTANCE(Instance, Pointer) if (Instance) { Instance->RecordDeallocation(Pointer); }
 
-	#define NEXUS_TRACKMEMORY_ALLOCATION(Pointer, Size) NEXUS_TRACKMEMORY_ALLOCATION_INSTANCE(::NxFr::Globals::Memory, Pointer, Size)
-	#define NEXUS_TRACKMEMORY_REALLOCATION(Pointer, Reallocated, Size) NEXUS_TRACKMEMORY_REALLOCATION_INSTANCE(::NxFr::Globals::Memory, Pointer, Reallocated, Size)
-	#define NEXUS_TRACKMEMORY_DEALLOCATION(Pointer) NEXUS_TRACKMEMORY_DEALLOCATION_INSTANCE(::NxFr::Globals::Memory, Pointer)
+	#define NEXUS_TRACKMEMORY_ALLOCATION(Pointer, Size) NEXUS_TRACKMEMORY_ALLOCATION_INSTANCE(::NxFr::Globals::Debug::Memory, Pointer, Size)
+	#define NEXUS_TRACKMEMORY_REALLOCATION(Pointer, Reallocated, Size) NEXUS_TRACKMEMORY_REALLOCATION_INSTANCE(::NxFr::Globals::Debug::Memory, Pointer, Reallocated, Size)
+	#define NEXUS_TRACKMEMORY_DEALLOCATION(Pointer) NEXUS_TRACKMEMORY_DEALLOCATION_INSTANCE(::NxFr::Globals::Debug::Memory, Pointer)
 #else
 	#define NEXUS_TRACKMEMORY_ALLOCATION_INSTANCE(Instance, Pointer, Size)
 	#define NEXUS_TRACKMEMORY_REALLOCATION_INSTANCE(Instance, Pointer, Reallocated, Size)

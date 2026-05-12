@@ -9,28 +9,49 @@
 
 namespace NxFr
 {
+	void Initialize(uint64 ArgC, char* ArgV[])
+	{
+		Globals::CreatePlatform();
+		Globals::CreateArgs(ArgC, ArgV);
+		Globals::CreatePathsAndFolders();
+		Globals::CreateDebug(Path::Combine(Globals::Paths::Saved, "debug"));
+	}
+
+	void Shutdown()
+	{
+		Globals::DestroyDebug();
+		Globals::DestroyTempFolder();
+		Globals::DestroyArgs();
+	}
+
 	namespace Globals
 	{
-		String Root;
-		String Assets;
-		String Configs;
-		String Libraries;
-		String Resources;
-		String Scripts;
-		String Sources;
-		String Builds;
-		String Cooked;
-		String Saved;
-		String Temp;
+		namespace Paths
+		{
+			String Root;
+			String Assets;
+			String Configs;
+			String Libraries;
+			String Resources;
+			String Scripts;
+			String Sources;
+			String Builds;
+			String Cooked;
+			String Saved;
+			String Temp;
+		}
+
+		namespace Debug
+		{
+			Logger* Logs = nullptr;
+			Stats* Statistiques = nullptr;
+			Instruments* Instrumentor = nullptr;
+			MemoryTracker* Memory = nullptr;
+		}
 
 		Arguments* Args = nullptr;
 		Platform* PlatformTarget = nullptr;
 		uint64 MainThreadId = 0;
-
-		Logger* Logs = nullptr;
-		Stats* Statistiques = nullptr;
-		Instruments* Instrumentor = nullptr;
-		MemoryTracker* Memory = nullptr;
 
 		void CreatePlatform()
 		{
@@ -43,91 +64,76 @@ namespace NxFr
 #endif
 		}
 
-		void ParseArgs(uint64 ArgC, char* ArgV[])
+		void CreateArgs(uint64 ArgC, char* ArgV[])
 		{
 			Args = new Arguments();
 			Args->ParseExe(ArgC, ArgV);
 			Args->Print();
 		}
 
-		void ReleaseArgs()
+		void DestroyArgs()
 		{
 			NEXUS_DELETE(Args);
 		}
 
-		void SetupPathsAndFolders()
+		void CreatePathsAndFolders()
 		{
-			Root = Path::GetWorkingDirectory();
-			Assets = Path::Combine(Root, "Assets");
-			Configs = Path::Combine(Root, "Configs");
-			Libraries = Path::Combine(Root, "Libraries");
-			Resources = Path::Combine(Root, "Resources");
-			Scripts = Path::Combine(Root, "Scripts");
-			Sources = Path::Combine(Root, "Sources");
-			Builds = Path::Combine(Root, "builds");
-			Cooked = Path::Combine(Root, "cooked");
-			Saved = Path::Combine(Root, "saved");
-			Temp = Path::Combine(Root, "temp");
+			Paths::Root = Path::GetWorkingDirectory();
+			Paths::Assets = Path::Combine(Paths::Root, "Assets");
+			Paths::Configs = Path::Combine(Paths::Root, "Configs");
+			Paths::Libraries = Path::Combine(Paths::Root, "Libraries");
+			Paths::Resources = Path::Combine(Paths::Root, "Resources");
+			Paths::Scripts = Path::Combine(Paths::Root, "Scripts");
+			Paths::Sources = Path::Combine(Paths::Root, "Sources");
+			Paths::Builds = Path::Combine(Paths::Root, "builds");
+			Paths::Cooked = Path::Combine(Paths::Root, "cooked");
+			Paths::Saved = Path::Combine(Paths::Root, "saved");
+			Paths::Temp = Path::Combine(Paths::Root, "temp");
 
-			Directory(Cooked).Create();
-			Directory(Saved).Create();
-			Directory(Temp).Create();
+			Directory(Paths::Cooked).Create();
+			Directory(Paths::Saved).Create();
+			Directory(Paths::Temp).Create();
 		}
 
-		void CleanupFolders()
+		void DestroyTempFolder()
 		{
-			Directory(Temp).Delete();
+			Directory(Paths::Temp).Delete();
 		}
 
 		Log* GetLogger()
 		{
-			return Logs;
+			return Debug::Logs;
 		}
 
 		void CreateDebug(StringView Path)
 		{
-			Memory = new MemoryTracker();
-			Memory->StartRecording();
+			Debug::Memory = new MemoryTracker();
+			Debug::Memory->StartRecording();
 
-			Logs = new Logger(LoggerVerbosity::All, LoggerOutput::All, Path::Combine(Path, "logs.txt"), true);
-			Logs->AddChannel(LoggerChannel::Default, true);
-			Logs->AddChannel(LoggerChannel::Verbose, false);
+			Debug::Logs = new Logger(LoggerVerbosity::All, LoggerOutput::All, Path::Combine(Path, "logs.txt"), true);
+			Debug::Logs->AddChannel(LoggerChannel::Default, true);
+			Debug::Logs->AddChannel(LoggerChannel::Verbose, false);
 
-			Instrumentor = new ChromeTracing(Path::Combine(Path, "instruments.json"), false, true);
-			Instrumentor->StartRecording();
+			Debug::Instrumentor = new ChromeTracing(Path::Combine(Path, "instruments.json"), false, true);
+			Debug::Instrumentor->StartRecording();
 
-			Statistiques = new Stats(Path::Combine(Path, "stats.csv"));
-			Statistiques->Initialize();
-			Statistiques->StartRecording();
+			Debug::Statistiques = new Stats(Path::Combine(Path, "stats.csv"));
+			Debug::Statistiques->Initialize();
+			Debug::Statistiques->StartRecording();
 		}
 
 		void DestroyDebug()
 		{
-			Instrumentor->StopRecording();
-			NEXUS_DELETE(Instrumentor);
+			Debug::Instrumentor->StopRecording();
+			NEXUS_DELETE(Debug::Instrumentor);
 
-			Statistiques->StopRecording();
-			NEXUS_DELETE(Statistiques);
+			Debug::Statistiques->StopRecording();
+			NEXUS_DELETE(Debug::Statistiques);
 
-			NEXUS_DELETE(Logs);
+			NEXUS_DELETE(Debug::Logs);
 
-			Memory->StopRecording();
-			NEXUS_DELETE(Memory);
+			Debug::Memory->StopRecording();
+			NEXUS_DELETE(Debug::Memory);
 		}
-	}
-
-	void Initialize(uint64 ArgC, char* ArgV[])
-	{
-		Globals::CreatePlatform();
-		Globals::ParseArgs(ArgC, ArgV);
-		Globals::SetupPathsAndFolders();
-		Globals::CreateDebug(Path::Combine(Globals::Saved, "debug"));
-	}
-
-	void Shutdown()
-	{
-		Globals::DestroyDebug();
-		Globals::CleanupFolders();
-		Globals::ReleaseArgs();
 	}
 }

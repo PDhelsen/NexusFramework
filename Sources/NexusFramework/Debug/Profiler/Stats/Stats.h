@@ -125,12 +125,12 @@ namespace NxFr
 	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(Id, Value); }
 	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(Id, Value); }
 
-	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Globals::Statistiques, Id, Type, Mode)
-	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxFr::Globals::Statistiques, Id, Value)
-	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxFr::Globals::Statistiques, Id, Value)
-	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxFr::Globals::Statistiques, Id, Value)
-	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxFr::Globals::Statistiques, Id, Value)
-	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxFr::Globals::Statistiques, Id, Value)
+	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Type, Mode)
+	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
 #elif NEXUS_DISTRIB
 	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode)
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value)
