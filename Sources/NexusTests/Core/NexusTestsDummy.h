@@ -89,7 +89,7 @@ namespace NxFr
 	{
 		static void ToString(const NxTs::Dummy& Data, String& Result, StringView Format = "")
 		{
-			Result.Format("Dummy: %d %s", Data.Key, Data.Value);
+			StringUtility::Format(Result, "Dummy: %d %s", Data.Key, Data.Value);
 		}
 	};
 

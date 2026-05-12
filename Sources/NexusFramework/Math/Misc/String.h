@@ -44,7 +44,7 @@ namespace NxFr
 
 		static void ToString(const Vector2f& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Vector2f>(Format, true), Data.x, Data.y);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Vector2f>(Format, true), Data.x, Data.y);
 		}
 
 		static void FromString(StringView Data, Vector2f& Result, StringView Format = "")
@@ -63,7 +63,7 @@ namespace NxFr
 
 		static void ToString(const Vector2i& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Vector2i>(Format), Data.x, Data.y);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Vector2i>(Format), Data.x, Data.y);
 		}
 
 		static void FromString(StringView Data, Vector2i& Result, StringView Format = "")
@@ -82,7 +82,7 @@ namespace NxFr
 
 		static void ToString(const Vector3f& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Vector3f>(Format, true), Data.x, Data.y, Data.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Vector3f>(Format, true), Data.x, Data.y, Data.z);
 		}
 
 		static void FromString(StringView Data, Vector3f& Result, StringView Format = "")
@@ -101,7 +101,7 @@ namespace NxFr
 
 		static void ToString(const Vector3i& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Vector3i>(Format), Data.x, Data.y, Data.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Vector3i>(Format), Data.x, Data.y, Data.z);
 		}
 
 		static void FromString(StringView Data, Vector3i& Result, StringView Format = "")
@@ -120,7 +120,7 @@ namespace NxFr
 
 		static void ToString(const Vector4f& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Vector4f>(Format, true), Data.x, Data.y, Data.z, Data.w);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Vector4f>(Format, true), Data.x, Data.y, Data.z, Data.w);
 		}
 
 		static void FromString(StringView Data, Vector4f& Result, StringView Format = "")
@@ -139,7 +139,7 @@ namespace NxFr
 
 		static void ToString(const Vector4i& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Vector4i>(Format), Data.x, Data.y, Data.z, Data.w);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Vector4i>(Format), Data.x, Data.y, Data.z, Data.w);
 		}
 
 		static void FromString(StringView Data, Vector4i& Result, StringView Format = "")
@@ -204,7 +204,7 @@ namespace NxFr
 
 		static void ToString(const AxisAngle& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<AxisAngle>(Format), Data.Axis.x, Data.Axis.y, Data.Axis.z, Data.Angle);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<AxisAngle>(Format), Data.Axis.x, Data.Axis.y, Data.Axis.z, Data.Angle);
 		}
 
 		static void FromString(StringView Data, AxisAngle& Result, StringView Format = "")
@@ -223,7 +223,7 @@ namespace NxFr
 
 		static void ToString(const Euler& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Euler>(Format, true), Data.x, Data.y, Data.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Euler>(Format, true), Data.x, Data.y, Data.z);
 		}
 
 		static void FromString(StringView Data, Euler& Result, StringView Format = "")
@@ -242,7 +242,7 @@ namespace NxFr
 
 		static void ToString(const Quaternion& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Quaternion>(Format, true), Data.x, Data.y, Data.z, Data.w);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Quaternion>(Format, true), Data.x, Data.y, Data.z, Data.w);
 		}
 
 		static void FromString(StringView Data, Quaternion& Result, StringView Format = "")
@@ -261,7 +261,7 @@ namespace NxFr
 
 		static void ToString(const Ray& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Ray>(Format), Data.Origin.x, Data.Origin.y, Data.Direction.z, Data.Direction.x, Data.Direction.y, Data.Direction.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Ray>(Format), Data.Origin.x, Data.Origin.y, Data.Direction.z, Data.Direction.x, Data.Direction.y, Data.Direction.z);
 		}
 
 		static void FromString(StringView Data, Ray& Result, StringView Format = "")
@@ -280,7 +280,7 @@ namespace NxFr
 
 		static void ToString(const Plane& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Plane>(Format), Data.Normal.x, Data.Normal.y, Data.Normal.z, Data.Distance);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Plane>(Format), Data.Normal.x, Data.Normal.y, Data.Normal.z, Data.Distance);
 		}
 
 		static void FromString(StringView Data, Plane& Result, StringView Format = "")
@@ -299,7 +299,7 @@ namespace NxFr
 
 		static void ToString(const Triangle& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Triangle>(Format), Data.A.x, Data.A.y, Data.A.z, Data.B.x, Data.B.y, Data.B.z, Data.C.x, Data.C.y, Data.C.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Triangle>(Format), Data.A.x, Data.A.y, Data.A.z, Data.B.x, Data.B.y, Data.B.z, Data.C.x, Data.C.y, Data.C.z);
 		}
 
 		static void FromString(StringView Data, Triangle& Result, StringView Format = "")
@@ -318,7 +318,7 @@ namespace NxFr
 
 		static void ToString(const Rectangle& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Rectangle>(Format), Data.Center.x, Data.Center.y, Data.Extents.x, Data.Extents.y);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Rectangle>(Format), Data.Center.x, Data.Center.y, Data.Extents.x, Data.Extents.y);
 		}
 
 		static void FromString(StringView Data, Rectangle& Result, StringView Format = "")
@@ -337,7 +337,7 @@ namespace NxFr
 
 		static void ToString(const Circle& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Circle>(Format), Data.Center.x, Data.Center.y, Data.Radius);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Circle>(Format), Data.Center.x, Data.Center.y, Data.Radius);
 		}
 
 		static void FromString(StringView Data, Circle& Result, StringView Format = "")
@@ -356,7 +356,7 @@ namespace NxFr
 
 		static void ToString(const Box& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Box>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Extents.x, Data.Extents.y, Data.Extents.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Box>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Extents.x, Data.Extents.y, Data.Extents.z);
 		}
 
 		static void FromString(StringView Data, Box& Result, StringView Format = "")
@@ -375,7 +375,7 @@ namespace NxFr
 
 		static void ToString(const Cube& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Cube>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Orientation.x, Data.Orientation.y, Data.Orientation.z, Data.Orientation.w, Data.Extents.x, Data.Extents.y, Data.Extents.z);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Cube>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Orientation.x, Data.Orientation.y, Data.Orientation.z, Data.Orientation.w, Data.Extents.x, Data.Extents.y, Data.Extents.z);
 		}
 
 		static void FromString(StringView Data, Cube& Result, StringView Format = "")
@@ -394,7 +394,7 @@ namespace NxFr
 
 		static void ToString(const Sphere& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Sphere>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Radius);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Sphere>(Format), Data.Center.x, Data.Center.y, Data.Center.z, Data.Radius);
 		}
 
 		static void FromString(StringView Data, Sphere& Result, StringView Format = "")

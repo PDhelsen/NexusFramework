@@ -11,6 +11,14 @@ namespace NxFr
 {
 	template <typename T> class Collection;
 
+	template<typename T>
+	struct StringConverter
+	{
+		static StringView GetFormat(bool Pretty) { return ""; };
+		static void ToString(const T& Data, String& Result, StringView Format = "") {}
+		static void FromString(StringView Data, T& Result, StringView Format = "") {}
+	};
+
 	class NEXUS_FRAMEWORK_API StringUtility
 	{
 	public:
@@ -38,22 +46,72 @@ namespace NxFr
 
 	public:
 		template<typename... Args>
-		static String Format(StringView Format, Args&&... args);
+		static void Format(String& Text, StringView Formatting, Args&&... args)
+		{
+			uint64 Size = StringCApi::Format(Text.GetCapacity(), Text.Characters(), Formatting.C(), args...);
+			if (Size >= Text.GetCapacity())
+			{
+				Text.Reserve(Size + 1);
+				StringCApi::Format(Text.GetCapacity(), Text.Characters(), Formatting.C(), args...);
+			}
+			Text.Validate();
+		}
 		template<typename... Args>
-		static String Format(uint64 Size, StringView Format, Args&&... args);
+		static void Format(String& Text, uint64 Size, StringView Formatting, Args&&... args)
+		{
+			Text.Reserve(Size);
+			StringCApi::Format(Text.GetCapacity(), Text.Characters(), Formatting.C(), args...);
+			Text.Validate();
+		}
 		template<typename... Args>
-		static uint64 Scan(StringView Text, StringView Format, Args&&... args);
+		static String FormatTo(StringView Formatting, Args&&... args)
+		{
+			String Result = String(Formatting.GetCount() + sizeof...(args) * GuessFormatingSize);
+			Format(Result, Formatting, args...);
+			return Result;
+		}
+		template<typename... Args>
+		static String FormatTo(uint64 Size, StringView Formatting, Args&&... args)
+		{
+			String Result = String(Size);
+			Format(Result, Size, Formatting, args...);
+			return Result;
+		}
+		template<typename... Args>
+		static uint64 Scan(StringView Text, StringView Formatting, Args&&... args)
+		{
+			return StringCApi::Scan(Text.C(), Formatting.C(), args...);
+		}
 
 		template<typename T>
-		static String ToString(const T& Data, StringView Format = "");
+		static String ToString(const T& Data, StringView Format = "")
+		{
+			String Result;
+			ToString<T>(Data, Result, Format);
+			return Result;
+		}
 		template<typename T>
-		static void ToString(const T& Data, String& Result, StringView Format = "");
+		static void ToString(const T& Data, String& Result, StringView Format = "")
+		{
+			StringConverter<T>::ToString(Data, Result, Format);
+		}
 		template<typename T>
-		static T FromString(StringView Data, StringView Format = "");
+		static T FromString(StringView Data, StringView Format = "")
+		{
+			T Result;
+			FromString<T>(Data, Result, Format);
+			return Result;
+		}
 		template<typename T>
-		static void FromString(StringView Data, T& Result, StringView Format = "");
+		static void FromString(StringView Data, T& Result, StringView Format = "")
+		{
+			StringConverter<T>::FromString(Data, Result, Format);
+		}
 		template<typename T>
-		static StringView ConvertionFormat(StringView Format = "", bool Pretty = false);
+		static StringView ConvertionFormat(StringView Format = "", bool Pretty = false)
+		{
+			return !Format.IsEmpty() ? Format : StringConverter<T>::GetFormat(Pretty);
+		}
 
 		static bool Start(StringView Text, StringView Substring);
 		static bool End(StringView Text, StringView Substring);
@@ -72,14 +130,6 @@ namespace NxFr
 
 	private:
 		static StringView Search(const char* Text, const char* Substring, uint64 Capacity, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
-	};
-
-	template<typename T>
-	struct StringConverter
-	{
-		static StringView GetFormat(bool Pretty) { return ""; };
-		static void ToString(const T& Data, String& Result, StringView Format = "");
-		static void FromString(StringView Data, T& Result, StringView Format = "");
 	};
 
 	NEXUS_FRAMEWORK_API String operator+(StringView TextA, StringView TextB);

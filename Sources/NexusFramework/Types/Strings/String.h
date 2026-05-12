@@ -46,11 +46,6 @@ namespace NxFr
 		String& operator+=(StringView Other);
 		String& operator-=(StringView Other);
 
-		template<typename... Args>
-		String& Format(StringView Format, Args&&... args);
-		template<typename... Args>
-		String& Format(uint64 Size, StringView Format, Args&&... args);
-
 		String& Assign(StringView OldText, StringView NewText);
 		String& Assign(StringView OldText, StringView NewText, uint64 Offset, uint64 Occurrence);
 		String& Append(StringView Text);

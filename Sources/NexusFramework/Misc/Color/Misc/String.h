@@ -16,7 +16,7 @@ namespace NxFr
 
 		static void ToString(const Color& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Color>(Format, true), Data.r, Data.g, Data.b, Data.a);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Color>(Format, true), Data.r, Data.g, Data.b, Data.a);
 		}
 
 		static void FromString(StringView Data, Color& Result, StringView Format = "")

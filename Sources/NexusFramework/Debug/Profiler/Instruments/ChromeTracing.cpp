@@ -33,7 +33,7 @@ namespace NxFr
 	void ChromeTracing::WriteMarker(const Marker& Data)
 	{
 		// Expect timing in micro second
-		Buffer.Format(
+		StringUtility::Format(Buffer,
 			StringView(",{\"cat\":\"function\",\"dur\":%.3f,\"name\":\"%s\",\"ph\":\"X\",\"pid\":0,\"tid\":%d,\"ts\":%.3f}"),
 			Data.GetWatch().GetElapsedTime(Time::SecondToMicro),
 			Data.GetText().C(),

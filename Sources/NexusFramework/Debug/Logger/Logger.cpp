@@ -190,7 +190,7 @@ namespace NxFr
 		int8 Seconds = Stamp.Seconds;
 
 		LogData Data(Verbosity, Channel);
-		Data.Message.Format(Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), GetBuffer().C(), StringUtility::NewLine.C());
+		StringUtility::Format(Data.Message, Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), GetBuffer().C(), StringUtility::NewLine.C());
 
 		Lock LockGuard(Guard);
 		Logs.Append(Move(Data));

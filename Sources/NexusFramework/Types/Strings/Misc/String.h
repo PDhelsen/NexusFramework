@@ -87,7 +87,7 @@ namespace NxFr
 
 		static void ToString(const int8& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<int8>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<int8>(Format), Data);
 		}
 
 		static void FromString(StringView Data, int8& Result, StringView Format = "")
@@ -106,7 +106,7 @@ namespace NxFr
 
 		static void ToString(const int16& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<int16>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<int16>(Format), Data);
 		}
 
 		static void FromString(StringView Data, int16& Result, StringView Format = "")
@@ -125,7 +125,7 @@ namespace NxFr
 
 		static void ToString(const int32& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<int32>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<int32>(Format), Data);
 		}
 
 		static void FromString(StringView Data, int32& Result, StringView Format = "")
@@ -144,7 +144,7 @@ namespace NxFr
 
 		static void ToString(const int64& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<int64>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<int64>(Format), Data);
 		}
 
 		static void FromString(StringView Data, int64& Result, StringView Format = "")
@@ -163,7 +163,7 @@ namespace NxFr
 
 		static void ToString(const uint8& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<uint8>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<uint8>(Format), Data);
 		}
 
 		static void FromString(StringView Data, uint8& Result, StringView Format = "")
@@ -182,7 +182,7 @@ namespace NxFr
 
 		static void ToString(const uint16& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<uint16>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<uint16>(Format), Data);
 		}
 
 		static void FromString(StringView Data, uint16& Result, StringView Format = "")
@@ -201,7 +201,7 @@ namespace NxFr
 
 		static void ToString(const uint32& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<uint32>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<uint32>(Format), Data);
 		}
 
 		static void FromString(StringView Data, uint32& Result, StringView Format = "")
@@ -220,7 +220,7 @@ namespace NxFr
 
 		static void ToString(const uint64& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<uint64>(Format), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<uint64>(Format), Data);
 		}
 
 		static void FromString(StringView Data, uint64& Result, StringView Format = "")
@@ -239,7 +239,7 @@ namespace NxFr
 
 		static void ToString(const float& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<float>(Format, true), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<float>(Format, true), Data);
 		}
 
 		static void FromString(StringView Data, float& Result, StringView Format = "")
@@ -258,7 +258,7 @@ namespace NxFr
 
 		static void ToString(const double& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<double>(Format, true), Data);
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<double>(Format, true), Data);
 		}
 
 		static void FromString(StringView Data, double& Result, StringView Format = "")

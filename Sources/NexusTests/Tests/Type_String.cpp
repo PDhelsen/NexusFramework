@@ -114,7 +114,7 @@ namespace NxTs
 		NxFr::List<NxFr::StringView> Split = NxFr::StringUtility::SplitAll(Test2, " ");
 		ASSERT_EQ(Split.GetCount(), 12);
 
-		NxFr::String Test3 = NxFr::StringUtility::Format("Hello %i World %.1f, %s", 10, 20.0f, Test1.C());
+		NxFr::String Test3 = NxFr::StringUtility::FormatTo("Hello %i World %.1f, %s", 10, 20.0f, Test1.C());
 		ASSERT_EQ(Test3, "Hello 10 World 20.0, Hello World");
 		int32 Day = 0, Year = 0;
 		NxFr::String Weekday = NxFr::String(), Month = NxFr::String();

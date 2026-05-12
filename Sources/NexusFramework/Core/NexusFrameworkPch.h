@@ -8,7 +8,6 @@
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringCApi.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
-#include "NexusFramework/Types/Strings/StringTemplate.h"
 #include "NexusFramework/Types/Strings/Misc/Hash.h"
 #include "NexusFramework/Types/Strings/Misc/Iterator.h"
 #include "NexusFramework/Types/Strings/Misc/String.h"

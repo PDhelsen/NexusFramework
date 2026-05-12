@@ -8,7 +8,6 @@
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringFunctions.h"
-#include "NexusFramework/Types/Strings/StringTemplate.h"
 #include "NexusFramework/Math/Math.h"
 
 namespace NxFr
@@ -59,7 +58,7 @@ namespace NxFr
 		template<typename... Args>
 		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
 		{
-			GetBuffer().Format(Message, args...);
+			StringUtility::Format(GetBuffer(), Message, args...);
 			PrintLog(Verbosity, Channel, Message);
 		}
 

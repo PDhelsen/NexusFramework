@@ -37,7 +37,7 @@ namespace NxFr
 
 		static void ToString(const Stopwatch& Data, String& Result, StringView Format = "")
 		{
-			Result.Format(StringUtility::ConvertionFormat<Stopwatch>(Format, true), Data.Peek());
+			StringUtility::Format(Result, StringUtility::ConvertionFormat<Stopwatch>(Format, true), Data.Peek());
 		}
 
 		static void FromString(StringView Data, Stopwatch& Result, StringView Format = "")

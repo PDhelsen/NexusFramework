@@ -81,8 +81,8 @@ namespace NxTs
 			Stats.RecordStatInteger(CntId, 0);
 			Stats.RecordStatInteger(AddId, 2);
 
-			Stats.RecordComment(NxFr::StringUtility::Format("Iteration: %d", Iteration));
-			Stats.RecordComment(NxFr::StringUtility::Format("Iteration (Again): %d", Iteration));
+			Stats.RecordComment(NxFr::StringUtility::FormatTo("Iteration: %d", Iteration));
+			Stats.RecordComment(NxFr::StringUtility::FormatTo("Iteration (Again): %d", Iteration));
 
 			ASSERT_EQ(Stats.GetStat(SetId).GetValueInteger(), Iteration);
 
