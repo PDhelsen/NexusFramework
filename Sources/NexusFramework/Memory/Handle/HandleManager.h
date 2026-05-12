@@ -16,15 +16,37 @@ namespace NxFr
 		~HandleManager();
 
 		template<typename T>
-		Handle<T> AcquireHandle(T* Pointer);
+		Handle<T> AcquireHandle(T* Pointer)
+		{
+			Handle<T> Handle;
+			Handle.Pointer = AllocateHandle(Pointer);
+			return Handle;
+		}
 		template<typename T>
-		void UpdateHandle(Handle<T>& Handle, T* Pointer);
+		void UpdateHandle(Handle<T>& Handle, T* Pointer)
+		{
+			ModifyHandle(Handle.Pointer, Pointer);
+		}
 		template<typename T>
-		void* ReleaseHandle(Handle<T>& Handle);
+		void* ReleaseHandle(Handle<T>& Handle)
+		{
+			void* RawPointer = Handle.GetRedirectedPointer();
+			FreeHandle(Handle.Pointer);
+			Handle.Pointer = nullptr;
+			return RawPointer;
+		}
 		template<typename T>
-		Handle<T> FindHandle(T* Pointer);
+		Handle<T> FindHandle(T* Pointer)
+		{
+			Handle<T> Handle;
+			Handle.Pointer = GetHandle(Pointer);
+			return Handle;
+		}
 		template<typename T>
-		bool BelongToManager(Handle<T> Handle);
+		bool BelongToManager(Handle<T> Handle)
+		{
+			return IsBelonging(Handle.Pointer);
+		}
 
 		Dictionary<void*, Handle<void>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
@@ -41,58 +63,4 @@ namespace NxFr
 
 		Pool<uint64, Pooling::PreAllocated<uint64>> Buffer;
 	};
-
-	template<typename T>
-	Handle<T> HandleManager::AcquireHandle(T* Pointer)
-	{
-		Handle<T> Handle;
-		Handle.Pointer = AllocateHandle(Pointer);
-		return Handle;
-	}
-
-	template<typename T>
-	void HandleManager::UpdateHandle(Handle<T>& Handle, T* Pointer)
-	{
-		ModifyHandle(Handle.Pointer, Pointer);
-	}
-
-	template<typename T>
-	void* HandleManager::ReleaseHandle(Handle<T>& Handle)
-	{
-		void* RawPointer = Handle.GetRedirectedPointer();
-		FreeHandle(Handle.Pointer);
-		Handle.Pointer = nullptr;
-		return RawPointer;
-	}
-
-	template<typename T>
-	Handle<T> HandleManager::FindHandle(T* Pointer)
-	{
-		Handle<T> Handle;
-		Handle.Pointer = GetHandle(Pointer);
-		return Handle;
-	}
-
-	template<typename T>
-	inline bool HandleManager::BelongToManager(Handle<T> Handle)
-	{
-		return IsBelonging(Handle.Pointer);
-	}
-
-	namespace Memory
-	{
-		template<typename T, typename ...Args>
-		Handle<T> Create(HandleManager* Manager, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
-		{
-			T* Pointer = Create<T>(Allocator, args...);
-			return Manager->AcquireHandle<T>(Pointer);
-		}
-
-		template<typename T>
-		void Destroy(HandleManager* Manager, Handle<T> Handle, Allocator* Allocator = AllocatorContext::Get())
-		{
-			Destroy(Handle.GetRedirectedPointer(), Allocator);
-			Manager->ReleaseHandle<T>(Handle);
-		}
-	}
 }

@@ -13,6 +13,12 @@
 
 namespace NxFr
 {
+	class Log;
+	namespace Globals
+	{
+		NEXUS_FRAMEWORK_API extern Log* GetLogger();
+	}
+
 	namespace LoggerChannel
 	{
 		NEXUS_FRAMEWORK_API extern const StringId Default;
@@ -51,35 +57,23 @@ namespace NxFr
 	{
 	public:
 		template<typename... Args>
-		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
+		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
+		{
+			GetBuffer().Format(Message, args...);
+			PrintLog(Verbosity, Channel, Message);
+		}
 
 	protected:
 		virtual String& GetBuffer() = 0;
 		virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
 		virtual void FlushLogs() = 0;
-
 	};
-
-	template<typename... Args>
-	void Log::LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args)
-	{
-		GetBuffer().Format(Message, args...);
-		PrintLog(Verbosity, Channel, Message);
-	}
 }
 
 NEXUS_FLAG(NxFr::LoggerVerbosity, uint8)
 NEXUS_FLAG_STRING(NxFr::LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
 NEXUS_FLAG(NxFr::LoggerOutput, uint8)
 NEXUS_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
-
-namespace NxFr
-{
-	namespace Globals
-	{
-		NEXUS_FRAMEWORK_API extern Log* GetLogger();
-	}
-}
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
 #define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }

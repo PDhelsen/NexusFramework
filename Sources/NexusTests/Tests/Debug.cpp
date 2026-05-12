@@ -84,13 +84,13 @@ namespace NxTs
 			Stats.RecordComment(NxFr::StringUtility::Format("Iteration: %d", Iteration));
 			Stats.RecordComment(NxFr::StringUtility::Format("Iteration (Again): %d", Iteration));
 
-			ASSERT_EQ(Stats.GetStat(SetId).GetValue<int64>(), Iteration);
+			ASSERT_EQ(Stats.GetStat(SetId).GetValueInteger(), Iteration);
 
 			Stats.Flush();
 			if (Iteration == 3)
 			{
 				Stats.Reset();
-				ASSERT_EQ(Stats.GetStat(NxFr::StatsHeader::TickId).GetValue<int64>(), 0);
+				ASSERT_EQ(Stats.GetStat(NxFr::StatsHeader::TickId).GetValueInteger(), 0);
 			}
 		}
 

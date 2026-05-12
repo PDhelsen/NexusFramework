@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"
+#include "NexusFramework/Debug/Profiler/Stats/Misc/String.h"
 
 #include "NexusFramework/External/StandardLibrary.h"
 
@@ -12,21 +13,6 @@ namespace NxFr
 		const StringId TickId = "Tick"_Sid;
 		const StringId CommentId = "Comments"_Sid;
 	}
-
-	template<>
-	struct StringConverter<Stats::Stat>
-	{
-		static void ToString(const Stats::Stat& Data, String& Result, StringView Format = "")
-		{
-			switch (Data.GetType())
-			{
-			case NxFr::Stats::StatType::Label: StringConverter<String>::ToString(Data.GetValue<StringView>(), Result); break;
-			case NxFr::Stats::StatType::Check: StringConverter<bool>::ToString(Data.GetValue<bool>(), Result); break;
-			case NxFr::Stats::StatType::Integer: StringConverter<int64>::ToString(Data.GetValue<int64>(), Result); break;
-			case NxFr::Stats::StatType::Decimal: StringConverter<float>::ToString(Data.GetValue<float>(), Result); break;
-			}
-		}
-	};
 
 #pragma endregion
 

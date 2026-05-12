@@ -51,7 +51,10 @@ namespace NxFr
 			Stat(StatType Type, StatMode Mode);
 			~Stat();
 
-			template<typename T> T GetValue() const { return (T)0; }
+			StringView GetValueLabel() const { return Value.Label; }
+			bool GetValueCheck() const { return Value.State; }
+			int64 GetValueInteger() const { return Finalize(Value.Integer); }
+			float GetValueDecimal() const { return Finalize(Value.Decimal); }
 			StatType GetType() const { return Type; }
 			StatMode GetMode() const { return Mode; }
 
@@ -112,30 +115,6 @@ namespace NxFr
 
 		Mutex Guard;
 	};
-
-	template<>
-	inline StringView Stats::Stat::GetValue() const
-	{
-		return Value.Label;
-	}
-
-	template<>
-	inline bool Stats::Stat::GetValue() const
-	{
-		return Value.State;
-	}
-
-	template<>
-	inline int64 Stats::Stat::GetValue() const
-	{
-		return Finalize(Value.Integer);
-	}
-
-	template<>
-	inline float Stats::Stat::GetValue() const
-	{
-		return Finalize(Value.Decimal);
-	}
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE

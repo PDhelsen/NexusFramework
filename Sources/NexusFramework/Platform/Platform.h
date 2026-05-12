@@ -45,7 +45,11 @@ namespace NxFr
 		virtual ~Platform();
 
 		template<typename R, typename... Args>
-		Delegate<R(Args...)> GetFunctionFromDll(StringView DllName, StringView FunctionName);
+		Delegate<R(Args...)> GetFunctionFromDll(StringView DllName, StringView FunctionName)
+		{
+			typedef R(*Type)(Args...);
+			return Delegate<R(Args...)>((Type)GetFromDll(DllName, FunctionName));
+		}
 		virtual void* LoadDll(StringView DllName) = 0;
 		virtual void UnloadDll(StringView DllName) = 0;
 		virtual void* GetFromDll(StringView DllName, StringView FunctionName) = 0;
@@ -113,11 +117,4 @@ namespace NxFr
 	protected:
 		Dictionary<String, void*> Dlls;
 	};
-
-	template<typename R, typename ...Args>
-	inline Delegate<R(Args...)> Platform::GetFunctionFromDll(StringView DllName, StringView FunctionName)
-	{
-		typedef R(*Type)(Args...);
-		return Delegate<R(Args...)>((Type)GetFromDll(DllName, FunctionName));
-	}
 }

@@ -67,10 +67,6 @@ namespace NxFr
 		static String ChangeName(StringView Path, StringView Name);
 		static String ChangeExtension(StringView Path, StringView Extension);
 
-		template<typename T>
-		static String Combine(const Collection<T>& Elements);
-		template<typename... Args>
-		static String Combine(Args&&... args);
 		static String Join(StringView Path, StringView Element);
 		static void Join(String& Path, StringView Element);
 		static String Normalize(StringView Path);
@@ -81,24 +77,23 @@ namespace NxFr
 		static void MakeAbsolute(String& Path, StringView Root);
 		static String MakeRelative(StringView Path, StringView Root);
 		static void MakeRelative(String& Path, StringView Root);
-	};
 
-	template<typename T>
-	inline String Path::Combine(const Collection<T>& Elements)
-	{
-		String Result;
-		for (auto It = Elements.Begin(); It != Elements.End(); ++It)
+		template<typename T>
+		static String Combine(const Collection<T>& Elements)
 		{
-			Join(Result, It);
+			String Result;
+			for (auto It = Elements.Begin(); It != Elements.End(); ++It)
+			{
+				Join(Result, It);
+			}
+			return Result;
 		}
-		return Result;
-	}
-
-	template<typename ...Args>
-	inline String Path::Combine(Args&&... args)
-	{
-		String Result;
-		(Join(Result, Forward<Args>(args)), ...);
-		return Result;
-	}
+		template<typename... Args>
+		static String Combine(Args&&... args)
+		{
+			String Result;
+			(Join(Result, Forward<Args>(args)), ...);
+			return Result;
+		}
+	};
 }

@@ -5,6 +5,9 @@
 
 namespace NxFr
 {
+	template<typename T>
+	struct RBSConverter;
+
 	class NEXUS_FRAMEWORK_API RBS
 	{
 	public:
@@ -30,22 +33,48 @@ namespace NxFr
 		RBS(Buffer&& Data);
 
 		template<typename T>
-		T ReadObject();
+		T ReadObject()
+		{
+			return RBSConverter<T>::Decode(*this);
+		}
 		template<typename T>
-		T ReadObject(uint64 Offset);
+		T ReadObject(uint64 Offset)
+		{
+			OffsetScope CursorOffset(*this, Offset);
+			return ReadObject();
+		}
 		template<typename T>
-		void WriteObject(const T& Object);
+		void WriteObject(const T& Object)
+		{
+			RBSConverter<T>::Encode(*this, Object);
+		}
 		template<typename T>
-		void WriteObject(const T& Object, uint64 Offset);
+		void WriteObject(const T& Object, uint64 Offset)
+		{
+			OffsetScope CursorOffset(*this, Offset);
+			WriteObject(Object);
+		}
 
 		template<typename T>
-		const T* ReadData(uint64 Size);
+		const T* ReadData(uint64 Size)
+		{
+			return (const T*)ReadByte(Size);
+		}
 		template<typename T>
-		const T* ReadData(uint64 Size, uint64 Offset);
+		const T* ReadData(uint64 Size, uint64 Offset)
+		{
+			return (const T*)ReadByte(Size, Offset);
+		}
 		template<typename T>
-		void WriteData(const T* Pointer, uint64 Size);
+		void WriteData(const T* Pointer, uint64 Size)
+		{
+			WriteByte(Pointer, Size);
+		}
 		template<typename T>
-		void WriteData(const T* Pointer, uint64 Size, uint64 Offset);
+		void WriteData(const T* Pointer, uint64 Size, uint64 Offset)
+		{
+			WriteByte(Pointer, Size, Offset);
+		}
 
 		const void* ReadByte(uint64 Size);
 		const void* ReadByte(uint64 Size, uint64 Offset);
@@ -67,81 +96,14 @@ namespace NxFr
 	struct RBSConverter
 	{
 	public:
-		static T Decode(RBS& Rbs);
-		static void Encode(RBS& Rbs, const T& Object);
+		static T Decode(RBS& Rbs)
+		{
+			return *Rbs.ReadData<T>(sizeof(T));
+		}
+
+		static void Encode(RBS& Rbs, const T& Object)
+		{
+			Rbs.WriteData<T>(&Object, sizeof(T));
+		}
 	};
-
-#pragma region Templates
-
-#pragma region RBS
-
-	template<typename T>
-	inline T RBS::ReadObject()
-	{
-		return RBSConverter<T>::Decode(*this);
-	}
-
-	template<typename T>
-	inline T RBS::ReadObject(uint64 Offset)
-	{
-		OffsetScope CursorOffset(*this, Offset);
-		return ReadObject();
-	}
-
-	template<typename T>
-	inline void RBS::WriteObject(const T& Object)
-	{
-		RBSConverter<T>::Encode(*this, Object);
-	}
-
-	template<typename T>
-	inline void RBS::WriteObject(const T& Object, uint64 Offset)
-	{
-		OffsetScope CursorOffset(*this, Offset);
-		WriteObject(Object);
-	}
-
-	template<typename T>
-	inline const T* RBS::ReadData(uint64 Size)
-	{
-		return (const T*)ReadByte(Size);
-	}
-
-	template<typename T>
-	inline const T* RBS::ReadData(uint64 Size, uint64 Offset)
-	{
-		return (const T*)ReadByte(Size, Offset);
-	}
-
-	template<typename T>
-	inline void RBS::WriteData(const T* Pointer, uint64 Size)
-	{
-		WriteByte(Pointer, Size);
-	}
-
-	template<typename T>
-	inline void RBS::WriteData(const T* Pointer, uint64 Size, uint64 Offset)
-	{
-		WriteByte(Pointer, Size, Offset);
-	}
-
-#pragma endregion
-
-#pragma region Converter
-
-	template<typename T>
-	inline T RBSConverter<T>::Decode(RBS& Rbs)
-	{
-		return *Rbs.ReadData<T>(sizeof(T));
-	}
-
-	template<typename T>
-	inline void RBSConverter<T>::Encode(RBS& Rbs, const T& Object)
-	{
-		Rbs.WriteData<T>(&Object, sizeof(T));
-	}
-
-#pragma endregion
-
-#pragma endregion
 }

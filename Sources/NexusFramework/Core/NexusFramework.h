@@ -40,6 +40,8 @@
 #include "NexusFramework/Memory/Handle/HandleManager.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
+#include "NexusFramework/Memory/Misc/Templates.h"
+#include "NexusFramework/Memory/Misc/Memory.h"
 
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Iterator/Iterator.h"
