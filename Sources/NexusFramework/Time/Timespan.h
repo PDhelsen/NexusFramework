@@ -8,19 +8,19 @@
 
 namespace NxFr
 {
-	struct Timespan
+	struct NEXUS_FRAMEWORK_API Timespan
 	{
 	public:
-		NEXUS_FRAMEWORK_API Timespan();
-		NEXUS_FRAMEWORK_API Timespan(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S);
+		Timespan();
+		Timespan(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S);
 
-		NEXUS_FRAMEWORK_API operator bool() const;
-		NEXUS_FRAMEWORK_API Timespan& operator+=(const Timespan& Other);
-		NEXUS_FRAMEWORK_API Timespan& operator-=(const Timespan& Other);
+		operator bool() const;
+		Timespan& operator+=(const Timespan& Other);
+		Timespan& operator-=(const Timespan& Other);
 
-		NEXUS_FRAMEWORK_API void Normalize();
+		void Normalize();
 
-		NEXUS_FRAMEWORK_API bool IsValid() const;
+		bool IsValid() const;
 
 		int32 Seconds;
 		int32 Minutes;
@@ -31,11 +31,11 @@ namespace NxFr
 	};
 
 	template<>
-	struct StringConverter<Timespan>
+	struct NEXUS_FRAMEWORK_API StringConverter<Timespan>
 	{
-		NEXUS_FRAMEWORK_API static StringView GetFormat(bool Pretty);
-		NEXUS_FRAMEWORK_API static void ToString(const Timespan& Data, String& Result, StringView Format = "");
-		NEXUS_FRAMEWORK_API static void FromString(StringView Data, Timespan& Result, StringView Format = "");
+		static StringView GetFormat(bool Pretty);
+		static void ToString(const Timespan& Data, String& Result, StringView Format = "");
+		static void FromString(StringView Data, Timespan& Result, StringView Format = "");
 	};
 
 	NEXUS_FRAMEWORK_API bool operator==(const Timespan& A, const Timespan& B);

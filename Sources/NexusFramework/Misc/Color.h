@@ -37,63 +37,63 @@ namespace NxFr
 
 	namespace Colors
 	{
-		struct sRGB
+		struct NEXUS_FRAMEWORK_API sRGB
 		{
 			using Type = float;
 
 			static inline Type BoundLow = 0.0f;
 			static inline Type BoundHigh = 1.0f;
 
-			NEXUS_FRAMEWORK_API sRGB();
-			NEXUS_FRAMEWORK_API sRGB(Type V);
-			NEXUS_FRAMEWORK_API sRGB(Type R, Type G, Type B);
-			NEXUS_FRAMEWORK_API sRGB(Type R, Type G, Type B, Type A);
-			NEXUS_FRAMEWORK_API sRGB(Vector3f V);
-			NEXUS_FRAMEWORK_API sRGB(Vector4f V);
-			NEXUS_FRAMEWORK_API sRGB(Linear Other);
-			NEXUS_FRAMEWORK_API sRGB(Bits Other);
-			NEXUS_FRAMEWORK_API sRGB(Hsv Other);
+			sRGB();
+			sRGB(Type V);
+			sRGB(Type R, Type G, Type B);
+			sRGB(Type R, Type G, Type B, Type A);
+			sRGB(Vector3f V);
+			sRGB(Vector4f V);
+			sRGB(Linear Other);
+			sRGB(Bits Other);
+			sRGB(Hsv Other);
 
-			NEXUS_FRAMEWORK_API operator Vector3f() const;
-			NEXUS_FRAMEWORK_API operator Vector4f() const;
+			operator Vector3f() const;
+			operator Vector4f() const;
 
-			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
-			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
-			NEXUS_FRAMEWORK_API float ToGrayscale() const;
-			NEXUS_FRAMEWORK_API Linear ToLinear() const;
-			NEXUS_FRAMEWORK_API Bits ToBits() const;
-			NEXUS_FRAMEWORK_API Hsv ToHsv() const;
+			Vector3f ToVector3f() const;
+			Vector4f ToVector4f() const;
+			float ToGrayscale() const;
+			Linear ToLinear() const;
+			Bits ToBits() const;
+			Hsv ToHsv() const;
 
-			NEXUS_FRAMEWORK_API bool operator==(sRGB Other) const;
-			NEXUS_FRAMEWORK_API bool operator!=(sRGB Other) const;
-			NEXUS_FRAMEWORK_API Type& operator[](uint64 Index);
-			NEXUS_FRAMEWORK_API const Type& operator[](uint64 Index) const;
+			bool operator==(sRGB Other) const;
+			bool operator!=(sRGB Other) const;
+			Type& operator[](uint64 Index);
+			const Type& operator[](uint64 Index) const;
 
-			NEXUS_FRAMEWORK_API sRGB& operator+=(Type Other);
-			NEXUS_FRAMEWORK_API sRGB& operator-=(Type Other);
-			NEXUS_FRAMEWORK_API sRGB& operator*=(Type Other);
-			NEXUS_FRAMEWORK_API sRGB& operator/=(Type Other);
-			NEXUS_FRAMEWORK_API sRGB& operator+=(sRGB Other);
-			NEXUS_FRAMEWORK_API sRGB& operator-=(sRGB Other);
-			NEXUS_FRAMEWORK_API sRGB& operator*=(sRGB Other);
-			NEXUS_FRAMEWORK_API sRGB& operator/=(sRGB Other);
+			sRGB& operator+=(Type Other);
+			sRGB& operator-=(Type Other);
+			sRGB& operator*=(Type Other);
+			sRGB& operator/=(Type Other);
+			sRGB& operator+=(sRGB Other);
+			sRGB& operator-=(sRGB Other);
+			sRGB& operator*=(sRGB Other);
+			sRGB& operator/=(sRGB Other);
 			
-			NEXUS_FRAMEWORK_API Type Min() const;
-			NEXUS_FRAMEWORK_API Type Max() const;
-			NEXUS_FRAMEWORK_API sRGB Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
+			Type Min() const;
+			Type Max() const;
+			sRGB Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
 			
-			NEXUS_FRAMEWORK_API Type& GetX();
-			NEXUS_FRAMEWORK_API Type& GetY();
-			NEXUS_FRAMEWORK_API Type& GetZ();
-			NEXUS_FRAMEWORK_API Type& GetW();
-			NEXUS_FRAMEWORK_API const Type& GetX() const;
-			NEXUS_FRAMEWORK_API const Type& GetY() const;
-			NEXUS_FRAMEWORK_API const Type& GetZ() const;
-			NEXUS_FRAMEWORK_API const Type& GetW() const;
-			NEXUS_FRAMEWORK_API void SetX(Type X);
-			NEXUS_FRAMEWORK_API void SetY(Type Y);
-			NEXUS_FRAMEWORK_API void SetZ(Type Z);
-			NEXUS_FRAMEWORK_API void SetW(Type W);
+			Type& GetX();
+			Type& GetY();
+			Type& GetZ();
+			Type& GetW();
+			const Type& GetX() const;
+			const Type& GetY() const;
+			const Type& GetZ() const;
+			const Type& GetW() const;
+			void SetX(Type X);
+			void SetY(Type Y);
+			void SetZ(Type Z);
+			void SetW(Type W);
 
 			Type r, g, b, a;
 		};
@@ -107,63 +107,63 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API sRGB operator*(sRGB Instance, sRGB Other);
 		NEXUS_FRAMEWORK_API sRGB operator/(sRGB Instance, sRGB Other);
 
-		struct Linear
+		struct NEXUS_FRAMEWORK_API Linear
 		{
 			using Type = float;
 
 			static inline Type BoundLow = 0.0f;
 			static inline Type BoundHigh = 1.0f;
 
-			NEXUS_FRAMEWORK_API Linear();
-			NEXUS_FRAMEWORK_API Linear(Type V);
-			NEXUS_FRAMEWORK_API Linear(Type R, Type G, Type B);
-			NEXUS_FRAMEWORK_API Linear(Type R, Type G, Type B, Type A);
-			NEXUS_FRAMEWORK_API Linear(Vector3f V);
-			NEXUS_FRAMEWORK_API Linear(Vector4f V);
-			NEXUS_FRAMEWORK_API Linear(sRGB Other);
-			NEXUS_FRAMEWORK_API Linear(Bits Other);
-			NEXUS_FRAMEWORK_API Linear(Hsv Other);
+			Linear();
+			Linear(Type V);
+			Linear(Type R, Type G, Type B);
+			Linear(Type R, Type G, Type B, Type A);
+			Linear(Vector3f V);
+			Linear(Vector4f V);
+			Linear(sRGB Other);
+			Linear(Bits Other);
+			Linear(Hsv Other);
 
-			NEXUS_FRAMEWORK_API operator Vector3f() const;
-			NEXUS_FRAMEWORK_API operator Vector4f() const;
+			operator Vector3f() const;
+			operator Vector4f() const;
 
-			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
-			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
-			NEXUS_FRAMEWORK_API float ToGrayscale() const;
-			NEXUS_FRAMEWORK_API sRGB TosRGB() const;
-			NEXUS_FRAMEWORK_API Bits ToBits() const;
-			NEXUS_FRAMEWORK_API Hsv ToHsv() const;
+			Vector3f ToVector3f() const;
+			Vector4f ToVector4f() const;
+			float ToGrayscale() const;
+			sRGB TosRGB() const;
+			Bits ToBits() const;
+			Hsv ToHsv() const;
 
-			NEXUS_FRAMEWORK_API bool operator==(Linear Other) const;
-			NEXUS_FRAMEWORK_API bool operator!=(Linear Other) const;
-			NEXUS_FRAMEWORK_API Type& operator[](uint64 Index);
-			NEXUS_FRAMEWORK_API const Type& operator[](uint64 Index) const;
+			bool operator==(Linear Other) const;
+			bool operator!=(Linear Other) const;
+			Type& operator[](uint64 Index);
+			const Type& operator[](uint64 Index) const;
 
-			NEXUS_FRAMEWORK_API Linear& operator+=(Type Other);
-			NEXUS_FRAMEWORK_API Linear& operator-=(Type Other);
-			NEXUS_FRAMEWORK_API Linear& operator*=(Type Other);
-			NEXUS_FRAMEWORK_API Linear& operator/=(Type Other);
-			NEXUS_FRAMEWORK_API Linear& operator+=(Linear Other);
-			NEXUS_FRAMEWORK_API Linear& operator-=(Linear Other);
-			NEXUS_FRAMEWORK_API Linear& operator*=(Linear Other);
-			NEXUS_FRAMEWORK_API Linear& operator/=(Linear Other);
+			Linear& operator+=(Type Other);
+			Linear& operator-=(Type Other);
+			Linear& operator*=(Type Other);
+			Linear& operator/=(Type Other);
+			Linear& operator+=(Linear Other);
+			Linear& operator-=(Linear Other);
+			Linear& operator*=(Linear Other);
+			Linear& operator/=(Linear Other);
 
-			NEXUS_FRAMEWORK_API Type Min() const;
-			NEXUS_FRAMEWORK_API Type Max() const;
-			NEXUS_FRAMEWORK_API Linear Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
+			Type Min() const;
+			Type Max() const;
+			Linear Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
 
-			NEXUS_FRAMEWORK_API Type& GetX();
-			NEXUS_FRAMEWORK_API Type& GetY();
-			NEXUS_FRAMEWORK_API Type& GetZ();
-			NEXUS_FRAMEWORK_API Type& GetW();
-			NEXUS_FRAMEWORK_API const Type& GetX() const;
-			NEXUS_FRAMEWORK_API const Type& GetY() const;
-			NEXUS_FRAMEWORK_API const Type& GetZ() const;
-			NEXUS_FRAMEWORK_API const Type& GetW() const;
-			NEXUS_FRAMEWORK_API void SetX(Type X);
-			NEXUS_FRAMEWORK_API void SetY(Type Y);
-			NEXUS_FRAMEWORK_API void SetZ(Type Z);
-			NEXUS_FRAMEWORK_API void SetW(Type W);
+			Type& GetX();
+			Type& GetY();
+			Type& GetZ();
+			Type& GetW();
+			const Type& GetX() const;
+			const Type& GetY() const;
+			const Type& GetZ() const;
+			const Type& GetW() const;
+			void SetX(Type X);
+			void SetY(Type Y);
+			void SetZ(Type Z);
+			void SetW(Type W);
 
 			Type r, g, b, a;
 		};
@@ -177,63 +177,63 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Linear operator*(Linear Instance, Linear Other);
 		NEXUS_FRAMEWORK_API Linear operator/(Linear Instance, Linear Other);
 
-		struct Bits
+		struct NEXUS_FRAMEWORK_API Bits
 		{
 			using Type = uint8;
 
 			static inline Type BoundLow = 0;
 			static inline Type BoundHigh = 255;
 
-			NEXUS_FRAMEWORK_API Bits();
-			NEXUS_FRAMEWORK_API Bits(Type V);
-			NEXUS_FRAMEWORK_API Bits(Type R, Type G, Type B);
-			NEXUS_FRAMEWORK_API Bits(Type R, Type G, Type B, Type A);
-			NEXUS_FRAMEWORK_API Bits(Vector3f V);
-			NEXUS_FRAMEWORK_API Bits(Vector4f V);
-			NEXUS_FRAMEWORK_API Bits(sRGB Other);
-			NEXUS_FRAMEWORK_API Bits(Linear Other);
-			NEXUS_FRAMEWORK_API Bits(Hsv Other);
+			Bits();
+			Bits(Type V);
+			Bits(Type R, Type G, Type B);
+			Bits(Type R, Type G, Type B, Type A);
+			Bits(Vector3f V);
+			Bits(Vector4f V);
+			Bits(sRGB Other);
+			Bits(Linear Other);
+			Bits(Hsv Other);
 
-			NEXUS_FRAMEWORK_API operator Vector3f() const;
-			NEXUS_FRAMEWORK_API operator Vector4f() const;
+			operator Vector3f() const;
+			operator Vector4f() const;
 
-			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
-			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
-			NEXUS_FRAMEWORK_API float ToGrayscale() const;
-			NEXUS_FRAMEWORK_API sRGB TosRGB() const;
-			NEXUS_FRAMEWORK_API Linear ToLinear() const;
-			NEXUS_FRAMEWORK_API Hsv ToHsv() const;
+			Vector3f ToVector3f() const;
+			Vector4f ToVector4f() const;
+			float ToGrayscale() const;
+			sRGB TosRGB() const;
+			Linear ToLinear() const;
+			Hsv ToHsv() const;
 
-			NEXUS_FRAMEWORK_API bool operator==(Bits Other) const;
-			NEXUS_FRAMEWORK_API bool operator!=(Bits Other) const;
-			NEXUS_FRAMEWORK_API Type& operator[](uint64 Index);
-			NEXUS_FRAMEWORK_API const Type& operator[](uint64 Index) const;
+			bool operator==(Bits Other) const;
+			bool operator!=(Bits Other) const;
+			Type& operator[](uint64 Index);
+			const Type& operator[](uint64 Index) const;
 
-			NEXUS_FRAMEWORK_API Bits& operator+=(Type Other);
-			NEXUS_FRAMEWORK_API Bits& operator-=(Type Other);
-			NEXUS_FRAMEWORK_API Bits& operator*=(Type Other);
-			NEXUS_FRAMEWORK_API Bits& operator/=(Type Other);
-			NEXUS_FRAMEWORK_API Bits& operator+=(Bits Other);
-			NEXUS_FRAMEWORK_API Bits& operator-=(Bits Other);
-			NEXUS_FRAMEWORK_API Bits& operator*=(Bits Other);
-			NEXUS_FRAMEWORK_API Bits& operator/=(Bits Other);
+			Bits& operator+=(Type Other);
+			Bits& operator-=(Type Other);
+			Bits& operator*=(Type Other);
+			Bits& operator/=(Type Other);
+			Bits& operator+=(Bits Other);
+			Bits& operator-=(Bits Other);
+			Bits& operator*=(Bits Other);
+			Bits& operator/=(Bits Other);
 
-			NEXUS_FRAMEWORK_API Type Min() const;
-			NEXUS_FRAMEWORK_API Type Max() const;
-			NEXUS_FRAMEWORK_API Bits Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
+			Type Min() const;
+			Type Max() const;
+			Bits Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
 
-			NEXUS_FRAMEWORK_API Type& GetX();
-			NEXUS_FRAMEWORK_API Type& GetY();
-			NEXUS_FRAMEWORK_API Type& GetZ();
-			NEXUS_FRAMEWORK_API Type& GetW();
-			NEXUS_FRAMEWORK_API const Type& GetX() const;
-			NEXUS_FRAMEWORK_API const Type& GetY() const;
-			NEXUS_FRAMEWORK_API const Type& GetZ() const;
-			NEXUS_FRAMEWORK_API const Type& GetW() const;
-			NEXUS_FRAMEWORK_API void SetX(Type X);
-			NEXUS_FRAMEWORK_API void SetY(Type Y);
-			NEXUS_FRAMEWORK_API void SetZ(Type Z);
-			NEXUS_FRAMEWORK_API void SetW(Type W);
+			Type& GetX();
+			Type& GetY();
+			Type& GetZ();
+			Type& GetW();
+			const Type& GetX() const;
+			const Type& GetY() const;
+			const Type& GetZ() const;
+			const Type& GetW() const;
+			void SetX(Type X);
+			void SetY(Type Y);
+			void SetZ(Type Z);
+			void SetW(Type W);
 
 			Type r, g, b, a;
 		};
@@ -247,63 +247,63 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API Bits operator*(Bits Instance, Bits Other);
 		NEXUS_FRAMEWORK_API Bits operator/(Bits Instance, Bits Other);
 
-		struct Hsv
+		struct NEXUS_FRAMEWORK_API Hsv
 		{
 			using Type = float;
 
 			static inline Type BoundLow = 0.0f;
 			static inline Type BoundHigh = 1.0f;
 
-			NEXUS_FRAMEWORK_API Hsv();
-			NEXUS_FRAMEWORK_API Hsv(Type V);
-			NEXUS_FRAMEWORK_API Hsv(Type H, Type S, Type V);
-			NEXUS_FRAMEWORK_API Hsv(Type H, Type S, Type V, Type A);
-			NEXUS_FRAMEWORK_API Hsv(Vector3f V);
-			NEXUS_FRAMEWORK_API Hsv(Vector4f V);
-			NEXUS_FRAMEWORK_API Hsv(sRGB Other);
-			NEXUS_FRAMEWORK_API Hsv(Linear Other);
-			NEXUS_FRAMEWORK_API Hsv(Bits Other);
+			Hsv();
+			Hsv(Type V);
+			Hsv(Type H, Type S, Type V);
+			Hsv(Type H, Type S, Type V, Type A);
+			Hsv(Vector3f V);
+			Hsv(Vector4f V);
+			Hsv(sRGB Other);
+			Hsv(Linear Other);
+			Hsv(Bits Other);
 
-			NEXUS_FRAMEWORK_API operator Vector3f() const;
-			NEXUS_FRAMEWORK_API operator Vector4f() const;
+			operator Vector3f() const;
+			operator Vector4f() const;
 
-			NEXUS_FRAMEWORK_API Vector3f ToVector3f() const;
-			NEXUS_FRAMEWORK_API Vector4f ToVector4f() const;
-			NEXUS_FRAMEWORK_API float ToGrayscale() const;
-			NEXUS_FRAMEWORK_API sRGB TosRGB() const;
-			NEXUS_FRAMEWORK_API Linear ToLinear() const;
-			NEXUS_FRAMEWORK_API Bits ToBits() const;
+			Vector3f ToVector3f() const;
+			Vector4f ToVector4f() const;
+			float ToGrayscale() const;
+			sRGB TosRGB() const;
+			Linear ToLinear() const;
+			Bits ToBits() const;
 
-			NEXUS_FRAMEWORK_API bool operator==(Hsv Other) const;
-			NEXUS_FRAMEWORK_API bool operator!=(Hsv Other) const;
-			NEXUS_FRAMEWORK_API Type& operator[](uint64 Index);
-			NEXUS_FRAMEWORK_API const Type& operator[](uint64 Index) const;
+			bool operator==(Hsv Other) const;
+			bool operator!=(Hsv Other) const;
+			Type& operator[](uint64 Index);
+			const Type& operator[](uint64 Index) const;
 
-			NEXUS_FRAMEWORK_API Hsv& operator+=(Type Other);
-			NEXUS_FRAMEWORK_API Hsv& operator-=(Type Other);
-			NEXUS_FRAMEWORK_API Hsv& operator*=(Type Other);
-			NEXUS_FRAMEWORK_API Hsv& operator/=(Type Other);
-			NEXUS_FRAMEWORK_API Hsv& operator+=(Hsv Other);
-			NEXUS_FRAMEWORK_API Hsv& operator-=(Hsv Other);
-			NEXUS_FRAMEWORK_API Hsv& operator*=(Hsv Other);
-			NEXUS_FRAMEWORK_API Hsv& operator/=(Hsv Other);
+			Hsv& operator+=(Type Other);
+			Hsv& operator-=(Type Other);
+			Hsv& operator*=(Type Other);
+			Hsv& operator/=(Type Other);
+			Hsv& operator+=(Hsv Other);
+			Hsv& operator-=(Hsv Other);
+			Hsv& operator*=(Hsv Other);
+			Hsv& operator/=(Hsv Other);
 
-			NEXUS_FRAMEWORK_API Type Min() const;
-			NEXUS_FRAMEWORK_API Type Max() const;
-			NEXUS_FRAMEWORK_API Hsv Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
+			Type Min() const;
+			Type Max() const;
+			Hsv Clamp(Type Min = BoundLow, Type Max = BoundHigh) const;
 
-			NEXUS_FRAMEWORK_API Type& GetX();
-			NEXUS_FRAMEWORK_API Type& GetY();
-			NEXUS_FRAMEWORK_API Type& GetZ();
-			NEXUS_FRAMEWORK_API Type& GetW();
-			NEXUS_FRAMEWORK_API const Type& GetX() const;
-			NEXUS_FRAMEWORK_API const Type& GetY() const;
-			NEXUS_FRAMEWORK_API const Type& GetZ() const;
-			NEXUS_FRAMEWORK_API const Type& GetW() const;
-			NEXUS_FRAMEWORK_API void SetX(Type X);
-			NEXUS_FRAMEWORK_API void SetY(Type Y);
-			NEXUS_FRAMEWORK_API void SetZ(Type Z);
-			NEXUS_FRAMEWORK_API void SetW(Type W);
+			Type& GetX();
+			Type& GetY();
+			Type& GetZ();
+			Type& GetW();
+			const Type& GetX() const;
+			const Type& GetY() const;
+			const Type& GetZ() const;
+			const Type& GetW() const;
+			void SetX(Type X);
+			void SetY(Type Y);
+			void SetZ(Type Z);
+			void SetW(Type W);
 
 			Type h, s, v, a;
 		};

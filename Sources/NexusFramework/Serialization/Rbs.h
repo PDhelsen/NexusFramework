@@ -5,29 +5,29 @@
 
 namespace NxFr
 {
-	class RBS
+	class NEXUS_FRAMEWORK_API RBS
 	{
 	public:
-		struct OffsetScope
+		struct NEXUS_FRAMEWORK_API OffsetScope
 		{
 		public:
-			NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, OffsetScope)
-			NEXUS_FRAMEWORK_API OffsetScope(RBS& Rbs, uint64 Offset);
-			NEXUS_FRAMEWORK_API ~OffsetScope();
+			NEXUS_NOCOPY_NOMOVE(OffsetScope)
+			OffsetScope(RBS& Rbs, uint64 Offset);
+			~OffsetScope();
 
 		private:
 			RBS& Rbs;
 			uint64 Cursor;
 		};
 
-		NEXUS_FRAMEWORK_API static Buffer Serialize(const RBS& Data);
-		NEXUS_FRAMEWORK_API static void SerializeFile(const RBS& Data, StringView Path);
-		NEXUS_FRAMEWORK_API static RBS Deserialize(BufferView Data);
-		NEXUS_FRAMEWORK_API static RBS DeserializeFile(StringView Path);
+		static Buffer Serialize(const RBS& Data);
+		static void SerializeFile(const RBS& Data, StringView Path);
+		static RBS Deserialize(BufferView Data);
+		static RBS DeserializeFile(StringView Path);
 
-		NEXUS_FRAMEWORK_API RBS();
-		NEXUS_FRAMEWORK_API RBS(BufferView View);
-		NEXUS_FRAMEWORK_API RBS(Buffer&& Data);
+		RBS();
+		RBS(BufferView View);
+		RBS(Buffer&& Data);
 
 		template<typename T>
 		T ReadObject();
@@ -47,16 +47,16 @@ namespace NxFr
 		template<typename T>
 		void WriteData(const T* Pointer, uint64 Size, uint64 Offset);
 
-		NEXUS_FRAMEWORK_API const void* ReadByte(uint64 Size);
-		NEXUS_FRAMEWORK_API const void* ReadByte(uint64 Size, uint64 Offset);
-		NEXUS_FRAMEWORK_API void WriteByte(const void* Pointer, uint64 Size);
-		NEXUS_FRAMEWORK_API void WriteByte(const void* Pointer, uint64 Size, uint64 Offset);
+		const void* ReadByte(uint64 Size);
+		const void* ReadByte(uint64 Size, uint64 Offset);
+		void WriteByte(const void* Pointer, uint64 Size);
+		void WriteByte(const void* Pointer, uint64 Size, uint64 Offset);
 
-		NEXUS_FRAMEWORK_API const Iterator::IteratorPointer Begin() const;
-		NEXUS_FRAMEWORK_API const Iterator::IteratorPointer End() const;
+		const Iterator::IteratorPointer Begin() const;
+		const Iterator::IteratorPointer End() const;
 
-		NEXUS_FRAMEWORK_API uint64 GetCursor() const { return Cursor; }
-		NEXUS_FRAMEWORK_API void SetCursor(uint64 Offset) { Cursor = Offset; }
+		uint64 GetCursor() const { return Cursor; }
+		void SetCursor(uint64 Offset) { Cursor = Offset; }
 
 	private:
 		Buffer Data;

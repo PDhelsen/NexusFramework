@@ -11,7 +11,7 @@
 
 namespace NxFr
 {
-	class Arguments
+	class NEXUS_FRAMEWORK_API Arguments
 	{
 	public:
 		inline static const String Separator = " ";
@@ -20,33 +20,33 @@ namespace NxFr
 		inline static const String NamedKey = "-";
 		inline static const String NamedSeparator = "=";
 
-		NEXUS_FRAMEWORK_API Arguments();
-		NEXUS_FRAMEWORK_API Arguments(const Arguments& Other);
-		NEXUS_FRAMEWORK_API Arguments(Arguments&& Other) noexcept;
-		NEXUS_FRAMEWORK_API ~Arguments();
+		Arguments();
+		Arguments(const Arguments& Other);
+		Arguments(Arguments&& Other) noexcept;
+		~Arguments();
 
-		NEXUS_FRAMEWORK_API Arguments& operator=(const Arguments& Other);
-		NEXUS_FRAMEWORK_API Arguments& operator=(Arguments&& Other) noexcept;
+		Arguments& operator=(const Arguments& Other);
+		Arguments& operator=(Arguments&& Other) noexcept;
 
-		NEXUS_FRAMEWORK_API void Clear();
-		NEXUS_FRAMEWORK_API void Print();
+		void Clear();
+		void Print();
 
-		NEXUS_FRAMEWORK_API void ParseExe(uint64 ArgC, char* ArgV[]);
-		NEXUS_FRAMEWORK_API void ParseCommand(StringView Command);
-		NEXUS_FRAMEWORK_API void ParseCollectionString(const Collection<String>& Items);
-		NEXUS_FRAMEWORK_API void ParseCollectionView(const Collection<StringView>& Items);
+		void ParseExe(uint64 ArgC, char* ArgV[]);
+		void ParseCommand(StringView Command);
+		void ParseCollectionString(const Collection<String>& Items);
+		void ParseCollectionView(const Collection<StringView>& Items);
 
-		NEXUS_FRAMEWORK_API bool Has(uint64 Index) const { return Positionals.IsValidIndex(Index); }
-		NEXUS_FRAMEWORK_API bool Has(StringView Key) const { return Named.TryGet(Key) != nullptr; }
-		NEXUS_FRAMEWORK_API StringView Get(uint64 Index, StringView Default = "") const { return Positionals.IsValidIndex(Index) ? Positionals[Index] : Default; }
-		NEXUS_FRAMEWORK_API StringView Get(StringView Key, StringView Default = "") const { const StringView* Ptr = Named.TryGet(Key); return Ptr != nullptr ? *Ptr : Default; }
+		bool Has(uint64 Index) const { return Positionals.IsValidIndex(Index); }
+		bool Has(StringView Key) const { return Named.TryGet(Key) != nullptr; }
+		StringView Get(uint64 Index, StringView Default = "") const { return Positionals.IsValidIndex(Index) ? Positionals[Index] : Default; }
+		StringView Get(StringView Key, StringView Default = "") const { const StringView* Ptr = Named.TryGet(Key); return Ptr != nullptr ? *Ptr : Default; }
 
-		NEXUS_FRAMEWORK_API const Array<String>& GetArgs() const { return Args; }
-		NEXUS_FRAMEWORK_API const List<StringView>& GetPositionals() const { return Positionals; }
-		NEXUS_FRAMEWORK_API const Dictionary<StringView, StringView>& GetNamed() const { return Named; }
+		const Array<String>& GetArgs() const { return Args; }
+		const List<StringView>& GetPositionals() const { return Positionals; }
+		const Dictionary<StringView, StringView>& GetNamed() const { return Named; }
 
-		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Args.GetCount(); }
-		NEXUS_FRAMEWORK_API bool IsEmpty() const { return Args.IsEmpty(); }
+		uint64 GetCount() const { return Args.GetCount(); }
+		bool IsEmpty() const { return Args.IsEmpty(); }
 
 	private:
 		void ParseArg(uint64 Index, StringView Arg);

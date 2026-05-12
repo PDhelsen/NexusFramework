@@ -6,17 +6,17 @@
 
 namespace NxFr
 {
-	struct ConditionVariable
+	struct NEXUS_FRAMEWORK_API ConditionVariable
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, ConditionVariable)
-		NEXUS_FRAMEWORK_API ConditionVariable();
-		NEXUS_FRAMEWORK_API ~ConditionVariable();
+		NEXUS_NOCOPY_NOMOVE(ConditionVariable)
+		ConditionVariable();
+		~ConditionVariable();
 
-		NEXUS_FRAMEWORK_API void Wait(Mutex& Guard, const Delegate<bool()>& Predicate);
-		NEXUS_FRAMEWORK_API void Wait(Mutex& Guard);
-		NEXUS_FRAMEWORK_API void Signal();
-		NEXUS_FRAMEWORK_API void Broadcast();
+		void Wait(Mutex& Guard, const Delegate<bool()>& Predicate);
+		void Wait(Mutex& Guard);
+		void Signal();
+		void Broadcast();
 
 	private:
 		void* Handle;

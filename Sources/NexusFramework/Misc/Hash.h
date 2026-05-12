@@ -17,32 +17,32 @@ namespace NxFr
 		using Default = class Fnv1a64;
 
 		template<typename L>
-		class HashAlgorithm
+		class NEXUS_FRAMEWORK_API HashAlgorithm
 		{
 		public:
 			using HashLength = L;
 
-			NEXUS_FRAMEWORK_API HashAlgorithm(HashLength Seed) {};
+			HashAlgorithm(HashLength Seed) {};
 
-			NEXUS_FRAMEWORK_API virtual HashAlgorithm& Accumulate(const void* Data, uint64 Length) = 0;
-			NEXUS_FRAMEWORK_API virtual HashLength Finalize() const = 0;
-			NEXUS_FRAMEWORK_API virtual HashLength Combine(HashLength HashA, HashLength HashB) const = 0;
+			virtual HashAlgorithm& Accumulate(const void* Data, uint64 Length) = 0;
+			virtual HashLength Finalize() const = 0;
+			virtual HashLength Combine(HashLength HashA, HashLength HashB) const = 0;
 
-			NEXUS_FRAMEWORK_API virtual uint64 GetSize() const = 0;
-			NEXUS_FRAMEWORK_API virtual HashLength GetSeed() const = 0;
+			virtual uint64 GetSize() const = 0;
+			virtual HashLength GetSeed() const = 0;
 		};
 
-		class XxHash32 : public HashAlgorithm<uint32>
+		class NEXUS_FRAMEWORK_API XxHash32 : public HashAlgorithm<uint32>
 		{
 		public:
-			NEXUS_FRAMEWORK_API XxHash32(HashLength Seed = 0);
+			XxHash32(HashLength Seed = 0);
 
-			NEXUS_FRAMEWORK_API XxHash32& Accumulate(const void* Data, uint64 Length) override;
-			NEXUS_FRAMEWORK_API HashLength Finalize() const override;
-			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
+			XxHash32& Accumulate(const void* Data, uint64 Length) override;
+			HashLength Finalize() const override;
+			HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
-			NEXUS_FRAMEWORK_API uint64 GetSize() const override { return Size; }
-			NEXUS_FRAMEWORK_API HashLength GetSeed() const override { return Seed; }
+			uint64 GetSize() const override { return Size; }
+			HashLength GetSeed() const override { return Seed; }
 
 		private:
 			inline static const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
@@ -68,17 +68,17 @@ namespace NxFr
 			uint8 BufferSize;
 		};
 
-		class XxHash64 : public HashAlgorithm<uint64>
+		class NEXUS_FRAMEWORK_API XxHash64 : public HashAlgorithm<uint64>
 		{
 		public:
-			NEXUS_FRAMEWORK_API XxHash64(HashLength Seed = 0);
+			XxHash64(HashLength Seed = 0);
 
-			NEXUS_FRAMEWORK_API XxHash64& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Finalize() const;
-			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
+			XxHash64& Accumulate(const void* Data, uint64 Length);
+			HashLength Finalize() const;
+			HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
-			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
-			NEXUS_FRAMEWORK_API HashLength GetSeed() const { return Seed; }
+			uint64 GetSize() const { return Size; }
+			HashLength GetSeed() const { return Seed; }
 
 		private:
 			inline static const uint8* CopyIntoBuffer(uint8* Buffer, const uint8* Data, uint8 Length, uint8& BufferIndex);
@@ -105,17 +105,17 @@ namespace NxFr
 			uint8 BufferSize;
 		};
 
-		class Murmur32 : public HashAlgorithm<uint32>
+		class NEXUS_FRAMEWORK_API Murmur32 : public HashAlgorithm<uint32>
 		{
 		public:
-			NEXUS_FRAMEWORK_API Murmur32(HashLength Seed = 0);
+			Murmur32(HashLength Seed = 0);
 
-			NEXUS_FRAMEWORK_API Murmur32& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Finalize() const;
-			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
+			Murmur32& Accumulate(const void* Data, uint64 Length);
+			HashLength Finalize() const;
+			HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
-			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
-			NEXUS_FRAMEWORK_API HashLength GetSeed() const { return Seed; }
+			uint64 GetSize() const { return Size; }
+			HashLength GetSeed() const { return Seed; }
 
 		private:
 			inline static HashLength RotateLeft(HashLength Value, uint8 Bits);
@@ -132,17 +132,17 @@ namespace NxFr
 			HashLength Accumulator;
 		};
 
-		class Fnv164 : public HashAlgorithm<uint64>
+		class NEXUS_FRAMEWORK_API Fnv164 : public HashAlgorithm<uint64>
 		{
 		public:
-			NEXUS_FRAMEWORK_API Fnv164(HashLength Seed = 0);
+			Fnv164(HashLength Seed = 0);
 
-			NEXUS_FRAMEWORK_API Fnv164& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Finalize() const;
-			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
+			Fnv164& Accumulate(const void* Data, uint64 Length);
+			HashLength Finalize() const;
+			HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
-			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
-			NEXUS_FRAMEWORK_API HashLength GetSeed() const { return Seed; }
+			uint64 GetSize() const { return Size; }
+			HashLength GetSeed() const { return Seed; }
 
 		private:
 			static const HashLength Basis = 0xcbf29ce484222325;
@@ -153,17 +153,17 @@ namespace NxFr
 			HashLength Accumulator;
 		};
 
-		class Fnv1a64 : public HashAlgorithm<uint64>
+		class NEXUS_FRAMEWORK_API Fnv1a64 : public HashAlgorithm<uint64>
 		{
 		public:
-			NEXUS_FRAMEWORK_API Fnv1a64(HashLength Seed = 0);
+			Fnv1a64(HashLength Seed = 0);
 
-			NEXUS_FRAMEWORK_API Fnv1a64& Accumulate(const void* Data, uint64 Length);
-			NEXUS_FRAMEWORK_API HashLength Finalize() const;
-			NEXUS_FRAMEWORK_API HashLength Combine(HashLength HashA, HashLength HashB) const override;
+			Fnv1a64& Accumulate(const void* Data, uint64 Length);
+			HashLength Finalize() const;
+			HashLength Combine(HashLength HashA, HashLength HashB) const override;
 
-			NEXUS_FRAMEWORK_API uint64 GetSize() const { return Size; }
-			NEXUS_FRAMEWORK_API HashLength GetSeed() const { return Seed; }
+			uint64 GetSize() const { return Size; }
+			HashLength GetSeed() const { return Seed; }
 
 		private:
 			static const HashLength Basis = 0xcbf29ce484222325;

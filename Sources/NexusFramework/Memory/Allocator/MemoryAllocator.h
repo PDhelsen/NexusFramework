@@ -4,19 +4,19 @@
 
 namespace NxFr
 {
-	class MemoryAllocator : public Allocator
+	class NEXUS_FRAMEWORK_API MemoryAllocator : public Allocator
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, MemoryAllocator)
-		NEXUS_FRAMEWORK_API MemoryAllocator(uint64 Size);
-		NEXUS_FRAMEWORK_API virtual ~MemoryAllocator();
+		NEXUS_NOCOPY_NOMOVE(MemoryAllocator)
+		MemoryAllocator(uint64 Size);
+		virtual ~MemoryAllocator();
 
 	protected:
-		NEXUS_FRAMEWORK_API void WipeoutMemory();
-		NEXUS_FRAMEWORK_API void EraseMemory(void* Pointer, uint64 Size);
+		void WipeoutMemory();
+		void EraseMemory(void* Pointer, uint64 Size);
 
-		NEXUS_FRAMEWORK_API bool IsPointerInMemoryBlock(void* Pointer) const;
-		NEXUS_FRAMEWORK_API void* GetMemoryBlock() const;
+		bool IsPointerInMemoryBlock(void* Pointer) const;
+		void* GetMemoryBlock() const;
 
 	private:
 		void* Data;

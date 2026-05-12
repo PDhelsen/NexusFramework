@@ -6,16 +6,16 @@
 
 namespace NxFr
 {
-	struct AllocatorContext
+	struct NEXUS_FRAMEWORK_API AllocatorContext
 	{
 	public:
-		NEXUS_FRAMEWORK_API static Allocator* Get();
-		NEXUS_FRAMEWORK_API static void Push(Allocator* Alloc);
-		NEXUS_FRAMEWORK_API static void Pop();
-		NEXUS_FRAMEWORK_API static void Reset();
+		static Allocator* Get();
+		static void Push(Allocator* Alloc);
+		static void Pop();
+		static void Reset();
 
-		NEXUS_FRAMEWORK_API AllocatorContext(Allocator* Allocator);
-		NEXUS_FRAMEWORK_API ~AllocatorContext();
+		AllocatorContext(Allocator* Allocator);
+		~AllocatorContext();
 	};
 }
 

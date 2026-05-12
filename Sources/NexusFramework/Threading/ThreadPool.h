@@ -11,25 +11,25 @@
 
 namespace NxFr
 {
-	class ThreadPool
+	class NEXUS_FRAMEWORK_API ThreadPool
 	{
 	public:
-		NEXUS_FRAMEWORK_API static uint64 MaxThreadCount();
+		static uint64 MaxThreadCount();
 
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, ThreadPool)
-		NEXUS_FRAMEWORK_API ThreadPool(uint64 Size = 0);
-		NEXUS_FRAMEWORK_API ~ThreadPool();
+		NEXUS_NOCOPY_NOMOVE(ThreadPool)
+		ThreadPool(uint64 Size = 0);
+		~ThreadPool();
 
-		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work);
-		NEXUS_FRAMEWORK_API void Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work);
-		NEXUS_FRAMEWORK_API void Submit(const NxFr::Delegate<void()>& Work);
-		NEXUS_FRAMEWORK_API void Wait();
+		void Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work);
+		void Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work);
+		void Submit(const NxFr::Delegate<void()>& Work);
+		void Wait();
 
-		NEXUS_FRAMEWORK_API bool HasWorkPending();
-		NEXUS_FRAMEWORK_API bool IsWorking();
+		bool HasWorkPending();
+		bool IsWorking();
 
 	private:
-		NEXUS_FRAMEWORK_API void Worker();
+		void Worker();
 
 	private:
 		Array<Thread*> Threads;

@@ -8,35 +8,35 @@
 
 namespace NxFr
 {
-	struct StringId
+	struct NEXUS_FRAMEWORK_API StringId
 	{
 	public:
-		NEXUS_FRAMEWORK_API static GUID InternString(StringView Text);
-		NEXUS_FRAMEWORK_API static StringView LookupString(GUID Id);
+		static GUID InternString(StringView Text);
+		static StringView LookupString(GUID Id);
 
-		NEXUS_FRAMEWORK_API StringId();
-		NEXUS_FRAMEWORK_API StringId(GUID Id);
-		NEXUS_FRAMEWORK_API StringId(StringView Text);
+		StringId();
+		StringId(GUID Id);
+		StringId(StringView Text);
 
-		NEXUS_FRAMEWORK_API operator GUID() const;
-		NEXUS_FRAMEWORK_API operator StringView() const;
+		operator GUID() const;
+		operator StringView() const;
 
-		NEXUS_FRAMEWORK_API bool operator==(GUID Other) const;
-		NEXUS_FRAMEWORK_API bool operator!=(GUID Other) const;
-		NEXUS_FRAMEWORK_API bool operator==(const StringId& Other) const;
-		NEXUS_FRAMEWORK_API bool operator!=(const StringId& Other) const;
-		NEXUS_FRAMEWORK_API bool operator<(const StringId& Other) const;
-		NEXUS_FRAMEWORK_API bool operator<=(const StringId& Other) const;
-		NEXUS_FRAMEWORK_API bool operator>(const StringId& Other) const;
-		NEXUS_FRAMEWORK_API bool operator>=(const StringId& Other) const;
+		bool operator==(GUID Other) const;
+		bool operator!=(GUID Other) const;
+		bool operator==(const StringId& Other) const;
+		bool operator!=(const StringId& Other) const;
+		bool operator<(const StringId& Other) const;
+		bool operator<=(const StringId& Other) const;
+		bool operator>(const StringId& Other) const;
+		bool operator>=(const StringId& Other) const;
 
-		NEXUS_FRAMEWORK_API GUID GetId() const;
-		NEXUS_FRAMEWORK_API StringView GetString() const;
+		GUID GetId() const;
+		StringView GetString() const;
 
-		NEXUS_FRAMEWORK_API const char* C() const { return LookupString(Id).C(); }
-		NEXUS_FRAMEWORK_API bool IsValid() const { return Id != 0; }
-		NEXUS_FRAMEWORK_API bool IsEmpty() const { return LookupString(Id).IsEmpty(); }
-		NEXUS_FRAMEWORK_API uint64 GetCount() const { return LookupString(Id).GetCount(); }
+		const char* C() const { return LookupString(Id).C(); }
+		bool IsValid() const { return Id != 0; }
+		bool IsEmpty() const { return LookupString(Id).IsEmpty(); }
+		uint64 GetCount() const { return LookupString(Id).GetCount(); }
 
 	private:
 		GUID Id;

@@ -6,7 +6,7 @@
 
 namespace NxFr
 {
-	class File
+	class NEXUS_FRAMEWORK_API File
 	{
 	public:
 		enum class Mode
@@ -14,32 +14,32 @@ namespace NxFr
 			None, Read, Write, Append
 		};
 
-		NEXUS_NOCOPY(NEXUS_FRAMEWORK_API, File)
-		NEXUS_FRAMEWORK_API File(StringView Path);
-		NEXUS_FRAMEWORK_API File(File&& Other) noexcept;
-		NEXUS_FRAMEWORK_API ~File();
+		NEXUS_NOCOPY(File)
+		File(StringView Path);
+		File(File&& Other) noexcept;
+		~File();
 
-		NEXUS_FRAMEWORK_API File& operator=(File&& Other) noexcept;
-		NEXUS_FRAMEWORK_API explicit operator bool() const;
-		NEXUS_FRAMEWORK_API bool operator ==(const File& Other) const;
-		NEXUS_FRAMEWORK_API bool operator !=(const File& Other) const;
+		File& operator=(File&& Other) noexcept;
+		explicit operator bool() const;
+		bool operator ==(const File& Other) const;
+		bool operator !=(const File& Other) const;
 
-		NEXUS_FRAMEWORK_API bool Exists() const;
-		NEXUS_FRAMEWORK_API void EnsureParent() const;
+		bool Exists() const;
+		void EnsureParent() const;
 
-		NEXUS_FRAMEWORK_API void Create(bool KeepOpen = false);
-		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false, bool CloseIfOpen = false);
-		NEXUS_FRAMEWORK_API void Copy(StringView Target, bool Override = false, bool CloseIfOpen = false);
-		NEXUS_FRAMEWORK_API void Delete(bool CloseIfOpen = false);
+		void Create(bool KeepOpen = false);
+		void Move(StringView Target, bool Override = false, bool CloseIfOpen = false);
+		void Copy(StringView Target, bool Override = false, bool CloseIfOpen = false);
+		void Delete(bool CloseIfOpen = false);
 
-		NEXUS_FRAMEWORK_API void Open(Mode OpenMode, bool CreateIfDontExist = false);
-		NEXUS_FRAMEWORK_API void Close();
+		void Open(Mode OpenMode, bool CreateIfDontExist = false);
+		void Close();
 
-		NEXUS_FRAMEWORK_API uint64 GetSize() const;
-		NEXUS_FRAMEWORK_API void WriteByte(BufferView Data);
-		NEXUS_FRAMEWORK_API Buffer ReadByte() const;
-		NEXUS_FRAMEWORK_API void WriteText(StringView Text);
-		NEXUS_FRAMEWORK_API String ReadText() const;
+		uint64 GetSize() const;
+		void WriteByte(BufferView Data);
+		Buffer ReadByte() const;
+		void WriteText(StringView Text);
+		String ReadText() const;
 
 		StringView GetPath() const { return Path; }
 		File::Mode GetMode() const { return FileMode; }

@@ -47,16 +47,16 @@ namespace NxFr
 		COUNT
 	};
 
-	class Log
+	class NEXUS_FRAMEWORK_API Log
 	{
 	public:
 		template<typename... Args>
 		void LogMessage(LoggerVerbosity Verbosity, StringId Channel, StringView Message, Args&&... args);
 
 	protected:
-		NEXUS_FRAMEWORK_API virtual String& GetBuffer() = 0;
-		NEXUS_FRAMEWORK_API virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
-		NEXUS_FRAMEWORK_API virtual void FlushLogs() = 0;
+		virtual String& GetBuffer() = 0;
+		virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
+		virtual void FlushLogs() = 0;
 
 	};
 

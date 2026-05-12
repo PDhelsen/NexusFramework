@@ -1,14 +1,14 @@
 #pragma once
 
-#define NEXUS_NOCOPY(DLL, T) \
-	DLL T(const T&) = delete;\
-	DLL T& operator=(const T&) = delete;
-#define NEXUS_NOMOVE(DLL, T) \
-	DLL T(T&&) noexcept = delete;\
-	DLL T& operator=(T&&) noexcept = delete;
-#define NEXUS_NOCOPY_NOMOVE(DLL, T)\
-	NEXUS_NOCOPY(DLL, T)\
-	NEXUS_NOMOVE(DLL, T)
+#define NEXUS_NOCOPY(T) \
+	T(const T&) = delete;\
+	T& operator=(const T&) = delete;
+#define NEXUS_NOMOVE(T) \
+	T(T&&) noexcept = delete;\
+	T& operator=(T&&) noexcept = delete;
+#define NEXUS_NOCOPY_NOMOVE(T)\
+	NEXUS_NOCOPY(T)\
+	NEXUS_NOMOVE(T)
 
 namespace NxFr
 {

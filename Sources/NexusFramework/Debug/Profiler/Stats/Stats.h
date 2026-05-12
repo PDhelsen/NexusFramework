@@ -18,7 +18,7 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API extern const StringId CommentId;
 	}
 
-	class Stats
+	class NEXUS_FRAMEWORK_API Stats
 	{
 	public:
 		enum class StatType
@@ -31,10 +31,10 @@ namespace NxFr
 			Set, Cnt, Add, Avg, Min, Max
 		};
 
-		union StatValue
+		union NEXUS_FRAMEWORK_API StatValue
 		{
-			NEXUS_FRAMEWORK_API StatValue();
-			NEXUS_FRAMEWORK_API ~StatValue();
+			StatValue();
+			~StatValue();
 
 			String Label;
 			int64 Integer;
@@ -42,28 +42,28 @@ namespace NxFr
 			bool State;
 		};
 
-		struct Stat
+		struct NEXUS_FRAMEWORK_API Stat
 		{
 			friend class Stats;
 
 		public:
-			NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Stat)
-			NEXUS_FRAMEWORK_API Stat(StatType Type, StatMode Mode);
-			NEXUS_FRAMEWORK_API ~Stat();
+			NEXUS_NOCOPY_NOMOVE(Stat)
+			Stat(StatType Type, StatMode Mode);
+			~Stat();
 
 			template<typename T> T GetValue() const { return (T)0; }
 			StatType GetType() const { return Type; }
 			StatMode GetMode() const { return Mode; }
 
 		private:
-			NEXUS_FRAMEWORK_API void Reset();
-			NEXUS_FRAMEWORK_API double Compute(double Current, double New) const;
-			NEXUS_FRAMEWORK_API double Finalize(double Current) const;
+			void Reset();
+			double Compute(double Current, double New) const;
+			double Finalize(double Current) const;
 
-			NEXUS_FRAMEWORK_API void RecordLabel(StringView Statistique);
-			NEXUS_FRAMEWORK_API void RecordCheck(bool Statistique);
-			NEXUS_FRAMEWORK_API void RecordInteger(int64 Statistique);
-			NEXUS_FRAMEWORK_API void RecordDecimal(float Statistique);
+			void RecordLabel(StringView Statistique);
+			void RecordCheck(bool Statistique);
+			void RecordInteger(int64 Statistique);
+			void RecordDecimal(float Statistique);
 
 			StatValue Value;
 			StatType Type;
@@ -74,27 +74,27 @@ namespace NxFr
 	public:
 		inline static const String Separator = ";";
 
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Stats)
-		NEXUS_FRAMEWORK_API Stats(StringView Path);
-		NEXUS_FRAMEWORK_API ~Stats();
+		NEXUS_NOCOPY_NOMOVE(Stats)
+		Stats(StringView Path);
+		~Stats();
 
-		NEXUS_FRAMEWORK_API void Initialize();
-		NEXUS_FRAMEWORK_API void Flush();
-		NEXUS_FRAMEWORK_API void Reset();
+		void Initialize();
+		void Flush();
+		void Reset();
 
-		NEXUS_FRAMEWORK_API void RecordHeader(StringId Name, StatType Type, StatMode Mode);
-		NEXUS_FRAMEWORK_API void RecordStatLabel(StringId Id, StringView Value);
-		NEXUS_FRAMEWORK_API void RecordStatCheck(StringId Id, bool Value);
-		NEXUS_FRAMEWORK_API void RecordStatInteger(StringId Id, int64 Value);
-		NEXUS_FRAMEWORK_API void RecordStatDecimal(StringId Id, float Value);
-		NEXUS_FRAMEWORK_API void RecordComment(StringView Comment);
+		void RecordHeader(StringId Name, StatType Type, StatMode Mode);
+		void RecordStatLabel(StringId Id, StringView Value);
+		void RecordStatCheck(StringId Id, bool Value);
+		void RecordStatInteger(StringId Id, int64 Value);
+		void RecordStatDecimal(StringId Id, float Value);
+		void RecordComment(StringView Comment);
 
-		NEXUS_FRAMEWORK_API void StartRecording();
-		NEXUS_FRAMEWORK_API void StopRecording();
+		void StartRecording();
+		void StopRecording();
 
-		NEXUS_FRAMEWORK_API Array<StringId> GetHeaders() const;
-		NEXUS_FRAMEWORK_API Dictionary<StringId, const Stat*> GetStats() const;
-		NEXUS_FRAMEWORK_API const Stat& GetStat(StringId Id) const;
+		Array<StringId> GetHeaders() const;
+		Dictionary<StringId, const Stat*> GetStats() const;
+		const Stat& GetStat(StringId Id) const;
 
 		uint64 GetCount() const { return Data.GetCount(); }
 		bool IsInitialized() const { return Initialized; }

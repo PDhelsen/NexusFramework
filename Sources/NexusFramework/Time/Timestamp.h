@@ -9,22 +9,22 @@
 
 namespace NxFr
 {
-    struct Timestamp
+    struct NEXUS_FRAMEWORK_API Timestamp
     {
 	public:
-		NEXUS_FRAMEWORK_API Timestamp();
-		NEXUS_FRAMEWORK_API Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd = -1, int32 Yd = -1, bool St = false);
+		Timestamp();
+		Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd = -1, int32 Yd = -1, bool St = false);
 
-		NEXUS_FRAMEWORK_API operator bool() const;
-		NEXUS_FRAMEWORK_API Timestamp& operator+=(const Timespan& Other);
-		NEXUS_FRAMEWORK_API Timestamp& operator-=(const Timespan& Other);
+		operator bool() const;
+		Timestamp& operator+=(const Timespan& Other);
+		Timestamp& operator-=(const Timespan& Other);
 
-		NEXUS_FRAMEWORK_API StringView GetWeekDay() const;
-		NEXUS_FRAMEWORK_API StringView GetMonth() const;
-		NEXUS_FRAMEWORK_API int32 GetDaysPerMonth() const;
+		StringView GetWeekDay() const;
+		StringView GetMonth() const;
+		int32 GetDaysPerMonth() const;
 
-		NEXUS_FRAMEWORK_API bool IsValid() const;
-		NEXUS_FRAMEWORK_API bool IsFull() const;
+		bool IsValid() const;
+		bool IsFull() const;
 
         int32 Seconds;
         int32 Minutes;
@@ -38,11 +38,11 @@ namespace NxFr
     };
 
 	template<>
-	struct StringConverter<Timestamp>
+	struct NEXUS_FRAMEWORK_API StringConverter<Timestamp>
 	{
-		NEXUS_FRAMEWORK_API static StringView GetFormat(bool Pretty);
-		NEXUS_FRAMEWORK_API static void ToString(const Timestamp& Data, String& Result, StringView Format);
-		NEXUS_FRAMEWORK_API static void FromString(StringView Data, Timestamp& Result, StringView Format);
+		static StringView GetFormat(bool Pretty);
+		static void ToString(const Timestamp& Data, String& Result, StringView Format);
+		static void FromString(StringView Data, Timestamp& Result, StringView Format);
 	};
 
 	NEXUS_FRAMEWORK_API bool operator==(const Timestamp& A, const Timestamp& B);

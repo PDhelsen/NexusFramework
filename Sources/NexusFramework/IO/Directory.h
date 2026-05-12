@@ -6,29 +6,29 @@
 
 namespace NxFr
 {
-	class Directory
+	class NEXUS_FRAMEWORK_API Directory
 	{
 	public:
-		NEXUS_FRAMEWORK_API Directory(StringView Path);
+		Directory(StringView Path);
 
-		NEXUS_FRAMEWORK_API explicit operator bool() const;
-		NEXUS_FRAMEWORK_API bool operator ==(const Directory& Other) const;
-		NEXUS_FRAMEWORK_API bool operator !=(const Directory& Other) const;
+		explicit operator bool() const;
+		bool operator ==(const Directory& Other) const;
+		bool operator !=(const Directory& Other) const;
 
-		NEXUS_FRAMEWORK_API bool Exists() const;
-		NEXUS_FRAMEWORK_API void EnsureParent() const;
+		bool Exists() const;
+		void EnsureParent() const;
 
-		NEXUS_FRAMEWORK_API void Create();
-		NEXUS_FRAMEWORK_API void Move(StringView Target, bool Override = false);
-		NEXUS_FRAMEWORK_API void Copy(StringView Target, bool Override = false);
-		NEXUS_FRAMEWORK_API void Delete();
+		void Create();
+		void Move(StringView Target, bool Override = false);
+		void Copy(StringView Target, bool Override = false);
+		void Delete();
 
-		NEXUS_FRAMEWORK_API List<String> GetContent(bool Recursive = false) const;
-		NEXUS_FRAMEWORK_API void GetContent(List<String>& Result, bool Recursive = false) const;
-		NEXUS_FRAMEWORK_API List<String> GetFiles(bool Recursive = false) const;
-		NEXUS_FRAMEWORK_API void GetFiles(List<String>& Result, bool Recursive = false) const;
-		NEXUS_FRAMEWORK_API List<String> GetDirectories(bool Recursive = false) const;
-		NEXUS_FRAMEWORK_API void GetDirectories(List<String>& Result, bool Recursive = false) const;
+		List<String> GetContent(bool Recursive = false) const;
+		void GetContent(List<String>& Result, bool Recursive = false) const;
+		List<String> GetFiles(bool Recursive = false) const;
+		void GetFiles(List<String>& Result, bool Recursive = false) const;
+		List<String> GetDirectories(bool Recursive = false) const;
+		void GetDirectories(List<String>& Result, bool Recursive = false) const;
 
 		StringView GetPath() const { return Path; }
 

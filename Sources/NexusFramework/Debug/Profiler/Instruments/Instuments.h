@@ -9,16 +9,16 @@
 
 namespace NxFr
 {
-	class Instruments
+	class NEXUS_FRAMEWORK_API Instruments
 	{
 	public:
-		class Marker
+		class NEXUS_FRAMEWORK_API Marker
 		{
 			friend class Instruments;
 
 		public:
-			NEXUS_FRAMEWORK_API Marker(StringView Text, Instruments* Target);
-			NEXUS_FRAMEWORK_API ~Marker();
+			Marker(StringView Text, Instruments* Target);
+			~Marker();
 
 			const Stopwatch& GetWatch() const { return Watch; }
 			StringView GetText() const { return Text; }
@@ -30,23 +30,23 @@ namespace NxFr
 		};
 
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Instruments)
-		NEXUS_FRAMEWORK_API Instruments(bool AutoStart = false, bool AutoFlush = false);
-		NEXUS_FRAMEWORK_API virtual ~Instruments();
+		NEXUS_NOCOPY_NOMOVE(Instruments)
+		Instruments(bool AutoStart = false, bool AutoFlush = false);
+		virtual ~Instruments();
 
-		NEXUS_FRAMEWORK_API void Record(const Marker& Data);
-		NEXUS_FRAMEWORK_API void Flush();
+		void Record(const Marker& Data);
+		void Flush();
 
-		NEXUS_FRAMEWORK_API void StartRecording();
-		NEXUS_FRAMEWORK_API void StopRecording();
+		void StartRecording();
+		void StopRecording();
 
 		bool IsRecording() const { return Recording; }
 		bool GetAutoFlush() const { return AutoFlush; }
 		void SetAutoFlush(bool Auto) { AutoFlush = true; }
 
 	protected:
-		NEXUS_FRAMEWORK_API virtual void RecordMarker(const Marker& Data) = 0;
-		NEXUS_FRAMEWORK_API virtual void FlushMarkers() = 0;
+		virtual void RecordMarker(const Marker& Data) = 0;
+		virtual void FlushMarkers() = 0;
 
 		bool Recording;
 		bool AutoFlush;

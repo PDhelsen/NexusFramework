@@ -7,7 +7,7 @@
 
 namespace NxFr
 {
-	struct Thread
+	struct NEXUS_FRAMEWORK_API Thread
 	{
 		friend class Platform;
 
@@ -21,30 +21,30 @@ namespace NxFr
 		};
 
 	public:
-		NEXUS_FRAMEWORK_API static uint64 ThreadId();
-		NEXUS_FRAMEWORK_API static void Yield();
-		NEXUS_FRAMEWORK_API static void Sleep(uint64 Milliseconds);
+		static uint64 ThreadId();
+		static void Yield();
+		static void Sleep(uint64 Milliseconds);
 
-		NEXUS_NOCOPY(NEXUS_FRAMEWORK_API, Thread)
-		NEXUS_FRAMEWORK_API Thread(const NxFr::Delegate<void()>& Function);
-		NEXUS_FRAMEWORK_API Thread(Thread&& Other) noexcept;
-		NEXUS_FRAMEWORK_API ~Thread();
+		NEXUS_NOCOPY(Thread)
+		Thread(const NxFr::Delegate<void()>& Function);
+		Thread(Thread&& Other) noexcept;
+		~Thread();
 
-		NEXUS_FRAMEWORK_API void Run();
-		NEXUS_FRAMEWORK_API void Join();
-		NEXUS_FRAMEWORK_API void Detach();
+		void Run();
+		void Join();
+		void Detach();
 
-		NEXUS_FRAMEWORK_API bool HasStarted() const { return IsRunning() || IsFinished(); }
-		NEXUS_FRAMEWORK_API bool IsFinished() const { return Integer::CheckFlag(State.Load(), (int64)Status::Finished); }
-		NEXUS_FRAMEWORK_API bool IsRunning() const { return Integer::CheckFlag(State.Load(), (int64)Status::Running); }
-		NEXUS_FRAMEWORK_API bool IsDetached() const { return Integer::CheckFlag(State.Load(), (int64)Status::Detached); }
-		NEXUS_FRAMEWORK_API bool IsJoining()  const { return Integer::CheckFlag(State.Load(), (int64)Status::Joined); }
+		bool HasStarted() const { return IsRunning() || IsFinished(); }
+		bool IsFinished() const { return Integer::CheckFlag(State.Load(), (int64)Status::Finished); }
+		bool IsRunning() const { return Integer::CheckFlag(State.Load(), (int64)Status::Running); }
+		bool IsDetached() const { return Integer::CheckFlag(State.Load(), (int64)Status::Detached); }
+		bool IsJoining()  const { return Integer::CheckFlag(State.Load(), (int64)Status::Joined); }
 
-		NEXUS_FRAMEWORK_API NxFr::GUID GetId() const { return Id.Load(); }
+		NxFr::GUID GetId() const { return Id.Load(); }
 
 	private:
-		NEXUS_FRAMEWORK_API void RunOnThread();
-		NEXUS_FRAMEWORK_API bool SetState(Status Target);
+		void RunOnThread();
+		bool SetState(Status Target);
 
 	private:
 		NxFr::Delegate<void()> Function;

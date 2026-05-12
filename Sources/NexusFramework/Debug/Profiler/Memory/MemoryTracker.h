@@ -7,22 +7,22 @@
 
 namespace NxFr
 {
-	class MemoryTracker
+	class NEXUS_FRAMEWORK_API MemoryTracker
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, MemoryTracker)
-		NEXUS_FRAMEWORK_API MemoryTracker();
-		NEXUS_FRAMEWORK_API ~MemoryTracker();
+		NEXUS_NOCOPY_NOMOVE(MemoryTracker)
+		MemoryTracker();
+		~MemoryTracker();
 
-		NEXUS_FRAMEWORK_API void RecordAllocation(void* Pointer, uint64 Size);
-		NEXUS_FRAMEWORK_API void RecordReallocation(void* Pointer, void* Reallocated, uint64 Size);
-		NEXUS_FRAMEWORK_API void RecordDeallocation(void* Pointer);
+		void RecordAllocation(void* Pointer, uint64 Size);
+		void RecordReallocation(void* Pointer, void* Reallocated, uint64 Size);
+		void RecordDeallocation(void* Pointer);
 
-		NEXUS_FRAMEWORK_API void StartRecording();
-		NEXUS_FRAMEWORK_API void StopRecording();
+		void StartRecording();
+		void StopRecording();
 
-		NEXUS_FRAMEWORK_API uint64 GetAllocatedAmount() const { return Amount; };
-		NEXUS_FRAMEWORK_API uint64 GetAllocationCount() const { return Count; };
+		uint64 GetAllocatedAmount() const { return Amount; };
+		uint64 GetAllocationCount() const { return Count; };
 
 	private:
 		Dictionary<void*, uint64> Alloctions;

@@ -5,29 +5,29 @@
 
 namespace NxFr
 {
-	struct Mutex
+	struct NEXUS_FRAMEWORK_API Mutex
 	{
 		friend struct ConditionVariable;
 
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Mutex)
-		NEXUS_FRAMEWORK_API Mutex();
-		NEXUS_FRAMEWORK_API ~Mutex();
+		NEXUS_NOCOPY_NOMOVE(Mutex)
+		Mutex();
+		~Mutex();
 
-		NEXUS_FRAMEWORK_API void Lock();
-		NEXUS_FRAMEWORK_API void Unlock();
+		void Lock();
+		void Unlock();
 
 	private:
 		void* Handle;
 		Atomic Owner;
 	};
 
-	struct Lock
+	struct NEXUS_FRAMEWORK_API Lock
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Lock)
-		NEXUS_FRAMEWORK_API Lock(Mutex& Guard);
-		NEXUS_FRAMEWORK_API ~Lock();
+		NEXUS_NOCOPY_NOMOVE(Lock)
+		Lock(Mutex& Guard);
+		~Lock();
 
 	private:
 		Mutex& Guard;

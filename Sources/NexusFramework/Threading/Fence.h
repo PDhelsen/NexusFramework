@@ -6,18 +6,18 @@
 
 namespace NxFr
 {
-	struct Fence
+	struct NEXUS_FRAMEWORK_API Fence
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Fence)
-		NEXUS_FRAMEWORK_API Fence(uint64 Value);
-		NEXUS_FRAMEWORK_API ~Fence();
+		NEXUS_NOCOPY_NOMOVE(Fence)
+		Fence(uint64 Value);
+		~Fence();
 
-		NEXUS_FRAMEWORK_API void Wait();
-		NEXUS_FRAMEWORK_API void Signal();
+		void Wait();
+		void Signal();
 
-		NEXUS_FRAMEWORK_API void Set(uint64 Value);
-		NEXUS_FRAMEWORK_API uint64 Get();
+		void Set(uint64 Value);
+		uint64 Get();
 
 	private:
 		ConditionVariable Condition;

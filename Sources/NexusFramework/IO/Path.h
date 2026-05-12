@@ -7,10 +7,10 @@
 
 namespace NxFr
 {
-	class Path
+	class NEXUS_FRAMEWORK_API Path
 	{
 	public:
-		struct Info
+		struct NEXUS_FRAMEWORK_API Info
 		{
 			Info()
 				: Path(), Depth(0),
@@ -32,55 +32,55 @@ namespace NxFr
 		inline static const String SeparatorPrevious = "..";
 		inline static const String SeparatorDrive = ":/";
 
-		NEXUS_FRAMEWORK_API static void ShowInExplorer(NxFr::StringView Path);
-		NEXUS_FRAMEWORK_API static String OpenFileDialog(NxFr::StringView Title = "", NxFr::StringView Extension = "", NxFr::StringView Name = "", NxFr::StringView Path = "");
-		NEXUS_FRAMEWORK_API static String GetWorkingDirectory();
-		NEXUS_FRAMEWORK_API static bool Exist(StringView Path);
-		NEXUS_FRAMEWORK_API static void EnsureParent(StringView Path);
-		NEXUS_FRAMEWORK_API static Info Parse(StringView Path);
+		static void ShowInExplorer(NxFr::StringView Path);
+		static String OpenFileDialog(NxFr::StringView Title = "", NxFr::StringView Extension = "", NxFr::StringView Name = "", NxFr::StringView Path = "");
+		static String GetWorkingDirectory();
+		static bool Exist(StringView Path);
+		static void EnsureParent(StringView Path);
+		static Info Parse(StringView Path);
 
-		NEXUS_FRAMEWORK_API static bool IsAbsolute(StringView Path);
-		NEXUS_FRAMEWORK_API static bool IsRelative(StringView Path);
-		NEXUS_FRAMEWORK_API static bool IsSubdirectory(StringView Path, StringView Root);
-		NEXUS_FRAMEWORK_API static bool IsDirectory(StringView Path);
-		NEXUS_FRAMEWORK_API static bool IsFile(StringView Path);
-		NEXUS_FRAMEWORK_API static bool Has(StringView Path, bool HasDrive, bool HasFolder, bool HasName, bool HasExtension);
-		NEXUS_FRAMEWORK_API static bool HasDrive(StringView Path);
-		NEXUS_FRAMEWORK_API static bool HasFolder(StringView Path);
-		NEXUS_FRAMEWORK_API static bool HasName(StringView Path);
-		NEXUS_FRAMEWORK_API static bool HasExtension(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView Get(StringView Path, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension);
-		NEXUS_FRAMEWORK_API static StringView GetDrive(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetFolder(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetName(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetExtension(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetDriveAndFolder(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetFolderAndName(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetNameAndExtension(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetPathWithoutDrive(StringView Path);
-		NEXUS_FRAMEWORK_API static StringView GetPathWithoutExtension(StringView Path);
-		NEXUS_FRAMEWORK_API static List<StringView> Split(StringView Path);
-		NEXUS_FRAMEWORK_API static int64 Depth(StringView Path);
-		NEXUS_FRAMEWORK_API static String Change(StringView Path, StringView ChangeDrive, StringView ChangeFolder, StringView ChangeName, StringView ChangeExtension);
-		NEXUS_FRAMEWORK_API static String ChangeDrive(StringView Path, StringView Drive);
-		NEXUS_FRAMEWORK_API static String ChangeFolder(StringView Path, StringView Folder);
-		NEXUS_FRAMEWORK_API static String ChangeName(StringView Path, StringView Name);
-		NEXUS_FRAMEWORK_API static String ChangeExtension(StringView Path, StringView Extension);
+		static bool IsAbsolute(StringView Path);
+		static bool IsRelative(StringView Path);
+		static bool IsSubdirectory(StringView Path, StringView Root);
+		static bool IsDirectory(StringView Path);
+		static bool IsFile(StringView Path);
+		static bool Has(StringView Path, bool HasDrive, bool HasFolder, bool HasName, bool HasExtension);
+		static bool HasDrive(StringView Path);
+		static bool HasFolder(StringView Path);
+		static bool HasName(StringView Path);
+		static bool HasExtension(StringView Path);
+		static StringView Get(StringView Path, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension);
+		static StringView GetDrive(StringView Path);
+		static StringView GetFolder(StringView Path);
+		static StringView GetName(StringView Path);
+		static StringView GetExtension(StringView Path);
+		static StringView GetDriveAndFolder(StringView Path);
+		static StringView GetFolderAndName(StringView Path);
+		static StringView GetNameAndExtension(StringView Path);
+		static StringView GetPathWithoutDrive(StringView Path);
+		static StringView GetPathWithoutExtension(StringView Path);
+		static List<StringView> Split(StringView Path);
+		static int64 Depth(StringView Path);
+		static String Change(StringView Path, StringView ChangeDrive, StringView ChangeFolder, StringView ChangeName, StringView ChangeExtension);
+		static String ChangeDrive(StringView Path, StringView Drive);
+		static String ChangeFolder(StringView Path, StringView Folder);
+		static String ChangeName(StringView Path, StringView Name);
+		static String ChangeExtension(StringView Path, StringView Extension);
 
 		template<typename T>
 		static String Combine(const Collection<T>& Elements);
 		template<typename... Args>
 		static String Combine(Args&&... args);
-		NEXUS_FRAMEWORK_API static String Join(StringView Path, StringView Element);
-		NEXUS_FRAMEWORK_API static void Join(String& Path, StringView Element);
-		NEXUS_FRAMEWORK_API static String Normalize(StringView Path);
-		NEXUS_FRAMEWORK_API static void Normalize(String& Path);
-		NEXUS_FRAMEWORK_API static String Resolve(StringView Path);
-		NEXUS_FRAMEWORK_API static void Resolve(String& Path);
-		NEXUS_FRAMEWORK_API static String MakeAbsolute(StringView Path, StringView Root);
-		NEXUS_FRAMEWORK_API static void MakeAbsolute(String& Path, StringView Root);
-		NEXUS_FRAMEWORK_API static String MakeRelative(StringView Path, StringView Root);
-		NEXUS_FRAMEWORK_API static void MakeRelative(String& Path, StringView Root);
+		static String Join(StringView Path, StringView Element);
+		static void Join(String& Path, StringView Element);
+		static String Normalize(StringView Path);
+		static void Normalize(String& Path);
+		static String Resolve(StringView Path);
+		static void Resolve(String& Path);
+		static String MakeAbsolute(StringView Path, StringView Root);
+		static void MakeAbsolute(String& Path, StringView Root);
+		static String MakeRelative(StringView Path, StringView Root);
+		static void MakeRelative(String& Path, StringView Root);
 	};
 
 	template<typename T>

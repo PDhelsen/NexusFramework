@@ -6,7 +6,7 @@ namespace NxFr
 {
 	class HandleManager;
 
-    class HeapAllocator : public MemoryAllocator
+    class NEXUS_FRAMEWORK_API HeapAllocator : public MemoryAllocator
     {
 	private:
 		struct HeapSlot
@@ -16,19 +16,19 @@ namespace NxFr
 		};
 
     public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, HeapAllocator)
-		NEXUS_FRAMEWORK_API HeapAllocator(uint64 Size);
-        NEXUS_FRAMEWORK_API virtual ~HeapAllocator();
+		NEXUS_NOCOPY_NOMOVE(HeapAllocator)
+		HeapAllocator(uint64 Size);
+        virtual ~HeapAllocator();
 
-		NEXUS_FRAMEWORK_API void Clear() override;
-		NEXUS_FRAMEWORK_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
-		NEXUS_FRAMEWORK_API bool BelongToAllocator(void* Pointer) const override;
+		void Clear() override;
+		bool CanAllocate(uint64 Size, uint64 Alignement) const override;
+		bool BelongToAllocator(void* Pointer) const override;
 
-		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager);
-		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager, float Time);
-		NEXUS_FRAMEWORK_API void Defragment(HandleManager* Manager, uint64 Count);
+		void Defragment(HandleManager* Manager);
+		void Defragment(HandleManager* Manager, float Time);
+		void Defragment(HandleManager* Manager, uint64 Count);
 
-		NEXUS_FRAMEWORK_API virtual bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
+		virtual bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
 
 	protected:
 		void* Allocate(uint64 Size, uint64 Alignement) override;

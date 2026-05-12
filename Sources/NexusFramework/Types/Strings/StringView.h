@@ -8,28 +8,28 @@ namespace NxFr
 {
 	template <typename T> class List;
 
-	struct StringView
+	struct NEXUS_FRAMEWORK_API StringView
 	{
 	public:
-		NEXUS_FRAMEWORK_API static NxFr::StringView GetTempExactString(NxFr::StringView Substring);
+		static NxFr::StringView GetTempExactString(NxFr::StringView Substring);
 
-		NEXUS_FRAMEWORK_API StringView();
-		NEXUS_FRAMEWORK_API StringView(const char* Text);
-		NEXUS_FRAMEWORK_API StringView(const char* Text, uint64 Size);
-		NEXUS_FRAMEWORK_API StringView(const char* Text, uint64 Offset, uint64 Size);
-		NEXUS_FRAMEWORK_API StringView(const String& Text);
+		StringView();
+		StringView(const char* Text);
+		StringView(const char* Text, uint64 Size);
+		StringView(const char* Text, uint64 Offset, uint64 Size);
+		StringView(const String& Text);
 
-		NEXUS_FRAMEWORK_API const Iterator::StringCharacter Begin() const;
-		NEXUS_FRAMEWORK_API const Iterator::StringToken Begin(StringView Token) const;
-		NEXUS_FRAMEWORK_API const Iterator::StringCharacter End() const;
-		NEXUS_FRAMEWORK_API const Iterator::StringToken End(StringView Token) const;
+		const Iterator::StringCharacter Begin() const;
+		const Iterator::StringToken Begin(StringView Token) const;
+		const Iterator::StringCharacter End() const;
+		const Iterator::StringToken End(StringView Token) const;
 
-		NEXUS_FRAMEWORK_API StringView Substring(uint64 Offset, uint64 Size) const;
-		NEXUS_FRAMEWORK_API String ExactString() const;
+		StringView Substring(uint64 Offset, uint64 Size) const;
+		String ExactString() const;
 
-		NEXUS_FRAMEWORK_API const char* C(bool Exact = false) const { return Exact ? GetTempExactString(*this).Data : Data; }
-		NEXUS_FRAMEWORK_API bool IsEmpty() const { return Count == 0; }
-		NEXUS_FRAMEWORK_API uint64 GetCount() const { return Count; }
+		const char* C(bool Exact = false) const { return Exact ? GetTempExactString(*this).Data : Data; }
+		bool IsEmpty() const { return Count == 0; }
+		uint64 GetCount() const { return Count; }
 
 	private:
 		const char* Data;

@@ -4,16 +4,16 @@
 
 namespace NxFr
 {
-    class StackAllocator : public MemoryAllocator
+    class NEXUS_FRAMEWORK_API StackAllocator : public MemoryAllocator
     {
     public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, StackAllocator)
-        NEXUS_FRAMEWORK_API StackAllocator(uint64 Size);
-        NEXUS_FRAMEWORK_API virtual ~StackAllocator();
+		NEXUS_NOCOPY_NOMOVE(StackAllocator)
+        StackAllocator(uint64 Size);
+        virtual ~StackAllocator();
 
-		NEXUS_FRAMEWORK_API void Clear() override;
-		NEXUS_FRAMEWORK_API bool CanAllocate(uint64 Size, uint64 Alignement) const override;
-		NEXUS_FRAMEWORK_API bool BelongToAllocator(void* Pointer) const override;
+		void Clear() override;
+		bool CanAllocate(uint64 Size, uint64 Alignement) const override;
+		bool BelongToAllocator(void* Pointer) const override;
 
 	protected:
 		void* Allocate(uint64 Size, uint64 Alignement) override;

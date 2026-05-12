@@ -5,86 +5,86 @@
 
 namespace NxFr
 {
-	class Stream
+	class NEXUS_FRAMEWORK_API Stream
 	{
 	public:
 		inline static constexpr uint64 BlockSize = 1024;
 
-		NEXUS_FRAMEWORK_API Stream(StringView Path);
-		NEXUS_FRAMEWORK_API Stream(const Stream& Other) = delete;
-		NEXUS_FRAMEWORK_API Stream(Stream&& Other) noexcept;
-		NEXUS_FRAMEWORK_API virtual ~Stream();
+		Stream(StringView Path);
+		Stream(const Stream& Other) = delete;
+		Stream(Stream&& Other) noexcept;
+		virtual ~Stream();
 
-		NEXUS_FRAMEWORK_API Stream& operator=(const Stream& Other) = delete;
-		NEXUS_FRAMEWORK_API Stream& operator=(Stream&& Other) noexcept;
+		Stream& operator=(const Stream& Other) = delete;
+		Stream& operator=(Stream&& Other) noexcept;
 
-		NEXUS_FRAMEWORK_API void Open(File::Mode Mode, bool CreateIfDontExist = true);
-		NEXUS_FRAMEWORK_API void Close();
+		void Open(File::Mode Mode, bool CreateIfDontExist = true);
+		void Close();
 
-		NEXUS_FRAMEWORK_API virtual void Cache() = 0;
-		NEXUS_FRAMEWORK_API virtual void Flush() = 0;
+		virtual void Cache() = 0;
+		virtual void Flush() = 0;
 
-		NEXUS_FRAMEWORK_API virtual uint64 GetSize() const = 0;
-		NEXUS_FRAMEWORK_API virtual uint64 GetCursor() const { return Cursor; }
-		NEXUS_FRAMEWORK_API virtual void SetCursor(uint64 Position) { Cursor = Position; }
-		NEXUS_FRAMEWORK_API virtual bool IsAtTheEnd() const { return Cursor == GetSize(); }
+		virtual uint64 GetSize() const = 0;
+		virtual uint64 GetCursor() const { return Cursor; }
+		virtual void SetCursor(uint64 Position) { Cursor = Position; }
+		virtual bool IsAtTheEnd() const { return Cursor == GetSize(); }
 
-		NEXUS_FRAMEWORK_API StringView GetPath() const { return Handle.GetPath(); }
-		NEXUS_FRAMEWORK_API File::Mode GetMode() const { return Handle.GetMode(); }
-		NEXUS_FRAMEWORK_API bool IsOpened() const { return Handle.IsOpened(); }
+		StringView GetPath() const { return Handle.GetPath(); }
+		File::Mode GetMode() const { return Handle.GetMode(); }
+		bool IsOpened() const { return Handle.IsOpened(); }
 
 	protected:
 		File Handle;
 		uint64 Cursor;
 	};
 
-	class TextStream : public Stream
+	class NEXUS_FRAMEWORK_API TextStream : public Stream
 	{
 	public:
-		NEXUS_FRAMEWORK_API TextStream(StringView Path);
-		NEXUS_FRAMEWORK_API TextStream(const TextStream& Other) = delete;
-		NEXUS_FRAMEWORK_API TextStream(TextStream&& Other) noexcept;
-		NEXUS_FRAMEWORK_API virtual ~TextStream();
+		TextStream(StringView Path);
+		TextStream(const TextStream& Other) = delete;
+		TextStream(TextStream&& Other) noexcept;
+		virtual ~TextStream();
 
-		NEXUS_FRAMEWORK_API TextStream& operator=(const TextStream& Other) = delete;
-		NEXUS_FRAMEWORK_API TextStream& operator=(TextStream&& Other) noexcept;
+		TextStream& operator=(const TextStream& Other) = delete;
+		TextStream& operator=(TextStream&& Other) noexcept;
 
-		NEXUS_FRAMEWORK_API void Cache() override;
-		NEXUS_FRAMEWORK_API void Flush() override;
+		void Cache() override;
+		void Flush() override;
 
-		NEXUS_FRAMEWORK_API StringView ReadAll();
-		NEXUS_FRAMEWORK_API StringView ReadBlock(uint64 Size);
-		NEXUS_FRAMEWORK_API StringView ReadLine();
-		NEXUS_FRAMEWORK_API void WriteAll(StringView Data);
-		NEXUS_FRAMEWORK_API void WriteBlock(StringView Data);
-		NEXUS_FRAMEWORK_API void WriteLine(StringView Data);
+		StringView ReadAll();
+		StringView ReadBlock(uint64 Size);
+		StringView ReadLine();
+		void WriteAll(StringView Data);
+		void WriteBlock(StringView Data);
+		void WriteLine(StringView Data);
 
-		NEXUS_FRAMEWORK_API uint64 GetSize() const { return Buffer.GetCount(); };
+		uint64 GetSize() const { return Buffer.GetCount(); };
 
 	private:
 		String Buffer;
 	};
 
-	class BinaryStream : public Stream
+	class NEXUS_FRAMEWORK_API BinaryStream : public Stream
 	{
 	public:
-		NEXUS_FRAMEWORK_API BinaryStream(StringView Path);
-		NEXUS_FRAMEWORK_API BinaryStream(const BinaryStream& Other) = delete;
-		NEXUS_FRAMEWORK_API BinaryStream(BinaryStream&& Other) noexcept;
-		NEXUS_FRAMEWORK_API virtual ~BinaryStream();
+		BinaryStream(StringView Path);
+		BinaryStream(const BinaryStream& Other) = delete;
+		BinaryStream(BinaryStream&& Other) noexcept;
+		virtual ~BinaryStream();
 
-		NEXUS_FRAMEWORK_API BinaryStream& operator=(const BinaryStream& Other) = delete;
-		NEXUS_FRAMEWORK_API BinaryStream& operator=(BinaryStream&& Other) noexcept;
+		BinaryStream& operator=(const BinaryStream& Other) = delete;
+		BinaryStream& operator=(BinaryStream&& Other) noexcept;
 
-		NEXUS_FRAMEWORK_API void Cache() override;
-		NEXUS_FRAMEWORK_API void Flush() override;
+		void Cache() override;
+		void Flush() override;
 
-		NEXUS_FRAMEWORK_API BufferView ReadAll();
-		NEXUS_FRAMEWORK_API BufferView ReadBlock(uint64 Size);
-		NEXUS_FRAMEWORK_API void WriteAll(BufferView Data);
-		NEXUS_FRAMEWORK_API void WriteBlock(BufferView Data);
+		BufferView ReadAll();
+		BufferView ReadBlock(uint64 Size);
+		void WriteAll(BufferView Data);
+		void WriteBlock(BufferView Data);
 
-		NEXUS_FRAMEWORK_API uint64 GetSize() const { return Buffer.GetCount(); };
+		uint64 GetSize() const { return Buffer.GetCount(); };
 
 	private:
 		Buffer Buffer;

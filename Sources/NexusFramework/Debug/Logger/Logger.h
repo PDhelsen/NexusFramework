@@ -12,7 +12,7 @@
 
 namespace NxFr
 {
-	class Logger : public Log
+	class NEXUS_FRAMEWORK_API Logger : public Log
 	{
 	private:
 		struct LogData
@@ -27,34 +27,34 @@ namespace NxFr
 	public:
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s%s";
 
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, Logger)
-		NEXUS_FRAMEWORK_API Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "", bool AutoFlush = false);
-		NEXUS_FRAMEWORK_API ~Logger();
+		NEXUS_NOCOPY_NOMOVE(Logger)
+		Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "", bool AutoFlush = false);
+		~Logger();
 
-		NEXUS_FRAMEWORK_API void Flush();
+		void Flush();
 
-		NEXUS_FRAMEWORK_API bool CheckVerbosity(LoggerVerbosity Verbosity) const;
-		NEXUS_FRAMEWORK_API void SetVerbosity(LoggerVerbosity Verbosity, bool State);
+		bool CheckVerbosity(LoggerVerbosity Verbosity) const;
+		void SetVerbosity(LoggerVerbosity Verbosity, bool State);
 
-		NEXUS_FRAMEWORK_API void AddChannel(StringId Channel, bool State = true);
-		NEXUS_FRAMEWORK_API void SetChannel(StringId Channel, bool State);
-		NEXUS_FRAMEWORK_API void SetAllChannels(bool State);
-		NEXUS_FRAMEWORK_API bool HasChannel(StringId Channel) const;
-		NEXUS_FRAMEWORK_API bool CheckChannel(StringId Channel) const;
-		NEXUS_FRAMEWORK_API Array<StringId> GetChannels() const;
+		void AddChannel(StringId Channel, bool State = true);
+		void SetChannel(StringId Channel, bool State);
+		void SetAllChannels(bool State);
+		bool HasChannel(StringId Channel) const;
+		bool CheckChannel(StringId Channel) const;
+		Array<StringId> GetChannels() const;
 
-		NEXUS_FRAMEWORK_API bool CheckOutput(LoggerOutput Output) const;
-		NEXUS_FRAMEWORK_API void SetOutput(LoggerOutput Output, bool State, StringView Path = "");
-		NEXUS_FRAMEWORK_API void RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
-		NEXUS_FRAMEWORK_API void UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
+		bool CheckOutput(LoggerOutput Output) const;
+		void SetOutput(LoggerOutput Output, bool State, StringView Path = "");
+		void RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
+		void UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 
-		NEXUS_FRAMEWORK_API bool GetAutoFlush() const;
-		NEXUS_FRAMEWORK_API void SetAutoFlush(bool Auto);
+		bool GetAutoFlush() const;
+		void SetAutoFlush(bool Auto);
 
 	protected:
-		NEXUS_FRAMEWORK_API String& GetBuffer() override;
-		NEXUS_FRAMEWORK_API void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
-		NEXUS_FRAMEWORK_API void FlushLogs() override;
+		String& GetBuffer() override;
+		void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
+		void FlushLogs() override;
 
 	private:
 		List<LogData> Logs;

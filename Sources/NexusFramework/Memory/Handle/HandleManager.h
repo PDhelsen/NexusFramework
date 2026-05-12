@@ -8,12 +8,12 @@
 
 namespace NxFr
 {
-	class HandleManager
+	class NEXUS_FRAMEWORK_API HandleManager
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(NEXUS_FRAMEWORK_API, HandleManager)
-		NEXUS_FRAMEWORK_API HandleManager(uint64 Size);
-		NEXUS_FRAMEWORK_API ~HandleManager();
+		NEXUS_NOCOPY_NOMOVE(HandleManager)
+		HandleManager(uint64 Size);
+		~HandleManager();
 
 		template<typename T>
 		Handle<T> AcquireHandle(T* Pointer);
@@ -26,18 +26,18 @@ namespace NxFr
 		template<typename T>
 		bool BelongToManager(Handle<T> Handle);
 
-		NEXUS_FRAMEWORK_API Dictionary<void*, Handle<void>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
+		Dictionary<void*, Handle<void>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
 
 		bool IsEmpty() const { return Buffer.GetCount() == 0; }
 		uint64 GetCount() const { return Buffer.GetCount(); }
 		uint64 GetCapacity() const { return Buffer.GetCapacity(); }
 
 	private:
-		NEXUS_FRAMEWORK_API void* AllocateHandle(void* Pointer);
-		NEXUS_FRAMEWORK_API void ModifyHandle(void* Handle, void* Pointer);
-		NEXUS_FRAMEWORK_API void FreeHandle(void* Handle);
-		NEXUS_FRAMEWORK_API void* GetHandle(void* Pointer);
-		NEXUS_FRAMEWORK_API bool IsBelonging(void* Pointer);
+		void* AllocateHandle(void* Pointer);
+		void ModifyHandle(void* Handle, void* Pointer);
+		void FreeHandle(void* Handle);
+		void* GetHandle(void* Pointer);
+		bool IsBelonging(void* Pointer);
 
 		Pool<uint64, Pooling::PreAllocated<uint64>> Buffer;
 	};

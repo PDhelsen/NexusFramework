@@ -11,7 +11,7 @@ namespace NxFr
 {
 	template <typename T> class Collection;
 
-	class StringUtility
+	class NEXUS_FRAMEWORK_API StringUtility
 	{
 	public:
 		enum class SearchMode
@@ -55,20 +55,20 @@ namespace NxFr
 		template<typename T>
 		static StringView ConvertionFormat(StringView Format = "", bool Pretty = false);
 
-		NEXUS_FRAMEWORK_API static bool Start(StringView Text, StringView Substring);
-		NEXUS_FRAMEWORK_API static bool End(StringView Text, StringView Substring);
-		NEXUS_FRAMEWORK_API static bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API static StringView Common(StringView Text1, StringView Text2);
-		NEXUS_FRAMEWORK_API static StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API static List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API static StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API static List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API static StringView TrimLeading(StringView Text, char Character = ' ');
-		NEXUS_FRAMEWORK_API static StringView TrimTrailing(StringView Text, char Character = ' ');
-		NEXUS_FRAMEWORK_API static String Lower(StringView Text);
-		NEXUS_FRAMEWORK_API static String Upper(StringView Text);
-		NEXUS_FRAMEWORK_API static String Replace(StringView Text, StringView Old, StringView New);
-		NEXUS_FRAMEWORK_API static String Join(const Collection<StringView>& Text, StringView Separator = "");
+		static bool Start(StringView Text, StringView Substring);
+		static bool End(StringView Text, StringView Substring);
+		static bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		static StringView Common(StringView Text1, StringView Text2);
+		static StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		static List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		static StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		static List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		static StringView TrimLeading(StringView Text, char Character = ' ');
+		static StringView TrimTrailing(StringView Text, char Character = ' ');
+		static String Lower(StringView Text);
+		static String Upper(StringView Text);
+		static String Replace(StringView Text, StringView Old, StringView New);
+		static String Join(const Collection<StringView>& Text, StringView Separator = "");
 
 	private:
 		static StringView Search(const char* Text, const char* Substring, uint64 Capacity, uint64 Size, SearchBehaviour Behaviour, SearchMode Mode, uint64 Offset, List<StringView>* Results);
