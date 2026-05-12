@@ -4,7 +4,7 @@
 #include "NexusFramework/Types/Numeric/Decimal.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Math/Vector.h"
-#include "NexusFramework/Misc/Hash.h"
+#include "NexusFramework/Misc/Hash/Hash.h"
 #include "NexusFramework/Serialization/Rbs.h"
 #include "NexusFramework/Serialization/Yaml.h"
 

@@ -1,5 +1,5 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
-#include "NexusFramework/Misc/Arguments.h"
+#include "NexusFramework/Misc/Arguments/Arguments.h"
 
 namespace NxFr
 {

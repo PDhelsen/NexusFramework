@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NexusFramework/Misc/Iterator.h"
+#include "NexusFramework/Misc/Iterator/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 #include "NexusFramework/Types/Containers/Node.h"
 

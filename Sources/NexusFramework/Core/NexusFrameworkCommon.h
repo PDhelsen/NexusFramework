@@ -2,7 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Misc/Arguments.h"
+#include "NexusFramework/Misc/Arguments/Arguments.h"
 #include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"

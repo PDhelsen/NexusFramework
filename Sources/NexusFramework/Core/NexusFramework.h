@@ -41,10 +41,10 @@
 #include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 
 #include "NexusFramework/Misc/Templates.h"
-#include "NexusFramework/Misc/Hash.h"
-#include "NexusFramework/Misc/Sort.h"
-#include "NexusFramework/Misc/Color.h"
-#include "NexusFramework/Misc/Arguments.h"
+#include "NexusFramework/Misc/Hash/Hash.h"
+#include "NexusFramework/Misc/Sort/Sort.h"
+#include "NexusFramework/Misc/Color/Color.h"
+#include "NexusFramework/Misc/Arguments/Arguments.h"
 
 #include "NexusFramework/Platform/Platform.h"
 

@@ -1,5 +1,5 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
-#include "NexusFramework/Misc/Color.h"
+#include "NexusFramework/Misc/Color/Color.h"
 
 namespace NxFr
 {
