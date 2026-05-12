@@ -19,6 +19,9 @@
 
 namespace NxFr
 {
+	template<typename T>
+	using Predicate = Delegate<bool(const T&)>;
+
 	class ContainersUtils
 	{
 	public:
@@ -205,17 +208,17 @@ namespace NxFr
 		}
 
 		template<typename T, typename C>
-		static bool Any(const C& Container, const Iterator::Predicate<T>& Predicate)
+		static bool Any(const C& Container, const Predicate<T>& Predicate)
 		{
 			return Where(Container, Predicate) != Container.End();
 		}
 		template<typename K, typename T>
-		static bool AnyKey(const Dictionary<K, T>& Container, const Iterator::Predicate<K>& Predicate)
+		static bool AnyKey(const Dictionary<K, T>& Container, const Predicate<K>& Predicate)
 		{
 			return WhereKey(Container, Predicate) != Container.End();
 		}
 		template<typename K, typename T>
-		static bool AnyValue(const Dictionary<K, T>& Container, const Iterator::Predicate<T>& Predicate)
+		static bool AnyValue(const Dictionary<K, T>& Container, const Predicate<T>& Predicate)
 		{
 			return WhereValue(Container, Predicate) != Container.End();
 		}
@@ -227,7 +230,7 @@ namespace NxFr
 		static bool ContainsValue(const Dictionary<K, T>& Container, const T& Other) { return AnyValue<K, T>(Container, [&](const T& Element) { return Element == Other; }); }
 		
 		template<typename T, typename C>
-		static typename C::I Where(const C& Container, const Iterator::Predicate<T>& Predicate)
+		static typename C::I Where(const C& Container, const Predicate<T>& Predicate)
 		{
 			for (typename C::I It = Container.Begin(); It != Container.End(); ++It)
 			{
@@ -240,7 +243,7 @@ namespace NxFr
 			return Container.End();
 		}
 		template<typename K, typename T>
-		static typename Dictionary<K, T>::I WhereKey(const Dictionary<K, T>& Container, const Iterator::Predicate<K>& Predicate)
+		static typename Dictionary<K, T>::I WhereKey(const Dictionary<K, T>& Container, const Predicate<K>& Predicate)
 		{
 			for (typename Dictionary<K, T>::I It = Container.Begin(); It != Container.End(); ++It)
 			{
@@ -253,7 +256,7 @@ namespace NxFr
 			return Container.End();
 		}
 		template<typename K, typename T>
-		static typename Dictionary<K, T>::I WhereValue(const Dictionary<K, T>& Container, const Iterator::Predicate<T>& Predicate)
+		static typename Dictionary<K, T>::I WhereValue(const Dictionary<K, T>& Container, const Predicate<T>& Predicate)
 		{
 			for (typename Dictionary<K, T>::I It = Container.Begin(); It != Container.End(); ++It)
 			{
