@@ -13,37 +13,37 @@ namespace NxFr
 		Bits::Bits(Type R, Type G, Type B, Type A) : r(R), g(G), b(B), a(A) {}
 		Bits::Bits(Vector3f V) : r(V.x), g(V.y), b(V.z), a(BoundHigh) {}
 		Bits::Bits(Vector4f V) : r(V.x), g(V.y), b(V.z), a(V.w) {}
-		Bits::Bits(sRGB Other) { *this = Utility::ToBits(Other); }
-		Bits::Bits(Linear Other) { *this = Utility::ToBits(Utility::TosRGB(Other)); }
-		Bits::Bits(Hsv Other) { *this = Utility::ToBits(Utility::TosRGB(Other)); }
+		Bits::Bits(sRGB Other) { *this = ColorUtility::ToBits(Other); }
+		Bits::Bits(Linear Other) { *this = ColorUtility::ToBits(ColorUtility::TosRGB(Other)); }
+		Bits::Bits(Hsv Other) { *this = ColorUtility::ToBits(ColorUtility::TosRGB(Other)); }
 
-		Bits::operator Vector3f() const { return Utility::ToVector3f(*this); }
-		Bits::operator Vector4f() const { return Utility::ToVector4f(*this); }
+		Bits::operator Vector3f() const { return ColorUtility::ToVector3f(*this); }
+		Bits::operator Vector4f() const { return ColorUtility::ToVector4f(*this); }
 
-		Vector3f Bits::ToVector3f() const { return Utility::ToVector3f(*this); }
-		Vector4f Bits::ToVector4f() const { return Utility::ToVector4f(*this); }
-		float Bits::ToGrayscale() const { return Utility::ToGrayscale(*this); }
-		sRGB Bits::TosRGB() const { return Utility::TosRGB(*this); }
-		Linear Bits::ToLinear() const { return Utility::ToLinear(*this); }
-		Hsv Bits::ToHsv() const { return Utility::ToHsv(*this); }
+		Vector3f Bits::ToVector3f() const { return ColorUtility::ToVector3f(*this); }
+		Vector4f Bits::ToVector4f() const { return ColorUtility::ToVector4f(*this); }
+		float Bits::ToGrayscale() const { return ColorUtility::ToGrayscale(*this); }
+		sRGB Bits::TosRGB() const { return ColorUtility::TosRGB(*this); }
+		Linear Bits::ToLinear() const { return ColorUtility::ToLinear(*this); }
+		Hsv Bits::ToHsv() const { return ColorUtility::ToHsv(*this); }
 
-		bool Bits::operator==(Bits Other) const { return Utility::Equals(*this, Other); }
-		bool Bits::operator!=(Bits Other) const { return !Utility::Equals(*this, Other); }
-		Bits::Type& Bits::operator[](uint64 Index) { return Utility::Access(*this, Index); }
-		const Bits::Type& Bits::operator[](uint64 Index) const { return Utility::Access(*this, Index); }
+		bool Bits::operator==(Bits Other) const { return ColorUtility::Equals(*this, Other); }
+		bool Bits::operator!=(Bits Other) const { return !ColorUtility::Equals(*this, Other); }
+		Bits::Type& Bits::operator[](uint64 Index) { return ColorUtility::Access(*this, Index); }
+		const Bits::Type& Bits::operator[](uint64 Index) const { return ColorUtility::Access(*this, Index); }
 
-		Bits& Bits::operator+=(Type Other) { *this = Utility::Add(*this, Other); return *this; }
-		Bits& Bits::operator-=(Type Other) { *this = Utility::Subtract(*this, Other); return *this; }
-		Bits& Bits::operator*=(Type Other) { *this = Utility::Multiply(*this, Other); return *this; }
-		Bits& Bits::operator/=(Type Other) { *this = Utility::Divide(*this, Other); return *this; }
-		Bits& Bits::operator+=(Bits Other) { *this = Utility::Add(*this, Other);	return *this; }
-		Bits& Bits::operator-=(Bits Other) { *this = Utility::Subtract(*this, Other); return *this; }
-		Bits& Bits::operator*=(Bits Other) { *this = Utility::Multiply(*this, Other); return *this; }
-		Bits& Bits::operator/=(Bits Other) { *this = Utility::Divide(*this, Other); return *this; }
+		Bits& Bits::operator+=(Type Other) { *this = ColorUtility::Add(*this, Other); return *this; }
+		Bits& Bits::operator-=(Type Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }
+		Bits& Bits::operator*=(Type Other) { *this = ColorUtility::Multiply(*this, Other); return *this; }
+		Bits& Bits::operator/=(Type Other) { *this = ColorUtility::Divide(*this, Other); return *this; }
+		Bits& Bits::operator+=(Bits Other) { *this = ColorUtility::Add(*this, Other);	return *this; }
+		Bits& Bits::operator-=(Bits Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }
+		Bits& Bits::operator*=(Bits Other) { *this = ColorUtility::Multiply(*this, Other); return *this; }
+		Bits& Bits::operator/=(Bits Other) { *this = ColorUtility::Divide(*this, Other); return *this; }
 
-		Bits::Type Bits::Min() const { return Utility::Min(*this); }
-		Bits::Type Bits::Max() const { return Utility::Max(*this); }
-		Bits Bits::Clamp(Type Min, Type Max) const { return Utility::Clamp(*this, Min, Max); }
+		Bits::Type Bits::Min() const { return ColorUtility::Min(*this); }
+		Bits::Type Bits::Max() const { return ColorUtility::Max(*this); }
+		Bits Bits::Clamp(Type Min, Type Max) const { return ColorUtility::Clamp(*this, Min, Max); }
 
 		Bits::Type& Bits::GetX() { return r; }
 		Bits::Type& Bits::GetY() { return g; }
@@ -58,13 +58,13 @@ namespace NxFr
 		void Bits::SetZ(Type Z) { b = Z; }
 		void Bits::SetW(Type W) { a = W; }
 
-		Bits operator+(Bits Instance, Bits::Type Other) { return Utility::Add(Instance, Other); }
-		Bits operator-(Bits Instance, Bits::Type Other) { return Utility::Subtract(Instance, Other); }
-		Bits operator*(Bits Instance, Bits::Type Other) { return Utility::Multiply(Instance, Other); }
-		Bits operator/(Bits Instance, Bits::Type Other) { return Utility::Divide(Instance, Other); }
-		Bits operator+(Bits Instance, Bits Other) { return Utility::Add(Instance, Other); }
-		Bits operator-(Bits Instance, Bits Other) { return Utility::Subtract(Instance, Other); }
-		Bits operator*(Bits Instance, Bits Other) { return Utility::Multiply(Instance, Other); }
-		Bits operator/(Bits Instance, Bits Other) { return Utility::Divide(Instance, Other); }
+		Bits operator+(Bits Instance, Bits::Type Other) { return ColorUtility::Add(Instance, Other); }
+		Bits operator-(Bits Instance, Bits::Type Other) { return ColorUtility::Subtract(Instance, Other); }
+		Bits operator*(Bits Instance, Bits::Type Other) { return ColorUtility::Multiply(Instance, Other); }
+		Bits operator/(Bits Instance, Bits::Type Other) { return ColorUtility::Divide(Instance, Other); }
+		Bits operator+(Bits Instance, Bits Other) { return ColorUtility::Add(Instance, Other); }
+		Bits operator-(Bits Instance, Bits Other) { return ColorUtility::Subtract(Instance, Other); }
+		Bits operator*(Bits Instance, Bits Other) { return ColorUtility::Multiply(Instance, Other); }
+		Bits operator/(Bits Instance, Bits Other) { return ColorUtility::Divide(Instance, Other); }
 	}
 }

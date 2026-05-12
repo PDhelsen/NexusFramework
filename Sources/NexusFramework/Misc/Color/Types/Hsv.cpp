@@ -13,37 +13,37 @@ namespace NxFr
 		Hsv::Hsv(Type H, Type S, Type V, Type A) : h(H), s(S), v(V), a(A) {}
 		Hsv::Hsv(Vector3f V) : h(V.x), s(V.y), v(V.z), a(BoundHigh) {}
 		Hsv::Hsv(Vector4f V) : h(V.x), s(V.y), v(V.z), a(V.w) {}
-		Hsv::Hsv(sRGB Other) { *this = Utility::ToHsv(Other); }
-		Hsv::Hsv(Linear Other) { *this = Utility::ToHsv(Utility::TosRGB(Other)); }
-		Hsv::Hsv(Bits Other) { *this = Utility::ToHsv(Utility::TosRGB(Other)); }
+		Hsv::Hsv(sRGB Other) { *this = ColorUtility::ToHsv(Other); }
+		Hsv::Hsv(Linear Other) { *this = ColorUtility::ToHsv(ColorUtility::TosRGB(Other)); }
+		Hsv::Hsv(Bits Other) { *this = ColorUtility::ToHsv(ColorUtility::TosRGB(Other)); }
 
-		Hsv::operator Vector3f() const { return Utility::ToVector3f(*this); }
-		Hsv::operator Vector4f() const { return Utility::ToVector4f(*this); }
+		Hsv::operator Vector3f() const { return ColorUtility::ToVector3f(*this); }
+		Hsv::operator Vector4f() const { return ColorUtility::ToVector4f(*this); }
 
-		Vector3f Hsv::ToVector3f() const { return Utility::ToVector3f(*this); }
-		Vector4f Hsv::ToVector4f() const { return Utility::ToVector4f(*this); }
-		float Hsv::ToGrayscale() const { return Utility::ToGrayscale(*this); }
-		sRGB Hsv::TosRGB() const { return Utility::TosRGB(*this); }
-		Linear Hsv::ToLinear() const { return Utility::ToLinear(*this); }
-		Bits Hsv::ToBits() const { return Utility::ToBits(*this); }
+		Vector3f Hsv::ToVector3f() const { return ColorUtility::ToVector3f(*this); }
+		Vector4f Hsv::ToVector4f() const { return ColorUtility::ToVector4f(*this); }
+		float Hsv::ToGrayscale() const { return ColorUtility::ToGrayscale(*this); }
+		sRGB Hsv::TosRGB() const { return ColorUtility::TosRGB(*this); }
+		Linear Hsv::ToLinear() const { return ColorUtility::ToLinear(*this); }
+		Bits Hsv::ToBits() const { return ColorUtility::ToBits(*this); }
 
-		bool Hsv::operator==(Hsv Other) const { return Utility::Equals(*this, Other); }
-		bool Hsv::operator!=(Hsv Other) const { return !Utility::Equals(*this, Other); }
-		Hsv::Type& Hsv::operator[](uint64 Index) { return Utility::Access(*this, Index); }
-		const Hsv::Type& Hsv::operator[](uint64 Index) const { return Utility::Access(*this, Index); }
+		bool Hsv::operator==(Hsv Other) const { return ColorUtility::Equals(*this, Other); }
+		bool Hsv::operator!=(Hsv Other) const { return !ColorUtility::Equals(*this, Other); }
+		Hsv::Type& Hsv::operator[](uint64 Index) { return ColorUtility::Access(*this, Index); }
+		const Hsv::Type& Hsv::operator[](uint64 Index) const { return ColorUtility::Access(*this, Index); }
 
-		Hsv& Hsv::operator+=(Type Other) { *this = Utility::Add(*this, Other); return *this; }
-		Hsv& Hsv::operator-=(Type Other) { *this = Utility::Subtract(*this, Other); return *this; }
-		Hsv& Hsv::operator*=(Type Other) { *this = Utility::Multiply(*this, Other); return *this; }
-		Hsv& Hsv::operator/=(Type Other) { *this = Utility::Divide(*this, Other); return *this; }
-		Hsv& Hsv::operator+=(Hsv Other) { *this = Utility::Add(*this, Other);	return *this; }
-		Hsv& Hsv::operator-=(Hsv Other) { *this = Utility::Subtract(*this, Other); return *this; }
-		Hsv& Hsv::operator*=(Hsv Other) { *this = Utility::Multiply(*this, Other); return *this; }
-		Hsv& Hsv::operator/=(Hsv Other) { *this = Utility::Divide(*this, Other); return *this; }
+		Hsv& Hsv::operator+=(Type Other) { *this = ColorUtility::Add(*this, Other); return *this; }
+		Hsv& Hsv::operator-=(Type Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }
+		Hsv& Hsv::operator*=(Type Other) { *this = ColorUtility::Multiply(*this, Other); return *this; }
+		Hsv& Hsv::operator/=(Type Other) { *this = ColorUtility::Divide(*this, Other); return *this; }
+		Hsv& Hsv::operator+=(Hsv Other) { *this = ColorUtility::Add(*this, Other);	return *this; }
+		Hsv& Hsv::operator-=(Hsv Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }
+		Hsv& Hsv::operator*=(Hsv Other) { *this = ColorUtility::Multiply(*this, Other); return *this; }
+		Hsv& Hsv::operator/=(Hsv Other) { *this = ColorUtility::Divide(*this, Other); return *this; }
 
-		Hsv::Type Hsv::Min() const { return Utility::Min(*this); }
-		Hsv::Type Hsv::Max() const { return Utility::Max(*this); }
-		Hsv Hsv::Clamp(Type Min, Type Max) const { return Utility::Clamp(*this, Min, Max); }
+		Hsv::Type Hsv::Min() const { return ColorUtility::Min(*this); }
+		Hsv::Type Hsv::Max() const { return ColorUtility::Max(*this); }
+		Hsv Hsv::Clamp(Type Min, Type Max) const { return ColorUtility::Clamp(*this, Min, Max); }
 
 		Hsv::Type& Hsv::GetX() { return h; }
 		Hsv::Type& Hsv::GetY() { return s; }
@@ -58,13 +58,13 @@ namespace NxFr
 		void Hsv::SetZ(Type Z) { v = Z; }
 		void Hsv::SetW(Type W) { a = W; }
 
-		Hsv operator+(Hsv Instance, Hsv::Type Other) { return Utility::Add(Instance, Other); }
-		Hsv operator-(Hsv Instance, Hsv::Type Other) { return Utility::Subtract(Instance, Other); }
-		Hsv operator*(Hsv Instance, Hsv::Type Other) { return Utility::Multiply(Instance, Other); }
-		Hsv operator/(Hsv Instance, Hsv::Type Other) { return Utility::Divide(Instance, Other); }
-		Hsv operator+(Hsv Instance, Hsv Other) { return Utility::Add(Instance, Other); }
-		Hsv operator-(Hsv Instance, Hsv Other) { return Utility::Subtract(Instance, Other); }
-		Hsv operator*(Hsv Instance, Hsv Other) { return Utility::Multiply(Instance, Other); }
-		Hsv operator/(Hsv Instance, Hsv Other) { return Utility::Divide(Instance, Other); }
+		Hsv operator+(Hsv Instance, Hsv::Type Other) { return ColorUtility::Add(Instance, Other); }
+		Hsv operator-(Hsv Instance, Hsv::Type Other) { return ColorUtility::Subtract(Instance, Other); }
+		Hsv operator*(Hsv Instance, Hsv::Type Other) { return ColorUtility::Multiply(Instance, Other); }
+		Hsv operator/(Hsv Instance, Hsv::Type Other) { return ColorUtility::Divide(Instance, Other); }
+		Hsv operator+(Hsv Instance, Hsv Other) { return ColorUtility::Add(Instance, Other); }
+		Hsv operator-(Hsv Instance, Hsv Other) { return ColorUtility::Subtract(Instance, Other); }
+		Hsv operator*(Hsv Instance, Hsv Other) { return ColorUtility::Multiply(Instance, Other); }
+		Hsv operator/(Hsv Instance, Hsv Other) { return ColorUtility::Divide(Instance, Other); }
 	}
 }

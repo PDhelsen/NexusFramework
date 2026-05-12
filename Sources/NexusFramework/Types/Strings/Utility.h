@@ -1,0 +1,130 @@
+#pragma once
+
+#include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringId.h"
+#include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Types/Strings/StringCApi.h"
+
+namespace NxFr
+{
+	template <typename T> class Collection;
+
+	template<typename T>
+	struct StringConverter
+	{
+		static StringView GetFormat(bool Pretty) { return ""; };
+		static void ToString(const T& Data, String& Result, StringView Format = "") {}
+		static void FromString(StringView Data, T& Result, StringView Format = "") {}
+	};
+
+	namespace StringUtility
+	{
+		enum class SearchMode
+		{
+			Substring, Characters
+		};
+
+		inline const uint8 GuessFormatingSize = 8;
+		inline const char NullChar = StringCApi::NullChar;
+		inline const char NewLineChar = StringCApi::NewLineChar;
+		inline const String NewLine = StringCApi::NewLine;
+		inline const String Empty = "";
+		inline const String Unknown = "Unknown";
+		inline const StringId Id = 0;
+
+		template<typename... Args>
+		void Format(String& Text, StringView Formatting, Args&&... args)
+		{
+			uint64 Size = StringCApi::Format(Text.GetCapacity(), Text.Characters(), Formatting.C(), args...);
+			if (Size >= Text.GetCapacity())
+			{
+				Text.Reserve(Size + 1);
+				StringCApi::Format(Text.GetCapacity(), Text.Characters(), Formatting.C(), args...);
+			}
+			Text.Validate();
+		}
+		template<typename... Args>
+		void Format(String& Text, uint64 Size, StringView Formatting, Args&&... args)
+		{
+			Text.Reserve(Size);
+			StringCApi::Format(Text.GetCapacity(), Text.Characters(), Formatting.C(), args...);
+			Text.Validate();
+		}
+		template<typename... Args>
+		String FormatTo(StringView Formatting, Args&&... args)
+		{
+			String Result = String(Formatting.GetCount() + sizeof...(args) * GuessFormatingSize);
+			Format(Result, Formatting, args...);
+			return Result;
+		}
+		template<typename... Args>
+		String FormatTo(uint64 Size, StringView Formatting, Args&&... args)
+		{
+			String Result = String(Size);
+			Format(Result, Size, Formatting, args...);
+			return Result;
+		}
+		template<typename... Args>
+		uint64 Scan(StringView Text, StringView Formatting, Args&&... args)
+		{
+			return StringCApi::Scan(Text.C(), Formatting.C(), args...);
+		}
+
+		template<typename T>
+		void ToString(const T& Data, String& Result, StringView Format = "")
+		{
+			StringConverter<T>::ToString(Data, Result, Format);
+		}
+		template<typename T>
+		String ToString(const T& Data, StringView Format = "")
+		{
+			String Result;
+			ToString<T>(Data, Result, Format);
+			return Result;
+		}
+		template<typename T>
+		void FromString(StringView Data, T& Result, StringView Format = "")
+		{
+			StringConverter<T>::FromString(Data, Result, Format);
+		}
+		template<typename T>
+		T FromString(StringView Data, StringView Format = "")
+		{
+			T Result;
+			FromString<T>(Data, Result, Format);
+			return Result;
+		}
+
+		template<typename T>
+		StringView ConvertionFormat(StringView Format = "", bool Pretty = false)
+		{
+			return !Format.IsEmpty() ? Format : StringConverter<T>::GetFormat(Pretty);
+		}
+
+		NEXUS_FRAMEWORK_API bool Start(StringView Text, StringView Substring);
+		NEXUS_FRAMEWORK_API bool End(StringView Text, StringView Substring);
+		NEXUS_FRAMEWORK_API bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API StringView Common(StringView Text1, StringView Text2);
+		NEXUS_FRAMEWORK_API StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NEXUS_FRAMEWORK_API StringView TrimLeading(StringView Text, char Character = ' ');
+		NEXUS_FRAMEWORK_API StringView TrimTrailing(StringView Text, char Character = ' ');
+		NEXUS_FRAMEWORK_API String Lower(StringView Text);
+		NEXUS_FRAMEWORK_API String Upper(StringView Text);
+		NEXUS_FRAMEWORK_API String Replace(StringView Text, StringView Old, StringView New);
+		NEXUS_FRAMEWORK_API String Join(const Collection<StringView>& Text, StringView Separator = "");
+	};
+
+	NEXUS_FRAMEWORK_API String operator+(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API String operator-(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API bool operator==(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API bool operator!=(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API bool operator>(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API bool operator>=(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API bool operator<(StringView TextA, StringView TextB);
+	NEXUS_FRAMEWORK_API bool operator<=(StringView TextA, StringView TextB);
+}

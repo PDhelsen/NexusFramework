@@ -13,37 +13,37 @@ namespace NxFr
 		Linear::Linear(Type R, Type G, Type B, Type A) : r(R), g(G), b(B), a(A) {}
 		Linear::Linear(Vector3f V) : r(V.x), g(V.y), b(V.z), a(BoundHigh) {}
 		Linear::Linear(Vector4f V) : r(V.x), g(V.y), b(V.z), a(V.w) {}
-		Linear::Linear(sRGB Other) { *this = Utility::ToLinear(Other); }
-		Linear::Linear(Bits Other) { *this = Utility::ToLinear(Utility::TosRGB(Other)); }
-		Linear::Linear(Hsv Other) { *this = Utility::ToLinear(Utility::TosRGB(Other)); }
+		Linear::Linear(sRGB Other) { *this = ColorUtility::ToLinear(Other); }
+		Linear::Linear(Bits Other) { *this = ColorUtility::ToLinear(ColorUtility::TosRGB(Other)); }
+		Linear::Linear(Hsv Other) { *this = ColorUtility::ToLinear(ColorUtility::TosRGB(Other)); }
 
-		Linear::operator Vector3f() const { return Utility::ToVector3f(*this); }
-		Linear::operator Vector4f() const { return Utility::ToVector4f(*this); }
+		Linear::operator Vector3f() const { return ColorUtility::ToVector3f(*this); }
+		Linear::operator Vector4f() const { return ColorUtility::ToVector4f(*this); }
 
-		Vector3f Linear::ToVector3f() const { return Utility::ToVector3f(*this); }
-		Vector4f Linear::ToVector4f() const { return Utility::ToVector4f(*this); }
-		float Linear::ToGrayscale() const { return Utility::ToGrayscale(*this); }
-		sRGB Linear::TosRGB() const { return Utility::TosRGB(*this); }
-		Bits Linear::ToBits() const { return Utility::ToBits(*this); }
-		Hsv Linear::ToHsv() const { return Utility::ToHsv(*this); }
+		Vector3f Linear::ToVector3f() const { return ColorUtility::ToVector3f(*this); }
+		Vector4f Linear::ToVector4f() const { return ColorUtility::ToVector4f(*this); }
+		float Linear::ToGrayscale() const { return ColorUtility::ToGrayscale(*this); }
+		sRGB Linear::TosRGB() const { return ColorUtility::TosRGB(*this); }
+		Bits Linear::ToBits() const { return ColorUtility::ToBits(*this); }
+		Hsv Linear::ToHsv() const { return ColorUtility::ToHsv(*this); }
 
-		bool Linear::operator==(Linear Other) const { return Utility::Equals(*this, Other); }
-		bool Linear::operator!=(Linear Other) const { return !Utility::Equals(*this, Other); }
-		Linear::Type& Linear::operator[](uint64 Index) { return Utility::Access(*this, Index); }
-		const Linear::Type& Linear::operator[](uint64 Index) const { return Utility::Access(*this, Index); }
+		bool Linear::operator==(Linear Other) const { return ColorUtility::Equals(*this, Other); }
+		bool Linear::operator!=(Linear Other) const { return !ColorUtility::Equals(*this, Other); }
+		Linear::Type& Linear::operator[](uint64 Index) { return ColorUtility::Access(*this, Index); }
+		const Linear::Type& Linear::operator[](uint64 Index) const { return ColorUtility::Access(*this, Index); }
 
-		Linear& Linear::operator+=(Type Other) { *this = Utility::Add(*this, Other); return *this; }
-		Linear& Linear::operator-=(Type Other) { *this = Utility::Subtract(*this, Other); return *this; }
-		Linear& Linear::operator*=(Type Other) { *this = Utility::Multiply(*this, Other); return *this; }
-		Linear& Linear::operator/=(Type Other) { *this = Utility::Divide(*this, Other); return *this; }
-		Linear& Linear::operator+=(Linear Other) { *this = Utility::Add(*this, Other);	return *this; }
-		Linear& Linear::operator-=(Linear Other) { *this = Utility::Subtract(*this, Other); return *this; }
-		Linear& Linear::operator*=(Linear Other) { *this = Utility::Multiply(*this, Other); return *this; }
-		Linear& Linear::operator/=(Linear Other) { *this = Utility::Divide(*this, Other); return *this; }
+		Linear& Linear::operator+=(Type Other) { *this = ColorUtility::Add(*this, Other); return *this; }
+		Linear& Linear::operator-=(Type Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }
+		Linear& Linear::operator*=(Type Other) { *this = ColorUtility::Multiply(*this, Other); return *this; }
+		Linear& Linear::operator/=(Type Other) { *this = ColorUtility::Divide(*this, Other); return *this; }
+		Linear& Linear::operator+=(Linear Other) { *this = ColorUtility::Add(*this, Other);	return *this; }
+		Linear& Linear::operator-=(Linear Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }
+		Linear& Linear::operator*=(Linear Other) { *this = ColorUtility::Multiply(*this, Other); return *this; }
+		Linear& Linear::operator/=(Linear Other) { *this = ColorUtility::Divide(*this, Other); return *this; }
 
-		Linear::Type Linear::Min() const { return Utility::Min(*this); }
-		Linear::Type Linear::Max() const { return Utility::Max(*this); }
-		Linear Linear::Clamp(Type Min, Type Max) const { return Utility::Clamp(*this, Min, Max); }
+		Linear::Type Linear::Min() const { return ColorUtility::Min(*this); }
+		Linear::Type Linear::Max() const { return ColorUtility::Max(*this); }
+		Linear Linear::Clamp(Type Min, Type Max) const { return ColorUtility::Clamp(*this, Min, Max); }
 
 		Linear::Type& Linear::GetX() { return r; }
 		Linear::Type& Linear::GetY() { return g; }
@@ -58,13 +58,13 @@ namespace NxFr
 		void Linear::SetZ(Type Z) { b = Z; }
 		void Linear::SetW(Type W) { a = W; }
 
-		Linear operator+(Linear Instance, Linear::Type Other) { return Utility::Add(Instance, Other); }
-		Linear operator-(Linear Instance, Linear::Type Other) { return Utility::Subtract(Instance, Other); }
-		Linear operator*(Linear Instance, Linear::Type Other) { return Utility::Multiply(Instance, Other); }
-		Linear operator/(Linear Instance, Linear::Type Other) { return Utility::Divide(Instance, Other); }
-		Linear operator+(Linear Instance, Linear Other) { return Utility::Add(Instance, Other); }
-		Linear operator-(Linear Instance, Linear Other) { return Utility::Subtract(Instance, Other); }
-		Linear operator*(Linear Instance, Linear Other) { return Utility::Multiply(Instance, Other); }
-		Linear operator/(Linear Instance, Linear Other) { return Utility::Divide(Instance, Other); }
+		Linear operator+(Linear Instance, Linear::Type Other) { return ColorUtility::Add(Instance, Other); }
+		Linear operator-(Linear Instance, Linear::Type Other) { return ColorUtility::Subtract(Instance, Other); }
+		Linear operator*(Linear Instance, Linear::Type Other) { return ColorUtility::Multiply(Instance, Other); }
+		Linear operator/(Linear Instance, Linear::Type Other) { return ColorUtility::Divide(Instance, Other); }
+		Linear operator+(Linear Instance, Linear Other) { return ColorUtility::Add(Instance, Other); }
+		Linear operator-(Linear Instance, Linear Other) { return ColorUtility::Subtract(Instance, Other); }
+		Linear operator*(Linear Instance, Linear Other) { return ColorUtility::Multiply(Instance, Other); }
+		Linear operator/(Linear Instance, Linear Other) { return ColorUtility::Divide(Instance, Other); }
 	}
 }

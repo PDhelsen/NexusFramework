@@ -7,7 +7,7 @@
 #include "NexusFramework/Types/Strings/StringId.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringCApi.h"
-#include "NexusFramework/Types/Strings/StringFunctions.h"
+#include "NexusFramework/Types/Strings/Utility.h"
 #include "NexusFramework/Types/Strings/Misc/Hash.h"
 #include "NexusFramework/Types/Strings/Misc/Iterator.h"
 #include "NexusFramework/Types/Strings/Misc/String.h"
@@ -27,7 +27,7 @@
 #include "NexusFramework/Types/Containers/Buffer.h"
 #include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Types/Containers/Tuple.h"
-#include "NexusFramework/Types/Containers/ContainersUtils.h"
+#include "NexusFramework/Types/Containers/Utility.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Functions/Event.h"
 

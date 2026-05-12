@@ -4,7 +4,7 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
-#include "NexusFramework/Types/Strings/StringFunctions.h"
+#include "NexusFramework/Types/Strings/Utility.h"
 #include "NexusFramework/Time/Timespan.h"
 
 namespace NxFr

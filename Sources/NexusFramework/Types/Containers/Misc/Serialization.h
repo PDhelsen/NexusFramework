@@ -17,7 +17,7 @@
 #include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Types/Containers/Tuple.h"
 #include "NexusFramework/Types/Containers/Collection.h"
-#include "NexusFramework/Types/Containers/ContainersUtils.h"
+#include "NexusFramework/Types/Containers/Utility.h"
 
 namespace NxFr
 {
@@ -133,8 +133,8 @@ namespace NxFr
 
 		static void Encode(RBS& Rbs, const Stack<T>& Object)
 		{
-			Array<T> Data = ContainersUtils::ToArray<T>(Object);
-			ContainersUtils::Reverse<T>(Data);
+			Array<T> Data = ContainerUtility::ToArray<T>(Object);
+			ContainerUtility::Reverse<T>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
 			for (const auto& It : Data)
@@ -184,8 +184,8 @@ namespace NxFr
 
 		static void Encode(RBS& Rbs, const Set<T>& Object)
 		{
-			Array<T> Data = ContainersUtils::ToArray<T>(Object);
-			ContainersUtils::Sort<T>(Data);
+			Array<T> Data = ContainerUtility::ToArray<T>(Object);
+			ContainerUtility::Sort<T>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
 			for (const auto& It : Data)
@@ -213,8 +213,8 @@ namespace NxFr
 
 		static void Encode(RBS& Rbs, const Dictionary<K, T>& Object)
 		{
-			Array<KeyValuePair<K, T>> Data = ContainersUtils::ToArray<K, T>(Object);
-			ContainersUtils::Sort<KeyValuePair<K, T>>(Data);
+			Array<KeyValuePair<K, T>> Data = ContainerUtility::ToArray<K, T>(Object);
+			ContainerUtility::Sort<KeyValuePair<K, T>>(Data);
 
 			Rbs.WriteObject(Data.GetCount());
 			for (const auto& It : Data)
@@ -305,7 +305,7 @@ namespace YAML
 				return false;
 			}
 
-			NxFr::ContainersUtils::Resize<T>(rhs, node.size());
+			NxFr::ContainerUtility::Resize<T>(rhs, node.size());
 			for (uint64 Index = 0; Index < node.size(); ++Index)
 			{
 				rhs[Index] = node[Index].as<T>();
@@ -507,8 +507,8 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
-			NxFr::ContainersUtils::Reverse<T>(Data);
+			NxFr::Array<T> Data = NxFr::ContainerUtility::ToArray<T>(rhs);
+			NxFr::ContainerUtility::Reverse<T>(Data);
 
 			for (const auto& It : Data)
 			{
@@ -541,8 +541,8 @@ namespace YAML
 			out << YAML::Flow;
 		}
 
-		NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
-		NxFr::ContainersUtils::Reverse<T>(Data);
+		NxFr::Array<T> Data = NxFr::ContainerUtility::ToArray<T>(rhs);
+		NxFr::ContainerUtility::Reverse<T>(Data);
 
 		out << YAML::BeginSeq;
 		for (const auto& It : Data)
@@ -621,8 +621,8 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
-			NxFr::ContainersUtils::Sort<T>(Data);
+			NxFr::Array<T> Data = NxFr::ContainerUtility::ToArray<T>(rhs);
+			NxFr::ContainerUtility::Sort<T>(Data);
 
 			for (const auto& It : Data)
 			{
@@ -656,8 +656,8 @@ namespace YAML
 			out << YAML::Flow;
 		}
 
-		NxFr::Array<T> Data = NxFr::ContainersUtils::ToArray<T>(rhs);
-		NxFr::ContainersUtils::Sort<T>(Data);
+		NxFr::Array<T> Data = NxFr::ContainerUtility::ToArray<T>(rhs);
+		NxFr::ContainerUtility::Sort<T>(Data);
 
 		out << YAML::BeginSeq;
 		for (const auto& It : Data)
@@ -682,8 +682,8 @@ namespace YAML
 				node.SetStyle(YAML::EmitterStyle::Flow);
 			}
 
-			NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(rhs);
-			NxFr::ContainersUtils::Sort<NxFr::KeyValuePair<K, T>>(Data);
+			NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainerUtility::ToArray<K, T>(rhs);
+			NxFr::ContainerUtility::Sort<NxFr::KeyValuePair<K, T>>(Data);
 
 			for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 			{
@@ -717,8 +717,8 @@ namespace YAML
 			out << YAML::Flow;
 		}
 
-		NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainersUtils::ToArray<K, T>(rhs);
-		NxFr::ContainersUtils::Sort<NxFr::KeyValuePair<K, T>>(Data);
+		NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainerUtility::ToArray<K, T>(rhs);
+		NxFr::ContainerUtility::Sort<NxFr::KeyValuePair<K, T>>(Data);
 
 		out << YAML::BeginMap;
 		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)

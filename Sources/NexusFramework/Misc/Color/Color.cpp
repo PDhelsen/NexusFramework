@@ -5,8 +5,6 @@ namespace NxFr
 {
 	namespace Colors
 	{
-#pragma region Const
-		
 		const Color Clear = Color(0.0f, 0.0f, 0.0f, 0.0f);
 		const Color Black = Color(0.0f, 0.0f, 0.0f, 1.0f);
 		const Color Gray = Color(0.5f, 0.5f, 0.5f, 1.0f);
@@ -18,19 +16,18 @@ namespace NxFr
 		const Color Cyan = Color(0.0f, 1.0f, 1.0f, 1.0f);
 		const Color Magenta = Color(1.0f, 0.0f, 1.0f, 1.0f);
 		const Color Orange = Color(1.0f, 0.5f, 0.0f, 1.0f);
-		
-#pragma endregion
+	}
 
-#pragma region Utility
-
-		float Utility::ToGrayscale(sRGB Instance)
+	namespace ColorUtility
+	{
+		float ToGrayscale(Colors::sRGB Instance)
 		{
 			return 0.2126f * Instance.r + 0.7152f * Instance.g + 0.0722f * Instance.b;
 		}
 
-		sRGB Utility::TosRGB(Linear Instance)
+		Colors::sRGB TosRGB(Colors::Linear Instance)
 		{
-			sRGB Result;
+			Colors::sRGB Result;
 			Result.r = Instance.r <= 0.0031308f ? Instance.r * 12.92f : 1.055f * Math::Pow(Instance.r, 1.0f / 2.4f) - 0.055f;
 			Result.g = Instance.g <= 0.0031308f ? Instance.g * 12.92f : 1.055f * Math::Pow(Instance.g, 1.0f / 2.4f) - 0.055f;
 			Result.b = Instance.b <= 0.0031308f ? Instance.b * 12.92f : 1.055f * Math::Pow(Instance.b, 1.0f / 2.4f) - 0.055f;
@@ -38,28 +35,28 @@ namespace NxFr
 			return Result.Clamp();
 		}
 
-		sRGB Utility::TosRGB(Bits Instance)
+		Colors::sRGB TosRGB(Colors::Bits Instance)
 		{
-			sRGB Result;
-			Result.r = Instance.r / (Bits::Type)Bits::BoundHigh;
-			Result.g = Instance.g / (Bits::Type)Bits::BoundHigh;
-			Result.b = Instance.b / (Bits::Type)Bits::BoundHigh;
-			Result.a = Instance.a / (Bits::Type)Bits::BoundHigh;
+			Colors::sRGB Result;
+			Result.r = Instance.r / (Colors::Bits::Type)Colors::Bits::BoundHigh;
+			Result.g = Instance.g / (Colors::Bits::Type)Colors::Bits::BoundHigh;
+			Result.b = Instance.b / (Colors::Bits::Type)Colors::Bits::BoundHigh;
+			Result.a = Instance.a / (Colors::Bits::Type)Colors::Bits::BoundHigh;
 			return Result.Clamp();
 		}
 
-		sRGB Utility::TosRGB(Hsv Instance)
+		Colors::sRGB TosRGB(Colors::Hsv Instance)
 		{
-			sRGB Result = ToHue(Instance.h);
+			Colors::sRGB Result = ToHue(Instance.h);
 			Result = VectorUtility::Lerp(Vector4f::One, Result.ToVector4f(), Instance.s);
 			Result = Result * Instance.v;
 			Result.a = Instance.a;
 			return Result;
 		}
 
-		Linear Utility::ToLinear(sRGB Instance)
+		Colors::Linear ToLinear(Colors::sRGB Instance)
 		{
-			Linear Result;
+			Colors::Linear Result;
 			Result.r = Instance.r <= 0.0031308f ? Instance.r / 12.92f : Math::Pow((Instance.r + 0.055f) / 1.055f, 2.4f);
 			Result.g = Instance.g <= 0.0031308f ? Instance.g / 12.92f : Math::Pow((Instance.g + 0.055f) / 1.055f, 2.4f);
 			Result.b = Instance.b <= 0.0031308f ? Instance.b / 12.92f : Math::Pow((Instance.b + 0.055f) / 1.055f, 2.4f);
@@ -67,25 +64,25 @@ namespace NxFr
 			return Result.Clamp();
 		}
 
-		Bits Utility::ToBits(sRGB Instance)
+		Colors::Bits ToBits(Colors::sRGB Instance)
 		{
-			Bits Result;
-			Result.r = (sRGB::Type)(Instance.r * Bits::BoundHigh);
-			Result.g = (sRGB::Type)(Instance.g * Bits::BoundHigh);
-			Result.b = (sRGB::Type)(Instance.b * Bits::BoundHigh);
-			Result.a = (sRGB::Type)(Instance.a * Bits::BoundHigh);
+			Colors::Bits Result;
+			Result.r = (Colors::sRGB::Type)(Instance.r * Colors::Bits::BoundHigh);
+			Result.g = (Colors::sRGB::Type)(Instance.g * Colors::Bits::BoundHigh);
+			Result.b = (Colors::sRGB::Type)(Instance.b * Colors::Bits::BoundHigh);
+			Result.a = (Colors::sRGB::Type)(Instance.a * Colors::Bits::BoundHigh);
 			return Result.Clamp();
 		}
 
-		Hsv Utility::ToHsv(sRGB Instance)
+		Colors::Hsv ToHsv(Colors::sRGB Instance)
 		{
-			Hsv Result;
+			Colors::Hsv Result;
 			
-			Bits::Type MaxComponent = Instance.Max();
-			Bits::Type MinComponent = Instance.Min();
-			Bits::Type Delta = MaxComponent - MinComponent;
+			Colors::Bits::Type MaxComponent = Instance.Max();
+			Colors::Bits::Type MinComponent = Instance.Min();
+			Colors::Bits::Type Delta = MaxComponent - MinComponent;
 			
-			Bits::Type Hue = 0;
+			Colors::Bits::Type Hue = 0;
 			if (Instance.r == MaxComponent)
 			{
 				Hue = 0 + (Instance.g - Instance.b) / Delta;
@@ -107,19 +104,16 @@ namespace NxFr
 			return Result.Clamp();
 		}
 
-		sRGB Utility::ToHue(float Hue)
+		Colors::sRGB ToHue(float Hue)
 		{
 			Hue = Math::Frac(Hue);
 			
-			sRGB Result;
+			Colors::sRGB Result;
 			Result.r = Math::Abs(Hue * 6.0f - 3.0f) - 1.0f;
 			Result.g = 2.0f - Math::Abs(Hue * 6.0f - 2.0f);
 			Result.b = 2.0f - Math::Abs(Hue * 6.0f - 4.0f);
 			return Result.Clamp();
 		}
-
-#pragma endregion
-
 	}
 }
 

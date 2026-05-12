@@ -811,39 +811,39 @@ namespace NxTs
 		ASSERT_EQ((*It).Key, 1);
 	}
 
-	TEST(Type_Containers, ContainersUtils)
+	TEST(Type_Containers, ContainerUtility)
 	{
 		NxFr::Array<Dummy> Data = { 1, 3, 5, 7, 9 };
-		NxFr::ContainersUtils::Swap<Dummy>(Data, 0, 1);
+		NxFr::ContainerUtility::Swap<Dummy>(Data, 0, 1);
 		ASSERT_EQ(Data[0].Key, 3);
 		ASSERT_EQ(Data[1].Key, 1);
-		NxFr::ContainersUtils::Sort<Dummy>(Data);
+		NxFr::ContainerUtility::Sort<Dummy>(Data);
 		for (uint64 Index = 1; Index < Data.GetCount(); Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] <= Data[Index], true);
 		}
-		NxFr::ContainersUtils::Reverse<Dummy>(Data);
+		NxFr::ContainerUtility::Reverse<Dummy>(Data);
 		for (uint64 Index = 1; Index < Data.GetCount(); Index++)
 		{
 			ASSERT_EQ(Data[Index - 1] > Data[Index], true);
 		}
-		ASSERT_EQ(NxFr::ContainersUtils::Any<Dummy>(Data, [](const Dummy& Element) { return Element.Key == 5; }), true);
-		ASSERT_EQ(NxFr::ContainersUtils::Contains<Dummy>(Data, 9), true);
-		ASSERT_NE(NxFr::ContainersUtils::Where<Dummy>(Data, [](const Dummy& Element) { return Element.Key == 5; }), Data.End());
-		ASSERT_NE(NxFr::ContainersUtils::Find<Dummy>(Data, 9), Data.End());
+		ASSERT_EQ(NxFr::ContainerUtility::Any<Dummy>(Data, [](const Dummy& Element) { return Element.Key == 5; }), true);
+		ASSERT_EQ(NxFr::ContainerUtility::Contains<Dummy>(Data, 9), true);
+		ASSERT_NE(NxFr::ContainerUtility::Where<Dummy>(Data, [](const Dummy& Element) { return Element.Key == 5; }), Data.End());
+		ASSERT_NE(NxFr::ContainerUtility::Find<Dummy>(Data, 9), Data.End());
 
-		NxFr::ContainersUtils::Fill<Dummy>(Data, 5);
+		NxFr::ContainerUtility::Fill<Dummy>(Data, 5);
 		ASSERT_EQ(Data.First().Key, 5);
 		ASSERT_EQ(Data.Last().Key, 5);
-		NxFr::ContainersUtils::Resize<Dummy>(Data, 10);
+		NxFr::ContainerUtility::Resize<Dummy>(Data, 10);
 		ASSERT_EQ(Data.GetCount(), 10);
 
 		NxFr::Set<Dummy> SetBase = { 1, 2, 3, 4, 5, 6, 7, 9 };
 		NxFr::Set<Dummy> SetOther = { 2, 4, 6, 8, 10 };
-		NxFr::ContainersUtils::Intersection(SetBase, SetOther);
+		NxFr::ContainerUtility::Intersection(SetBase, SetOther);
 		ASSERT_EQ(SetBase.GetCount(), 3);
 
-		NxFr::Array<Dummy> ToArray = NxFr::ContainersUtils::ToArray<Dummy>(SetOther);
+		NxFr::Array<Dummy> ToArray = NxFr::ContainerUtility::ToArray<Dummy>(SetOther);
 		ASSERT_EQ(SetOther.GetCount(), 5);
 	}
 

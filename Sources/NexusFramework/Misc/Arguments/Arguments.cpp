@@ -51,7 +51,7 @@ namespace NxFr
 
 	void Arguments::Clear()
 	{
-		ContainersUtils::Resize<String>(Args, 0);
+		ContainerUtility::Resize<String>(Args, 0);
 		Positionals.Clear();
 		Named.Clear();
 	}
@@ -145,7 +145,7 @@ namespace NxFr
 	{
 		uint64 Count = GetCount() + Grow;
 
-		ContainersUtils::Resize<String>(Args, Count);
+		ContainerUtility::Resize<String>(Args, Count);
 		Positionals.Reserve(Count);
 		Named.Reserve(Count);
 	}

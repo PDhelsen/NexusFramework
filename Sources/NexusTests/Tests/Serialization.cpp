@@ -227,7 +227,7 @@ empty_map: {})";
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::Array<NxFr::String>>()[4], "Fifth");
 		ASSERT_EQ(RbsDeserialization.ReadObject<NxFr::List<NxFr::String>>()[4], "Fifth");
 		auto HashSet = RbsDeserialization.ReadObject<NxFr::Set<NxFr::String>>();
-		ASSERT_EQ(NxFr::ContainersUtils::Contains<NxFr::String>(HashSet, "Fifth"), true);
+		ASSERT_EQ(NxFr::ContainerUtility::Contains<NxFr::String>(HashSet, "Fifth"), true);
 		auto Dict = RbsDeserialization.ReadObject<NxFr::Dictionary<NxFr::String, uint64>>();
 		ASSERT_EQ(Dict["Fifth"], 5);
 	}

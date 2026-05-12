@@ -3,7 +3,7 @@
 #include "NexusFramework/Debug/Logger/Log.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
-#include "NexusFramework/Types/Strings/StringFunctions.h"
+#include "NexusFramework/Types/Strings/Utility.h"
 
 #include "NexusFramework/Math/Vector.h"
 #include "NexusFramework/Math/Rotation.h"

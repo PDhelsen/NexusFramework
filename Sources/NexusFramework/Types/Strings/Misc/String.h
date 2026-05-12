@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NexusFramework/Types/Strings/StringFunctions.h"
+#include "NexusFramework/Types/Strings/Utility.h"
 
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Numeric/Decimal.h"

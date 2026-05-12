@@ -351,7 +351,7 @@ namespace NxFr
 
 	Array<StringId> Stats::GetHeaders() const
 	{
-		return ContainersUtils::ToArrayKeys(Headers);
+		return ContainerUtility::ToArrayKeys(Headers);
 	}
 
 	Dictionary<StringId, const Stats::Stat*> Stats::GetStats() const

@@ -20,18 +20,18 @@ namespace NxTs
 		NxFr::Color Color1(1, 0, 0);
 		NxFr::Color Color2(0, 0, 1);
 		
-		ASSERT_EQ(NxFr::Colors::Utility::Access(Color2, 2), 1.0f);
-		ASSERT_EQ(NxFr::Colors::Utility::Min(Color1), 0.0f);
-		ASSERT_EQ(NxFr::Colors::Utility::Min(Color1, Color2), NxFr::Color(0.0f, 0.0f, 0.0f));
-		ASSERT_EQ(NxFr::Colors::Utility::Max(Color1), 1.0f);
-		ASSERT_EQ(NxFr::Colors::Utility::Max(Color1, Color2), NxFr::Color(1.0f, 0.0f, 1.0f));
-		ASSERT_EQ(NxFr::Colors::Utility::Clamp(NxFr::Color(-1.5f, 0.5f, 1.5f), 0.0f, 1.0f), NxFr::Color(0.0f, 0.5f, 1.0f));
-		ASSERT_EQ(NxFr::Colors::Utility::Lerp(Color1, Color2, 0.5f), NxFr::Color(0.5f, 0.0f, 0.5f));
+		ASSERT_EQ(NxFr::ColorUtility::Access(Color2, 2), 1.0f);
+		ASSERT_EQ(NxFr::ColorUtility::Min(Color1), 0.0f);
+		ASSERT_EQ(NxFr::ColorUtility::Min(Color1, Color2), NxFr::Color(0.0f, 0.0f, 0.0f));
+		ASSERT_EQ(NxFr::ColorUtility::Max(Color1), 1.0f);
+		ASSERT_EQ(NxFr::ColorUtility::Max(Color1, Color2), NxFr::Color(1.0f, 0.0f, 1.0f));
+		ASSERT_EQ(NxFr::ColorUtility::Clamp(NxFr::Color(-1.5f, 0.5f, 1.5f), 0.0f, 1.0f), NxFr::Color(0.0f, 0.5f, 1.0f));
+		ASSERT_EQ(NxFr::ColorUtility::Lerp(Color1, Color2, 0.5f), NxFr::Color(0.5f, 0.0f, 0.5f));
 		ASSERT_EQ(Color1 + Color2, NxFr::Color(1.0f, 0.0f, 1.0f, 2.0f));
 		ASSERT_EQ(Color1 - 1.0f, NxFr::Color(0.0f, -1.0f, -1.0f, 0.0f));
 
-		ASSERT_EQ(NxFr::Colors::Utility::ToVector3f(Color1), NxFr::Vector3f(1, 0, 0));
-		ASSERT_EQ(NxFr::Colors::Utility::ToVector4f(Color2), NxFr::Vector4f(0, 0, 1, 1));
+		ASSERT_EQ(NxFr::ColorUtility::ToVector3f(Color1), NxFr::Vector3f(1, 0, 0));
+		ASSERT_EQ(NxFr::ColorUtility::ToVector4f(Color2), NxFr::Vector4f(0, 0, 1, 1));
 
 		ASSERT_EQ(NxFr::Colors::Linear(0.21403f, 0.21403f, 0.21403f), NxFr::Color(0.5f, 0.5f, 0.5f));
 		ASSERT_EQ(NxFr::Colors::Bits(127, 127, 127), NxFr::Color(0.5f, 0.5f, 0.5f));
@@ -76,7 +76,7 @@ namespace NxTs
 		}
 
 		NxFr::LinkedList<uint64> LinkedSort = { 9, 6, 4, 8, 3, 1, 2, 7, 0, 5 };
-		NxFr::ContainersUtils::Sort(LinkedSort);
+		NxFr::ContainerUtility::Sort(LinkedSort);
 		NxFr::LinkedList<uint64>::N* Node = NxFr::Node::GetNode<uint64, NxFr::LinkedList<uint64>::N>(&LinkedSort.First());
 		while (Node && Node->Next)
 		{
