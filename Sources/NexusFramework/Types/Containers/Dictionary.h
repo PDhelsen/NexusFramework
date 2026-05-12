@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Hash/Hash.h"
 #include "NexusFramework/Math/Math.h"
@@ -26,13 +25,13 @@ namespace NxFr
 
 		inline static const uint64 DefaultSize = 11;
 
-		Dictionary(uint64 Size = DefaultSize, Allocator * Allctr = AllocatorContext::Get())
+		Dictionary(uint64 Size = DefaultSize, Allocator * Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}
 
-		Dictionary(InitializerList<KV> Init, Allocator* Allctr = AllocatorContext::Get())
+		Dictionary(InitializerList<KV> Init, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Init.size());

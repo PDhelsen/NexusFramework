@@ -12,7 +12,7 @@ namespace NxFr
 	public:
 		using F = Delegate<void(Args...)>;
 
-		Event(Allocator* Allctr = AllocatorContext::Get())
+		Event(Allocator* Allctr = Allocator::Scope::Get())
 			: Functions(4, Allctr)
 		{
 		}

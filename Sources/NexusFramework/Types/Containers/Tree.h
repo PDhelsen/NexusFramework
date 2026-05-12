@@ -3,7 +3,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
@@ -18,7 +17,7 @@ namespace NxFr
 		using N = Node::NodeTree<T>;
 		using I = Iterator::IteratorNodeTree<T, N>;
 
-		Tree(Allocator* Allctr = AllocatorContext::Get())
+		Tree(Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 		}

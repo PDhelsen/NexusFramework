@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Sort/Sort.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
@@ -20,13 +19,13 @@ namespace NxFr
 
 		inline static const uint64 DefaultSize = 8;
 
-		List(uint64 Size = DefaultSize, Allocator * Allctr = AllocatorContext::Get())
+		List(uint64 Size = DefaultSize, Allocator * Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}
 
-		List(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+		List(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Init.size());

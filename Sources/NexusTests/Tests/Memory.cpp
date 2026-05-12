@@ -237,7 +237,7 @@ namespace NxTs
 		NxFr::HeapAllocator* Allocator = new NxFr::HeapAllocator(512);
 
 		{
-			NxFr::AllocatorContext Context(Allocator);
+			NxFr::Allocator::Scope Scope(Allocator);
 
 			Dummy* Test = new Dummy();
 			Test->Key = 1;

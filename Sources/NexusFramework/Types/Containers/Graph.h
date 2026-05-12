@@ -3,7 +3,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
@@ -20,7 +19,7 @@ namespace NxFr
 		using CT = NxFr::Node::NodeGraphConnectionType;
 		using I = Iterator::IteratorNodeGraph<T, N>;
 
-		Graph(Allocator* Allctr = AllocatorContext::Get())
+		Graph(Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 		}

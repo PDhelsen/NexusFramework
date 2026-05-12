@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Hash/Hash.h"
 #include "NexusFramework/Math/Math.h"
@@ -24,13 +23,13 @@ namespace NxFr
 
 		inline static const uint64 DefaultSize = 11;
 
-		Set(uint64 Size = DefaultSize, Allocator* Allctr = AllocatorContext::Get())
+		Set(uint64 Size = DefaultSize, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}
 
-		Set(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+		Set(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Init.size());

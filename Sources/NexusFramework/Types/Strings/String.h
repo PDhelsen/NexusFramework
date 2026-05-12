@@ -3,7 +3,6 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Memory/Memory.h"
 
 namespace NxFr
@@ -32,11 +31,11 @@ namespace NxFr
 		};
 
 	public:
-		String(Allocator* Allctr = AllocatorContext::Get());
-		String(uint64 Bytes, Allocator* Allctr = AllocatorContext::Get());
-		String(const char* Text, Allocator* Allctr = AllocatorContext::Get());
-		String(const char* Text, uint64 Size, Allocator* Allctr = AllocatorContext::Get());
-		String(StringView Text, Allocator* Allctr = AllocatorContext::Get());
+		String(Allocator* Allctr = Allocator::Scope::Get());
+		String(uint64 Bytes, Allocator* Allctr = Allocator::Scope::Get());
+		String(const char* Text, Allocator* Allctr = Allocator::Scope::Get());
+		String(const char* Text, uint64 Size, Allocator* Allctr = Allocator::Scope::Get());
+		String(StringView Text, Allocator* Allctr = Allocator::Scope::Get());
 		String(const String& Text);
 		String(String&& Other) noexcept;
 		~String();

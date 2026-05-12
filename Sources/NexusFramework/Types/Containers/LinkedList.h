@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
@@ -19,12 +18,12 @@ namespace NxFr
 		using N = Node::NodeDouble<T>;
 		using I = Iterator::IteratorNodeDouble<T, N>;
 
-		LinkedList(Allocator* Allctr = AllocatorContext::Get())
+		LinkedList(Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 		}
 
-		LinkedList(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+		LinkedList(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			for (auto It : Init)

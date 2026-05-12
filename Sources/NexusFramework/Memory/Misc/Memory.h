@@ -9,14 +9,14 @@ namespace NxFr
 	namespace Memory
 	{
 		template<typename T, typename ...Args>
-		Handle<T> Create(HandleManager* Manager, Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
+		Handle<T> Create(HandleManager* Manager, Allocator* Allocator = Allocator::Scope::Get(), Args&& ...args)
 		{
 			T* Pointer = Create<T>(Allocator, args...);
 			return Manager->AcquireHandle<T>(Pointer);
 		}
 
 		template<typename T>
-		void Destroy(HandleManager* Manager, Handle<T> Handle, Allocator* Allocator = AllocatorContext::Get())
+		void Destroy(HandleManager* Manager, Handle<T> Handle, Allocator* Allocator = Allocator::Scope::Get())
 		{
 			Destroy(Handle.GetRedirectedPointer(), Allocator);
 			Manager->ReleaseHandle<T>(Handle);

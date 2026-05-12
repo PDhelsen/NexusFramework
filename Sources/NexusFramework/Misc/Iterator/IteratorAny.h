@@ -43,7 +43,7 @@ namespace NxFr
 
 		public:
 			template<typename I>
-			IteratorAny(const I& Iterator, Allocator* Allctr = AllocatorContext::Get())
+			IteratorAny(const I& Iterator, Allocator* Allctr = Allocator::Scope::Get())
 			{
 				It = new Wrapper<T, I>(Iterator);
 			}

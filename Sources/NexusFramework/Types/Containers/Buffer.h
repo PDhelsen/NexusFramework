@@ -3,7 +3,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
 
@@ -83,7 +82,7 @@ namespace NxFr
 	public:
 		using I = Iterator::IteratorPointer;
 
-		Buffer(uint64 Size = 0, Allocator* Allctr = AllocatorContext::Get())
+		Buffer(uint64 Size = 0, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0), Data(nullptr)
 		{
 			Allocate(Size);

@@ -3,7 +3,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
 #include "NexusFramework/Debug/Logger/Log.h"
@@ -20,7 +19,7 @@ namespace NxFr
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
 			NEXUS_NOCOPY_NOMOVE(PreAllocated)
-			PreAllocated(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+			PreAllocated(uint64 Size, Allocator* Allctr = Allocator::Scope::Get())
 				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
 				Allocate(Size);
@@ -216,7 +215,7 @@ namespace NxFr
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
 			NEXUS_NOCOPY_NOMOVE(OnDemand)
-			OnDemand(Allocator* Allctr = AllocatorContext::Get())
+			OnDemand(Allocator* Allctr = Allocator::Scope::Get())
 				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
 			}
@@ -454,12 +453,12 @@ namespace NxFr
 		using I = typename P::I;
 
 		NEXUS_NOCOPY_NOMOVE(Pool)
-		Pool(Allocator* Allctr = AllocatorContext::Get())
+		Pool(Allocator* Allctr = Allocator::Scope::Get())
 			: Data(Allctr)
 		{
 		}
 
-		Pool(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+		Pool(uint64 Size, Allocator* Allctr = Allocator::Scope::Get())
 			: Data(Size, Allctr)
 		{
 		}

@@ -21,6 +21,18 @@ namespace NxFr
 		friend void Memory::Free(void*, Allocator*);
 
 	public:
+		struct NEXUS_FRAMEWORK_API Scope
+		{
+		public:
+			static Allocator* Get();
+			static void Push(Allocator* Alloc);
+			static void Pop();
+			static void Reset();
+
+			Scope(Allocator* Allocator);
+			~Scope();
+		};
+
 		NEXUS_NOCOPY_NOMOVE(Allocator)
 		Allocator(uint64 Size);
 		virtual ~Allocator() = default;

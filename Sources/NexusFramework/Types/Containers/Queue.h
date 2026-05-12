@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
@@ -19,13 +18,13 @@ namespace NxFr
 
 		inline static const uint64 BucketSize = BS;
 
-		Queue(Allocator* Allctr = AllocatorContext::Get())
+		Queue(Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 		}
 
-		Queue(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+		Queue(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
 			ValidateDefaultState();

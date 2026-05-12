@@ -4,7 +4,6 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Sort/Sort.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
@@ -35,7 +34,7 @@ namespace NxFr
 			ConstructRange(0, Count);
 		}
 
-		Array(uint64 Size, Allocator* Allctr = AllocatorContext::Get())
+		Array(uint64 Size, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0)
 		{
 			NEXUS_ASSERT((L == 0 && Size == 0) || (L == 0 && Size > 0), Default, "The provided size is invalid");
@@ -44,7 +43,7 @@ namespace NxFr
 			ConstructRange(0, Count);
 		}
 
-		Array(InitializerList<T> Init, Allocator* Allctr = AllocatorContext::Get())
+		Array(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
 			: Alloc(Allctr), Count(0)
 		{
 			NEXUS_ASSERT((L == 0 && Init.size() == 0) || (L == 0 && Init.size() > 0), Default, "The provided size is invalid");

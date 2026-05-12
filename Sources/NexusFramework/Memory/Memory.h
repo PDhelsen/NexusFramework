@@ -4,7 +4,6 @@
 #include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/AllocatorContext.h"
 
 #define NEXUS_DELETE(Ptr) \
 delete Ptr;\
@@ -40,9 +39,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void* OffsetPointer(void* Pointer, uint64 Offset);
 		NEXUS_FRAMEWORK_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
-		NEXUS_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = DefaultAlignement);
-		NEXUS_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = AllocatorContext::Get(), uint64 Alignement = DefaultAlignement);
-		NEXUS_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = AllocatorContext::Get());
+		NEXUS_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = Allocator::Scope::Get(), uint64 Alignement = DefaultAlignement);
+		NEXUS_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = Allocator::Scope::Get(), uint64 Alignement = DefaultAlignement);
+		NEXUS_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = Allocator::Scope::Get());
 
 		template<typename T, typename... Args>
 		T* Construct(void* Pointer, Args&&... args)
@@ -57,14 +56,14 @@ namespace NxFr
 		}
 
 		template<typename T, typename ...Args>
-		T* Create(Allocator* Allocator = AllocatorContext::Get(), Args&& ...args)
+		T* Create(Allocator* Allocator = Allocator::Scope::Get(), Args&& ...args)
 		{
 			void* Ptr = Allocate(sizeof(T), Allocator, alignof(T));
 			return Construct<T>(Ptr, args...);
 		}
 
 		template<typename T>
-		void Destroy(T* Pointer, Allocator* Allocator = AllocatorContext::Get())
+		void Destroy(T* Pointer, Allocator* Allocator = Allocator::Scope::Get())
 		{
 			Destruct(Pointer);
 			Free(Pointer, Allocator);
