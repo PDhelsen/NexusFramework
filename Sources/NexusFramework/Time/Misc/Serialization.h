@@ -10,79 +10,82 @@
 
 namespace NxFr
 {
-	template<>
-	struct RBSConverter<Timespan>
+	namespace RBSUtility
 	{
-		static Timespan Decode(const RBS& Rbs)
+		template<>
+		struct Converter<Timespan>
 		{
-			Timespan Result;
-			Result.Seconds = Rbs.ReadObject<int32>();
-			Result.Minutes = Rbs.ReadObject<int32>();
-			Result.Hours = Rbs.ReadObject<int32>();
-			Result.Days = Rbs.ReadObject<int32>();
-			Result.Months = Rbs.ReadObject<int32>();
-			Result.Years = Rbs.ReadObject<int32>();
-			return Result;
-		}
+			static Timespan Decode(const RBS& Rbs)
+			{
+				Timespan Result;
+				Result.Seconds = Rbs.ReadObject<int32>();
+				Result.Minutes = Rbs.ReadObject<int32>();
+				Result.Hours = Rbs.ReadObject<int32>();
+				Result.Days = Rbs.ReadObject<int32>();
+				Result.Months = Rbs.ReadObject<int32>();
+				Result.Years = Rbs.ReadObject<int32>();
+				return Result;
+			}
 
-		static void Encode(RBS& Rbs, const Timespan& Object)
+			static void Encode(RBS& Rbs, const Timespan& Object)
+			{
+				Rbs.WriteObject(Object.Seconds);
+				Rbs.WriteObject(Object.Minutes);
+				Rbs.WriteObject(Object.Hours);
+				Rbs.WriteObject(Object.Days);
+				Rbs.WriteObject(Object.Months);
+				Rbs.WriteObject(Object.Years);
+			}
+		};
+
+		template<>
+		struct Converter<Timestamp>
 		{
-			Rbs.WriteObject(Object.Seconds);
-			Rbs.WriteObject(Object.Minutes);
-			Rbs.WriteObject(Object.Hours);
-			Rbs.WriteObject(Object.Days);
-			Rbs.WriteObject(Object.Months);
-			Rbs.WriteObject(Object.Years);
-		}
-	};
+			static Timestamp Decode(const RBS& Rbs)
+			{
+				Timestamp Result;
+				Result.Seconds = Rbs.ReadObject<int32>();
+				Result.Minutes = Rbs.ReadObject<int32>();
+				Result.Hours = Rbs.ReadObject<int32>();
+				Result.Days = Rbs.ReadObject<int32>();
+				Result.Months = Rbs.ReadObject<int32>();
+				Result.Years = Rbs.ReadObject<int32>();
+				Result.WeekDay = Rbs.ReadObject<int32>();
+				Result.YearDay = Rbs.ReadObject<int32>();
+				Result.DayLightSaving = Rbs.ReadObject<int32>();
+				return Result;
+			}
 
-	template<>
-	struct RBSConverter<Timestamp>
-	{
-		static Timestamp Decode(const RBS& Rbs)
+			static void Encode(RBS& Rbs, const Timestamp& Object)
+			{
+				Rbs.WriteObject(Object.Seconds);
+				Rbs.WriteObject(Object.Minutes);
+				Rbs.WriteObject(Object.Hours);
+				Rbs.WriteObject(Object.Days);
+				Rbs.WriteObject(Object.Months);
+				Rbs.WriteObject(Object.Years);
+				Rbs.WriteObject(Object.WeekDay);
+				Rbs.WriteObject(Object.YearDay);
+				Rbs.WriteObject(Object.DayLightSaving);
+			}
+		};
+
+		template<>
+		struct Converter<Stopwatch>
 		{
-			Timestamp Result;
-			Result.Seconds = Rbs.ReadObject<int32>();
-			Result.Minutes = Rbs.ReadObject<int32>();
-			Result.Hours = Rbs.ReadObject<int32>();
-			Result.Days = Rbs.ReadObject<int32>();
-			Result.Months = Rbs.ReadObject<int32>();
-			Result.Years = Rbs.ReadObject<int32>();
-			Result.WeekDay = Rbs.ReadObject<int32>();
-			Result.YearDay = Rbs.ReadObject<int32>();
-			Result.DayLightSaving = Rbs.ReadObject<int32>();
-			return Result;
-		}
+			static Stopwatch Decode(const RBS& Rbs)
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
+				return Stopwatch();
 
-		static void Encode(RBS& Rbs, const Timestamp& Object)
-		{
-			Rbs.WriteObject(Object.Seconds);
-			Rbs.WriteObject(Object.Minutes);
-			Rbs.WriteObject(Object.Hours);
-			Rbs.WriteObject(Object.Days);
-			Rbs.WriteObject(Object.Months);
-			Rbs.WriteObject(Object.Years);
-			Rbs.WriteObject(Object.WeekDay);
-			Rbs.WriteObject(Object.YearDay);
-			Rbs.WriteObject(Object.DayLightSaving);
-		}
-	};
+			}
 
-	template<>
-	struct RBSConverter<Stopwatch>
-	{
-		static Stopwatch Decode(const RBS& Rbs)
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
-			return Stopwatch();
-
-		}
-
-		static void Encode(RBS& Rbs, const Stopwatch& Object)
-		{
-			Rbs.WriteObject(Object.Peek());
-		}
-	};
+			static void Encode(RBS& Rbs, const Stopwatch& Object)
+			{
+				Rbs.WriteObject(Object.Peek());
+			}
+		};
+	}
 }
 
 namespace YAML

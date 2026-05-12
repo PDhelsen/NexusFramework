@@ -9,40 +9,43 @@
 
 namespace NxFr
 {
-	// In Time.cpp due to C-Lib conversion
-	template<>
-	struct NEXUS_FRAMEWORK_API StringConverter<Timestamp>
+	namespace StringUtility
 	{
-		static StringView GetFormat(bool Pretty);
-		static void ToString(const Timestamp& Data, String& Result, StringView Format);
-		static void FromString(StringView Data, Timestamp& Result, StringView Format);
-	};
-
-	// In Time.cpp due to C-Lib conversion
-	template<>
-	struct NEXUS_FRAMEWORK_API StringConverter<Timespan>
-	{
-		static StringView GetFormat(bool Pretty);
-		static void ToString(const Timespan& Data, String& Result, StringView Format = "");
-		static void FromString(StringView Data, Timespan& Result, StringView Format = "");
-	};
-
-	template<>
-	struct StringConverter<Stopwatch>
-	{
-		static StringView GetFormat(bool Pretty)
+		// In Time.cpp due to C-Lib conversion
+		template<>
+		struct NEXUS_FRAMEWORK_API Converter<Timestamp>
 		{
-			return Pretty ? "%.2f" : "%f";
-		}
+			static StringView GetFormat(bool Pretty);
+			static void ToString(const Timestamp& Data, String& Result, StringView Format);
+			static void FromString(StringView Data, Timestamp& Result, StringView Format);
+		};
 
-		static void ToString(const Stopwatch& Data, String& Result, StringView Format = "")
+		// In Time.cpp due to C-Lib conversion
+		template<>
+		struct NEXUS_FRAMEWORK_API Converter<Timespan>
 		{
-			StringUtility::Format(Result, StringUtility::ConvertionFormat<Stopwatch>(Format, true), Data.Peek());
-		}
+			static StringView GetFormat(bool Pretty);
+			static void ToString(const Timespan& Data, String& Result, StringView Format = "");
+			static void FromString(StringView Data, Timespan& Result, StringView Format = "");
+		};
 
-		static void FromString(StringView Data, Stopwatch& Result, StringView Format = "")
+		template<>
+		struct Converter<Stopwatch>
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
-		}
-	};
+			static StringView GetFormat(bool Pretty)
+			{
+				return Pretty ? "%.2f" : "%f";
+			}
+
+			static void ToString(const Stopwatch& Data, String& Result, StringView Format = "")
+			{
+				StringUtility::Format(Result, StringUtility::ConvertionFormat<Stopwatch>(Format, true), Data.Peek());
+			}
+
+			static void FromString(StringView Data, Stopwatch& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
+			}
+		};
+	}
 }

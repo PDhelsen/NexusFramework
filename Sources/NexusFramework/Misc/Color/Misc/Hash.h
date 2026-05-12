@@ -6,7 +6,7 @@
 
 namespace NxFr
 {
-	namespace Hashing
+	namespace HashUtility
 	{
 		template<typename H>
 		class Hasher<Color, H>

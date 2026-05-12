@@ -7,27 +7,30 @@
 
 namespace NxFr
 {
-	template<>
-	struct RBSConverter<Color>
+	namespace RBSUtility
 	{
-		static Color Decode(const RBS& Rbs)
+		template<>
+		struct Converter<Color>
 		{
-			Color Result;
-			Result.r = Rbs.ReadObject<Color::Type>();
-			Result.g = Rbs.ReadObject<Color::Type>();
-			Result.b = Rbs.ReadObject<Color::Type>();
-			Result.a = Rbs.ReadObject<Color::Type>();
-			return Result;
-		}
+			static Color Decode(const RBS& Rbs)
+			{
+				Color Result;
+				Result.r = Rbs.ReadObject<Color::Type>();
+				Result.g = Rbs.ReadObject<Color::Type>();
+				Result.b = Rbs.ReadObject<Color::Type>();
+				Result.a = Rbs.ReadObject<Color::Type>();
+				return Result;
+			}
 
-		static void Encode(RBS& Rbs, const Color& Object)
-		{
-			Rbs.WriteObject(Object.r);
-			Rbs.WriteObject(Object.g);
-			Rbs.WriteObject(Object.b);
-			Rbs.WriteObject(Object.a);
-		}
-	};
+			static void Encode(RBS& Rbs, const Color& Object)
+			{
+				Rbs.WriteObject(Object.r);
+				Rbs.WriteObject(Object.g);
+				Rbs.WriteObject(Object.b);
+				Rbs.WriteObject(Object.a);
+			}
+		};
+	}
 }
 
 namespace YAML

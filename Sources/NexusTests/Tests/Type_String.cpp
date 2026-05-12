@@ -208,7 +208,7 @@ namespace NxTs
 		Array.AssignConstruct(1, "World Hello");
 		Array.AssignConstruct(2, "Hello World");
 		Array.AssignConstruct(3, "Hello");
-		NxFr::ContainersUtils::Sort<NxFr::StringView>(Array);
+		NxFr::ContainerUtility::Sort<NxFr::StringView>(Array);
 		for (uint64 Index = 1; Index < Array.GetCount(); Index++)
 		{
 			ASSERT_EQ(Array[Index - 1] <= Array[Index], true);

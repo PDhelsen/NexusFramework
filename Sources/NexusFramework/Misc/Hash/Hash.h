@@ -10,7 +10,10 @@ namespace NxFr
 	namespace Hashing
 	{
 		using Default = class Fnv1a64;
+	}
 
+	namespace HashUtility
+	{
 		template<typename T, typename H = Hashing::Default>
 		struct Hasher
 		{
@@ -57,7 +60,7 @@ namespace NxFr
 		template<typename T>
 		Hash<H>& Accumulate(const T& Data)
 		{
-			Hashing::Hasher<T, H>::Accumulate(*this, Data);
+			HashUtility::Hasher<T, H>::Accumulate(*this, Data);
 			return *this;
 		}
 

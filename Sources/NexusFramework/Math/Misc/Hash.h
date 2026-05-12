@@ -9,7 +9,7 @@
 
 namespace NxFr
 {
-	namespace Hashing
+	namespace HashUtility
 	{
 		template<uint8 D, typename T, typename H>
 		class Hasher<Vector<D, T>, H>

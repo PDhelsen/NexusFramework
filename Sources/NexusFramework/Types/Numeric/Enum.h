@@ -3,54 +3,60 @@
 #define NEXUS_ENUM_STRING(EnumType, Count, ...)\
 	namespace NxFr\
 	{\
-		template<>\
-		struct StringConverter<EnumType>\
+		namespace StringUtility\
 		{\
-			inline static const StringView Names[Count] = { __VA_ARGS__ }; \
-			static void ToString(const EnumType& Data, String& Result, StringView Format = "")\
+			template<>\
+			struct Converter<EnumType>\
 			{\
-				Result = Names[(uint64)Data];\
-			}\
-			static void FromString(StringView Data, EnumType& Result, StringView Format = "")\
-			{\
-				for (int Index = 0; Index < Count; ++Index)\
+				inline static const StringView Names[Count] = { __VA_ARGS__ }; \
+				static void ToString(const EnumType& Data, String& Result, StringView Format = "")\
 				{\
-					if (Data == Names[Index])\
-					{\
-						Result = (EnumType)Index;\
-						return;\
-					}\
+					Result = Names[(uint64)Data];\
 				}\
-				Result = (EnumType)Count;\
-			}\
-		};\
+				static void FromString(StringView Data, EnumType& Result, StringView Format = "")\
+				{\
+					for (int Index = 0; Index < Count; ++Index)\
+					{\
+						if (Data == Names[Index])\
+						{\
+							Result = (EnumType)Index;\
+							return;\
+						}\
+					}\
+					Result = (EnumType)Count;\
+				}\
+			};\
+		}\
 	}
 
 #define NEXUS_FLAG_STRING(EnumType, Count, ...)\
 	namespace NxFr\
 	{\
-		template<>\
-		struct StringConverter<EnumType>\
+		namespace StringUtility\
 		{\
-			inline static const StringView Names[Count] = { __VA_ARGS__ }; \
-			static void ToString(const EnumType& Data, String& Result, StringView Format = "")\
+			template<>\
+			struct Converter<EnumType>\
 			{\
-				uint64 Index = Enum::FlagIndex(Data);\
-				Result = Index < Count ? Names[Index] : "None";\
-			}\
-			static void FromString(StringView Data, EnumType& Result, StringView Format = "")\
-			{\
-				for (int Index = 0; Index < Count; ++Index)\
+				inline static const StringView Names[Count] = { __VA_ARGS__ }; \
+				static void ToString(const EnumType& Data, String& Result, StringView Format = "")\
 				{\
-					if (Data == Names[Index])\
-					{\
-						Result = (EnumType)(1 << Index);\
-						return;\
-					}\
+					uint64 Index = Enum::FlagIndex(Data);\
+					Result = Index < Count ? Names[Index] : "None";\
 				}\
-				Result = EnumType::None;\
-			}\
-		};\
+				static void FromString(StringView Data, EnumType& Result, StringView Format = "")\
+				{\
+					for (int Index = 0; Index < Count; ++Index)\
+					{\
+						if (Data == Names[Index])\
+						{\
+							Result = (EnumType)(1 << Index);\
+							return;\
+						}\
+					}\
+					Result = EnumType::None;\
+				}\
+			};\
+		}\
 	}
 
 #define NEXUS_FLAG(EnumType, IntegerType)\

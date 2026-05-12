@@ -21,259 +21,262 @@
 
 namespace NxFr
 {
-	template<typename T>
-	struct RBSConverter<Array<T>>
+	namespace RBSUtility
 	{
-		static Array<T> Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter<Array<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			Array<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static Array<T> Decode(const RBS& Rbs)
 			{
-				Result[Index] = Rbs.ReadObject<T>();
+				uint64 Size = Rbs.ReadObject<uint64>();
+				Array<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result[Index] = Rbs.ReadObject<T>();
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const Array<T>& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			for (const auto& It : Object)
+			static void Encode(RBS& Rbs, const Array<T>& Object)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object.GetCount());
+				for (const auto& It : Object)
+				{
+					Rbs.WriteObject(It);
+				}
 			}
-		}
-	};
+		};
 
-	template<typename T>
-	struct RBSConverter<List<T>>
-	{
-		static List<T> Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter<List<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			List<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static List<T> Decode(const RBS& Rbs)
 			{
-				Result.Append(Rbs.ReadObject<T>());
+				uint64 Size = Rbs.ReadObject<uint64>();
+				List<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result.Append(Rbs.ReadObject<T>());
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const List<T>& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			for (const auto& It : Object)
+			static void Encode(RBS& Rbs, const List<T>& Object)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object.GetCount());
+				for (const auto& It : Object)
+				{
+					Rbs.WriteObject(It);
+				}
 			}
-		}
-	};
+		};
 
-	template<typename T>
-	struct RBSConverter<Dequeue<T>>
-	{
-		static Dequeue<T> Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter<Dequeue<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			Dequeue<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static Dequeue<T> Decode(const RBS& Rbs)
 			{
-				Result.AppendBack(Rbs.ReadObject<T>());
+				uint64 Size = Rbs.ReadObject<uint64>();
+				Dequeue<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result.AppendBack(Rbs.ReadObject<T>());
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const Dequeue<T>& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			for (const auto& It : Object)
+			static void Encode(RBS& Rbs, const Dequeue<T>& Object)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object.GetCount());
+				for (const auto& It : Object)
+				{
+					Rbs.WriteObject(It);
+				}
 			}
-		}
-	};
+		};
 
-	template<typename T>
-	struct RBSConverter<Queue<T>>
-	{
-		static Queue<T> Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter<Queue<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			Queue<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static Queue<T> Decode(const RBS& Rbs)
 			{
-				Result.Append(Rbs.ReadObject<T>());
+				uint64 Size = Rbs.ReadObject<uint64>();
+				Queue<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result.Append(Rbs.ReadObject<T>());
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const Queue<T>& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			for (const auto& It : Object)
+			static void Encode(RBS& Rbs, const Queue<T>& Object)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object.GetCount());
+				for (const auto& It : Object)
+				{
+					Rbs.WriteObject(It);
+				}
 			}
-		}
-	};
+		};
 
-	template<typename T>
-	struct RBSConverter<Stack<T>>
-	{
-		static Queue<T> Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter<Stack<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			Stack<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static Queue<T> Decode(const RBS& Rbs)
 			{
-				Result.Append(Rbs.ReadObject<T>());
+				uint64 Size = Rbs.ReadObject<uint64>();
+				Stack<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result.Append(Rbs.ReadObject<T>());
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const Stack<T>& Object)
-		{
-			Array<T> Data = ContainerUtility::ToArray<T>(Object);
-			ContainerUtility::Reverse<T>(Data);
-
-			Rbs.WriteObject(Data.GetCount());
-			for (const auto& It : Data)
+			static void Encode(RBS& Rbs, const Stack<T>& Object)
 			{
-				Rbs.WriteObject(It);
-			}
-		}
-	};
+				Array<T> Data = ContainerUtility::ToArray<T>(Object);
+				ContainerUtility::Reverse<T>(Data);
 
-	template<typename T>
-	struct RBSConverter<LinkedList<T>>
-	{
-		static LinkedList<T> Decode(const RBS& Rbs)
+				Rbs.WriteObject(Data.GetCount());
+				for (const auto& It : Data)
+				{
+					Rbs.WriteObject(It);
+				}
+			}
+		};
+
+		template<typename T>
+		struct Converter<LinkedList<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			LinkedList<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static LinkedList<T> Decode(const RBS& Rbs)
 			{
-				Result.AppendBack(Rbs.ReadObject<T>());
+				uint64 Size = Rbs.ReadObject<uint64>();
+				LinkedList<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result.AppendBack(Rbs.ReadObject<T>());
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const LinkedList<T>& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			for (const auto& It : Object)
+			static void Encode(RBS& Rbs, const LinkedList<T>& Object)
 			{
-				Rbs.WriteObject(It);
+				Rbs.WriteObject(Object.GetCount());
+				for (const auto& It : Object)
+				{
+					Rbs.WriteObject(It);
+				}
 			}
-		}
-	};
+		};
 
-	template<typename T>
-	struct RBSConverter<Set<T>>
-	{
-		static Set<T> Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter<Set<T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			Set<T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static Set<T> Decode(const RBS& Rbs)
 			{
-				Result.Append(Rbs.ReadObject<T>());
+				uint64 Size = Rbs.ReadObject<uint64>();
+				Set<T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					Result.Append(Rbs.ReadObject<T>());
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const Set<T>& Object)
-		{
-			Array<T> Data = ContainerUtility::ToArray<T>(Object);
-			ContainerUtility::Sort<T>(Data);
-
-			Rbs.WriteObject(Data.GetCount());
-			for (const auto& It : Data)
+			static void Encode(RBS& Rbs, const Set<T>& Object)
 			{
-				Rbs.WriteObject(It);
-			}
-		}
-	};
+				Array<T> Data = ContainerUtility::ToArray<T>(Object);
+				ContainerUtility::Sort<T>(Data);
 
-	template<typename K, typename T>
-	struct RBSConverter<Dictionary<K, T>>
-	{
-		static Dictionary<K, T> Decode(const RBS& Rbs)
+				Rbs.WriteObject(Data.GetCount());
+				for (const auto& It : Data)
+				{
+					Rbs.WriteObject(It);
+				}
+			}
+		};
+
+		template<typename K, typename T>
+		struct Converter<Dictionary<K, T>>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			Dictionary<K, T> Result(Size);
-			for (uint64 Index = 0; Index < Size; ++Index)
+			static Dictionary<K, T> Decode(const RBS& Rbs)
 			{
-				K Key = Rbs.ReadObject<K>();
-				T Value = Rbs.ReadObject<T>();
-				Result.Append(Move(Key), Move(Value));
+				uint64 Size = Rbs.ReadObject<uint64>();
+				Dictionary<K, T> Result(Size);
+				for (uint64 Index = 0; Index < Size; ++Index)
+				{
+					K Key = Rbs.ReadObject<K>();
+					T Value = Rbs.ReadObject<T>();
+					Result.Append(Move(Key), Move(Value));
+				}
+				return Result;
 			}
-			return Result;
-		}
 
-		static void Encode(RBS& Rbs, const Dictionary<K, T>& Object)
-		{
-			Array<KeyValuePair<K, T>> Data = ContainerUtility::ToArray<K, T>(Object);
-			ContainerUtility::Sort<KeyValuePair<K, T>>(Data);
-
-			Rbs.WriteObject(Data.GetCount());
-			for (const auto& It : Data)
+			static void Encode(RBS& Rbs, const Dictionary<K, T>& Object)
 			{
-				Rbs.WriteObject(It.Key);
-				Rbs.WriteObject(It.Value);
+				Array<KeyValuePair<K, T>> Data = ContainerUtility::ToArray<K, T>(Object);
+				ContainerUtility::Sort<KeyValuePair<K, T>>(Data);
+
+				Rbs.WriteObject(Data.GetCount());
+				for (const auto& It : Data)
+				{
+					Rbs.WriteObject(It.Key);
+					Rbs.WriteObject(It.Value);
+				}
 			}
-		}
-	};
+		};
 
-	template<>
-	struct RBSConverter<BufferView>
-	{
-		static BufferView Decode(const RBS& Rbs)
+		template<>
+		struct Converter<BufferView>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			const void* Ptr = Rbs.ReadByte(Size);
-			return BufferView(Ptr, Size);
-		}
-
-		static void Encode(RBS& Rbs, const BufferView& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			Rbs.WriteByte(Object.GetPtr(), Object.GetCount());
-		}
-	};
-
-	template<typename T1, typename T2>
-	struct RBSConverter<Tuple<T1, T2>>
-	{
-		static Tuple<T1, T2> Decode(const RBS& Rbs)
-		{
-			return Tuple<T1, T2>(Rbs.ReadObject<T1>(), Rbs.ReadObject<T2>());
-		}
-
-		static void Encode(RBS& Rbs, const Tuple<T1, T2>& Object)
-		{
-			Rbs.WriteObject(Object.GetFirst());
-			Rbs.WriteObject(Object.GetSecond());
-		}
-	};
-
-	template<typename T>
-	struct RBSConverter<Collection<T>>
-	{
-		static Array<T> Decode(const RBS& Rbs)
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
-		}
-
-		static void Encode(RBS& Rbs, const Collection<T>& Object)
-		{
-			Rbs.WriteObject(Object.GetCount());
-			for (const auto& It : Object)
+			static BufferView Decode(const RBS& Rbs)
 			{
-				Rbs.WriteObject(It);
+				uint64 Size = Rbs.ReadObject<uint64>();
+				const void* Ptr = Rbs.ReadByte(Size);
+				return BufferView(Ptr, Size);
 			}
-		}
-	};
+
+			static void Encode(RBS& Rbs, const BufferView& Object)
+			{
+				Rbs.WriteObject(Object.GetCount());
+				Rbs.WriteByte(Object.GetPtr(), Object.GetCount());
+			}
+		};
+
+		template<typename T1, typename T2>
+		struct Converter<Tuple<T1, T2>>
+		{
+			static Tuple<T1, T2> Decode(const RBS& Rbs)
+			{
+				return Tuple<T1, T2>(Rbs.ReadObject<T1>(), Rbs.ReadObject<T2>());
+			}
+
+			static void Encode(RBS& Rbs, const Tuple<T1, T2>& Object)
+			{
+				Rbs.WriteObject(Object.GetFirst());
+				Rbs.WriteObject(Object.GetSecond());
+			}
+		};
+
+		template<typename T>
+		struct Converter<Collection<T>>
+		{
+			static Array<T> Decode(const RBS& Rbs)
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
+			}
+
+			static void Encode(RBS& Rbs, const Collection<T>& Object)
+			{
+				Rbs.WriteObject(Object.GetCount());
+				for (const auto& It : Object)
+				{
+					Rbs.WriteObject(It);
+				}
+			}
+		};
+	}
 }
 
 namespace YAML

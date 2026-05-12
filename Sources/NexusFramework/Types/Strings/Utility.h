@@ -11,19 +11,19 @@ namespace NxFr
 {
 	template <typename T> class Collection;
 
-	template<typename T>
-	struct StringConverter
-	{
-		static StringView GetFormat(bool Pretty) { return ""; };
-		static void ToString(const T& Data, String& Result, StringView Format = "") {}
-		static void FromString(StringView Data, T& Result, StringView Format = "") {}
-	};
-
 	namespace StringUtility
 	{
 		enum class SearchMode
 		{
 			Substring, Characters
+		};
+
+		template<typename T>
+		struct Converter
+		{
+			static StringView GetFormat(bool Pretty) { return ""; };
+			static void ToString(const T& Data, String& Result, StringView Format = "") {}
+			static void FromString(StringView Data, T& Result, StringView Format = "") {}
 		};
 
 		inline const uint8 GuessFormatingSize = 8;
@@ -75,7 +75,7 @@ namespace NxFr
 		template<typename T>
 		void ToString(const T& Data, String& Result, StringView Format = "")
 		{
-			StringConverter<T>::ToString(Data, Result, Format);
+			Converter<T>::ToString(Data, Result, Format);
 		}
 		template<typename T>
 		String ToString(const T& Data, StringView Format = "")
@@ -87,7 +87,7 @@ namespace NxFr
 		template<typename T>
 		void FromString(StringView Data, T& Result, StringView Format = "")
 		{
-			StringConverter<T>::FromString(Data, Result, Format);
+			Converter<T>::FromString(Data, Result, Format);
 		}
 		template<typename T>
 		T FromString(StringView Data, StringView Format = "")
@@ -100,7 +100,7 @@ namespace NxFr
 		template<typename T>
 		StringView ConvertionFormat(StringView Format = "", bool Pretty = false)
 		{
-			return !Format.IsEmpty() ? Format : StringConverter<T>::GetFormat(Pretty);
+			return !Format.IsEmpty() ? Format : Converter<T>::GetFormat(Pretty);
 		}
 
 		NEXUS_FRAMEWORK_API bool Start(StringView Text, StringView Substring);

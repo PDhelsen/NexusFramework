@@ -5,8 +5,11 @@
 
 namespace NxFr
 {
-	template<typename T>
-	struct RBSConverter;
+	namespace RBSUtility
+	{
+		template<typename T>
+		struct Converter;
+	}
 
 	class NEXUS_FRAMEWORK_API RBS
 	{
@@ -23,12 +26,12 @@ namespace NxFr
 		template<typename T>
 		T ReadObject() const
 		{
-			return RBSConverter<T>::Decode(*this);
+			return RBSUtility::Converter<T>::Decode(*this);
 		}
 		template<typename T>
 		void WriteObject(const T& Object)
 		{
-			RBSConverter<T>::Encode(*this, Object);
+			RBSUtility::Converter<T>::Encode(*this, Object);
 		}
 
 		template<typename T>
@@ -56,18 +59,21 @@ namespace NxFr
 		mutable uint64 Cursor;
 	};
 
-	template<typename T>
-	struct RBSConverter
+	namespace RBSUtility
 	{
-	public:
-		static T Decode(const RBS& Rbs)
+		template<typename T>
+		struct Converter
 		{
-			return *Rbs.ReadData<T>(sizeof(T));
-		}
+		public:
+			static T Decode(const RBS& Rbs)
+			{
+				return *Rbs.ReadData<T>(sizeof(T));
+			}
 
-		static void Encode(RBS& Rbs, const T& Object)
-		{
-			Rbs.WriteData<T>(&Object, sizeof(T));
-		}
-	};
+			static void Encode(RBS& Rbs, const T& Object)
+			{
+				Rbs.WriteData<T>(&Object, sizeof(T));
+			}
+		};
+	}
 }

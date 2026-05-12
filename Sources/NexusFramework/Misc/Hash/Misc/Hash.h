@@ -4,7 +4,7 @@
 
 namespace NxFr
 {
-	namespace Hashing
+	namespace HashUtility
 	{
 		template<typename T, typename H>
 		struct Hasher<T*, H>

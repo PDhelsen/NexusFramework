@@ -24,212 +24,215 @@
 
 namespace NxFr
 {
-	template<typename T>
-	struct StringConverter<Array<T>>
+	namespace StringUtility
 	{
-		static void ToString(const Array<T>& Data, String& Result, StringView Format = "")
+		template<typename T>
+		struct Converter<Array<T>>
 		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void ToString(const Array<T>& Data, String& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
 			}
-		}
 
-		static void FromString(StringView Data, Array<T>& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Array");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<List<T>>
-	{
-		static void ToString(const List<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void FromString(StringView Data, Array<T>& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Array");
 			}
-		}
+		};
 
-		static void FromString(StringView Data, List<T>& Result, StringView Format = "")
+		template<typename T>
+		struct Converter<List<T>>
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with List");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<Dequeue<T>>
-	{
-		static void ToString(const Dequeue<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void ToString(const List<T>& Data, String& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
 			}
-		}
 
-		static void FromString(StringView Data, Dequeue<T>& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Dequeue");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<Stack<T>>
-	{
-		static void ToString(const Stack<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void FromString(StringView Data, List<T>& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with List");
 			}
-		}
+		};
 
-		static void FromString(StringView Data, Stack<T>& Result, StringView Format = "")
+		template<typename T>
+		struct Converter<Dequeue<T>>
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Stack");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<Queue<T>>
-	{
-		static void ToString(const Queue<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void ToString(const Dequeue<T>& Data, String& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
 			}
-		}
 
-		static void FromString(StringView Data, Queue<T>& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Queue");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<LinkedList<T>>
-	{
-		static void ToString(const LinkedList<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void FromString(StringView Data, Dequeue<T>& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Dequeue");
 			}
-		}
+		};
 
-		static void FromString(StringView Data, LinkedList<T>& Result, StringView Format = "")
+		template<typename T>
+		struct Converter<Stack<T>>
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with LinkedList");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<Set<T>>
-	{
-		static void ToString(const Set<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void ToString(const Stack<T>& Data, String& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(It, Format);
-				Result += StringUtility::NewLine;
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
 			}
-		}
 
-		static void FromString(StringView Data, Set<T>& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Set");
-		}
-	};
-
-	template<typename K, typename T>
-	struct StringConverter<Dictionary<K, T>>
-	{
-		static void ToString(const Dictionary<K, T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& [Key, Value] : Data)
+			static void FromString(StringView Data, Stack<T>& Result, StringView Format = "")
 			{
-				Result += "Key: ";
-				Result += StringUtility::ToString<K>(Key, Format);
-				Result += " => ";
-				Result += "Value: ";
-				Result += StringUtility::ToString<T>(Value, Format);
-				Result += StringUtility::NewLine;
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Stack");
 			}
-		}
+		};
 
-		static void FromString(StringView Data, Dictionary<K, T>& Result, StringView Format = "")
+		template<typename T>
+		struct Converter<Queue<T>>
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Dictionary");
-		}
-	};
-
-	template<>
-	struct StringConverter<BufferView>
-	{
-		static void ToString(const BufferView& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (const auto& It : Data)
+			static void ToString(const Queue<T>& Data, String& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<uint8>(It, Format);
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
 			}
-		}
 
-		static void FromString(StringView Data, BufferView& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
-		}
-	};
-
-	template<typename T1, typename T2>
-	struct StringConverter<Tuple<T1, T2>>
-	{
-		static void ToString(const Tuple<T1, T2>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			Result += StringUtility::ToString<T1>(Data.GetFirst(), Format);
-			Result += StringUtility::ToString<T2>(Data.GetSecond(), Format);
-		}
-
-		static void FromString(StringView Data, Tuple<T1, T2>& Result, StringView Format = "")
-		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
-		}
-	};
-
-	template<typename T>
-	struct StringConverter<Collection<T>>
-	{
-		static void ToString(const Collection<T>& Data, String& Result, StringView Format = "")
-		{
-			Result.Clear();
-			for (auto It = Data.Begin(); It != Data.End(); ++It)
+			static void FromString(StringView Data, Queue<T>& Result, StringView Format = "")
 			{
-				Result += StringUtility::ToString<T>(*It, Format);
-				Result += StringUtility::NewLine;
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Queue");
 			}
-		}
+		};
 
-		static void FromString(StringView Data, Collection<T>& Result, StringView Format = "")
+		template<typename T>
+		struct Converter<LinkedList<T>>
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported FromString with Collection");
-		}
-	};
+			static void ToString(const LinkedList<T>& Data, String& Result, StringView Format = "")
+			{
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
+			}
+
+			static void FromString(StringView Data, LinkedList<T>& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with LinkedList");
+			}
+		};
+
+		template<typename T>
+		struct Converter<Set<T>>
+		{
+			static void ToString(const Set<T>& Data, String& Result, StringView Format = "")
+			{
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<T>(It, Format);
+					Result += StringUtility::NewLine;
+				}
+			}
+
+			static void FromString(StringView Data, Set<T>& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Set");
+			}
+		};
+
+		template<typename K, typename T>
+		struct Converter<Dictionary<K, T>>
+		{
+			static void ToString(const Dictionary<K, T>& Data, String& Result, StringView Format = "")
+			{
+				Result.Clear();
+				for (const auto& [Key, Value] : Data)
+				{
+					Result += "Key: ";
+					Result += StringUtility::ToString<K>(Key, Format);
+					Result += " => ";
+					Result += "Value: ";
+					Result += StringUtility::ToString<T>(Value, Format);
+					Result += StringUtility::NewLine;
+				}
+			}
+
+			static void FromString(StringView Data, Dictionary<K, T>& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Dictionary");
+			}
+		};
+
+		template<>
+		struct Converter<BufferView>
+		{
+			static void ToString(const BufferView& Data, String& Result, StringView Format = "")
+			{
+				Result.Clear();
+				for (const auto& It : Data)
+				{
+					Result += StringUtility::ToString<uint8>(It, Format);
+				}
+			}
+
+			static void FromString(StringView Data, BufferView& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
+			}
+		};
+
+		template<typename T1, typename T2>
+		struct Converter<Tuple<T1, T2>>
+		{
+			static void ToString(const Tuple<T1, T2>& Data, String& Result, StringView Format = "")
+			{
+				Result.Clear();
+				Result += StringUtility::ToString<T1>(Data.GetFirst(), Format);
+				Result += StringUtility::ToString<T2>(Data.GetSecond(), Format);
+			}
+
+			static void FromString(StringView Data, Tuple<T1, T2>& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
+			}
+		};
+
+		template<typename T>
+		struct Converter<Collection<T>>
+		{
+			static void ToString(const Collection<T>& Data, String& Result, StringView Format = "")
+			{
+				Result.Clear();
+				for (auto It = Data.Begin(); It != Data.End(); ++It)
+				{
+					Result += StringUtility::ToString<T>(*It, Format);
+					Result += StringUtility::NewLine;
+				}
+			}
+
+			static void FromString(StringView Data, Collection<T>& Result, StringView Format = "")
+			{
+				NEXUS_ASSERT(false, Default, "Unsupported FromString with Collection");
+			}
+		};
+	}
 }

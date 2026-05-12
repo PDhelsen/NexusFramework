@@ -6,18 +6,21 @@
 
 namespace NxFr
 {
-	template<>
-	struct StringConverter<Stats::Stat>
+	namespace StringUtility
 	{
-		static void ToString(const Stats::Stat& Data, String& Result, StringView Format = "")
+		template<>
+		struct Converter<Stats::Stat>
 		{
-			switch (Data.GetType())
+			static void ToString(const Stats::Stat& Data, String& Result, StringView Format = "")
 			{
-			case NxFr::Stats::Type::Label: StringConverter<String>::ToString(Data.GetValueLabel(), Result); break;
-			case NxFr::Stats::Type::Check: StringConverter<bool>::ToString(Data.GetValueCheck(), Result); break;
-			case NxFr::Stats::Type::Integer: StringConverter<int64>::ToString(Data.GetValueInteger(), Result); break;
-			case NxFr::Stats::Type::Decimal: StringConverter<float>::ToString(Data.GetValueDecimal(), Result); break;
+				switch (Data.GetType())
+				{
+				case NxFr::Stats::Type::Label: StringUtility::ToString(Data.GetValueLabel(), Result); break;
+				case NxFr::Stats::Type::Check: StringUtility::ToString(Data.GetValueCheck(), Result); break;
+				case NxFr::Stats::Type::Integer: StringUtility::ToString(Data.GetValueInteger(), Result); break;
+				case NxFr::Stats::Type::Decimal: StringUtility::ToString(Data.GetValueDecimal(), Result); break;
+				}
 			}
-		}
-	};
+		};
+	}
 }

@@ -70,7 +70,7 @@ NEXUS_FLAG_STRING(NxTs::DummyFlag, 4, "First", "Second", "Third", "Fourth")
 
 namespace NxFr
 {
-	namespace Hashing
+	namespace HashUtility
 	{
 		template<typename H>
 		class Hasher<NxTs::Dummy, H>
@@ -84,32 +84,38 @@ namespace NxFr
 		};
 	}
 
-	template<>
-	struct StringConverter<NxTs::Dummy>
+	namespace StringUtility
 	{
-		static void ToString(const NxTs::Dummy& Data, String& Result, StringView Format = "")
+		template<>
+		struct Converter<NxTs::Dummy>
 		{
-			StringUtility::Format(Result, "Dummy: %d %s", Data.Key, Data.Value);
-		}
-	};
+			static void ToString(const NxTs::Dummy& Data, String& Result, StringView Format = "")
+			{
+				StringUtility::Format(Result, "Dummy: %d %s", Data.Key, Data.Value);
+			}
+		};
+	}
 
-	template<>
-	struct RBSConverter<NxTs::Dummy>
+	namespace RBSUtility
 	{
-		static NxTs::Dummy Decode(const RBS& Rbs)
+		template<>
+		struct Converter<NxTs::Dummy>
 		{
-			NxTs::Dummy Instance;
-			Instance.Key = Rbs.ReadObject<uint64>();
-			Instance.Value = Rbs.ReadObject<NxFr::String>();
-			return Instance;
-		}
+			static NxTs::Dummy Decode(const RBS& Rbs)
+			{
+				NxTs::Dummy Instance;
+				Instance.Key = Rbs.ReadObject<uint64>();
+				Instance.Value = Rbs.ReadObject<NxFr::String>();
+				return Instance;
+			}
 
-		static void Encode(RBS& Rbs, const NxTs::Dummy& Object)
-		{
-			Rbs.WriteObject(Object.Key);
-			Rbs.WriteObject(Object.Value);
-		}
-	};
+			static void Encode(RBS& Rbs, const NxTs::Dummy& Object)
+			{
+				Rbs.WriteObject(Object.Key);
+				Rbs.WriteObject(Object.Value);
+			}
+		};
+	}
 }
 
 namespace YAML

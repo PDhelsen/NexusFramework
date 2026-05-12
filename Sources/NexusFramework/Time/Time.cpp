@@ -114,53 +114,55 @@ namespace NxFr
 
 #pragma endregion
 
-#pragma region StringConverter
+#pragma region StringUtility - Converter
 
-	StringView StringConverter<Timestamp>::GetFormat(bool Pretty)
+	namespace StringUtility
 	{
-		return "%A - %B %d %Y - %H:%M:%S";
+		StringView Converter<Timestamp>::GetFormat(bool Pretty)
+		{
+			return "%A - %B %d %Y - %H:%M:%S";
+		}
+
+		void Converter<Timestamp>::ToString(const Timestamp& Data, String& Result, StringView Format)
+		{
+			Buffer& LocalBuffer = GetLocalBuffer();
+			Format = StringUtility::ConvertionFormat<Timestamp>(Format);
+
+			TimeInfo.Stamp = Data;
+			ConvertFromNexusToCLib(true);
+			uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			Result = String(LocalBuffer.GetPtr<char>(), Size);
+		}
+
+		void Converter<Timestamp>::FromString(StringView Data, Timestamp& Result, StringView Format)
+		{
+			Format = StringUtility::ConvertionFormat<Timestamp>(Format);
+			StringUtility::Scan(Data, Format, &TimeInfo.TM);
+			Result = TimeInfo.Stamp;
+		}
+
+		StringView Converter<Timespan>::GetFormat(bool Pretty)
+		{
+			return "%Yy%mm%dd - %Hh%Mm%Ss";
+		}
+
+		void Converter<Timespan>::ToString(const Timespan& Data, String& Result, StringView Format)
+		{
+			Buffer& LocalBuffer = GetLocalBuffer();
+			Format = StringUtility::ConvertionFormat<Timespan>(Format);
+
+			TimeInfo.Span = Data;
+			ConvertFromNexusToCLib(false);
+			uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
+			Result = String(LocalBuffer.GetPtr<char>(), Size);
+		}
+
+		void Converter<Timespan>::FromString(StringView Data, Timespan& Result, StringView Format)
+		{
+			Format = StringUtility::ConvertionFormat<Timespan>(Format);
+			StringUtility::Scan(Data, Format, &TimeInfo.TM);
+			Result = TimeInfo.Span;
+		}
 	}
-
-	void StringConverter<Timestamp>::ToString(const Timestamp& Data, String& Result, StringView Format)
-	{
-		Buffer& LocalBuffer = GetLocalBuffer();
-		Format = StringUtility::ConvertionFormat<Timestamp>(Format);
-
-		TimeInfo.Stamp = Data;
-		ConvertFromNexusToCLib(true);
-		uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
-		Result = String(LocalBuffer.GetPtr<char>(), Size);
-	}
-
-	void StringConverter<Timestamp>::FromString(StringView Data, Timestamp& Result, StringView Format)
-	{
-		Format = StringUtility::ConvertionFormat<Timestamp>(Format);
-		StringUtility::Scan(Data, Format, &TimeInfo.TM);
-		Result = TimeInfo.Stamp;
-	}
-
-	StringView StringConverter<Timespan>::GetFormat(bool Pretty)
-	{
-		return "%Yy%mm%dd - %Hh%Mm%Ss";
-	}
-
-	void StringConverter<Timespan>::ToString(const Timespan& Data, String& Result, StringView Format)
-	{
-		Buffer& LocalBuffer = GetLocalBuffer();
-		Format = StringUtility::ConvertionFormat<Timespan>(Format);
-
-		TimeInfo.Span = Data;
-		ConvertFromNexusToCLib(false);
-		uint64 Size = strftime(LocalBuffer.GetPtr<char>(), LocalBuffer.GetCount(), Format.C(), &TimeInfo.TM);
-		Result = String(LocalBuffer.GetPtr<char>(), Size);
-	}
-
-	void StringConverter<Timespan>::FromString(StringView Data, Timespan& Result, StringView Format)
-	{
-		Format = StringUtility::ConvertionFormat<Timespan>(Format);
-		StringUtility::Scan(Data, Format, &TimeInfo.TM);
-		Result = TimeInfo.Span;
-	}
-
 #pragma endregion
 }

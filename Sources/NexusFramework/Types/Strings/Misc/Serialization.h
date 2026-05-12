@@ -11,90 +11,92 @@
 
 namespace NxFr
 {
-	template<>
-	struct RBSConverter<const char*>
+	namespace RBSUtility
 	{
-		static const char* Decode(const RBS& Rbs)
+		template<>
+		struct Converter<const char*>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			const char* Text = Rbs.ReadData<char>(Size);
-			Rbs.ReadByte(sizeof(StringCApi::NullChar));
-			return Text;
-		}
+			static const char* Decode(const RBS& Rbs)
+			{
+				uint64 Size = Rbs.ReadObject<uint64>();
+				const char* Text = Rbs.ReadData<char>(Size);
+				Rbs.ReadByte(sizeof(StringCApi::NullChar));
+				return Text;
+			}
 
-		static void Encode(RBS& Rbs, const char* Object)
+			static void Encode(RBS& Rbs, const char* Object)
+			{
+				uint64 Size = StringCApi::Length(Object);
+
+				Rbs.WriteObject(Size);
+				Rbs.WriteData(Object, StringCApi::Length(Object));
+				Rbs.WriteObject(StringCApi::NullChar);
+			}
+		};
+
+		template<size_t N>
+		struct Converter<char[N]>
 		{
-			uint64 Size = StringCApi::Length(Object);
+			static const char* Decode(const RBS& Rbs)
+			{
+				uint64 Size = Rbs.ReadObject<uint64>();
+				const char* Text = Rbs.ReadData<char>(Size);
+				Rbs.ReadByte(sizeof(StringCApi::NullChar));
+				return Text;
+			}
 
-			Rbs.WriteObject(Size);
-			Rbs.WriteData(Object, StringCApi::Length(Object));
-			Rbs.WriteObject(StringCApi::NullChar);
-		}
-	};
+			static void Encode(RBS& Rbs, const char(&Object)[N])
+			{
+				uint64 Size = StringCApi::Length(Object);
 
-	template<size_t N>
-	struct RBSConverter<char[N]>
-	{
-		static const char* Decode(const RBS& Rbs)
+				Rbs.WriteObject(Size);
+				Rbs.WriteData(Object, StringCApi::Length(Object));
+				Rbs.WriteObject(StringCApi::NullChar);
+			}
+		};
+
+		template<>
+		struct Converter<String>
 		{
-			uint64 Size = Rbs.ReadObject<uint64>();
-			const char* Text = Rbs.ReadData<char>(Size);
-			Rbs.ReadByte(sizeof(StringCApi::NullChar));
-			return Text;
-		}
+			static String Decode(const RBS& Rbs)
+			{
+				return Rbs.ReadObject<const char*>();
+			}
 
-		static void Encode(RBS& Rbs, const char(&Object)[N])
+			static void Encode(RBS& Rbs, const String& Object)
+			{
+				Rbs.WriteObject<const char*>(Object.C());
+			}
+		};
+
+		template<>
+		struct Converter<StringView>
 		{
-			uint64 Size = StringCApi::Length(Object);
+			static StringView Decode(const RBS& Rbs)
+			{
+				return Rbs.ReadObject<const char*>();
+			}
 
-			Rbs.WriteObject(Size);
-			Rbs.WriteData(Object, StringCApi::Length(Object));
-			Rbs.WriteObject(StringCApi::NullChar);
-		}
-	};
+			static void Encode(RBS& Rbs, const StringView& Object)
+			{
+				Rbs.WriteObject<const char*>(Object.C(true));
+			}
+		};
 
-	template<>
-	struct RBSConverter<String>
-	{
-		static String Decode(const RBS& Rbs)
+		template<>
+		struct Converter<StringId>
 		{
-			return Rbs.ReadObject<const char*>();
-		}
+			static StringId Decode(const RBS& Rbs)
+			{
+				return Rbs.ReadObject<StringView>();
+			}
 
-		static void Encode(RBS& Rbs, const String& Object)
-		{
-			Rbs.WriteObject<const char*>(Object.C());
-		}
-	};
-
-	template<>
-	struct RBSConverter<StringView>
-	{
-		static StringView Decode(const RBS& Rbs)
-		{
-			return Rbs.ReadObject<const char*>();
-		}
-
-		static void Encode(RBS& Rbs, const StringView& Object)
-		{
-			Rbs.WriteObject<const char*>(Object.C(true));
-		}
-	};
-
-	template<>
-	struct RBSConverter<StringId>
-	{
-		static StringId Decode(const RBS& Rbs)
-		{
-			return Rbs.ReadObject<StringView>();
-		}
-
-		static void Encode(RBS& Rbs, const StringId& Object)
-		{
-			Rbs.WriteObject<StringView>(Object);
-		}
-	};
-
+			static void Encode(RBS& Rbs, const StringId& Object)
+			{
+				Rbs.WriteObject<StringView>(Object);
+			}
+		};
+	}
 }
 
 namespace YAML

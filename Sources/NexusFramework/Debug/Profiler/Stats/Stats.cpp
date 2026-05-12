@@ -159,7 +159,7 @@ namespace NxFr
 
 		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
 		{
-			StringConverter<Stats::Stat>::ToString(Data[Index], Buffer);
+			StringUtility::ToString(Data[Index], Buffer);
 
 			Stream.WriteBlock(Buffer);
 			Stream.WriteBlock(Separator);
