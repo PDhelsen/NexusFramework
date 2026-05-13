@@ -1,7 +1,6 @@
 #pragma once
 
-#include "NexusFramework/Memory/Memory.h"
-#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Misc/Iterator/IteratorAny.h"
 
 namespace NxFr

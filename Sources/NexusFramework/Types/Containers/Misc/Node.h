@@ -1,9 +1,8 @@
 #pragma once
 
 #include "NexusFramework/Types/Numeric/Integer.h"
-#include "NexusFramework/Memory/Memory.h"
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Misc/Node/Node.h"
+#include "NexusFramework/Memory/Memory.h"
 
 namespace NxFr
 {

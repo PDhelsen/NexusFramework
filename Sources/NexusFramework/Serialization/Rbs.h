@@ -2,6 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Containers/Buffer.h"
+#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 
 namespace NxFr
 {

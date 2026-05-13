@@ -1,11 +1,5 @@
 #pragma once
 
-#include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Debug/Logger/Log.h"
-#include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Types/Strings/StringView.h"
-#include "NexusFramework/Types/Strings/Utility.h"
-
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dequeue.h"
@@ -21,6 +15,12 @@
 #include "NexusFramework/Types/Containers/Tuple.h"
 #include "NexusFramework/Types/Containers/Collection.h"
 #include "NexusFramework/Types/Containers/Utility.h"
+
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Types/Strings/Utility.h"
+
+#include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
 {

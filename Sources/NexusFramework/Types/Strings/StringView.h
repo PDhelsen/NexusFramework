@@ -6,8 +6,6 @@
 
 namespace NxFr
 {
-	template <typename T> class List;
-
 	struct NEXUS_FRAMEWORK_API StringView
 	{
 	public:

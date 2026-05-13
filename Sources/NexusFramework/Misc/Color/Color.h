@@ -5,6 +5,7 @@
 #include "NexusFramework/Misc/Color/Types/Linear.h"
 #include "NexusFramework/Misc/Color/Types/Bits.h"
 #include "NexusFramework/Misc/Color/Types/Hsv.h"
+#include "NexusFramework/Math/Vector.h"
 
 namespace NxFr
 {

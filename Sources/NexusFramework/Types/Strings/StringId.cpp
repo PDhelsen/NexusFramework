@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Types/Strings/StringId.h"
+
 #include "NexusFramework/Threading/Mutex.h"
 
 namespace NxFr

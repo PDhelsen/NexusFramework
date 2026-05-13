@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numeric/Decimal.h"
 
 namespace NxFr
 {

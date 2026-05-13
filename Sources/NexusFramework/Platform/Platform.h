@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Containers/List.h"
@@ -8,11 +9,11 @@
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
-#include "NexusFramework/Misc/Templates.h"
-#include "NexusFramework/Threading/Thread.h"
 
 namespace NxFr
 {
+	struct Thread;
+
 	class NEXUS_FRAMEWORK_API Platform
 	{
 	public:

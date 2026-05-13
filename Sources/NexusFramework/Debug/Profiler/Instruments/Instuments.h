@@ -2,6 +2,7 @@
 
 #include "NexusFramework/External/Intrinsics.h"
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Time/Stopwatch.h"

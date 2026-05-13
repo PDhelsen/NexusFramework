@@ -9,7 +9,7 @@ namespace NxFr
 
 	namespace Hashing
 	{
-		using Default = class Fnv1a64;
+		using Default = Fnv1a64;
 	}
 
 	namespace HashUtility

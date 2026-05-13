@@ -1,8 +1,8 @@
 #pragma once
 
 #include "NexusFramework/Misc/Iterator/Iterator.h"
-#include "NexusFramework/Debug/Logger/Log.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
+#include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
 {

@@ -1,5 +1,6 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Serialization/Yaml.h"
+
 #include "NexusFramework/IO/Stream.h"
 
 namespace NxFr

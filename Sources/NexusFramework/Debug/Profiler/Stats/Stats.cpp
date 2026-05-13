@@ -2,8 +2,6 @@
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"
 #include "NexusFramework/Debug/Profiler/Stats/Misc/String.h"
 
-#include "NexusFramework/External/StandardLibrary.h"
-
 namespace NxFr
 {
 #pragma region Static

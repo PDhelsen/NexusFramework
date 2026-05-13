@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Threading/Mutex.h"
 

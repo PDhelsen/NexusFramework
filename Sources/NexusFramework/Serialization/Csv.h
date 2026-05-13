@@ -2,6 +2,7 @@
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Collection.h"
 
 namespace NxFr

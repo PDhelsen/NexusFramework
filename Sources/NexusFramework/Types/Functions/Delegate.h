@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Misc/Templates.h"
+#include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr

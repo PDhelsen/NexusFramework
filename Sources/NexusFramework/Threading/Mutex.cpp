@@ -1,6 +1,9 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Threading/Mutex.h"
 
+#include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/Threading/Thread.h"
+
 namespace NxFr
 {
 	Mutex::Mutex()

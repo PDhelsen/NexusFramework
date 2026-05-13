@@ -1,8 +1,8 @@
 #pragma once
 
-#include "NexusFramework/Misc/Iterator/Iterator.h"
-
 #include "NexusFramework/Types/Strings/StringView.h"
+
+#include "NexusFramework/Misc/Iterator/Iterator.h"
 
 namespace NxFr
 {

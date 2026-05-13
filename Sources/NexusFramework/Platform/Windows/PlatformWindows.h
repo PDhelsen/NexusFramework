@@ -1,6 +1,5 @@
 #pragma once
 
-#include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Platform/Platform.h"
 
 namespace NxFr

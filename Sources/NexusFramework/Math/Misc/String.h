@@ -1,14 +1,16 @@
 #pragma once
 
-#include "NexusFramework/Debug/Logger/Log.h"
-#include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Types/Strings/StringView.h"
-#include "NexusFramework/Types/Strings/Utility.h"
-
 #include "NexusFramework/Math/Vector.h"
 #include "NexusFramework/Math/Rotation.h"
 #include "NexusFramework/Math/Matrix.h"
 #include "NexusFramework/Math/Shape.h"
+
+#include "NexusFramework/Types/Strings/String.h"
+#include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Types/Strings/Utility.h"
+
+#include "NexusFramework/Debug/Logger/Log.h"
+
 
 namespace NxFr
 {

@@ -1,10 +1,14 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Math/Vector.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
 
 namespace NxFr
 {
+	template<uint8 D, typename T>
+	struct Vector;
+	using Vector3f = Vector<3, float>;
+	using Vector4f = Vector<4, float>;
 	namespace Colors
 	{
 		struct sRGB;

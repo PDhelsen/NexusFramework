@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 

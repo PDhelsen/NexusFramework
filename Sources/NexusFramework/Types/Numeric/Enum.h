@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NexusFramework/Math/Math.h"
+
 #define NEXUS_ENUM_STRING(EnumType, Count, ...)\
 	namespace NxFr\
 	{\

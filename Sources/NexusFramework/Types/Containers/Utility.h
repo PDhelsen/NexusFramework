@@ -1,7 +1,5 @@
 #pragma once
 
-#include "NexusFramework/Types/Containers/Misc/Node.h"
-#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dequeue.h"
@@ -16,6 +14,8 @@
 #include "NexusFramework/Types/Containers/Buffer.h"
 #include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Types/Containers/Tuple.h"
+#include "NexusFramework/Types/Functions/Delegate.h"
+#include "NexusFramework/Misc/Sort/Sort.h"
 
 namespace NxFr
 {

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NexusFramework/External/YamlCpp.h"
-
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 
 namespace NxFr

@@ -1,11 +1,12 @@
 #pragma once
 
-#include "NexusFramework/Types/Strings/Utility.h"
-#include "NexusFramework/Debug/Logger/Log.h"
-
 #include "NexusFramework/Time/Timespan.h"
 #include "NexusFramework/Time/Timestamp.h"
 #include "NexusFramework/Time/Stopwatch.h"
+
+#include "NexusFramework/Types/Strings/Utility.h"
+
+#include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
 {

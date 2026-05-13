@@ -3,13 +3,10 @@
 #include "NexusFramework/Core/NexusFrameworkCore.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Memory.h"
 
 namespace NxFr
 {
 	struct StringView;
-	template <typename T> class List;
-
 	namespace Iterator
 	{
 		struct StringCharacter;

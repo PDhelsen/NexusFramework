@@ -1,11 +1,11 @@
 #pragma once
 
-#include "NexusFramework/Misc/Hash/Hash.h"
-
 #include "NexusFramework/Math/Vector.h"
 #include "NexusFramework/Math/Rotation.h"
 #include "NexusFramework/Math/Matrix.h"
 #include "NexusFramework/Math/Shape.h"
+
+#include "NexusFramework/Misc/Hash/Hash.h"
 
 namespace NxFr
 {

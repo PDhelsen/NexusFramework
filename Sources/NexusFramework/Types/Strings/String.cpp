@@ -1,6 +1,8 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Types/Strings/String.h"
 
+#include "NexusFramework/Memory/Memory.h"
+
 namespace NxFr
 {
 	String::String(Allocator* Allctr)

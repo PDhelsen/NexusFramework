@@ -1,9 +1,9 @@
 #pragma once
 
-#include "NexusFramework/Types/Strings/Utility.h"
-
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Numeric/Decimal.h"
+
+#include "NexusFramework/Types/Strings/Utility.h"
 
 namespace NxFr
 {

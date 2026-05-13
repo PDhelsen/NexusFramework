@@ -1,8 +1,5 @@
 #pragma once
 
-#include "NexusFramework/Serialization/Rbs.h"
-#include "NexusFramework/Serialization/Yaml.h"
-
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dequeue.h"
@@ -18,6 +15,9 @@
 #include "NexusFramework/Types/Containers/Tuple.h"
 #include "NexusFramework/Types/Containers/Collection.h"
 #include "NexusFramework/Types/Containers/Utility.h"
+
+#include "NexusFramework/Serialization/Rbs.h"
+#include "NexusFramework/Serialization/Yaml.h"
 
 namespace NxFr
 {

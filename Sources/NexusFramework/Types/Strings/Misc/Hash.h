@@ -1,10 +1,10 @@
 #pragma once
 
-#include "NexusFramework/Misc/Hash/Hash.h"
-
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Types/Strings/StringId.h"
+
+#include "NexusFramework/Misc/Hash/Hash.h"
 
 namespace NxFr
 {

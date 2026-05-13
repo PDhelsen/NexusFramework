@@ -1,10 +1,10 @@
 #pragma once
 
-#include "NexusFramework/Misc/Hash/Hash.h"
-
 #include "NexusFramework/Time/Timespan.h"
 #include "NexusFramework/Time/Timestamp.h"
 #include "NexusFramework/Time/Stopwatch.h"
+
+#include "NexusFramework/Misc/Hash/Hash.h"
 
 namespace NxFr
 {

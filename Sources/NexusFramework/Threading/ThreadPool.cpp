@@ -1,6 +1,8 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Threading/ThreadPool.h"
 
+#include "NexusFramework/Platform/Platform.h"
+
 namespace NxFr
 {
 	uint64 ThreadPool::MaxThreadCount()

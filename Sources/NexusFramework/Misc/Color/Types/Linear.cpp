@@ -2,6 +2,7 @@
 #include "NexusFramework/Misc/Color/Types/Linear.h"
 
 #include "NexusFramework/Misc/Color/Color.h"
+#include "NexusFramework/Math/Vector.h"
 
 namespace NxFr
 {

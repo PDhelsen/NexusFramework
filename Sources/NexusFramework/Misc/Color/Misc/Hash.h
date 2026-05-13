@@ -1,8 +1,8 @@
 #pragma once
 
-#include "NexusFramework/Misc/Hash/Hash.h"
-
 #include "NexusFramework/Misc/Color/Color.h"
+
+#include "NexusFramework/Misc/Hash/Hash.h"
 
 namespace NxFr
 {

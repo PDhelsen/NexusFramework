@@ -1,8 +1,8 @@
 #pragma once
 
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
-#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {

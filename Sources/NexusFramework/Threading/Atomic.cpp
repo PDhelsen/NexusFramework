@@ -1,6 +1,7 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Threading/Atomic.h"
-#include "Fence.h"
+
+#include "NexusFramework/Platform/Platform.h"
 
 namespace NxFr
 {

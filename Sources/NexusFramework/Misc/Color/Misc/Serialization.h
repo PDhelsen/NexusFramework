@@ -1,9 +1,9 @@
 #pragma once
 
+#include "NexusFramework/Misc/Color/Color.h"
+
 #include "NexusFramework/Serialization/Yaml.h"
 #include "NexusFramework/Serialization/Rbs.h"
-
-#include "NexusFramework/Misc/Color/Color.h"
 
 namespace NxFr
 {

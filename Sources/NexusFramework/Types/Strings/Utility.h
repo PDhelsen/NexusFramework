@@ -9,6 +9,7 @@
 
 namespace NxFr
 {
+	template <typename T> class List;
 	template <typename T> class Collection;
 
 	namespace StringUtility

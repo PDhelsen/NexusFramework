@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Debug/Logger/Log.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"

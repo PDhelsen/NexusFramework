@@ -2,6 +2,7 @@
 #include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"
 
 #include "NexusFramework/Time/Time.h"
+#include "NexusFramework/Threading/Thread.h"
 
 namespace NxFr
 {
