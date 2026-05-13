@@ -31,7 +31,6 @@ namespace NxFr
 
 	struct AxisAngle
 	{
-	public:
 		AxisAngle()
 			: Axis(0), Angle(0)
 		{
@@ -47,7 +46,6 @@ namespace NxFr
 		bool operator==(AxisAngle Other) const { return Axis == Other.Axis && Math::Equals(Angle, Other.Angle); }
 		bool operator!=(AxisAngle Other) const { return !(*this == Other); }
 
-	public:
 		Vector<3, float> Axis;
 		float Angle;
 	};
@@ -58,7 +56,6 @@ namespace NxFr
 
 	struct Euler
 	{
-	public:
 		static const Euler Identity;
 
 		Euler()
@@ -83,7 +80,6 @@ namespace NxFr
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 
-	public:
 		float x, y, z;
 		//float Pitch, Yaw, Roll;
 	};
@@ -96,7 +92,6 @@ namespace NxFr
 
 	struct Quaternion
 	{
-	public:
 		static const Quaternion Identity;
 
 		Quaternion()
@@ -190,7 +185,6 @@ namespace NxFr
 		float SqrMagnitude() const { return RotationUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return RotationUtility::Magnitude(*this); }
 
-	public:
 		float x, y, z, w;
 	};
 

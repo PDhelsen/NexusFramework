@@ -43,9 +43,8 @@ namespace NxFr
 	}
 
 	template<typename K, typename T>
-	class KeyValuePair
+	struct KeyValuePair
 	{
-	public:
 		KeyValuePair()
 			: Key(), Value()
 		{

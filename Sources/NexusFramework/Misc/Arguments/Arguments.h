@@ -52,7 +52,6 @@ namespace NxFr
 		void ParseArg(uint64 Index, StringView Arg);
 		void Resize(uint64 Grow);
 
-	private:
 		Array<String> Args;
 		List<StringView> Positionals;
 		Dictionary<StringView, StringView> Named;

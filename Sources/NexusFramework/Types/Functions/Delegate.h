@@ -12,6 +12,7 @@ namespace NxFr
 	template<typename R, typename... Args>
 	class Delegate<R(Args...)>
 	{
+	public:
 		using A = uint64;
 		using S = R(*)(void*, Args...);
 		using C = void(*)(const void*, void*);
@@ -22,33 +23,6 @@ namespace NxFr
 		template <typename T>
 		using FCM = R(T::*)(Args...) const;
 
-		struct FFData
-		{
-			FF Pointer;
-		};
-		template<typename T>
-		struct FMData
-		{
-			T* Instance;
-			FM<T> Member;
-		};
-		template<typename T>
-		struct FCMData
-		{
-			const T* Instance;
-			FCM<T> Member;
-		};
-		template<typename FC>
-		struct FCData
-		{
-			FC& Pointer;
-		};
-		struct FLData
-		{
-			void* Pointer;
-		};
-
-	public:
 		Delegate()
 			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
@@ -282,6 +256,34 @@ namespace NxFr
 		}
 
 	private:
+		struct FFData
+		{
+			FF Pointer;
+		};
+		template<typename T>
+		struct FMData
+		{
+			T* Instance;
+			FM<T> Member;
+		};
+		template<typename T>
+		struct FCMData
+		{
+			const T* Instance;
+			FCM<T> Member;
+		};
+		template<typename FC>
+		struct FCData
+		{
+			FC& Pointer;
+		};
+		struct FLData
+		{
+			void* Pointer;
+		};
+
+		static constexpr uint64 BufferSize = 32;
+
 		void Reset()
 		{
 			if (IsComplex())
@@ -318,9 +320,6 @@ namespace NxFr
 		{
 			return Copier != nullptr || Destroyer != nullptr;
 		}
-
-	private:
-		static constexpr uint64 BufferSize = 32;
 
 		mutable alignas(Memory::DefaultAlignement) Byte Buffer[BufferSize];
 		S Function;

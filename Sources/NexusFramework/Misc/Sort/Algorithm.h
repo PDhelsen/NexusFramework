@@ -24,7 +24,7 @@ namespace NxFr
 		}
 
 		template<typename T>
-		class MergeSortIndexed
+		struct MergeSortIndexed
 		{
 		public:
 			MergeSortIndexed(const CompareFunction<T>& Comparison = nullptr)
@@ -79,7 +79,7 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		class MergeSortLinked
+		struct MergeSortLinked
 		{
 		public:
 			MergeSortLinked(const Delegate<void(N*, N*)>& SetNext, const Delegate<N* (N*)>& GetNext, const Delegate<const T& (N*)>& GetValue, const CompareFunction<T>& Comparison = nullptr)
@@ -156,7 +156,7 @@ namespace NxFr
 		};
 
 		template<typename T>
-		class QuickSort
+		struct QuickSort
 		{
 		public:
 			QuickSort(const CompareFunction<T>& Comparison = nullptr)
@@ -235,7 +235,7 @@ namespace NxFr
 		};
 
 		template<typename T>
-		class HeapSort
+		struct HeapSort
 		{
 		public:
 			HeapSort(const CompareFunction<T>& Comparison = nullptr)

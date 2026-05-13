@@ -39,7 +39,6 @@ namespace NxFr
 	template<uint8 D, typename T>
 	struct Vector
 	{
-	public:
 		inline static const uint8 Count = D;
 		inline static const uint8 Size = Count * sizeof(T);
 
@@ -69,7 +68,6 @@ namespace NxFr
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
 
-	public:
 		T m[Count];
 	};
 
@@ -97,7 +95,6 @@ namespace NxFr
 	template<typename T>
 	struct Vector<2, T>
 	{
-	public:
 		static const Vector<2, T> Zero;
 		static const Vector<2, T> One;
 		static const Vector<2, T> Infinity;
@@ -130,7 +127,6 @@ namespace NxFr
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
 
-	public:
 		T x, y;
 	};
 
@@ -161,7 +157,6 @@ namespace NxFr
 	template<typename T>
 	struct Vector<3, T>
 	{
-	public:
 		static const Vector<3, T> Zero;
 		static const Vector<3, T> One;
 		static const Vector<3, T> Infinity;
@@ -196,7 +191,6 @@ namespace NxFr
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
 
-	public:
 		T x, y, z;
 	};
 
@@ -228,7 +222,6 @@ namespace NxFr
 	template<typename T>
 	struct Vector<4, T>
 	{
-	public:
 		static const Vector<4, T> Zero;
 		static const Vector<4, T> One;
 		static const Vector<4, T> Infinity;
@@ -265,7 +258,6 @@ namespace NxFr
 		float SqrMagnitude() const { return VectorUtility::SqrMagnitude(*this); }
 		float Magnitude() const { return VectorUtility::Magnitude(*this); }
 
-	public:
 		T x, y, z, w;
 	};
 

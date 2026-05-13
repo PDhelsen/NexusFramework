@@ -14,16 +14,6 @@ namespace NxFr
 {
 	class NEXUS_FRAMEWORK_API Logger : public Log
 	{
-	private:
-		struct Info
-		{
-			Info(LoggerVerbosity Verbosity, StringId Channel);
-
-			String Message;
-			StringId Channel;
-			LoggerVerbosity Verbosity;
-		};
-
 	public:
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s%s";
 
@@ -52,11 +42,19 @@ namespace NxFr
 		void SetAutoFlush(bool Auto);
 
 	protected:
-		String& GetBuffer() override;
 		void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
-		void FlushLogs() override;
+		void FlushLogs();
 
 	private:
+		struct Info
+		{
+			Info(LoggerVerbosity Verbosity, StringId Channel);
+
+			String Message;
+			StringId Channel;
+			LoggerVerbosity Verbosity;
+		};
+
 		List<Info> Infos;
 		Dictionary<StringId, bool, Hashing::Default> Channels;
 		LoggerVerbosity VerbosityMask;

@@ -11,7 +11,7 @@ namespace NxFr
 	namespace HashUtility
 	{
 		template<typename H>
-		class Hasher<const char*, H>
+		struct Hasher<const char*, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const char* Data)
@@ -21,7 +21,7 @@ namespace NxFr
 		};
 
 		template<size_t N, typename H>
-		class Hasher<char[N], H>
+		struct Hasher<char[N], H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const char(&Data)[N])
@@ -31,7 +31,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<String, H>
+		struct Hasher<String, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const String& Data)
@@ -41,7 +41,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<StringView, H>
+		struct Hasher<StringView, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const StringView& Data)
@@ -51,7 +51,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<StringId, H>
+		struct Hasher<StringId, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const StringId& Data)

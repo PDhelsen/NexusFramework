@@ -31,7 +31,6 @@ namespace NxFr
 	private:
 		void Worker();
 
-	private:
 		Array<Thread*> Threads;
 		Queue<NxFr::Delegate<void()>> Tasks;
 		Atomic Work;

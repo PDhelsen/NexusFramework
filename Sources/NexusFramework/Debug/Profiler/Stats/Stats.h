@@ -74,7 +74,6 @@ namespace NxFr
 			uint64 StatTick;
 		};
 
-	public:
 		inline static const String Separator = ";";
 
 		NEXUS_NOCOPY_NOMOVE(Stats)

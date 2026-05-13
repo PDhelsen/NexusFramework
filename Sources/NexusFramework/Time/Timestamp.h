@@ -11,7 +11,6 @@ namespace NxFr
 {
     struct NEXUS_FRAMEWORK_API Timestamp
     {
-	public:
 		Timestamp();
 		Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd = -1, int32 Yd = -1, bool St = false);
 

@@ -35,9 +35,9 @@ namespace NxFr
 		}
 	}
 
-	Logger::Info::Info(LoggerVerbosity Verbosity, StringId Channel)
-		: Message(64), Channel(Channel), Verbosity(Verbosity)
+	String& Log::GetBuffer()
 	{
+		return GetLocalBuffer();
 	}
 
 	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path, bool AutoFlush)
@@ -170,11 +170,6 @@ namespace NxFr
 		AutoFlush = State;
 	}
 
-	String& Logger::GetBuffer()
-	{
-		return GetLocalBuffer();
-	}
-
 	void Logger::PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
 		if (!CheckVerbosity(Verbosity) || !CheckChannel(Channel) || Message.IsEmpty())
@@ -228,5 +223,10 @@ namespace NxFr
 		}
 
 		Infos.Clear();
+	}
+
+	Logger::Info::Info(LoggerVerbosity Verbosity, StringId Channel)
+		: Message(64), Channel(Channel), Verbosity(Verbosity)
+	{
 	}
 }

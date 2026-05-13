@@ -14,16 +14,6 @@ namespace NxFr
 	template<typename T, uint64 L = 0>
 	class Array
 	{
-	private:
-		union Buffer
-		{
-			T* Heap;
-			T Stack[L > 0 ? L : 1];
-
-			Buffer() : Heap(nullptr) {};
-			~Buffer() {};
-		};
-
 	public:
 		using I = Iterator::IteratorBlock<T>;
 
@@ -345,6 +335,15 @@ namespace NxFr
 		uint64 GetCount() const { return Count; }
 
 	private:
+		union Buffer
+		{
+			T* Heap;
+			T Stack[L > 0 ? L : 1];
+
+			Buffer() : Heap(nullptr) {};
+			~Buffer() {};
+		};
+
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);

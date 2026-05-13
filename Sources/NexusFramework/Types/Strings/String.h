@@ -21,16 +21,6 @@ namespace NxFr
 	public:
 		using Similar = StringView;
 
-	private:
-		inline static const uint8 SmallStringCapacity = 16;
-
-		union Buffer
-		{
-			char* Large;
-			char Small[SmallStringCapacity];
-		};
-
-	public:
 		String(Allocator* Allctr = Allocator::Scope::Get());
 		String(uint64 Bytes, Allocator* Allctr = Allocator::Scope::Get());
 		String(const char* Text, Allocator* Allctr = Allocator::Scope::Get());
@@ -72,6 +62,14 @@ namespace NxFr
 		uint64 GetCapacity() const { return Capacity; }
 
 	private:
+		inline static const uint8 SmallStringCapacity = 16;
+
+		union Buffer
+		{
+			char* Large;
+			char Small[SmallStringCapacity];
+		};
+
 		void Allocate(uint64 Bytes, uint64 Size, const char* Text);
 		void Reallocate(uint64 Bytes);
 		void Free();

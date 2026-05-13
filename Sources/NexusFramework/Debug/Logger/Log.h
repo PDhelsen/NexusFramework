@@ -63,9 +63,9 @@ namespace NxFr
 		}
 
 	protected:
-		virtual String& GetBuffer() = 0;
+		static String& GetBuffer();
+
 		virtual void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) = 0;
-		virtual void FlushLogs() = 0;
 	};
 }
 

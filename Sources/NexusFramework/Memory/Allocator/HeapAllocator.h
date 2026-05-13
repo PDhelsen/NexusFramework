@@ -8,13 +8,6 @@ namespace NxFr
 
     class NEXUS_FRAMEWORK_API HeapAllocator : public MemoryAllocator
     {
-	private:
-		struct HeapSlot
-		{
-			HeapSlot* Next;
-			bool Free;
-		};
-
     public:
 		NEXUS_NOCOPY_NOMOVE(HeapAllocator)
 		HeapAllocator(uint64 Size);
@@ -36,6 +29,12 @@ namespace NxFr
 		void Free(void* Pointer) override;
 
     private:
+		struct HeapSlot
+		{
+			HeapSlot* Next;
+			bool Free;
+		};
+
         void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
         void RemoveNextHeapSlot(HeapSlot* Slot);
 		HeapSlot* GetHeapSlot(void* Pointer) const;
@@ -47,7 +46,6 @@ namespace NxFr
 
 		void Defragment(HandleManager* Manager, float Time, uint64 Count);
 
-	private:
 		HeapSlot* Root;
 		mutable HeapSlot* Cache;
     };

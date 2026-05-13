@@ -22,7 +22,6 @@ namespace NxFr
 		void WriteHeader();
 		void WriteFooter();
 
-	private:
 		TextStream Stream;
 		String Buffer;
 	};

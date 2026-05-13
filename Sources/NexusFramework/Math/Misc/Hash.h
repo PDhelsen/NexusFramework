@@ -12,7 +12,7 @@ namespace NxFr
 	namespace HashUtility
 	{
 		template<uint8 D, typename T, typename H>
-		class Hasher<Vector<D, T>, H>
+		struct Hasher<Vector<D, T>, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Vector<D, T>& Data)
@@ -25,7 +25,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<AxisAngle, H>
+		struct Hasher<AxisAngle, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const AxisAngle& Data)
@@ -36,7 +36,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Euler, H>
+		struct Hasher<Euler, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Euler& Data)
@@ -48,7 +48,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Quaternion, H>
+		struct Hasher<Quaternion, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Quaternion& Data)
@@ -61,7 +61,7 @@ namespace NxFr
 		};
 
 		template<uint8 R, uint8 C, typename T, typename H>
-		class Hasher<Matrix<R, C, T>, H>
+		struct Hasher<Matrix<R, C, T>, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Matrix<R, C, T>& Data)
@@ -74,7 +74,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Ray, H>
+		struct Hasher<Ray, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Ray& Data)
@@ -85,7 +85,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Plane, H>
+		struct Hasher<Plane, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Plane& Data)
@@ -96,7 +96,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Triangle, H>
+		struct Hasher<Triangle, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Triangle& Data)
@@ -108,7 +108,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Rectangle, H>
+		struct Hasher<Rectangle, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Rectangle& Data)
@@ -119,7 +119,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Circle, H>
+		struct Hasher<Circle, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Circle& Data)
@@ -130,7 +130,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Box, H>
+		struct Hasher<Box, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Box& Data)
@@ -141,7 +141,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Cube, H>
+		struct Hasher<Cube, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Cube& Data)
@@ -153,7 +153,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Sphere, H>
+		struct Hasher<Sphere, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Sphere& Data)

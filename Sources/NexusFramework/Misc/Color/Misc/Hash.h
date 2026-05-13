@@ -9,7 +9,7 @@ namespace NxFr
 	namespace HashUtility
 	{
 		template<typename H>
-		class Hasher<Color, H>
+		struct Hasher<Color, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Color& Data)

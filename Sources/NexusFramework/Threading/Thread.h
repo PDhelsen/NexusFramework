@@ -11,15 +11,6 @@ namespace NxFr
 	{
 		friend class Platform;
 
-		enum class Status : int64
-		{
-			Uninitialized = 0,
-			Running = 1 << 0,
-			Finished = 1 << 1,
-			Detached = 1 << 2,
-			Joined = 1 << 3
-		};
-
 	public:
 		static uint64 ThreadId();
 		static void Yield();
@@ -43,10 +34,18 @@ namespace NxFr
 		NxFr::GUID GetId() const { return Id.Load(); }
 
 	private:
+		enum class Status : int64
+		{
+			Uninitialized = 0,
+			Running = 1 << 0,
+			Finished = 1 << 1,
+			Detached = 1 << 2,
+			Joined = 1 << 3
+		};
+
 		void RunOnThread();
 		bool SetState(Status Target);
 
-	private:
 		NxFr::Delegate<void()> Function;
 		Atomic State;
 		Atomic Id;

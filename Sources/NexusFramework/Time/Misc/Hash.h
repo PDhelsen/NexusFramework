@@ -11,7 +11,7 @@ namespace NxFr
 	namespace HashUtility
 	{
 		template<typename H>
-		class Hasher<Timespan, H>
+		struct Hasher<Timespan, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Timespan& Data)
@@ -26,7 +26,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Timestamp, H>
+		struct Hasher<Timestamp, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Timestamp& Data)
@@ -44,7 +44,7 @@ namespace NxFr
 		};
 
 		template<typename H>
-		class Hasher<Stopwatch, H>
+		struct Hasher<Stopwatch, H>
 		{
 		public:
 			static void Accumulate(Hash<H>& State, const Stopwatch& Data)

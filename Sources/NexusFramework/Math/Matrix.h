@@ -46,7 +46,6 @@ namespace NxFr
 	template<uint8 R, uint8 C, typename T>
 	struct Matrix
 	{
-	public:
 		inline static const bool Square = R == C;
 		inline static const uint8 Dimension = Square ? R : 0;
 		inline static const uint8 Count = R * C;
@@ -89,7 +88,6 @@ namespace NxFr
 		float Determinant() const { return MatrixUtility::Determinant(*this); }
 		float Trace() const { return MatrixUtility::Trace(*this); }
 
-	public:
 		T m[Count];
 	};
 
@@ -112,7 +110,6 @@ namespace NxFr
 	template<>
 	struct Matrix<4, 4, float>
 	{
-	public:
 		inline static const bool Square = 4 == 4;
 		inline static const uint8 Dimension = Square ? 4 : 0;
 		inline static const uint8 Count = 4 * 4;
@@ -312,7 +309,6 @@ namespace NxFr
 		float Determinant() const { return MatrixUtility::Determinant(*this); }
 		float Trace() const { return MatrixUtility::Trace(*this); }
 
-	public:
 		float m[Count];
 	};
 

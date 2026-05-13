@@ -10,7 +10,6 @@ namespace NxFr
 {
 	struct NEXUS_FRAMEWORK_API Timespan
 	{
-	public:
 		Timespan();
 		Timespan(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S);
 

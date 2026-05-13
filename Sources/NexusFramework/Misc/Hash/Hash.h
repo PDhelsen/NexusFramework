@@ -5,7 +5,7 @@
 namespace NxFr
 {
 	template<typename H>
-	struct Hash;
+	class Hash;
 
 	namespace Hashing
 	{
@@ -26,7 +26,7 @@ namespace NxFr
 	}
 
 	template<typename H = Hashing::Default>
-	struct Hash
+	class Hash
 	{
 	public:
 		using HashLength = typename H::HashLength;

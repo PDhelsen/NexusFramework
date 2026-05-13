@@ -29,7 +29,6 @@ namespace NxFr
 			Instruments* Target;
 		};
 
-	public:
 		NEXUS_NOCOPY_NOMOVE(Instruments)
 		Instruments(bool AutoStart = false, bool AutoFlush = false);
 		virtual ~Instruments();
@@ -48,6 +47,7 @@ namespace NxFr
 		virtual void RecordMarker(const Scope& Data) = 0;
 		virtual void FlushMarkers() = 0;
 
+	private:
 		bool Recording;
 		bool AutoFlush;
 
