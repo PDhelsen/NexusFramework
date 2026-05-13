@@ -35,7 +35,7 @@ namespace NxFr
 		Array<StringId> GetChannels() const;
 
 		bool CheckOutput(LoggerOutput Output) const;
-		void SetOutput(LoggerOutput Output, bool State, StringView Path = "");
+		void SetOutput(LoggerOutput Output, StringView Path = "");
 		void RegisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 		void UnregisterCallback(const Delegate<void(LoggerVerbosity, StringId, StringView)>& Callback);
 

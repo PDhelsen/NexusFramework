@@ -41,17 +41,17 @@ namespace NxFr
 	}
 
 	Logger::Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path, bool AutoFlush)
-		: Infos(), Channels(), VerbosityMask(Verbosity), Outputs(Output),
+		: Infos(), Channels(), VerbosityMask(Verbosity), Outputs(),
 		Target(Globals::PlatformTarget), Stream(""), Callback(),
 		AutoFlush(AutoFlush), Guard()
 	{
-		SetOutput(LoggerOutput::File, !Path.IsEmpty(), Path);
+		SetOutput(Output, Path);
 	}
 
 	Logger::~Logger()
 	{
 		Flush();
-		SetOutput(LoggerOutput::File, false);
+		SetOutput(LoggerOutput::None);
 	}
 
 	void Logger::Flush()
@@ -134,14 +134,14 @@ namespace NxFr
 		return Enum::CheckFlag(Outputs, Output);
 	}
 
-	void Logger::SetOutput(LoggerOutput Output, bool State, StringView Path)
+	void Logger::SetOutput(LoggerOutput Output, StringView Path)
 	{
 		if (CheckOutput(LoggerOutput::File))
 		{
 			Stream.Close();
 		}
 
-		Outputs = Enum::SetFlag(Outputs, Output, State);
+		Outputs = Output;
 
 		if (CheckOutput(LoggerOutput::File))
 		{
