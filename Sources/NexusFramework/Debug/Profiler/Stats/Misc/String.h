@@ -1,8 +1,8 @@
 #pragma once
 
-#include "NexusFramework/Types/Strings/Utility.h"
-
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"
+
+#include "NexusFramework/Types/Strings/Utility.h"
 
 namespace NxFr
 {

@@ -1,6 +1,7 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Threading/ConditionVariable.h"
 
+#include "NexusFramework/Platform/Platform.h"
 #include "NexusFramework/Threading/Thread.h"
 
 namespace NxFr

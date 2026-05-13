@@ -1,16 +1,19 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
+#include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Strings/String.h"
-#include "NexusFramework/Misc/Arguments/Arguments.h"
-#include "NexusFramework/Platform/Platform.h"
-#include "NexusFramework/Debug/Logger/Logger.h"
-#include "NexusFramework/Debug/Profiler/Stats/Stats.h"
-#include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
-#include "NexusFramework/Debug/Profiler/Memory/MemoryTracker.h"
+#include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
 {
+	class Logger;
+	class Stats;
+	class Instruments;
+	class MemoryTracker;
+	class Arguments;
+	class Platform;
+
 	NEXUS_FRAMEWORK_API void Initialize(uint64 ArgC, char* ArgV[]);
 	NEXUS_FRAMEWORK_API void Shutdown();
 
