@@ -3,6 +3,7 @@
 
 #include "NexusFramework/External/StandardLibrary.h"
 #include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/Time/Misc/String.h"
 
 namespace NxFr
 {

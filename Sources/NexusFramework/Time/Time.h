@@ -7,7 +7,6 @@
 #include "NexusFramework/Types/Strings/StringView.h"
 #include "NexusFramework/Time/Timespan.h"
 #include "NexusFramework/Time/Timestamp.h"
-#include "NexusFramework/Time/Misc/String.h"
 
 namespace NxFr
 {
