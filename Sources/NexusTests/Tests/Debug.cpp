@@ -107,7 +107,12 @@ namespace NxTs
 		NxFr::Delegate<void(uint64, NxFr::Instruments*)> Dummy = [](uint64 Count, NxFr::Instruments* Instruments)
 		{
 			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
-			NxFr::Thread::Sleep(Count);
+
+			NxFr::Stopwatch Watch = true;
+			while (Watch.Peek(NxFr::Time::SecondToMilli) < Count)
+			{
+				continue;
+			}
 		};
 
 		NxFr::ChromeTracing Instruments = NxFr::ChromeTracing(Path);

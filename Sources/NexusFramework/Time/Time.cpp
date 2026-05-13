@@ -73,7 +73,7 @@ namespace NxFr
 			return Time;
 		}
 
-		uint64 ProcessorTick()
+		double ProcessorTick()
 		{
 			return Globals::PlatformTarget->GetProcessorTimer();
 		}
