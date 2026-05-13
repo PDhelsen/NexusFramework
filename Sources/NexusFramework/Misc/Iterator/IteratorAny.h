@@ -37,6 +37,11 @@ namespace NxFr
 				It = Other.It->Clone();
 			}
 
+			bool Equals(const IteratorAny& Other) const
+			{
+				return It->Equals(Other.It);
+			}
+
 			void Increment()
 			{
 				It->Increment();
@@ -62,23 +67,18 @@ namespace NxFr
 				return It->Id();
 			}
 
-			bool Equals(const IteratorAny& Other) const
-			{
-				return It->Equals(Other.It);
-			}
-
 		private:
 			struct Interface
 			{
 				virtual ~Interface() = default;
 
+				virtual Interface* Clone() const = 0;
+				virtual bool Equals(const Interface* Other) const = 0;
 				virtual void Increment() = 0;
 				virtual void Decrement() = 0;
 				virtual T& Get() = 0;
 				virtual const T& Get() const = 0;
 				virtual uint64 Id() const = 0;
-				virtual bool Equals(const Interface* Other) const = 0;
-				virtual Interface* Clone() const = 0;
 			};
 
 			template<typename T, typename I>
@@ -88,13 +88,13 @@ namespace NxFr
 				Wrapper(const Wrapper<T, I>& Other) : It(Other.It) {}
 				~Wrapper() = default;
 
+				Interface* Clone() const override { return new Wrapper<T, I>(*this); }
+				bool Equals(const Interface* Other) const override { return It.Equals(dynamic_cast<const Wrapper<T, I>*>(Other)->It); }
 				void Increment() override { It.Increment(); }
 				void Decrement() override { It.Increment(); }
 				T& Get() override { return It.Get(); }
 				const T& Get() const override { return It.Get(); }
 				uint64 Id() const override { return It.Id(); }
-				bool Equals(const Interface* Other) const override { return It.Equals(dynamic_cast<const Wrapper<T, I>*>(Other)->It); }
-				Interface* Clone() const override { return new Wrapper<T, I>(*this); }
 
 				I It;
 			};

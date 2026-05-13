@@ -42,10 +42,10 @@ namespace NxFr
 			Bits ToBits() const;
 			Hsv ToHsv() const;
 
-			bool operator==(Linear Other) const;
-			bool operator!=(Linear Other) const;
 			Type& operator[](uint64 Index);
 			const Type& operator[](uint64 Index) const;
+			bool operator==(Linear Other) const;
+			bool operator!=(Linear Other) const;
 
 			Linear& operator+=(Type Other);
 			Linear& operator-=(Type Other);

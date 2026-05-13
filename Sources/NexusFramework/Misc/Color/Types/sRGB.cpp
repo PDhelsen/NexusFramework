@@ -27,10 +27,10 @@ namespace NxFr
 		Bits sRGB::ToBits() const { return ColorUtility::ToBits(*this); }
 		Hsv sRGB::ToHsv() const { return ColorUtility::ToHsv(*this); }
 
-		bool sRGB::operator==(sRGB Other) const { return ColorUtility::Equals(*this, Other); }
-		bool sRGB::operator!=(sRGB Other) const { return !ColorUtility::Equals(*this, Other); }
 		sRGB::Type& sRGB::operator[](uint64 Index) { return ColorUtility::Access(*this, Index); }
 		const sRGB::Type& sRGB::operator[](uint64 Index) const { return ColorUtility::Access(*this, Index); }
+		bool sRGB::operator==(sRGB Other) const { return ColorUtility::Equals(*this, Other); }
+		bool sRGB::operator!=(sRGB Other) const { return !ColorUtility::Equals(*this, Other); }
 
 		sRGB& sRGB::operator+=(Type Other) { *this = ColorUtility::Add(*this, Other); return *this; }
 		sRGB& sRGB::operator-=(Type Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }

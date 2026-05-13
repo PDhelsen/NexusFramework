@@ -17,14 +17,14 @@ namespace NxFr
 		{
 		}
 
-		void operator()(Args... args) const
-		{
-			return Invoke(args...);
-		}
-
 		explicit operator bool() const
 		{
 			return !IsNull();
+		}
+
+		void operator()(Args... args) const
+		{
+			return Invoke(args...);
 		}
 
 		void operator+=(const F& Func)
@@ -35,20 +35,6 @@ namespace NxFr
 		void operator-=(const F& Func)
 		{
 			Unregister(Func);
-		}
-
-		void Register(const F& Func)
-		{
-			Functions.Append(Func);
-		}
-
-		void Unregister(const F& Func)
-		{
-			auto It = ContainerUtility::Find(Functions, Func);
-			if (It != Functions.End())
-			{
-				Functions.Remove(It.Id());
-			}
 		}
 
 		template<typename... Args>
@@ -63,6 +49,20 @@ namespace NxFr
 		void Clear()
 		{
 			Functions.Clear();
+		}
+
+		void Register(const F& Func)
+		{
+			Functions.Append(Func);
+		}
+
+		void Unregister(const F& Func)
+		{
+			auto It = ContainerUtility::Find(Functions, Func);
+			if (It != Functions.End())
+			{
+				Functions.Remove(It.Id());
+			}
 		}
 
 		bool IsNull() const { return Functions.IsEmpty(); }

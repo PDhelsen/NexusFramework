@@ -42,10 +42,10 @@ namespace NxFr
 			Bits ToBits() const;
 			Hsv ToHsv() const;
 
-			bool operator==(sRGB Other) const;
-			bool operator!=(sRGB Other) const;
 			Type& operator[](uint64 Index);
 			const Type& operator[](uint64 Index) const;
+			bool operator==(sRGB Other) const;
+			bool operator!=(sRGB Other) const;
 
 			sRGB& operator+=(Type Other);
 			sRGB& operator-=(Type Other);

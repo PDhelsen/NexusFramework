@@ -27,10 +27,10 @@ namespace NxFr
 		Bits Linear::ToBits() const { return ColorUtility::ToBits(*this); }
 		Hsv Linear::ToHsv() const { return ColorUtility::ToHsv(*this); }
 
-		bool Linear::operator==(Linear Other) const { return ColorUtility::Equals(*this, Other); }
-		bool Linear::operator!=(Linear Other) const { return !ColorUtility::Equals(*this, Other); }
 		Linear::Type& Linear::operator[](uint64 Index) { return ColorUtility::Access(*this, Index); }
 		const Linear::Type& Linear::operator[](uint64 Index) const { return ColorUtility::Access(*this, Index); }
+		bool Linear::operator==(Linear Other) const { return ColorUtility::Equals(*this, Other); }
+		bool Linear::operator!=(Linear Other) const { return !ColorUtility::Equals(*this, Other); }
 
 		Linear& Linear::operator+=(Type Other) { *this = ColorUtility::Add(*this, Other); return *this; }
 		Linear& Linear::operator-=(Type Other) { *this = ColorUtility::Subtract(*this, Other); return *this; }

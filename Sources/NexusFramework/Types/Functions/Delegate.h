@@ -112,6 +112,16 @@ namespace NxFr
 			return *this;
 		}
 
+		explicit operator bool() const
+		{
+			return !IsNull();
+		}
+
+		R operator()(Args... args) const
+		{
+			return Invoke(Forward<Args>(args)...);
+		}
+
 		bool operator==(const Delegate<R(Args...)>& Other) const
 		{
 			return Equals(Other);
@@ -120,16 +130,6 @@ namespace NxFr
 		bool operator!=(const Delegate<R(Args...)>& Other) const
 		{
 			return !(*this == Other);
-		}
-
-		R operator()(Args... args) const
-		{
-			return Invoke(Forward<Args>(args)...);
-		}
-
-		explicit operator bool() const
-		{
-			return !IsNull();
 		}
 
 		void Bind(FF Func)

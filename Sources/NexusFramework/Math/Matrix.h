@@ -58,12 +58,12 @@ namespace NxFr
 		Matrix(const Matrix<R, C, T>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); }
 
 		Matrix<R, C, T>& operator=(const Matrix<R, C, T>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
-		bool operator==(const Matrix<R, C, T>& Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
-		bool operator!=(const Matrix<R, C, T>& Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return m[Index]; }
 		const T& operator[](uint8 Index) const { return m[Index]; }
 		T& operator()(uint8 Row, uint8 Column) { return m[GetIndex(Row, Column)]; }
 		const T& operator()(uint8 Row, uint8 Column) const { return m[GetIndex(Row, Column)]; }
+		bool operator==(const Matrix<R, C, T>& Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
+		bool operator!=(const Matrix<R, C, T>& Other) const { return !(*this == Other); }
 
 		Matrix<R, C, T>& operator+=(T Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
 		Matrix<R, C, T>& operator+=(const Matrix<R, C, T>& Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
@@ -224,12 +224,12 @@ namespace NxFr
 		Matrix(const Matrix<4, 4, float>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); }
 
 		Matrix<4, 4, float>& operator=(const Matrix<4, 4, float>& Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
-		bool operator==(const Matrix<4, 4, float>& Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
-		bool operator!=(const Matrix<4, 4, float>& Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return m[Index]; }
 		const float& operator[](uint8 Index) const { return m[Index]; }
 		float& operator()(uint8 Row, uint8 Column) { return m[GetIndex(Row, Column)]; }
 		const float& operator()(uint8 Row, uint8 Column) const { return m[GetIndex(Row, Column)]; }
+		bool operator==(const Matrix<4, 4, float>& Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
+		bool operator!=(const Matrix<4, 4, float>& Other) const { return !(*this == Other); }
 
 		Matrix<4, 4, float>& operator+=(float Other) { *this = MatrixUtility::Add(*this, Other); return *this; }
 		Matrix<4, 4, float>& operator+=(const Matrix<4, 4, float>& Other) { *this = MatrixUtility::Add(*this, Other); return *this; }

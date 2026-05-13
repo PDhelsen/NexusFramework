@@ -17,6 +17,11 @@ namespace NxFr
 
 			}
 
+			bool Equals(const IteratorPointer& Other) const
+			{
+				return Data == Other.Data && Offset == Other.Offset;
+			}
+
 			void Increment()
 			{
 				++Offset;
@@ -42,11 +47,6 @@ namespace NxFr
 				return Offset;
 			}
 
-			bool Equals(const IteratorPointer& Other) const
-			{
-				return Data == Other.Data && Offset == Other.Offset;
-			}
-
 		private:
 			void* Data;
 			uint64 Offset;
@@ -60,6 +60,11 @@ namespace NxFr
 				: Data(Pointer), Index(Idx)
 			{
 
+			}
+
+			bool Equals(const IteratorBlock<T>& Other) const
+			{
+				return Data == Other.Data && Index == Other.Index;
 			}
 
 			void Increment()
@@ -87,11 +92,6 @@ namespace NxFr
 				return Index;
 			}
 
-			bool Equals(const IteratorBlock<T>& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
-			}
-
 		private:
 			T* Data;
 			uint64 Index;
@@ -107,6 +107,11 @@ namespace NxFr
 				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
 
+			}
+
+			bool Equals(const IteratorBucket<T, BS>& Other) const
+			{
+				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
 
 			void Increment()
@@ -148,11 +153,6 @@ namespace NxFr
 			uint64 Id() const
 			{
 				return BucketIndex * BucketSize + DataIndex - Offset;
-			}
-
-			bool Equals(const IteratorBucket<T, BS>& Other) const
-			{
-				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
 
 		private:
@@ -174,6 +174,11 @@ namespace NxFr
 
 			}
 
+			bool Equals(const IteratorStack<T, BS>& Other) const
+			{
+				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
+			}
+
 			void Increment()
 			{
 				if (DataIndex == 0)
@@ -215,11 +220,6 @@ namespace NxFr
 				return BucketIndex * BucketSize + DataIndex - Offset;
 			}
 
-			bool Equals(const IteratorStack<T, BS>& Other) const
-			{
-				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
-			}
-
 		private:
 			T** Data;
 			uint64 Offset;
@@ -238,6 +238,11 @@ namespace NxFr
 				{
 					Increment();
 				}
+			}
+
+			bool Equals(const IteratorHashmap<T, N>& Other) const
+			{
+				return Data == Other.Data && Index == Other.Index;
 			}
 
 			void Increment()
@@ -268,11 +273,6 @@ namespace NxFr
 				return Index;
 			}
 
-			bool Equals(const IteratorHashmap<T, N>& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
-			}
-
 		private:
 			N* Data;
 			uint64 Index;
@@ -290,6 +290,11 @@ namespace NxFr
 				{
 					Increment();
 				}
+			}
+
+			bool Equals(const IteratorPreAllocated<T, N>& Other) const
+			{
+				return Data == Other.Data && Index == Other.Index;
 			}
 
 			void Increment()
@@ -320,11 +325,6 @@ namespace NxFr
 				return Index;
 			}
 
-			bool Equals(const IteratorPreAllocated<T, N>& Other) const
-			{
-				return Data == Other.Data && Index == Other.Index;
-			}
-
 		private:
 			N* Data;
 			uint64 Index;
@@ -339,6 +339,11 @@ namespace NxFr
 				: Current(Pointer)
 			{
 
+			}
+
+			bool Equals(const IteratorNodeSimple<T, N>& Other) const
+			{
+				return Current == Other.Current;
 			}
 
 			void Increment()
@@ -370,11 +375,6 @@ namespace NxFr
 				return -1;
 			}
 
-			bool Equals(const IteratorNodeSimple<T, N>& Other) const
-			{
-				return Current == Other.Current;
-			}
-
 		private:
 			N* Current;
 		};
@@ -387,6 +387,11 @@ namespace NxFr
 				: Current(Pointer)
 			{
 
+			}
+
+			bool Equals(const IteratorNodeDouble<T, N>& Other) const
+			{
+				return Current == Other.Current;
 			}
 
 			void Increment()
@@ -421,11 +426,6 @@ namespace NxFr
 				return -1;
 			}
 
-			bool Equals(const IteratorNodeDouble<T, N>& Other) const
-			{
-				return Current == Other.Current;
-			}
-
 		private:
 			N* Current;
 		};
@@ -437,6 +437,11 @@ namespace NxFr
 			IteratorNodeTree(N* Pointer)
 				: Current(Pointer)
 			{
+			}
+
+			bool Equals(const IteratorNodeTree<T, N>& Other) const
+			{
+				return Current == Other.Current;
 			}
 
 			void Increment()
@@ -485,11 +490,6 @@ namespace NxFr
 				return -1;
 			}
 
-			bool Equals(const IteratorNodeTree<T, N>& Other) const
-			{
-				return Current == Other.Current;
-			}
-
 		private:
 			N* Current;
 		};
@@ -502,6 +502,11 @@ namespace NxFr
 				: Current(Pointer)
 			{
 
+			}
+
+			bool Equals(const IteratorNodeGraph<T, N>& Other) const
+			{
+				return Current == Other.Current;
 			}
 
 			void Increment()
@@ -531,11 +536,6 @@ namespace NxFr
 			{
 				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
 				return -1;
-			}
-
-			bool Equals(const IteratorNodeGraph<T, N>& Other) const
-			{
-				return Current == Other.Current;
 			}
 
 		private:

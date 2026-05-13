@@ -10,12 +10,11 @@ namespace NxFr
 	public:
 		inline static constexpr uint64 BlockSize = 1024;
 
+		NEXUS_NOCOPY(Stream)
 		Stream(StringView Path);
-		Stream(const Stream& Other) = delete;
 		Stream(Stream&& Other) noexcept;
 		virtual ~Stream();
 
-		Stream& operator=(const Stream& Other) = delete;
 		Stream& operator=(Stream&& Other) noexcept;
 
 		void Open(File::Mode Mode, bool CreateIfDontExist = true);
@@ -41,12 +40,11 @@ namespace NxFr
 	class NEXUS_FRAMEWORK_API TextStream : public Stream
 	{
 	public:
+		NEXUS_NOCOPY(TextStream)
 		TextStream(StringView Path);
-		TextStream(const TextStream& Other) = delete;
 		TextStream(TextStream&& Other) noexcept;
 		virtual ~TextStream();
 
-		TextStream& operator=(const TextStream& Other) = delete;
 		TextStream& operator=(TextStream&& Other) noexcept;
 
 		void Cache() override;
@@ -68,12 +66,11 @@ namespace NxFr
 	class NEXUS_FRAMEWORK_API BinaryStream : public Stream
 	{
 	public:
+		NEXUS_NOCOPY(BinaryStream)
 		BinaryStream(StringView Path);
-		BinaryStream(const BinaryStream& Other) = delete;
 		BinaryStream(BinaryStream&& Other) noexcept;
 		virtual ~BinaryStream();
 
-		BinaryStream& operator=(const BinaryStream& Other) = delete;
 		BinaryStream& operator=(BinaryStream&& Other) noexcept;
 
 		void Cache() override;

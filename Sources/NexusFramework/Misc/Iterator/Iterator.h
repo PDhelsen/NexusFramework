@@ -10,6 +10,26 @@ namespace NxFr
 		struct Iterator
 		{
 		public:
+			T* operator->()
+			{
+				return &Cast().Get();
+			}
+
+			const T* operator->() const
+			{
+				return &Cast().Get();
+			}
+
+			bool operator==(const I& Other) const
+			{
+				return Cast().Equals(Other);
+			}
+
+			bool operator!=(const I& Other) const
+			{
+				return !Cast().Equals(Other);
+			}
+
 			I& operator++()
 			{
 				Cast().Increment();
@@ -44,26 +64,6 @@ namespace NxFr
 			const T& operator*() const
 			{
 				return Cast().Get();
-			}
-
-			T* operator->()
-			{
-				return &Cast().Get();
-			}
-
-			const T* operator->() const
-			{
-				return &Cast().Get();
-			}
-
-			bool operator==(const I& Other) const
-			{
-				return Cast().Equals(Other);
-			}
-
-			bool operator!=(const I& Other) const
-			{
-				return !Cast().Equals(Other);
 			}
 
 			I& Next(uint64 Iteration = 1)

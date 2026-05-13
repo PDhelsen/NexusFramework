@@ -50,10 +50,10 @@ namespace NxFr
 		template<uint8 S, typename P> Vector(Vector<S, P> Other) {}
 
 		Vector<D, T>& operator=(Vector<D, T> Other) { Memory::MemCopy(&Other.m[0], &m[0], Size); return *this; }
-		bool operator==(Vector<D, T> Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
-		bool operator!=(Vector<D, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return m[Index]; }
 		const T& operator[](uint8 Index) const { return m[Index]; }
+		bool operator==(Vector<D, T> Other) const { for (uint8 Index = 0; Index < Count; ++Index) if (!Math::Equals(m[Index], Other[Index])) return false; return true; }
+		bool operator!=(Vector<D, T> Other) const { return !(*this == Other); }
 
 		Vector<D, T>& operator+=(T Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] += Other; return *this; }
 		Vector<D, T>& operator-=(T Other) { for (uint8 Index = 0; Index < Count; ++Index) m[Index] -= Other; return *this; }
@@ -109,10 +109,10 @@ namespace NxFr
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y) {}
 
 		Vector<2, T>& operator=(Vector<2, T> Other) { x = Other.x; y = Other.y; return *this; }
-		bool operator==(Vector<2, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y); }
-		bool operator!=(Vector<2, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : x; }
 		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : x; }
+		bool operator==(Vector<2, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y); }
+		bool operator!=(Vector<2, T> Other) const { return !(*this == Other); }
 
 		Vector<2, T>& operator+=(T Other) { x += Other; y += Other; return *this; }
 		Vector<2, T>& operator-=(T Other) { x -= Other; y -= Other; return *this; }
@@ -173,10 +173,10 @@ namespace NxFr
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y), z(Other.z) {}
 
 		Vector<3, T>& operator=(Vector<3, T> Other) { x = Other.x; y = Other.y; z = Other.z; return *this; }
-		bool operator==(Vector<3, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
-		bool operator!=(Vector<3, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+		bool operator==(Vector<3, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
+		bool operator!=(Vector<3, T> Other) const { return !(*this == Other); }
 
 		Vector<3, T>& operator+=(T Other) { x += Other; y += Other; z += Other; return *this; }
 		Vector<3, T>& operator-=(T Other) { x -= Other; y -= Other; z -= Other; return *this; }
@@ -240,10 +240,10 @@ namespace NxFr
 		template<typename P> Vector(Vector<4, P> Other) : x(Other.x), y(Other.y), z(Other.z), w(Other.w) {}
 
 		Vector<4, T>& operator=(Vector<4, T> Other) { x = Other.x; y = Other.y; z = Other.z; w = Other.w; return *this; }
-		bool operator==(Vector<4, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
-		bool operator!=(Vector<4, T> Other) const { return !(*this == Other); }
 		T& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 		const T& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
+		bool operator==(Vector<4, T> Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
+		bool operator!=(Vector<4, T> Other) const { return !(*this == Other); }
 
 		Vector<4, T>& operator+=(T Other) { x += Other; y += Other; z += Other; w += Other; return *this; }
 		Vector<4, T>& operator-=(T Other) { x -= Other; y -= Other; z -= Other; w -= Other; return *this; }

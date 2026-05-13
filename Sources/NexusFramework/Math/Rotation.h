@@ -75,10 +75,10 @@ namespace NxFr
 
 		operator Vector<3, float>() const { return Vector<3, float>(x, y, z); }
 
-		bool operator==(Euler Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
-		bool operator!=(Euler Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : x; }
+		bool operator==(Euler Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z); }
+		bool operator!=(Euler Other) const { return !(*this == Other); }
 
 		float x, y, z;
 		//float Pitch, Yaw, Roll;
@@ -173,10 +173,10 @@ namespace NxFr
 
 		operator Vector<4, float>() const { return Vector<4, float>(x, y, z, w); }
 
-		bool operator==(Quaternion Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
-		bool operator!=(Quaternion Other) const { return !(*this == Other); }
 		float& operator[](uint8 Index) { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
 		const float& operator[](uint8 Index) const { return Index == 0 ? x : Index == 1 ? y : Index == 2 ? z : Index == 3 ? w : x; }
+		bool operator==(Quaternion Other) const { return Math::Equals(x, Other.x) && Math::Equals(y, Other.y) && Math::Equals(z, Other.z) && Math::Equals(w, Other.w); }
+		bool operator!=(Quaternion Other) const { return !(*this == Other); }
 
 		Quaternion& operator*=(Quaternion Other) { *this = RotationUtility::Concatenate(*this, Other); return *this; }
 
