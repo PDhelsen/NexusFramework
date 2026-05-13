@@ -44,6 +44,40 @@ namespace NxFr
 		Platform();
 		virtual ~Platform();
 
+		virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
+		virtual uint64 GetProcessId() const = 0;
+		virtual uint64 GetProcessorCount() const = 0;
+		virtual MemoryInfo GetMemoryInfo() const = 0;
+
+		virtual void WaitForUserToCloseTerminal() const = 0;
+		virtual String ReadFromTerminal() const = 0;
+		virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
+		virtual void WriteToDebugger(StringView Message) const = 0;
+
+		virtual PathType GetPathType(StringView Path) const = 0;
+		virtual void OpenExplorer(StringView Path) const = 0;
+		virtual String OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const = 0;
+		virtual String GetWorkingDirectory() const = 0;
+		virtual void SetWorkingDirectory(StringView Path) const = 0;
+		
+		virtual void* FileCreate(StringView Path, bool KeepOpen) const = 0;
+		virtual void FileMove(StringView Path, StringView Target, bool Override = false) const = 0;
+		virtual void FileCopy(StringView Path, StringView Target, bool Override = false) const = 0;
+		virtual void FileDelete(StringView Path) const = 0;
+		virtual void* FileOpen(StringView Path, FileMode Mode) const = 0;
+		virtual void FileClose(void* File) const = 0;
+		virtual uint64 FileSize(void* File) const = 0;
+		virtual void FileWriteByte(void* File, BufferView Data) const = 0;
+		virtual Buffer FileReadByte(void* File) const = 0;
+		virtual void FileWriteText(void* File, StringView Text) const = 0;
+		virtual String FileReadText(void* File) const = 0;
+
+		virtual void DirectoryCreate(StringView Path) const = 0;
+		virtual void DirectoryMove(StringView Path, StringView Target, bool Override = false) const = 0;
+		virtual void DirectoryCopy(StringView Path, StringView Target, bool Override = false) const = 0;
+		virtual void DirectoryDelete(StringView Path) const = 0;
+		virtual List<String> DirectoryContent(StringView Path) const = 0;
+
 		template<typename R, typename... Args>
 		Delegate<R(Args...)> GetFunctionFromDll(StringView DllName, StringView FunctionName)
 		{
@@ -78,41 +112,6 @@ namespace NxFr
 		virtual int64 ThreadAtomicLoad(int64* Instance) const = 0;
 		virtual void ThreadAtomicStore(int64* Instance, int64 Value) const = 0;
 		virtual bool ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const = 0;
-
-		virtual double GetProcessorTimer(double Unit = 1.0) const = 0;
-		virtual uint64 GetProcessId() const = 0;
-		virtual uint64 GetProcessorCount() const = 0;
-
-		virtual MemoryInfo GetMemoryInfo() const = 0;
-
-		virtual void WaitForUserToCloseTerminal() const = 0;
-		virtual String ReadFromTerminal() const = 0;
-		virtual void WriteToTerminal(StringView Message, TerminalColor Color = TerminalColor::White) const = 0;
-		virtual void WriteToDebugger(StringView Message) const = 0;
-
-		virtual void OpenExplorer(StringView Path) const = 0;
-		virtual PathType GetPathType(StringView Path) const = 0;
-		virtual String OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const = 0;
-		virtual String GetWorkingDirectory() const = 0;
-		virtual void SetWorkingDirectory(StringView Path) const = 0;
-
-		virtual void DirectoryCreate(StringView Path) const = 0;
-		virtual void DirectoryMove(StringView Path, StringView Target, bool Override = false) const = 0;
-		virtual void DirectoryCopy(StringView Path, StringView Target, bool Override = false) const = 0;
-		virtual void DirectoryDelete(StringView Path) const = 0;
-		virtual List<String> DirectoryContent(StringView Path) const = 0;
-
-		virtual void* FileCreate(StringView Path, bool KeepOpen) const = 0;
-		virtual void FileMove(StringView Path, StringView Target, bool Override = false) const = 0;
-		virtual void FileCopy(StringView Path, StringView Target, bool Override = false) const = 0;
-		virtual void FileDelete(StringView Path) const = 0;
-		virtual void* FileOpen(StringView Path, FileMode Mode) const = 0;
-		virtual void FileClose(void* File) const = 0;
-		virtual uint64 FileSize(void* File) const = 0;
-		virtual void FileWriteByte(void* File, BufferView Data) const = 0;
-		virtual Buffer FileReadByte(void* File) const = 0;
-		virtual void FileWriteText(void* File, StringView Text) const = 0;
-		virtual String FileReadText(void* File) const = 0;
 
 	protected:
 		Dictionary<String, void*> Dlls;
