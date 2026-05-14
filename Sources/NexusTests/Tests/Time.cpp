@@ -60,12 +60,12 @@ namespace NxTs
 	{
 		NxFr::Stopwatch Stopwatch(true);
 
-		NxFr::Thread::Sleep(1000);
+		NxFr::Thread::Sleep(20);
 		double Peek = Stopwatch.Peek(NxFr::Time::SecondToMilli);
-		ASSERT_EQ(Peek >= 1000, true);
+		ASSERT_EQ(Peek >= 20, true);
 
-		NxFr::Thread::Sleep(1000);
+		NxFr::Thread::Sleep(20);
 		double ElapsedTime = Stopwatch.Stop(NxFr::Time::SecondToMilli);
-		ASSERT_EQ(ElapsedTime >= 1000 && ElapsedTime >= Peek, true);
+		ASSERT_EQ(ElapsedTime >= 20 && ElapsedTime >= Peek, true);
 	}
 }

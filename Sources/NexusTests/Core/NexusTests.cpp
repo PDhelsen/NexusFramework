@@ -7,12 +7,12 @@ namespace NxTs
 {
 	void Environment::SetUp()
 	{
-		NxFr::Initialize(0, nullptr);
+		NxFr::Globals::Initialize(0, nullptr);
 	}
 
 	void Environment::TearDown()
 	{
-		NxFr::Shutdown();
+		NxFr::Globals::Shutdown();
 	}
 }
 

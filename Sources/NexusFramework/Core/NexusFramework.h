@@ -100,3 +100,5 @@
 #include "NexusFramework/Time/Misc/Serialization.h"
 #include "NexusFramework/Time/Misc/String.h"
 #include "NexusFramework/Debug/Profiler/Stats/Misc/String.h"
+
+#include "NexusFramework/Core/NexusFrameworkCommon.h"

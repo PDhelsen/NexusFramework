@@ -118,28 +118,28 @@ namespace NxFr
 }
 
 #if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode) if (Instance) { Instance->RecordHeader(Id, ::NxFr::Stats::Type::Type, ::NxFr::Stats::Mode::Mode); }
+	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, StatType, StatMode) if (Instance) { Instance->RecordHeader(Id, ::NxFr::Stats::Type::StatType, ::NxFr::Stats::Mode::StatMode); }
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(Id, Value); }
 	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(Id, Value); }
 	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(Id, Value); }
 	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(Id, Value); }
 	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(Id, Value); }
 
-	#define NEXUS_STAT_HEADER(Id, Type, Mode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Type, Mode)
+	#define NEXUS_STAT_HEADER(Id, StatType, StatMode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, StatType, StatMode)
 	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
 	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
 	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
 	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
 	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
 #elif NEXUS_DISTRIB
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, Type, Mode)
+	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, StatType, StatMode)
 	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value)
 	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value)
 
-	#define NEXUS_STAT_HEADER(Id, Type, Mode)
+	#define NEXUS_STAT_HEADER(Id, StatType, StatMode)
 	#define NEXUS_STAT_LABEL(Id, Value)
 	#define NEXUS_STAT_CHECK(Id, Value)
 	#define NEXUS_STAT_INTEGER(Id, Value)

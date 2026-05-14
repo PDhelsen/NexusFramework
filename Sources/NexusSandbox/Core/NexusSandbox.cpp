@@ -14,10 +14,10 @@ namespace NxSb
 
 int main(int argc, char* argv[])
 {
-	NxFr::Initialize(argc, argv);
+	NxFr::Globals::Initialize(argc, argv);
 
 	NxSb::HelloWorld();
 	NxFr::Globals::PlatformTarget->WaitForUserToCloseTerminal();
 
-	NxFr::Shutdown();
+	NxFr::Globals::Shutdown();
 }

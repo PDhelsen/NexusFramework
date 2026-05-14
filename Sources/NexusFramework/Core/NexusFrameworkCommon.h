@@ -14,9 +14,6 @@ namespace NxFr
 	class Arguments;
 	class Platform;
 
-	NEXUS_FRAMEWORK_API void Initialize(uint64 ArgC, char* ArgV[]);
-	NEXUS_FRAMEWORK_API void Shutdown();
-
 	namespace Globals
 	{
 		namespace Paths
@@ -45,6 +42,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API extern Arguments* Args;
 		NEXUS_FRAMEWORK_API extern Platform* PlatformTarget;
 		NEXUS_FRAMEWORK_API extern uint64 MainThreadId;
+
+		NEXUS_FRAMEWORK_API void Initialize(uint64 ArgC, char* ArgV[]);
+		NEXUS_FRAMEWORK_API void Shutdown();
 
 		NEXUS_FRAMEWORK_API void CreatePlatform();
 		NEXUS_FRAMEWORK_API void CreateArgs(uint64 ArgC, char* ArgV[]);

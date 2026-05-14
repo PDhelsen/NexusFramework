@@ -13,21 +13,6 @@
 
 namespace NxFr
 {
-	void Initialize(uint64 ArgC, char* ArgV[])
-	{
-		Globals::CreatePlatform();
-		Globals::CreateArgs(ArgC, ArgV);
-		Globals::CreatePathsAndFolders();
-		Globals::CreateDebug(Path::Combine(Globals::Paths::Saved, "debug"));
-	}
-
-	void Shutdown()
-	{
-		Globals::DestroyDebug();
-		Globals::DestroyTempFolder();
-		Globals::DestroyArgs();
-	}
-
 	namespace Globals
 	{
 		namespace Paths
@@ -56,6 +41,21 @@ namespace NxFr
 		Arguments* Args = nullptr;
 		Platform* PlatformTarget = nullptr;
 		uint64 MainThreadId = 0;
+
+		void Initialize(uint64 ArgC, char* ArgV[])
+		{
+			CreatePlatform();
+			CreateArgs(ArgC, ArgV);
+			CreatePathsAndFolders();
+			CreateDebug(Path::Combine(Paths::Saved, "debug"));
+		}
+
+		void Shutdown()
+		{
+			DestroyDebug();
+			DestroyTempFolder();
+			DestroyArgs();
+		}
 
 		void CreatePlatform()
 		{
