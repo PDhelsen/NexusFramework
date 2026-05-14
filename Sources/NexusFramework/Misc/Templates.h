@@ -104,7 +104,19 @@ namespace NxFr
 	};
 
 	template<typename T>
+	struct Decay<const T>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
 	struct Decay<T*>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
+	struct Decay<const T*>
 	{
 		using Type = T;
 	};
@@ -116,7 +128,19 @@ namespace NxFr
 	};
 
 	template<typename T>
+	struct Decay<const T&>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
 	struct Decay<T&&>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
+	struct Decay<const T&&>
 	{
 		using Type = T;
 	};
@@ -148,6 +172,18 @@ namespace NxFr
 	template<typename T> 
 	struct DecayReference<T&&> 
 	{ 
+		using Type = T;
+	};
+
+	template<typename T>
+	struct DecayConst
+	{
+		using Type = T;
+	};
+
+	template<typename T>
+	struct DecayConst<const T>
+	{
 		using Type = T;
 	};
 

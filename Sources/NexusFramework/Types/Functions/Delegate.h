@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Misc/Templates.h"
+#include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
@@ -23,60 +24,60 @@ namespace NxFr
 		template <typename T>
 		using FCM = R(T::*)(Args...) const;
 
-		Delegate()
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		Delegate(Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Reset();
 		}
 
-		Delegate(NullPtr)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		Delegate(NullPtr Ptr, Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Reset();
 		}
 
-		Delegate(FF Func)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		Delegate(FF Func, Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Func);
 		}
 
 		template<typename T>
-		Delegate(T* Target, FM<T> Method)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		Delegate(T* Target, FM<T> Method, Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Target, Method);
 		}
 
 		template<typename T>
-		Delegate(const T* Target, FCM<T> Method)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		Delegate(const T* Target, FCM<T> Method, Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Target, Method);
 		}
 
-		template<typename FC, typename = EnableIf<!IsSameType<typename Decay<FC>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FC>::Type, NullPtr>::Value>::Type>
-		Delegate(FC& Func)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
+		Delegate(FC& Func, Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Func);
 		}
 
-		template<typename FL, typename = EnableIf<!IsSameType<typename Decay<FL>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FL>::Type, NullPtr>::Value>::Type>
-		Delegate(FL&& Func)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
+		Delegate(FL&& Func, Allocator* Allctr = Allocator::Scope::Get())
+			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Forward<FL>(Func));
 		}
 
 		Delegate(const Delegate<R(Args...)>& Other)
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Alloc(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Copy(Other);
 		}
 
 		Delegate(Delegate<R(Args...)>&& Other) noexcept
-			: Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Alloc(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Copy(Other);
 			Other.Reset();
@@ -171,7 +172,7 @@ namespace NxFr
 			};
 		}
 
-		template<typename FC, typename = EnableIf<!IsSameType<typename Decay<FC>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FC>::Type, NullPtr>::Value>::Type>
+		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
 		void Bind(FC& Func)
 		{
 			Reset();
@@ -183,16 +184,17 @@ namespace NxFr
 			};
 		}
 
-		template<typename FL, typename = EnableIf<!IsSameType<typename Decay<FL>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename Decay<FL>::Type, NullPtr>::Value>::Type>
+		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
 		void Bind(FL&& Func)
 		{
 #pragma warning(push)
 #pragma warning(disable : 4172)
-			using Lambda = typename Decay<FL>::Type;
+			using Lambda = typename DecayReference<FL>::Type;
 
 			Reset();
 			if constexpr (sizeof(Lambda) > BufferSize)
 			{
+				Allocator::Scope Scope(Alloc);
 				Lambda* Info = new Lambda(Forward<FL>(Func));
 				new (Buffer) FLData{ Info };
 				Function = [](void* Data, Args... args) -> R
@@ -288,6 +290,7 @@ namespace NxFr
 		{
 			if (IsComplex())
 			{
+				Allocator::Scope Scope(Alloc);
 				Destroyer(Buffer);
 			}
 
@@ -302,12 +305,14 @@ namespace NxFr
 		{
 			Reset();
 
+			Alloc = Other.Alloc;
 			Function = Other.Function;
 			Copier = Other.Copier;
 			Destroyer = Other.Destroyer;
 
 			if (Other.IsComplex())
 			{
+				Allocator::Scope Scope(Other.Alloc);
 				Other.Copier(Other.Buffer, Buffer);
 			}
 			else
@@ -321,6 +326,7 @@ namespace NxFr
 			return Copier != nullptr || Destroyer != nullptr;
 		}
 
+		Allocator* Alloc;
 		mutable alignas(Memory::DefaultAlignement) Byte Buffer[BufferSize];
 		S Function;
 		C Copier;

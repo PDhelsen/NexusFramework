@@ -24,6 +24,12 @@ namespace NxFr
 	};
 
 	template<typename T>
+	struct Decay<Handle<const T>>
+	{
+		using Type = T;
+	};
+
+	template<typename T>
 	struct DecayPointer<Handle<T>>
 	{
 		using Type = T;
