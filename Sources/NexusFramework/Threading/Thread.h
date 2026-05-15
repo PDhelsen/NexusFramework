@@ -1,9 +1,9 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Threading/Atomic.h"
 
 namespace NxFr
@@ -18,7 +18,7 @@ namespace NxFr
 		static void Sleep(uint64 Milliseconds);
 
 		NEXUS_NOCOPY(Thread)
-		Thread(const NxFr::Delegate<void()>& Function);
+		Thread(const Delegate<void()>& Function);
 		Thread(Thread&& Other) noexcept;
 		~Thread();
 
@@ -32,7 +32,7 @@ namespace NxFr
 		bool IsDetached() const { return Integer::CheckFlag(State.Load(), (int64)Status::Detached); }
 		bool IsJoining()  const { return Integer::CheckFlag(State.Load(), (int64)Status::Joined); }
 
-		NxFr::GUID GetId() const { return Id.Load(); }
+		GUID GetId() const { return Id.Load(); }
 
 	private:
 		enum class Status : int64
@@ -47,7 +47,7 @@ namespace NxFr
 		void RunOnThread();
 		bool SetState(Status Target);
 
-		NxFr::Delegate<void()> Function;
+		Delegate<void()> Function;
 		Atomic State;
 		Atomic Id;
 		void* Handle;

@@ -20,13 +20,13 @@ namespace NxFr
 			{
 			}
 
-			NxFr::StringView Path;
+			StringView Path;
 			int64 Depth;
 
-			NxFr::StringView Drive;
-			NxFr::StringView Folder;
-			NxFr::StringView Name;
-			NxFr::StringView Extension;
+			StringView Drive;
+			StringView Folder;
+			StringView Name;
+			StringView Extension;
 		};
 
 		inline static const String SeparatorFolder = "/";
@@ -34,8 +34,8 @@ namespace NxFr
 		inline static const String SeparatorPrevious = "..";
 		inline static const String SeparatorDrive = ":/";
 
-		static void ShowInExplorer(NxFr::StringView Path);
-		static String OpenFileDialog(NxFr::StringView Title = "", NxFr::StringView Extension = "", NxFr::StringView Name = "", NxFr::StringView Path = "");
+		static void ShowInExplorer(StringView Path);
+		static String OpenFileDialog(StringView Title = "", StringView Extension = "", StringView Name = "", StringView Path = "");
 		static String GetWorkingDirectory();
 		static bool Exist(StringView Path);
 		static void EnsureParent(StringView Path);

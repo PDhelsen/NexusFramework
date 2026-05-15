@@ -3,7 +3,6 @@
 
 #include "NexusFramework/Memory/Handle/Handle.h"
 #include "NexusFramework/Memory/Handle/HandleManager.h"
-
 #include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Time/Stopwatch.h"
 

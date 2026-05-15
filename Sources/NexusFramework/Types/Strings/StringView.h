@@ -9,7 +9,7 @@ namespace NxFr
 	struct NEXUS_FRAMEWORK_API StringView
 	{
 	public:
-		static NxFr::StringView GetTempExactString(NxFr::StringView Substring);
+		static StringView GetTempExactString(StringView Substring);
 
 		StringView();
 		StringView(const char* Text);

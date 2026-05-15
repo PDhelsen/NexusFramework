@@ -8,7 +8,7 @@ namespace NxFr
 {
 #pragma region Logic
 
-	static Path::Info Parse_Impl(NxFr::StringView Path)
+	static Path::Info Parse_Impl(StringView Path)
 	{
 		Path::Info Infos;
 
@@ -309,12 +309,12 @@ namespace NxFr
 
 #pragma region Global
 
-	void Path::ShowInExplorer(NxFr::StringView Path)
+	void Path::ShowInExplorer(StringView Path)
 	{
 		Globals::PlatformTarget->OpenExplorer(Path);
 	}
 
-	String Path::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path)
+	String Path::OpenFileDialog(StringView Title, StringView Extension, StringView Name, StringView Path)
 	{
 		return Normalize(Globals::PlatformTarget->OpenFileDialog(Title, Extension, Name, Path));
 	}
@@ -331,7 +331,7 @@ namespace NxFr
 
 	void Path::EnsureParent(StringView Path)
 	{
-		NxFr::String Parent = Path::GetDriveAndFolder(Path);
+		String Parent = Path::GetDriveAndFolder(Path);
 		if (Parent.IsEmpty() || Exist(Path))
 		{
 			return;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Containers/List.h"
@@ -9,6 +8,7 @@
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/Types/Strings/StringView.h"
+#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {
@@ -57,7 +57,7 @@ namespace NxFr
 
 		virtual PathType GetPathType(StringView Path) const = 0;
 		virtual void OpenExplorer(StringView Path) const = 0;
-		virtual String OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const = 0;
+		virtual String OpenFileDialog(StringView Title, StringView Extension, StringView Name, StringView Path) const = 0;
 		virtual String GetWorkingDirectory() const = 0;
 		virtual void SetWorkingDirectory(StringView Path) const = 0;
 		

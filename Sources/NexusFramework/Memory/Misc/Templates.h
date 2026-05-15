@@ -1,7 +1,7 @@
 #pragma once
 
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
+#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {

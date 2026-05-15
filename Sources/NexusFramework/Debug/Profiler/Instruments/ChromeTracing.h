@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Debug/Profiler/Instruments/Instuments.h"
+
 #include "NexusFramework/Types/Strings/String.h"
 #include "NexusFramework/IO/Stream.h"
 

@@ -20,7 +20,7 @@ namespace NxFr
 		Globals::PlatformTarget->ThreadSleep(Milliseconds);
 	}
 
-	Thread::Thread(const NxFr::Delegate<void()>& Function)
+	Thread::Thread(const Delegate<void()>& Function)
 		: Function(Function), Handle(nullptr), State(), Id()
 	{
 	}

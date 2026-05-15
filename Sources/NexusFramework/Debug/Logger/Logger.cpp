@@ -18,18 +18,18 @@ namespace NxFr
 	{
 		switch (Verbosity)
 		{
-		case NxFr::LoggerVerbosity::Fatal:
+		case LoggerVerbosity::Fatal:
 			return Platform::TerminalColor::Magenta;
-		case NxFr::LoggerVerbosity::Error:
+		case LoggerVerbosity::Error:
 			return Platform::TerminalColor::Red;
-		case NxFr::LoggerVerbosity::Warning:
+		case LoggerVerbosity::Warning:
 			return Platform::TerminalColor::Yellow;
-		case NxFr::LoggerVerbosity::Info:
+		case LoggerVerbosity::Info:
 			return Platform::TerminalColor::White;
 
-		case NxFr::LoggerVerbosity::None:
-		case NxFr::LoggerVerbosity::All:
-		case NxFr::LoggerVerbosity::COUNT:
+		case LoggerVerbosity::None:
+		case LoggerVerbosity::All:
+		case LoggerVerbosity::COUNT:
 		default:
 			return Platform::TerminalColor::None;
 		}

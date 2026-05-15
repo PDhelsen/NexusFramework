@@ -1,12 +1,12 @@
 #pragma once
 
 #include "NexusFramework/External/StandardLibrary.h"
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
-#include "NexusFramework/Memory/Memory.h"
-#include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
+#include "NexusFramework/Memory/Memory.h"
+#include "NexusFramework/Memory/Allocator/Allocator.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr

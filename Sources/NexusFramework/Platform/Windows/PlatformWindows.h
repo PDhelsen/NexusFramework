@@ -23,7 +23,7 @@ namespace NxFr
 
 		PathType GetPathType(StringView Path) const override;
 		void OpenExplorer(StringView Path) const override;
-		String OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const;
+		String OpenFileDialog(StringView Title, StringView Extension, StringView Name, StringView Path) const;
 		String GetWorkingDirectory() const override;
 		void SetWorkingDirectory(StringView Path) const override;
 

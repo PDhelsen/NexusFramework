@@ -11,10 +11,10 @@ namespace NxFr
 	{
 		switch (Mode)
 		{
-		case NxFr::File::Mode::None: return Platform::FileMode::None;
-		case NxFr::File::Mode::Read: return Platform::FileMode::Read;
-		case NxFr::File::Mode::Write: return Platform::FileMode::Write;
-		case NxFr::File::Mode::Append: return Platform::FileMode::Append;
+		case File::Mode::None: return Platform::FileMode::None;
+		case File::Mode::Read: return Platform::FileMode::Read;
+		case File::Mode::Write: return Platform::FileMode::Write;
+		case File::Mode::Append: return Platform::FileMode::Append;
 		}
 
 		return Platform::FileMode::Read;

@@ -1,11 +1,11 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
+#include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {

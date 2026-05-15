@@ -1,10 +1,10 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/Queue.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Threading/Thread.h"
 #include "NexusFramework/Threading/Atomic.h"
 #include "NexusFramework/Threading/Mutex.h"
@@ -21,9 +21,9 @@ namespace NxFr
 		ThreadPool(uint64 Size = 0);
 		~ThreadPool();
 
-		void Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work);
-		void Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work);
-		void Submit(const NxFr::Delegate<void()>& Work);
+		void Dispatch(uint64 Count, uint64 Group, Delegate<void(uint64)> Work);
+		void Dispatch(uint64 Count, Delegate<void(uint64)> Work);
+		void Submit(const Delegate<void()>& Work);
 		void Wait();
 
 		bool HasWorkPending();
@@ -33,7 +33,7 @@ namespace NxFr
 		void Worker();
 
 		Array<Thread*> Threads;
-		Queue<NxFr::Delegate<void()>> Tasks;
+		Queue<Delegate<void()>> Tasks;
 		Atomic Work;
 		Atomic Running;
 

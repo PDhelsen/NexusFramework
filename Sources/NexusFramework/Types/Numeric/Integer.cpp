@@ -1,8 +1,8 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Misc/Hash/Hash.h"
-#include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Threading/Thread.h"
 
 namespace NxFr

@@ -2,10 +2,10 @@
 
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Types/Numeric/Integer.h"
-#include "NexusFramework/Memory/Memory.h"
-#include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Types/Containers/Misc/Node.h"
+#include "NexusFramework/Memory/Memory.h"
+#include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
@@ -15,8 +15,8 @@ namespace NxFr
 	{
 	public:
 		using N = Node::NodeGraph<T>;
-		using C = NxFr::Node::NodeGraphConnection<T>;
-		using CT = NxFr::Node::NodeGraphConnectionType;
+		using C = Node::NodeGraphConnection<T>;
+		using CT = Node::NodeGraphConnectionType;
 		using I = Iterator::IteratorNodeGraph<T, N>;
 
 		Graph(Allocator* Allctr = Allocator::Scope::Get())

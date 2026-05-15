@@ -39,7 +39,7 @@ namespace NxFr
 		}
 	}
 
-	void ThreadPool::Dispatch(uint64 Count, uint64 Group, NxFr::Delegate<void(uint64)> Work)
+	void ThreadPool::Dispatch(uint64 Count, uint64 Group, Delegate<void(uint64)> Work)
 	{
 		uint64 Batch = (Count + Group - 1) / Group;
 		for (uint64 Index = 0; Index < Batch; ++Index)
@@ -57,7 +57,7 @@ namespace NxFr
 		}
 	}
 
-	void ThreadPool::Dispatch(uint64 Count, NxFr::Delegate<void(uint64)> Work)
+	void ThreadPool::Dispatch(uint64 Count, Delegate<void(uint64)> Work)
 	{
 		for (uint64 Index = 0; Index < Count; ++Index)
 		{
@@ -68,7 +68,7 @@ namespace NxFr
 		}
 	}
 
-	void ThreadPool::Submit(const NxFr::Delegate<void()>& Work)
+	void ThreadPool::Submit(const Delegate<void()>& Work)
 	{
 		Lock GuardLock(Guard);
 
@@ -101,7 +101,7 @@ namespace NxFr
 	{
 		while (true)
 		{
-			NxFr::Delegate<void()> Instance(nullptr);
+			Delegate<void()> Instance(nullptr);
 
 			{
 				Lock GuardLock(Guard);

@@ -1,9 +1,9 @@
 #pragma once
 
 #include "NexusFramework/Types/Numeric/Integer.h"
+#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Types/Containers/Misc/Iterator.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr

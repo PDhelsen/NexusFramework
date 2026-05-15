@@ -32,10 +32,10 @@ namespace NxFr
 	{
 		switch (StatType)
 		{
-		case NxFr::Stats::Type::Label: new (&StatValue.Label) String(32); break;
-		case NxFr::Stats::Type::Check: StatValue.State = false; break;
-		case NxFr::Stats::Type::Integer: StatValue.Integer = 0; break;
-		case NxFr::Stats::Type::Decimal: StatValue.Decimal = 0.0f; break;
+		case Stats::Type::Label: new (&StatValue.Label) String(32); break;
+		case Stats::Type::Check: StatValue.State = false; break;
+		case Stats::Type::Integer: StatValue.Integer = 0; break;
+		case Stats::Type::Decimal: StatValue.Decimal = 0.0f; break;
 		}
 	}
 
@@ -52,10 +52,10 @@ namespace NxFr
 		StatTick = 0;
 		switch (StatType)
 		{
-		case NxFr::Stats::Type::Label: StatValue.Label.Clear(); break;
-		case NxFr::Stats::Type::Check: StatValue.State = false; break;
-		case NxFr::Stats::Type::Integer: StatValue.Integer = StatMode == Mode::Min ? Integer::MaxI64 : StatMode == Mode::Max ? Integer::MinI64 : 0; break;
-		case NxFr::Stats::Type::Decimal: StatValue.Decimal = StatMode == Mode::Min ? Decimal::MaxF : StatMode == Mode::Max ? Decimal::MinF : 0.0f; break;
+		case Stats::Type::Label: StatValue.Label.Clear(); break;
+		case Stats::Type::Check: StatValue.State = false; break;
+		case Stats::Type::Integer: StatValue.Integer = StatMode == Mode::Min ? Integer::MaxI64 : StatMode == Mode::Max ? Integer::MinI64 : 0; break;
+		case Stats::Type::Decimal: StatValue.Decimal = StatMode == Mode::Min ? Decimal::MaxF : StatMode == Mode::Max ? Decimal::MinF : 0.0f; break;
 		}
 	}
 
@@ -63,12 +63,12 @@ namespace NxFr
 	{
 		switch (StatMode)
 		{
-		case NxFr::Stats::Mode::Set: return New;
-		case NxFr::Stats::Mode::Cnt: return ++Current;
-		case NxFr::Stats::Mode::Add: return Current + New;
-		case NxFr::Stats::Mode::Avg: return Current + New;
-		case NxFr::Stats::Mode::Min: return Math::Min(Current, New);
-		case NxFr::Stats::Mode::Max: return Math::Max(Current, New);
+		case Stats::Mode::Set: return New;
+		case Stats::Mode::Cnt: return ++Current;
+		case Stats::Mode::Add: return Current + New;
+		case Stats::Mode::Avg: return Current + New;
+		case Stats::Mode::Min: return Math::Min(Current, New);
+		case Stats::Mode::Max: return Math::Max(Current, New);
 		}
 
 		return New;

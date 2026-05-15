@@ -23,21 +23,21 @@ namespace NxFr
 
 	static Buffer& GetLocalBufferByte() { static Buffer LocalBuffer(512, nullptr); return LocalBuffer; }
 	static String& GetLocalBufferString() { static String LocalBuffer(64, nullptr); return LocalBuffer; }
-	static String ConvertPathToWindows(NxFr::StringView Path) { return StringUtility::Replace(Path, Path::SeparatorFolder, SeparatorFolder); }
-	static String ConvertPathToNexus(NxFr::StringView Path) { return StringUtility::Replace(Path, SeparatorFolder, Path::SeparatorFolder); }
+	static String ConvertPathToWindows(StringView Path) { return StringUtility::Replace(Path, Path::SeparatorFolder, SeparatorFolder); }
+	static String ConvertPathToNexus(StringView Path) { return StringUtility::Replace(Path, SeparatorFolder, Path::SeparatorFolder); }
 
 	static StringView TerminalColorToPrefix(Platform::TerminalColor Color)
 	{
 		switch (Color)
 		{
-		case NxFr::Platform::TerminalColor::Black: return "\033[30m";
-		case NxFr::Platform::TerminalColor::Red: return "\033[31m";
-		case NxFr::Platform::TerminalColor::Green: return "\033[32m";
-		case NxFr::Platform::TerminalColor::Blue: return "\033[34m";
-		case NxFr::Platform::TerminalColor::Yellow: return "\033[33m";
-		case NxFr::Platform::TerminalColor::Cyan: return "\033[36m";
-		case NxFr::Platform::TerminalColor::Magenta: return "\033[35m";
-		case NxFr::Platform::TerminalColor::White: return "\033[37m";
+		case Platform::TerminalColor::Black: return "\033[30m";
+		case Platform::TerminalColor::Red: return "\033[31m";
+		case Platform::TerminalColor::Green: return "\033[32m";
+		case Platform::TerminalColor::Blue: return "\033[34m";
+		case Platform::TerminalColor::Yellow: return "\033[33m";
+		case Platform::TerminalColor::Cyan: return "\033[36m";
+		case Platform::TerminalColor::Magenta: return "\033[35m";
+		case Platform::TerminalColor::White: return "\033[37m";
 		}
 
 		return "\033[m";
@@ -138,7 +138,7 @@ namespace NxFr
 			{
 				char Code = InputRecord.Event.KeyEvent.uChar.AsciiChar;
 				char Converter[2] = { Code, StringUtility::NullChar };
-				NxFr::StringView Character = Converter;
+				StringView Character = Converter;
 
 				if (InputRecord.Event.KeyEvent.wVirtualKeyCode == VK_RETURN)
 				{
@@ -199,7 +199,7 @@ namespace NxFr
 		ShellExecuteA(nullptr, "open", "explorer.exe", Path.C(), nullptr, SW_SHOWNORMAL);
 	}
 
-	String PlatformWindows::OpenFileDialog(NxFr::StringView Title, NxFr::StringView Extension, NxFr::StringView Name, NxFr::StringView Path) const
+	String PlatformWindows::OpenFileDialog(StringView Title, StringView Extension, StringView Name, StringView Path) const
 	{
 		String File = Name + "." + Extension;
 		String Directory = ConvertPathToWindows(Path);
@@ -283,9 +283,9 @@ namespace NxFr
 		DWORD Attributes = 0;
 		switch (Mode)
 		{
-		case NxFr::Platform::FileMode::Read: Attributes = GENERIC_READ; break;
-		case NxFr::Platform::FileMode::Write: Attributes = GENERIC_WRITE; break;
-		case NxFr::Platform::FileMode::Append: Attributes = FILE_APPEND_DATA; break;
+		case Platform::FileMode::Read: Attributes = GENERIC_READ; break;
+		case Platform::FileMode::Write: Attributes = GENERIC_WRITE; break;
+		case Platform::FileMode::Append: Attributes = FILE_APPEND_DATA; break;
 		}
 
 		HANDLE File = CreateFileA(

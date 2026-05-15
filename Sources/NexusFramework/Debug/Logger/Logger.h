@@ -1,13 +1,14 @@
 #pragma once
 
 #include "NexusFramework/Debug/Logger/Log.h"
-#include "NexusFramework/Misc/Templates.h"
+
 #include "NexusFramework/Types/Containers/Array.h"
 #include "NexusFramework/Types/Containers/List.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Functions/Delegate.h"
 #include "NexusFramework/Types/Functions/Event.h"
 #include "NexusFramework/Platform/Platform.h"
+#include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/IO/Stream.h"
 #include "NexusFramework/Threading/Mutex.h"
 

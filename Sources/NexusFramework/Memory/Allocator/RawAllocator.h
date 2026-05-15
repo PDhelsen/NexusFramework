@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NexusFramework/Memory/Allocator/Allocator.h"
+
 #include "NexusFramework/Types/Containers/Set.h"
 
 namespace NxFr

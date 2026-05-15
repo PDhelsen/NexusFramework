@@ -77,6 +77,6 @@
 			inline EnumType SetFlagTrue(EnumType Value, EnumType Flag) { return Value | Flag; }\
 			inline EnumType SetFlagFalse(EnumType Value, EnumType Flag) { return Value & ~Flag; }\
 			inline EnumType SetFlag(EnumType Value, EnumType Flag, bool State) { return State ? SetFlagTrue(Value, Flag) : SetFlagFalse(Value, Flag); }\
-			inline IntegerType FlagIndex(EnumType Value) { return ::NxFr::Math::LogTwoPowerOfTwo((IntegerType)Value); }\
+			inline IntegerType FlagIndex(EnumType Value) { return Math::LogTwoPowerOfTwo((IntegerType)Value); }\
 		}\
 	}

@@ -1,12 +1,6 @@
 #include "NexusTests/Core/NexusTests.h"
 #include "NexusTests/Core/NexusTestsDummy.h"
 
-#include "NexusFramework/Memory/Allocator/RawAllocator.h"
-#include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
-#include "NexusFramework/Memory/Allocator/StackAllocator.h"
-#include "NexusFramework/Memory/Allocator/PoolAllocator.h"
-#include "NexusFramework/Memory/Allocator/HeapAllocator.h"
-
 namespace NxTs
 {
 	TEST(Memory, Allocation)

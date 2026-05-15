@@ -1,7 +1,5 @@
 #include "NexusTests/Core/NexusTestsDummy.h"
 
-#include "NexusFramework/Core/NexusFrameworkCommon.h"
-
 namespace NxTs
 {
 	NxFr::String Dummy::GeneratePath(NxFr::StringView Path)

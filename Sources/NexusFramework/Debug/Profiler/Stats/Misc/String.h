@@ -15,10 +15,10 @@ namespace NxFr
 			{
 				switch (Data.GetType())
 				{
-				case NxFr::Stats::Type::Label: StringUtility::ToString(Data.GetValueLabel(), Result); break;
-				case NxFr::Stats::Type::Check: StringUtility::ToString(Data.GetValueCheck(), Result); break;
-				case NxFr::Stats::Type::Integer: StringUtility::ToString(Data.GetValueInteger(), Result); break;
-				case NxFr::Stats::Type::Decimal: StringUtility::ToString(Data.GetValueDecimal(), Result); break;
+				case Stats::Type::Label: StringUtility::ToString(Data.GetValueLabel(), Result); break;
+				case Stats::Type::Check: StringUtility::ToString(Data.GetValueCheck(), Result); break;
+				case Stats::Type::Integer: StringUtility::ToString(Data.GetValueInteger(), Result); break;
+				case Stats::Type::Decimal: StringUtility::ToString(Data.GetValueDecimal(), Result); break;
 				}
 			}
 		};

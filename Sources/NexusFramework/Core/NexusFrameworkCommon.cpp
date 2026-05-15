@@ -1,11 +1,11 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Core/NexusFrameworkCommon.h"
 
+#include "NexusFramework/Platform/Windows/PlatformWindows.h"
+#include "NexusFramework/Misc/Arguments/Arguments.h"
 #include "NexusFramework/IO/Path.h"
 #include "NexusFramework/IO/Directory.h"
 #include "NexusFramework/Threading/Thread.h"
-#include "NexusFramework/Platform/Windows/PlatformWindows.h"
-#include "NexusFramework/Misc/Arguments/Arguments.h"
 #include "NexusFramework/Debug/Logger/Logger.h"
 #include "NexusFramework/Debug/Profiler/Stats/Stats.h"
 #include "NexusFramework/Debug/Profiler/Instruments/ChromeTracing.h"

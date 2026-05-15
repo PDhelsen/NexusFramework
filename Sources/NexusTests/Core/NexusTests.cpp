@@ -1,8 +1,6 @@
 #include "NexusTests/Core/NexusTests.h"
 #include "NexusFramework/Memory/Misc/Operator.h"
 
-#include "NexusFramework/Core/NexusFrameworkCommon.h"
-
 namespace NxTs
 {
 	void Environment::SetUp()
