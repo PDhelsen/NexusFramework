@@ -47,12 +47,12 @@ namespace NxFr
 	template<typename Derived, typename Base>
 	class InheritFrom
 	{
-	public:
-		static constexpr bool Value = sizeof(Test(static_cast<Derived*>(nullptr))) == sizeof(char);
-
 	private:
-		static uint8   Test(Base*);
-		static uint32  Test(...);
+		static uint8   Check(Base*);
+		static uint32  Check(...);
+
+	public:
+		static constexpr bool Value = sizeof(Check(static_cast<Derived*>(nullptr))) == sizeof(char);
 	};
 
 	template<typename T, typename = void>
