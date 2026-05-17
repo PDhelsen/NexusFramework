@@ -24,7 +24,7 @@ namespace NxFr
 
 		void operator()(Args... args) const
 		{
-			return Invoke(args...);
+			return Invoke(Forward<Args>(args)...);
 		}
 
 		void operator+=(const F& Func)
@@ -38,9 +38,9 @@ namespace NxFr
 		}
 
 		template<typename... Args>
-		void Invoke(Args... args)
+		void Invoke(Args... args) const
 		{
-			for (auto& F : Functions)
+			for (const auto& F : Functions)
 			{
 				F.Invoke(args...);
 			}

@@ -57,7 +57,7 @@ namespace NxTs
 		Event += Function;
 		Event += Object;
 		Event += Lambda;
-		Event.Invoke(1);
+		Event(1);
 		ASSERT_EQ(Event.GetCount(), 3);
 
 		Event -= Function;
