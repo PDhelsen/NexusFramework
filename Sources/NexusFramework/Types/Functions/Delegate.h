@@ -3,7 +3,6 @@
 #include "NexusFramework/Misc/Templates.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Memory.h"
-#include "NexusFramework/Misc/Pattern/Context.h"
 #include "NexusFramework/Debug/Logger/Log.h"
 
 namespace NxFr
@@ -17,8 +16,8 @@ namespace NxFr
 	public:
 		using A = uint64;
 		using S = R(*)(void*, Args...);
-		using C = void(*)(const void*, void*);
-		using D = void(*)(void*);
+		using C = void(*)(Allocator*, const void*, void*);
+		using D = void(*)(Allocator*, void*);
 		using FF = R(*)(Args...);
 		template <typename T>
 		using FM = R(T::*)(Args...);
@@ -195,24 +194,23 @@ namespace NxFr
 			Reset();
 			if constexpr (sizeof(Lambda) > BufferSize)
 			{
-				Context<Allocator>::Reference _ = Allocator::GetContexts().PushReference(Alloc);
-				Lambda* Info = new Lambda(Forward<FL>(Func));
+				Lambda* Info = Memory::Create<Lambda>(Alloc, Forward<FL>(Func));
 				new (Buffer) FLData{ Info };
 				Function = [](void* Data, Args... args) -> R
 				{
 					Lambda* Info = static_cast<Lambda*>(static_cast<FLData*>(Data)->Pointer);
 					return (*Info)(Forward<Args>(args)...);
 				};
-				Copier = [](const void* Data, void* Instance)
+				Copier = [](Allocator* Allctr, const void* Data, void* Instance)
 				{
 					const Lambda* Info = static_cast<const Lambda*>(static_cast<const FLData*>(Data)->Pointer);
-					Lambda* Copy = new Lambda(*Info);
+					Lambda* Copy = Memory::Create<Lambda>(Allctr, *Info);
 					new (Instance) FLData{ Copy };
 				};
-				Destroyer = [](void* Data)
+				Destroyer = [](Allocator* Allctr, void* Data)
 				{
 					Lambda* Info = static_cast<Lambda*>(static_cast<FLData*>(Data)->Pointer);
-					delete Info;
+					Memory::Destroy<Lambda>(Info, Allctr);
 				};
 			}
 			else
@@ -223,12 +221,12 @@ namespace NxFr
 					auto* Info = static_cast<Lambda*>(Data);
 					return (*Info)(Forward<Args>(args)...);
 				};
-				Copier = [](const void* Other, void* Instance)
+				Copier = [](Allocator* Allctr, const void* Other, void* Instance)
 				{
 					const Lambda* Info = static_cast<const Lambda*>(Other);
 					new (Instance) Lambda(*Info);
 				};
-				Destroyer = [](void* Data)
+				Destroyer = [](Allocator* Allctr, void* Data)
 				{
 					Lambda* Info = static_cast<Lambda*>(Data);
 					Info->~Lambda();
@@ -291,8 +289,7 @@ namespace NxFr
 		{
 			if (IsComplex())
 			{
-				Context<Allocator>::Reference _ = Allocator::GetContexts().PushReference(Alloc);
-				Destroyer(Buffer);
+				Destroyer(Alloc, Buffer);
 			}
 
 			Function = nullptr;
@@ -313,8 +310,7 @@ namespace NxFr
 
 			if (Other.IsComplex())
 			{
-				Context<Allocator>::Reference _ = Allocator::GetContexts().PushReference(Alloc);
-				Other.Copier(Other.Buffer, Buffer);
+				Other.Copier(Alloc, Other.Buffer, Buffer);
 			}
 			else
 			{
@@ -327,8 +323,8 @@ namespace NxFr
 			return Copier != nullptr || Destroyer != nullptr;
 		}
 
-		Allocator* Alloc;
 		mutable alignas(Memory::DefaultAlignement) Byte Buffer[BufferSize];
+		Allocator* Alloc;
 		S Function;
 		C Copier;
 		D Destroyer;
