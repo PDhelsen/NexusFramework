@@ -7,6 +7,10 @@
 namespace NxFr
 {
 	class Allocator;
+
+	template<typename T>
+	struct Context;
+
 	namespace Memory
 	{
 		NEXUS_FRAMEWORK_API void* Allocate(uint64, Allocator*, uint64);
@@ -23,15 +27,12 @@ namespace NxFr
 	public:
 		struct NEXUS_FRAMEWORK_API Scope
 		{
-		public:
-			static Allocator* Get();
-			static void Push(Allocator* Alloc);
-			static void Pop();
-			static void Reset();
-
-			Scope(Allocator* Allocator);
+			Scope(Allocator* Instance);
 			~Scope();
 		};
+
+		static Context<Allocator>& GetContexts();
+		static Allocator* TryGet();
 
 		NEXUS_NOCOPY_NOMOVE(Allocator)
 		Allocator(uint64 Size);

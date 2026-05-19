@@ -23,7 +23,7 @@ namespace NxFr
 			ConstructRange(0, Count);
 		}
 
-		Array(uint64 Size, Allocator* Allctr = Allocator::Scope::Get())
+		Array(uint64 Size, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0)
 		{
 			NEXUS_ASSERT((L == 0 && Size == 0) || (L == 0 && Size > 0), Default, "The provided size is invalid");
@@ -32,7 +32,7 @@ namespace NxFr
 			ConstructRange(0, Count);
 		}
 
-		Array(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
+		Array(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0)
 		{
 			NEXUS_ASSERT((L == 0 && Init.size() == 0) || (L == 0 && Init.size() > 0), Default, "The provided size is invalid");

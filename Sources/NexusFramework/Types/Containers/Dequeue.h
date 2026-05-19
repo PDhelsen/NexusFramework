@@ -18,13 +18,13 @@ namespace NxFr
 
 		inline static const uint64 BucketSize = BS;
 
-		Dequeue(Allocator* Allctr = Allocator::Scope::Get())
+		Dequeue(Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 		}
 
-		Dequeue(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
+		Dequeue(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexFront(0), IndexBack(0), Data(nullptr)
 		{
 			ValidateDefaultState();

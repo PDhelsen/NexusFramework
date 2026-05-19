@@ -18,13 +18,13 @@ namespace NxFr
 
 		inline static const uint64 BucketSize = BS;
 
-		Stack(Allocator* Allctr = Allocator::Scope::Get())
+		Stack(Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 		}
 
-		Stack(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
+		Stack(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateDefaultState();

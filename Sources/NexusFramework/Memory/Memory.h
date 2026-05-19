@@ -38,9 +38,9 @@ namespace NxFr
 		NEXUS_FRAMEWORK_API void* OffsetPointer(void* Pointer, uint64 Offset);
 		NEXUS_FRAMEWORK_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
-		NEXUS_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = Allocator::Scope::Get(), uint64 Alignement = DefaultAlignement);
-		NEXUS_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = Allocator::Scope::Get(), uint64 Alignement = DefaultAlignement);
-		NEXUS_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = Allocator::Scope::Get());
+		NEXUS_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
+		NEXUS_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
+		NEXUS_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = Allocator::TryGet());
 
 		template<typename T, typename... Args>
 		T* Construct(void* Pointer, Args&&... args)
@@ -55,14 +55,14 @@ namespace NxFr
 		}
 
 		template<typename T, typename ...Args>
-		T* Create(Allocator* Allocator = Allocator::Scope::Get(), Args&& ...args)
+		T* Create(Allocator* Allocator = Allocator::TryGet(), Args&& ...args)
 		{
 			void* Ptr = Allocate(sizeof(T), Allocator, alignof(T));
 			return Construct<T>(Ptr, args...);
 		}
 
 		template<typename T>
-		void Destroy(T* Pointer, Allocator* Allocator = Allocator::Scope::Get())
+		void Destroy(T* Pointer, Allocator* Allocator = Allocator::TryGet())
 		{
 			Destruct(Pointer);
 			Free(Pointer, Allocator);

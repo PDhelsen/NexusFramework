@@ -7,6 +7,11 @@ namespace NxTs
 		return NxFr::Path::Combine(NxFr::Globals::Paths::Temp, Path);
 	}
 
+	NxFr::StringId Dummy::GetId()
+	{
+		return "Dummy"_Sid;
+	}
+
 	NxFr::StringView Dummy::GetText()
 	{
 		return "This is a dummy text string.";

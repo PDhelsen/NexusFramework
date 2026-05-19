@@ -19,7 +19,7 @@ namespace NxFr
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
 			NEXUS_NOCOPY_NOMOVE(PreAllocated)
-			PreAllocated(uint64 Size, Allocator* Allctr = Allocator::Scope::Get())
+			PreAllocated(uint64 Size, Allocator* Allctr = Allocator::TryGet())
 				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
 				Allocate(Size);
@@ -215,7 +215,7 @@ namespace NxFr
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
 			NEXUS_NOCOPY_NOMOVE(OnDemand)
-			OnDemand(Allocator* Allctr = Allocator::Scope::Get())
+			OnDemand(Allocator* Allctr = Allocator::TryGet())
 				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
 			}
@@ -453,12 +453,12 @@ namespace NxFr
 		using I = typename P::I;
 
 		NEXUS_NOCOPY_NOMOVE(Pool)
-		Pool(Allocator* Allctr = Allocator::Scope::Get())
+		Pool(Allocator* Allctr = Allocator::TryGet())
 			: Data(Allctr)
 		{
 		}
 
-		Pool(uint64 Size, Allocator* Allctr = Allocator::Scope::Get())
+		Pool(uint64 Size, Allocator* Allctr = Allocator::TryGet())
 			: Data(Size, Allctr)
 		{
 		}

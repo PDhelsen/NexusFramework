@@ -84,4 +84,28 @@ namespace NxTs
 			Node = Node->Next;
 		}
 	}
+
+	TEST(Misc, Pattern)
+	{
+		Dummy Test;
+
+		{
+			NxFr::Context<Dummy> Contexts;
+			NxFr::Context<Dummy>::Reference _ = Contexts.PushReference(&Test);
+			ASSERT_EQ(Contexts.GetCount(), 1);
+			ASSERT_EQ(Contexts.TryGet(), &Test);
+		}
+
+		NxFr::Registry<Dummy*> Registry;
+		Registry.Register(Dummy::GetId(), &Test);
+		ASSERT_EQ(Registry.GetCount(), 1);
+		ASSERT_EQ(Registry.TryGet(Dummy::GetId()), &Test);
+
+		NxFr::Factory<Dummy> Factory;
+		Factory.Register<Dummy>(Dummy::GetId());
+		Dummy* Instance = Factory.Create(Dummy::GetId());
+		ASSERT_EQ(Factory.GetCount(), 1);
+		ASSERT_EQ(Instance->Value, Test.Value);
+		delete Instance;
+	}
 }

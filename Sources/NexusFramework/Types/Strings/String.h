@@ -18,11 +18,11 @@ namespace NxFr
 	public:
 		using Similar = StringView;
 
-		String(Allocator* Allctr = Allocator::Scope::Get());
-		String(uint64 Bytes, Allocator* Allctr = Allocator::Scope::Get());
-		String(const char* Text, Allocator* Allctr = Allocator::Scope::Get());
-		String(const char* Text, uint64 Size, Allocator* Allctr = Allocator::Scope::Get());
-		String(StringView Text, Allocator* Allctr = Allocator::Scope::Get());
+		String(Allocator* Allctr = Allocator::TryGet());
+		String(uint64 Bytes, Allocator* Allctr = Allocator::TryGet());
+		String(const char* Text, Allocator* Allctr = Allocator::TryGet());
+		String(const char* Text, uint64 Size, Allocator* Allctr = Allocator::TryGet());
+		String(StringView Text, Allocator* Allctr = Allocator::TryGet());
 		String(const String& Text);
 		String(String&& Other) noexcept;
 		~String();

@@ -46,6 +46,9 @@
 #include "NexusFramework/Misc/Sort/Sort.h"
 #include "NexusFramework/Misc/Color/Color.h"
 #include "NexusFramework/Misc/Arguments/Arguments.h"
+#include "NexusFramework/Misc/Pattern/Context.h"
+#include "NexusFramework/Misc/Pattern/Registry.h"
+#include "NexusFramework/Misc/Pattern/Factory.h"
 
 #include "NexusFramework/Math/Math.h"
 #include "NexusFramework/Math/Vector.h"

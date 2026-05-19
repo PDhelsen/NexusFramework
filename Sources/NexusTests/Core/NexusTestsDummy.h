@@ -27,6 +27,7 @@ namespace NxTs
 	{
 		static NxFr::String GeneratePath(NxFr::StringView Path = "");
 
+		static NxFr::StringId GetId();
 		static NxFr::StringView GetText();
 		static NxFr::Byte* GetData();
 		static Dummy GetReference();

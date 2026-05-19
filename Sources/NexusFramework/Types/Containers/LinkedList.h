@@ -18,12 +18,12 @@ namespace NxFr
 		using N = Node::NodeDouble<T>;
 		using I = Iterator::IteratorNodeDouble<T, N>;
 
-		LinkedList(Allocator* Allctr = Allocator::Scope::Get())
+		LinkedList(Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 		}
 
-		LinkedList(InitializerList<T> Init, Allocator* Allctr = Allocator::Scope::Get())
+		LinkedList(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			for (auto It : Init)
