@@ -6,7 +6,7 @@
 
 namespace NxFr
 {
-    struct NEXUS_FRAMEWORK_API Timestamp
+    struct NX_FRAMEWORK_API Timestamp
     {
 		Timestamp();
 		Timestamp(int32 Y, int32 M, int32 D, int32 H, int32 Mn, int32 S, int32 Wd = -1, int32 Yd = -1, bool St = false);
@@ -33,12 +33,12 @@ namespace NxFr
         bool DayLightSaving;
     };
 
-	NEXUS_FRAMEWORK_API bool operator==(const Timestamp& A, const Timestamp& B);
-	NEXUS_FRAMEWORK_API bool operator!=(const Timestamp& A, const Timestamp& B);
-	NEXUS_FRAMEWORK_API bool operator<(const Timestamp& A, const Timestamp& B);
-	NEXUS_FRAMEWORK_API bool operator>(const Timestamp& A, const Timestamp& B);
-	NEXUS_FRAMEWORK_API bool operator<=(const Timestamp& A, const Timestamp& B);
-	NEXUS_FRAMEWORK_API bool operator>=(const Timestamp& A, const Timestamp& B);
-	NEXUS_FRAMEWORK_API Timestamp operator+(const Timestamp& A, const Timespan& B);
-	NEXUS_FRAMEWORK_API Timestamp operator-(const Timestamp& A, const Timespan& B);
+	NX_FRAMEWORK_API bool operator==(const Timestamp& A, const Timestamp& B);
+	NX_FRAMEWORK_API bool operator!=(const Timestamp& A, const Timestamp& B);
+	NX_FRAMEWORK_API bool operator<(const Timestamp& A, const Timestamp& B);
+	NX_FRAMEWORK_API bool operator>(const Timestamp& A, const Timestamp& B);
+	NX_FRAMEWORK_API bool operator<=(const Timestamp& A, const Timestamp& B);
+	NX_FRAMEWORK_API bool operator>=(const Timestamp& A, const Timestamp& B);
+	NX_FRAMEWORK_API Timestamp operator+(const Timestamp& A, const Timespan& B);
+	NX_FRAMEWORK_API Timestamp operator-(const Timestamp& A, const Timespan& B);
 }

@@ -255,7 +255,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NEXUS_ASSERT(false, Default, "IteratorHashmap doesn't support moving backward");
+				NX_ASSERT(false, Default, "IteratorHashmap doesn't support moving backward");
 			}
 
 			T& Get()
@@ -307,7 +307,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NEXUS_ASSERT(false, Default, "IteratorPreAllocated doesn't support moving backward");
+				NX_ASSERT(false, Default, "IteratorPreAllocated doesn't support moving backward");
 			}
 
 			T& Get()
@@ -356,7 +356,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeSimple doesn't support moving backward");
+				NX_ASSERT(false, Default, "IteratorNodeSimple doesn't support moving backward");
 			}
 
 			T& Get()
@@ -371,7 +371,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeSimple doesn't support query the id");
+				NX_ASSERT(false, Default, "IteratorNodeSimple doesn't support query the id");
 				return -1;
 			}
 
@@ -422,7 +422,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeDouble doesn't support query the id");
+				NX_ASSERT(false, Default, "IteratorNodeDouble doesn't support query the id");
 				return -1;
 			}
 
@@ -471,7 +471,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support moving backward");
+				NX_ASSERT(false, Default, "IteratorNodeTree doesn't support moving backward");
 			}
 
 			T& Get()
@@ -486,7 +486,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
+				NX_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
 				return -1;
 			}
 
@@ -519,7 +519,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeGraph doesn't support moving backward");
+				NX_ASSERT(false, Default, "IteratorNodeGraph doesn't support moving backward");
 			}
 
 			T& Get()
@@ -534,7 +534,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NEXUS_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
+				NX_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
 				return -1;
 			}
 

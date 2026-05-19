@@ -13,7 +13,7 @@ namespace NxFr
 		struct Reference
 		{
 		public:
-			NEXUS_NOCOPY_NOMOVE(Reference)
+			NX_NOCOPY_NOMOVE(Reference)
 			Reference(Context* Instances, T* Instance)
 				: Instances(Instances)
 			{
@@ -31,7 +31,7 @@ namespace NxFr
 		struct Value
 		{
 		public:
-			NEXUS_NOCOPY_NOMOVE(Value)
+			NX_NOCOPY_NOMOVE(Value)
 			template<typename... Args>
 			Value(Context* Instances, Args&&... args)
 				: Instances(Instances), Data(Forward<Args>(args)...)

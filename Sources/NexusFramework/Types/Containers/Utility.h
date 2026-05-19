@@ -143,7 +143,7 @@ namespace NxFr
 		void Swap(Tuple<T1, T2>& Container)
 		{
 			constexpr bool SameType = IsSameType<T1, T2>::Value;
-			NEXUS_ASSERT_STATIC(SameType, "Cannot swap if First and Second are not of the same type");
+			NX_ASSERT_STATIC(SameType, "Cannot swap if First and Second are not of the same type");
 
 			T1 Temp = Container.GetSecond();
 			Container.SetSecond(Move(Container.GetFirst()));

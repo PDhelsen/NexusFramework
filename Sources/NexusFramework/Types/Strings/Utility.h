@@ -104,28 +104,28 @@ namespace NxFr
 			return !Format.IsEmpty() ? Format : Converter<T>::GetFormat(Pretty);
 		}
 
-		NEXUS_FRAMEWORK_API bool Start(StringView Text, StringView Substring);
-		NEXUS_FRAMEWORK_API bool End(StringView Text, StringView Substring);
-		NEXUS_FRAMEWORK_API bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API StringView Common(StringView Text1, StringView Text2);
-		NEXUS_FRAMEWORK_API StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
-		NEXUS_FRAMEWORK_API StringView TrimLeading(StringView Text, char Character = ' ');
-		NEXUS_FRAMEWORK_API StringView TrimTrailing(StringView Text, char Character = ' ');
-		NEXUS_FRAMEWORK_API String Lower(StringView Text);
-		NEXUS_FRAMEWORK_API String Upper(StringView Text);
-		NEXUS_FRAMEWORK_API String Replace(StringView Text, StringView Old, StringView New);
-		NEXUS_FRAMEWORK_API String Join(const Collection<StringView>& Text, StringView Separator = "");
+		NX_FRAMEWORK_API bool Start(StringView Text, StringView Substring);
+		NX_FRAMEWORK_API bool End(StringView Text, StringView Substring);
+		NX_FRAMEWORK_API bool Contains(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NX_FRAMEWORK_API StringView Common(StringView Text1, StringView Text2);
+		NX_FRAMEWORK_API StringView Find(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NX_FRAMEWORK_API List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NX_FRAMEWORK_API StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
+		NX_FRAMEWORK_API List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NX_FRAMEWORK_API StringView TrimLeading(StringView Text, char Character = ' ');
+		NX_FRAMEWORK_API StringView TrimTrailing(StringView Text, char Character = ' ');
+		NX_FRAMEWORK_API String Lower(StringView Text);
+		NX_FRAMEWORK_API String Upper(StringView Text);
+		NX_FRAMEWORK_API String Replace(StringView Text, StringView Old, StringView New);
+		NX_FRAMEWORK_API String Join(const Collection<StringView>& Text, StringView Separator = "");
 	};
 
-	NEXUS_FRAMEWORK_API String operator+(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API String operator-(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API bool operator==(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API bool operator!=(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API bool operator>(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API bool operator>=(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API bool operator<(StringView TextA, StringView TextB);
-	NEXUS_FRAMEWORK_API bool operator<=(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API String operator+(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API String operator-(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API bool operator==(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API bool operator!=(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API bool operator>(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API bool operator>=(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API bool operator<(StringView TextA, StringView TextB);
+	NX_FRAMEWORK_API bool operator<=(StringView TextA, StringView TextB);
 }

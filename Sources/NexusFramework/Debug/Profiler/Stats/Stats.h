@@ -15,11 +15,11 @@ namespace NxFr
 {
 	namespace StatsHeader
 	{
-		NEXUS_FRAMEWORK_API extern const StringId TickId;
-		NEXUS_FRAMEWORK_API extern const StringId CommentId;
+		NX_FRAMEWORK_API extern const StringId TickId;
+		NX_FRAMEWORK_API extern const StringId CommentId;
 	}
 
-	class NEXUS_FRAMEWORK_API Stats
+	class NX_FRAMEWORK_API Stats
 	{
 	public:
 		enum class Type
@@ -32,7 +32,7 @@ namespace NxFr
 			Set, Cnt, Add, Avg, Min, Max
 		};
 
-		union NEXUS_FRAMEWORK_API Value
+		union NX_FRAMEWORK_API Value
 		{
 			Value();
 			~Value();
@@ -43,12 +43,12 @@ namespace NxFr
 			bool State;
 		};
 
-		struct NEXUS_FRAMEWORK_API Stat
+		struct NX_FRAMEWORK_API Stat
 		{
 			friend class Stats;
 
 		public:
-			NEXUS_NOCOPY_NOMOVE(Stat)
+			NX_NOCOPY_NOMOVE(Stat)
 			Stat(Type Type, Mode Mode);
 			~Stat();
 
@@ -77,7 +77,7 @@ namespace NxFr
 
 		inline static const String Separator = ";";
 
-		NEXUS_NOCOPY_NOMOVE(Stats)
+		NX_NOCOPY_NOMOVE(Stats)
 		Stats(StringView Path);
 		~Stats();
 
@@ -117,32 +117,32 @@ namespace NxFr
 	};
 }
 
-#if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, StatType, StatMode) if (Instance) { Instance->RecordHeader(Id, ::NxFr::Stats::Type::StatType, ::NxFr::Stats::Mode::StatMode); }
-	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(Id, Value); }
-	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(Id, Value); }
-	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(Id, Value); }
-	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(Id, Value); }
-	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(Id, Value); }
+#if NX_DEBUG || NX_RELEASE
+	#define NX_STAT_HEADER_INSTANCE(Instance, Id, StatType, StatMode) if (Instance) { Instance->RecordHeader(Id, ::NxFr::Stats::Type::StatType, ::NxFr::Stats::Mode::StatMode); }
+	#define NX_STAT_LABEL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatLabel(Id, Value); }
+	#define NX_STAT_CHECK_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatCheck(Id, Value); }
+	#define NX_STAT_INTEGER_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatInteger(Id, Value); }
+	#define NX_STAT_DECIMAL_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordStatDecimal(Id, Value); }
+	#define NX_STAT_COMMENT_INSTANCE(Instance, Id, Value) if (Instance) { Instance->RecordComment(Id, Value); }
 
-	#define NEXUS_STAT_HEADER(Id, StatType, StatMode) NEXUS_STAT_HEADER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, StatType, StatMode)
-	#define NEXUS_STAT_LABEL(Id, Value) NEXUS_STAT_LABEL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
-	#define NEXUS_STAT_CHECK(Id, Value) NEXUS_STAT_CHECK_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
-	#define NEXUS_STAT_INTEGER(Id, Value) NEXUS_STAT_INTEGER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
-	#define NEXUS_STAT_DECIMAL(Id, Value) NEXUS_STAT_DECIMAL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
-	#define NEXUS_STAT_COMMENT(Id, Value) NEXUS_STAT_COMMENT_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
-#elif NEXUS_DISTRIB
-	#define NEXUS_STAT_HEADER_INSTANCE(Instance, Id, StatType, StatMode)
-	#define NEXUS_STAT_LABEL_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_CHECK_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_INTEGER_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_DECIMAL_INSTANCE(Instance, Id, Value)
-	#define NEXUS_STAT_COMMENT_INSTANCE(Instance, Id, Value)
+	#define NX_STAT_HEADER(Id, StatType, StatMode) NX_STAT_HEADER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, StatType, StatMode)
+	#define NX_STAT_LABEL(Id, Value) NX_STAT_LABEL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NX_STAT_CHECK(Id, Value) NX_STAT_CHECK_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NX_STAT_INTEGER(Id, Value) NX_STAT_INTEGER_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NX_STAT_DECIMAL(Id, Value) NX_STAT_DECIMAL_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+	#define NX_STAT_COMMENT(Id, Value) NX_STAT_COMMENT_INSTANCE(::NxFr::Globals::Debug::Statistiques, Id, Value)
+#elif NX_DISTRIB
+	#define NX_STAT_HEADER_INSTANCE(Instance, Id, StatType, StatMode)
+	#define NX_STAT_LABEL_INSTANCE(Instance, Id, Value)
+	#define NX_STAT_CHECK_INSTANCE(Instance, Id, Value)
+	#define NX_STAT_INTEGER_INSTANCE(Instance, Id, Value)
+	#define NX_STAT_DECIMAL_INSTANCE(Instance, Id, Value)
+	#define NX_STAT_COMMENT_INSTANCE(Instance, Id, Value)
 
-	#define NEXUS_STAT_HEADER(Id, StatType, StatMode)
-	#define NEXUS_STAT_LABEL(Id, Value)
-	#define NEXUS_STAT_CHECK(Id, Value)
-	#define NEXUS_STAT_INTEGER(Id, Value)
-	#define NEXUS_STAT_DECIMAL(Id, Value)
-	#define NEXUS_STAT_COMMENT(Id, Value)
+	#define NX_STAT_HEADER(Id, StatType, StatMode)
+	#define NX_STAT_LABEL(Id, Value)
+	#define NX_STAT_CHECK(Id, Value)
+	#define NX_STAT_INTEGER(Id, Value)
+	#define NX_STAT_DECIMAL(Id, Value)
+	#define NX_STAT_COMMENT(Id, Value)
 #endif

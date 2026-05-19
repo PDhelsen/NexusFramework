@@ -7,7 +7,7 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API StringId
+	struct NX_FRAMEWORK_API StringId
 	{
 	public:
 		static GUID InternString(StringView Text);
@@ -41,7 +41,7 @@ namespace NxFr
 		GUID Id;
 	};
 
-	NEXUS_FRAMEWORK_API StringId operator""_Sid(const char* Text, uint64 Size);
+	NX_FRAMEWORK_API StringId operator""_Sid(const char* Text, uint64 Size);
 }
 
 using NxFr::operator""_Sid;

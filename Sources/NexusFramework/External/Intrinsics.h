@@ -1,26 +1,26 @@
 #pragma once
 
-#if NEXUS_MSVC
+#if NX_MSVC
 	#include <intrin.h>
 	
-	#define NEXUS_FORCE_INLINE __forceinline
-	#define NEXUS_DEBUGBREAK __debugbreak()
+	#define NX_FORCE_INLINE __forceinline
+	#define NX_DEBUGBREAK __debugbreak()
 
-	#define NEXUS_FILE_NAME __FILE__
-	#define NEXUS_LINE_NUMBER __LINE__
-	#define NEXUS_FUNCTION_NAME __FUNCTION__
-	#define NEXUS_FUNCTION_SIGNATURE __FUNCSIG__
+	#define NX_FILE_NAME __FILE__
+	#define NX_LINE_NUMBER __LINE__
+	#define NX_FUNCTION_NAME __FUNCTION__
+	#define NX_FUNCTION_SIGNATURE __FUNCSIG__
 
-	#define NEXUS_BITSCANFORWARD(Mask, Index, Result)	unsigned long Index;\
+	#define NX_BITSCANFORWARD(Mask, Index, Result)	unsigned long Index;\
 														unsigned char Result = _BitScanForward(&Index, (unsigned long)Mask);
-	#define NEXUS_BITSCANBACKWARD(Mask, Index, Result)	unsigned long Index;\
+	#define NX_BITSCANBACKWARD(Mask, Index, Result)	unsigned long Index;\
 														unsigned char Result = _BitScanReverse(&Index, (unsigned long)Mask);
 
-	#define NEXUS_THREAD_INTERLOCKED_INCREMENT _InterlockedIncrement64
-	#define NEXUS_THREAD_INTERLOCKED_DECREMENT _InterlockedDecrement64
-	#define NEXUS_THREAD_INTERLOCKED_ADD _InterlockedExchangeAdd64
-	#define NEXUS_THREAD_INTERLOCKED_EXCHANGE _InterlockedExchange64
-	#define NEXUS_THREAD_INTERLOCKED_COMPAREEXCHANGE _InterlockedCompareExchange64
+	#define NX_THREAD_INTERLOCKED_INCREMENT _InterlockedIncrement64
+	#define NX_THREAD_INTERLOCKED_DECREMENT _InterlockedDecrement64
+	#define NX_THREAD_INTERLOCKED_ADD _InterlockedExchangeAdd64
+	#define NX_THREAD_INTERLOCKED_EXCHANGE _InterlockedExchange64
+	#define NX_THREAD_INTERLOCKED_COMPAREEXCHANGE _InterlockedCompareExchange64
 
 #else
 	#error "Compiler is not suppored"

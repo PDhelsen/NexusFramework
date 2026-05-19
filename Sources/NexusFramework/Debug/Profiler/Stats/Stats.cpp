@@ -130,7 +130,7 @@ namespace NxFr
 	{
 		if (Initialized)
 		{
-			NEXUS_LOG(Warning, Default, "Stats is already initialized");
+			NX_LOG(Warning, Default, "Stats is already initialized");
 			return;
 		}
 
@@ -146,7 +146,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -174,7 +174,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -193,13 +193,13 @@ namespace NxFr
 	{
 		if (Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is already initialized");
+			NX_LOG(Error, Default, "Stats is already initialized");
 			return;
 		}
 
-		NEXUS_ASSERT(!(StatType == Type::Label && StatMode != Mode::Set), Default, "Combination not supported");
-		NEXUS_ASSERT(!(StatType == Type::Check && StatMode != Mode::Set), Default, "Combination not supported");
-		NEXUS_ASSERT(!(StatType == Type::Decimal && StatMode == Mode::Cnt), Default, "Combination not supported");
+		NX_ASSERT(!(StatType == Type::Label && StatMode != Mode::Set), Default, "Combination not supported");
+		NX_ASSERT(!(StatType == Type::Check && StatMode != Mode::Set), Default, "Combination not supported");
+		NX_ASSERT(!(StatType == Type::Decimal && StatMode == Mode::Cnt), Default, "Combination not supported");
 
 		Lock LockGuard(Guard);
 		Headers.Append(Name, Data.GetCount());
@@ -213,7 +213,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -224,9 +224,9 @@ namespace NxFr
 
 		Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
+		NX_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.StatType == Type::Label, Default, "Invalid record call");
+		NX_ASSERT(Statistique.StatType == Type::Label, Default, "Invalid record call");
 		Statistique.RecordLabel(Value);
 	}
 
@@ -234,7 +234,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -245,9 +245,9 @@ namespace NxFr
 
 		Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
+		NX_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.StatType == Type::Check, Default, "Invalid record call");
+		NX_ASSERT(Statistique.StatType == Type::Check, Default, "Invalid record call");
 		Statistique.RecordCheck(Value);
 	}
 
@@ -255,7 +255,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -266,9 +266,9 @@ namespace NxFr
 
 		Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
+		NX_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.StatType == Type::Integer, Default, "Invalid record call");
+		NX_ASSERT(Statistique.StatType == Type::Integer, Default, "Invalid record call");
 		Statistique.RecordInteger(Value);
 	}
 
@@ -276,7 +276,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -287,9 +287,9 @@ namespace NxFr
 
 		Lock LockGuard(Guard);
 
-		NEXUS_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
+		NX_ASSERT(Headers.TryGet(Id) != nullptr, Default, "Failed to find Id (%s)", Id.C());
 		Stat& Statistique = Data[Headers[Id]];
-		NEXUS_ASSERT(Statistique.StatType == Type::Decimal, Default, "Invalid record call");
+		NX_ASSERT(Statistique.StatType == Type::Decimal, Default, "Invalid record call");
 		Statistique.RecordDecimal(Value);
 	}
 
@@ -297,7 +297,7 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
@@ -317,13 +317,13 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
 		if (Recording)
 		{
-			NEXUS_LOG(Warning, Default, "Stats is already recording");
+			NX_LOG(Warning, Default, "Stats is already recording");
 			return;
 		}
 
@@ -334,13 +334,13 @@ namespace NxFr
 	{
 		if (!Initialized)
 		{
-			NEXUS_LOG(Error, Default, "Stats is not initialized");
+			NX_LOG(Error, Default, "Stats is not initialized");
 			return;
 		}
 
 		if (!Recording)
 		{
-			NEXUS_LOG(Warning, Default, "Stats is not recording");
+			NX_LOG(Warning, Default, "Stats is not recording");
 			return;
 		}
 

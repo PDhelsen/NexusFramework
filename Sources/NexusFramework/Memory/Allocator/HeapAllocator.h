@@ -6,10 +6,10 @@ namespace NxFr
 {
 	class HandleManager;
 
-    class NEXUS_FRAMEWORK_API HeapAllocator : public MemoryAllocator
+    class NX_FRAMEWORK_API HeapAllocator : public MemoryAllocator
     {
     public:
-		NEXUS_NOCOPY_NOMOVE(HeapAllocator)
+		NX_NOCOPY_NOMOVE(HeapAllocator)
 		HeapAllocator(uint64 Size);
         virtual ~HeapAllocator();
 

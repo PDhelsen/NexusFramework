@@ -173,8 +173,8 @@ namespace NxFr
 
 		T& Assign(T* Position, const T& Value)
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -184,8 +184,8 @@ namespace NxFr
 
 		T& Assign(T* Position, T&& Value)
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -196,8 +196,8 @@ namespace NxFr
 		template<typename... Args>
 		T& AssignConstruct(T* Position, Args&&... args)
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Instance = GetNode(Position);
 			T& Item = GetItem(Instance);
@@ -247,8 +247,8 @@ namespace NxFr
 
 		void Remove(T* Value)
 		{
-			NEXUS_ASSERT(Value != nullptr, Default, "Value is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Value != nullptr, Default, "Value is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			N* Instance = GetNode(Value);
 			RemoveNode(Instance);
@@ -272,9 +272,9 @@ namespace NxFr
 
 		void Connect(T* From, T* To)
 		{
-			NEXUS_ASSERT(From != nullptr, Default, "From is null");
-			NEXUS_ASSERT(To != nullptr, Default, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(From != nullptr, Default, "From is null");
+			NX_ASSERT(To != nullptr, Default, "To is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			N* Start = GetNode(From);
 			N* Target = GetNode(To);
@@ -285,9 +285,9 @@ namespace NxFr
 
 		void Disconnect(T* From, T* To)
 		{
-			NEXUS_ASSERT(From != nullptr, Default, "From is null");
-			NEXUS_ASSERT(To != nullptr, Default, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(From != nullptr, Default, "From is null");
+			NX_ASSERT(To != nullptr, Default, "To is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			N* Start = GetNode(From);
 			N* Target = GetNode(To);
@@ -298,22 +298,22 @@ namespace NxFr
 
 		T& Get()
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			return GetItem(Data);
 		}
 
 		const T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			return GetItem(Data);
 		}
 
 		T& GetConnection(T* Position, CT Type, uint64 Index = 0) 
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			uint64 Idx = 0;
 			N* Instance = GetNode(Position);
@@ -334,14 +334,14 @@ namespace NxFr
 				Connect = Connect->Next;
 			}
 
-			NEXUS_ASSERT(Connect, Default, "Failed to find connection");
+			NX_ASSERT(Connect, Default, "Failed to find connection");
 			return *Position;
 		}
 
 		const T& GetConnection(const T* Position, CT Type, uint64 Index = 0) const
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			uint64 Idx = 0;
 			const N* Instance = GetNode(Position);
@@ -362,14 +362,14 @@ namespace NxFr
 				Connect = Connect->Next;
 			}
 
-			NEXUS_ASSERT(Connect, Default, "Failed to find connection");
+			NX_ASSERT(Connect, Default, "Failed to find connection");
 			return *Position;
 		}
 
 		T* TryGetConnection(T* Position, CT Type, uint64 Index = 0) 
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			uint64 Idx = 0;
 			N* Instance = GetNode(Position);
@@ -395,8 +395,8 @@ namespace NxFr
 
 		const T* TryGetConnection(const T* Position, CT Type, uint64 Index = 0) const
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			uint64 Idx = 0;
 			const N* Instance = GetNode(Position);
@@ -428,9 +428,9 @@ namespace NxFr
 		
 		bool IsConnected(const T* Position, const T* To, CT Type, uint64& Index) const
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(To != nullptr, Default, "To is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(To != nullptr, Default, "To is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 			
 			Index = 0;
 			const N* Instance = GetNode(Position);
@@ -453,16 +453,16 @@ namespace NxFr
 
 		I GetIterator(T* Position)
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			return GetIt(GetNode(Position));
 		}
 
 		const I GetIterator(T* Position) const
 		{
-			NEXUS_ASSERT(Position != nullptr, Default, "Position is null");
-			NEXUS_ASSERT(!IsEmpty(), Default, "Graph is empty");
+			NX_ASSERT(Position != nullptr, Default, "Position is null");
+			NX_ASSERT(!IsEmpty(), Default, "Graph is empty");
 
 			return GetIt(GetNode(Position));
 		}

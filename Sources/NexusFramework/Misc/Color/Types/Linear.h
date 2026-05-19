@@ -19,7 +19,7 @@ namespace NxFr
 
 	namespace Colors
 	{
-		struct NEXUS_FRAMEWORK_API Linear
+		struct NX_FRAMEWORK_API Linear
 		{
 			using Type = float;
 
@@ -80,13 +80,13 @@ namespace NxFr
 			Type r, g, b, a;
 		};
 
-		NEXUS_FRAMEWORK_API Linear operator+(Linear Instance, Linear::Type Other);
-		NEXUS_FRAMEWORK_API Linear operator-(Linear Instance, Linear::Type Other);
-		NEXUS_FRAMEWORK_API Linear operator*(Linear Instance, Linear::Type Other);
-		NEXUS_FRAMEWORK_API Linear operator/(Linear Instance, Linear::Type Other);
-		NEXUS_FRAMEWORK_API Linear operator+(Linear Instance, Linear Other);
-		NEXUS_FRAMEWORK_API Linear operator-(Linear Instance, Linear Other);
-		NEXUS_FRAMEWORK_API Linear operator*(Linear Instance, Linear Other);
-		NEXUS_FRAMEWORK_API Linear operator/(Linear Instance, Linear Other);
+		NX_FRAMEWORK_API Linear operator+(Linear Instance, Linear::Type Other);
+		NX_FRAMEWORK_API Linear operator-(Linear Instance, Linear::Type Other);
+		NX_FRAMEWORK_API Linear operator*(Linear Instance, Linear::Type Other);
+		NX_FRAMEWORK_API Linear operator/(Linear Instance, Linear::Type Other);
+		NX_FRAMEWORK_API Linear operator+(Linear Instance, Linear Other);
+		NX_FRAMEWORK_API Linear operator-(Linear Instance, Linear Other);
+		NX_FRAMEWORK_API Linear operator*(Linear Instance, Linear Other);
+		NX_FRAMEWORK_API Linear operator/(Linear Instance, Linear Other);
 	}
 }

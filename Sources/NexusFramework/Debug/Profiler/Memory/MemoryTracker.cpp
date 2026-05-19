@@ -22,9 +22,9 @@ namespace NxFr
 		Lock LockGuard(Guard);
 		Recording = false;
 
-		NEXUS_ASSERT(Pointer, Default, "Null pointer");
-		NEXUS_ASSERT(Amount < Integer::MaxUI64 - Size, Default, "Allocation Amount will overflow");
-		NEXUS_ASSERT(Count < Integer::MaxUI64, Default, "Allocation Count will overflow");
+		NX_ASSERT(Pointer, Default, "Null pointer");
+		NX_ASSERT(Amount < Integer::MaxUI64 - Size, Default, "Allocation Amount will overflow");
+		NX_ASSERT(Count < Integer::MaxUI64, Default, "Allocation Count will overflow");
 
 		Alloctions.AppendOrAssign(Pointer, Size);
 		Amount += Size;
@@ -57,13 +57,13 @@ namespace NxFr
 		uint64* Allocation = Alloctions.TryGet(Pointer);
 		if (!Allocation)
 		{
-			NEXUS_LOG(Info, Verbose, "Untracked allocation %p", Pointer);
+			NX_LOG(Info, Verbose, "Untracked allocation %p", Pointer);
 			return;
 		}
 
 		uint64 Size = *Allocation;
-		NEXUS_ASSERT(Amount >= Size, Default, "Allocation Amount will overflow");
-		NEXUS_ASSERT(Count > 0, Default, "Allocation Count will overflow");
+		NX_ASSERT(Amount >= Size, Default, "Allocation Amount will overflow");
+		NX_ASSERT(Count > 0, Default, "Allocation Count will overflow");
 
 		Alloctions.Remove(Pointer);
 		Amount -= Size;
@@ -76,7 +76,7 @@ namespace NxFr
 	{
 		if (Recording)
 		{
-			NEXUS_LOG(Warning, Default, "MemoryTracker is already recording");
+			NX_LOG(Warning, Default, "MemoryTracker is already recording");
 			return;
 		}
 
@@ -87,7 +87,7 @@ namespace NxFr
 	{
 		if (!Recording)
 		{
-			NEXUS_LOG(Warning, Default, "MemoryTracker is not recording");
+			NX_LOG(Warning, Default, "MemoryTracker is not recording");
 			return;
 		}
 

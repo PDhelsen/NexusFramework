@@ -7,10 +7,10 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API ConditionVariable
+	struct NX_FRAMEWORK_API ConditionVariable
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(ConditionVariable)
+		NX_NOCOPY_NOMOVE(ConditionVariable)
 		ConditionVariable();
 		~ConditionVariable();
 

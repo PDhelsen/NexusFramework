@@ -14,7 +14,7 @@ namespace NxFr
 {
 	struct Thread;
 
-	class NEXUS_FRAMEWORK_API Platform
+	class NX_FRAMEWORK_API Platform
 	{
 	public:
 		enum class TerminalColor : uint8
@@ -32,7 +32,7 @@ namespace NxFr
 			None, Read, Write, Append
 		};
 
-		struct NEXUS_FRAMEWORK_API MemoryInfo
+		struct NX_FRAMEWORK_API MemoryInfo
 		{
 		public:
 			uint64 CurrentUsage;
@@ -41,7 +41,7 @@ namespace NxFr
 			uint64 PeakAllocated;
 		};
 
-		NEXUS_NOCOPY_NOMOVE(Platform)
+		NX_NOCOPY_NOMOVE(Platform)
 		Platform();
 		virtual ~Platform();
 

@@ -4,11 +4,11 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 
-#define NEXUS_DELETE(Ptr) \
+#define NX_DELETE(Ptr) \
 delete Ptr;\
 Ptr = nullptr;
 
-#define NEXUS_DELETE_ARRAY(Ptr) \
+#define NX_DELETE_ARRAY(Ptr) \
 delete[] Ptr;\
 Ptr = nullptr;
 
@@ -26,21 +26,21 @@ namespace NxFr
 
 		inline constexpr uint64 DefaultAlignement = 16;
 
-		NEXUS_FRAMEWORK_API void MemSet(void* Memory, uint8 Value, uint64 Size);
-		NEXUS_FRAMEWORK_API void MemCopy(const void* Source, void* Destination, uint64 Size);
-		NEXUS_FRAMEWORK_API void MemMove(const void* Source, void* Destination, uint64 Size);
-		NEXUS_FRAMEWORK_API bool MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination);
-		NEXUS_FRAMEWORK_API bool MemCompare(const void* Source, const void* Destination, uint64 Size);
+		NX_FRAMEWORK_API void MemSet(void* Memory, uint8 Value, uint64 Size);
+		NX_FRAMEWORK_API void MemCopy(const void* Source, void* Destination, uint64 Size);
+		NX_FRAMEWORK_API void MemMove(const void* Source, void* Destination, uint64 Size);
+		NX_FRAMEWORK_API bool MemCompare(const void* Source, const void* Destination, uint64 SizeSource, uint64 SizeDestination);
+		NX_FRAMEWORK_API bool MemCompare(const void* Source, const void* Destination, uint64 Size);
 
-		NEXUS_FRAMEWORK_API uint64 AlignAddress(uint64 Address, uint64 Alignement);
-		NEXUS_FRAMEWORK_API void* AlignPointer(void* Pointer, uint64 Alignement);
-		NEXUS_FRAMEWORK_API void* UnalignPointer(void* Pointer);
-		NEXUS_FRAMEWORK_API void* OffsetPointer(void* Pointer, uint64 Offset);
-		NEXUS_FRAMEWORK_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
+		NX_FRAMEWORK_API uint64 AlignAddress(uint64 Address, uint64 Alignement);
+		NX_FRAMEWORK_API void* AlignPointer(void* Pointer, uint64 Alignement);
+		NX_FRAMEWORK_API void* UnalignPointer(void* Pointer);
+		NX_FRAMEWORK_API void* OffsetPointer(void* Pointer, uint64 Offset);
+		NX_FRAMEWORK_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
-		NEXUS_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
-		NEXUS_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
-		NEXUS_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = Allocator::TryGet());
+		NX_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
+		NX_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
+		NX_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = Allocator::TryGet());
 
 		template<typename T, typename... Args>
 		T* Construct(void* Pointer, Args&&... args)

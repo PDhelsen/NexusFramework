@@ -14,12 +14,12 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Logger : public Log
+	class NX_FRAMEWORK_API Logger : public Log
 	{
 	public:
 		inline static const String Format = "[%02d:%02d:%02d][%7s][%s] %s%s";
 
-		NEXUS_NOCOPY_NOMOVE(Logger)
+		NX_NOCOPY_NOMOVE(Logger)
 		Logger(LoggerVerbosity Verbosity, LoggerOutput Output, StringView Path = "", bool AutoFlush = false);
 		~Logger();
 

@@ -28,15 +28,15 @@ namespace NxFr
 		inline const Array<String> MonthsNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
 		inline const Array<int32> DayPerMonths = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
-		NEXUS_FRAMEWORK_API Timestamp Now();
-		NEXUS_FRAMEWORK_API int64 TimeSinceEpoch();
-		NEXUS_FRAMEWORK_API double ProcessorTick();
-		NEXUS_FRAMEWORK_API double Convert(double Value, double Unit = 1.0);
+		NX_FRAMEWORK_API Timestamp Now();
+		NX_FRAMEWORK_API int64 TimeSinceEpoch();
+		NX_FRAMEWORK_API double ProcessorTick();
+		NX_FRAMEWORK_API double Convert(double Value, double Unit = 1.0);
 
-		NEXUS_FRAMEWORK_API StringView GetWeekDay(int32 Day);
-		NEXUS_FRAMEWORK_API StringView GetMonth(int32 Month);
-		NEXUS_FRAMEWORK_API int32 GetDaysPerMonth(int32 Month, bool Leap);
-		NEXUS_FRAMEWORK_API bool IsLeapYear(int32 Year);
+		NX_FRAMEWORK_API StringView GetWeekDay(int32 Day);
+		NX_FRAMEWORK_API StringView GetMonth(int32 Month);
+		NX_FRAMEWORK_API int32 GetDaysPerMonth(int32 Month, bool Leap);
+		NX_FRAMEWORK_API bool IsLeapYear(int32 Year);
 	};
 }
 

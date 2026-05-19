@@ -6,7 +6,7 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API StringView
+	struct NX_FRAMEWORK_API StringView
 	{
 	public:
 		static StringView GetTempExactString(StringView Substring);

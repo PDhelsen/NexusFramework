@@ -41,7 +41,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Array<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Array");
+				NX_ASSERT(false, Default, "Unsupported FromString with Array");
 			}
 		};
 
@@ -60,7 +60,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, List<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with List");
+				NX_ASSERT(false, Default, "Unsupported FromString with List");
 			}
 		};
 
@@ -79,7 +79,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Dequeue<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Dequeue");
+				NX_ASSERT(false, Default, "Unsupported FromString with Dequeue");
 			}
 		};
 
@@ -98,7 +98,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Stack<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Stack");
+				NX_ASSERT(false, Default, "Unsupported FromString with Stack");
 			}
 		};
 
@@ -117,7 +117,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Queue<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Queue");
+				NX_ASSERT(false, Default, "Unsupported FromString with Queue");
 			}
 		};
 
@@ -136,7 +136,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, LinkedList<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with LinkedList");
+				NX_ASSERT(false, Default, "Unsupported FromString with LinkedList");
 			}
 		};
 
@@ -155,7 +155,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Set<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Set");
+				NX_ASSERT(false, Default, "Unsupported FromString with Set");
 			}
 		};
 
@@ -178,7 +178,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Dictionary<K, T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Dictionary");
+				NX_ASSERT(false, Default, "Unsupported FromString with Dictionary");
 			}
 		};
 
@@ -196,7 +196,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, BufferView& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
+				NX_ASSERT(false, Default, "Unsupported FromString with Tuple");
 			}
 		};
 
@@ -212,7 +212,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Tuple<T1, T2>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Tuple");
+				NX_ASSERT(false, Default, "Unsupported FromString with Tuple");
 			}
 		};
 
@@ -231,7 +231,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Collection<T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Collection");
+				NX_ASSERT(false, Default, "Unsupported FromString with Collection");
 			}
 		};
 	}

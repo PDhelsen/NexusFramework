@@ -43,7 +43,7 @@ namespace NxFr
 	{
 		if (Recording)
 		{
-			NEXUS_LOG(Warning, Default, "Instruments is already recording");
+			NX_LOG(Warning, Default, "Instruments is already recording");
 			return;
 		}
 
@@ -54,7 +54,7 @@ namespace NxFr
 	{
 		if (!Recording)
 		{
-			NEXUS_LOG(Warning, Default, "Instruments is not recording");
+			NX_LOG(Warning, Default, "Instruments is not recording");
 			return;
 		}
 

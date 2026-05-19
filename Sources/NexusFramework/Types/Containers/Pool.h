@@ -18,7 +18,7 @@ namespace NxFr
 			using N = Node::NodeSimple<T>;
 			using I = Iterator::IteratorPreAllocated<T, N>;
 
-			NEXUS_NOCOPY_NOMOVE(PreAllocated)
+			NX_NOCOPY_NOMOVE(PreAllocated)
 			PreAllocated(uint64 Size, Allocator* Allctr = Allocator::TryGet())
 				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
@@ -69,7 +69,7 @@ namespace NxFr
 
 				if (Count == Capacity)
 				{
-					NEXUS_ASSERT(false, Default, "Pool is full");
+					NX_ASSERT(false, Default, "Pool is full");
 					return nullptr;
 				}
 
@@ -87,13 +87,13 @@ namespace NxFr
 
 				if (Instance == nullptr || !Memory::IsPointerInRange(Instance, Data, sizeof(N) * Capacity))
 				{
-					NEXUS_ASSERT(false, Default, "Trying to recycle invalid address");
+					NX_ASSERT(false, Default, "Trying to recycle invalid address");
 					return;
 				}
 
 				if (Count == 0)
 				{
-					NEXUS_ASSERT(false, Default, "Pool is full");
+					NX_ASSERT(false, Default, "Pool is full");
 					return;
 				}
 
@@ -214,7 +214,7 @@ namespace NxFr
 			using N = Node::NodeDouble<T>;
 			using I = Iterator::IteratorNodeSimple<T, N>;
 
-			NEXUS_NOCOPY_NOMOVE(OnDemand)
+			NX_NOCOPY_NOMOVE(OnDemand)
 			OnDemand(Allocator* Allctr = Allocator::TryGet())
 				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
@@ -296,7 +296,7 @@ namespace NxFr
 
 				if (Instance == nullptr)
 				{
-					NEXUS_ASSERT(false, Default, "Trying to recycle invalid address");
+					NX_ASSERT(false, Default, "Trying to recycle invalid address");
 					return;
 				}
 
@@ -452,7 +452,7 @@ namespace NxFr
 	public:
 		using I = typename P::I;
 
-		NEXUS_NOCOPY_NOMOVE(Pool)
+		NX_NOCOPY_NOMOVE(Pool)
 		Pool(Allocator* Allctr = Allocator::TryGet())
 			: Data(Allctr)
 		{

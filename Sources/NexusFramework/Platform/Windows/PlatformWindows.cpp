@@ -228,7 +228,7 @@ namespace NxFr
 		Buffer& LocalBuffer = GetLocalBufferByte();
 
 		DWORD Length = GetCurrentDirectoryA((DWORD)LocalBuffer.GetCount(), LocalBuffer.GetPtr<char>());
-		NEXUS_ASSERT(Length != 0 && Length < LocalBuffer.GetCount(), Default, "BufferLogs overflowed when getting the current working directory");
+		NX_ASSERT(Length != 0 && Length < LocalBuffer.GetCount(), Default, "BufferLogs overflowed when getting the current working directory");
 		return ConvertPathToNexus(StringView(LocalBuffer.GetPtr<char>(), Length));
 	}
 
@@ -250,7 +250,7 @@ namespace NxFr
 		);
 
 		bool Result = File != INVALID_HANDLE_VALUE;
-		NEXUS_ASSERT(Result, Default, "Failed to create file: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to create file: %s", Path.C());
 
 		if (!KeepOpen)
 		{
@@ -263,19 +263,19 @@ namespace NxFr
 	void PlatformWindows::FileMove(StringView Path, StringView Target, bool Override) const
 	{
 		bool Result = MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
-		NEXUS_ASSERT(Result, Default, "Failed to move file: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to move file: %s", Path.C());
 	}
 
 	void PlatformWindows::FileCopy(StringView Path, StringView Target, bool Override) const
 	{
 		bool Result = CopyFileA(Path.C(), Target.C(), !Override);
-		NEXUS_ASSERT(Result, Default, "Failed to copy file: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to copy file: %s", Path.C());
 	}
 
 	void PlatformWindows::FileDelete(StringView Path) const
 	{
 		bool Result = DeleteFileA(Path.C());
-		NEXUS_ASSERT(Result, Default, "Failed to delete file: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to delete file: %s", Path.C());
 	}
 
 	void* PlatformWindows::FileOpen(StringView Path, FileMode Mode) const
@@ -299,7 +299,7 @@ namespace NxFr
 		);
 
 		bool Result = File != INVALID_HANDLE_VALUE;
-		NEXUS_ASSERT(Result, Default, "Failed to open file: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to open file: %s", Path.C());
 
 		if (Result && Mode == FileMode::Append)
 		{
@@ -311,14 +311,14 @@ namespace NxFr
 
 	void PlatformWindows::FileClose(void* File) const
 	{
-		NEXUS_ASSERT(File, Default, "Invalid File");
+		NX_ASSERT(File, Default, "Invalid File");
 		bool Result = CloseHandle(File);
-		NEXUS_ASSERT(Result, Default, "Failed to close file");
+		NX_ASSERT(Result, Default, "Failed to close file");
 	}
 
 	uint64 PlatformWindows::FileSize(void* File) const
 	{
-		NEXUS_ASSERT(File, Default, "Invalid File");
+		NX_ASSERT(File, Default, "Invalid File");
 
 		LARGE_INTEGER FileSize;
 		bool Result = GetFileSizeEx(File, &FileSize);
@@ -327,46 +327,46 @@ namespace NxFr
 
 	void PlatformWindows::FileWriteByte(void* File, BufferView Data) const
 	{
-		NEXUS_ASSERT(File, Default, "Invalid File");
-		NEXUS_ASSERT(Data.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
+		NX_ASSERT(File, Default, "Invalid File");
+		NX_ASSERT(Data.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Data.GetPtr(), (DWORD)Data.GetCount(), &Written, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Data.GetCount(), Default, "Failed to write to file");
+		NX_ASSERT(Result && Written == Data.GetCount(), Default, "Failed to write to file");
 	}
 
 	Buffer PlatformWindows::FileReadByte(void* File) const
 	{
-		NEXUS_ASSERT(File, Default, "Invalid File");
+		NX_ASSERT(File, Default, "Invalid File");
 
 		Buffer Data = Buffer(FileSize(File));
 
 		DWORD Read = 0;
 		bool Result = ReadFile(File, Data.GetPtr(), (DWORD)Data.GetCount(), &Read, nullptr);
 
-		NEXUS_ASSERT(Result && Read == Data.GetCount(), Default, "Failed to read to file");
+		NX_ASSERT(Result && Read == Data.GetCount(), Default, "Failed to read to file");
 
 		return Data;
 	}
 
 	void PlatformWindows::FileWriteText(void* File, StringView Text) const
 	{
-		NEXUS_ASSERT(File, Default, "Invalid File");
+		NX_ASSERT(File, Default, "Invalid File");
 
 		String Content = StringUtility::Replace(Text, StringUtility::NewLine, NewLine);
 
-		NEXUS_ASSERT(Content.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
+		NX_ASSERT(Content.GetCount() <= Integer::MaxUI32, Default, "Currenlty support only file smaller that uint32 max value");
 
 		DWORD Written = 0;
 		bool Result = WriteFile(File, Content.C(), (DWORD)Content.GetCount(), &Written, nullptr);
 
-		NEXUS_ASSERT(Result && Written == Content.GetCount(), Default, "Failed to write to file");
+		NX_ASSERT(Result && Written == Content.GetCount(), Default, "Failed to write to file");
 	}
 
 	String PlatformWindows::FileReadText(void* File) const
 	{
-		NEXUS_ASSERT(File, Default, "Invalid File");
+		NX_ASSERT(File, Default, "Invalid File");
 
 		uint64 Size = FileSize(File);
 		String Text = String(Size + 1);
@@ -375,7 +375,7 @@ namespace NxFr
 		bool Result = ReadFile(File, Text.Characters(), (DWORD)Size, &Read, nullptr);
 		Text.Validate();
 
-		NEXUS_ASSERT(Result && Read == Size, Default, "Failed to read to file");
+		NX_ASSERT(Result && Read == Size, Default, "Failed to read to file");
 
 		Text.Assign(NewLine, StringUtility::NewLine);
 		return Text;
@@ -384,24 +384,24 @@ namespace NxFr
 	void PlatformWindows::DirectoryCreate(StringView Path) const
 	{
 		bool Result = CreateDirectoryA(Path.C(), nullptr);
-		NEXUS_ASSERT(Result, Default, "Failed to create directory: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to create directory: %s", Path.C());
 	}
 
 	void PlatformWindows::DirectoryMove(StringView Path, StringView Target, bool Override) const
 	{
 		bool Result = MoveFileExA(Path.C(), Target.C(), Override ? MOVEFILE_REPLACE_EXISTING : 0);
-		NEXUS_ASSERT(Result, Default, "Failed to move directory: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to move directory: %s", Path.C());
 	}
 
 	void PlatformWindows::DirectoryCopy(StringView Path, StringView Target, bool Override) const
 	{
-		NEXUS_ASSERT(false, Default, "Not supported at platform level");
+		NX_ASSERT(false, Default, "Not supported at platform level");
 	}
 
 	void PlatformWindows::DirectoryDelete(StringView Path) const
 	{
 		bool Result = RemoveDirectoryA(Path.C());
-		NEXUS_ASSERT(Result, Default, "Failed to delete directory: %s", Path.C());
+		NX_ASSERT(Result, Default, "Failed to delete directory: %s", Path.C());
 	}
 
 	List<String> PlatformWindows::DirectoryContent(StringView Path) const
@@ -416,7 +416,7 @@ namespace NxFr
 		{
 			if (File == INVALID_HANDLE_VALUE)
 			{
-				NEXUS_LOG(Error, Default, "Failed to open file %s", Temp.C());
+				NX_LOG(Error, Default, "Failed to open file %s", Temp.C());
 				Result.Clear();
 				return Result;
 			}
@@ -454,7 +454,7 @@ namespace NxFr
 		HMODULE Dll = LoadLibraryA(DllName.C());
 		if (Dll == nullptr)
 		{
-			NEXUS_LOG(Error, Default, "Failed to load library");
+			NX_LOG(Error, Default, "Failed to load library");
 			return nullptr;
 		}
 
@@ -482,7 +482,7 @@ namespace NxFr
 		auto Function = GetProcAddress(Dll, FunctionName.C());
 		if (!Function)
 		{
-			NEXUS_LOG(Error, Default, "Failed to load function");
+			NX_LOG(Error, Default, "Failed to load function");
 		}
 
 		return Function;
@@ -506,7 +506,7 @@ namespace NxFr
 	void* PlatformWindows::ThreadCreate(Thread* Instance) const
 	{
 		HANDLE Handle = (HANDLE)_beginthreadex(NULL, 0, &ThreadCallback, Instance, 0, NULL);
-		NEXUS_ASSERT(Handle, Default, "Failed to create thread");
+		NX_ASSERT(Handle, Default, "Failed to create thread");
 		return Handle;
 	}
 
@@ -577,31 +577,31 @@ namespace NxFr
 
 	int64 PlatformWindows::ThreadAtomicIncrement(int64* Instance) const
 	{
-		return NEXUS_THREAD_INTERLOCKED_INCREMENT(Instance);
+		return NX_THREAD_INTERLOCKED_INCREMENT(Instance);
 	}
 
 	int64 PlatformWindows::ThreadAtomicDecrement(int64* Instance) const
 	{
-		return NEXUS_THREAD_INTERLOCKED_DECREMENT(Instance);
+		return NX_THREAD_INTERLOCKED_DECREMENT(Instance);
 	}
 
 	int64 PlatformWindows::ThreadAtomicAdd(int64* Instance, int64 Value) const
 	{
-		return NEXUS_THREAD_INTERLOCKED_ADD(Instance, Value) + Value;
+		return NX_THREAD_INTERLOCKED_ADD(Instance, Value) + Value;
 	}
 
 	int64 PlatformWindows::ThreadAtomicLoad(int64* Instance) const
 	{
-		return NEXUS_THREAD_INTERLOCKED_COMPAREEXCHANGE(Instance, 0, 0);
+		return NX_THREAD_INTERLOCKED_COMPAREEXCHANGE(Instance, 0, 0);
 	}
 
 	void PlatformWindows::ThreadAtomicStore(int64* Instance, int64 Value) const
 	{
-		NEXUS_THREAD_INTERLOCKED_EXCHANGE(Instance, Value);
+		NX_THREAD_INTERLOCKED_EXCHANGE(Instance, Value);
 	}
 
 	bool PlatformWindows::ThreadAtomicCompareExchange(int64* Instance, int64 Value, int64 Expected) const
 	{
-		return NEXUS_THREAD_INTERLOCKED_COMPAREEXCHANGE(Instance, Value, Expected) == Expected;
+		return NX_THREAD_INTERLOCKED_COMPAREEXCHANGE(Instance, Value, Expected) == Expected;
 	}
 }

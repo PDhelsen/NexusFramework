@@ -7,7 +7,7 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Directory
+	class NX_FRAMEWORK_API Directory
 	{
 	public:
 		Directory(StringView Path);

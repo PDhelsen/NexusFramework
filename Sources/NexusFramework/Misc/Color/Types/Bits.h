@@ -19,7 +19,7 @@ namespace NxFr
 
 	namespace Colors
 	{
-		struct NEXUS_FRAMEWORK_API Bits
+		struct NX_FRAMEWORK_API Bits
 		{
 			using Type = uint8;
 
@@ -80,13 +80,13 @@ namespace NxFr
 			Type r, g, b, a;
 		};
 
-		NEXUS_FRAMEWORK_API Bits operator+(Bits Instance, Bits::Type Other);
-		NEXUS_FRAMEWORK_API Bits operator-(Bits Instance, Bits::Type Other);
-		NEXUS_FRAMEWORK_API Bits operator*(Bits Instance, Bits::Type Other);
-		NEXUS_FRAMEWORK_API Bits operator/(Bits Instance, Bits::Type Other);
-		NEXUS_FRAMEWORK_API Bits operator+(Bits Instance, Bits Other);
-		NEXUS_FRAMEWORK_API Bits operator-(Bits Instance, Bits Other);
-		NEXUS_FRAMEWORK_API Bits operator*(Bits Instance, Bits Other);
-		NEXUS_FRAMEWORK_API Bits operator/(Bits Instance, Bits Other);
+		NX_FRAMEWORK_API Bits operator+(Bits Instance, Bits::Type Other);
+		NX_FRAMEWORK_API Bits operator-(Bits Instance, Bits::Type Other);
+		NX_FRAMEWORK_API Bits operator*(Bits Instance, Bits::Type Other);
+		NX_FRAMEWORK_API Bits operator/(Bits Instance, Bits::Type Other);
+		NX_FRAMEWORK_API Bits operator+(Bits Instance, Bits Other);
+		NX_FRAMEWORK_API Bits operator-(Bits Instance, Bits Other);
+		NX_FRAMEWORK_API Bits operator*(Bits Instance, Bits Other);
+		NX_FRAMEWORK_API Bits operator/(Bits Instance, Bits Other);
 	}
 }

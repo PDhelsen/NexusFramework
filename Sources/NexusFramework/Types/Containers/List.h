@@ -146,7 +146,7 @@ namespace NxFr
 
 		T& Assign(uint64 Index, const T& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Item = Value;
@@ -155,7 +155,7 @@ namespace NxFr
 
 		T& Assign(uint64 Index, T&& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Item = Move(Value);
@@ -165,7 +165,7 @@ namespace NxFr
 		template<typename... Args>
 		T& AssignConstruct(uint64 Index, Args&&... args)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			T& Item = GetItem(Index);
 			Destruct(Index);
@@ -176,8 +176,8 @@ namespace NxFr
 		template<typename C>
 		T& AssignRange(uint64 Index, const C& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index + Value.GetCount() - 1), Default, "Invalid Index");
 
 			uint64 Offset = 0;
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It, ++Offset)
@@ -228,7 +228,7 @@ namespace NxFr
 
 		T& Insert(uint64 Index, const T& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
@@ -238,7 +238,7 @@ namespace NxFr
 
 		T& Insert(uint64 Index, T&& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
@@ -249,7 +249,7 @@ namespace NxFr
 		template<typename... Args>
 		T& InsertConstruct(uint64 Index, Args&&... args)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(++Count);
 			Shift(Index, 1, true);
@@ -260,7 +260,7 @@ namespace NxFr
 		template<typename C>
 		T& InsertRange(uint64 Index, const C& Value)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Resize(GetCount() + Value.GetCount());
 			Shift(Index, Value.GetCount(), true);
@@ -276,7 +276,7 @@ namespace NxFr
 
 		void Remove(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			Destruct(Index);
 			Shift(Index, 1, false);
@@ -285,8 +285,8 @@ namespace NxFr
 
 		void RemoveRange(uint64 Index, uint64 Size)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
-			NEXUS_ASSERT(IsValidIndex(Index + Size - 1), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index + Size - 1), Default, "Invalid Index");
 
 			DestructRange(Index, Size);
 			Shift(Index, Size, false);
@@ -295,7 +295,7 @@ namespace NxFr
 
 		void RemoveLast()
 		{
-			NEXUS_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
 			
 			Destruct(Count - 1);
 			Resize(--Count);
@@ -303,7 +303,7 @@ namespace NxFr
 
 		void RemoveSwap(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			GetItem(Index) = GetItem(Count - 1);
 			RemoveLast();
@@ -321,56 +321,56 @@ namespace NxFr
 
 		T& Get(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
 
 		const T& Get(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetItem(Index);
 		}
 
 		T& First() 
 		{
-			NEXUS_ASSERT(IsValidIndex(0), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(0), Default, "Invalid Index");
 
 			return GetItem(0);
 		}
 
 		const T& First() const
 		{
-			NEXUS_ASSERT(IsValidIndex(0), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(0), Default, "Invalid Index");
 
 			return GetItem(0);
 		}
 
 		T& Last() 
 		{
-			NEXUS_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
 
 			return GetItem(Count - 1);
 		}
 
 		const T& Last() const
 		{
-			NEXUS_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Count - 1), Default, "Invalid Index");
 
 			return GetItem(Count - 1);
 		}
 
 		I GetIterator(uint64 Index)
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIt(Index);
 		}
 
 		const I GetIterator(uint64 Index) const
 		{
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
+			NX_ASSERT(IsValidIndex(Index), Default, "Invalid Index");
 
 			return GetIt(Index);
 		}

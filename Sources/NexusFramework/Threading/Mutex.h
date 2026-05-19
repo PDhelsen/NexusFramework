@@ -6,12 +6,12 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API Mutex
+	struct NX_FRAMEWORK_API Mutex
 	{
 		friend struct ConditionVariable;
 
 	public:
-		NEXUS_NOCOPY_NOMOVE(Mutex)
+		NX_NOCOPY_NOMOVE(Mutex)
 		Mutex();
 		~Mutex();
 
@@ -23,10 +23,10 @@ namespace NxFr
 		Atomic Owner;
 	};
 
-	struct NEXUS_FRAMEWORK_API Lock
+	struct NX_FRAMEWORK_API Lock
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(Lock)
+		NX_NOCOPY_NOMOVE(Lock)
 		Lock(Mutex& Guard);
 		~Lock();
 

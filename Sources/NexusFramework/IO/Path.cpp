@@ -43,7 +43,7 @@ namespace NxFr
 			}
 			else if (StringCApi::Compare(Pointer, Path::SeparatorDrive.C(), Path::SeparatorDrive.GetCount()) == 0)
 			{
-				NEXUS_ASSERT(Infos.Drive.IsEmpty(), Default, "Two drive separator has been found. That is not supported");
+				NX_ASSERT(Infos.Drive.IsEmpty(), Default, "Two drive separator has been found. That is not supported");
 
 				uint64 Position = Pointer - Infos.Path.C();
 				Infos.Drive = Infos.Path.Substring(0, Position);
@@ -65,7 +65,7 @@ namespace NxFr
 			}
 			else if (StringCApi::Compare(Pointer, Path::SeparatorExtension.C(), Path::SeparatorExtension.GetCount()) == 0)
 			{
-				NEXUS_ASSERT(Infos.Extension.IsEmpty(), Default, "Two extension separators has been found. That is not supported");
+				NX_ASSERT(Infos.Extension.IsEmpty(), Default, "Two extension separators has been found. That is not supported");
 
 				uint64 Position = Pointer - Infos.Path.C();
 				uint64 Offset = Path::SeparatorExtension.GetCount();
@@ -284,7 +284,7 @@ namespace NxFr
 			}
 		}
 
-		NEXUS_ASSERT(Common >= Count * (Path::SeparatorPrevious.GetCount() + Path::SeparatorFolder.GetCount()), Default, "Not enough space");
+		NX_ASSERT(Common >= Count * (Path::SeparatorPrevious.GetCount() + Path::SeparatorFolder.GetCount()), Default, "Not enough space");
 
 		char* Write = Path.Characters();
 		for (uint64 Index = 0; Index < Count; ++Index)

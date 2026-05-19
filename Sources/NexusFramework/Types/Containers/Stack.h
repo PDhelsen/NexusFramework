@@ -189,7 +189,7 @@ namespace NxFr
 
 		void Remove()
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Stack is Empty");
+			NX_ASSERT(!IsEmpty(), Default, "Stack is Empty");
 
 			Destruct(Buckets - 1, IndexLast);
 			RemoveBucket();
@@ -206,14 +206,14 @@ namespace NxFr
 
 		T& Get()
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Stack is Empty");
+			NX_ASSERT(!IsEmpty(), Default, "Stack is Empty");
 
 			return GetItem(Buckets - 1, IndexLast);
 		}
 
 		const T& Get() const
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Stack is Empty");
+			NX_ASSERT(!IsEmpty(), Default, "Stack is Empty");
 
 			return GetItem(Buckets - 1, IndexLast);
 		}

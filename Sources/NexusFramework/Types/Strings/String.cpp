@@ -258,7 +258,7 @@ namespace NxFr
 			// Once grow over the Sso limit, it cannot go back to Sso.
 			// The cost of allocating has been paid, so there is no point to freeing the memory until the string is destroyed
 			// The only exception is when using the move constructor / operator
-			NEXUS_ASSERT(false, Default, "Not supposed to reallocate from sso to sso");
+			NX_ASSERT(false, Default, "Not supposed to reallocate from sso to sso");
 		}
 
 		ValidateNullTermination();

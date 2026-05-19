@@ -76,7 +76,7 @@ namespace NxFr
 		{
 			static Stopwatch Decode(const RBS& Rbs)
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
+				NX_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
 				return Stopwatch();
 
 			}

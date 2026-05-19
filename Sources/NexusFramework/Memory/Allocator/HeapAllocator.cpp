@@ -58,7 +58,7 @@ namespace NxFr
 		Size = GetAlignedSize(Size);
 		HeapSlot* Slot = GetHeapSlot(Size);
 
-		NEXUS_ASSERT(Slot, Default, "Allocator is full");
+		NX_ASSERT(Slot, Default, "Allocator is full");
 
 		void* Pointer = GetHeapSlotMemory(Slot);
 
@@ -76,7 +76,7 @@ namespace NxFr
 			return nullptr;
 		}
 
-		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
+		NX_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		void* NewPointer = nullptr;
 		Size = GetAlignedSize(Size);
@@ -123,7 +123,7 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
+		NX_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		HeapSlot* Slot = GetHeapSlot(Pointer);
 		uint64 Size = GetHeapSlotSize(Slot);
@@ -148,7 +148,7 @@ namespace NxFr
 		void* NextPointer = reinterpret_cast<void*>(NextAddress);
 		bool NextIsInsideHeap = NextPointer && IsPointerInMemoryBlock(NextPointer);
 
-		NEXUS_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, Default, "Overlap");
+		NX_ASSERT(Slot->Next == nullptr || reinterpret_cast<uint64>(Slot->Next) >= NextAddress, Default, "Overlap");
 
 		bool AddHeapSlot = NextIsInsideHeap && Slot->Next == nullptr;
 		bool InsertHeapSlot = NextIsInsideHeap && !AddHeapSlot && (reinterpret_cast<uint64>(Slot->Next) - NextAddress >= sizeof(HeapSlot) + Memory::DefaultAlignement);

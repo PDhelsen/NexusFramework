@@ -4,10 +4,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API PlatformWindows : public Platform
+	class NX_FRAMEWORK_API PlatformWindows : public Platform
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(PlatformWindows)
+		NX_NOCOPY_NOMOVE(PlatformWindows)
 		PlatformWindows();
 		virtual ~PlatformWindows();
 

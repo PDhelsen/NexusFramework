@@ -14,13 +14,13 @@ namespace NxFr
 	class Log;
 	namespace Globals
 	{
-		NEXUS_FRAMEWORK_API extern Log* GetLogger();
+		NX_FRAMEWORK_API extern Log* GetLogger();
 	}
 
 	namespace LoggerChannel
 	{
-		NEXUS_FRAMEWORK_API extern const StringId Default;
-		NEXUS_FRAMEWORK_API extern const StringId Verbose;
+		NX_FRAMEWORK_API extern const StringId Default;
+		NX_FRAMEWORK_API extern const StringId Verbose;
 	}
 
 	enum class LoggerVerbosity : uint8
@@ -51,7 +51,7 @@ namespace NxFr
 		COUNT
 	};
 
-	class NEXUS_FRAMEWORK_API Log
+	class NX_FRAMEWORK_API Log
 	{
 	public:
 		template<typename... Args>
@@ -68,35 +68,35 @@ namespace NxFr
 	};
 }
 
-NEXUS_FLAG(NxFr::LoggerVerbosity, uint8)
-NEXUS_FLAG_STRING(NxFr::LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
-NEXUS_FLAG(NxFr::LoggerOutput, uint8)
-NEXUS_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
+NX_FLAG(NxFr::LoggerVerbosity, uint8)
+NX_FLAG_STRING(NxFr::LoggerVerbosity, 4, "Fatal", "Error", "Warning", "Info")
+NX_FLAG(NxFr::LoggerOutput, uint8)
+NX_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 
-#if NEXUS_DEBUG || NEXUS_RELEASE
-#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }
+#if NX_DEBUG || NX_RELEASE
+#define NX_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...) if (Instance) { Instance->LogMessage(::NxFr::LoggerVerbosity::Vbs, ::NxFr::LoggerChannel::Chn, Msg, __VA_ARGS__); }
 
-#define NEXUS_LOG(Vbs, Chn, Msg, ...) NEXUS_LOG_INSTANCE(::NxFr::Globals::GetLogger(), Vbs, Chn, Msg, __VA_ARGS__)
-#elif NEXUS_DISTRIB
-#define NEXUS_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...)
+#define NX_LOG(Vbs, Chn, Msg, ...) NX_LOG_INSTANCE(::NxFr::Globals::GetLogger(), Vbs, Chn, Msg, __VA_ARGS__)
+#elif NX_DISTRIB
+#define NX_LOG_INSTANCE(Instance, Vbs, Chn, Msg, ...)
 
-#define NEXUS_LOG(Vbs, Chn, Msg, ...)
+#define NX_LOG(Vbs, Chn, Msg, ...)
 #endif
 
-#if NEXUS_DEBUG || NEXUS_RELEASE
-#define NEXUS_ASSERT_INSTANCE(Instance, Condition, Channel, Msg, ...) if (!(Condition)) { \
-	NEXUS_LOG_INSTANCE(Instance, Fatal, Channel, Msg, __VA_ARGS__); \
-	NEXUS_LOG_INSTANCE(Instance, Fatal, Channel, "%s %s %d", NEXUS_FUNCTION_SIGNATURE, NEXUS_FILE_NAME, NEXUS_LINE_NUMBER); \
-	NEXUS_DEBUGBREAK; }
+#if NX_DEBUG || NX_RELEASE
+#define NX_ASSERT_INSTANCE(Instance, Condition, Channel, Msg, ...) if (!(Condition)) { \
+	NX_LOG_INSTANCE(Instance, Fatal, Channel, Msg, __VA_ARGS__); \
+	NX_LOG_INSTANCE(Instance, Fatal, Channel, "%s %s %d", NX_FUNCTION_SIGNATURE, NX_FILE_NAME, NX_LINE_NUMBER); \
+	NX_DEBUGBREAK; }
 
-#define NEXUS_ASSERT(Condition, Channel, Msg, ...) if (!(Condition)) { \
-	NEXUS_LOG(Fatal, Channel, Msg, __VA_ARGS__); \
-	NEXUS_LOG(Fatal, Channel, "%s %s %d", NEXUS_FUNCTION_SIGNATURE, NEXUS_FILE_NAME, NEXUS_LINE_NUMBER); \
-	NEXUS_DEBUGBREAK; }
-#elif NEXUS_DISTRIB
-#define NEXUS_ASSERT_INSTANCE(Instance, Condition, Msg, ...)
+#define NX_ASSERT(Condition, Channel, Msg, ...) if (!(Condition)) { \
+	NX_LOG(Fatal, Channel, Msg, __VA_ARGS__); \
+	NX_LOG(Fatal, Channel, "%s %s %d", NX_FUNCTION_SIGNATURE, NX_FILE_NAME, NX_LINE_NUMBER); \
+	NX_DEBUGBREAK; }
+#elif NX_DISTRIB
+#define NX_ASSERT_INSTANCE(Instance, Condition, Msg, ...)
 
-#define NEXUS_ASSERT(Condition, Msg, ...)
+#define NX_ASSERT(Condition, Msg, ...)
 #endif
 
-#define NEXUS_ASSERT_STATIC(condition, Msg) static_assert(condition, Msg)
+#define NX_ASSERT_STATIC(condition, Msg) static_assert(condition, Msg)

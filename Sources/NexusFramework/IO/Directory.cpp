@@ -42,7 +42,7 @@ namespace NxFr
 	{
 		if (Path.IsEmpty())
 		{
-			NEXUS_LOG(Error, Default, "Impossible to create directory with empty path");
+			NX_LOG(Error, Default, "Impossible to create directory with empty path");
 			return;
 		}
 
@@ -51,40 +51,40 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(!Exists(), Default, "Failed to create directory: %s", Path.C());
+		NX_ASSERT(!Exists(), Default, "Failed to create directory: %s", Path.C());
 
 		Path::EnsureParent(Path);
 		Globals::PlatformTarget->DirectoryCreate(Path);
 
-		NEXUS_ASSERT(Exists(), Default, "Failed to create directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to create directory: %s", Path.C());
 	}
 
 	void Directory::Move(StringView Target, bool Override)
 	{
 		if (Path.IsEmpty() || Target.IsEmpty() || Path == Target)
 		{
-			NEXUS_LOG(Error, Default, "Impossible to move directory with empty path");
+			NX_LOG(Error, Default, "Impossible to move directory with empty path");
 			return;
 		}
 
-		NEXUS_ASSERT(Exists() && Path != Target && !Path::Exist(Target), Default, "Failed to move directory: %s", Path.C());
+		NX_ASSERT(Exists() && Path != Target && !Path::Exist(Target), Default, "Failed to move directory: %s", Path.C());
 
 		Path::EnsureParent(Target);
 		Globals::PlatformTarget->DirectoryMove(Path, Target, Override);
 		SetPath(Target);
 
-		NEXUS_ASSERT(Exists(), Default, "Failed to move directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to move directory: %s", Path.C());
 	}
 
 	void Directory::Copy(StringView Target, bool Override)
 	{
 		if (Path.IsEmpty() || Target.IsEmpty() || Path == Target)
 		{
-			NEXUS_LOG(Error, Default, "Impossible to copy directory with empty path");
+			NX_LOG(Error, Default, "Impossible to copy directory with empty path");
 			return;
 		}
 
-		NEXUS_ASSERT(Exists() && Path != Target && !Path::Exist(Target), Default, "Failed to copy directory: %s", Path.C());
+		NX_ASSERT(Exists() && Path != Target && !Path::Exist(Target), Default, "Failed to copy directory: %s", Path.C());
 
 		Path::EnsureParent(Target);
 		Globals::PlatformTarget->DirectoryCreate(Target);
@@ -106,14 +106,14 @@ namespace NxFr
 			}
 		}
 
-		NEXUS_ASSERT(Exists(), Default, "Failed to copy directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to copy directory: %s", Path.C());
 	}
 
 	void Directory::Delete()
 	{
 		if (Path.IsEmpty())
 		{
-			NEXUS_LOG(Error, Default, "Impossible to delete directory with empty path");
+			NX_LOG(Error, Default, "Impossible to delete directory with empty path");
 			return;
 		}
 
@@ -122,7 +122,7 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(Exists(), Default, "Failed to delete directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to delete directory: %s", Path.C());
 
 		List<String> Content = List<String>();
 		GetContent(Content);
@@ -143,12 +143,12 @@ namespace NxFr
 
 		Globals::PlatformTarget->DirectoryDelete(Path);
 
-		NEXUS_ASSERT(!Exists(), Default, "Failed to delete directory: %s", Path.C());
+		NX_ASSERT(!Exists(), Default, "Failed to delete directory: %s", Path.C());
 	}
 
 	List<String> Directory::GetContent(bool Recursive) const
 	{
-		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
 		List<String> Content = List<String>();
 		GetContent(Content, Recursive);
@@ -157,14 +157,14 @@ namespace NxFr
 
 	void Directory::GetContent(List<String>& Content, bool Recursive) const
 	{
-		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
 		GetContent(Content, Recursive, true, true);
 	}
 
 	List<String> Directory::GetFiles(bool Recursive) const
 	{
-		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
 		List<String> Content = List<String>();
 		GetFiles(Content, Recursive);
@@ -173,14 +173,14 @@ namespace NxFr
 
 	void Directory::GetFiles(List<String>& Content, bool Recursive) const
 	{
-		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
 		GetContent(Content, Recursive, true, false);
 	}
 
 	List<String> Directory::GetDirectories(bool Recursive) const
 	{
-		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
 		List<String> Content = List<String>();
 		GetDirectories(Content, Recursive);
@@ -189,7 +189,7 @@ namespace NxFr
 
 	void Directory::GetDirectories(List<String>& Content, bool Recursive) const
 	{
-		NEXUS_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
+		NX_ASSERT(Exists(), Default, "Failed to get content of directory: %s", Path.C());
 
 		GetContent(Content, Recursive, false, true);
 	}

@@ -65,7 +65,7 @@ namespace NxTs
 	}
 	Dummy::~Dummy()
 	{
-		NEXUS_ASSERT(Key != NxFr::Integer::MaxUI64, Default, "Dummy already destroyed");
+		NX_ASSERT(Key != NxFr::Integer::MaxUI64, Default, "Dummy already destroyed");
 		Key = NxFr::Integer::MaxUI64;
 	}
 	Dummy& Dummy::operator=(const Dummy& Other)

@@ -40,7 +40,7 @@ namespace NxFr
 			return nullptr;
 		}
 
-		NEXUS_ASSERT(BelongToAllocator(Pointer), Default, "Memory was not allocated from this allocator");
+		NX_ASSERT(BelongToAllocator(Pointer), Default, "Memory was not allocated from this allocator");
 
 		Allocated.Remove(Pointer);
 		Pointer = Memory::Reallocate(Pointer, Size, nullptr, Alignement);
@@ -56,7 +56,7 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(BelongToAllocator(Pointer), Default, "Memory was not allocated from this allocator");
+		NX_ASSERT(BelongToAllocator(Pointer), Default, "Memory was not allocated from this allocator");
 
 		Memory::Free(Pointer, nullptr);
 		Allocated.Remove(Pointer);

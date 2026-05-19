@@ -8,7 +8,7 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API Thread
+	struct NX_FRAMEWORK_API Thread
 	{
 		friend class Platform;
 
@@ -17,7 +17,7 @@ namespace NxFr
 		static void Yield();
 		static void Sleep(uint64 Milliseconds);
 
-		NEXUS_NOCOPY(Thread)
+		NX_NOCOPY(Thread)
 		Thread(const Delegate<void()>& Function);
 		Thread(Thread&& Other) noexcept;
 		~Thread();

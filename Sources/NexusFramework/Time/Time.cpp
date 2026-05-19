@@ -86,21 +86,21 @@ namespace NxFr
 
 		StringView GetWeekDay(int32 Day)
 		{
-			NEXUS_ASSERT(Day >= 1 && Day <= 7, Default, "Day has to be between 1-7, value was %d");
+			NX_ASSERT(Day >= 1 && Day <= 7, Default, "Day has to be between 1-7, value was %d");
 
 			return WeekDaysNames[Day - 1];
 		}
 
 		StringView GetMonth(int32 Month)
 		{
-			NEXUS_ASSERT(Month >= 1 && Month <= 12, Default, "Month has to be between 1-12, value was %d");
+			NX_ASSERT(Month >= 1 && Month <= 12, Default, "Month has to be between 1-12, value was %d");
 
 			return MonthsNames[Month - 1];
 		}
 
 		int32 GetDaysPerMonth(int32 Month, bool Leap)
 		{
-			NEXUS_ASSERT(Month >= 1 && Month <= 12, Default, "Month has to be between 1-12, value was %d");
+			NX_ASSERT(Month >= 1 && Month <= 12, Default, "Month has to be between 1-12, value was %d");
 
 			int32 Days = DayPerMonths[Month - 1];
 			Days += Leap && Month == 2 ? 1 : 0;

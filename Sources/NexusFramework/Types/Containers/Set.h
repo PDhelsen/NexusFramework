@@ -146,7 +146,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
+			NX_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Value);
 			return Data[Index].Value;
 		}
@@ -156,7 +156,7 @@ namespace NxFr
 			Resize(++Count);
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
+			NX_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
 			Construct(Index, Hash, Move(Value));
 			return Data[Index].Value;
 		}
@@ -170,7 +170,7 @@ namespace NxFr
 			{
 				uint64 Hash = GetHash(*It);
 				uint64 Index = GetIndex(Hash);
-				NEXUS_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
+				NX_ASSERT(IsFreeIndex(Index), Default, "Value already present in Dictionary");
 				Construct(Index, Hash, *It);
 			}
 
@@ -231,11 +231,11 @@ namespace NxFr
 
 		void Remove(const Q& Value)
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+			NX_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			uint64 Hash = GetHash(Value);
 			uint64 Index = GetIndex(Hash);
-			NEXUS_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
+			NX_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
 			Destruct(Index);
 			Resize(--Count);
 		}
@@ -243,13 +243,13 @@ namespace NxFr
 		template<typename C>
 		void RemoveRange(const C& Value)
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+			NX_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(*It);
 				uint64 Index = GetIndex(Hash);
-				NEXUS_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
+				NX_ASSERT(IsValidIndex(Index), Default, "Failed to find key");
 				Destruct(Index);
 				Resize(--Count);
 			}
@@ -291,19 +291,19 @@ namespace NxFr
 
 		T& Get(const Q& Value)
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+			NX_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			T* Item = TryGetItem(Value);
-			NEXUS_ASSERT(Item, Default, "Failed to find key");
+			NX_ASSERT(Item, Default, "Failed to find key");
 			return *Item;
 		}
 
 		const T& Get(const Q& Value) const
 		{
-			NEXUS_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
+			NX_ASSERT(!IsEmpty(), Default, "Dictionary is empty");
 
 			const T* Item = TryGetItem(Value);
-			NEXUS_ASSERT(Item, Default, "Failed to find key");
+			NX_ASSERT(Item, Default, "Failed to find key");
 			return *Item;
 		}
 
@@ -408,7 +408,7 @@ namespace NxFr
 		void Construct(uint64 Index, uint64 Hash, Args&&... args)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(Instance.Free, Default, "Construct on an already occupied slot");
+			NX_ASSERT(Instance.Free, Default, "Construct on an already occupied slot");
 			Memory::Construct<T>(&Instance.Value, args...);
 			Instance.Update(Hash);
 		}
@@ -416,7 +416,7 @@ namespace NxFr
 		void Destruct(uint64 Index)
 		{
 			N& Instance = Data[Index];
-			NEXUS_ASSERT(!Instance.Free, Default, "Destruct on a free slot");
+			NX_ASSERT(!Instance.Free, Default, "Destruct on a free slot");
 			Memory::Destruct(&Instance.Value);
 			Instance.Update();
 		}

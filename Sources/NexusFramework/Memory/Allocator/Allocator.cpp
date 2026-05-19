@@ -32,14 +32,14 @@ namespace NxFr
 
 	void Allocator::IncreaseAmount(uint64 Delta)
 	{
-		NEXUS_ASSERT(Capacity == 0 || Amount + Delta <= Capacity, Default, "Invalid delta");
+		NX_ASSERT(Capacity == 0 || Amount + Delta <= Capacity, Default, "Invalid delta");
 
 		Amount += Delta;
 	}
 
 	void Allocator::DecreaseAmount(uint64 Delta)
 	{
-		NEXUS_ASSERT(Amount >= Delta, Default, "Invalid delta");
+		NX_ASSERT(Amount >= Delta, Default, "Invalid delta");
 
 		Amount -= Delta;
 	}

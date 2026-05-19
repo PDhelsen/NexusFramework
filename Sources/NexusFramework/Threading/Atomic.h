@@ -6,10 +6,10 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API Atomic
+	struct NX_FRAMEWORK_API Atomic
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(Atomic)
+		NX_NOCOPY_NOMOVE(Atomic)
 		Atomic(int64 Value = 0);
 		~Atomic();
 

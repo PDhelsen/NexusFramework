@@ -106,7 +106,7 @@ namespace NxTs
 		NxFr::String Path = Dummy::GeneratePath("Debug_Instruments.json");
 		NxFr::Delegate<void(uint64, NxFr::Instruments*)> Dummy = [](uint64 Count, NxFr::Instruments* Instruments)
 		{
-			NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instruments);
+			NX_INSTUMENT_FUNCTION_INSTANCE(Instruments);
 
 			NxFr::Stopwatch Watch = true;
 			while (Watch.Peek(NxFr::Time::SecondToMilli) < Count)

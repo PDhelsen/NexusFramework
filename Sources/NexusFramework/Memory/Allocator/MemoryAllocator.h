@@ -4,10 +4,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API MemoryAllocator : public Allocator
+	class NX_FRAMEWORK_API MemoryAllocator : public Allocator
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(MemoryAllocator)
+		NX_NOCOPY_NOMOVE(MemoryAllocator)
 		MemoryAllocator(uint64 Size);
 		virtual ~MemoryAllocator();
 

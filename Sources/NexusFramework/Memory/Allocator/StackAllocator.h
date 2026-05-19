@@ -4,10 +4,10 @@
 
 namespace NxFr
 {
-    class NEXUS_FRAMEWORK_API StackAllocator : public MemoryAllocator
+    class NX_FRAMEWORK_API StackAllocator : public MemoryAllocator
     {
     public:
-		NEXUS_NOCOPY_NOMOVE(StackAllocator)
+		NX_NOCOPY_NOMOVE(StackAllocator)
         StackAllocator(uint64 Size);
         virtual ~StackAllocator();
 

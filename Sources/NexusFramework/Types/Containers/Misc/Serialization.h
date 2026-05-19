@@ -264,7 +264,7 @@ namespace NxFr
 		{
 			static Array<T> Decode(const RBS& Rbs)
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
+				NX_ASSERT(false, Default, "Unsupported Decode with Collection");
 			}
 
 			static void Encode(RBS& Rbs, const Collection<T>& Object)
@@ -797,7 +797,7 @@ namespace YAML
 
 		static bool decode(const Node& node, NxFr::Collection<T>& rhs)
 		{
-			NEXUS_ASSERT(false, Default, "Unsupported Decode with Collection");
+			NX_ASSERT(false, Default, "Unsupported Decode with Collection");
 			return false;
 		}
 	};

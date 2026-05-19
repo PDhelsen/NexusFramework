@@ -7,10 +7,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API ChromeTracing : public Instruments
+	class NX_FRAMEWORK_API ChromeTracing : public Instruments
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(ChromeTracing)
+		NX_NOCOPY_NOMOVE(ChromeTracing)
 		ChromeTracing(StringView Path, bool AutoStart = false, bool AutoFlush = false);
 		virtual ~ChromeTracing();
 

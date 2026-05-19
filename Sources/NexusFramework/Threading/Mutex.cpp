@@ -13,20 +13,20 @@ namespace NxFr
 
 	Mutex::~Mutex()
 	{
-		NEXUS_ASSERT(Owner.Load() == 0, Default, "Mutex is locked by another thread");
+		NX_ASSERT(Owner.Load() == 0, Default, "Mutex is locked by another thread");
 		Globals::PlatformTarget->ThreadMutexDestroy(Handle);
 	}
 
 	void Mutex::Lock()
 	{
-		NEXUS_ASSERT(Owner.Load() == 0 || Owner.Load() != Thread::ThreadId(), Default, "Mutex is already locked by this thread");
+		NX_ASSERT(Owner.Load() == 0 || Owner.Load() != Thread::ThreadId(), Default, "Mutex is already locked by this thread");
 		Globals::PlatformTarget->ThreadMutexLock(Handle);
 		Owner.Store(Thread::ThreadId());
 	}
 
 	void Mutex::Unlock()
 	{
-		NEXUS_ASSERT(Owner.Load() == Thread::ThreadId(), Default, "Mutex is locked by another thread");
+		NX_ASSERT(Owner.Load() == Thread::ThreadId(), Default, "Mutex is locked by another thread");
 		Owner.Store(0);
 		Globals::PlatformTarget->ThreadMutexUnlock(Handle);
 	}

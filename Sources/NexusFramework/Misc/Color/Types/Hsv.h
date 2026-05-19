@@ -19,7 +19,7 @@ namespace NxFr
 
 	namespace Colors
 	{
-		struct NEXUS_FRAMEWORK_API Hsv
+		struct NX_FRAMEWORK_API Hsv
 		{
 			using Type = float;
 
@@ -80,13 +80,13 @@ namespace NxFr
 			Type h, s, v, a;
 		};
 
-		NEXUS_FRAMEWORK_API Hsv operator+(Hsv Instance, Hsv::Type Other);
-		NEXUS_FRAMEWORK_API Hsv operator-(Hsv Instance, Hsv::Type Other);
-		NEXUS_FRAMEWORK_API Hsv operator*(Hsv Instance, Hsv::Type Other);
-		NEXUS_FRAMEWORK_API Hsv operator/(Hsv Instance, Hsv::Type Other);
-		NEXUS_FRAMEWORK_API Hsv operator+(Hsv Instance, Hsv Other);
-		NEXUS_FRAMEWORK_API Hsv operator-(Hsv Instance, Hsv Other);
-		NEXUS_FRAMEWORK_API Hsv operator*(Hsv Instance, Hsv Other);
-		NEXUS_FRAMEWORK_API Hsv operator/(Hsv Instance, Hsv Other);
+		NX_FRAMEWORK_API Hsv operator+(Hsv Instance, Hsv::Type Other);
+		NX_FRAMEWORK_API Hsv operator-(Hsv Instance, Hsv::Type Other);
+		NX_FRAMEWORK_API Hsv operator*(Hsv Instance, Hsv::Type Other);
+		NX_FRAMEWORK_API Hsv operator/(Hsv Instance, Hsv::Type Other);
+		NX_FRAMEWORK_API Hsv operator+(Hsv Instance, Hsv Other);
+		NX_FRAMEWORK_API Hsv operator-(Hsv Instance, Hsv Other);
+		NX_FRAMEWORK_API Hsv operator*(Hsv Instance, Hsv Other);
+		NX_FRAMEWORK_API Hsv operator/(Hsv Instance, Hsv Other);
 	}
 }

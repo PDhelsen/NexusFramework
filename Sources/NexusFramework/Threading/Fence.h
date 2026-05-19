@@ -7,10 +7,10 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API Fence
+	struct NX_FRAMEWORK_API Fence
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(Fence)
+		NX_NOCOPY_NOMOVE(Fence)
 		Fence(uint64 Value);
 		~Fence();
 

@@ -184,18 +184,18 @@ namespace NxFr
 
 		BufferView Get(uint64 Size, uint64 Offset = 0) const
 		{
-			NEXUS_ASSERT(Size > 0, Default, "Size is 0");
-			NEXUS_ASSERT(Size <= Count, Default, "Size is greater than the size of the Buffer");
-			NEXUS_ASSERT(Offset + Size <= Count, Default, "Get will overflow");
+			NX_ASSERT(Size > 0, Default, "Size is 0");
+			NX_ASSERT(Size <= Count, Default, "Size is greater than the size of the Buffer");
+			NX_ASSERT(Offset + Size <= Count, Default, "Get will overflow");
 
 			return BufferView((Byte*)GetPtr() + Offset, Size);
 		}
 
 		void Set(const void* Source, uint64 Size = 0, uint64 OffsetBuffer = 0, uint64 OffsetSource = 0)
 		{
-			NEXUS_ASSERT(Source, Default, "Source is null");
-			NEXUS_ASSERT(Size <= Count, Default, "Size is greater than the size of the Buffer");
-			NEXUS_ASSERT(OffsetBuffer + Size <= Count, Default, "Set will overflow");
+			NX_ASSERT(Source, Default, "Source is null");
+			NX_ASSERT(Size <= Count, Default, "Size is greater than the size of the Buffer");
+			NX_ASSERT(OffsetBuffer + Size <= Count, Default, "Set will overflow");
 
 			Size = Size != 0 ? Size : Count;
 			Copy(Source, Size, OffsetBuffer, OffsetSource);

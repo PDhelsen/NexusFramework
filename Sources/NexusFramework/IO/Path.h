@@ -9,10 +9,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Path
+	class NX_FRAMEWORK_API Path
 	{
 	public:
-		struct NEXUS_FRAMEWORK_API Info
+		struct NX_FRAMEWORK_API Info
 		{
 			Info()
 				: Path(), Depth(0),

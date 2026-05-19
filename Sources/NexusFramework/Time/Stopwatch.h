@@ -5,7 +5,7 @@
 
 namespace NxFr
 {
-	struct NEXUS_FRAMEWORK_API Stopwatch
+	struct NX_FRAMEWORK_API Stopwatch
 	{
 	public:
 		Stopwatch(bool AutoStart = false);

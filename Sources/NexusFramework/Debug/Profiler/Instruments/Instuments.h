@@ -10,10 +10,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Instruments
+	class NX_FRAMEWORK_API Instruments
 	{
 	public:
-		class NEXUS_FRAMEWORK_API Scope
+		class NX_FRAMEWORK_API Scope
 		{
 			friend class Instruments;
 
@@ -30,7 +30,7 @@ namespace NxFr
 			Instruments* Target;
 		};
 
-		NEXUS_NOCOPY_NOMOVE(Instruments)
+		NX_NOCOPY_NOMOVE(Instruments)
 		Instruments(bool AutoStart = false, bool AutoFlush = false);
 		virtual ~Instruments();
 
@@ -56,20 +56,20 @@ namespace NxFr
 	};
 }
 
-#if NEXUS_DEBUG || NEXUS_RELEASE
-	#define NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) ::NxFr::Instruments::Scope Marker##Line(Name, Instance);
-	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, Name) NEXUS_INSTUMENT_LINE_INSTANCE(Instance, Name, NEXUS_LINE_NUMBER)
-	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance) NEXUS_INSTUMENT_SCOPE_INSTANCE(Instance, NEXUS_FUNCTION_SIGNATURE)
+#if NX_DEBUG || NX_RELEASE
+	#define NX_INSTUMENT_LINE_INSTANCE(Instance, Name, Line) ::NxFr::Instruments::Scope Marker##Line(Name, Instance);
+	#define NX_INSTUMENT_SCOPE_INSTANCE(Instance, Name) NX_INSTUMENT_LINE_INSTANCE(Instance, Name, NX_LINE_NUMBER)
+	#define NX_INSTUMENT_FUNCTION_INSTANCE(Instance) NX_INSTUMENT_SCOPE_INSTANCE(Instance, NX_FUNCTION_SIGNATURE)
 
-	#define NEXUS_INSTUMENT_LINE(Name, Line) NEXUS_INSTUMENT_LINE_INSTANCE(::NxFr::Globals::Debug::Instrumentor, Name, Line)
-	#define NEXUS_INSTUMENT_SCOPE(Name) NEXUS_INSTUMENT_SCOPE_INSTANCE(::NxFr::Globals::Debug::Instrumentor, Name)
-	#define NEXUS_INSTUMENT_FUNCTION() NEXUS_INSTUMENT_FUNCTION_INSTANCE(::NxFr::Globals::Debug::Instrumentor)
-#elif NEXUS_DISTRIB
-	#define NEXUS_INSTUMENT_LINE_INSTANCE(Name, Line, Instance)
-	#define NEXUS_INSTUMENT_SCOPE_INSTANCE(Name, Instance)
-	#define NEXUS_INSTUMENT_FUNCTION_INSTANCE(Instance)
+	#define NX_INSTUMENT_LINE(Name, Line) NX_INSTUMENT_LINE_INSTANCE(::NxFr::Globals::Debug::Instrumentor, Name, Line)
+	#define NX_INSTUMENT_SCOPE(Name) NX_INSTUMENT_SCOPE_INSTANCE(::NxFr::Globals::Debug::Instrumentor, Name)
+	#define NX_INSTUMENT_FUNCTION() NX_INSTUMENT_FUNCTION_INSTANCE(::NxFr::Globals::Debug::Instrumentor)
+#elif NX_DISTRIB
+	#define NX_INSTUMENT_LINE_INSTANCE(Name, Line, Instance)
+	#define NX_INSTUMENT_SCOPE_INSTANCE(Name, Instance)
+	#define NX_INSTUMENT_FUNCTION_INSTANCE(Instance)
 
-	#define NEXUS_INSTUMENT_LINE(Name, Line)
-	#define NEXUS_INSTUMENT_SCOPE(Name)
-	#define NEXUS_INSTUMENT_FUNCTION()
+	#define NX_INSTUMENT_LINE(Name, Line)
+	#define NX_INSTUMENT_SCOPE(Name)
+	#define NX_INSTUMENT_FUNCTION()
 #endif

@@ -60,12 +60,12 @@ namespace NxFr
 	{
 		for (uint64 Index = 0; Index < Positionals.GetCount(); ++Index)
 		{
-			NEXUS_LOG(Info, Default, "Positional %llu : %s", Index, Positionals[Index].C(true));
+			NX_LOG(Info, Default, "Positional %llu : %s", Index, Positionals[Index].C(true));
 		}
 
 		for (auto& [Key, Value] : Named)
 		{
-			NEXUS_LOG(Info, Default, "Named %s : %s", Key.C(true), Value.C(true));
+			NX_LOG(Info, Default, "Named %s : %s", Key.C(true), Value.C(true));
 		}
 	}
 

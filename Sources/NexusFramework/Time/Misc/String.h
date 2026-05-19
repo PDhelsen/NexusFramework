@@ -14,7 +14,7 @@ namespace NxFr
 	{
 		// In Time.cpp due to C-Lib conversion
 		template<>
-		struct NEXUS_FRAMEWORK_API Converter<Timestamp>
+		struct NX_FRAMEWORK_API Converter<Timestamp>
 		{
 			static StringView GetFormat(bool Pretty);
 			static void ToString(const Timestamp& Data, String& Result, StringView Format);
@@ -23,7 +23,7 @@ namespace NxFr
 
 		// In Time.cpp due to C-Lib conversion
 		template<>
-		struct NEXUS_FRAMEWORK_API Converter<Timespan>
+		struct NX_FRAMEWORK_API Converter<Timespan>
 		{
 			static StringView GetFormat(bool Pretty);
 			static void ToString(const Timespan& Data, String& Result, StringView Format = "");
@@ -45,7 +45,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Stopwatch& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
+				NX_ASSERT(false, Default, "Unsupported FromString with Stopwatch");
 			}
 		};
 	}

@@ -6,8 +6,8 @@ namespace NxFr
 	PoolAllocator::PoolAllocator(uint64 Size, uint64 Stride)
 		: MemoryAllocator(Size), Head(nullptr), Stride(Stride)
 	{
-		NEXUS_ASSERT(Stride >= sizeof(void*), Default, "Element size should be at least : %llu bytes", sizeof(void*));
-		NEXUS_ASSERT(Math::IsMultiple(Size, Stride), Default, "Size (%llu) is not a multiple of the stride (%llu)", Size, Stride);
+		NX_ASSERT(Stride >= sizeof(void*), Default, "Element size should be at least : %llu bytes", sizeof(void*));
+		NX_ASSERT(Math::IsMultiple(Size, Stride), Default, "Size (%llu) is not a multiple of the stride (%llu)", Size, Stride);
 
 		Clear();
 	}
@@ -36,7 +36,7 @@ namespace NxFr
 
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(FreeAmount() >= Stride, Default, "Allocator is full");
+		NX_ASSERT(FreeAmount() >= Stride, Default, "Allocator is full");
 
 		void* Pointer = Head;
 
@@ -48,7 +48,7 @@ namespace NxFr
 
 	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(false, Default, "Reallocate from Pool Allocator is not supported");
+		NX_ASSERT(false, Default, "Reallocate from Pool Allocator is not supported");
 		return nullptr;
 	}
 
@@ -59,7 +59,7 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
+		NX_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		EraseMemory(Pointer, Stride);
 

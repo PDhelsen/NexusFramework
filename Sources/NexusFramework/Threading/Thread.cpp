@@ -33,14 +33,14 @@ namespace NxFr
 
 	Thread::~Thread()
 	{
-		NEXUS_ASSERT(!IsRunning(), Default, "Thread is still running")
+		NX_ASSERT(!IsRunning(), Default, "Thread is still running")
 
 		Globals::PlatformTarget->ThreadDestroy(Handle);
 	}
 
 	void Thread::Run()
 	{
-		NEXUS_ASSERT(!HasStarted(), Default, "Thread is already running");
+		NX_ASSERT(!HasStarted(), Default, "Thread is already running");
 
 		if (SetState(Status::Running))
 		{
@@ -57,8 +57,8 @@ namespace NxFr
 
 	void Thread::Join()
 	{
-		NEXUS_ASSERT(IsRunning() || IsFinished(), Default, "Thread is not running");
-		NEXUS_ASSERT(!IsDetached(), Default, "Thread is already detached");
+		NX_ASSERT(IsRunning() || IsFinished(), Default, "Thread is not running");
+		NX_ASSERT(!IsDetached(), Default, "Thread is already detached");
 
 		if (SetState(Status::Joined))
 		{
@@ -68,8 +68,8 @@ namespace NxFr
 
 	void Thread::Detach()
 	{
-		NEXUS_ASSERT(IsRunning() || IsFinished(), Default, "Thread is not running");
-		NEXUS_ASSERT(!IsJoining(), Default, "Thread is already joining");
+		NX_ASSERT(IsRunning() || IsFinished(), Default, "Thread is not running");
+		NX_ASSERT(!IsJoining(), Default, "Thread is already joining");
 
 		if (SetState(Status::Detached))
 		{

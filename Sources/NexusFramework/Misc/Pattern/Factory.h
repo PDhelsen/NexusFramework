@@ -13,7 +13,7 @@ namespace NxFr
 	public:
 		struct Creator
 		{
-			NEXUS_NOCOPY_NOMOVE(Creator);
+			NX_NOCOPY_NOMOVE(Creator);
 			Creator() = default;
 			virtual ~Creator() = default;
 

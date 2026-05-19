@@ -34,7 +34,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Vector<D, T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with un-specified vector");
+				NX_ASSERT(false, Default, "Unsupported FromString with un-specified vector");
 			}
 		};
 
@@ -171,7 +171,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Matrix<R, C, T>& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with matrix");
+				NX_ASSERT(false, Default, "Unsupported FromString with matrix");
 			}
 		};
 
@@ -194,7 +194,7 @@ namespace NxFr
 
 			static void FromString(StringView Data, Matrix4x4f& Result, StringView Format = "")
 			{
-				NEXUS_ASSERT(false, Default, "Unsupported FromString with matrix");
+				NX_ASSERT(false, Default, "Unsupported FromString with matrix");
 			}
 		};
 

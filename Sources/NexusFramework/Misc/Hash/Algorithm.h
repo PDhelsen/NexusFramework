@@ -8,7 +8,7 @@ namespace NxFr
 	namespace Hashing
 	{
 		template<typename L>
-		class NEXUS_FRAMEWORK_API HashAlgorithm
+		class NX_FRAMEWORK_API HashAlgorithm
 		{
 		public:
 			using HashLength = L;
@@ -23,7 +23,7 @@ namespace NxFr
 			virtual HashLength GetSeed() const = 0;
 		};
 
-		class NEXUS_FRAMEWORK_API XxHash32 : public HashAlgorithm<uint32>
+		class NX_FRAMEWORK_API XxHash32 : public HashAlgorithm<uint32>
 		{
 		public:
 			XxHash32(HashLength Seed = 0);
@@ -59,7 +59,7 @@ namespace NxFr
 			uint8 BufferSize;
 		};
 
-		class NEXUS_FRAMEWORK_API XxHash64 : public HashAlgorithm<uint64>
+		class NX_FRAMEWORK_API XxHash64 : public HashAlgorithm<uint64>
 		{
 		public:
 			XxHash64(HashLength Seed = 0);
@@ -96,7 +96,7 @@ namespace NxFr
 			uint8 BufferSize;
 		};
 
-		class NEXUS_FRAMEWORK_API Murmur32 : public HashAlgorithm<uint32>
+		class NX_FRAMEWORK_API Murmur32 : public HashAlgorithm<uint32>
 		{
 		public:
 			Murmur32(HashLength Seed = 0);
@@ -123,7 +123,7 @@ namespace NxFr
 			HashLength Accumulator;
 		};
 
-		class NEXUS_FRAMEWORK_API Fnv164 : public HashAlgorithm<uint64>
+		class NX_FRAMEWORK_API Fnv164 : public HashAlgorithm<uint64>
 		{
 		public:
 			Fnv164(HashLength Seed = 0);
@@ -144,7 +144,7 @@ namespace NxFr
 			HashLength Accumulator;
 		};
 
-		class NEXUS_FRAMEWORK_API Fnv1a64 : public HashAlgorithm<uint64>
+		class NX_FRAMEWORK_API Fnv1a64 : public HashAlgorithm<uint64>
 		{
 		public:
 			Fnv1a64(HashLength Seed = 0);

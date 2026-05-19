@@ -19,7 +19,7 @@ namespace NxFr
 
 	namespace Colors
 	{
-		struct NEXUS_FRAMEWORK_API sRGB
+		struct NX_FRAMEWORK_API sRGB
 		{
 			using Type = float;
 
@@ -80,13 +80,13 @@ namespace NxFr
 			Type r, g, b, a;
 		};
 
-		NEXUS_FRAMEWORK_API sRGB operator+(sRGB Instance, sRGB::Type Other);
-		NEXUS_FRAMEWORK_API sRGB operator-(sRGB Instance, sRGB::Type Other);
-		NEXUS_FRAMEWORK_API sRGB operator*(sRGB Instance, sRGB::Type Other);
-		NEXUS_FRAMEWORK_API sRGB operator/(sRGB Instance, sRGB::Type Other);
-		NEXUS_FRAMEWORK_API sRGB operator+(sRGB Instance, sRGB Other);
-		NEXUS_FRAMEWORK_API sRGB operator-(sRGB Instance, sRGB Other);
-		NEXUS_FRAMEWORK_API sRGB operator*(sRGB Instance, sRGB Other);
-		NEXUS_FRAMEWORK_API sRGB operator/(sRGB Instance, sRGB Other);
+		NX_FRAMEWORK_API sRGB operator+(sRGB Instance, sRGB::Type Other);
+		NX_FRAMEWORK_API sRGB operator-(sRGB Instance, sRGB::Type Other);
+		NX_FRAMEWORK_API sRGB operator*(sRGB Instance, sRGB::Type Other);
+		NX_FRAMEWORK_API sRGB operator/(sRGB Instance, sRGB::Type Other);
+		NX_FRAMEWORK_API sRGB operator+(sRGB Instance, sRGB Other);
+		NX_FRAMEWORK_API sRGB operator-(sRGB Instance, sRGB Other);
+		NX_FRAMEWORK_API sRGB operator*(sRGB Instance, sRGB Other);
+		NX_FRAMEWORK_API sRGB operator/(sRGB Instance, sRGB Other);
 	}
 }

@@ -10,12 +10,12 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Stream
+	class NX_FRAMEWORK_API Stream
 	{
 	public:
 		inline static constexpr uint64 BlockSize = 1024;
 
-		NEXUS_NOCOPY(Stream)
+		NX_NOCOPY(Stream)
 		Stream(StringView Path);
 		Stream(Stream&& Other) noexcept;
 		virtual ~Stream();
@@ -42,10 +42,10 @@ namespace NxFr
 		uint64 Cursor;
 	};
 
-	class NEXUS_FRAMEWORK_API TextStream : public Stream
+	class NX_FRAMEWORK_API TextStream : public Stream
 	{
 	public:
-		NEXUS_NOCOPY(TextStream)
+		NX_NOCOPY(TextStream)
 		TextStream(StringView Path);
 		TextStream(TextStream&& Other) noexcept;
 		virtual ~TextStream();
@@ -68,10 +68,10 @@ namespace NxFr
 		String Buffer;
 	};
 
-	class NEXUS_FRAMEWORK_API BinaryStream : public Stream
+	class NX_FRAMEWORK_API BinaryStream : public Stream
 	{
 	public:
-		NEXUS_NOCOPY(BinaryStream)
+		NX_NOCOPY(BinaryStream)
 		BinaryStream(StringView Path);
 		BinaryStream(BinaryStream&& Other) noexcept;
 		virtual ~BinaryStream();

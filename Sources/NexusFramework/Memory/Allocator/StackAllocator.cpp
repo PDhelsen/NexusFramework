@@ -40,7 +40,7 @@ namespace NxFr
 		void* Pointer = Memory::AlignPointer(Marker, Alignement);
 		void* NextPointer = Memory::OffsetPointer(Pointer, Size);
 
-		NEXUS_ASSERT(IsPointerInMemoryBlock(NextPointer), Default, "Allocator is full");
+		NX_ASSERT(IsPointerInMemoryBlock(NextPointer), Default, "Allocator is full");
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
 		Next(NextPointer);
@@ -53,7 +53,7 @@ namespace NxFr
 
 	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NEXUS_ASSERT(false, Default, "Reallocate from Stack Allocator is not supported");
+		NX_ASSERT(false, Default, "Reallocate from Stack Allocator is not supported");
 		return nullptr;
 	}
 
@@ -64,7 +64,7 @@ namespace NxFr
 			return;
 		}
 
-		NEXUS_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
+		NX_ASSERT(IsPointerInMemoryBlock(Pointer), Default, "Invalid pointer");
 
 		uint64 Address = reinterpret_cast<uint64>(Pointer);
 		uint64 Current = reinterpret_cast<uint64>(Marker);

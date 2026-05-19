@@ -8,7 +8,7 @@ namespace NxSb
 {
 	void HelloWorld()
 	{
-		NEXUS_LOG(Info, Default, "Hello World");
+		NX_LOG(Info, Default, "Hello World");
 	}
 }
 

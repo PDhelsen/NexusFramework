@@ -65,9 +65,9 @@ namespace NxTs
 	};
 }
 
-NEXUS_ENUM_STRING(NxTs::DummyEnum, 5, "Null", "First", "Second", "Third", "Fourth")
-NEXUS_FLAG(NxTs::DummyFlag, uint8)
-NEXUS_FLAG_STRING(NxTs::DummyFlag, 4, "First", "Second", "Third", "Fourth")
+NX_ENUM_STRING(NxTs::DummyEnum, 5, "Null", "First", "Second", "Third", "Fourth")
+NX_FLAG(NxTs::DummyFlag, uint8)
+NX_FLAG_STRING(NxTs::DummyFlag, 4, "First", "Second", "Third", "Fourth")
 
 namespace NxFr
 {

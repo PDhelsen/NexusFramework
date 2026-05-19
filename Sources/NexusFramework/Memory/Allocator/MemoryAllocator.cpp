@@ -21,7 +21,7 @@ namespace NxFr
 
 	void MemoryAllocator::EraseMemory(void* Pointer, uint64 Size)
 	{
-#if NEXUS_DEBUG
+#if NX_DEBUG
 		Memory::MemSet(Pointer, 0, Size);
 #endif
 	}

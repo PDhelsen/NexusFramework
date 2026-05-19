@@ -74,7 +74,7 @@ namespace NxFr
 	{
 		if (HasChannel(Channel))
 		{
-			NEXUS_LOG(Error, Default, "Channel (%s) is already registered", Channel.C());
+			NX_LOG(Error, Default, "Channel (%s) is already registered", Channel.C());
 			return;
 		}
 
@@ -85,7 +85,7 @@ namespace NxFr
 	{
 		if (!HasChannel(Channel))
 		{
-			NEXUS_LOG(Error, Default, "Channel (%s) is not registered", Channel.C());
+			NX_LOG(Error, Default, "Channel (%s) is not registered", Channel.C());
 			return;
 		}
 
@@ -109,7 +109,7 @@ namespace NxFr
 	{
 		if (!HasChannel(Channel))
 		{
-			NEXUS_LOG(Error, Default, "Channel (%s) is not registered", Channel.C());
+			NX_LOG(Error, Default, "Channel (%s) is not registered", Channel.C());
 			return false;
 		}
 

@@ -59,7 +59,7 @@ namespace NxFr
 
 		void CreatePlatform()
 		{
-#if NEXUS_WINDOWS
+#if NX_WINDOWS
 			PlatformTarget = new PlatformWindows();
 			MainThreadId = Thread::ThreadId();
 #else
@@ -77,7 +77,7 @@ namespace NxFr
 
 		void DestroyArgs()
 		{
-			NEXUS_DELETE(Args);
+			NX_DELETE(Args);
 		}
 
 		void CreatePathsAndFolders()
@@ -129,15 +129,15 @@ namespace NxFr
 		void DestroyDebug()
 		{
 			Debug::Instrumentor->StopRecording();
-			NEXUS_DELETE(Debug::Instrumentor);
+			NX_DELETE(Debug::Instrumentor);
 
 			Debug::Statistiques->StopRecording();
-			NEXUS_DELETE(Debug::Statistiques);
+			NX_DELETE(Debug::Statistiques);
 
-			NEXUS_DELETE(Debug::Logs);
+			NX_DELETE(Debug::Logs);
 
 			Debug::Memory->StopRecording();
-			NEXUS_DELETE(Debug::Memory);
+			NX_DELETE(Debug::Memory);
 		}
 	}
 }

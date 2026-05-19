@@ -6,10 +6,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API RawAllocator : public Allocator
+	class NX_FRAMEWORK_API RawAllocator : public Allocator
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(RawAllocator)
+		NX_NOCOPY_NOMOVE(RawAllocator)
 		RawAllocator();
 		virtual ~RawAllocator();
 

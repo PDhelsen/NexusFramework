@@ -45,26 +45,26 @@ workspace (Framework)
         toolset "msc"
 
     filter "toolset:msc"
-        defines { "NEXUS_MSVC" }
+        defines { "NX_MSVC" }
     	disablewarnings { "4244", "4267", "4251" }
 
     filter "platforms:Win64"
-        defines { "NEXUS_WINDOWS" }
+        defines { "NX_WINDOWS" }
         architecture "x64"
 		system "windows"
 
     filter "configurations:Debug"
-        defines { "NEXUS_DEBUG" }
+        defines { "NX_DEBUG" }
         symbols "On"
         optimize "Off"
 
     filter "configurations:Release"
-        defines { "NEXUS_RELEASE" }
+        defines { "NX_RELEASE" }
         symbols "On"
         optimize "On"
 
     filter "configurations:Distrib"
-        defines { "NEXUS_DISTRIB" }
+        defines { "NX_DISTRIB" }
         symbols "Off"
         optimize "On"
 
@@ -111,7 +111,7 @@ project (Framework)
 
 	defines
 	{
-		"NEXUS_FRAMEWORK_DLL"
+		"NX_FRAMEWORK_DLL"
 	}
 
     postbuildcommands

@@ -30,7 +30,7 @@ namespace NxFr
 	StringView::StringView(const char* Text, uint64 Offset, uint64 Size)
 		: Data(Text + Offset), Count(Size)
 	{
-		NEXUS_ASSERT(Offset + Size <= StringCApi::Length(Text), Default, "Invalid String view");
+		NX_ASSERT(Offset + Size <= StringCApi::Length(Text), Default, "Invalid String view");
 	}
 
 	StringView::StringView(const String& Text)

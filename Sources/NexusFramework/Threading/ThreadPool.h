@@ -12,12 +12,12 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API ThreadPool
+	class NX_FRAMEWORK_API ThreadPool
 	{
 	public:
 		static uint64 MaxThreadCount();
 
-		NEXUS_NOCOPY_NOMOVE(ThreadPool)
+		NX_NOCOPY_NOMOVE(ThreadPool)
 		ThreadPool(uint64 Size = 0);
 		~ThreadPool();
 

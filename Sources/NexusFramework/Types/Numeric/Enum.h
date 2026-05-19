@@ -2,7 +2,7 @@
 
 #include "NexusFramework/Math/Math.h"
 
-#define NEXUS_ENUM_STRING(EnumType, Count, ...)\
+#define NX_ENUM_STRING(EnumType, Count, ...)\
 	namespace NxFr\
 	{\
 		namespace StringUtility\
@@ -31,7 +31,7 @@
 		}\
 	}
 
-#define NEXUS_FLAG_STRING(EnumType, Count, ...)\
+#define NX_FLAG_STRING(EnumType, Count, ...)\
 	namespace NxFr\
 	{\
 		namespace StringUtility\
@@ -61,7 +61,7 @@
 		}\
 	}
 
-#define NEXUS_FLAG(EnumType, IntegerType)\
+#define NX_FLAG(EnumType, IntegerType)\
 	inline EnumType operator ~ (EnumType Value) { return (EnumType)(~(IntegerType)Value); }\
 	inline EnumType operator | (EnumType Value, EnumType Flag) { return (EnumType)((IntegerType)Value | (IntegerType)Flag); }\
 	inline EnumType operator & (EnumType Value, EnumType Flag) { return (EnumType)((IntegerType)Value & (IntegerType)Flag); }\

@@ -13,7 +13,7 @@ namespace NxFr
 		struct StringToken;
 	}
 
-	class NEXUS_FRAMEWORK_API String
+	class NX_FRAMEWORK_API String
 	{
 	public:
 		using Similar = StringView;

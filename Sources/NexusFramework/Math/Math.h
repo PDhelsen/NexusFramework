@@ -262,7 +262,7 @@ namespace NxFr
 		template<typename T>
 		T LogTwoPowerOfTwo(T X)
 		{
-			NEXUS_BITSCANFORWARD(X, Index, Result)
+			NX_BITSCANFORWARD(X, Index, Result)
 			return Result > 0 ? (T)Index : -1;
 		}
 

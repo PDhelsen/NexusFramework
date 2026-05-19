@@ -9,7 +9,7 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API File
+	class NX_FRAMEWORK_API File
 	{
 	public:
 		enum class Mode
@@ -17,7 +17,7 @@ namespace NxFr
 			None, Read, Write, Append
 		};
 
-		NEXUS_NOCOPY(File)
+		NX_NOCOPY(File)
 		File(StringView Path);
 		File(File&& Other) noexcept;
 		~File();

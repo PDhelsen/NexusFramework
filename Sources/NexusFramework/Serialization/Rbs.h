@@ -12,7 +12,7 @@ namespace NxFr
 		struct Converter;
 	}
 
-	class NEXUS_FRAMEWORK_API RBS
+	class NX_FRAMEWORK_API RBS
 	{
 	public:
 		static Buffer Serialize(const RBS& Data);

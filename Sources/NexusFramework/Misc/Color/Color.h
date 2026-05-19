@@ -13,29 +13,29 @@ namespace NxFr
 
 	namespace Colors
 	{
-		NEXUS_FRAMEWORK_API extern const Color Clear;
-		NEXUS_FRAMEWORK_API extern const Color Black;
-		NEXUS_FRAMEWORK_API extern const Color Gray;
-		NEXUS_FRAMEWORK_API extern const Color White;
-		NEXUS_FRAMEWORK_API extern const Color Red;
-		NEXUS_FRAMEWORK_API extern const Color Green;
-		NEXUS_FRAMEWORK_API extern const Color Blue;
-		NEXUS_FRAMEWORK_API extern const Color Yellow;
-		NEXUS_FRAMEWORK_API extern const Color Cyan;
-		NEXUS_FRAMEWORK_API extern const Color Magenta;
-		NEXUS_FRAMEWORK_API extern const Color Orange;
+		NX_FRAMEWORK_API extern const Color Clear;
+		NX_FRAMEWORK_API extern const Color Black;
+		NX_FRAMEWORK_API extern const Color Gray;
+		NX_FRAMEWORK_API extern const Color White;
+		NX_FRAMEWORK_API extern const Color Red;
+		NX_FRAMEWORK_API extern const Color Green;
+		NX_FRAMEWORK_API extern const Color Blue;
+		NX_FRAMEWORK_API extern const Color Yellow;
+		NX_FRAMEWORK_API extern const Color Cyan;
+		NX_FRAMEWORK_API extern const Color Magenta;
+		NX_FRAMEWORK_API extern const Color Orange;
 	}
 
 	namespace ColorUtility
 	{
-		NEXUS_FRAMEWORK_API float ToGrayscale(Colors::sRGB Instance);
-		NEXUS_FRAMEWORK_API Colors::sRGB TosRGB(Colors::Linear Instance);
-		NEXUS_FRAMEWORK_API Colors::sRGB TosRGB(Colors::Bits Instance);
-		NEXUS_FRAMEWORK_API Colors::sRGB TosRGB(Colors::Hsv Instance);
-		NEXUS_FRAMEWORK_API Colors::Linear ToLinear(Colors::sRGB Instance);
-		NEXUS_FRAMEWORK_API Colors::Bits ToBits(Colors::sRGB Instance);
-		NEXUS_FRAMEWORK_API Colors::Hsv ToHsv(Colors::sRGB Instance);
-		NEXUS_FRAMEWORK_API Colors::sRGB ToHue(float Hue);
+		NX_FRAMEWORK_API float ToGrayscale(Colors::sRGB Instance);
+		NX_FRAMEWORK_API Colors::sRGB TosRGB(Colors::Linear Instance);
+		NX_FRAMEWORK_API Colors::sRGB TosRGB(Colors::Bits Instance);
+		NX_FRAMEWORK_API Colors::sRGB TosRGB(Colors::Hsv Instance);
+		NX_FRAMEWORK_API Colors::Linear ToLinear(Colors::sRGB Instance);
+		NX_FRAMEWORK_API Colors::Bits ToBits(Colors::sRGB Instance);
+		NX_FRAMEWORK_API Colors::Hsv ToHsv(Colors::sRGB Instance);
+		NX_FRAMEWORK_API Colors::sRGB ToHue(float Hue);
 
 		template<typename T>
 		Vector3f ToVector3f(T Instance)

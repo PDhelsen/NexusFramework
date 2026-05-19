@@ -13,19 +13,19 @@ namespace NxFr
 
 	namespace Memory
 	{
-		NEXUS_FRAMEWORK_API void* Allocate(uint64, Allocator*, uint64);
-		NEXUS_FRAMEWORK_API void* Reallocate(void*, uint64, Allocator*, uint64);
-		NEXUS_FRAMEWORK_API void Free(void*, Allocator*);
+		NX_FRAMEWORK_API void* Allocate(uint64, Allocator*, uint64);
+		NX_FRAMEWORK_API void* Reallocate(void*, uint64, Allocator*, uint64);
+		NX_FRAMEWORK_API void Free(void*, Allocator*);
 	}
 
-	class NEXUS_FRAMEWORK_API Allocator
+	class NX_FRAMEWORK_API Allocator
 	{
 		friend void* Memory::Allocate(uint64, Allocator*, uint64);
 		friend void* Memory::Reallocate(void*, uint64, Allocator*, uint64);
 		friend void Memory::Free(void*, Allocator*);
 
 	public:
-		struct NEXUS_FRAMEWORK_API Scope
+		struct NX_FRAMEWORK_API Scope
 		{
 			Scope(Allocator* Instance);
 			~Scope();
@@ -34,7 +34,7 @@ namespace NxFr
 		static Context<Allocator>& GetContexts();
 		static Allocator* TryGet();
 
-		NEXUS_NOCOPY_NOMOVE(Allocator)
+		NX_NOCOPY_NOMOVE(Allocator)
 		Allocator(uint64 Size);
 		virtual ~Allocator() = default;
 

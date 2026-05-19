@@ -4,10 +4,10 @@
 
 namespace NxFr
 {
-    class NEXUS_FRAMEWORK_API PoolAllocator : public MemoryAllocator
+    class NX_FRAMEWORK_API PoolAllocator : public MemoryAllocator
     {
     public:
-		NEXUS_NOCOPY_NOMOVE(PoolAllocator)
+		NX_NOCOPY_NOMOVE(PoolAllocator)
 		PoolAllocator(uint64 Size, uint64 Stride);
 		virtual ~PoolAllocator();
 

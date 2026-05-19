@@ -147,7 +147,7 @@ namespace NxFr
 		template<typename T>
 		void Bind(T* Target, FM<T> Method)
 		{
-			NEXUS_ASSERT_STATIC(sizeof(FMData<T>) <= BufferSize, "Member function too large for Delegate Buffer");
+			NX_ASSERT_STATIC(sizeof(FMData<T>) <= BufferSize, "Member function too large for Delegate Buffer");
 
 			Reset();
 			new (Buffer) FMData<T>{ Target, Method };
@@ -161,7 +161,7 @@ namespace NxFr
 		template<typename T>
 		void Bind(const T* Target, FCM<T> Method)
 		{
-			NEXUS_ASSERT_STATIC(sizeof(FCMData<T>) <= BufferSize, "Member function too large for Delegate Buffer");
+			NX_ASSERT_STATIC(sizeof(FCMData<T>) <= BufferSize, "Member function too large for Delegate Buffer");
 
 			Reset();
 			new (Buffer) FCMData<T>{ Target, Method };
@@ -237,7 +237,7 @@ namespace NxFr
 
 		R Invoke(Args... args) const
 		{
-			NEXUS_ASSERT(!IsNull(), Default, "Delegate is null");
+			NX_ASSERT(!IsNull(), Default, "Delegate is null");
 			return Function(Buffer, Forward<Args>(args)...);
 		}
 

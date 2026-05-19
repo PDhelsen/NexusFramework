@@ -11,7 +11,7 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Arguments
+	class NX_FRAMEWORK_API Arguments
 	{
 	public:
 		inline static const String Separator = " ";

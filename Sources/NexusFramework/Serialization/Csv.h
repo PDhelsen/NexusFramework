@@ -7,7 +7,7 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API Csv
+	class NX_FRAMEWORK_API Csv
 	{
 	public:
 		inline static const String Separator = ";";

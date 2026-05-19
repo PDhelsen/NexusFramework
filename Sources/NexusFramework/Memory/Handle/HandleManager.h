@@ -9,10 +9,10 @@
 
 namespace NxFr
 {
-	class NEXUS_FRAMEWORK_API HandleManager
+	class NX_FRAMEWORK_API HandleManager
 	{
 	public:
-		NEXUS_NOCOPY_NOMOVE(HandleManager)
+		NX_NOCOPY_NOMOVE(HandleManager)
 		HandleManager(uint64 Size);
 		~HandleManager();
 

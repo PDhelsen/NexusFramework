@@ -19,7 +19,7 @@ namespace NxFr
 	{
 		if (Started)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was already started");
+			NX_LOG(Warning, Default, "Stopwatch was already started");
 			return;
 		}
 
@@ -33,13 +33,13 @@ namespace NxFr
 	{
 		if (Paused)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was already paused");
+			NX_LOG(Warning, Default, "Stopwatch was already paused");
 			return 0.0;
 		}
 
 		if (!Started)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
+			NX_LOG(Warning, Default, "Stopwatch was not started");
 			return 0.0;
 		}
 
@@ -53,13 +53,13 @@ namespace NxFr
 	{
 		if (!Paused)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not paused");
+			NX_LOG(Warning, Default, "Stopwatch was not paused");
 			return;
 		}
 
 		if (!Started)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
+			NX_LOG(Warning, Default, "Stopwatch was not started");
 			return;
 		}
 
@@ -71,7 +71,7 @@ namespace NxFr
 	{
 		if (!Started)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was not started");
+			NX_LOG(Warning, Default, "Stopwatch was not started");
 			return 0.0;
 		}
 
@@ -86,7 +86,7 @@ namespace NxFr
 	{
 		if (Started)
 		{
-			NEXUS_LOG(Warning, Default, "Stopwatch was running");
+			NX_LOG(Warning, Default, "Stopwatch was running");
 		}
 
 		StartTimer = 0.0;
