@@ -4,14 +4,12 @@
 
 namespace NxFr
 {
-	class HandleManager;
-
 	template<typename T>
 	struct Handle
 	{
 		template<typename>
 		friend struct Handle;
-		friend HandleManager;
+		friend class HandleManager;
 
 		Handle() : Pointer(nullptr) {}
 		template<typename U>
