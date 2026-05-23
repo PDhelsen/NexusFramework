@@ -27,13 +27,13 @@ namespace NxFr
 			static void FromString(StringView Data, T& Result, StringView Format = "") {}
 		};
 
-		inline const uint8 GuessFormatingSize = 8;
-		inline const char NullChar = StringCApi::NullChar;
-		inline const char NewLineChar = StringCApi::NewLineChar;
-		inline const String NewLine = StringCApi::NewLine;
-		inline const String Empty = "";
-		inline const String Unknown = "Unknown";
-		inline const StringId Id = 0;
+		inline static const uint8 GuessFormatingSize = 8;
+		inline static const char NullChar = StringCApi::NullChar;
+		inline static const char NewLineChar = StringCApi::NewLineChar;
+		inline static const String NewLine = StringCApi::NewLine;
+		inline static const String Empty = "";
+		inline static const String Unknown = "Unknown";
+		inline static const StringId Id = 0;
 
 		template<typename... Args>
 		void Format(String& Text, StringView Formatting, Args&&... args)

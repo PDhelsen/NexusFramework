@@ -4,16 +4,6 @@
 
 namespace NxFr
 {
-#pragma region Static
-
-	namespace StatsHeader
-	{
-		const StringId TickId = "Tick"_Sid;
-		const StringId CommentId = "Comments"_Sid;
-	}
-
-#pragma endregion
-
 #pragma region Stat
 
 	Stats::Value::Value()

@@ -15,8 +15,8 @@ namespace NxFr
 {
 	namespace StatsHeader
 	{
-		NX_FRAMEWORK_API extern const StringId TickId;
-		NX_FRAMEWORK_API extern const StringId CommentId;
+		inline const StringId TickId = "Tick"_Sid;
+		inline const StringId CommentId = "Comments"_Sid;
 	}
 
 	class NX_FRAMEWORK_API Stats

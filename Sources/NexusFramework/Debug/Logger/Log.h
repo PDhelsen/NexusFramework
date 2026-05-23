@@ -19,8 +19,8 @@ namespace NxFr
 
 	namespace LoggerChannel
 	{
-		NX_FRAMEWORK_API extern const StringId Default;
-		NX_FRAMEWORK_API extern const StringId Verbose;
+		inline const StringId Default = "Default"_Sid;
+		inline const StringId Verbose = "Verbose"_Sid;
 	}
 
 	enum class LoggerVerbosity : uint8
