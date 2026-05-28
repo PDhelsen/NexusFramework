@@ -56,14 +56,14 @@ namespace NxFr
 			Bind(Target, Method);
 		}
 
-		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
+		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<typename DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<typename DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
 		Delegate(FC& Func, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Func);
 		}
 
-		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
+		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<typename DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<typename DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
 		Delegate(FL&& Func, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
@@ -172,7 +172,7 @@ namespace NxFr
 			};
 		}
 
-		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
+		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<typename DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<typename DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
 		void Bind(FC& Func)
 		{
 			Reset();
@@ -184,7 +184,7 @@ namespace NxFr
 			};
 		}
 
-		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
+		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<typename DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<typename DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
 		void Bind(FL&& Func)
 		{
 #pragma warning(push)

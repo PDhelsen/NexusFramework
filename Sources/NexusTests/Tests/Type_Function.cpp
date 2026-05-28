@@ -18,7 +18,7 @@ namespace NxTs
 
 		NxFr::Delegate<uint64(uint64)> ConstObject(&ConstData, &Dummy::Function2);
 		uint64 ConstResult2 = ConstObject(5);
-		ASSERT_EQ(Result2, 5);
+		ASSERT_EQ(ConstResult2, 5);
 
 		NxFr::Delegate<uint64(uint64, uint64)> Lambda([&](uint64 A, uint64 B)->uint64 { return A + B; });
 		uint64 Result3 = Lambda(5, 5);
