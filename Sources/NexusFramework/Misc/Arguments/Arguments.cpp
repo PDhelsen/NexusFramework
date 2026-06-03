@@ -83,11 +83,13 @@ namespace NxFr
 
 	void Arguments::ParseCommand(StringView Command)
 	{
+		List<StringView> Tokens = StringUtility::Tokenize(Command);
+
 		uint64 Index = GetCount();
-		uint64 Count = StringUtility::SplitAll(Command, Separator).GetCount();
+		uint64 Count = Tokens.GetCount();
 
 		Resize(Count);
-		for (auto It = Command.Begin(Separator); It != Command.End(Separator); ++It)
+		for (auto It = Tokens.Begin(); It != Tokens.End(); ++It)
 		{
 			ParseArg(Index++, *It);
 		}

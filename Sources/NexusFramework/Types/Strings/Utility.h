@@ -112,6 +112,7 @@ namespace NxFr
 		NX_FRAMEWORK_API List<StringView> FindAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
 		NX_FRAMEWORK_API StringView Split(StringView Text, StringView Substring, uint64 Offset = 0, SearchMode Mode = SearchMode::Substring);
 		NX_FRAMEWORK_API List<StringView> SplitAll(StringView Text, StringView Substring, SearchMode Mode = SearchMode::Substring);
+		NX_FRAMEWORK_API List<StringView> Tokenize(StringView Text, StringView Separator = " ");
 		NX_FRAMEWORK_API StringView TrimLeading(StringView Text, char Character = ' ');
 		NX_FRAMEWORK_API StringView TrimTrailing(StringView Text, char Character = ' ');
 		NX_FRAMEWORK_API String Lower(StringView Text);

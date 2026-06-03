@@ -111,6 +111,78 @@ namespace NxFr
 			return Results;
 		}
 
+		List<StringView> Tokenize(StringView Text, StringView Separator)
+		{
+			List<StringView> Result;
+
+			if (Text.IsEmpty() || Separator.IsEmpty())
+			{
+				return Result;
+			}
+
+			static const char* QuoteChar = "\"";
+			static uint64 QuoteSize = 1;
+			bool Quotes = false;
+
+			const char* Pointer = Text.C();
+			const char* Start = Text.C();
+			const char* End = Text.C() + Text.GetCount();
+
+			while (Pointer != End)
+			{
+				if (StringCApi::Compare(Pointer, QuoteChar, QuoteSize) == 0)
+				{
+					if (!Quotes)
+					{
+						StringView Token = StringView(Start, Pointer - Start);
+						if (!Token.IsEmpty())
+						{
+							Result.Append(Token);
+						}
+
+						Quotes = true;
+					}
+					else
+					{
+						StringView Token = StringView(Start, Pointer - Start);
+						Result.Append(Token);
+
+						Quotes = false;
+					}
+
+					Pointer += QuoteSize;
+					Start = Pointer;
+					continue;
+				}
+				else if (!Quotes && uint64(End - Pointer) >= Separator.GetCount() && StringCApi::Compare(Pointer, Separator.C(), Separator.GetCount()) == 0)
+				{
+					StringView Token = StringView(Start, Pointer - Start);
+					if (!Token.IsEmpty())
+					{
+						Result.Append(Token);
+					}
+
+					Pointer += Separator.GetCount();
+					Start = Pointer;
+					continue;
+				}
+				else
+				{
+					Pointer++;
+				}
+			}
+
+			StringView Token = StringView(Start, Pointer - Start);
+			if (!Token.IsEmpty())
+			{
+				Result.Append(Token);
+			}
+
+			NX_ASSERT(!Quotes, Default, "Malformed string with unmatched quotes");
+
+			return Result;
+		}
+
 		StringView TrimLeading(StringView Text, char Character)
 		{
 			uint64 Index = 0;

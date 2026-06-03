@@ -108,6 +108,9 @@ namespace NxTs
 		ASSERT_EQ(NxFr::StringUtility::Split(Test1, "He"), "");
 		ASSERT_EQ(NxFr::StringUtility::Split(Test1, "l", 2, NxFr::StringUtility::SearchMode::Characters).IsEmpty(), false);
 
+		NxFr::List<NxFr::StringView> Tokens = NxFr::StringUtility::Tokenize("Command Args1 \"Args2 Args3\" \"\" Args4");
+		ASSERT_EQ(Tokens.GetCount(), 5);
+
 		NxFr::String Test2 = NxFr::String("Hello World 1 Hello World 2 Hello World 3 Hello World 4");
 		NxFr::List<NxFr::StringView> Found = NxFr::StringUtility::FindAll(Test2, "Hello");
 		ASSERT_EQ(Found.GetCount(), 4);
