@@ -13,18 +13,23 @@ namespace NxFr
 
 		GUID GenerateGuid()
 		{
-			return GenerateGuid(Time::TimeSinceEpoch(), Globals::PlatformTarget->GetProcessId(), Thread::ThreadId(), GlobalSeed);
+			GlobalSeed = GenerateGuid(Time::TimeSinceEpoch(), Globals::PlatformTarget->GetProcessId(), Thread::ThreadId(), GlobalSeed);
+			return GlobalSeed;
 		}
 
 		GUID GenerateGuid(uint64 Time, uint64 ProcessId, uint64 ThreadId, uint64 Seed)
 		{
-			Hash Instance;
-			Instance.Accumulate(Seed);
-			Instance.Accumulate(Time);
-			Instance.Accumulate(ProcessId);
-			Instance.Accumulate(ThreadId);
-			GlobalSeed = Instance.Finalize();
-			return GlobalSeed;
+			GUID Id = 0;
+			while (Id == 0)
+			{
+				Hash Instance;
+				Instance.Accumulate(Seed);
+				Instance.Accumulate(Time);
+				Instance.Accumulate(ProcessId);
+				Instance.Accumulate(ThreadId);
+				Id = Instance.Finalize();
+			}
+			return Id;
 		}
 	}
 }
