@@ -12,7 +12,7 @@ namespace NxFr
 	{
 		Path::Info Infos;
 
-		Infos.Path = Path.C();
+		Infos.Path = Path;
 		if (Infos.Path.IsEmpty())
 		{
 			return Infos;
