@@ -321,7 +321,10 @@ namespace NxFr
 
 	String Path::GetWorkingDirectory()
 	{
-		return Globals::PlatformTarget->GetWorkingDirectory();
+		String Result = Globals::PlatformTarget->GetWorkingDirectory();
+		Result += SeparatorFolder;
+		Normalize(Result);
+		return Result;
 	}
 
 	bool Path::Exist(StringView Path)
@@ -332,7 +335,7 @@ namespace NxFr
 	void Path::EnsureParent(StringView Path)
 	{
 		String Parent = Path::GetDriveAndFolder(Path);
-		if (Parent.IsEmpty() || Exist(Path))
+		if (Parent.IsEmpty() || Exist(Parent))
 		{
 			return;
 		}
@@ -413,61 +416,87 @@ namespace NxFr
 	StringView Path::Get(StringView Path, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, GetDrive, GetFolder, GetName, GetExtension);
+		StringView Result = Get_Impl(Infos, GetDrive, GetFolder, GetName, GetExtension);
+		return Result;
 	}
 
-	StringView Path::GetDrive(StringView Path)
+	StringView Path::GetDrive(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, true, false, false, false);
+		StringView Result = Get_Impl(Infos, true, false, false, false);
+		if (!Result.IsEmpty() && WithSeparator)
+		{
+			Result = StringView(Result.C(), Result.GetCount() + SeparatorDrive.GetCount());
+		}
+		return Result;
 	}
 
-	StringView Path::GetFolder(StringView Path)
+	StringView Path::GetFolder(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, false, true, false, false);
+		StringView Result = Get_Impl(Infos, false, true, false, false);
+		if (!Result.IsEmpty() && WithSeparator)
+		{
+			Result = StringView(Result.C(), Result.GetCount() + SeparatorFolder.GetCount());
+		}
+		return Result;
 	}
 
 	StringView Path::GetName(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, false, false, true, false);
+		StringView Result = Get_Impl(Infos, false, false, true, false);
+		return Result;
 	}
 
-	StringView Path::GetExtension(StringView Path)
+	StringView Path::GetExtension(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, false, false, false, true);
+		StringView Result = Get_Impl(Infos, false, false, false, true);
+		if (!Result.IsEmpty() && WithSeparator)
+		{
+			Result = StringView(Result.C() - SeparatorExtension.GetCount(), Result.GetCount() + SeparatorExtension.GetCount());
+		}
+		return Result;
 	}
 
-	StringView Path::GetDriveAndFolder(StringView Path)
+	StringView Path::GetDriveAndFolder(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, true, true, false, false);
+		StringView Result = Get_Impl(Infos, true, true, false, false);
+		if (!Result.IsEmpty() && WithSeparator)
+		{
+			Result = StringView(Result.C(), Result.GetCount() + SeparatorFolder.GetCount());
+		}
+		return Result;
 	}
 
 	StringView Path::GetFolderAndName(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, false, true, true, false);
+		StringView Result = Get_Impl(Infos, false, true, true, false);
+		return Result;
 	}
 
 	StringView Path::GetNameAndExtension(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, false, false, true, true);
+		StringView Result = Get_Impl(Infos, false, false, true, true);
+		return Result;
 	}
 
 	StringView Path::GetPathWithoutDrive(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, false, true, true, true);
+		StringView Result = Get_Impl(Infos, false, true, true, true);
+		return Result;
 	}
 
 	StringView Path::GetPathWithoutExtension(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		return Get_Impl(Infos, true, true, true, false);
+		StringView Result = Get_Impl(Infos, true, true, true, false);
+		return Result;
 	}
 
 	List<StringView> Path::Split(StringView Path)

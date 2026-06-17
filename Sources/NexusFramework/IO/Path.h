@@ -52,11 +52,11 @@ namespace NxFr
 		static bool HasName(StringView Path);
 		static bool HasExtension(StringView Path);
 		static StringView Get(StringView Path, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension);
-		static StringView GetDrive(StringView Path);
-		static StringView GetFolder(StringView Path);
+		static StringView GetDrive(StringView Path, bool WithSeparator = false);
+		static StringView GetFolder(StringView Path, bool WithSeparator = false);
 		static StringView GetName(StringView Path);
-		static StringView GetExtension(StringView Path);
-		static StringView GetDriveAndFolder(StringView Path);
+		static StringView GetExtension(StringView Path, bool WithSeparator = false);
+		static StringView GetDriveAndFolder(StringView Path, bool WithSeparator = false);
 		static StringView GetFolderAndName(StringView Path);
 		static StringView GetNameAndExtension(StringView Path);
 		static StringView GetPathWithoutDrive(StringView Path);

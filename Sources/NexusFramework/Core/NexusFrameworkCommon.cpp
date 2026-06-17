@@ -83,16 +83,16 @@ namespace NxFr
 		void CreatePathsAndFolders()
 		{
 			Paths::Root = Path::GetWorkingDirectory();
-			Paths::Assets = Path::Combine(Paths::Root, "Assets");
-			Paths::Configs = Path::Combine(Paths::Root, "Configs");
-			Paths::Libraries = Path::Combine(Paths::Root, "Libraries");
-			Paths::Resources = Path::Combine(Paths::Root, "Resources");
-			Paths::Scripts = Path::Combine(Paths::Root, "Scripts");
-			Paths::Sources = Path::Combine(Paths::Root, "Sources");
-			Paths::Builds = Path::Combine(Paths::Root, "builds");
-			Paths::Cooked = Path::Combine(Paths::Root, "cooked");
-			Paths::Saved = Path::Combine(Paths::Root, "saved");
-			Paths::Temp = Path::Combine(Paths::Root, "temp");
+			Paths::Assets = Path::Combine(Paths::Root, "Assets/");
+			Paths::Configs = Path::Combine(Paths::Root, "Configs/");
+			Paths::Libraries = Path::Combine(Paths::Root, "Libraries/");
+			Paths::Resources = Path::Combine(Paths::Root, "Resources/");
+			Paths::Scripts = Path::Combine(Paths::Root, "Scripts/");
+			Paths::Sources = Path::Combine(Paths::Root, "Sources/");
+			Paths::Builds = Path::Combine(Paths::Root, "builds/");
+			Paths::Cooked = Path::Combine(Paths::Root, "cooked/");
+			Paths::Saved = Path::Combine(Paths::Root, "saved/");
+			Paths::Temp = Path::Combine(Paths::Root, "temp/");
 
 			Directory(Paths::Cooked).Create();
 			Directory(Paths::Saved).Create();
