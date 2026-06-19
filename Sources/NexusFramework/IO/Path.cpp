@@ -21,13 +21,13 @@ namespace NxFr
 		const char* Pointer = Infos.Path.C();
 		const char* End = Infos.Path.C() + Infos.Path.GetCount();
 
-		bool StartBySeparatorDrive = StringCApi::Compare(Pointer, Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
-		bool EndBySeparartorDrive = StringCApi::Compare(End - Path::SeparatorFolder.GetCount(), Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
-		if (StartBySeparatorDrive)
+		bool StartBySeparator = StringCApi::Compare(Pointer, Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
+		bool EndBySeparartor = StringCApi::Compare(End - Path::SeparatorFolder.GetCount(), Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
+		if (StartBySeparator)
 		{
 			Pointer += Path::SeparatorFolder.GetCount();
 		}
-		if (EndBySeparartorDrive)
+		if (EndBySeparartor)
 		{
 			End -= Path::SeparatorFolder.GetCount();
 		}
@@ -54,7 +54,7 @@ namespace NxFr
 			else if (StringCApi::Compare(Pointer, Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0)
 			{
 				uint64 Position = Pointer - Infos.Path.C();
-				uint64 OffsetFolder = !Infos.Drive.IsEmpty() ? Infos.Drive.GetCount() + Path::SeparatorDrive.GetCount() : StartBySeparatorDrive ? 1 : 0;
+				uint64 OffsetFolder = !Infos.Drive.IsEmpty() ? Infos.Drive.GetCount() + Path::SeparatorDrive.GetCount() : StartBySeparator ? 1 : 0;
 				uint64 OffsetName = Path::SeparatorFolder.GetCount();
 				Infos.Folder = Infos.Path.Substring(OffsetFolder, Position - OffsetFolder);
 				Infos.Name = Infos.Path.Substring(Position + OffsetName, End - (Pointer + OffsetName));
@@ -108,54 +108,87 @@ namespace NxFr
 		return Result;
 	}
 
-	static StringView Get_Impl(const Path::Info& Infos, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension)
+	static StringView Get_Impl(const Path::Info& Infos, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension, bool WithSeparator)
 	{
 		uint64 Offset = 0;
 		uint64 Count = 0;
+
 		if (GetDrive && !Infos.Drive.IsEmpty())
 		{
 			Offset = 0;
 			Count = Infos.Drive.GetCount();
+			if (WithSeparator)
+			{
+				Count += Path::SeparatorDrive.GetCount();
+			}
 		}
 		if (GetFolder && !Infos.Folder.IsEmpty())
 		{
 			Offset = Count != 0 ? Offset : Infos.Folder.C() - Infos.Path.C();
 			Count = (Infos.Folder.C() + Infos.Folder.GetCount()) - (Infos.Path.C() + Offset);
+			if (WithSeparator)
+			{
+				Count += Path::SeparatorFolder.GetCount();
+			}
 		}
 		if (GetName && !Infos.Name.IsEmpty())
 		{
 			Offset = Count != 0 ? Offset : Infos.Name.C() - Infos.Path.C();
 			Count = (Infos.Name.C() + Infos.Name.GetCount()) - (Infos.Path.C() + Offset);
+			if (WithSeparator && StringUtility::End(Infos.Path, Path::SeparatorFolder))
+			{
+				Count += Path::SeparatorFolder.GetCount();
+			}
 		}
 		if (GetExtension && !Infos.Extension.IsEmpty())
 		{
 			Offset = Count != 0 ? Offset : Infos.Extension.C() - Infos.Path.C();
+			if (WithSeparator && Count == 0)
+			{
+				Offset -= Path::SeparatorExtension.GetCount();
+			}
 			Count = (Infos.Extension.C() + Infos.Extension.GetCount()) - (Infos.Path.C() + Offset);
 		}
+
 		return StringView(Infos.Path.C(), Offset, Count);
 	}
 
-	static void Change_Impl(const Path::Info& Infos, String& Buffer, StringView ChangeDrive, StringView ChangeFolder, StringView ChangeName, StringView ChangeExtension)
+	static void Change_Impl(const Path::Info& Infos, String& Buffer, bool ChangeDrive, StringView Drive, bool ChangeFolder, StringView Folder, bool ChangeName, StringView Name, bool ChangeExtension, StringView Extension)
 	{
+		bool EndBySeparartor = StringCApi::Compare(Infos.Path.C() + Infos.Path.GetCount() - Path::SeparatorFolder.GetCount(), Path::SeparatorFolder.C(), Path::SeparatorFolder.GetCount()) == 0;
+
 		Buffer.Clear();
-		if (!Infos.Drive.IsEmpty() || !ChangeDrive.IsEmpty())
+		if (!Infos.Drive.IsEmpty() || ChangeDrive)
 		{
-			Buffer += !ChangeDrive.IsEmpty() ? ChangeDrive : Infos.Drive;
-			Buffer += Path::SeparatorDrive;
+			Buffer += ChangeDrive ? Drive : Infos.Drive;
+			if (!StringUtility::End(Drive, Path::SeparatorDrive))
+			{
+				Buffer += Path::SeparatorDrive;
+			}
 		}
-		if (!Infos.Folder.IsEmpty() || !ChangeFolder.IsEmpty())
+		if (!Infos.Folder.IsEmpty() || ChangeFolder)
 		{
-			Buffer += !ChangeFolder.IsEmpty() ? ChangeFolder : Infos.Folder;
-			Buffer += Path::SeparatorFolder;
+			Buffer += ChangeFolder ? Folder : Infos.Folder;
+			if (!StringUtility::End(Folder, Path::SeparatorFolder))
+			{
+				Buffer += Path::SeparatorFolder;
+			}
 		}
-		if (!Infos.Name.IsEmpty() || !ChangeName.IsEmpty())
+		if (!Infos.Name.IsEmpty() || ChangeName)
 		{
-			Buffer += !ChangeName.IsEmpty() ? ChangeName : Infos.Name;
+			Buffer += ChangeName? Name : Infos.Name;
+			if (StringUtility::End(Infos.Path, Path::SeparatorFolder))
+			{
+				Buffer += Path::SeparatorFolder;
+			}
 		}
-		if (!Infos.Extension.IsEmpty() || !ChangeExtension.IsEmpty())
+		if (!Infos.Extension.IsEmpty() || ChangeExtension)
 		{
-			Buffer += Path::SeparatorExtension;
-			Buffer += !ChangeExtension.IsEmpty() ? ChangeExtension : Infos.Extension;
+			if (!StringUtility::Start(Extension, Path::SeparatorExtension))
+			{
+				Buffer += Path::SeparatorExtension;
+			}
+			Buffer += ChangeExtension ? Extension : Infos.Extension;
 		}
 	}
 
@@ -383,12 +416,6 @@ namespace NxFr
 		return !Infos.Extension.IsEmpty();
 	}
 
-	bool Path::Has(StringView Path, bool HasDrive, bool HasFolder, bool HasName, bool HasExtension)
-	{
-		Path::Info Infos = Parse_Impl(Path);
-		return Has_Impl(Infos, HasDrive, HasFolder, HasName, HasExtension);
-	}
-
 	bool Path::HasDrive(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
@@ -413,89 +440,67 @@ namespace NxFr
 		return Has_Impl(Infos, false, false, false, true);
 	}
 
-	StringView Path::Get(StringView Path, bool GetDrive, bool GetFolder, bool GetName, bool GetExtension)
-	{
-		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, GetDrive, GetFolder, GetName, GetExtension);
-		return Result;
-	}
-
 	StringView Path::GetDrive(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, true, false, false, false);
-		if (!Result.IsEmpty() && WithSeparator)
-		{
-			Result = StringView(Result.C(), Result.GetCount() + SeparatorDrive.GetCount());
-		}
+		StringView Result = Get_Impl(Infos, true, false, false, false, WithSeparator);
 		return Result;
 	}
 
 	StringView Path::GetFolder(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, false, true, false, false);
-		if (!Result.IsEmpty() && WithSeparator)
-		{
-			Result = StringView(Result.C(), Result.GetCount() + SeparatorFolder.GetCount());
-		}
+		StringView Result = Get_Impl(Infos, false, true, false, false, WithSeparator);
 		return Result;
 	}
 
-	StringView Path::GetName(StringView Path)
+	StringView Path::GetName(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, false, false, true, false);
+		StringView Result = Get_Impl(Infos, false, false, true, false, WithSeparator);
 		return Result;
 	}
 
 	StringView Path::GetExtension(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, false, false, false, true);
-		if (!Result.IsEmpty() && WithSeparator)
-		{
-			Result = StringView(Result.C() - SeparatorExtension.GetCount(), Result.GetCount() + SeparatorExtension.GetCount());
-		}
+		StringView Result = Get_Impl(Infos, false, false, false, true, WithSeparator);
 		return Result;
 	}
 
 	StringView Path::GetDriveAndFolder(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, true, true, false, false);
-		if (!Result.IsEmpty() && WithSeparator)
-		{
-			Result = StringView(Result.C(), Result.GetCount() + SeparatorFolder.GetCount());
-		}
+		StringView Result = Get_Impl(Infos, true, true, false, false, WithSeparator);
+
 		return Result;
 	}
 
-	StringView Path::GetFolderAndName(StringView Path)
+	StringView Path::GetFolderAndName(StringView Path, bool WithSeparator)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, false, true, true, false);
+		StringView Result = Get_Impl(Infos, false, true, true, false, WithSeparator);
 		return Result;
 	}
 
 	StringView Path::GetNameAndExtension(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, false, false, true, true);
+		StringView Result = Get_Impl(Infos, false, false, true, true, true);
 		return Result;
 	}
 
 	StringView Path::GetPathWithoutDrive(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, false, true, true, true);
+		StringView Result = Get_Impl(Infos, false, true, true, true, false);
 		return Result;
 	}
 
 	StringView Path::GetPathWithoutExtension(StringView Path)
 	{
 		Path::Info Infos = Parse_Impl(Path);
-		StringView Result = Get_Impl(Infos, true, true, true, false);
+		StringView Result = Get_Impl(Infos, true, true, true, false, false);
 		return Result;
 	}
 
@@ -511,19 +516,11 @@ namespace NxFr
 		return Infos.Depth;
 	}
 
-	String Path::Change(StringView Path, StringView ChangeDrive, StringView ChangeFolder, StringView ChangeName, StringView ChangeExtension)
-	{
-		Path::Info Infos = Parse_Impl(Path);
-		String Result;
-		Change_Impl(Infos, Result, ChangeDrive, ChangeFolder, ChangeName, ChangeExtension);
-		return Result;
-	}
-
 	String Path::ChangeDrive(StringView Path, StringView Drive)
 	{
 		Path::Info Infos = Parse_Impl(Path);
 		String Result;
-		Change_Impl(Infos, Result, Drive, "", "", "");
+		Change_Impl(Infos, Result, true, Drive, false, "", false, "", false, "");
 		return Result;
 	}
 
@@ -531,7 +528,7 @@ namespace NxFr
 	{
 		Path::Info Infos = Parse_Impl(Path);
 		String Result;
-		Change_Impl(Infos, Result, "", Folder, "", "");
+		Change_Impl(Infos, Result, false, "", true, Folder, false, "", false, "");
 		return Result;
 	}
 
@@ -539,7 +536,7 @@ namespace NxFr
 	{
 		Path::Info Infos = Parse_Impl(Path);
 		String Result;
-		Change_Impl(Infos, Result, "", "", Name, "");
+		Change_Impl(Infos, Result, false, "", false, "", true, Name, false, "");
 		return Result;
 	}
 
@@ -547,7 +544,7 @@ namespace NxFr
 	{
 		Path::Info Infos = Parse_Impl(Path);
 		String Result;
-		Change_Impl(Infos, Result, "", "", "", Extension);
+		Change_Impl(Infos, Result, false, "", false, "", false, "", true, Extension);
 		return Result;
 	}
 
