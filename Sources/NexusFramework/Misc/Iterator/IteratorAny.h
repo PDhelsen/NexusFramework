@@ -7,26 +7,26 @@ namespace NxFr
 	namespace Iterator
 	{
 		template<typename T>
-		struct IteratorAny : public Iterator<T, IteratorAny<T>>
+		struct Any : public Iterator<T, Any<T>>
 		{
 		public:
 			template<typename I>
-			IteratorAny(const I& Iterator)
+			Any(const I& Iterator)
 			{
 				It = new Wrapper<T, I>(Iterator);
 			}
 
-			IteratorAny(const IteratorAny& Other)
+			Any(const Any& Other)
 			{
 				It = Other.It->Clone();
 			}
 
-			~IteratorAny()
+			~Any()
 			{
 				delete It;
 			}
 
-			IteratorAny& operator=(const IteratorAny& Other)
+			Any& operator=(const Any& Other)
 			{
 				if (this == &Other)
 				{
@@ -37,7 +37,7 @@ namespace NxFr
 				It = Other.It->Clone();
 			}
 
-			bool Equals(const IteratorAny& Other) const
+			bool Equals(const Any& Other) const
 			{
 				return It->Equals(Other.It);
 			}

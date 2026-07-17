@@ -49,8 +49,8 @@ namespace NxFr
 		const void* ReadByte(uint64 Size) const;
 		void WriteByte(const void* Pointer, uint64 Size);
 
-		const Iterator::IteratorPointer Begin() const;
-		const Iterator::IteratorPointer End() const;
+		const Iterator::Pointer Begin() const;
+		const Iterator::Pointer End() const;
 
 		uint64 GetCursor() const { return Cursor; }
 		void SetCursor(uint64 Offset) const { Cursor = Offset; }

@@ -16,7 +16,7 @@ namespace NxFr
 		{
 		public:
 			using N = Node::NodeSimple<T>;
-			using I = Iterator::IteratorPreAllocated<T, N>;
+			using I = Iterator::PreAllocated<T, N>;
 
 			NX_NOCOPY_NOMOVE(PreAllocated)
 			PreAllocated(uint64 Size, Allocator* Allctr = Allocator::TryGet())
@@ -212,7 +212,7 @@ namespace NxFr
 		{
 		public:
 			using N = Node::NodeDouble<T>;
-			using I = Iterator::IteratorNodeSimple<T, N>;
+			using I = Iterator::NodeSimple<T, N>;
 
 			NX_NOCOPY_NOMOVE(OnDemand)
 			OnDemand(Allocator* Allctr = Allocator::TryGet())

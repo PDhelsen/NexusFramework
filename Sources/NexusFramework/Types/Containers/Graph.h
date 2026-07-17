@@ -17,7 +17,7 @@ namespace NxFr
 		using N = Node::NodeGraph<T>;
 		using C = Node::NodeGraphConnection<T>;
 		using CT = Node::NodeGraphConnectionType;
-		using I = Iterator::IteratorNodeGraph<T, N>;
+		using I = Iterator::NodeGraph<T, N>;
 
 		Graph(Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0), Data(nullptr)

@@ -11,7 +11,7 @@ namespace NxFr
 	struct BufferView
 	{
 	public:
-		using I = Iterator::IteratorPointer;
+		using I = Iterator::Pointer;
 
 		BufferView()
 			: Data(nullptr), Count(0)
@@ -80,7 +80,7 @@ namespace NxFr
 	class Buffer
 	{
 	public:
-		using I = Iterator::IteratorPointer;
+		using I = Iterator::Pointer;
 
 		Buffer(uint64 Size = 0, Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0), Data(nullptr)

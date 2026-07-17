@@ -14,7 +14,7 @@ namespace NxFr
 	class Array
 	{
 	public:
-		using I = Iterator::IteratorBlock<T>;
+		using I = Iterator::Block<T>;
 
 		Array()
 			: Alloc(nullptr), Count(0)

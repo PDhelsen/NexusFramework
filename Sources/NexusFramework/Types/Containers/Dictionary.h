@@ -19,7 +19,7 @@ namespace NxFr
 	public:
 		using KV = KeyValuePair<const K, T>;
 		using N = Node::NodeHashmap<KV>;
-		using I = Iterator::IteratorHashmap<KV, N>;
+		using I = Iterator::Hashmap<KV, N>;
 		using TB = typename N::TombstoneMode;
 		using Q = typename SimilarOf<K>::Type;
 
@@ -304,14 +304,16 @@ namespace NxFr
 		template<typename C>
 		T& TryAppendRange(const C& Value)
 		{
-			Resize(GetCount() + Value.GetCount());
-
 			for (typename C::I It = Value.Begin(); It != Value.End(); ++It)
 			{
 				uint64 Hash = GetHash(It->Key);
 				uint64 Index = GetIndex(Hash);
 				if (Index >= Capacity || Data[Index].Free)
 				{
+					if (Resize(++Count))
+					{
+						Index = GetIndex(Hash);
+					}
 					Construct(Index, Hash, It->Key, It->Value);
 				}
 			}

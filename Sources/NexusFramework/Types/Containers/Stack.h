@@ -14,7 +14,7 @@ namespace NxFr
 	class Stack
 	{
 	public:
-		using I = Iterator::IteratorStack<T, BS>;
+		using I = Iterator::Stack<T, BS>;
 
 		inline static const uint64 BucketSize = BS;
 

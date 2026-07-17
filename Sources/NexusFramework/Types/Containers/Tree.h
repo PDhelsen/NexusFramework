@@ -15,7 +15,7 @@ namespace NxFr
 	{
 	public:
 		using N = Node::NodeTree<T>;
-		using I = Iterator::IteratorNodeTree<T, N>;
+		using I = Iterator::NodeTree<T, N>;
 
 		Tree(Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0), Data(nullptr)

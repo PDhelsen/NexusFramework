@@ -14,7 +14,7 @@ namespace NxFr
 	class Dequeue
 	{
 	public:
-		using I = Iterator::IteratorBucket<T, BS>;
+		using I = Iterator::Bucket<T, BS>;
 
 		inline static const uint64 BucketSize = BS;
 

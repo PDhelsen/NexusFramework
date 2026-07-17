@@ -16,7 +16,7 @@ namespace NxFr
 	{
 	public:
 		using N = Node::NodeDouble<T>;
-		using I = Iterator::IteratorNodeDouble<T, N>;
+		using I = Iterator::NodeDouble<T, N>;
 
 		LinkedList(Allocator* Allctr = Allocator::TryGet())
 			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)

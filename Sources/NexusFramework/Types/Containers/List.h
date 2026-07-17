@@ -14,7 +14,7 @@ namespace NxFr
 	class List
 	{
 	public:
-		using I = Iterator::IteratorBlock<T>;
+		using I = Iterator::Block<T>;
 
 		inline static const uint64 DefaultSize = 8;
 

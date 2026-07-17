@@ -62,12 +62,12 @@ namespace NxFr
 		Cursor += Size;
 	}
 
-	const Iterator::IteratorPointer RBS::Begin() const
+	const Iterator::Pointer RBS::Begin() const
 	{
 		return Data.Begin();
 	}
 
-	const Iterator::IteratorPointer RBS::End() const
+	const Iterator::Pointer RBS::End() const
 	{
 		return Data.End();
 	}

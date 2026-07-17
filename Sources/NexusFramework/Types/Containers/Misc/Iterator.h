@@ -8,16 +8,16 @@ namespace NxFr
 {
 	namespace Iterator
 	{
-		struct IteratorPointer : public Iterator<Byte, IteratorPointer>
+		struct Pointer : public Iterator<Byte, Pointer>
 		{
 		public:
-			IteratorPointer(void* Pointer, uint64 Offset)
+			Pointer(void* Pointer, uint64 Offset)
 				: Data(Pointer), Offset(Offset)
 			{
 
 			}
 
-			bool Equals(const IteratorPointer& Other) const
+			bool Equals(const Pointer& Other) const
 			{
 				return Data == Other.Data && Offset == Other.Offset;
 			}
@@ -53,16 +53,16 @@ namespace NxFr
 		};
 
 		template<typename T>
-		struct IteratorBlock : public Iterator<T, IteratorBlock<T>>
+		struct Block : public Iterator<T, Block<T>>
 		{
 		public:
-			IteratorBlock(T* Pointer, uint64 Idx)
+			Block(T* Pointer, uint64 Idx)
 				: Data(Pointer), Index(Idx)
 			{
 
 			}
 
-			bool Equals(const IteratorBlock<T>& Other) const
+			bool Equals(const Block<T>& Other) const
 			{
 				return Data == Other.Data && Index == Other.Index;
 			}
@@ -98,18 +98,18 @@ namespace NxFr
 		};
 
 		template<typename T, uint64 BS>
-		struct IteratorBucket : public Iterator<T, IteratorBucket<T, BS>>
+		struct Bucket : public Iterator<T, Bucket<T, BS>>
 		{
 		public:
 			inline static const uint64 BucketSize = BS;
 
-			IteratorBucket(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
+			Bucket(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
 				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
 
 			}
 
-			bool Equals(const IteratorBucket<T, BS>& Other) const
+			bool Equals(const Bucket<T, BS>& Other) const
 			{
 				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
@@ -163,18 +163,18 @@ namespace NxFr
 		};
 
 		template<typename T, uint64 BS>
-		struct IteratorStack : public Iterator<T, IteratorStack<T, BS>>
+		struct Stack : public Iterator<T, Stack<T, BS>>
 		{
 		public:
 			inline static const uint64 BucketSize = BS;
 
-			IteratorStack(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
+			Stack(T** Pointer, uint64 Front, uint64 BucketIdx, uint64 DataIdx)
 				: Data(Pointer), Offset(Front), BucketIndex(BucketIdx), DataIndex(DataIdx)
 			{
 
 			}
 
-			bool Equals(const IteratorStack<T, BS>& Other) const
+			bool Equals(const Stack<T, BS>& Other) const
 			{
 				return Data == Other.Data && BucketIndex == Other.BucketIndex && DataIndex == Other.DataIndex;
 			}
@@ -228,19 +228,19 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		struct IteratorHashmap : public Iterator<T, IteratorHashmap<T, N>>
+		struct Hashmap : public Iterator<T, Hashmap<T, N>>
 		{
 		public:
-			IteratorHashmap(N* Pointer, uint64 Idx, uint64 Cpct)
+			Hashmap(N* Pointer, uint64 Idx, uint64 Cpct)
 				: Data(Pointer), Index(Idx), Capacity(Cpct)
 			{
-				if (Data[Index].Free && Index < Capacity)
+				if (Index < Capacity && Data[Index].Free)
 				{
 					Increment();
 				}
 			}
 
-			bool Equals(const IteratorHashmap<T, N>& Other) const
+			bool Equals(const Hashmap<T, N>& Other) const
 			{
 				return Data == Other.Data && Index == Other.Index;
 			}
@@ -250,12 +250,12 @@ namespace NxFr
 				do
 				{
 					++Index;
-				} while (Data[Index].Free && Index < Capacity);
+				} while (Index < Capacity && Data[Index].Free);
 			}
 
 			void Decrement()
 			{
-				NX_ASSERT(false, Default, "IteratorHashmap doesn't support moving backward");
+				NX_ASSERT(false, Default, "Iterator::Hashmap doesn't support moving backward");
 			}
 
 			T& Get()
@@ -280,19 +280,19 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		struct IteratorPreAllocated : public Iterator<T, IteratorPreAllocated<T, N>>
+		struct PreAllocated : public Iterator<T, PreAllocated<T, N>>
 		{
 		public:
-			IteratorPreAllocated(N* Pointer, uint64 Idx, uint64 Cpct)
+			PreAllocated(N* Pointer, uint64 Idx, uint64 Cpct)
 				: Data(Pointer), Index(Idx), Capacity(Cpct)
 			{
-				if (Data[Index].Next != nullptr && Index < Capacity)
+				if (Index < Capacity && Data[Index].Next != nullptr)
 				{
 					Increment();
 				}
 			}
 
-			bool Equals(const IteratorPreAllocated<T, N>& Other) const
+			bool Equals(const PreAllocated<T, N>& Other) const
 			{
 				return Data == Other.Data && Index == Other.Index;
 			}
@@ -302,12 +302,12 @@ namespace NxFr
 				do
 				{
 					++Index;
-				} while (Data[Index].Next != nullptr && Index < Capacity);
+				} while (Index < Capacity && Data[Index].Next != nullptr);
 			}
 
 			void Decrement()
 			{
-				NX_ASSERT(false, Default, "IteratorPreAllocated doesn't support moving backward");
+				NX_ASSERT(false, Default, "Iterator::PreAllocated doesn't support moving backward");
 			}
 
 			T& Get()
@@ -332,16 +332,16 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		struct IteratorNodeSimple : public Iterator<T, IteratorNodeSimple<T, N>>
+		struct NodeSimple : public Iterator<T, NodeSimple<T, N>>
 		{
 		public:
-			IteratorNodeSimple(N* Pointer)
+			NodeSimple(N* Pointer)
 				: Current(Pointer)
 			{
 
 			}
 
-			bool Equals(const IteratorNodeSimple<T, N>& Other) const
+			bool Equals(const NodeSimple<T, N>& Other) const
 			{
 				return Current == Other.Current;
 			}
@@ -356,7 +356,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NX_ASSERT(false, Default, "IteratorNodeSimple doesn't support moving backward");
+				NX_ASSERT(false, Default, "Iterator::NodeSimple doesn't support moving backward");
 			}
 
 			T& Get()
@@ -371,7 +371,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NX_ASSERT(false, Default, "IteratorNodeSimple doesn't support query the id");
+				NX_ASSERT(false, Default, "Iterator::NodeSimple doesn't support query the id");
 				return -1;
 			}
 
@@ -380,16 +380,16 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		struct IteratorNodeDouble : public Iterator<T, IteratorNodeDouble<T, N>>
+		struct NodeDouble : public Iterator<T, NodeDouble<T, N>>
 		{
 		public:
-			IteratorNodeDouble(N* Pointer)
+			NodeDouble(N* Pointer)
 				: Current(Pointer)
 			{
 
 			}
 
-			bool Equals(const IteratorNodeDouble<T, N>& Other) const
+			bool Equals(const NodeDouble<T, N>& Other) const
 			{
 				return Current == Other.Current;
 			}
@@ -422,7 +422,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NX_ASSERT(false, Default, "IteratorNodeDouble doesn't support query the id");
+				NX_ASSERT(false, Default, "Iterator::NodeDouble doesn't support query the id");
 				return -1;
 			}
 
@@ -431,15 +431,15 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		struct IteratorNodeTree : public Iterator<T, IteratorNodeTree<T, N>>
+		struct NodeTree : public Iterator<T, NodeTree<T, N>>
 		{
 		public:
-			IteratorNodeTree(N* Pointer)
+			NodeTree(N* Pointer)
 				: Current(Pointer)
 			{
 			}
 
-			bool Equals(const IteratorNodeTree<T, N>& Other) const
+			bool Equals(const NodeTree<T, N>& Other) const
 			{
 				return Current == Other.Current;
 			}
@@ -471,7 +471,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NX_ASSERT(false, Default, "IteratorNodeTree doesn't support moving backward");
+				NX_ASSERT(false, Default, "Iterator::NodeTree doesn't support moving backward");
 			}
 
 			T& Get()
@@ -486,7 +486,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NX_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
+				NX_ASSERT(false, Default, "Iterator::NodeTree doesn't support query the id");
 				return -1;
 			}
 
@@ -495,16 +495,16 @@ namespace NxFr
 		};
 
 		template<typename T, typename N>
-		struct IteratorNodeGraph : public Iterator<T, IteratorNodeGraph<T, N>>
+		struct NodeGraph : public Iterator<T, NodeGraph<T, N>>
 		{
 		public:
-			IteratorNodeGraph(N* Pointer)
+			NodeGraph(N* Pointer)
 				: Current(Pointer)
 			{
 
 			}
 
-			bool Equals(const IteratorNodeGraph<T, N>& Other) const
+			bool Equals(const NodeGraph<T, N>& Other) const
 			{
 				return Current == Other.Current;
 			}
@@ -519,7 +519,7 @@ namespace NxFr
 
 			void Decrement()
 			{
-				NX_ASSERT(false, Default, "IteratorNodeGraph doesn't support moving backward");
+				NX_ASSERT(false, Default, "Iterator::NodeGraph doesn't support moving backward");
 			}
 
 			T& Get()
@@ -534,7 +534,7 @@ namespace NxFr
 
 			uint64 Id() const
 			{
-				NX_ASSERT(false, Default, "IteratorNodeTree doesn't support query the id");
+				NX_ASSERT(false, Default, "Iterator::NodeGraph doesn't support query the id");
 				return -1;
 			}
 

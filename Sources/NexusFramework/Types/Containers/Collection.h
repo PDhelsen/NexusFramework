@@ -9,7 +9,7 @@ namespace NxFr
 	class Collection
 	{
 	public:
-		using I = Iterator::IteratorAny<T>;
+		using I = Iterator::Any<T>;
 
 		template<typename C>
 		Collection(const C& Container)

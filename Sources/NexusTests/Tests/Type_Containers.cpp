@@ -934,5 +934,13 @@ namespace NxTs
 		}
 		ASSERT_EQ(IteratorReverseLinkedList.First().Key, 0);
 		ASSERT_EQ(IteratorReverseLinkedList.Last().Key, IteratorReverseLinkedList.GetCount() - 1);
+
+		NxFr::Array<Dummy> IteratorView = { 0, 1, 2, 3, 4 };
+		auto View = NxFr::Iterator::View(IteratorView.Begin(), IteratorView.End());
+		for (auto& It : View)
+		{
+			It.Key = 0;
+		}
+		ASSERT_EQ(IteratorView.Last().Key, 0);
 	}
 }

@@ -105,5 +105,42 @@ namespace NxFr
 			I& Cast() { return static_cast<I&>(*this); }
 			const I& Cast() const { return static_cast<const I&>(*this); }
 		};
+
+		template<typename T>
+		struct View
+		{
+		public:
+			View(T ItBegin, T ItEnd)
+				: ItBegin(ItBegin), ItEnd(ItEnd)
+			{
+			}
+
+			T begin() { return Begin(); }
+			T Begin()
+			{
+				return ItBegin;
+			}
+
+			const T begin() const { return Begin(); }
+			const T Begin() const
+			{
+				return ItBegin;
+			}
+
+			T end() { return End(); }
+			T End()
+			{
+				return ItEnd;
+			}
+
+			const T end() const { return End(); }
+			const T End() const
+			{
+				return ItEnd;
+			}
+
+			T ItBegin;
+			T ItEnd;
+		};
 	}
 }
