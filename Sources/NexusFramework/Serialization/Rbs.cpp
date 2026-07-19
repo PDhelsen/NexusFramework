@@ -10,7 +10,7 @@ namespace NxFr
 		return Data.Data;
 	}
 
-	void RBS::SerializeFile(const RBS& Data, StringView Path)
+	void RBS::SerializeAndSave(const RBS& Data, StringView Path)
 	{
 		BinaryStream Stream(Path);
 		Stream.Open(File::Mode::Write);
@@ -23,7 +23,7 @@ namespace NxFr
 		return RBS(Data);
 	}
 
-	RBS RBS::DeserializeFile(StringView Path)
+	RBS RBS::LoadAndDeserialize(StringView Path)
 	{
 		BinaryStream Stream(Path);
 		Stream.Open(File::Mode::Read);

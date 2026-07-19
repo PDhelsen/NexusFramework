@@ -11,10 +11,10 @@ namespace NxFr
 
 		NX_FRAMEWORK_API String Serialize(const YAML::Node& Data);
 		NX_FRAMEWORK_API String Serialize(const YAML::Emitter& Data);
-		NX_FRAMEWORK_API void SerializeFile(const YAML::Node& Data, StringView Path);
-		NX_FRAMEWORK_API void SerializeFile(const YAML::Emitter& Data, StringView Path);
+		NX_FRAMEWORK_API void SerializeAndSave(const YAML::Node& Data, StringView Path);
+		NX_FRAMEWORK_API void SerializeAndSave(const YAML::Emitter& Data, StringView Path);
 		NX_FRAMEWORK_API YAML::Node Deserialize(StringView Data);
-		NX_FRAMEWORK_API YAML::Node DeserializeFile(StringView Path);
+		NX_FRAMEWORK_API YAML::Node LoadAndDeserialize(StringView Path);
 
 		NX_FRAMEWORK_API YAML::Node EmitterToNode(const YAML::Emitter& Data);
 	}

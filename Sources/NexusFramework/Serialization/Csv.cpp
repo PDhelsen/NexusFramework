@@ -20,7 +20,7 @@ namespace NxFr
 		return Text;
 	}
 
-	void Csv::SerializeFile(const Csv& Data, StringView Path)
+	void Csv::SerializeAndSave(const Csv& Data, StringView Path)
 	{
 		TextStream Stream(Path);
 		Stream.Open(File::Mode::Write);
@@ -43,7 +43,7 @@ namespace NxFr
 		return Data;
 	}
 
-	Csv Csv::DeserializeFile(StringView Path)
+	Csv Csv::LoadAndDeserialize(StringView Path)
 	{
 		TextStream Stream(Path);
 		Stream.Open(File::Mode::Read);

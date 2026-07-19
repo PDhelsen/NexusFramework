@@ -16,9 +16,9 @@ namespace NxFr
 	{
 	public:
 		static Buffer Serialize(const RBS& Data);
-		static void SerializeFile(const RBS& Data, StringView Path);
+		static void SerializeAndSave(const RBS& Data, StringView Path);
 		static RBS Deserialize(BufferView Data);
-		static RBS DeserializeFile(StringView Path);
+		static RBS LoadAndDeserialize(StringView Path);
 
 		RBS();
 		RBS(BufferView View);

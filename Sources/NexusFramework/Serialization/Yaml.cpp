@@ -20,15 +20,15 @@ namespace NxFr
 			return Data.c_str();
 		}
 
-		void SerializeFile(const YAML::Node& Data, StringView Path)
+		void SerializeAndSave(const YAML::Node& Data, StringView Path)
 		{
 			YAML::Emitter Emitter;
 			Emitter << Data;
 
-			SerializeFile(Emitter, Path);
+			SerializeAndSave(Emitter, Path);
 		}
 
-		void SerializeFile(const YAML::Emitter& Data, StringView Path)
+		void SerializeAndSave(const YAML::Emitter& Data, StringView Path)
 		{
 			TextStream Stream(Path);
 			Stream.Open(File::Mode::Write);
@@ -41,7 +41,7 @@ namespace NxFr
 			return YAML::Load(Data.C());
 		}
 
-		YAML::Node DeserializeFile(StringView Path)
+		YAML::Node LoadAndDeserialize(StringView Path)
 		{
 			return YAML::LoadFile(Path.C());
 		}

@@ -13,9 +13,9 @@ namespace NxFr
 		inline static const String Separator = ";";
 
 		static String Serialize(const Csv& Data);
-		static void SerializeFile(const Csv& Data, StringView Path);
+		static void SerializeAndSave(const Csv& Data, StringView Path);
 		static Csv Deserialize(StringView Text);
-		static Csv DeserializeFile(StringView Path);
+		static Csv LoadAndDeserialize(StringView Path);
 
 		Csv();
 
