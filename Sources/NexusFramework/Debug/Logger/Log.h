@@ -84,9 +84,21 @@ NX_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 #endif
 
 #if NX_DEBUG || NX_RELEASE
+#define NX_ASSERT_RETURN_INSTANCE(Instance, Condition, Return, Channel, Msg, ...) if (!(Condition)) { \
+	NX_LOG_INSTANCE(Instance, Fatal, Channel, Msg, __VA_ARGS__); \
+	NX_LOG_INSTANCE(Instance, Fatal, Channel, "%s %s %d", NX_FUNCTION_SIGNATURE, NX_FILE_NAME, NX_LINE_NUMBER); \
+	return Return; \
+	NX_DEBUGBREAK; }
+
 #define NX_ASSERT_INSTANCE(Instance, Condition, Channel, Msg, ...) if (!(Condition)) { \
 	NX_LOG_INSTANCE(Instance, Fatal, Channel, Msg, __VA_ARGS__); \
 	NX_LOG_INSTANCE(Instance, Fatal, Channel, "%s %s %d", NX_FUNCTION_SIGNATURE, NX_FILE_NAME, NX_LINE_NUMBER); \
+	NX_DEBUGBREAK; }
+
+#define NX_ASSERT_RETURN(Condition, Return, Channel, Msg, ...) if (!(Condition)) { \
+	NX_LOG(Fatal, Channel, Msg, __VA_ARGS__); \
+	NX_LOG(Fatal, Channel, "%s %s %d", NX_FUNCTION_SIGNATURE, NX_FILE_NAME, NX_LINE_NUMBER); \
+	return Return; \
 	NX_DEBUGBREAK; }
 
 #define NX_ASSERT(Condition, Channel, Msg, ...) if (!(Condition)) { \
@@ -94,8 +106,9 @@ NX_FLAG_STRING(NxFr::LoggerOutput, 4, "Fatal", "Error", "Warning", "Info")
 	NX_LOG(Fatal, Channel, "%s %s %d", NX_FUNCTION_SIGNATURE, NX_FILE_NAME, NX_LINE_NUMBER); \
 	NX_DEBUGBREAK; }
 #elif NX_DISTRIB
+#define NX_ASSERT_RETURN_INSTANCE(Instance, Condition, Return, Channel, Msg, ...)
 #define NX_ASSERT_INSTANCE(Instance, Condition, Msg, ...)
-
+#define NX_ASSERT_RETURN(Condition, Return, Channel, Msg, ...)
 #define NX_ASSERT(Condition, Msg, ...)
 #endif
 
