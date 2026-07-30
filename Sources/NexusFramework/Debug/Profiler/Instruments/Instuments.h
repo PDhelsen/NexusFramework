@@ -13,7 +13,7 @@ namespace NxFr
 	class NX_FRAMEWORK_API Instruments
 	{
 	public:
-		class NX_FRAMEWORK_API Scope
+		struct NX_FRAMEWORK_API Scope
 		{
 			friend class Instruments;
 
