@@ -9,7 +9,7 @@ namespace NxFr
 	struct NX_FRAMEWORK_API StringView
 	{
 	public:
-		static StringView GetTempExactString(StringView Substring);
+		static String& GetTempExactString(StringView Substring);
 
 		StringView();
 		StringView(const char* Text);
@@ -25,7 +25,7 @@ namespace NxFr
 		StringView Substring(uint64 Offset, uint64 Size) const;
 		String ExactString() const;
 
-		const char* C(bool Exact = false) const { return Exact ? GetTempExactString(*this).Data : Data; }
+		const char* C(bool Exact = false) const { return Exact ? GetTempExactString(*this).C() : Data; }
 		bool IsEmpty() const { return Count == 0; }
 		uint64 GetCount() const { return Count; }
 

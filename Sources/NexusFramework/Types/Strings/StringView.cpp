@@ -5,7 +5,7 @@ namespace NxFr
 {
 	static String& GetLocalBuffer() { static thread_local String LocalBuffer(64, nullptr); return LocalBuffer; }
 
-	StringView StringView::GetTempExactString(StringView Substring)
+	String& StringView::GetTempExactString(StringView Substring)
 	{
 		String& Buffer = GetLocalBuffer();
 		Buffer = Substring;
