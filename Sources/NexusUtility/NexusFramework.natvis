@@ -101,7 +101,7 @@
 
 				<Size>Count</Size>
 				<Loop>
-					<If Condition="Data[Index].Hash != 0">
+					<If Condition="!Data[Index].Free">
 						<Item>Data[Index].Value</Item>
 					</If>
 					<Exec>Index++</Exec>
@@ -119,7 +119,7 @@
 
 				<Size>Count</Size>
 				<Loop>
-					<If Condition="Data[Index].Hash != 0">
+					<If Condition="!Data[Index].Free">
 						<Item>Data[Index].Value</Item>
 					</If>
 					<Exec>Index++</Exec>
