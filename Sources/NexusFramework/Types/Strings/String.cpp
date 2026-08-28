@@ -175,10 +175,15 @@ namespace NxFr
 		return *this;
 	}
 
-	void String::Reserve(uint64 Size)
+	void String::Reserve(uint64 Size, bool Shrink)
 	{
 		Size = Math::Max(Size, Count + 1ull);
 		Size = Math::Max(Size, SmallStringCapacity + 1ull);
+		if (Capacity >= Size && !Shrink)
+		{
+			return;
+		}
+
 		Reallocate(Size);
 	}
 

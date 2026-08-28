@@ -148,7 +148,7 @@ namespace NxTs
 		ASSERT_EQ(Test.IsValidIndex(Test.GetCount()), false);
 		Test.Reserve(30);
 		ASSERT_EQ(Test.GetCapacity(), 30);
-		Test.Reserve(0);
+		Test.Reserve(0, true);
 		ASSERT_EQ(Test.GetCapacity(), 10);
 	}
 

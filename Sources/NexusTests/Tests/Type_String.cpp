@@ -38,7 +38,7 @@ namespace NxTs
 
 		Test.Reserve(100);
 		ASSERT_EQ(Test.GetCapacity(), 100);
-		Test.Reserve(0);
+		Test.Reserve(0, true);
 		ASSERT_EQ(Test.GetCapacity(), 17);
 	}
 

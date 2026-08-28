@@ -309,14 +309,10 @@ namespace NxFr
 			RemoveLast();
 		}
 
-		void Clear(bool ShrinkToZero = false)
+		void Clear()
 		{
 			DestructRange(0, Count);
 			Resize(0);
-			if (ShrinkToZero)
-			{
-				Reserve(0);
-			}
 		}
 
 		T& Get(uint64 Index)
@@ -432,9 +428,14 @@ namespace NxFr
 			return !IsEmpty() && Index >= 0 && Index < Count;
 		}
 
-		void Reserve(uint64 Size)
+		void Reserve(uint64 Size, bool Shrink = false)
 		{
 			Size = Math::Max(Size, Count);
+			if (Capacity >= Size && !Shrink)
+			{
+				return;
+			}
+
 			Reallocate(Size);
 		}
 

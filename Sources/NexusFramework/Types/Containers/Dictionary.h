@@ -541,9 +541,14 @@ namespace NxFr
 			return GetIt(Capacity);
 		}
 
-		void Reserve(uint64 Size)
+		void Reserve(uint64 Size, bool Shrink = false)
 		{
 			Size = Math::Max(Size, Count);
+			if (Capacity >= Size && !Shrink)
+			{
+				return;
+			}
+
 			Reallocate(Size);
 		}
 

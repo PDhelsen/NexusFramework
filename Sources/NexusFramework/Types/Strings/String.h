@@ -42,7 +42,7 @@ namespace NxFr
 		String& Terminate(uint64 Size);
 		String& Clear();
 
-		void Reserve(uint64 Size);
+		void Reserve(uint64 Size, bool Shrink = false);
 		void Validate();
 
 		const Iterator::StringCharacter Begin() const;
