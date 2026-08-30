@@ -58,6 +58,7 @@ namespace NxFr
 		if (!Allocation)
 		{
 			NX_LOG(Info, Verbose, "Untracked allocation %p", Pointer);
+			Recording = true;
 			return;
 		}
 

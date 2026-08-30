@@ -22,6 +22,7 @@ namespace NxFr
 		void StartRecording();
 		void StopRecording();
 
+		bool IsRecording() const { return Recording; }
 		uint64 GetAllocatedAmount() const { return Amount; };
 		uint64 GetAllocationCount() const { return Count; };
 
