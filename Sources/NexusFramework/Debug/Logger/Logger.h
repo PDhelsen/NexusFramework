@@ -44,10 +44,6 @@ namespace NxFr
 		void SetAutoFlush(bool Auto);
 
 	protected:
-		void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
-		void FlushLogs();
-
-	private:
 		struct Info
 		{
 			Info(LoggerVerbosity Verbosity, StringId Channel);
@@ -57,6 +53,12 @@ namespace NxFr
 			LoggerVerbosity Verbosity;
 		};
 
+		void PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message) override;
+		void FlushLogs();
+		void WriteLog(const Info& Data);
+		void OutputLogs();
+
+	private:
 		List<Info> Infos;
 		Dictionary<StringId, bool, Hashing::Default> Channels;
 		LoggerVerbosity VerbosityMask;

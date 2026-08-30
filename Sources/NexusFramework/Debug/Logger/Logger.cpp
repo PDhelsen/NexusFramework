@@ -6,6 +6,7 @@
 
 namespace NxFr
 {
+	static thread_local uint64 ReEntranceDepth = 0;
 	static String& GetLocalBuffer() { static thread_local String LocalBuffer(64, nullptr); return LocalBuffer; }
 
 	static Platform::TerminalColor VerbosityToTerminalColor(LoggerVerbosity Verbosity)
@@ -50,8 +51,15 @@ namespace NxFr
 
 	void Logger::Flush()
 	{
-		Lock LockGuard(Guard);
+		if (ReEntranceDepth > 0)
+		{
+			return;
+		}
+
+		ReEntranceDepth++;
 		FlushLogs();
+		OutputLogs();
+		ReEntranceDepth--;
 	}
 
 	bool Logger::CheckVerbosity(LoggerVerbosity Verbosity) const
@@ -162,11 +170,20 @@ namespace NxFr
 	void Logger::SetAutoFlush(bool State)
 	{
 		AutoFlush = State;
+		if (AutoFlush)
+		{
+			Flush();
+		}
 	}
 
 	void Logger::PrintLog(LoggerVerbosity Verbosity, StringId Channel, StringView Message)
 	{
 		if (!CheckVerbosity(Verbosity) || !CheckChannel(Channel) || Message.IsEmpty())
+		{
+			return;
+		}
+
+		if (ReEntranceDepth > 1)
 		{
 			return;
 		}
@@ -180,43 +197,81 @@ namespace NxFr
 
 		Info Data(Verbosity, Channel);
 		StringUtility::Format(Data.Message, Format, Hours, Minutes, Seconds, VerbosityLabel.C(), Channel.C(), GetBuffer().C(), StringUtility::NewLine.C());
+		
+		if (ReEntranceDepth == 1)
+		{
+			ReEntranceDepth++;
 
-		Lock LockGuard(Guard);
-		Infos.Append(Move(Data));
-		if (AutoFlush || IsFatal)
+			Info Emergency(LoggerVerbosity::Fatal, LoggerChannel::Default);
+			StringUtility::Format(Emergency.Message, Format, Hours, Minutes, Seconds, StringUtility::ToString(LoggerVerbosity::Fatal).C(), LoggerChannel::Default.C(), "This is a re-entrant emergency logging", StringUtility::NewLine.C());
+			WriteLog(Emergency);
+			WriteLog(Data);
+
+			ReEntranceDepth--;
+			return;
+		}
+
+		ReEntranceDepth++;
+		if (AutoFlush)
+		{
+			WriteLog(Data);
+		}
+		else
+		{
+			Lock LockGuard(Guard);
+			Infos.Append(Move(Data));
+		}
+		ReEntranceDepth--;
+
+		if (IsFatal && !AutoFlush)
 		{
 			FlushLogs();
+		}
+
+		if (IsFatal || AutoFlush)
+		{
+			OutputLogs();
 		}
 	}
 
 	void Logger::FlushLogs()
 	{
+		Lock LockGuard(Guard);
+
 		for (auto& Data : Infos)
 		{
-			if (CheckOutput(LoggerOutput::Console))
-			{
-				Target->WriteToTerminal(Data.Message, VerbosityToTerminalColor(Data.Verbosity));
-			}
-			if (CheckOutput(LoggerOutput::IDE))
-			{
-				Target->WriteToDebugger(Data.Message);
-			}
-			if (CheckOutput(LoggerOutput::File))
-			{
-				Stream.WriteBlock(Data.Message);
-			}
-			if (CheckOutput(LoggerOutput::Callback))
-			{
-				Callback.Invoke(Data.Verbosity, Data.Channel, Data.Message);
-			}
+			WriteLog(Data);
 		}
 
+		Infos.Clear();
+	}
+
+	void Logger::WriteLog(const Info& Data)
+	{
+		if (CheckOutput(LoggerOutput::Console))
+		{
+			Target->WriteToTerminal(Data.Message, VerbosityToTerminalColor(Data.Verbosity));
+		}
+		if (CheckOutput(LoggerOutput::IDE))
+		{
+			Target->WriteToDebugger(Data.Message);
+		}
+		if (CheckOutput(LoggerOutput::File))
+		{
+			Stream.WriteBlock(Data.Message);
+		}
+		if (CheckOutput(LoggerOutput::Callback))
+		{
+			Callback.Invoke(Data.Verbosity, Data.Channel, Data.Message);
+		}
+	}
+
+	void Logger::OutputLogs()
+	{
 		if (CheckOutput(LoggerOutput::File))
 		{
 			Stream.Flush();
 		}
-
-		Infos.Clear();
 	}
 
 	Logger::Info::Info(LoggerVerbosity Verbosity, StringId Channel)
