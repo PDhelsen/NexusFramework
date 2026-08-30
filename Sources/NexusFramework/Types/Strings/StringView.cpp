@@ -8,7 +8,8 @@ namespace NxFr
 	String& StringView::GetTempExactString(StringView Substring)
 	{
 		String& Buffer = GetLocalBuffer();
-		Buffer = Substring;
+		Buffer.Clear();
+		Buffer += Substring;
 		return Buffer;
 	}
 
