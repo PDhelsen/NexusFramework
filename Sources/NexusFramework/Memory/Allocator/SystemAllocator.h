@@ -6,12 +6,12 @@
 
 namespace NxFr
 {
-	class NX_FRAMEWORK_API RawAllocator : public Allocator
+	class NX_FRAMEWORK_API SystemAllocator : public Allocator
 	{
 	public:
-		NX_NOCOPY_NOMOVE(RawAllocator)
-		RawAllocator();
-		virtual ~RawAllocator();
+		NX_NOCOPY_NOMOVE(SystemAllocator)
+		SystemAllocator();
+		virtual ~SystemAllocator();
 
 		void Clear() override;
 		bool CanAllocate(uint64 Size, uint64 Alignement) const override;

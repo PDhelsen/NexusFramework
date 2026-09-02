@@ -1,39 +1,39 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
-#include "NexusFramework/Memory/Allocator/RawAllocator.h"
+#include "NexusFramework/Memory/Allocator/SystemAllocator.h"
 
 namespace NxFr
 {
-	RawAllocator::RawAllocator()
+	SystemAllocator::SystemAllocator()
 		: Allocator(0), Allocated(11, nullptr)
 	{
 	}
 
-	RawAllocator::~RawAllocator()
+	SystemAllocator::~SystemAllocator()
 	{
 	}
 
-	void RawAllocator::Clear()
+	void SystemAllocator::Clear()
 	{
 	}
 
-	bool RawAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
+	bool SystemAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
 	{
 		return true;
 	}
 
-	bool RawAllocator::BelongToAllocator(void* Pointer) const
+	bool SystemAllocator::BelongToAllocator(void* Pointer) const
 	{
 		return Allocated.TryGet(Pointer) != nullptr;
 	}
 
-	void* RawAllocator::Allocate(uint64 Size, uint64 Alignement)
+	void* SystemAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		void* Pointer = Memory::Allocate(Size, nullptr, Alignement);
 		Allocated.Append(Pointer);
 		return Pointer;
 	}
 
-	void* RawAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
+	void* SystemAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
 		if (Pointer == nullptr)
 		{
@@ -49,7 +49,7 @@ namespace NxFr
 		return Pointer;
 	}
 
-	void RawAllocator::Free(void* Pointer)
+	void SystemAllocator::Free(void* Pointer)
 	{
 		if (Pointer == nullptr)
 		{

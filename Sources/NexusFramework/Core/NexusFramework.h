@@ -28,7 +28,7 @@
 
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Allocator/Allocator.h"
-#include "NexusFramework/Memory/Allocator/RawAllocator.h"
+#include "NexusFramework/Memory/Allocator/SystemAllocator.h"
 #include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
 #include "NexusFramework/Memory/Allocator/StackAllocator.h"
 #include "NexusFramework/Memory/Allocator/PoolAllocator.h"

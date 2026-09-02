@@ -47,7 +47,7 @@ namespace NxFr
 		virtual uint64 TotalAmount() const { return Capacity; };
 		virtual bool IsEmpty() const { return UsedAmount() == 0; };
 		virtual bool IsFull() const { return Usage() > 0.95f; };
-		virtual float Usage() const { return (float)UsedAmount() / (float)TotalAmount(); }
+		virtual float Usage() const { return Capacity > 0 ? (float)UsedAmount() / (float)TotalAmount() : -1.0f; }
 
 	protected:
 		virtual void* Allocate(uint64 Size, uint64 Alignement) = 0;

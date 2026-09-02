@@ -36,6 +36,7 @@ namespace NxFr
 
 	void* PoolAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
+		NX_ASSERT(Size == Stride, Default, "Size doesn't match stride");
 		NX_ASSERT(FreeAmount() >= Stride, Default, "Allocator is full");
 
 		void* Pointer = Head;
