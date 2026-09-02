@@ -226,6 +226,56 @@ namespace NxTs
 		delete Allocator;
 	}
 
+	TEST(Memory, ContinuousAllocator)
+	{
+		NxFr::ContinuousAllocator* Allocator = new NxFr::ContinuousAllocator(3 * (16 + 16 + sizeof(Dummy)), NxFr::ContinuousAllocator::DefaultCreator<NxFr::HeapAllocator>());
+		ASSERT_EQ(Allocator->GetCount(), 0);
+
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
+		ASSERT_EQ(Allocator->GetCount(), 1);
+
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test2->Key = 2;
+		ASSERT_EQ(Allocator->GetCount(), 1);
+
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+		ASSERT_EQ(Allocator->GetCount(), 1);
+
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test4->Key = 4;
+		ASSERT_EQ(Allocator->GetCount(), 2);
+
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test5->Key = 5;
+		ASSERT_EQ(Allocator->GetCount(), 2);
+
+		delete Allocator;
+	}
+
+	TEST(Memory, FixedAllocator)
+	{
+		NxFr::FixedAllocator* Allocator = new NxFr::FixedAllocator(3 * (16 + 16 + sizeof(Dummy)));
+
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
+
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test2->Key = 2;
+
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test4->Key = 4;
+
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test5->Key = 5;
+
+		delete Allocator;
+	}
+
 	TEST(Memory, AllocatorContext)
 	{
 		NxFr::HeapAllocator* Allocator = new NxFr::HeapAllocator(512);

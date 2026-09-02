@@ -30,9 +30,12 @@
 #include "NexusFramework/Memory/Allocator/Allocator.h"
 #include "NexusFramework/Memory/Allocator/SystemAllocator.h"
 #include "NexusFramework/Memory/Allocator/MemoryAllocator.h"
+#include "NexusFramework/Memory/Allocator/BucketAllocator.h"
 #include "NexusFramework/Memory/Allocator/StackAllocator.h"
 #include "NexusFramework/Memory/Allocator/PoolAllocator.h"
 #include "NexusFramework/Memory/Allocator/HeapAllocator.h"
+#include "NexusFramework/Memory/Allocator/ContinuousAllocator.h"
+#include "NexusFramework/Memory/Allocator/FixedAllocator.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
 #include "NexusFramework/Memory/Handle/HandleManager.h"
 
