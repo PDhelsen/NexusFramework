@@ -3,72 +3,85 @@
 
 namespace NxFr
 {
-	HandleManager::HandleManager(uint64 Size)
-		: Buffer(Size)
+	HandleManager::HandleManager(uint64 BucketSize)
+		: Buckets(), BucketSize(BucketSize)
 	{
 	}
 
 	HandleManager::~HandleManager()
 	{
-
+		ClearBuckets();
 	}
 
-	void* HandleManager::AllocateHandle(void* Pointer)
+	Handle<void*> HandleManager::GetHandle(void* Pointer) const
 	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-
-		uint64& Redirection = Buffer.Acquire();
-		Redirection = Address;
-
-		return &Redirection;
-	}
-
-	void HandleManager::ModifyHandle(void* Handle, void* Pointer)
-	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-
-		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
-		*Redirection = Address;
-	}
-
-	void HandleManager::FreeHandle(void* Handle)
-	{
-		uint64* Redirection = reinterpret_cast<uint64*>(Handle);
-		*Redirection = 0;
-
-		Buffer.Recycle(*Redirection);
-	}
-
-	void* HandleManager::GetHandle(void* Pointer)
-	{
-		uint64 Address = reinterpret_cast<uint64>(Pointer);
-
-		auto It = ContainerUtility::Find(Buffer, Address);
-		return It == Buffer.End() ? nullptr : &It.Get();
-	}
-
-	bool HandleManager::IsBelonging(void* Pointer)
-	{
-		uint64* Address = reinterpret_cast<uint64*>(Pointer);
-		return &Buffer.Begin().Get() <= Address && Address < &Buffer.End().Get();
-	}
-
-	Dictionary<void*, Handle<void>> HandleManager::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
-	{
-		Dictionary<void*, Handle<void>> Handles;
-
-		for (auto It = Buffer.Begin(); It != Buffer.End(); ++It)
+		for (HandleBucket* Bucket : Buckets)
 		{
-			void* Data = reinterpret_cast<void*>(*It);
-			if (Memory::IsPointerInRange(Data, Pointer, Offset))
+			Handle<void*> Handle = Bucket->Find(Pointer);
+			if (Handle.IsValid())
 			{
-				Handle<void> Handle;
-				Handle.Pointer = &It.Get();
-
-				Handles.Append(Data, Handle);
+				return Handle;
 			}
 		}
 
-		return Handles;
+		return Handle<void*>();
+	}
+
+	HandleBucket* HandleManager::FindOrCreateBucket()
+	{
+		HandleBucket* Result = FindBucket();
+		if (Result == nullptr)
+		{
+			Result = CreateBucket();
+		}
+
+		return Result;
+	}
+
+	HandleBucket* HandleManager::FindBucket()
+	{
+		for (HandleBucket* Bucket : Buckets)
+		{
+			if (Bucket->GetCount() < Bucket->GetCapacity())
+			{
+				return Bucket;
+			}
+		}
+
+		return nullptr;
+	}
+
+	HandleBucket* HandleManager::CreateBucket()
+	{
+		Allocator::Scope Context(nullptr);
+
+		HandleBucket* Bucket = new HandleBucket(BucketSize);
+		Buckets.Append(Bucket);
+		return Bucket;
+	}
+
+	HandleBucket* HandleManager::GetBucket(Handle<void*> Handle) const
+	{
+		for (HandleBucket* Bucket : Buckets)
+		{
+			if (Bucket->Belong(Handle))
+			{
+				return Bucket;
+			}
+		}
+
+		return nullptr;
+	}
+
+	void HandleManager::ClearBuckets()
+	{
+		Allocator::Scope Context(nullptr);
+
+		for (HandleBucket* Bucket : Buckets)
+		{
+			delete Bucket;
+		}
+
+		Buckets.Clear();
 	}
 }

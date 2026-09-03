@@ -1,67 +1,53 @@
 #pragma once
 
 #include "NexusFramework/Core/NexusFrameworkCore.h"
-#include "NexusFramework/Types/Numeric/Integer.h"
-#include "NexusFramework/Types/Containers/Dictionary.h"
-#include "NexusFramework/Types/Containers/Pool.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
-#include "NexusFramework/Misc/Templates.h"
+#include "NexusFramework/Memory/Handle/HandleBucket.h"
+#include "NexusFramework/Types/Containers/Set.h"
 
 namespace NxFr
 {
-	class NX_FRAMEWORK_API HandleManager
+	class HandleManager
 	{
 	public:
-		NX_NOCOPY_NOMOVE(HandleManager)
-		HandleManager(uint64 Size);
+		NX_NOCOPY_NOMOVE(HandleManager);
+		HandleManager(uint64 BucketSize);
 		~HandleManager();
 
 		template<typename T>
-		Handle<T> AcquireHandle(T* Pointer)
+		Handle<T> Acquire(T* Pointer)
 		{
-			Handle<T> Handle;
-			Handle.Pointer = AllocateHandle(Pointer);
-			return Handle;
+			return FindOrCreateBucket()->Acquire(Pointer);
 		}
 		template<typename T>
-		void UpdateHandle(Handle<T>& Handle, T* Pointer)
+		void Update(Handle<T> Handle, T* Pointer)
 		{
-			ModifyHandle(Handle.Pointer, Pointer);
+			GetBucket(Handle)->Update(Handle, Pointer);
 		}
 		template<typename T>
-		void* ReleaseHandle(Handle<T>& Handle)
+		void* Release(Handle<T> Handle)
 		{
-			void* RawPointer = Handle.GetRedirectedPointer();
-			FreeHandle(Handle.Pointer);
-			Handle.Pointer = nullptr;
-			return RawPointer;
+			return GetBucket(Handle)->Release(Handle);
 		}
 		template<typename T>
-		Handle<T> FindHandle(T* Pointer)
+		Handle<T> Find(T* Pointer)
 		{
-			Handle<T> Handle;
-			Handle.Pointer = GetHandle(Pointer);
-			return Handle;
-		}
-		template<typename T>
-		bool BelongToManager(Handle<T> Handle)
-		{
-			return IsBelonging(Handle.Pointer);
+			return GetHandle(Pointer);
 		}
 
-		Dictionary<void*, Handle<void>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
-
-		bool IsEmpty() const { return Buffer.GetCount() == 0; }
-		uint64 GetCount() const { return Buffer.GetCount(); }
-		uint64 GetCapacity() const { return Buffer.GetCapacity(); }
+		uint64 GetBucketSize() const { return BucketSize; }
+		void SetBucketSize(uint64 Size) { this->BucketSize = Size; }
 
 	private:
-		void* AllocateHandle(void* Pointer);
-		void ModifyHandle(void* Handle, void* Pointer);
-		void FreeHandle(void* Handle);
-		void* GetHandle(void* Pointer);
-		bool IsBelonging(void* Pointer);
+		Handle<void*> GetHandle(void* Pointer) const;
+		HandleBucket* FindOrCreateBucket();
+		HandleBucket* FindBucket();
+		HandleBucket* CreateBucket();
+		HandleBucket* GetBucket(Handle<void*> Handle) const;
+		void ClearBuckets();
 
-		Pool<uint64, Pooling::PreAllocated<uint64>> Buffer;
+		Set<HandleBucket*> Buckets;
+		uint64 BucketSize;
 	};
 }
+

@@ -2,7 +2,7 @@
 #include "HeapAllocator.h"
 
 #include "NexusFramework/Memory/Handle/Handle.h"
-#include "NexusFramework/Memory/Handle/HandleManager.h"
+#include "NexusFramework/Memory/Handle/HandleBucket.h"
 #include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Time/Stopwatch.h"
 
@@ -38,17 +38,17 @@ namespace NxFr
 		return Pointer && IsPointerInMemoryBlock(Pointer);
 	}
 
-	void HeapAllocator::Defragment(HandleManager* Manager)
+	void HeapAllocator::Defragment(HandleBucket* Manager)
 	{
 		Defragment(Manager, 0, 0);
 	}
 
-	void HeapAllocator::Defragment(HandleManager* Manager, float Time)
+	void HeapAllocator::Defragment(HandleBucket* Manager, float Time)
 	{
 		Defragment(Manager, Time, 0);
 	}
 
-	void HeapAllocator::Defragment(HandleManager* Manager, uint64 Count)
+	void HeapAllocator::Defragment(HandleBucket* Manager, uint64 Count)
 	{
 		Defragment(Manager, 0, Count);
 	}
@@ -245,7 +245,7 @@ namespace NxFr
 		IncreaseAmount(sizeof(HeapSlot));
 	}
 
-	void HeapAllocator::Defragment(HandleManager* Manager, float Time, uint64 Count)
+	void HeapAllocator::Defragment(HandleBucket* Manager, float Time, uint64 Count)
 	{
 		Dictionary<void*, Handle<void>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
 
@@ -299,7 +299,7 @@ namespace NxFr
 				// Move data
 				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
 				Data = GetHeapSlotMemory(Slot);
-				Manager->UpdateHandle(Handle, Data);
+				Manager->Update(Handle, Data);
 
 				// Update HeapSlot
 				uint64 NewAddress = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot) + NextSize;

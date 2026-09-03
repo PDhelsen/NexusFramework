@@ -37,6 +37,7 @@
 #include "NexusFramework/Memory/Allocator/ContinuousAllocator.h"
 #include "NexusFramework/Memory/Allocator/FixedAllocator.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
+#include "NexusFramework/Memory/Handle/HandleBucket.h"
 #include "NexusFramework/Memory/Handle/HandleManager.h"
 
 #include "NexusFramework/Platform/Platform.h"

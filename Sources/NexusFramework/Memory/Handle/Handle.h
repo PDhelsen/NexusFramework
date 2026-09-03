@@ -9,7 +9,7 @@ namespace NxFr
 	{
 		template<typename>
 		friend struct Handle;
-		friend class HandleManager;
+		friend class HandleBucket;
 
 		Handle() : Pointer(nullptr) {}
 		template<typename U>

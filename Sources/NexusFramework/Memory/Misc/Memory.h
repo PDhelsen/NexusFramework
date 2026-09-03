@@ -2,24 +2,24 @@
 
 #include "NexusFramework/Memory/Memory.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
-#include "NexusFramework/Memory/Handle/HandleManager.h"
+#include "NexusFramework/Memory/Handle/HandleBucket.h"
 
 namespace NxFr
 {
 	namespace Memory
 	{
 		template<typename T, typename ...Args>
-		Handle<T> Create(HandleManager* Manager, Allocator* Allocator = Allocator::TryGet(), Args&& ...args)
+		Handle<T> Create(HandleBucket* Bucket, Allocator* Allocator = Allocator::TryGet(), Args&& ...args)
 		{
 			T* Pointer = Create<T>(Allocator, args...);
-			return Manager->AcquireHandle<T>(Pointer);
+			return Bucket->Acquire<T>(Pointer);
 		}
 
 		template<typename T>
-		void Destroy(HandleManager* Manager, Handle<T> Handle, Allocator* Allocator = Allocator::TryGet())
+		void Destroy(HandleBucket* Bucket, Handle<T> Handle, Allocator* Allocator = Allocator::TryGet())
 		{
 			Destroy(Handle.GetRedirectedPointer(), Allocator);
-			Manager->ReleaseHandle<T>(Handle);
+			Bucket->Release<T>(Handle);
 		}
 	}
 }

@@ -300,9 +300,9 @@ namespace NxTs
 		Dummy* Test1 = new Dummy();
 		Dummy* Test2 = new Dummy();
 
-		NxFr::HandleManager Manager = NxFr::HandleManager(10);
+		NxFr::HandleBucket Bucket = NxFr::HandleBucket(10);
 
-		NxFr::Handle<Dummy> Handle = Manager.AcquireHandle<Dummy>(Test1);
+		NxFr::Handle<Dummy> Handle = Bucket.Acquire<Dummy>(Test1);
 		ASSERT_EQ(Handle.IsValid(), true);
 		ASSERT_EQ(&Handle->Key, &Test1->Key);
 		ASSERT_EQ(Handle->Key, Test1->Key);
@@ -310,7 +310,7 @@ namespace NxTs
 		Handle->Key = 1;
 		ASSERT_EQ(Test1->Key, 1);
 
-		Manager.UpdateHandle<Dummy>(Handle, Test2);
+		Bucket.Update<Dummy>(Handle, Test2);
 		ASSERT_EQ(Handle.IsValid(), true);
 		ASSERT_EQ(&Handle->Key, &Test2->Key);
 		ASSERT_EQ(Handle->Key, Test2->Key);
@@ -318,10 +318,10 @@ namespace NxTs
 		Handle->Key = 2;
 		ASSERT_EQ(Test2->Key, 2);
 
-		ASSERT_EQ(Manager.BelongToManager(Handle), true);
-		ASSERT_EQ(Manager.BelongToManager(NxFr::Handle<Dummy>()), false);
+		ASSERT_EQ(Bucket.Belong(Handle), true);
+		ASSERT_EQ(Bucket.Belong(NxFr::Handle<Dummy>()), false);
 
-		Manager.ReleaseHandle<Dummy>(Handle);
+		Bucket.Release<Dummy>(Handle);
 		ASSERT_EQ(Handle.IsValid(), false);
 
 		delete Test1;
@@ -331,46 +331,46 @@ namespace NxTs
 	TEST(Memory, Defragmentation)
 	{
 		NxFr::HeapAllocator* Heap = new NxFr::HeapAllocator(512);
-		NxFr::HandleManager Manager = NxFr::HandleManager(10);
+		NxFr::HandleBucket Bucket = NxFr::HandleBucket(10);
 
-		Heap->Defragment(&Manager);
+		Heap->Defragment(&Bucket);
 
 		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test1->Key = 1;
-		NxFr::Handle<Dummy> Handle1 = Manager.AcquireHandle<Dummy>(Test1);
+		NxFr::Handle<Dummy> Handle1 = Bucket.Acquire<Dummy>(Test1);
 
 		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test2->Key = 2;
-		NxFr::Handle<Dummy> Handle2 = Manager.AcquireHandle<Dummy>(Test2);
+		NxFr::Handle<Dummy> Handle2 = Bucket.Acquire<Dummy>(Test2);
 
 		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test3->Key = 3;
-		NxFr::Handle<Dummy> Handle3 = Manager.AcquireHandle<Dummy>(Test3);
+		NxFr::Handle<Dummy> Handle3 = Bucket.Acquire<Dummy>(Test3);
 
 		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test4->Key = 4;
-		NxFr::Handle<Dummy> Handle4 = Manager.AcquireHandle<Dummy>(Test4);
+		NxFr::Handle<Dummy> Handle4 = Bucket.Acquire<Dummy>(Test4);
 
 		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test5->Key = 5;
-		NxFr::Handle<Dummy> Handle5 = Manager.AcquireHandle<Dummy>(Test5);
+		NxFr::Handle<Dummy> Handle5 = Bucket.Acquire<Dummy>(Test5);
 
 		Dummy* Test6 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test6->Key = 6;
-		NxFr::Handle<Dummy> Handle6 = Manager.AcquireHandle<Dummy>(Test6);
+		NxFr::Handle<Dummy> Handle6 = Bucket.Acquire<Dummy>(Test6);
 
 		Dummy* Test7 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
 		Test7->Key = 7;
-		NxFr::Handle<Dummy> Handle7 = Manager.AcquireHandle<Dummy>(Test7);
+		NxFr::Handle<Dummy> Handle7 = Bucket.Acquire<Dummy>(Test7);
 
-		NxFr::Memory::Free(Manager.ReleaseHandle(Handle2), Heap);
-		NxFr::Memory::Free(Manager.ReleaseHandle(Handle4), Heap);
-		NxFr::Memory::Free(Manager.ReleaseHandle(Handle5), Heap);
+		NxFr::Memory::Free(Bucket.Release(Handle2), Heap);
+		NxFr::Memory::Free(Bucket.Release(Handle4), Heap);
+		NxFr::Memory::Free(Bucket.Release(Handle5), Heap);
 
 		uint64 StartAmount = Heap->UsedAmount();
-		Heap->Defragment(&Manager, 1.0f);
-		Heap->Defragment(&Manager);
-		Heap->Defragment(&Manager);
+		Heap->Defragment(&Bucket, 1.0f);
+		Heap->Defragment(&Bucket);
+		Heap->Defragment(&Bucket);
 		uint64 EndAmount = Heap->UsedAmount();
 
 		ASSERT_EQ(Handle3->Key, 3);
@@ -378,10 +378,10 @@ namespace NxTs
 		ASSERT_EQ(Handle7->Key, 7);
 		ASSERT_EQ(StartAmount > EndAmount, true);
 
-		Manager.ReleaseHandle(Handle1);
-		Manager.ReleaseHandle(Handle3);
-		Manager.ReleaseHandle(Handle6);
-		Manager.ReleaseHandle(Handle7);
+		Bucket.Release(Handle1);
+		Bucket.Release(Handle3);
+		Bucket.Release(Handle6);
+		Bucket.Release(Handle7);
 
 		delete Heap;
 	}
