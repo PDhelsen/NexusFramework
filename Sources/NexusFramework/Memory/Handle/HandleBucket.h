@@ -4,11 +4,15 @@
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Containers/Dictionary.h"
 #include "NexusFramework/Types/Containers/Pool.h"
+#include "NexusFramework/Types/Containers/Tuple.h"
 #include "NexusFramework/Memory/Handle/Handle.h"
 #include "NexusFramework/Misc/Templates.h"
 
 namespace NxFr
 {
+	using HandleBucketInfo = Tuple<Handle<void>, HandleBucket*>;
+	using HandlePointerInfos = Dictionary<void*, HandleBucketInfo>;
+
 	class NX_FRAMEWORK_API HandleBucket
 	{
 	public:
@@ -49,7 +53,8 @@ namespace NxFr
 			return Belong(Handle.Pointer);
 		}
 
-		Dictionary<void*, Handle<void>> GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset);
+		HandlePointerInfos GetInfos();
+		void GetInfos(HandlePointerInfos& Infos);
 
 		bool IsEmpty() const { return Buffer.GetCount() == 0; }
 		uint64 GetCount() const { return Buffer.GetCount(); }

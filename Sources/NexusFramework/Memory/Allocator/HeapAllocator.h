@@ -4,8 +4,6 @@
 
 namespace NxFr
 {
-	class HandleBucket;
-
     class NX_FRAMEWORK_API HeapAllocator : public MemoryAllocator
     {
     public:
@@ -17,23 +15,18 @@ namespace NxFr
 		bool CanAllocate(uint64 Size, uint64 Alignement) const override;
 		bool BelongToAllocator(void* Pointer) const override;
 
-		void Defragment(HandleBucket* Manager);
-		void Defragment(HandleBucket* Manager, float Time);
-		void Defragment(HandleBucket* Manager, uint64 Count);
-
 		virtual bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
 
 	protected:
-		void* Allocate(uint64 Size, uint64 Alignement) override;
-		void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
-		void Free(void* Pointer) override;
-
-    private:
 		struct HeapSlot
 		{
 			HeapSlot* Next;
 			bool Free;
 		};
+
+		void* Allocate(uint64 Size, uint64 Alignement) override;
+		void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) override;
+		void Free(void* Pointer) override;
 
         void UpdateHeapSlot(HeapSlot* Slot, uint64 Size);
         void RemoveNextHeapSlot(HeapSlot* Slot);
@@ -43,8 +36,6 @@ namespace NxFr
 		uint64 GetHeapSlotSize(HeapSlot* Slot) const;
 		uint64 GetAlignedSize(uint64 Size) const;
 		void Reset();
-
-		void Defragment(HandleBucket* Manager, float Time, uint64 Count);
 
 		HeapSlot* Root;
 		mutable HeapSlot* Cache;

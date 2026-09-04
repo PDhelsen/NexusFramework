@@ -1,10 +1,5 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
-#include "HeapAllocator.h"
-
-#include "NexusFramework/Memory/Handle/Handle.h"
-#include "NexusFramework/Memory/Handle/HandleBucket.h"
-#include "NexusFramework/Time/Time.h"
-#include "NexusFramework/Time/Stopwatch.h"
+#include "NexusFramework/Memory/Allocator/HeapAllocator.h"
 
 namespace NxFr
 {
@@ -36,21 +31,6 @@ namespace NxFr
 	bool HeapAllocator::BelongToAllocator(void* Pointer) const
 	{
 		return Pointer && IsPointerInMemoryBlock(Pointer);
-	}
-
-	void HeapAllocator::Defragment(HandleBucket* Manager)
-	{
-		Defragment(Manager, 0, 0);
-	}
-
-	void HeapAllocator::Defragment(HandleBucket* Manager, float Time)
-	{
-		Defragment(Manager, Time, 0);
-	}
-
-	void HeapAllocator::Defragment(HandleBucket* Manager, uint64 Count)
-	{
-		Defragment(Manager, 0, Count);
 	}
 
 	void* HeapAllocator::Allocate(uint64 Size, uint64 Alignement)
@@ -243,81 +223,5 @@ namespace NxFr
 		Cache = nullptr;
 
 		IncreaseAmount(sizeof(HeapSlot));
-	}
-
-	void HeapAllocator::Defragment(HandleBucket* Manager, float Time, uint64 Count)
-	{
-		Dictionary<void*, Handle<void>> Handles = Manager->GetHandlesPointingToMemoryRange(GetMemoryBlock(), TotalAmount());
-
-		bool All = Time <= 0.0f && Count == 0;
-		Stopwatch Watch = Stopwatch(true);
-		uint64 Iteration = 0;
-
-		HeapSlot* Slot = Root;
-		while (All || (!All && Time > 0.0f) || (!All && Count > 0))
-		{
-			// Last slot
-			if (Slot->Next == nullptr)
-			{
-				break;
-			}
-
-			// Slot is currently used
-			if (!Slot->Free)
-			{
-				Slot = Slot->Next;
-				continue;
-			}
-
-			// Slot is free and next one too, so we can merge the two free slot together
-			if (Slot->Next->Free)
-			{
-				HeapSlot* Next = Slot->Next;
-				Slot->Next = Next->Next;
-
-				EraseMemory(Next, sizeof(HeapSlot));
-				DecreaseAmount(sizeof(HeapSlot));
-			}
-			// Slot is free but next one not, so we move the next one into the current one to bubble up the free space at the end of the heap
-			else
-			{
-				// Check if next data is stored in an Handle and so can be moved in memory
-				void* Data = GetHeapSlotMemory(Slot->Next);
-				Handle<void>* Ptr = Handles.TryGet(Data);
-				if (Ptr == nullptr)
-				{
-					Slot = Slot->Next;
-					continue;
-				}
-
-				// Get slot info
-				Handle<void>& Handle = *Ptr;
-				uint64 SlotSize = GetHeapSlotSize(Slot);
-				uint64 NextSize = GetHeapSlotSize(Slot->Next);
-				HeapSlot* NextNext = Slot->Next->Next;
-
-				// Move data
-				Memory::MemMove(Slot->Next, Slot, sizeof(HeapSlot) + NextSize);
-				Data = GetHeapSlotMemory(Slot);
-				Manager->Update(Handle, Data);
-
-				// Update HeapSlot
-				uint64 NewAddress = reinterpret_cast<uint64>(Slot) + sizeof(HeapSlot) + NextSize;
-				HeapSlot* NewSlot = reinterpret_cast<HeapSlot*>(NewAddress);
-				NewSlot->Next = NextNext;
-				NewSlot->Free = true;
-				Slot->Next = NewSlot;
-				Slot->Free = false;
-
-				Slot = NewSlot;
-			}
-
-			Count = Count > 0 ? Count - 1 : 0;
-			Time = Time > 0.0f ? Time - (float)Watch.Peek(Time::SecondToMilli) : 0.0f;
-
-			Iteration++;
-		}
-
-		Watch.Stop();
 	}
 }

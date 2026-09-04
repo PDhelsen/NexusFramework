@@ -13,6 +13,21 @@ namespace NxFr
 		ClearBuckets();
 	}
 
+	HandlePointerInfos HandleManager::GetInfos()
+	{
+		HandlePointerInfos Infos;
+		GetInfos(Infos);
+		return Infos;
+	}
+
+	void HandleManager::GetInfos(HandlePointerInfos& Infos)
+	{
+		for (auto* Bucket : Buckets)
+		{
+			Bucket->GetInfos(Infos);
+		}
+	}
+
 	Handle<void*> HandleManager::GetHandle(void* Pointer) const
 	{
 		for (HandleBucket* Bucket : Buckets)

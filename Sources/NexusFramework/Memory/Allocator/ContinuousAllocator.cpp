@@ -38,6 +38,7 @@ namespace NxFr
 		Allocator* Alloc = Creator.Invoke(BucketSize);
 		Allocators.Append(Alloc);
 
+		IncreaseAmount(Alloc->UsedAmount());
 		return Alloc;
 	}
 
@@ -57,10 +58,13 @@ namespace NxFr
 	void ContinuousAllocator::ClearAllocators(bool Delete)
 	{
 		Allocator::Scope Context(nullptr);
+		ResetAmount();
 
 		for (Allocator* Alloc : Allocators)
 		{
 			Alloc->Clear();
+			IncreaseAmount(Alloc->UsedAmount());
+
 			if (Delete)
 			{
 				delete Alloc;

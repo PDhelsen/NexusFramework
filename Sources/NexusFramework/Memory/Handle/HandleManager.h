@@ -7,7 +7,7 @@
 
 namespace NxFr
 {
-	class HandleManager
+	class NX_FRAMEWORK_API HandleManager
 	{
 	public:
 		NX_NOCOPY_NOMOVE(HandleManager);
@@ -34,6 +34,9 @@ namespace NxFr
 		{
 			return GetHandle(Pointer);
 		}
+
+		HandlePointerInfos GetInfos();
+		void GetInfos(HandlePointerInfos& Infos);
 
 		uint64 GetBucketSize() const { return BucketSize; }
 		void SetBucketSize(uint64 Size) { this->BucketSize = Size; }

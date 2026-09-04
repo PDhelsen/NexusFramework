@@ -25,7 +25,6 @@ namespace NxFr
 		Allocator* GetAllocator(void* Pointer) const override;
 		void ClearAllocators(bool Delete) override;
 
-	private:
 		Set<Allocator*> Allocators;
 		Delegate<Allocator*(uint64)> Creator;
 	};

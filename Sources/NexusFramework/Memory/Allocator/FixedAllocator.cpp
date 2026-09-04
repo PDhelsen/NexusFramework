@@ -62,10 +62,12 @@ namespace NxFr
 	void FixedAllocator::ClearAllocators(bool Delete)
 	{
 		Allocator::Scope Context(nullptr);
+		ResetAmount();
 
 		for (auto [Size, Alloc] : Allocators)
 		{
 			Alloc->Clear();
+
 			if (Delete)
 			{
 				delete Alloc;

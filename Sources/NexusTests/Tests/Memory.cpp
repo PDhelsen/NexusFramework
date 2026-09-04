@@ -276,6 +276,63 @@ namespace NxTs
 		delete Allocator;
 	}
 
+	TEST(Memory, ManagedAllocator)
+	{
+		NxFr::ManagedAllocator* Allocator = new NxFr::ManagedAllocator(512, 5);
+
+		Allocator->Defragment();
+
+		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test1->Key = 1;
+		NxFr::Handle<Dummy> Handle1 = Allocator->Acquire<Dummy>(Test1);
+
+		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test2->Key = 2;
+		NxFr::Handle<Dummy> Handle2 = Allocator->Acquire<Dummy>(Test2);
+
+		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test3->Key = 3;
+		NxFr::Handle<Dummy> Handle3 = Allocator->Acquire<Dummy>(Test3);
+
+		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test4->Key = 4;
+		NxFr::Handle<Dummy> Handle4 = Allocator->Acquire<Dummy>(Test4);
+
+		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test5->Key = 5;
+		NxFr::Handle<Dummy> Handle5 = Allocator->Acquire<Dummy>(Test5);
+
+		Dummy* Test6 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test6->Key = 6;
+		NxFr::Handle<Dummy> Handle6 = Allocator->Acquire<Dummy>(Test6);
+
+		Dummy* Test7 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Allocator);
+		Test7->Key = 7;
+		NxFr::Handle<Dummy> Handle7 = Allocator->Acquire<Dummy>(Test7);
+
+		NxFr::Memory::Free(Allocator->Release(Handle2), Allocator);
+		NxFr::Memory::Free(Allocator->Release(Handle4), Allocator);
+		NxFr::Memory::Free(Allocator->Release(Handle5), Allocator);
+
+		uint64 StartAmount = Allocator->UsedAmount();
+		Allocator->Defragment(1.0f);
+		Allocator->Defragment();
+		Allocator->Defragment();
+		uint64 EndAmount = Allocator->UsedAmount();
+
+		ASSERT_EQ(Handle3->Key, 3);
+		ASSERT_EQ(Handle6->Key, 6);
+		ASSERT_EQ(Handle7->Key, 7);
+		ASSERT_EQ(StartAmount > EndAmount, true);
+
+		Allocator->Release(Handle1);
+		Allocator->Release(Handle3);
+		Allocator->Release(Handle6);
+		Allocator->Release(Handle7);
+
+		delete Allocator;
+	}
+
 	TEST(Memory, AllocatorContext)
 	{
 		NxFr::HeapAllocator* Allocator = new NxFr::HeapAllocator(512);
@@ -326,63 +383,5 @@ namespace NxTs
 
 		delete Test1;
 		delete Test2;
-	}
-
-	TEST(Memory, Defragmentation)
-	{
-		NxFr::HeapAllocator* Heap = new NxFr::HeapAllocator(512);
-		NxFr::HandleBucket Bucket = NxFr::HandleBucket(10);
-
-		Heap->Defragment(&Bucket);
-
-		Dummy* Test1 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test1->Key = 1;
-		NxFr::Handle<Dummy> Handle1 = Bucket.Acquire<Dummy>(Test1);
-
-		Dummy* Test2 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test2->Key = 2;
-		NxFr::Handle<Dummy> Handle2 = Bucket.Acquire<Dummy>(Test2);
-
-		Dummy* Test3 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test3->Key = 3;
-		NxFr::Handle<Dummy> Handle3 = Bucket.Acquire<Dummy>(Test3);
-
-		Dummy* Test4 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test4->Key = 4;
-		NxFr::Handle<Dummy> Handle4 = Bucket.Acquire<Dummy>(Test4);
-
-		Dummy* Test5 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test5->Key = 5;
-		NxFr::Handle<Dummy> Handle5 = Bucket.Acquire<Dummy>(Test5);
-
-		Dummy* Test6 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test6->Key = 6;
-		NxFr::Handle<Dummy> Handle6 = Bucket.Acquire<Dummy>(Test6);
-
-		Dummy* Test7 = (Dummy*)NxFr::Memory::Allocate(sizeof(Dummy), Heap);
-		Test7->Key = 7;
-		NxFr::Handle<Dummy> Handle7 = Bucket.Acquire<Dummy>(Test7);
-
-		NxFr::Memory::Free(Bucket.Release(Handle2), Heap);
-		NxFr::Memory::Free(Bucket.Release(Handle4), Heap);
-		NxFr::Memory::Free(Bucket.Release(Handle5), Heap);
-
-		uint64 StartAmount = Heap->UsedAmount();
-		Heap->Defragment(&Bucket, 1.0f);
-		Heap->Defragment(&Bucket);
-		Heap->Defragment(&Bucket);
-		uint64 EndAmount = Heap->UsedAmount();
-
-		ASSERT_EQ(Handle3->Key, 3);
-		ASSERT_EQ(Handle6->Key, 6);
-		ASSERT_EQ(Handle7->Key, 7);
-		ASSERT_EQ(StartAmount > EndAmount, true);
-
-		Bucket.Release(Handle1);
-		Bucket.Release(Handle3);
-		Bucket.Release(Handle6);
-		Bucket.Release(Handle7);
-
-		delete Heap;
 	}
 }

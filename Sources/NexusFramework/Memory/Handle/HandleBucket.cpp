@@ -53,22 +53,23 @@ namespace NxFr
 		return &Buffer.Begin().Get() <= Address && Address < &Buffer.End().Get();
 	}
 
-	Dictionary<void*, Handle<void>> HandleBucket::GetHandlesPointingToMemoryRange(void* Pointer, uint64 Offset)
+	HandlePointerInfos HandleBucket::GetInfos()
 	{
-		Dictionary<void*, Handle<void>> Handles;
+		HandlePointerInfos Infos;
+		GetInfos(Infos);
+		return Infos;
+	}
 
+	void HandleBucket::GetInfos(HandlePointerInfos& Infos)
+	{
 		for (auto It = Buffer.Begin(); It != Buffer.End(); ++It)
 		{
 			void* Data = reinterpret_cast<void*>(*It);
-			if (Memory::IsPointerInRange(Data, Pointer, Offset))
-			{
-				Handle<void> Handle;
-				Handle.Pointer = &It.Get();
 
-				Handles.Append(Data, Handle);
-			}
+			Handle<void> Handle;
+			Handle.Pointer = &It.Get();
+
+			Infos.Append(Data, HandleBucketInfo(Handle, this));
 		}
-
-		return Handles;
 	}
 }
