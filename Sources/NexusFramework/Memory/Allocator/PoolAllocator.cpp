@@ -49,8 +49,10 @@ namespace NxFr
 
 	void* PoolAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NX_ASSERT(false, Default, "Reallocate from Pool Allocator is not supported");
-		return nullptr;
+		// Pool can only allocate a given size, so there is no point of reallocating since it will have the same size.
+		// In order to make allocator compliant with the interface and make it usable with abstraction,
+		// it will return the same pointer as realloc can return the same pointer if it can either grow in place or reallocate the same or smaller
+		return Pointer;
 	}
 
 	void PoolAllocator::Free(void* Pointer)

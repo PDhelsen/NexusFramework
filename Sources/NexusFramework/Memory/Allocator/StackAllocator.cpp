@@ -53,8 +53,8 @@ namespace NxFr
 
 	void* StackAllocator::Reallocate(void* Pointer, uint64 Size, uint64 Alignement)
 	{
-		NX_ASSERT(false, Default, "Reallocate from Stack Allocator is not supported");
-		return nullptr;
+		// Stack allocator can only grow as free will deallocate everything past this object.
+		return Allocate(Size, Alignement);
 	}
 
 	void StackAllocator::Free(void* Pointer)
