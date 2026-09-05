@@ -38,9 +38,9 @@ namespace NxFr
 		NX_FRAMEWORK_API void* OffsetPointer(void* Pointer, uint64 Offset);
 		NX_FRAMEWORK_API bool IsPointerInRange(void* Pointer, void* Position, uint64 Offset);
 
-		NX_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
-		NX_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allocator = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
-		NX_FRAMEWORK_API void Free(void* Pointer, Allocator* Allocator = Allocator::TryGet());
+		NX_FRAMEWORK_API void* Allocate(uint64 Size, Allocator* Allctr = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
+		NX_FRAMEWORK_API void* Reallocate(void* Pointer, uint64 Size, Allocator* Allctr = Allocator::TryGet(), uint64 Alignement = DefaultAlignement);
+		NX_FRAMEWORK_API void Free(void* Pointer, Allocator* Allctr = Allocator::TryGet());
 
 		template<typename T, typename... Args>
 		T* Construct(void* Pointer, Args&&... args)
@@ -55,17 +55,17 @@ namespace NxFr
 		}
 
 		template<typename T, typename ...Args>
-		T* Create(Allocator* Allocator = Allocator::TryGet(), Args&& ...args)
+		T* Create(Allocator* Allctr = Allocator::TryGet(), Args&& ...args)
 		{
-			void* Ptr = Allocate(sizeof(T), Allocator, alignof(T));
+			void* Ptr = Allocate(sizeof(T), Allctr, alignof(T));
 			return Construct<T>(Ptr, args...);
 		}
 
 		template<typename T>
-		void Destroy(T* Pointer, Allocator* Allocator = Allocator::TryGet())
+		void Destroy(T* Pointer, Allocator* Allctr = Allocator::TryGet())
 		{
 			Destruct(Pointer);
-			Free(Pointer, Allocator);
+			Free(Pointer, Allctr);
 		}
 	};
 }

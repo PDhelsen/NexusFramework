@@ -18,9 +18,9 @@ namespace NxFr
 	uint64 FixedAllocator::UsedAmount() const
 	{
 		uint64 Amount = 0;
-		for (auto [Stride, Alloc] : Allocators)
+		for (auto [Stride, Allctr] : Allocators)
 		{
-			Amount += Alloc->UsedAmount();
+			Amount += Allctr->UsedAmount();
 		}
 		return Amount;
 	}
@@ -39,8 +39,8 @@ namespace NxFr
 
 	Allocator* FixedAllocator::FindAllocator(uint64 Size, uint64 Alignement)
 	{
-		Allocator** Alloc = Allocators.TryGet(Size);
-		return Alloc ? *Alloc : nullptr;
+		Allocator** Allctr = Allocators.TryGet(Size);
+		return Allctr ? *Allctr : nullptr;
 	}
 
 	Allocator* FixedAllocator::CreateAllocator(uint64 Size, uint64 Alignement)
@@ -50,19 +50,19 @@ namespace NxFr
 		uint64 Stride = Size;
 		uint64 PoolSize = Math::RoundToInt(BucketSize / (float)Stride) * Stride;
 
-		Allocator* Alloc = new ContinuousAllocator(PoolSize, [Stride](uint64 BucketSize) { return new PoolAllocator(BucketSize, Stride); });
-		Allocators.Append(Size, Alloc);
+		Allocator* Allctr = new ContinuousAllocator(PoolSize, [Stride](uint64 BucketSize) { return new PoolAllocator(BucketSize, Stride); });
+		Allocators.Append(Size, Allctr);
 
-		return Alloc;
+		return Allctr;
 	}
 
 	Allocator* FixedAllocator::GetAllocator(void* Pointer) const
 	{
-		for (auto [Size, Alloc] : Allocators)
+		for (auto [Size, Allctr] : Allocators)
 		{
-			if (Alloc->BelongToAllocator(Pointer))
+			if (Allctr->BelongToAllocator(Pointer))
 			{
-				return Alloc;
+				return Allctr;
 			}
 		}
 
@@ -73,12 +73,12 @@ namespace NxFr
 	{
 		Allocator::Scope Context(nullptr);
 
-		for (auto [Size, Alloc] : Allocators)
+		for (auto [Size, Allctr] : Allocators)
 		{
-			Alloc->Clear();
+			Allctr->Clear();
 			if (Delete)
 			{
-				delete Alloc;
+				delete Allctr;
 			}
 		}
 

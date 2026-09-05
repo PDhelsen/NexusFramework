@@ -18,18 +18,18 @@ namespace NxFr
 		using I = Iterator::NodeTree<T, N>;
 
 		Tree(Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Count(0), Data(nullptr)
+			: Allctr(Allctr), Count(0), Data(nullptr)
 		{
 		}
 
 		Tree(const Tree<T>& Other)
-			: Alloc(Other.Alloc), Count(0), Data(nullptr)
+			: Allctr(Other.Allctr), Count(0), Data(nullptr)
 		{
 			AppendRange(nullptr, Other);
 		}
 
 		Tree(Tree<T>&& Other) noexcept
-			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
+			: Allctr(Other.Allctr), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Count = 0;
 			Other.Data = nullptr;
@@ -63,7 +63,7 @@ namespace NxFr
 
 			Clear();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Count = Other.Count;
 			Data = Other.Data;
 
@@ -530,7 +530,7 @@ namespace NxFr
 		{
 			++Count;
 
-			N* Instance = (N*)Memory::Allocate(sizeof(N), Alloc);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), Allctr);
 			Instance->Count = 0;
 			Instance->Parent = nullptr;
 			Instance->Sibling = nullptr;
@@ -542,7 +542,7 @@ namespace NxFr
 		{
 			--Count;
 
-			Memory::Free(Instance, Alloc);
+			Memory::Free(Instance, Allctr);
 		}
 
 		template<typename... Args>
@@ -696,7 +696,7 @@ namespace NxFr
 			return I(const_cast<N*>(Instance));
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Count;
 		N* Data;
 	};

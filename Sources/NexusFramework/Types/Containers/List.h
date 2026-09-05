@@ -19,13 +19,13 @@ namespace NxFr
 		inline static const uint64 DefaultSize = 8;
 
 		List(uint64 Size = DefaultSize, Allocator * Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}
 
 		List(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Init.size());
 
@@ -36,7 +36,7 @@ namespace NxFr
 		}
 
 		List(const List<T>& Other)
-			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
+			: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
 			Allocate(Capacity);
 
@@ -47,7 +47,7 @@ namespace NxFr
 		}
 
 		List(List<T>&& Other) noexcept
-			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+			: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Capacity = 0;
 			Other.Count = 0;
@@ -92,7 +92,7 @@ namespace NxFr
 			Clear();
 			Free();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
 			Data = Other.Data;
@@ -447,18 +447,18 @@ namespace NxFr
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, Alloc);
+			Data = (T*)Memory::Allocate(sizeof(T) * Capacity, Allctr);
 		}
 
 		void Reallocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (T*)Memory::Reallocate(Data, sizeof(T) * Capacity, Alloc);
+			Data = (T*)Memory::Reallocate(Data, sizeof(T) * Capacity, Allctr);
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Alloc);
+			Memory::Free(Data, Allctr);
 			Data = nullptr;
 		}
 
@@ -534,7 +534,7 @@ namespace NxFr
 			return Capacity * 2;
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Capacity;
 		uint64 Count;
 		T* Data;

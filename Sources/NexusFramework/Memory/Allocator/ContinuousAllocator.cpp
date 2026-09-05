@@ -21,20 +21,20 @@ namespace NxFr
 	uint64 ContinuousAllocator::UsedAmount() const
 	{
 		uint64 Amount = 0;
-		for (auto* Alloc : Allocators)
+		for (auto* Allctr : Allocators)
 		{
-			Amount += Alloc->UsedAmount();
+			Amount += Allctr->UsedAmount();
 		}
 		return Amount;
 	}
 
 	Allocator* ContinuousAllocator::FindAllocator(uint64 Size, uint64 Alignement)
 	{
-		for (Allocator* Alloc : Allocators)
+		for (Allocator* Allctr : Allocators)
 		{
-			if (Alloc->CanAllocate(Size, Alignement))
+			if (Allctr->CanAllocate(Size, Alignement))
 			{
-				return Alloc;
+				return Allctr;
 			}
 		}
 
@@ -45,19 +45,19 @@ namespace NxFr
 	{
 		Allocator::Scope Context(nullptr);
 
-		Allocator* Alloc = Creator.Invoke(BucketSize);
-		Allocators.Append(Alloc);
+		Allocator* Allctr = Creator.Invoke(BucketSize);
+		Allocators.Append(Allctr);
 
-		return Alloc;
+		return Allctr;
 	}
 
 	Allocator* ContinuousAllocator::GetAllocator(void* Pointer) const
 	{
-		for (Allocator* Alloc : Allocators)
+		for (Allocator* Allctr : Allocators)
 		{
-			if (Alloc->BelongToAllocator(Pointer))
+			if (Allctr->BelongToAllocator(Pointer))
 			{
-				return Alloc;
+				return Allctr;
 			}
 		}
 
@@ -68,12 +68,12 @@ namespace NxFr
 	{
 		Allocator::Scope Context(nullptr);
 
-		for (Allocator* Alloc : Allocators)
+		for (Allocator* Allctr : Allocators)
 		{
-			Alloc->Clear();
+			Allctr->Clear();
 			if (Delete)
 			{
-				delete Alloc;
+				delete Allctr;
 			}
 		}
 

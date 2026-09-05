@@ -25,13 +25,13 @@ namespace NxFr
 		inline static const uint64 DefaultSize = 11;
 
 		Set(uint64 Size = DefaultSize, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}
 
 		Set(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr)
+			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Init.size());
 
@@ -42,7 +42,7 @@ namespace NxFr
 		}
 
 		Set(const Set<T, H>& Other)
-			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
+			: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count), Data(nullptr)
 		{
 			Allocate(Capacity);
 
@@ -53,7 +53,7 @@ namespace NxFr
 		}
 
 		Set(Set<T, H>&& Other) noexcept
-			: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
+			: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Capacity = 0;
 			Other.Count = 0;
@@ -99,7 +99,7 @@ namespace NxFr
 			Clear();
 			Free();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Capacity = Other.Capacity;
 			Count = Other.Count;
 			Data = Other.Data;
@@ -374,7 +374,7 @@ namespace NxFr
 		void Allocate(uint64 Size)
 		{
 			ValidateCapacity(Size);
-			Data = (N*)Memory::Allocate(sizeof(N) * Capacity, Alloc);
+			Data = (N*)Memory::Allocate(sizeof(N) * Capacity, Allctr);
 
 			for (uint64 Index = 0; Index < Capacity; ++Index)
 			{
@@ -402,12 +402,12 @@ namespace NxFr
 				Construct(NewIndex, Instance.Hash, Move(Instance.Value));
 			}
 
-			Memory::Free(Temp, Alloc);
+			Memory::Free(Temp, Allctr);
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Alloc);
+			Memory::Free(Data, Allctr);
 			Data = nullptr;
 		}
 
@@ -575,7 +575,7 @@ namespace NxFr
 			return Index < Capacity && Data[Index].Free;
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Capacity;
 		uint64 Count;
 		N* Data;

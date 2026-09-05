@@ -112,15 +112,15 @@ namespace NxFr
 		return Address >= Start && Address < End;
 	}
 
-	void* Memory::Allocate(uint64 Size, Allocator* Allocator, uint64 Alignement)
+	void* Memory::Allocate(uint64 Size, Allocator* Allctr, uint64 Alignement)
 	{
 		NX_ASSERT(Size > 0, Default, "Allocation Size is 0");
 		NX_ASSERT(Math::IsPowerOfTwo(Alignement), Default, "Invalid Alignement");
 		void* Return = nullptr;
 
-		if (Allocator != nullptr)
+		if (Allctr != nullptr)
 		{
-			Return = Allocator->Allocate(Size, Alignement);
+			Return = Allctr->Allocate(Size, Alignement);
 		}
 		else
 		{
@@ -132,15 +132,15 @@ namespace NxFr
 		return Return;
 	}
 
-	void* Memory::Reallocate(void* Pointer, uint64 Size, Allocator* Allocator, uint64 Alignement)
+	void* Memory::Reallocate(void* Pointer, uint64 Size, Allocator* Allctr, uint64 Alignement)
 	{
 		NX_ASSERT(Size > 0, Default, "Allocation Size is 0");
 		NX_ASSERT(Math::IsPowerOfTwo(Alignement), Default, "Invalid Alignement");
 		void* Return = nullptr;
 
-		if (Allocator != nullptr)
+		if (Allctr != nullptr)
 		{
-			Return = Allocator->Reallocate(Pointer, Size, Alignement);
+			Return = Allctr->Reallocate(Pointer, Size, Alignement);
 		}
 		else
 		{
@@ -152,11 +152,11 @@ namespace NxFr
 		return Return;
 	}
 
-	void Memory::Free(void* Pointer, Allocator* Allocator)
+	void Memory::Free(void* Pointer, Allocator* Allctr)
 	{
-		if (Allocator != nullptr)
+		if (Allctr != nullptr)
 		{
-			Allocator->Free(Pointer);
+			Allctr->Free(Pointer);
 		}
 		else
 		{

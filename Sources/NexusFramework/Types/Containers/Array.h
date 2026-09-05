@@ -17,14 +17,14 @@ namespace NxFr
 		using I = Iterator::Block<T>;
 
 		Array()
-			: Alloc(nullptr), Count(0)
+			: Allctr(nullptr), Count(0)
 		{
 			Allocate(L);
 			ConstructRange(0, Count);
 		}
 
 		Array(uint64 Size, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Count(0)
+			: Allctr(Allctr), Count(0)
 		{
 			NX_ASSERT((L == 0 && Size == 0) || (L == 0 && Size > 0), Default, "The provided size is invalid");
 
@@ -33,7 +33,7 @@ namespace NxFr
 		}
 
 		Array(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Count(0)
+			: Allctr(Allctr), Count(0)
 		{
 			NX_ASSERT((L == 0 && Init.size() == 0) || (L == 0 && Init.size() > 0), Default, "The provided size is invalid");
 
@@ -48,7 +48,7 @@ namespace NxFr
 		}
 
 		Array(const Array<T, L>& Other)
-			: Alloc(Other.Alloc), Count(Other.Count)
+			: Allctr(Other.Allctr), Count(Other.Count)
 		{
 			Allocate(Count);
 			for (uint64 Index = 0; Index < Count; ++Index)
@@ -58,7 +58,7 @@ namespace NxFr
 		}
 
 		Array(Array<T, L>&& Other) noexcept
-			: Alloc(Other.Alloc), Count(Other.Count)
+			: Allctr(Other.Allctr), Count(Other.Count)
 		{
 			if (!Other.IsStackArray())
 			{
@@ -112,7 +112,7 @@ namespace NxFr
 			DestructRange(0, Count);
 			Free();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Count = Other.Count;
 
 			if (!Other.IsStackArray())
@@ -348,7 +348,7 @@ namespace NxFr
 			ValidateCapacity(Size);
 			if (!IsStackArray())
 			{
-				Data.Heap = (T*)Memory::Allocate(sizeof(T) * Count, Alloc);
+				Data.Heap = (T*)Memory::Allocate(sizeof(T) * Count, Allctr);
 			}
 		}
 
@@ -356,7 +356,7 @@ namespace NxFr
 		{
 			if (!IsStackArray())
 			{
-				Memory::Free(Data.Heap, Alloc);
+				Memory::Free(Data.Heap, Allctr);
 				Data.Heap = nullptr;
 			}
 		}
@@ -428,7 +428,7 @@ namespace NxFr
 			return L == Count;
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Count;
 		Buffer Data;
 	};

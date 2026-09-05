@@ -82,7 +82,7 @@ namespace NxFr
 		inline char* GetData() { return Sso() ? Data.Small : Data.Large; }
 		inline bool Sso() const { return Capacity <= SmallStringCapacity; }
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Capacity;
 		uint64 Count;
 		Buffer Data;

@@ -19,12 +19,12 @@ namespace NxFr
 		using I = Iterator::NodeDouble<T, N>;
 
 		LinkedList(Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
+			: Allctr(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 		}
 
 		LinkedList(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
+			: Allctr(Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			for (auto It : Init)
 			{
@@ -33,7 +33,7 @@ namespace NxFr
 		}
 
 		LinkedList(const LinkedList<T>& Other)
-			: Alloc(Other.Alloc), Count(0), DataHead(nullptr), DataTail(nullptr)
+			: Allctr(Other.Allctr), Count(0), DataHead(nullptr), DataTail(nullptr)
 		{
 			N* Current = Other.DataHead;
 			while (Current)
@@ -44,7 +44,7 @@ namespace NxFr
 		}
 
 		LinkedList(LinkedList<T>&& Other) noexcept
-			: Alloc(Other.Alloc), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
+			: Allctr(Other.Allctr), Count(Other.Count), DataHead(Other.DataHead), DataTail(Other.DataTail)
 		{
 			Other.Count = 0;
 			Other.DataHead = nullptr;
@@ -84,7 +84,7 @@ namespace NxFr
 
 			Clear();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Count = Other.Count;
 			DataHead = Other.DataHead;
 			DataTail = Other.DataTail;
@@ -675,7 +675,7 @@ namespace NxFr
 		{
 			++Count;
 
-			N* Instance = (N*)Memory::Allocate(sizeof(N), Alloc);
+			N* Instance = (N*)Memory::Allocate(sizeof(N), Allctr);
 			Instance->Next = nullptr;
 			Instance->Prev = nullptr;
 			return Instance;
@@ -685,7 +685,7 @@ namespace NxFr
 		{
 			--Count;
 
-			Memory::Free(Instance, Alloc);
+			Memory::Free(Instance, Allctr);
 		}
 
 		template<typename... Args>
@@ -827,7 +827,7 @@ namespace NxFr
 			return I(const_cast<N*>(Instance));
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Count;
 		N* DataHead;
 		N* DataTail;

@@ -20,7 +20,7 @@ namespace NxFr
 
 			NX_NOCOPY_NOMOVE(PreAllocated)
 			PreAllocated(uint64 Size, Allocator* Allctr = Allocator::TryGet())
-				: Alloc(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
+				: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr), Head(nullptr)
 			{
 				Allocate(Size);
 				ConstructRange(0, Capacity);
@@ -145,12 +145,12 @@ namespace NxFr
 			void Allocate(uint64 Size)
 			{
 				ValidateCapacity(Size);
-				Data = (N*)Memory::Allocate(sizeof(N) * Capacity, Alloc);
+				Data = (N*)Memory::Allocate(sizeof(N) * Capacity, Allctr);
 			}
 
 			void Free()
 			{
-				Memory::Free(Data, Alloc);
+				Memory::Free(Data, Allctr);
 				Data = nullptr;
 			}
 
@@ -200,7 +200,7 @@ namespace NxFr
 				return ++Instance;
 			}
 
-			Allocator* Alloc;
+			Allocator* Allctr;
 			uint64 Capacity;
 			uint64 Count;
 			N* Data;
@@ -216,7 +216,7 @@ namespace NxFr
 
 			NX_NOCOPY_NOMOVE(OnDemand)
 			OnDemand(Allocator* Allctr = Allocator::TryGet())
-				: Alloc(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
+				: Allctr(Allctr), Count(0), Unsused(0), Data(nullptr), Head(nullptr)
 			{
 			}
 
@@ -390,7 +390,7 @@ namespace NxFr
 		private:
 			N* Allocate()
 			{
-				return (N*)Memory::Allocate(sizeof(N), Alloc);
+				return (N*)Memory::Allocate(sizeof(N), Allctr);
 			}
 
 			void Free()
@@ -405,7 +405,7 @@ namespace NxFr
 
 			void Free(N* Instance)
 			{
-				Memory::Free(Instance, Alloc);
+				Memory::Free(Instance, Allctr);
 			}
 
 			void Construct(N* Instance)
@@ -438,7 +438,7 @@ namespace NxFr
 				return I(const_cast<N*>(Instance));
 			}
 
-			Allocator* Alloc;
+			Allocator* Allctr;
 			uint64 Count;
 			uint64 Unsused;
 			N* Data;

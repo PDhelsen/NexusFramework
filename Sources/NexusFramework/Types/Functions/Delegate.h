@@ -25,59 +25,59 @@ namespace NxFr
 		using FCM = R(T::*)(Args...) const;
 
 		Delegate(Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Reset();
 		}
 
 		Delegate(NullPtr Ptr, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Reset();
 		}
 
 		Delegate(FF Func, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Func);
 		}
 
 		template<typename T>
 		Delegate(T* Target, FM<T> Method, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Target, Method);
 		}
 
 		template<typename T>
 		Delegate(const T* Target, FCM<T> Method, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Target, Method);
 		}
 
 		template<typename FC, typename = EnableIf<!IsSameType<typename DecayConst<typename DecayReference<FC>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<typename DecayReference<FC>::Type>::Type, NullPtr>::Value>::Type>
 		Delegate(FC& Func, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Func);
 		}
 
 		template<typename FL, typename = EnableIf<!IsSameType<typename DecayConst<typename DecayReference<FL>::Type>::Type, Delegate<R(Args...)>>::Value && !IsSameType<typename DecayConst<typename DecayReference<FL>::Type>::Type, NullPtr>::Value>::Type>
 		Delegate(FL&& Func, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Bind(Forward<FL>(Func));
 		}
 
 		Delegate(const Delegate<R(Args...)>& Other)
-			: Alloc(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Copy(Other);
 		}
 
 		Delegate(Delegate<R(Args...)>&& Other) noexcept
-			: Alloc(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Copy(Other);
 			Other.Reset();
@@ -194,7 +194,7 @@ namespace NxFr
 			Reset();
 			if constexpr (sizeof(Lambda) > BufferSize)
 			{
-				Lambda* Info = Memory::Create<Lambda>(Alloc, Forward<FL>(Func));
+				Lambda* Info = Memory::Create<Lambda>(Allctr, Forward<FL>(Func));
 				new (Buffer) FLData{ Info };
 				Function = [](void* Data, Args... args) -> R
 				{
@@ -289,7 +289,7 @@ namespace NxFr
 		{
 			if (IsComplex())
 			{
-				Destroyer(Alloc, Buffer);
+				Destroyer(Allctr, Buffer);
 			}
 
 			Function = nullptr;
@@ -303,14 +303,14 @@ namespace NxFr
 		{
 			Reset();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Function = Other.Function;
 			Copier = Other.Copier;
 			Destroyer = Other.Destroyer;
 
 			if (Other.IsComplex())
 			{
-				Other.Copier(Alloc, Other.Buffer, Buffer);
+				Other.Copier(Allctr, Other.Buffer, Buffer);
 			}
 			else
 			{
@@ -324,7 +324,7 @@ namespace NxFr
 		}
 
 		mutable alignas(Memory::DefaultAlignement) Byte Buffer[BufferSize];
-		Allocator* Alloc;
+		Allocator* Allctr;
 		S Function;
 		C Copier;
 		D Destroyer;

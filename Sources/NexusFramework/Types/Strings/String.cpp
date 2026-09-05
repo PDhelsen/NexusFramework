@@ -6,44 +6,44 @@
 namespace NxFr
 {
 	String::String(Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(SmallStringCapacity, 0, nullptr);
 	}
 
 	String::String(uint64 Bytes, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Bytes, 0, nullptr);
 	}
 
 	String::String(const char* Text, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		uint64 Size = StringCApi::Length(Text);
 		Allocate(Size, Size, Text);
 	}
 
 	String::String(const char* Text, uint64 Size, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Size, Size, Text);
 	}
 
 	String::String(StringView Text, Allocator* Allctr)
-		: Alloc(Allctr), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Text.GetCount(), Text.GetCount(), Text.C());
 	}
 
 	String::String(const String& Other)
-		: Alloc(Other.Alloc), Capacity(SmallStringCapacity), Count(0)
+		: Allctr(Other.Allctr), Capacity(SmallStringCapacity), Count(0)
 	{
 		Allocate(Other.Capacity, Other.Count, Other.GetBuffer());
 	}
 
 	String::String(String&& Other) noexcept
-		: Alloc(Other.Alloc), Capacity(Other.Capacity), Count(Other.Count)
+		: Allctr(Other.Allctr), Capacity(Other.Capacity), Count(Other.Count)
 	{
 		if (Other.Sso())
 		{
@@ -87,7 +87,7 @@ namespace NxFr
 
 		Free();
 
-		Alloc = Other.Alloc;
+		Allctr = Other.Allctr;
 		Capacity = Other.Capacity;
 		Count = Other.Count;
 
@@ -229,7 +229,7 @@ namespace NxFr
 
 		if (!Sso())
 		{
-			Data.Large = (char*)Memory::Allocate(Capacity, Alloc);
+			Data.Large = (char*)Memory::Allocate(Capacity, Allctr);
 		}
 
 		if (Text)
@@ -248,14 +248,14 @@ namespace NxFr
 
 		if (!Sso() && !WasSso)
 		{
-			Data.Large = (char*)Memory::Reallocate(Data.Large, Capacity, Alloc);
+			Data.Large = (char*)Memory::Reallocate(Data.Large, Capacity, Allctr);
 		}
 		else if (!Sso() && WasSso)
 		{
 			char Temp[SmallStringCapacity];
 			StringCApi::Copy(Data.Small, Temp, SmallStringCapacity);
 
-			Data.Large = (char*)Memory::Allocate(Capacity, Alloc);
+			Data.Large = (char*)Memory::Allocate(Capacity, Allctr);
 			StringCApi::Copy(Temp, Data.Large, Capacity);
 		}
 		else
@@ -273,7 +273,7 @@ namespace NxFr
 	{
 		if (!Sso())
 		{
-			Memory::Free(Data.Large, Alloc);
+			Memory::Free(Data.Large, Allctr);
 		}
 	}
 

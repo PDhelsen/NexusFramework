@@ -32,8 +32,8 @@ namespace NxFr
 	{
 		NX_ASSERT(Size < BucketSize, Default, "Allocation size requested overflow allocator size");
 
-		Allocator* Alloc = FindOrCreateAllocator(Size, Alignement);
-		void* Pointer = Memory::Allocate(Size, Alloc, Alignement);
+		Allocator* Allctr = FindOrCreateAllocator(Size, Alignement);
+		void* Pointer = Memory::Allocate(Size, Allctr, Alignement);
 
 		return Pointer;
 	}
@@ -47,11 +47,11 @@ namespace NxFr
 
 		NX_ASSERT(Size < BucketSize, Default, "Allocation size requested overflow allocator size");
 
-		Allocator* Alloc = GetAllocator(Pointer);
-		NX_ASSERT(Alloc, Default, "Memory was not allocated from this allocator");
-		if (Alloc->CanAllocate(Size, Alignement))
+		Allocator* Allctr = GetAllocator(Pointer);
+		NX_ASSERT(Allctr, Default, "Memory was not allocated from this allocator");
+		if (Allctr->CanAllocate(Size, Alignement))
 		{
-			Pointer = Memory::Reallocate(Pointer, Size, Alloc, Alignement);
+			Pointer = Memory::Reallocate(Pointer, Size, Allctr, Alignement);
 		}
 		else
 		{
@@ -69,9 +69,9 @@ namespace NxFr
 			return;
 		}
 
-		Allocator* Alloc = GetAllocator(Pointer);
-		NX_ASSERT(Alloc, Default, "Memory was not allocated from this allocator");
-		Memory::Free(Pointer, Alloc);
+		Allocator* Allctr = GetAllocator(Pointer);
+		NX_ASSERT(Allctr, Default, "Memory was not allocated from this allocator");
+		Memory::Free(Pointer, Allctr);
 	}
 
 	Allocator* BucketAllocator::FindOrCreateAllocator(uint64 Size, uint64 Alignement)

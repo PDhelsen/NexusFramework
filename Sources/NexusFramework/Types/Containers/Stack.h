@@ -19,13 +19,13 @@ namespace NxFr
 		inline static const uint64 BucketSize = BS;
 
 		Stack(Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
+			: Allctr(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 		}
 
 		Stack(InitializerList<T> Init, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
+			: Allctr(Allctr), Buckets(0), Count(0), IndexLast(0), Data(nullptr)
 		{
 			ValidateDefaultState();
 
@@ -36,7 +36,7 @@ namespace NxFr
 		}
 
 		Stack(const Stack<T, BS>& Other)
-			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(nullptr)
+			: Allctr(Other.Allctr), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(nullptr)
 		{
 			if (Buckets)
 			{
@@ -57,7 +57,7 @@ namespace NxFr
 		}
 
 		Stack(Stack<T, BS>&& Other) noexcept
-			: Alloc(Other.Alloc), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(Other.Data)
+			: Allctr(Other.Allctr), Buckets(Other.Buckets), Count(Other.Count), IndexLast(Other.IndexLast), Data(Other.Data)
 		{
 			Other.ValidateDefaultState();
 			Other.Data = nullptr;
@@ -110,7 +110,7 @@ namespace NxFr
 
 			Clear();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Buckets = Other.Buckets;
 			Count = Other.Count;
 			IndexLast = Other.IndexLast;
@@ -282,23 +282,23 @@ namespace NxFr
 		void Allocate(uint64 Size)
 		{
 			ValidateBucket(Size);
-			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, Alloc);
+			Data = (T**)Memory::Allocate(sizeof(T*) * Buckets, Allctr);
 		}
 
 		void Allocate(uint64 Index, uint64 Size)
 		{
-			Data[Index] = (T*)Memory::Allocate(sizeof(T) * Size, Alloc);
+			Data[Index] = (T*)Memory::Allocate(sizeof(T) * Size, Allctr);
 		}
 
 		void Reallocate(uint64 Size)
 		{
 			ValidateBucket(Size);
-			Data = (T**)Memory::Reallocate(Data, sizeof(T*) * Buckets, Alloc);
+			Data = (T**)Memory::Reallocate(Data, sizeof(T*) * Buckets, Allctr);
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Alloc);
+			Memory::Free(Data, Allctr);
 			Data = nullptr;
 		}
 
@@ -306,7 +306,7 @@ namespace NxFr
 		{
 			for (uint64 Offset = 0; Offset < Size; ++Offset)
 			{
-				Memory::Free(Data[Index + Offset], Alloc);
+				Memory::Free(Data[Index + Offset], Allctr);
 			}
 		}
 
@@ -438,7 +438,7 @@ namespace NxFr
 			IndexLast = BucketSize - 1;
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Buckets;
 		uint64 Count;
 		uint64 IndexLast;

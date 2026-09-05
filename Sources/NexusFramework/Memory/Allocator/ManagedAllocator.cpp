@@ -122,9 +122,9 @@ namespace NxFr
 		Infos.Clear();
 		Manager.GetInfos(Infos);
 
-		for (auto* Alloc : Allocators)
+		for (auto* Allctr : Allocators)
 		{
-			static_cast<Heap*>(Alloc)->Defragment(Infos, Time, Count);
+			static_cast<Heap*>(Allctr)->Defragment(Infos, Time, Count);
 		}
 	}
 }

@@ -83,20 +83,20 @@ namespace NxFr
 		using I = Iterator::Pointer;
 
 		Buffer(uint64 Size = 0, Allocator* Allctr = Allocator::TryGet())
-			: Alloc(Allctr), Count(0), Data(nullptr)
+			: Allctr(Allctr), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
 		}
 
 		Buffer(const Buffer& Other)
-			: Alloc(Other.Alloc), Count(Other.Count), Data(nullptr)
+			: Allctr(Other.Allctr), Count(Other.Count), Data(nullptr)
 		{
 			Allocate(Count);
 			Set(Other.Data);
 		}
 
 		Buffer(Buffer&& Other) noexcept
-			: Alloc(Other.Alloc), Count(Other.Count), Data(Other.Data)
+			: Allctr(Other.Allctr), Count(Other.Count), Data(Other.Data)
 		{
 			Other.Data = nullptr;
 		}
@@ -137,7 +137,7 @@ namespace NxFr
 
 			Free();
 
-			Alloc = Other.Alloc;
+			Allctr = Other.Allctr;
 			Count = Other.Count;
 			Data = Other.Data;
 
@@ -317,18 +317,18 @@ namespace NxFr
 		void Allocate(uint64 Size)
 		{
 			ValidateCount(Size);
-			Data = Memory::Allocate(Count, Alloc);
+			Data = Memory::Allocate(Count, Allctr);
 		}
 
 		void Reallocate(uint64 Size)
 		{
 			ValidateCount(Size);
-			Data = Memory::Reallocate(Data, Count, Alloc);
+			Data = Memory::Reallocate(Data, Count, Allctr);
 		}
 
 		void Free()
 		{
-			Memory::Free(Data, Alloc);
+			Memory::Free(Data, Allctr);
 		}
 
 		void Clear(uint64 Size, uint64 Offset)
@@ -356,7 +356,7 @@ namespace NxFr
 			Count = Size > 1 ? Size : 1;
 		}
 
-		Allocator* Alloc;
+		Allocator* Allctr;
 		uint64 Count;
 		void* Data;
 	};	

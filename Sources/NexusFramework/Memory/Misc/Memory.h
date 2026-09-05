@@ -10,31 +10,31 @@ namespace NxFr
 	namespace Memory
 	{
 		template<typename T, typename ...Args>
-		Handle<T> Create(HandleManager* Bucket, Allocator* Allocator = Allocator::TryGet(), Args&& ...args)
+		Handle<T> Create(HandleManager* Bucket, Allocator* Allctr = Allocator::TryGet(), Args&& ...args)
 		{
-			T* Pointer = Create<T>(Allocator, args...);
+			T* Pointer = Create<T>(Allctr, args...);
 			return Bucket->Acquire<T>(Pointer);
 		}
 
 		template<typename T>
-		void Destroy(Handle<T> Handle, HandleManager* Bucket, Allocator* Allocator = Allocator::TryGet())
+		void Destroy(Handle<T> Handle, HandleManager* Bucket, Allocator* Allctr = Allocator::TryGet())
 		{
-			Destroy(Handle.GetRedirectedPointer(), Allocator);
+			Destroy(Handle.GetRedirectedPointer(), Allctr);
 			Bucket->Release<T>(Handle);
 		}
 
 		template<typename T, typename ...Args>
-		Handle<T> Create(ManagedAllocator* Allocator, Args&& ...args)
+		Handle<T> Create(ManagedAllocator* Allctr, Args&& ...args)
 		{
-			T* Pointer = Create<T>(Allocator, args...);
-			return Allocator->Acquire<T>(Pointer);
+			T* Pointer = Create<T>(static_cast<Allocator*>(Allctr), args...);
+			return Allctr->Acquire<T>(Pointer);
 		}
 
 		template<typename T>
-		void Destroy(Handle<T> Handle, ManagedAllocator* Allocator)
+		void Destroy(Handle<T> Handle, ManagedAllocator* Allctr)
 		{
-			Destroy(Handle.GetRedirectedPointer(), Allocator);
-			Allocator->Release<T>(Handle);
+			Destroy(Handle.GetRedirectedPointer(), static_cast<Allocator*>(Allctr));
+			Allctr->Release<T>(Handle);
 		}
 	}
 }
