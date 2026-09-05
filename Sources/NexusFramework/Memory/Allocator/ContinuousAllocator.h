@@ -13,9 +13,11 @@ namespace NxFr
 		static Delegate<Allocator*(uint64)> DefaultCreator() { return [](uint64 Bucket) { return new T(Bucket); }; }
 
 		NX_NOCOPY_NOMOVE(ContinuousAllocator)
-		ContinuousAllocator(uint64 Size, const Delegate<Allocator*(uint64)>& Creator);
-		ContinuousAllocator(uint64 Size, Delegate<Allocator*(uint64)>&& Creator);
+		ContinuousAllocator(uint64 BucketSize, const Delegate<Allocator*(uint64)>& Creator);
+		ContinuousAllocator(uint64 BucketSize, Delegate<Allocator*(uint64)>&& Creator);
 		virtual ~ContinuousAllocator();
+
+		uint64 UsedAmount() const override;
 
 		uint64 GetCount() const { return Allocators.GetCount(); }
 

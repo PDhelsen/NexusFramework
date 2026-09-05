@@ -15,6 +15,16 @@ namespace NxFr
 		ClearAllocators(true);
 	}
 
+	uint64 FixedAllocator::UsedAmount() const
+	{
+		uint64 Amount = 0;
+		for (auto [Stride, Alloc] : Allocators)
+		{
+			Amount += Alloc->UsedAmount();
+		}
+		return Amount;
+	}
+
 	void* FixedAllocator::Allocate(uint64 Size, uint64 Alignement)
 	{
 		ResizeAllocation(Size);
@@ -62,12 +72,10 @@ namespace NxFr
 	void FixedAllocator::ClearAllocators(bool Delete)
 	{
 		Allocator::Scope Context(nullptr);
-		ResetAmount();
 
 		for (auto [Size, Alloc] : Allocators)
 		{
 			Alloc->Clear();
-
 			if (Delete)
 			{
 				delete Alloc;

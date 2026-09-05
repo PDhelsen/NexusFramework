@@ -4,7 +4,7 @@
 namespace NxFr
 {
 	MemoryAllocator::MemoryAllocator(uint64 Size)
-		: Allocator(Size), Data(nullptr)
+		: Allocator(), Data(nullptr), Amount(0), Capacity(Size)
 	{
 		Data = Memory::Allocate(TotalAmount(), nullptr);
 	}
@@ -29,10 +29,5 @@ namespace NxFr
 	bool MemoryAllocator::IsPointerInMemoryBlock(void* Pointer) const
 	{
 		return Memory::IsPointerInRange(Pointer, Data, TotalAmount());
-	}
-
-	void* MemoryAllocator::GetMemoryBlock() const
-	{
-		return Data;
 	}
 }

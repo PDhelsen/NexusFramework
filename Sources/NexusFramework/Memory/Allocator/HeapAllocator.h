@@ -15,7 +15,7 @@ namespace NxFr
 		bool CanAllocate(uint64 Size, uint64 Alignement) const override;
 		bool BelongToAllocator(void* Pointer) const override;
 
-		virtual bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
+		bool IsEmpty() const override { return UsedAmount() == sizeof(HeapSlot); };
 
 	protected:
 		struct HeapSlot
@@ -35,7 +35,6 @@ namespace NxFr
         void* GetHeapSlotMemory(HeapSlot* Slot) const;
 		uint64 GetHeapSlotSize(HeapSlot* Slot) const;
 		uint64 GetAlignedSize(uint64 Size) const;
-		void Reset();
 
 		HeapSlot* Root;
 		mutable HeapSlot* Cache;

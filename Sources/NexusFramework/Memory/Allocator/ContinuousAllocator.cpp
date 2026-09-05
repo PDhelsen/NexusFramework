@@ -3,19 +3,29 @@
 
 namespace NxFr
 {
-	ContinuousAllocator::ContinuousAllocator(uint64 Size, const Delegate<Allocator*(uint64)>& Creator)
-		: BucketAllocator(Size), Allocators(), Creator(Creator)
+	ContinuousAllocator::ContinuousAllocator(uint64 BucketSize, const Delegate<Allocator*(uint64)>& Creator)
+		: BucketAllocator(BucketSize), Allocators(), Creator(Creator)
 	{
 	}
 
-	ContinuousAllocator::ContinuousAllocator(uint64 Size, Delegate<Allocator*(uint64)>&& Creator)
-		: BucketAllocator(Size), Allocators(), Creator(Move(Creator))
+	ContinuousAllocator::ContinuousAllocator(uint64 BucketSize, Delegate<Allocator*(uint64)>&& Creator)
+		: BucketAllocator(BucketSize), Allocators(), Creator(Move(Creator))
 	{
 	}
 
 	ContinuousAllocator::~ContinuousAllocator()
 	{
 		ClearAllocators(true);
+	}
+
+	uint64 ContinuousAllocator::UsedAmount() const
+	{
+		uint64 Amount = 0;
+		for (auto* Alloc : Allocators)
+		{
+			Amount += Alloc->UsedAmount();
+		}
+		return Amount;
 	}
 
 	Allocator* ContinuousAllocator::FindAllocator(uint64 Size, uint64 Alignement)
@@ -38,7 +48,6 @@ namespace NxFr
 		Allocator* Alloc = Creator.Invoke(BucketSize);
 		Allocators.Append(Alloc);
 
-		IncreaseAmount(Alloc->UsedAmount());
 		return Alloc;
 	}
 
@@ -58,13 +67,10 @@ namespace NxFr
 	void ContinuousAllocator::ClearAllocators(bool Delete)
 	{
 		Allocator::Scope Context(nullptr);
-		ResetAmount();
 
 		for (Allocator* Alloc : Allocators)
 		{
 			Alloc->Clear();
-			IncreaseAmount(Alloc->UsedAmount());
-
 			if (Delete)
 			{
 				delete Alloc;

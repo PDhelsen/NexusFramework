@@ -4,7 +4,7 @@
 namespace NxFr
 {
 	SystemAllocator::SystemAllocator()
-		: Allocator(0), Allocated(11, nullptr)
+		: Allocator(), Allocated(11, nullptr)
 	{
 	}
 

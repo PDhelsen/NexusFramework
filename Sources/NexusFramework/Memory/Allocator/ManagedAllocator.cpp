@@ -1,23 +1,21 @@
 #include "NexusFramework/Core/NexusFrameworkPch.h"
 #include "NexusFramework/Memory/Allocator/ManagedAllocator.h"
 
-#include "NexusFramework/Memory/Handle/Handle.h"
-#include "NexusFramework/Memory/Handle/HandleBucket.h"
 #include "NexusFramework/Time/Time.h"
 #include "NexusFramework/Time/Stopwatch.h"
 
 namespace NxFr
 {
-	ManagedAllocator::ManagedHeap::ManagedHeap(uint64 Size)
+	ManagedAllocator::Heap::Heap(uint64 Size)
 		: HeapAllocator(Size)
 	{
 	}
 
-	ManagedAllocator::ManagedHeap::~ManagedHeap()
+	ManagedAllocator::Heap::~Heap()
 	{
 	}
 
-	void ManagedAllocator::ManagedHeap::Defragment(const HandlePointerInfos& Infos, float& Time, uint64& Count)
+	void ManagedAllocator::Heap::Defragment(const HandleMemroyInfos& Infos, float& Time, uint64& Count)
 	{
 		bool All = Time <= 0.0f && Count == 0;
 		Stopwatch Watch = Stopwatch(true);
@@ -46,14 +44,14 @@ namespace NxFr
 				Slot->Next = Next->Next;
 
 				EraseMemory(Next, sizeof(HeapSlot));
-				DecreaseAmount(sizeof(HeapSlot));
+				Amount -= sizeof(HeapSlot);
 			}
 			// Slot is free but next one not, so we move the next one into the current one to bubble up the free space at the end of the heap
 			else
 			{
 				// Check if next data is stored in an Handle and so can be moved in memory
 				void* Data = GetHeapSlotMemory(Slot->Next);
-				const HandleBucketInfo* Bucket = Infos.TryGet(Data);
+				const HandleManagerInfo* Bucket = Infos.TryGet(Data);
 				if (Bucket == nullptr)
 				{
 					Slot = Slot->Next;
@@ -61,7 +59,7 @@ namespace NxFr
 				}
 
 				// Get slot info
-				HandleBucketInfo Info = *Bucket;
+				HandleManagerInfo Info = *Bucket;
 				uint64 SlotSize = GetHeapSlotSize(Slot);
 				uint64 NextSize = GetHeapSlotSize(Slot->Next);
 				HeapSlot* NextNext = Slot->Next->Next;
@@ -92,7 +90,7 @@ namespace NxFr
 	}
 
 	ManagedAllocator::ManagedAllocator(uint64 Size, uint64 Count)
-		: ContinuousAllocator(Size, ContinuousAllocator::DefaultCreator<ManagedHeap>()), Manager(Count)
+		: ContinuousAllocator(Size, ContinuousAllocator::DefaultCreator<Heap>()), Manager(Count)
 	{
 	}
 
@@ -126,11 +124,7 @@ namespace NxFr
 
 		for (auto* Alloc : Allocators)
 		{
-			uint64 Marker = Alloc->UsedAmount();
-			static_cast<ManagedHeap*>(Alloc)->Defragment(Infos, Time, Count);
-			uint64 Delta = Marker - Alloc->UsedAmount();
-
-			DecreaseAmount(Delta);
+			static_cast<Heap*>(Alloc)->Defragment(Infos, Time, Count);
 		}
 	}
 }

@@ -19,9 +19,9 @@ namespace NxFr
 	void PoolAllocator::Clear()
 	{
 		WipeoutMemory();
-		ResetAmount();
-
-		Reset();
+		Head = (uint64*)Data;
+		*Head = reinterpret_cast<uint64>(Head) + Stride;
+		Amount = 0;
 	}
 
 	bool PoolAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
@@ -41,9 +41,13 @@ namespace NxFr
 
 		void* Pointer = Head;
 
-		Next();
+		Head = reinterpret_cast<uint64*>(*Head);
+		if (Head != nullptr && IsPointerInMemoryBlock(Head) && *Head == 0)
+		{
+			*Head = reinterpret_cast<uint64>(Head) + Stride;
+		}
 
-		IncreaseAmount(Stride);
+		Amount += Stride;
 		return Pointer;
 	}
 
@@ -66,30 +70,10 @@ namespace NxFr
 
 		EraseMemory(Pointer, Stride);
 
-		Previous(Pointer);
-
-		DecreaseAmount(Stride);
-	}
-
-	void PoolAllocator::Next()
-	{
-		Head = reinterpret_cast<uint64*>(*Head);
-		if (Head != nullptr && IsPointerInMemoryBlock(Head) && *Head == 0)
-		{
-			*Head = reinterpret_cast<uint64>(Head) + Stride;
-		}
-	}
-
-	void PoolAllocator::Previous(void* Pointer)
-	{
 		uint64 Address = reinterpret_cast<uint64>(Head);
 		Head = (uint64*)Pointer;
 		*Head = Address;
-	}
 
-	void PoolAllocator::Reset()
-	{
-		Head = (uint64*)GetMemoryBlock();;
-		*Head = reinterpret_cast<uint64>(Head) + Stride;
+		Amount -= Stride;
 	}
 }

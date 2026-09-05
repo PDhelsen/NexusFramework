@@ -21,10 +21,6 @@ namespace NxFr
 		void Free(void* Pointer) override;
 
     private:
-		inline void Next(void* Pointer);
-		inline void Previous(void* Pointer);
-		inline void Reset();
-
 		void* Marker;
     };
 }

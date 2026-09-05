@@ -8,7 +8,7 @@ namespace NxFr
 	{
 	public:
 		NX_NOCOPY_NOMOVE(BucketAllocator)
-		BucketAllocator(uint64 Size);
+		BucketAllocator(uint64 BucketSize);
 		virtual ~BucketAllocator();
 
 		void Clear() override;
@@ -16,7 +16,13 @@ namespace NxFr
 		bool BelongToAllocator(void* Pointer) const override;
 
 		uint64 GetBucketSize() const { return BucketSize; }
-		void SetBucketSize(uint64 Size) { this->BucketSize = Size; }
+		void SetBucketSize(uint64 BucketSize) { this->BucketSize = BucketSize; }
+
+		uint64 FreeAmount() const override { return Integer::MaxUI64; }
+		uint64 TotalAmount() const override { return 0.0f; }
+		float Usage() const override { return -1.0f; }
+		bool IsFull() const override { return false; }
+		bool IsEmpty() const override { return false; }
 
 	protected:
 		void* Allocate(uint64 Size, uint64 Alignement) override;

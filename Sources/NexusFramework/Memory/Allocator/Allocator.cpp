@@ -24,28 +24,4 @@ namespace NxFr
 	{
 		return Allocator::GetContexts().TryGet();
 	}
-
-	Allocator::Allocator(uint64 Size)
-		: Amount(0), Capacity(Size)
-	{
-	}
-
-	void Allocator::IncreaseAmount(uint64 Delta)
-	{
-		NX_ASSERT(Capacity == 0 || Amount + Delta <= Capacity, Default, "Invalid delta");
-
-		Amount += Delta;
-	}
-
-	void Allocator::DecreaseAmount(uint64 Delta)
-	{
-		NX_ASSERT(Amount >= Delta, Default, "Invalid delta");
-
-		Amount -= Delta;
-	}
-
-	void Allocator::ResetAmount()
-	{
-		Amount = 0;
-	}
 }

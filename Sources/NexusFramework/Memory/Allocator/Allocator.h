@@ -6,10 +6,9 @@
 
 namespace NxFr
 {
-	class Allocator;
-
 	template<typename T>
 	struct Context;
+	class Allocator;
 
 	namespace Memory
 	{
@@ -35,32 +34,24 @@ namespace NxFr
 		static Allocator* TryGet();
 
 		NX_NOCOPY_NOMOVE(Allocator)
-		Allocator(uint64 Size);
+		Allocator() = default;
 		virtual ~Allocator() = default;
 
 		virtual void Clear() = 0;
 		virtual bool CanAllocate(uint64 Size, uint64 Alignement) const = 0;
 		virtual bool BelongToAllocator(void* Pointer) const = 0;
 
-		virtual uint64 UsedAmount() const { return Amount; };
-		virtual uint64 FreeAmount() const { return Capacity > 0 ? Capacity - Amount : 0; };
-		virtual uint64 TotalAmount() const { return Capacity; };
-		virtual bool IsEmpty() const { return UsedAmount() == 0; };
-		virtual bool IsFull() const { return Usage() > 0.95f; };
-		virtual float Usage() const { return Capacity > 0 ? (float)UsedAmount() / (float)TotalAmount() : -1.0f; }
+		virtual uint64 UsedAmount() const = 0;
+		virtual uint64 FreeAmount() const = 0;
+		virtual uint64 TotalAmount() const = 0;
+		virtual float Usage() const = 0;
+		virtual bool IsFull() const = 0;
+		virtual bool IsEmpty() const = 0;
 
 	protected:
 		virtual void* Allocate(uint64 Size, uint64 Alignement) = 0;
 		virtual void* Reallocate(void* Pointer, uint64 Size, uint64 Alignement) = 0;
 		virtual void Free(void* Pointer) = 0;
-
-		virtual void IncreaseAmount(uint64 Delta);
-		virtual void DecreaseAmount(uint64 Delta);
-		virtual void ResetAmount();
-
-	private:
-		uint64 Capacity;
-		uint64 Amount;
 	};
 }
 

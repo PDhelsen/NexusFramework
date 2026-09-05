@@ -16,9 +16,8 @@ namespace NxFr
 	void StackAllocator::Clear()
 	{
 		WipeoutMemory();
-		ResetAmount();
-
-		Reset();
+		Marker = Data;
+		Amount = 0;
 	}
 
 	bool StackAllocator::CanAllocate(uint64 Size, uint64 Alignement) const
@@ -43,10 +42,9 @@ namespace NxFr
 		NX_ASSERT(IsPointerInMemoryBlock(NextPointer), Default, "Allocator is full");
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
-		Next(NextPointer);
+		Marker = NextPointer;
 		uint64 After = reinterpret_cast<uint64>(Marker);
-
-		IncreaseAmount(After - Before);
+		Amount += After - Before;
 
 		return Pointer;
 	}
@@ -75,26 +73,10 @@ namespace NxFr
 		}
 
 		uint64 Before = reinterpret_cast<uint64>(Marker);
-		Previous(Pointer);
+		Marker = Memory::UnalignPointer(Pointer);
 		uint64 After = reinterpret_cast<uint64>(Marker);
+		Amount -= Before - After;
 
 		EraseMemory(Marker, FreeAmount());
-
-		DecreaseAmount(Before - After);
-	}
-
-	void StackAllocator::Next(void* Pointer)
-	{
-		Marker = Pointer;
-	}
-
-	void StackAllocator::Previous(void* Pointer)
-	{
-		Marker = Memory::UnalignPointer(Pointer);
-	}
-
-	void StackAllocator::Reset()
-	{
-		Marker = GetMemoryBlock();
 	}
 }

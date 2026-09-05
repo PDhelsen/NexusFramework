@@ -357,7 +357,7 @@ namespace NxTs
 		Dummy* Test1 = new Dummy();
 		Dummy* Test2 = new Dummy();
 
-		NxFr::HandleBucket Bucket = NxFr::HandleBucket(10);
+		NxFr::HandleManager Bucket = NxFr::HandleManager(10);
 
 		NxFr::Handle<Dummy> Handle = Bucket.Acquire<Dummy>(Test1);
 		ASSERT_EQ(Handle.IsValid(), true);

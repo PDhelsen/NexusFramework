@@ -3,8 +3,8 @@
 
 namespace NxFr
 {
-	BucketAllocator::BucketAllocator(uint64 Size)
-		: Allocator(0), BucketSize(Size)
+	BucketAllocator::BucketAllocator(uint64 BucketSize)
+		: Allocator(), BucketSize(BucketSize)
 	{
 	}
 
@@ -33,13 +33,7 @@ namespace NxFr
 		NX_ASSERT(Size < BucketSize, Default, "Allocation size requested overflow allocator size");
 
 		Allocator* Alloc = FindOrCreateAllocator(Size, Alignement);
-
-		uint64 Marker = Alloc->UsedAmount();
-
 		void* Pointer = Memory::Allocate(Size, Alloc, Alignement);
-
-		uint64 Delta = Alloc->UsedAmount() - Marker;
-		IncreaseAmount(Delta);
 
 		return Pointer;
 	}
@@ -55,23 +49,9 @@ namespace NxFr
 
 		Allocator* Alloc = GetAllocator(Pointer);
 		NX_ASSERT(Alloc, Default, "Memory was not allocated from this allocator");
-
 		if (Alloc->CanAllocate(Size, Alignement))
 		{
-			uint64 Marker = Alloc->UsedAmount();
-
 			Pointer = Memory::Reallocate(Pointer, Size, Alloc, Alignement);
-
-			if (Alloc->UsedAmount() > Marker)
-			{
-				uint64 Delta = Alloc->UsedAmount() - Marker;
-				IncreaseAmount(Delta);
-			}
-			else
-			{
-				uint64 Delta = Marker - Alloc->UsedAmount();
-				DecreaseAmount(Delta);
-			}
 		}
 		else
 		{
@@ -91,13 +71,7 @@ namespace NxFr
 
 		Allocator* Alloc = GetAllocator(Pointer);
 		NX_ASSERT(Alloc, Default, "Memory was not allocated from this allocator");
-
-		uint64 Marker = Alloc->UsedAmount();
-
 		Memory::Free(Pointer, Alloc);
-
-		uint64 Delta = Marker - Alloc->UsedAmount();
-		DecreaseAmount(Delta);
 	}
 
 	Allocator* BucketAllocator::FindOrCreateAllocator(uint64 Size, uint64 Alignement)

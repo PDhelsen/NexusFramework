@@ -24,10 +24,6 @@ namespace NxFr
 		void Free(void* Pointer) override;
 
     private:
-		inline void Next();
-		inline void Previous(void* Pointer);
-		inline void Reset();
-
 		uint64* Head;
         uint64 Stride;
     };
