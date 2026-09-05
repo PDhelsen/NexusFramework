@@ -68,9 +68,10 @@ namespace NxFr
 			}
 			else
 			{
+				Allocate(Count);
 				for (uint64 Index = 0; Index < Count; ++Index)
 				{
-					Construct(Index, Other[Index]);
+					Construct(Index, Move(Other[Index]));
 				}
 			}
 		}
@@ -112,20 +113,23 @@ namespace NxFr
 			DestructRange(0, Count);
 			Free();
 
-			Allctr = Other.Allctr;
-			Count = Other.Count;
-
-			if (!Other.IsStackArray())
+			if (!Other.IsStackArray() && Allctr == Other.Allctr)
 			{
+				Count = Other.Count;
 				Data.Heap = Other.Data.Heap;
+
 				Other.Data.Heap = nullptr;
 				Other.Count = 0;
 			}
 			else
 			{
+				Count = Other.Count;
+
+				Allocate(Count);
+
 				for (uint64 Index = 0; Index < Count; ++Index)
 				{
-					Construct(Index, Other[Index]);
+					Construct(Index, Move(Other[Index]));
 				}
 			}
 

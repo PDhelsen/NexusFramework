@@ -137,12 +137,19 @@ namespace NxFr
 
 			Free();
 
-			Allctr = Other.Allctr;
-			Count = Other.Count;
-			Data = Other.Data;
+			if (Allctr == Other.Allctr)
+			{
+				Count = Other.Count;
+				Data = Other.Data;
 
-			Other.Count = 0;
-			Other.Data = nullptr;
+				Other.Count = 0;
+				Other.Data = nullptr;
+			}
+			else
+			{
+				Allocate(Count);
+				Set(Other.Data);
+			}
 
 			return *this;
 		}

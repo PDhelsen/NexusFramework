@@ -131,12 +131,51 @@ namespace NxFr
 
 			Clear();
 
-			Allctr = Other.Allctr;
-			Count = Other.Count;
-			Data = Other.Data;
+			if (Allctr == Other.Allctr)
+			{
+				Count = Other.Count;
+				Data = Other.Data;
 
-			Other.Count = 0;
-			Other.Data = nullptr;
+				Other.Count = 0;
+				Other.Data = nullptr;
+			}
+			else
+			{
+				N* Current = Other.Data;
+				while (Current)
+				{
+					Append(Current->Value);
+					Current = Current->Next;
+				}
+
+				Current = Other.Data;
+				while (Current)
+				{
+					I From = Begin();
+					while (*From != Current->Value)
+					{
+						++From;
+					}
+
+					C* Link = Current->Connection;
+					while (Link)
+					{
+						if (Link->Type == CT::To)
+						{
+							I To = Begin();
+							while (*To != Link->Target->Value)
+							{
+								++To;
+							}
+							Connect(&(*From), &(*To));
+						}
+
+						Link = Link->Next;
+					}
+
+					Current = Current->Next;
+				}
+			}
 
 			return *this;
 		}

@@ -99,14 +99,28 @@ namespace NxFr
 			Clear();
 			Free();
 
-			Allctr = Other.Allctr;
-			Capacity = Other.Capacity;
-			Count = Other.Count;
-			Data = Other.Data;
+			if (Allctr == Other.Allctr)
+			{
+				Capacity = Other.Capacity;
+				Count = Other.Count;
+				Data = Other.Data;
 
-			Other.Capacity = 0;
-			Other.Count = 0;
-			Other.Data = nullptr;
+				Other.Capacity = 0;
+				Other.Count = 0;
+				Other.Data = nullptr;
+			}
+			else
+			{
+				Capacity = Other.Capacity;
+				Count = Other.Count;
+
+				Allocate(Capacity);
+
+				for (uint64 Index = 0; Index < Capacity; ++Index)
+				{
+					Copy(Index, Other.Data[Index]);
+				}
+			}
 
 			return *this;
 		}

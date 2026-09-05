@@ -84,14 +84,25 @@ namespace NxFr
 
 			Clear();
 
-			Allctr = Other.Allctr;
-			Count = Other.Count;
-			DataHead = Other.DataHead;
-			DataTail = Other.DataTail;
+			if (Allctr == Other.Allctr)
+			{
+				Count = Other.Count;
+				DataHead = Other.DataHead;
+				DataTail = Other.DataTail;
 
-			Other.Count = 0;
-			Other.DataHead = nullptr;
-			Other.DataTail = nullptr;
+				Other.Count = 0;
+				Other.DataHead = nullptr;
+				Other.DataTail = nullptr;
+			}
+			else
+			{
+				N* Current = Other.DataHead;
+				while (Current)
+				{
+					AppendBack(Move(Current->Value));
+					Current = Current->Next;
+				}
+			}
 
 			return *this;
 		}

@@ -87,7 +87,6 @@ namespace NxFr
 
 		Free();
 
-		Allctr = Other.Allctr;
 		Capacity = Other.Capacity;
 		Count = Other.Count;
 
@@ -95,14 +94,18 @@ namespace NxFr
 		{
 			StringCApi::Copy(Other.Data.Small, Data.Small, SmallStringCapacity);
 		}
+		else if (Allctr != Other.Allctr)
+		{
+			Allocate(Other.Capacity, Other.Count, Other.GetBuffer());
+		}
 		else
 		{
 			Data.Large = Other.Data.Large;
+			Other.Data.Large = nullptr;
 		}
 
 		Other.Count = 0;
 		Other.Capacity = SmallStringCapacity;
-		Other.Data.Large = nullptr;
 
 		ValidateNullTermination();
 

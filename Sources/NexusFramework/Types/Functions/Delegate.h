@@ -16,7 +16,7 @@ namespace NxFr
 	public:
 		using A = uint64;
 		using S = R(*)(void*, Args...);
-		using C = void(*)(Allocator*, const void*, void*);
+		using C = void(*)(Allocator*, void*, void*, bool);
 		using D = void(*)(Allocator*, void*);
 		using FF = R(*)(Args...);
 		template <typename T>
@@ -71,16 +71,15 @@ namespace NxFr
 		}
 
 		Delegate(const Delegate<R(Args...)>& Other)
-			: Allctr(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Other.Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
 			Copy(Other);
 		}
 
 		Delegate(Delegate<R(Args...)>&& Other) noexcept
-			: Allctr(nullptr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
+			: Allctr(Other.Allctr), Function(nullptr), Copier(nullptr), Destroyer(nullptr)
 		{
-			Copy(Other);
-			Other.Reset();
+			Move(Other);
 		}
 
 		~Delegate()
@@ -96,7 +95,6 @@ namespace NxFr
 			}
 
 			Copy(Other);
-
 			return *this;
 		}
 
@@ -107,9 +105,7 @@ namespace NxFr
 				return *this;
 			}
 
-			Copy(Other);
-			Other.Reset();
-
+			Move(Other);
 			return *this;
 		}
 
@@ -201,11 +197,19 @@ namespace NxFr
 					Lambda* Info = static_cast<Lambda*>(static_cast<FLData*>(Data)->Pointer);
 					return (*Info)(Forward<Args>(args)...);
 				};
-				Copier = [](Allocator* Allctr, const void* Data, void* Instance)
+				Copier = [](Allocator* Allctr, void* Data, void* Instance, bool Steal)
 				{
-					const Lambda* Info = static_cast<const Lambda*>(static_cast<const FLData*>(Data)->Pointer);
-					Lambda* Copy = Memory::Create<Lambda>(Allctr, *Info);
-					new (Instance) FLData{ Copy };
+					FLData* Info = static_cast<FLData*>(Data);
+					if (Steal)
+					{
+						new (Instance) FLData{ Info->Pointer };
+						Info->Pointer = nullptr;
+					}
+					else
+					{
+						Lambda* Copy = Memory::Create<Lambda>(Allctr, *static_cast<Lambda*>(Info->Pointer));
+						new (Instance) FLData{ Copy };
+					}
 				};
 				Destroyer = [](Allocator* Allctr, void* Data)
 				{
@@ -221,7 +225,7 @@ namespace NxFr
 					auto* Info = static_cast<Lambda*>(Data);
 					return (*Info)(Forward<Args>(args)...);
 				};
-				Copier = [](Allocator* Allctr, const void* Other, void* Instance)
+				Copier = [](Allocator* Allctr, void* Other, void* Instance, bool Steal)
 				{
 					const Lambda* Info = static_cast<const Lambda*>(Other);
 					new (Instance) Lambda(*Info);
@@ -303,19 +307,40 @@ namespace NxFr
 		{
 			Reset();
 
-			Allctr = Other.Allctr;
 			Function = Other.Function;
 			Copier = Other.Copier;
 			Destroyer = Other.Destroyer;
 
 			if (Other.IsComplex())
 			{
-				Other.Copier(Allctr, Other.Buffer, Buffer);
+				Other.Copier(Allctr, Other.Buffer, Buffer, false);
 			}
 			else
 			{
 				Memory::MemCopy(Other.Buffer, Buffer, BufferSize);
 			}
+		}
+
+		void Move(Delegate<R(Args...)>& Other)
+		{
+			Reset();
+
+			Function = Other.Function;
+			Copier = Other.Copier;
+			Destroyer = Other.Destroyer;
+
+			if (Other.IsComplex())
+			{
+				Other.Copier(Allctr, Other.Buffer, Buffer, Allctr == Other.Allctr);
+			}
+			else
+			{
+				Memory::MemCopy(Other.Buffer, Buffer, BufferSize);
+			}
+
+			Other.Function = nullptr;
+			Other.Copier = nullptr;
+			Other.Destroyer = nullptr;
 		}
 
 		bool IsComplex() const

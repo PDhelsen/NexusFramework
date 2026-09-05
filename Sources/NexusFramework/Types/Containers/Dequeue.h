@@ -111,15 +111,41 @@ namespace NxFr
 
 			Clear();
 
-			Allctr = Other.Allctr;
-			Buckets = Other.Buckets;
-			Count = Other.Count;
-			IndexFront = Other.IndexFront;
-			IndexBack = Other.IndexBack;
-			Data = Other.Data;
+			if (Allctr == Other.Allctr)
+			{
+				Buckets = Other.Buckets;
+				Count = Other.Count;
+				IndexFront = Other.IndexFront;
+				IndexBack = Other.IndexBack;
+				Data = Other.Data;
 
-			Other.ValidateDefaultState();
-			Other.Data = nullptr;
+				Other.ValidateDefaultState();
+				Other.Data = nullptr;
+			}
+			else
+			{
+				Buckets = Other.Buckets;
+				Count = Other.Count;
+				IndexFront = Other.IndexFront;
+				IndexBack = Other.IndexBack;
+
+				if (Buckets)
+				{
+					Allocate(Buckets);
+				}
+
+				for (uint64 Bucket = 0; Bucket < Buckets; ++Bucket)
+				{
+					Allocate(Bucket, BucketSize);
+				}
+
+				for (uint64 Index = 0; Index < Count; ++Index)
+				{
+					uint64 BucketIndex, DataIndex;
+					GetIndex(Index, BucketIndex, DataIndex);
+					Construct(BucketIndex, DataIndex, Move(Other.GetItem(Index)));
+				}
+			}
 
 			return *this;
 		}
