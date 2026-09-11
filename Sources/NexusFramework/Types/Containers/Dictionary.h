@@ -25,7 +25,13 @@ namespace NxFr
 
 		inline static const uint64 DefaultSize = 11;
 
-		Dictionary(uint64 Size = DefaultSize, Allocator * Allctr = Allocator::TryGet())
+		Dictionary(Allocator* Allctr = Allocator::TryGet())
+			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
+		{
+			Allocate(DefaultSize);
+		}
+
+		Dictionary(uint64 Size, Allocator * Allctr = Allocator::TryGet())
 			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);

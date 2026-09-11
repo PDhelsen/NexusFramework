@@ -4,12 +4,12 @@
 namespace NxFr
 {
 	Arguments::Arguments()
-		: Args(0), Positionals(), Named()
+		: Args(), Positionals(), Named()
 	{
 	}
 
 	Arguments::Arguments(const Arguments& Other)
-		: Args(0), Positionals(), Named()
+		: Args(), Positionals(), Named()
 	{
 		ParseCollectionString(Other.Args);
 	}

@@ -82,7 +82,13 @@ namespace NxFr
 	public:
 		using I = Iterator::Pointer;
 
-		Buffer(uint64 Size = 0, Allocator* Allctr = Allocator::TryGet())
+		Buffer(Allocator* Allctr = Allocator::TryGet())
+			: Allctr(Allctr), Count(0), Data(nullptr)
+		{
+			Allocate(0);
+		}
+
+		Buffer(uint64 Size, Allocator* Allctr = Allocator::TryGet())
 			: Allctr(Allctr), Count(0), Data(nullptr)
 		{
 			Allocate(Size);

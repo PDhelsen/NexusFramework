@@ -16,8 +16,8 @@ namespace NxFr
 	public:
 		using I = Iterator::Block<T>;
 
-		Array()
-			: Allctr(nullptr), Count(0)
+		Array(Allocator* Allctr = Allocator::TryGet())
+			: Allctr(Allctr), Count(0)
 		{
 			Allocate(L);
 			ConstructRange(0, Count);

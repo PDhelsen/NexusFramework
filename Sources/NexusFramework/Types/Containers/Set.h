@@ -24,7 +24,13 @@ namespace NxFr
 
 		inline static const uint64 DefaultSize = 11;
 
-		Set(uint64 Size = DefaultSize, Allocator* Allctr = Allocator::TryGet())
+		Set(Allocator* Allctr = Allocator::TryGet())
+			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
+		{
+			Allocate(DefaultSize);
+		}
+
+		Set(uint64 Size, Allocator* Allctr = Allocator::TryGet())
 			: Allctr(Allctr), Capacity(0), Count(0), Data(nullptr)
 		{
 			Allocate(Size);
