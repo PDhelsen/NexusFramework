@@ -304,20 +304,6 @@ namespace YAML
 		}
 	};
 
-	template<uint8 D, typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Vector<D, T>& rhs)
-	{
-		out << YAML::Flow;
-		out << YAML::BeginSeq;
-		for (uint8 Index = 0; Index < D; ++Index)
-		{
-			out << rhs[Index];
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Euler>
 	{
@@ -347,20 +333,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Euler& rhs)
-	{
-		out << YAML::Flow;
-		out << YAML::BeginSeq;
-
-		out << rhs.x;
-		out << rhs.y;
-		out << rhs.z;
-
-		out << YAML::EndSeq;
-
-		return out;
-	}
 
 	template<>
 	struct convert<NxFr::AxisAngle>
@@ -394,21 +366,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::AxisAngle& rhs)
-	{
-		out << YAML::Flow;
-		out << YAML::BeginSeq;
-
-		out << rhs.Angle;
-		out << rhs.Axis.x;
-		out << rhs.Axis.y;
-		out << rhs.Axis.z;
-
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Quaternion>
 	{
@@ -440,21 +397,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Quaternion& rhs)
-	{
-		out << YAML::Flow;
-		out << YAML::BeginSeq;
-
-		out << rhs.w;
-		out << rhs.x;
-		out << rhs.y;
-		out << rhs.z;
-
-		out << YAML::EndSeq;
-
-		return out;
-	}
 
 	template<uint8 R, uint8 C, typename T>
 	struct convert<NxFr::Matrix<R, C, T>>
@@ -488,20 +430,6 @@ namespace YAML
 		}
 	};
 
-	template<uint8 R, uint8 C, typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Matrix<R, C, T>& rhs)
-	{
-		out << YAML::Flow;
-		out << YAML::BeginSeq;
-		for (uint8 Index = 0; Index < NxFr::Matrix<R, C, T>::Count; ++Index)
-		{
-			out << rhs[Index];
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Ray>
 	{
@@ -524,14 +452,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Ray& rhs)
-	{
-		out << YAML::Key << "origin" << YAML::Value << rhs.Origin;
-		out << YAML::Key << "direction" << YAML::Value << rhs.Direction;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Plane>
 	{
@@ -553,14 +473,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Plane& rhs)
-	{
-		out << YAML::Key << "normal" << YAML::Value << rhs.Normal;
-		out << YAML::Key << "distance" << YAML::Value << rhs.Distance;
-
-		return out;
-	}
 
 	template<>
 	struct convert<NxFr::Triangle>
@@ -586,15 +498,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Triangle& rhs)
-	{
-		out << YAML::Key << "a" << YAML::Value << rhs.A;
-		out << YAML::Key << "b" << YAML::Value << rhs.B;
-		out << YAML::Key << "c" << YAML::Value << rhs.C;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Rectangle>
 	{
@@ -616,14 +519,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Rectangle& rhs)
-	{
-		out << YAML::Key << "center" << YAML::Value << rhs.Center;
-		out << YAML::Key << "extents" << YAML::Value << rhs.Extents;
-
-		return out;
-	}
 
 	template<>
 	struct convert<NxFr::Circle>
@@ -647,14 +542,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Circle& rhs)
-	{
-		out << YAML::Key << "center" << YAML::Value << rhs.Center;
-		out << YAML::Key << "radius" << YAML::Value << rhs.Radius;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Box>
 	{
@@ -676,14 +563,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Box& rhs)
-	{
-		out << YAML::Key << "center" << YAML::Value << rhs.Center;
-		out << YAML::Key << "extents" << YAML::Value << rhs.Extents;
-
-		return out;
-	}
 
 	template<>
 	struct convert<NxFr::Cube>
@@ -709,15 +588,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Cube& rhs)
-	{
-		out << YAML::Key << "center" << YAML::Value << rhs.Center;
-		out << YAML::Key << "orientation" << YAML::Value << rhs.Orientation;
-		out << YAML::Key << "extents" << YAML::Value << rhs.Extents;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Sphere>
 	{
@@ -739,12 +609,4 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Sphere& rhs)
-	{
-		out << YAML::Key << "center" << YAML::Value << rhs.Center;
-		out << YAML::Key << "radius" << YAML::Value << rhs.Radius;
-
-		return out;
-	}
 }

@@ -318,24 +318,6 @@ namespace YAML
 	};
 
 	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Array<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		out << YAML::BeginSeq;
-		for (const auto& It : rhs)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
-	template<typename T>
 	struct convert<NxFr::List<T>>
 	{
 		static Node encode(const NxFr::List<T>& rhs)
@@ -370,24 +352,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::List<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		out << YAML::BeginSeq;
-		for (const auto& It : rhs)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
 
 	template<typename T>
 	struct convert<NxFr::Dequeue<T>>
@@ -426,24 +390,6 @@ namespace YAML
 	};
 
 	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Dequeue<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		out << YAML::BeginSeq;
-		for (const auto& It : rhs)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
-	template<typename T>
 	struct convert<NxFr::Queue<T>>
 	{
 		static Node encode(const NxFr::Queue<T>& rhs)
@@ -478,24 +424,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Queue<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		out << YAML::BeginSeq;
-		for (const auto& It : rhs)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
 
 	template<typename T>
 	struct convert<NxFr::Stack<T>>
@@ -537,27 +465,6 @@ namespace YAML
 	};
 
 	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Stack<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		NxFr::Array<T> Data = NxFr::ContainerUtility::ToArray<T>(rhs);
-		NxFr::ContainerUtility::Reverse<T>(Data);
-
-		out << YAML::BeginSeq;
-		for (const auto& It : Data)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
-	template<typename T>
 	struct convert<NxFr::LinkedList<T>>
 	{
 		static Node encode(const NxFr::LinkedList<T>& rhs)
@@ -592,24 +499,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::LinkedList<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		out << YAML::BeginSeq;
-		for (const auto& It : rhs)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
 
 	template<typename T>
 	struct convert<NxFr::Set<T>>
@@ -651,27 +540,6 @@ namespace YAML
 		}
 	};
 
-	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Set<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		NxFr::Array<T> Data = NxFr::ContainerUtility::ToArray<T>(rhs);
-		NxFr::ContainerUtility::Sort<T>(Data);
-
-		out << YAML::BeginSeq;
-		for (const auto& It : Data)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
 	template<typename K, typename T>
 	struct convert<NxFr::Dictionary<K, T>>
 	{
@@ -712,28 +580,6 @@ namespace YAML
 		}
 	};
 
-	template<typename K, typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Dictionary<K, T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		NxFr::Array<NxFr::KeyValuePair<K, T>> Data = NxFr::ContainerUtility::ToArray<K, T>(rhs);
-		NxFr::ContainerUtility::Sort<NxFr::KeyValuePair<K, T>>(Data);
-
-		out << YAML::BeginMap;
-		for (uint64 Index = 0; Index < Data.GetCount(); ++Index)
-		{
-			out << YAML::Key << Data[Index].Key;
-			out << YAML::Value << Data[Index].Value;
-		}
-		out << YAML::EndMap;
-
-		return out;
-	}
-
 	template<typename T1, typename T2>
 	struct convert<NxFr::Tuple<T1, T2>>
 	{
@@ -762,19 +608,6 @@ namespace YAML
 		}
 	};
 
-	template<typename T1, typename T2>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Tuple<T1, T2>& rhs)
-	{
-		out << YAML::Flow;
-
-		out << YAML::BeginSeq;
-		out << rhs.GetFirst();
-		out << rhs.GetSecond();
-		out << YAML::EndSeq;
-
-		return out;
-	}
-
 	template<typename T>
 	struct convert<NxFr::Collection<T>>
 	{
@@ -801,22 +634,4 @@ namespace YAML
 			return false;
 		}
 	};
-
-	template<typename T>
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Collection<T>& rhs)
-	{
-		if (rhs.GetCount() <= NxFr::Yaml::SmallSequence)
-		{
-			out << YAML::Flow;
-		}
-
-		out << YAML::BeginSeq;
-		for (const auto& It : rhs)
-		{
-			out << It;
-		}
-		out << YAML::EndSeq;
-
-		return out;
-	}
 }

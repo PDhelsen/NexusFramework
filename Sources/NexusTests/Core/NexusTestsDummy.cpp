@@ -162,11 +162,4 @@ namespace YAML
 		rhs.Value = node["value"].as<NxFr::String>();
 		return true;
 	}
-
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxTs::Dummy& rhs)
-	{
-		out << YAML::Key << "key" << YAML::Value << rhs.Key;
-		out << YAML::Key << "value" << YAML::Value << rhs.Value;
-		return out;
-	}
 }

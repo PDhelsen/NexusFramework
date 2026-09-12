@@ -36,81 +36,81 @@ nested:
 empty_list: []
 empty_map: {})";
 
-		YAML::Node Deserialize = NxFr::Yaml::Deserialize(YamlData);
+		const NxFr::Yaml::Node Deserialize = NxFr::Yaml::Deserialize(YamlData);
 
-		NxFr::String Name = Deserialize["name"].as<NxFr::String>();
+		NxFr::String Name = Deserialize["name"].As<NxFr::String>();
 		ASSERT_EQ(Name, "NexusProject");
-		bool Enabled = Deserialize["enabled"].as<bool>();
+		bool Enabled = Deserialize["enabled"].As<bool>();
 		ASSERT_EQ(Enabled, true);
-		uint64 Version = Deserialize["version"].as<uint64>();
+		uint64 Version = Deserialize["version"].As<uint64>();
 		ASSERT_EQ(Version, 2);
-		float Value = Deserialize["value"].as<float>();
+		float Value = Deserialize["value"].As<float>();
 		ASSERT_EQ(Value, 3.14f);
-		Dummy Object = Deserialize["object"].as<Dummy>();
+		Dummy Object = Deserialize["object"].As<Dummy>();
 		ASSERT_EQ(Object, Dummy::GetReference());
 
-		NxFr::Vector4f Vector = Deserialize["vector"].as<NxFr::Vector4f>();
+		NxFr::Vector4f Vector = Deserialize["vector"].As<NxFr::Vector4f>();
 		ASSERT_EQ(Vector, NxFr::Vector4f(1, 2, 3, 4));
-		NxFr::Euler Euler = Deserialize["euler"].as<NxFr::Euler>();
+		NxFr::Euler Euler = Deserialize["euler"].As<NxFr::Euler>();
 		ASSERT_EQ(Euler, NxFr::Euler(1, 2, 3));
-		NxFr::AxisAngle AxisAngle = Deserialize["axisangle"].as<NxFr::AxisAngle>();
+		NxFr::AxisAngle AxisAngle = Deserialize["axisangle"].As<NxFr::AxisAngle>();
 		ASSERT_EQ(AxisAngle, NxFr::AxisAngle(NxFr::Vector3f::Zero, 1.0f));
-		NxFr::Quaternion Quaternion = Deserialize["quaternion"].as<NxFr::Quaternion>();
+		NxFr::Quaternion Quaternion = Deserialize["quaternion"].As<NxFr::Quaternion>();
 		ASSERT_EQ(Quaternion, NxFr::Quaternion(0, 0, 0, 1));
-		NxFr::Matrix4x4f Matrix = Deserialize["matrix"].as<NxFr::Matrix4x4f>();
+		NxFr::Matrix4x4f Matrix = Deserialize["matrix"].As<NxFr::Matrix4x4f>();
 		ASSERT_EQ(Matrix, NxFr::Matrix4x4f::Identity);
-		NxFr::Ray Ray = Deserialize["ray"].as<NxFr::Ray>();
+		NxFr::Ray Ray = Deserialize["ray"].As<NxFr::Ray>();
 		ASSERT_EQ(Ray, NxFr::Ray(NxFr::Vector3f::Zero, NxFr::Vector3f::Forward));
 
-		YAML::Node Array = Deserialize["array"];
-		ASSERT_EQ(Array[0].as<uint64>(), 3);
-		ASSERT_EQ(Array[2].as<uint64>(), 7);
-		ASSERT_EQ(Array[4].as<uint64>(), 13);
+		NxFr::Yaml::Node Array = Deserialize["array"];
+		ASSERT_EQ(Array[0].As<uint64>(), 3);
+		ASSERT_EQ(Array[2].As<uint64>(), 7);
+		ASSERT_EQ(Array[4].As<uint64>(), 13);
 		NxFr::Array<uint64> ArrayValue = 5;
-		for (uint64 Index = 0; Index < Array.size(); Index++)
+		for (uint64 Index = 0; Index < Array.GetCount(); Index++)
 		{
-			ArrayValue[Index] = Array[Index].as<uint64>();
+			ArrayValue[Index] = Array[Index].As<uint64>();
 		}
 		ASSERT_EQ(ArrayValue.GetCount(), 5);
-		NxFr::Array<uint64> ArrayDecoded = Array.as<NxFr::Array<uint64>>();
+		NxFr::Array<uint64> ArrayDecoded = Array.As<NxFr::Array<uint64>>();
 		ASSERT_EQ(ArrayDecoded.GetCount(), 5);
 
-		YAML::Node List = Deserialize["list"];
-		ASSERT_EQ(List[0].as<NxFr::String>(), "Alice");
-		ASSERT_EQ(List[1].as<NxFr::String>(), "Bob");
-		ASSERT_EQ(List[2].as<NxFr::String>(), "Charlie");
+		NxFr::Yaml::Node List = Deserialize["list"];
+		ASSERT_EQ(List[0].As<NxFr::String>(), "Alice");
+		ASSERT_EQ(List[1].As<NxFr::String>(), "Bob");
+		ASSERT_EQ(List[2].As<NxFr::String>(), "Charlie");
 		NxFr::List<NxFr::String> ListValue;
-		for (YAML::const_iterator It = List.begin(); It != List.end(); ++It)
+		for (NxFr::Yaml::Iterator It = List.Begin(); It != List.End(); ++It)
 		{
-			ListValue.Append(It->as<NxFr::String>());
+			ListValue.Append(It.Data().As<NxFr::String>());
 		}
 		ASSERT_EQ(ListValue.GetCount(), 3);
-		NxFr::List<NxFr::String> ListDecoded = List.as<NxFr::List<NxFr::String>>();
+		NxFr::List<NxFr::String> ListDecoded = List.As<NxFr::List<NxFr::String>>();
 		ASSERT_EQ(ListDecoded.GetCount(), 3);
 
-		YAML::Node Map = Deserialize["map"];
-		ASSERT_EQ(Map["key"].as<NxFr::String>(), "value");
-		ASSERT_EQ(Map["first"].as<NxFr::String>(), "second");
-		ASSERT_EQ(Map["id"].as<NxFr::String>(), "data");
+		NxFr::Yaml::Node Map = Deserialize["map"];
+		ASSERT_EQ(Map["key"].As<NxFr::String>(), "value");
+		ASSERT_EQ(Map["first"].As<NxFr::String>(), "second");
+		ASSERT_EQ(Map["id"].As<NxFr::String>(), "data");
 		NxFr::Dictionary<NxFr::String, NxFr::String> MapValue;
-		for (YAML::const_iterator It = Map.begin(); It != Map.end(); ++It)
+		for (NxFr::Yaml::Iterator It = Map.Begin(); It != Map.End(); ++It)
 		{
-			MapValue.Append(It->first.as<NxFr::String>(), It->second.as<NxFr::String>());
+			MapValue.Append(It.Key().As<NxFr::String>(), It.Value().As<NxFr::String>());
 		}
 		ASSERT_EQ(MapValue.GetCount(), 3);
-		NxFr::Dictionary<NxFr::String, NxFr::String> MapDecoded = Map.as<NxFr::Dictionary<NxFr::String, NxFr::String>>();
+		NxFr::Dictionary<NxFr::String, NxFr::String> MapDecoded = Map.As<NxFr::Dictionary<NxFr::String, NxFr::String>>();
 		ASSERT_EQ(MapDecoded.GetCount(), 3);
 
-		YAML::Node Nested = Deserialize["nested"];
-		ASSERT_EQ(Nested["created"].as<NxFr::String>(), "2025-04-12");
-		ASSERT_EQ(Nested["tags"][0].as<NxFr::String>(), "engine");
-		ASSERT_EQ(Nested["config"]["gravity"].as<float>(), 9.81f);
+		NxFr::Yaml::Node Nested = Deserialize["nested"];
+		ASSERT_EQ(Nested["created"].As<NxFr::String>(), "2025-04-12");
+		ASSERT_EQ(Nested["tags"][0].As<NxFr::String>(), "engine");
+		ASSERT_EQ(Nested["config"]["gravity"].As<float>(), 9.81f);
 
-		ASSERT_EQ(Deserialize["empty_list"].size(), 0);
-		ASSERT_EQ(Deserialize["empty_map"].size(), 0);
+		ASSERT_EQ(Deserialize["empty_list"].GetCount(), 0);
+		ASSERT_EQ(Deserialize["empty_map"].GetCount(), 0);
 
 
-		YAML::Node Serialize;
+		NxFr::Yaml::Node Serialize;
 
 		Serialize["name"] = Name;
 		Serialize["enabled"] = Enabled;
@@ -132,30 +132,6 @@ empty_map: {})";
 
 		NxFr::String Output = NxFr::Yaml::Serialize(Serialize);
 		ASSERT_EQ(Output, YamlData);
-
-
-		YAML::Emitter Emitter;
-
-		Emitter << YAML::Key << "name" << YAML::Value << Name;
-		Emitter << YAML::Key << "enabled" << YAML::Value << Enabled;
-		Emitter << YAML::Key << "version" << YAML::Value << Version;
-		Emitter << YAML::Key << "value" << YAML::Value << Value;
-		Emitter << YAML::Key << "object" << YAML::Value << Object;
-		Emitter << YAML::Key << "vector" << YAML::Value << Vector;
-		Emitter << YAML::Key << "euler" << YAML::Value << Euler;
-		Emitter << YAML::Key << "axisangle" << YAML::Value << AxisAngle;
-		Emitter << YAML::Key << "quaternion" << YAML::Value << Quaternion;
-		Emitter << YAML::Key << "matrix" << YAML::Value << Matrix;
-		Emitter << YAML::Key << "ray" << YAML::Value << Ray;
-		Emitter << YAML::Key << "array" << YAML::Value << ArrayValue;
-		Emitter << YAML::Key << "list" << YAML::Value << ListValue;
-		Emitter << YAML::Key << "map" << YAML::Value << MapValue;
-		Emitter << YAML::Key << "nested" << YAML::Value << Nested;
-		Emitter << YAML::Key << "empty_list" << YAML::Value << NxFr::List<uint64>();
-		Emitter << YAML::Key << "empty_map" << YAML::Value << NxFr::Dictionary<uint64, uint64>();
-
-		NxFr::String Emitted = NxFr::Yaml::Serialize(Serialize);
-		ASSERT_EQ(Emitted, YamlData);
 	}
 
 	TEST(Serialization, Rbs)

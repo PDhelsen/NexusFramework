@@ -115,12 +115,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::String& rhs)
-	{
-		out << rhs.C();
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::StringView>
 	{
@@ -135,12 +129,6 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringView& rhs)
-	{
-		out << rhs.C();
-		return out;
-	}
 
 	template<>
 	struct convert<NxFr::StringId>
@@ -161,10 +149,4 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::StringId& rhs)
-	{
-		out << rhs.GetString();
-		return out;
-	}
 }

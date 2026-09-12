@@ -127,6 +127,4 @@ namespace YAML
 		static Node encode(const NxTs::Dummy& rhs);
 		static bool decode(const Node& node, NxTs::Dummy& rhs);
 	};
-
-	YAML::Emitter& operator<<(YAML::Emitter& out, const NxTs::Dummy& rhs);
 }

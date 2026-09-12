@@ -66,19 +66,4 @@ namespace YAML
 			return true;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Color& rhs)
-	{
-		out << YAML::Flow;
-		out << YAML::BeginSeq;
-
-		out << rhs.r;
-		out << rhs.g;
-		out << rhs.b;
-		out << rhs.a;
-
-		out << YAML::EndSeq;
-
-		return out;
-	}
 }

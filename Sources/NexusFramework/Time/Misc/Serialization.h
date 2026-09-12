@@ -121,18 +121,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Timespan& rhs)
-	{
-		out << YAML::Key << "seconds" << YAML::Value << rhs.Seconds;
-		out << YAML::Key << "minutes" << YAML::Value << rhs.Minutes;
-		out << YAML::Key << "hours" << YAML::Value << rhs.Hours;
-		out << YAML::Key << "days" << YAML::Value << rhs.Days;
-		out << YAML::Key << "months" << YAML::Value << rhs.Months;
-		out << YAML::Key << "years" << YAML::Value << rhs.Years;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Timestamp>
 	{
@@ -169,21 +157,6 @@ namespace YAML
 		}
 	};
 
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Timestamp& rhs)
-	{
-		out << YAML::Key << "seconds" << YAML::Value << rhs.Seconds;
-		out << YAML::Key << "minutes" << YAML::Value << rhs.Minutes;
-		out << YAML::Key << "hours" << YAML::Value << rhs.Hours;
-		out << YAML::Key << "days" << YAML::Value << rhs.Days;
-		out << YAML::Key << "months" << YAML::Value << rhs.Months;
-		out << YAML::Key << "years" << YAML::Value << rhs.Years;
-		out << YAML::Key << "weekday" << YAML::Value << rhs.WeekDay;
-		out << YAML::Key << "yearday" << YAML::Value << rhs.YearDay;
-		out << YAML::Key << "daylightsaving" << YAML::Value << rhs.DayLightSaving;
-
-		return out;
-	}
-
 	template<>
 	struct convert<NxFr::Stopwatch>
 	{
@@ -201,11 +174,4 @@ namespace YAML
 			return false;
 		}
 	};
-
-	inline YAML::Emitter& operator<<(YAML::Emitter& out, const NxFr::Stopwatch& rhs)
-	{
-		out << YAML::Key << "elapsed" << YAML::Value << rhs.Peek();
-
-		return out;
-	}
 }

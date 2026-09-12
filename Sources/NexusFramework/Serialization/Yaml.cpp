@@ -7,28 +7,99 @@ namespace NxFr
 {
 	namespace Yaml
 	{
-		String Serialize(const YAML::Node& Data)
+		Iterator::Iterator(YAML::iterator It)
+			: It(It)
 		{
-			YAML::Emitter Emitter;
-			Emitter << Data;
-
-			return Serialize(Emitter);
 		}
 
-		String Serialize(const YAML::Emitter& Data)
+		Iterator& Iterator::operator++()
 		{
-			return Data.c_str();
+			++It;
+			return *this;
 		}
 
-		void SerializeAndSave(const YAML::Node& Data, StringView Path)
+		Iterator Iterator::operator++(int)
 		{
-			YAML::Emitter Emitter;
-			Emitter << Data;
-
-			SerializeAndSave(Emitter, Path);
+			Iterator Return(It);
+			++It;
+			return Return;
 		}
 
-		void SerializeAndSave(const YAML::Emitter& Data, StringView Path)
+		bool Iterator::operator==(const Iterator& Other) const
+		{
+			return It == Other.It;
+		}
+
+		bool Iterator::operator!=(const Iterator& Other) const
+		{
+			return It != Other.It;
+		}
+
+		Node Iterator::Data()
+		{
+			return *It;
+		}
+
+		Node Iterator::Key()
+		{
+			return It->first;
+		}
+
+		Node Iterator::Value()
+		{
+			return It->second;
+		}
+
+		ConstIterator::ConstIterator(YAML::const_iterator It)
+			: It(It)
+		{
+		}
+
+		ConstIterator& ConstIterator::operator++()
+		{
+			++It;
+			return *this;
+		}
+
+		ConstIterator ConstIterator::operator++(int)
+		{
+			ConstIterator Return(It);
+			++It;
+			return Return;
+		}
+
+		bool ConstIterator::operator==(const ConstIterator& Other) const
+		{
+			return It == Other.It;
+		}
+
+		bool ConstIterator::operator!=(const ConstIterator& Other) const
+		{
+			return It != Other.It;
+		}
+
+		Node ConstIterator::Data() const
+		{
+			return *It;
+		}
+
+		Node ConstIterator::Key() const
+		{
+			return It->first;
+		}
+
+		Node ConstIterator::Value() const
+		{
+			return It->second;
+		}
+
+		String Serialize(const Node& Data)
+		{
+			Allocator::Scope _ = nullptr;
+			return YAML::Dump(Data.Data).c_str();
+		}
+
+		void SerializeAndSave(const Node& Data, StringView Path)
 		{
 			TextStream Stream(Path);
 			Stream.Open(File::Mode::Write);
@@ -36,19 +107,16 @@ namespace NxFr
 			Stream.Close();
 		}
 
-		YAML::Node Deserialize(StringView Data)
+		Node Deserialize(StringView Data)
 		{
+			Allocator::Scope _ = nullptr;
 			return YAML::Load(Data.C());
 		}
 
-		YAML::Node LoadAndDeserialize(StringView Path)
+		Node LoadAndDeserialize(StringView Path)
 		{
+			Allocator::Scope _ = nullptr;
 			return YAML::LoadFile(Path.C());
-		}
-
-		YAML::Node EmitterToNode(const YAML::Emitter& Data)
-		{
-			return YAML::Load(Data.c_str());
 		}
 	}
 }
