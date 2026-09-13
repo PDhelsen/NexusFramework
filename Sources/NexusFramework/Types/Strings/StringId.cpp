@@ -22,7 +22,7 @@ namespace NxFr
 		if (Ids.TryGet(Id) == nullptr)
 		{
 			Dequeue<String>& Instances = GetStrings();
-			String& Instance = Instances.AppendBack(Text);
+			String& Instance = Instances.AppendBackConstruct(Text, nullptr);
 			Ids.Append(Id, Instance);
 		}
 
