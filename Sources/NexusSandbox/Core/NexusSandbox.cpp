@@ -1,8 +1,6 @@
 #include "NexusSandbox/Core/NexusSandbox.h"
 #include "NexusFramework/Memory/Misc/Operator.h"
 
-#include "NexusFramework/Core/NexusFramework.h"
-#include "NexusFramework/Core/NexusFrameworkCommon.h"
 
 namespace NxSb
 {
