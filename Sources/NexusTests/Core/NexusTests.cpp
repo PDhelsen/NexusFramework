@@ -14,7 +14,9 @@ namespace NxTs
 	}
 }
 
-void NexusGTestMain()
+int main(int argc, char* argv[])
 {
+	testing::InitGoogleTest(&argc, argv);
 	testing::AddGlobalTestEnvironment(new NxTs::Environment());
+	return RUN_ALL_TESTS();
 }

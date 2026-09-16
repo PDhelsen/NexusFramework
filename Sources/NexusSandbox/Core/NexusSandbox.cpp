@@ -1,7 +1,6 @@
 #include "NexusSandbox/Core/NexusSandbox.h"
 #include "NexusFramework/Memory/Misc/Operator.h"
 
-
 namespace NxSb
 {
 	void HelloWorld()

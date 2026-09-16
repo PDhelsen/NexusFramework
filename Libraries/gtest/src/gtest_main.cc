@@ -31,8 +31,6 @@
 
 #include "gtest/gtest.h"
 
-extern void NexusGTestMain();
-
 #if defined(GTEST_OS_ESP8266) || defined(GTEST_OS_ESP32) || \
     (defined(GTEST_OS_NRF52) && defined(ARDUINO))
 // Arduino-like platforms: program entry points are setup/loop instead of main.
@@ -41,16 +39,9 @@ extern void NexusGTestMain();
 extern "C" {
 #endif
 
-void setup()
-{
-	testing::InitGoogleTest();
-	NexusGTestMain();
-}
+void setup() { testing::InitGoogleTest(); }
 
-void loop()
-{
-	RUN_ALL_TESTS();
-}
+void loop() { RUN_ALL_TESTS(); }
 
 #ifdef GTEST_OS_ESP8266
 }
@@ -62,7 +53,6 @@ void loop()
 GTEST_API_ int main() {
   printf("Running main() from %s\n", __FILE__);
   testing::InitGoogleTest();
-  NexusGTestMain();
   return RUN_ALL_TESTS();
 }
 #else
@@ -71,7 +61,6 @@ GTEST_API_ int main() {
 GTEST_API_ int main(int argc, char **argv) {
   printf("Running main() from %s\n", __FILE__);
   testing::InitGoogleTest(&argc, argv);
-  NexusGTestMain();
   return RUN_ALL_TESTS();
 }
 #endif

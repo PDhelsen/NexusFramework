@@ -220,7 +220,8 @@ project (GTest)
 
     removefiles
     {
-        Lib .. "**/gtest-all.cc"
+        Lib .. "**/gtest-all.cc",
+        Lib .. "**/gtest_main.cc"
     }
 
     includedirs
