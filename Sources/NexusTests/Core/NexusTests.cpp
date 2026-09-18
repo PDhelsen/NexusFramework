@@ -16,7 +16,5 @@ namespace NxTs
 
 int main(int argc, char* argv[])
 {
-	testing::InitGoogleTest(&argc, argv);
-	testing::AddGlobalTestEnvironment(new NxTs::Environment());
-	return RUN_ALL_TESTS();
+	return NxFr::Globals::RunUnitTest<NxTs::Environment>(argc, argv);
 }

@@ -1,11 +1,10 @@
 #pragma once
 
-#include "NexusFramework/External/GTest.h"
 #include "NexusFramework/Core/NexusFramework.h"
 
 namespace NxTs
 {
-	class Environment : public ::testing::Environment
+	class Environment : public NxFr::UnitTestEnvironment
 	{
 	public:
 		void SetUp() override;

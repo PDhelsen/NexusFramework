@@ -110,3 +110,4 @@
 #include "NexusFramework/Debug/Profiler/Stats/Misc/String.h"
 
 #include "NexusFramework/Core/NexusFrameworkCommon.h"
+#include "NexusFramework/External/GTest.h"
