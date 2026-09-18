@@ -1,5 +1,7 @@
 #pragma once
 
+#include "NexusFramework/External/GTest.h"
+
 #include "NexusFramework/Types/Numeric/Integer.h"
 #include "NexusFramework/Types/Numeric/Decimal.h"
 #include "NexusFramework/Types/Numeric/Enum.h"
@@ -110,4 +112,3 @@
 #include "NexusFramework/Debug/Profiler/Stats/Misc/String.h"
 
 #include "NexusFramework/Core/NexusFrameworkCommon.h"
-#include "NexusFramework/External/GTest.h"

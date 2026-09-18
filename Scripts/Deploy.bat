@@ -20,7 +20,16 @@ call :CopyFolder %Root%Libraries %Deploy%Libraries "*.h *.hpp *.cpp *.cc *.natvi
 call :CopyFolder %Root%Sources %Deploy%Sources "*.h *.cpp *.natvis"
 call :CopyFolder %Root%builds\binaries %Deploy%Builds "*.dll *.lib *.pdb"
 
-if errorlevel 1 (pause) else (exit /b 0)
+if errorlevel 1 (
+	pause
+) else (
+	choice /M "Do you want to save %Deploy% to the NexusFramework environment variable?"
+	if %errorlevel%==1 (
+		setx NexusFramework %Target%\NexusFramework
+	)
+	
+	exit /b 0
+)
 
 ::------------------------------------------------
 :CopyFolder

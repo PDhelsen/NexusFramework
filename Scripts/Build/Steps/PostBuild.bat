@@ -1,8 +1,18 @@
 @echo off
 
 set Root=%~dp0..\..\..\
+
+set Project=""
+set Platform=""
+set Configuration=""
+for /F "tokens=1-3 delims=_" %%A in ("%1") do (
+    set Project=%%A
+    set Platform=%%B
+    set Configuration=%%C
+)
+
 set Artifacts=%Root%builds\artifacts\
-set Binaries=%1
-robocopy %Binaries% %Artifacts% %2 /it /is /e /v
+set Binaries=%Root%builds\binaries\%Project%_%Platform%_%Configuration%\
+robocopy %Binaries% %Artifacts% %2 "*.dll *.lib *.pdb" /it /is /v 
 
 if errorlevel 1 (pause) else (exit /b 0)

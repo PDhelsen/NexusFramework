@@ -3,8 +3,9 @@
 	<GoogleTestAdapterSettings>
 		<SolutionSettings>
 			<Settings>
-				<PathExtension>../../artifacts</PathExtension>
-				<AdditionalTestExecutionParam>--gtest_output=xml:Results/</AdditionalTestExecutionParam>	
+				<AdditionalTestExecutionParam>--gtest_output=xml:$(ExecutableDir)/../../../saved/Results/</AdditionalTestExecutionParam>	
+				<PathExtension>$(ExecutableDir)/../../artifacts/</PathExtension>
+				<WorkingDir>$(ExecutableDir)/../../../</WorkingDir>
 			</Settings>
 		</SolutionSettings>
 		<ProjectSettings/>

@@ -1,15 +1,43 @@
-Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
-
-Name = "%{prj.name}"
-OutputDirectory = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
-OutputName = "%{cfg.buildtarget.basename}%{cfg.buildtarget.extension}"
-
 Framework = "NexusFramework"
 Utility = "NexusUtility"
 Sandbox = "NexusSandbox"
 Tests = "NexusTests"
 GTest = "Gtest"
-Yaml = "Yaml-Cpp"
+YamlCpp = "Yaml-Cpp"
+
+ProjectName = "%{prj.name}"
+OutputName = "%{cfg.buildtarget.basename}%{cfg.buildtarget.extension}"
+OutputDirectory = "%{prj.name}_%{cfg.platform}_%{cfg.buildcfg}"
+Language = "C++"
+LanguageVersion = "C++20"
+Systems = 
+{
+    Windows = "windows"
+}
+Platforms = 
+{
+    Win64 = "Win64"
+}
+Configurations = 
+{
+    Debug  = "Debug",
+    Release = "Release",
+    Distrib = "Distrib"
+}
+Compilers = 
+{
+    Msvc = "msc"
+}
+Tools = 
+{
+    VisualStudio = "vs*"
+}
+Warnings = 
+{
+    "4244", "4251", "4267", "4275"
+}
+
+Root = os.realpath(os.getcwd() .. "/../../"):gsub("\\", "/")
 
 Builds = Root .. "builds/"
 Configs = Root .. "Configs/"
@@ -20,18 +48,41 @@ Sources = Root .. "Sources/"
 Artifacts = Builds .. "artifacts/"
 Binaries = Builds .. "binaries/"
 Intermediates = Builds .. "intermediates/"
-Code = Sources .. Name .. "/"
-Lib = Libraries .. Name .. "/"
+FirstParty = Sources .. ProjectName .. "/"
+ThirdParty = Libraries .. ProjectName .. "/"
 Target = Binaries .. OutputDirectory .. "/"
 Object = Intermediates .. OutputDirectory .. "/"
 
-PostBuild = Scripts .. "Build/Steps/PostBuild.bat " .. Target .. " " .. OutputName
+Includes = 
+{
+    Sources,
+    Libraries
+}
 
+LibrariesIncludes = 
+{
+
+}
+
+Links = 
+{
+    YamlCpp,
+    GTest
+}
+
+Defines = 
+{
+    "GTEST_LINKED_AS_SHARED_LIBRARY"
+}
+
+PostBuild = Scripts .. "Build/Steps/PostBuild.bat " .. OutputDirectory .. " " .. OutputName
+
+-- ----------------------------------------------------------------------------------
 workspace (Framework)
     location (Root)
 
-    platforms { "Win64" }
-    configurations { "Debug", "Release", "Distrib" }
+    platforms { Platforms.Win64 }
+    configurations { Configurations.Debug, Configurations.Release, Configurations.Distrib }
 
 	startproject (Sandbox)
     debugcommand (Artifacts .. Sandbox .. ".exe")
@@ -41,36 +92,38 @@ workspace (Framework)
     flags { "MultiProcessorCompile" }
     staticruntime "off"
 
-	filter "action:vs*"
-        toolset "msc"
+	filter ("action:" .. Tools.VisualStudio)
+        toolset (Compilers.Msvc)
 
-    filter "toolset:msc"
-        defines { "NX_MSVC" }
-    	disablewarnings { "4244", "4267", "4251" }
+    filter ("toolset:" .. Compilers.Msvc)
+        defines { "NX_MSVC", "_CRT_SECURE_NO_WARNINGS" }
+    	disablewarnings (Warnings)
 
-    filter "platforms:Win64"
+    filter ("platforms:" .. Platforms.Win64)
         defines { "NX_WINDOWS" }
+		system (Systems.Windows)
         architecture "x64"
-		system "windows"
 
-    filter "configurations:Debug"
+    filter ("configurations:" .. Configurations.Debug)
         defines { "NX_DEBUG" }
         symbols "On"
         optimize "Off"
 
-    filter "configurations:Release"
+    filter ("configurations:" .. Configurations.Release)
         defines { "NX_RELEASE" }
         symbols "On"
         optimize "On"
 
-    filter "configurations:Distrib"
+    filter ("configurations:" .. Configurations.Distrib)
         defines { "NX_DISTRIB" }
         symbols "Off"
         optimize "On"
 
+    filter ""
+
 group "Libraries"
 project (GTest)
-project (Yaml)
+project (YamlCpp)
 group "Tests"
 project (Sandbox)
 project (Tests)
@@ -78,39 +131,39 @@ group "Misc"
 project (Utility)
 group ""
 
+-- ----------------------------------------------------------------------------------
 project (Framework)
-    location (Code)
+    location (FirstParty)
 
     kind "SharedLib"
-    language "C++"
-	cppdialect "C++20"
+    language (Language)
+	cppdialect (LanguageVersion)
 
 	targetdir (Target)
 	objdir (Object)
 
     pchheader ("NexusFramework/Core/NexusFrameworkPch.h")
-	pchsource (Code .. "Core/NexusFrameworkPch.cpp")
+	pchsource (FirstParty .. "Core/NexusFrameworkPch.cpp")
 
     files
     {
-        Code .. "**.h",
-        Code .. "**.cpp",
-        Code .. "**.natvis",
+        FirstParty .. "**.h",
+        FirstParty .. "**.cpp"
     }
 
     includedirs
     {
-		Sources,
-		Libraries,
+		Includes
     }
 
 	links
 	{
-		Yaml
+		Links
 	}
 
 	defines
 	{
+        Defines,
 		"NX_FRAMEWORK_DLL"
 	}
 
@@ -121,7 +174,7 @@ project (Framework)
 
 -- ----------------------------------------------------------------------------------
 project (Utility)
-    location (Code)
+    location (FirstParty)
 
     kind "Utility"
 
@@ -130,36 +183,41 @@ project (Utility)
 
     files
     {
-        Code .. "**.natvis",
+        FirstParty .. "**.natvis",
     }
 
 -- ----------------------------------------------------------------------------------
 project (Sandbox)
-    location (Code)
+    location (FirstParty)
 
     kind "ConsoleApp"
-    language "C++"
-	cppdialect "C++20"
+    language (Language)
+	cppdialect (LanguageVersion)
 
 	targetdir (Target)
 	objdir (Object)
 
     files
     {
-        Code .. "**.h",
-        Code .. "**.cpp"
+        FirstParty .. "**.h",
+        FirstParty .. "**.cpp"
     }
 
     includedirs
     {
-        Sources,
-		Libraries,
+		Includes
     }
 
-    links
-    {
+	links
+	{
+        Links,
         Framework
-    }
+	}
+
+    defines
+	{
+		Defines
+	}
 
     postbuildcommands
     {
@@ -167,96 +225,108 @@ project (Sandbox)
     }
 
 project (Tests)
-    location (Code)
+    location (FirstParty)
 
     kind "ConsoleApp"
-    language "C++"
-	cppdialect "C++20"
+    language (Language)
+	cppdialect (LanguageVersion)
 
 	targetdir (Target)
 	objdir (Object)
 
     files
     {
-        Code .. "**.h",
-        Code .. "**.cpp",
-        Configs .. "UnitTest.runsettings"
+        FirstParty .. "**.h",
+        FirstParty .. "**.cpp"
     }
 
     includedirs
     {
-        Sources,
-		Libraries,
+		Includes
     }
 
-    links
-    {
-        Framework,
-		GTest,
-		Yaml
-    }
+	links
+	{
+        Links,
+        Framework
+	}
+
+    defines
+	{
+		Defines
+	}
 
     postbuildcommands
     {
         PostBuild
     }
 
+    filter ("action:" .. Tools.VisualStudio)
+        vsprops 
+        {
+            RunSettingsFilePath = Configs .. "UnitTest.runsettings"
+        }
+
+    filter ""
+
 -- ----------------------------------------------------------------------------------
 project (GTest)
-    location (Lib)
+    location (ThirdParty)
 
-    kind "StaticLib"
-    language "C++"
-	cppdialect "C++20"
+    kind "SharedLib"
+    language (Language)
+	cppdialect (LanguageVersion)
 
 	targetdir (Target)
 	objdir (Object)
 
     files
     {
-        Lib .. "**.h",
-        Lib .. "**.cc"
+        ThirdParty .. "**.h",
+        ThirdParty .. "**.cc"
     }
 
     removefiles
     {
-        Lib .. "**/gtest-all.cc",
-        Lib .. "**/gtest_main.cc"
+        ThirdParty .. "**/gtest-all.cc",
+        ThirdParty .. "**/gtest_main.cc"
     }
 
     includedirs
     {
         Libraries,
-        Lib,
+        ThirdParty
     }
+
+    defines
+	{
+		"GTEST_CREATE_SHARED_LIBRARY"
+	}
 
 	postbuildcommands
     {
         PostBuild
     }
 
-	filter "toolset:msc"
-		disablewarnings { "26439", "26495" }
-
-project (Yaml)
-    location (Lib)
+project (YamlCpp)
+    location (ThirdParty)
 
     kind "SharedLib"
-    language "C++"
-	cppdialect "C++20"
+    language (Language)
+	cppdialect (LanguageVersion)
 
 	targetdir (Target)
 	objdir (Object)
 
     files
     {
-        Lib .. "**.h",
-        Lib .. "**.cpp"
+        ThirdParty .. "**.h",
+        ThirdParty .. "**.cpp"
     }
 
     includedirs
     {
-        Libraries,
+        Libraries
     }
 
 	defines
@@ -268,6 +338,3 @@ project (Yaml)
     {
         PostBuild
     }
-
-	filter "toolset:msc"
-		disablewarnings { "4267", "4251", "4275" }
