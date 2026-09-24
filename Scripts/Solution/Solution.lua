@@ -2,8 +2,8 @@ Framework = "NexusFramework"
 Utility = "NexusUtility"
 Sandbox = "NexusSandbox"
 Tests = "NexusTests"
-GTest = "Gtest"
-YamlCpp = "Yaml-Cpp"
+GTest = "GTest"
+YamlCpp = "YamlCpp"
 
 ProjectName = "%{prj.name}"
 OutputName = "%{cfg.buildtarget.basename}%{cfg.buildtarget.extension}"
@@ -56,7 +56,8 @@ Object = Intermediates .. OutputDirectory .. "/"
 Includes = 
 {
     Sources,
-    Libraries
+    Libraries .. GTest .. "/googletest/include/",
+    Libraries .. YamlCpp .. "/include/",
 }
 
 LibrariesIncludes = 
@@ -282,20 +283,20 @@ project (GTest)
 
     files
     {
-        ThirdParty .. "**.h",
-        ThirdParty .. "**.cc"
+        ThirdParty .. "googletest/include/**",
+        ThirdParty .. "googletest/src/**"
     }
 
     removefiles
     {
-        ThirdParty .. "**/gtest-all.cc",
-        ThirdParty .. "**/gtest_main.cc"
+        ThirdParty .. "googletest/src/gtest-all.cc",
+        ThirdParty .. "googletest/src/gtest_main.cc"
     }
 
     includedirs
     {
-        Libraries,
-        ThirdParty
+        ThirdParty .. "googletest/",
+        ThirdParty .. "googletest/include/"
     }
 
     defines
@@ -320,13 +321,13 @@ project (YamlCpp)
 
     files
     {
-        ThirdParty .. "**.h",
-        ThirdParty .. "**.cpp"
+        ThirdParty .. "include/**",
+        ThirdParty .. "src/**"
     }
 
     includedirs
     {
-        Libraries
+        ThirdParty .. "include/",
     }
 
 	defines

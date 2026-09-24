@@ -1,0 +1,6 @@
+[submodule "Libraries/GTest"]
+	path = Libraries/GTest
+	url = https://github.com/google/googletest.git
+[submodule "Libraries/YamlCpp"]
+	path = Libraries/YamlCpp
+	url = https://github.com/jbeder/yaml-cpp.git
